@@ -1,0 +1,23 @@
+{
+  "msg": "ok",
+  "data": {
+    "on_lessons": [
+      {
+        "classroom": {
+          "course": {
+            "name": "八",
+            "id": 161
+          },
+          "students_count": 18,
+          "id": 2409,
+          "name": "了"
+        },
+        "user_auth": "02c5c5dc-7fe8-4524-8bd5-bd4699a239f3",
+        "id": 2867,
+        "invite_code": "HTW7BZ",
+        "title": "试题为主的ppp"
+      }
+    ]
+  },
+  "success": true
+}
