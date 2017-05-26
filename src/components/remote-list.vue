@@ -2,13 +2,17 @@
   <!-- 教师遥控器列表 -->
   <div class="hello">
     <h1>遥控器列表</h1>
-    <div v-for="item in list">遥控器id：{{item.id}}</div>
+    <button>刷新还是轮询？</button>
+    <div v-for="item in list">
+      <router-link :to="'/' + item.id">遥控器id：{{item.id}}</router-link>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import request from '@/util/request'
 import API from '../config/api'
+console.log(request)
 
 export default {
   name: 'remote-list',
@@ -23,10 +27,10 @@ export default {
   methods: {
     fetchList () {
       let self = this
-      console.log(99)
-      axios.get(API.remote_control_list)
-        .then(function (response) {
-          let jsonData = response.data
+
+      request.get(API.remote_control_list)
+        .then(jsonData => {
+          console.log(99, jsonData)
 
           if (jsonData.success) {
             self.list = jsonData.data.on_lessons
