@@ -12,7 +12,6 @@
 <script>
 import request from '@/util/request'
 import API from '../config/api'
-console.log(request)
 
 export default {
   name: 'remote-list',
@@ -30,11 +29,9 @@ export default {
 
       request.get(API.remote_control_list)
         .then(jsonData => {
-          console.log(99, jsonData)
-
           if (jsonData.success) {
             self.list = jsonData.data.on_lessons
-          };
+          }
         })
         .catch(function (error) {
           console.log(error)

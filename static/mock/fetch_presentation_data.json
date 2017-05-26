@@ -1,0 +1,506 @@
+{
+  "msg": "ok",
+  "presentationData": {
+    "Title": "试题为主的ppp",
+    "Height": 540,
+    "Slides": [
+      {
+        "lessonSlideID": 33551,
+        "Cover": "http://st0.ykt.io/Foy8ZOtG5MUHqUYbFIJS91vwX0_9",
+        "Thumbnail": "http://st0.ykt.io/FiOF0aOS1y_3xRthtfyzmw8Wd0Vc"
+      },
+      {
+        "Answer": "A",
+        "lessonSlideID": 33552,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7776,
+          "Type": "MultipleChoice"
+        },
+        "Cover": "http://st0.ykt.io/FlGyCWb_i5wAbo3cJ7QakQNzh8uG",
+        "Thumbnail": "http://st0.ykt.io/FmdUX6Ei_HTLLjv8Pqcn14IGZBVT"
+      },
+      {
+        "Answer": "A",
+        "lessonSlideID": 33553,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7777,
+          "Type": "MultipleChoice"
+        },
+        "Cover": "http://st0.ykt.io/Fs8Kbtt6CuTrDfFaxrI-gBdxnPLN",
+        "Thumbnail": "http://st0.ykt.io/FmTBU1xNW2EOyzZ9TsOzHO0m58pR"
+      },
+      {
+        "Answer": "A",
+        "lessonSlideID": 33554,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7778,
+          "Type": "MultipleChoice"
+        },
+        "Cover": "http://st0.ykt.io/Fqsdk6S1r6bdf8qUzfKW82mTqQHS",
+        "Thumbnail": "http://st0.ykt.io/FnP1M8e18LVhrOuZ-2EGnUYEr_Ja"
+      },
+      {
+        "Answer": "AB",
+        "lessonSlideID": 33555,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7779,
+          "Type": "MultipleChoiceMA"
+        },
+        "Cover": "http://st0.ykt.io/Fhkqr2RuUK_RaplpvwIfevzC7_sx",
+        "Thumbnail": "http://st0.ykt.io/FjB_kxix3hU5JdXJDntmSx2qqbL0"
+      },
+      {
+        "Answer": "AB",
+        "lessonSlideID": 33556,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7780,
+          "Type": "MultipleChoiceMA"
+        },
+        "Cover": "http://st0.ykt.io/FmeJ3aTsr1RtqzqIofiYuF2NrY9S",
+        "Thumbnail": "http://st0.ykt.io/FhJT7QoeWd2Guh-CLEelCkpFNdfo"
+      },
+      {
+        "Answer": "AB",
+        "lessonSlideID": 33557,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7781,
+          "Type": "MultipleChoiceMA"
+        },
+        "Cover": "http://st0.ykt.io/Fmrfjq8gy-OEmiWad3Epern80CKC",
+        "Thumbnail": "http://st0.ykt.io/FmC18jIpkRWlnyk3hRVM-R7QGmMI"
+      },
+      {
+        "Answer": "AB",
+        "lessonSlideID": 33558,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7782,
+          "Type": "MultipleChoiceMA"
+        },
+        "Cover": "http://st0.ykt.io/FpCEjwE20lgznuSkxtE3GzbI5b2T",
+        "Thumbnail": "http://st0.ykt.io/FkqetRRxNABE2Q1z7J0vQz3x5-Xt"
+      },
+      {
+        "Answer": "B",
+        "lessonSlideID": 33559,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7783,
+          "Type": "MultipleChoice"
+        },
+        "Cover": "http://st0.ykt.io/FlAS-_ifC4LkhpkQmMF78DQBaPgd",
+        "Thumbnail": "http://st0.ykt.io/FqRaQpRLtFy95on7amKTqouTHP2b"
+      },
+      {
+        "Answer": "1",
+        "lessonSlideID": 33560,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7784,
+          "Answer": "1",
+          "Type": "Polling"
+        },
+        "Cover": "http://st0.ykt.io/FlKc3yHAKB3la1LclI88JR-244on",
+        "Thumbnail": "http://st0.ykt.io/FkF8qxYa2srDUsus-kSmU2F9ElqS"
+      },
+      {
+        "Answer": "2",
+        "lessonSlideID": 33561,
+        "Problem": {
+          "Submit": {
+            "Width": 121.5,
+            "Top": 489.375031,
+            "Left": 702,
+            "Height": 32.4
+          },
+          "Score": 1,
+          "Bullets": [
+            {
+              "Width": 40.5,
+              "Top": 224.437485,
+              "Label": "A",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 291.937469,
+              "Label": "B",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 359.437469,
+              "Label": "C",
+              "Left": 123.75,
+              "Height": 40.5
+            },
+            {
+              "Width": 40.5,
+              "Top": 426.937469,
+              "Label": "D",
+              "Left": 123.75,
+              "Height": 40.5
+            }
+          ],
+          "HasRemark": false,
+          "ProblemID": 7785,
+          "Answer": "2",
+          "Type": "Polling"
+        },
+        "Cover": "http://st0.ykt.io/FnUaryRHcvvdHu2zyfFrDKudy9zD",
+        "Thumbnail": "http://st0.ykt.io/FgVR2ylcFRzRyskQ-y7a9MLJUktD"
+      },
+      {
+        "lessonSlideID": 33562,
+        "Cover": "http://st0.ykt.io/Fk0P2sA8m45405dg4GRIaiwqHqFP",
+        "Thumbnail": "http://st0.ykt.io/Fiz2x2mhSvlSA970I6vOGProa42e"
+      }
+    ],
+    "Width": 960,
+    "Version": "0.8",
+    "DataCompleted": true,
+    "LessonID": 2882
+  },
+  "success": true
+}
