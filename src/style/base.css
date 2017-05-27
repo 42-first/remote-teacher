@@ -1,0 +1,70 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font: 14px/1.5 -apple-system-font,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color: #4A4A4A;
+  background-color: #EDF2F6;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/*-----------------------------*\
+    $ 样式重置 reset
+\*-----------------------------*/
+
+body, div, dl, dt, dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote，th,td{margin:0;padding:0;}
+table{border-collapse:collapse;border-spacing:0;}
+fieldset,img {border:0;}
+address,caption, cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
+ol,ul {list-style:none;}
+caption,th{text-align:left;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+q:before, q:after{content:' ';}
+abbr,acronym{border:0;}
+a {text-decoration:none;}
+
+
+/*-----------------------------*\
+    $ 基本字体大小
+\*-----------------------------*/
+
+[data-dpr="1"] .f12 {
+  font-size: 12px;
+}
+[data-dpr="2"] .f12 {
+    font-size: 24px;
+}
+[data-dpr="3"] .f12 {
+  font-size: 36px;
+}
+
+[data-dpr="1"] .f14 {
+  font-size: 14px;
+}
+[data-dpr="2"] .f14 {
+    font-size: 28px;
+}
+[data-dpr="3"] .f14 {
+  font-size: 42px;
+}
+
+[data-dpr="1"] .f16 {
+  font-size: 16px;
+}
+[data-dpr="2"] .f16 {
+    font-size: 32px;
+}
+[data-dpr="3"] .f16 {
+  font-size: 45px;
+}
+
+[data-dpr="1"] .f18 {
+  font-size: 18px;
+}
+[data-dpr="2"] .f18 {
+    font-size: 36px;
+}
+[data-dpr="3"] .f18 {
+  font-size: 48px;
+}
