@@ -4,7 +4,8 @@ body {
   height: 100%;
   font: 14px/1.5 -apple-system-font,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   color: #4A4A4A;
-  background-color: #EDF2F6;
+  /*background-color: #EDF2F6;*/
+  background-color: #fff;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -49,6 +50,16 @@ a {text-decoration:none;}
   font-size: 42px;
 }
 
+[data-dpr="1"] .f15 {
+  font-size: 15px;
+}
+[data-dpr="2"] .f15 {
+    font-size: 30px;
+}
+[data-dpr="3"] .f15 {
+  font-size: 45px;
+}
+
 [data-dpr="1"] .f16 {
   font-size: 16px;
 }
@@ -56,7 +67,7 @@ a {text-decoration:none;}
     font-size: 32px;
 }
 [data-dpr="3"] .f16 {
-  font-size: 45px;
+  font-size: 48px;
 }
 
 [data-dpr="1"] .f18 {
@@ -67,4 +78,14 @@ a {text-decoration:none;}
 }
 [data-dpr="3"] .f18 {
   font-size: 48px;
+}
+
+[data-dpr="1"] .f25 {
+  font-size: 25px;
+}
+[data-dpr="2"] .f25 {
+    font-size: 50px;
+}
+[data-dpr="3"] .f25 {
+  font-size: 75px;
 }

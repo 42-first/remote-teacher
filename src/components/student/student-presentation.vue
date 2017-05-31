@@ -10,18 +10,24 @@
   <section class="page">
     <!-- header 返回 弹幕 投稿 标题 -->
     <header class="student__header">
-      <p class="student__header--back"><i class="iconfont icon-back"></i></p>
-      <h3 class="header-title"></h3>
+      <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
+      <h3 class="header-title f18">学生遥控器</h3>
       <div class="student__header--more">
-        <i class="iconfont icon-add"></i>
+        <i class="iconfont icon-add f25"></i>
         <div class="none"></div>
       </div>
     </header>
 
     <!-- tab  -->
-    <selction class="">
-      <ul class="student__tabs"></ul>
-    </selction>
+    <section class="">
+      <ul class="student__tabs f15">
+        <li class="tab-item curr">全部</li>
+        <li class="tab-item">PPT</li>
+        <li class="tab-item">习题</li>
+        <li class="tab-item">试卷</li>
+        <li class="tab-item">红包</li>
+      </ul>
+    </section>
 
   </section>
 </template>
@@ -37,28 +43,24 @@
     },
     data() {
       return {
-        pptWidth: 0,
-        pptHeight: 0,
-        // 是否有课程锁定
-        isLock: false,
-        date: '',
-        // 直播的位置
-        sindex: 0,
-        socket: null,
+        // 课程ID
+        lessonID: 0,
+        // pptID
+        presentationID: 0,
+
+        // 权限相关
         userID: 0,
         avatar: '',
-        userAuth: '',
-        // 后端交互获取的直播lessonIDs
-        allLessonIDs: [],
-        // 课程IDs
-        alessonids: null,
-        // 结构保持和九宫格统一
-        oLessons: {},
-        alessons: [],
-        // 直播映射表：九宫格那个格子在直播 直播对应的ID
-        lessonsMap: [],
-        // 没有直播的课程池
-        unLivePool: []
+        userAuth: 0,
+
+        // 当前tab下标
+        currTabIndex: 0,
+
+        // 是否观看模式
+        observerMode: false,
+        presentationList: null,
+        quizList: null,
+        commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
     },
     components: {
@@ -67,7 +69,6 @@
     },
     watch: {
       pptHeight: function (Height) {
-        this.pptWidth && this.pptHeight && this.handleResize();
       }
     },
     filters: {
@@ -75,7 +76,7 @@
     mixins: [ wsmixin],
     methods: {
       /*
-      * @method 直播初始化
+      * @method 接收器初始化
       */
       init(){
         let self = this;
@@ -108,43 +109,12 @@
           .then(function (res) {
             if(res.data.success) {
               let data = res.data.data;
-              let ids = data.lesson_ids;
-              let lessonid = null;
 
-              self.allLessonIDs = ids;
-              self.userID = data.user_id;
-              self.userAuth = data.professional_auth_code;
-
-              for(let i = 0, count = ids.length; i<count; i++) {
-                lessonid = ids[i].lesson_id;
-                // 加入直播的课程
-                alessonids.push(lessonid);
-
-                // 九宫格随机显示课程
-                init && !self.oLessons[lessonid] && self.setLesson(lessonid);
-                // 初始化socket后未直播的课程池
-                !init && !self.oLessons[lessonid] && unLivePool.push(lessonid);
-
-                // 模拟websocket
-                if (process.env.NODE_ENV !== 'production') {
-                  self.oLessons[lessonid] && self.getPresentation(lessonid, 100, parseInt(Math.random()*6+1));
-                }
-              }
-
-              // 初始化socket后每分钟更新直播课程
-              !init && self.updateLive(alessonids, unLivePool);
-              self.unLivePool = unLivePool;
-
-              // websocket通信使用
-              self.alessonids = alessonids.length > 9 ? alessonids.slice(0, 9) : alessonids.slice(0);
-              init && ids.length && self.initws();
             }
           })
           .catch(function (error) {
             console.log(error);
           });
-
-        this.setDate();
       },
 
       /*
@@ -155,10 +125,6 @@
         // 比例根据PPT计算下
         let iHeight = $(window).height()-70;
         let iWidth = iHeight * (16/9);
-
-        this.pptHeight && this.pptWidth && (iWidth = iHeight * ( this.pptWidth / this.pptHeight));
-        $(this.$el).find('.J_course_list').width(iWidth);
-        $(this.$el).find('.J_live_header').width(iWidth);
       },
       /*
        * @method 返回上一页
@@ -166,13 +132,6 @@
        */
       doBack(){
         this.$router.back();
-      },
-      /*
-       * @method 刷新数据
-       *
-       */
-      doRefresh(){
-        location.reload();
       }
     },
     created() {
@@ -198,4 +157,98 @@
   }
 
 
+
+  /*-------------------*\
+    $ header
+  \*-------------------*/
+
+
+  .student__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 1.33rem;
+    color: #2A2A2A;
+    background: #EDF2F6;
+    /* box-shadow: 0 4px 6px rgba(0,0,0, 0.2); */
+
+    .student__header--back, .student__header--more {
+      width: 1rem;
+    }
+
+    .header-title {
+      flex: 1;
+    }
+  }
+
+  /*
+  .student__header:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: auto;
+    top: 1.33rem;
+    height: 1px;
+    width: 100%;
+    background-color: #c4c4c4;
+    display: block;
+    z-index: 15;
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+  }
+  */
+
+
+
+
+  /*-------------------*\
+    $ header
+  \*-------------------*/
+
+
+  .student__tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    height: 1rem;
+
+    box-shadow: 0 4px 6px rgba(0,0,0, 0.2);
+
+    .tab-item {
+      height: 100%;
+      line-height: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .curr {
+      color: #639EF4;
+      border-bottom: 4px solid #639EF4;
+    }
+
+  }
+
+
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

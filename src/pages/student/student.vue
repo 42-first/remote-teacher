@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <p>学生遥控器</p>
     <router-view></router-view>
   </div>
 </template>
@@ -12,7 +11,7 @@
 </script>
 
 <style>
-  @import "~@/style/font/base.css";
+  @import "~@/style/base.css";
 
   #app {
     width: 100%;
