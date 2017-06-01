@@ -10,30 +10,28 @@
     <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
     <div>下一张幻灯片</div>
     <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
-    <div class="toolbar">工具栏</div>
+    <Toolbar></Toolbar>
+    <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
+    <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
+      <component :is="initiativeCtrlMaskTpl"></component>
+    </div>
+
+    <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
+    <div class="rc-mask" v-show="!isToastCtrlMaskHidden">
+      <component :is="toastCtrlMaskTpl"></component>
+    </div>
+
+    <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
+    <div class="rc-mask" v-show="!isMsgMaskHidden">
+      <component :is="msgMaskTpl"></component>
+    </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
   /*样式清零*/
   html, body {height: 100%;}
-  body, div, dl, dt, dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote，th,td{margin:0;padding:0;}
-  table{border-collapse:collapse;border-spacing:0;}
-  fieldset,img {border:0;}
-  address,caption, cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
-  ol,ul {list-style:none;}
-  caption,th{text-align:left;}
-  h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
-  q:before, q:after{content:' '}
-  abbr,acronym{border:0;}
-  a{
-      text-decoration:none;
-  }
-  .clearfix:after {display: block; content: ""; clear: both;}
-  .tac {text-align: center;}
-</style>
-
-<style lang="sass" scoped>
+  @import "~@/style/base";
   @import "~@/style/remote";
 </style>
 
@@ -41,7 +39,9 @@
 /* eslint-disable no-undef, no-unreachable */
 
 import request from '@/util/request'
-import API from '../config/api'
+import API from '@/config/api'
+import Toolbar from '@/components/template/toolbar'
+import RcMaskErrormsg from '@/components/template/rc-mask-errormsg'
 
 export default {
   name: 'Remote',
@@ -63,12 +63,16 @@ export default {
       isRobber: false,                        // 是夺权者
       isRobbing: false,                       // 正在夺权
       startPoint: [0, 0],
-      msgMaskTpl: 'rc-mask-errormsg',
-      toastCtrlMaskTpl: 'rc-mask-errormsg',
-      initiativeCtrlMaskTpl: 'rc-mask-errormsg',
+      msgMaskTpl: 'RcMaskErrormsg',
+      toastCtrlMaskTpl: '',
+      initiativeCtrlMaskTpl: '',
       errType: -1,
       connectCountDown: 10
     }
+  },
+  components: {
+    Toolbar,
+    RcMaskErrormsg
   },
   created () {
     this.lessonid = this.$route.params.lessonid
