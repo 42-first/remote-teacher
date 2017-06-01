@@ -1,15 +1,40 @@
+<!-- 教师遥控器根组件 -->
 <template>
-  <!-- 教师遥控器根组件 -->
-  <div>
-    <div class="detail">第{{current}}页/共{{total}}页</div>
-    <img v-if="pptData.length" class="card" mode="widthFix" :src="pptData[current - 1].Cover" />
+  <div class="rc-home">
+    <div class="detail">
+      <div>
+        当前幻灯片<span class="">{{current}}/{{total}}</span>
+      </div>
+      <div  class="pubpblm_or_check_answer">查看答案</div>
+    </div>
+    <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
     <div>下一张幻灯片</div>
-    <img v-if="pptData.length" class="card" mode="widthFix" :src="pptData[current].Cover" />
+    <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
+    <div class="toolbar">工具栏</div>
   </div>
 </template>
 
-<style lang="sass">
-  img {width: 100%;}
+<style>
+  /*样式清零*/
+  html, body {height: 100%;}
+  body, div, dl, dt, dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote，th,td{margin:0;padding:0;}
+  table{border-collapse:collapse;border-spacing:0;}
+  fieldset,img {border:0;}
+  address,caption, cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
+  ol,ul {list-style:none;}
+  caption,th{text-align:left;}
+  h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+  q:before, q:after{content:' '}
+  abbr,acronym{border:0;}
+  a{
+      text-decoration:none;
+  }
+  .clearfix:after {display: block; content: ""; clear: both;}
+  .tac {text-align: center;}
+</style>
+
+<style lang="sass" scoped>
+  @import "~@/style/remote";
 </style>
 
 <script>

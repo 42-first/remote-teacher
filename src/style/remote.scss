@@ -1,0 +1,758 @@
+/**
+ * @module 直接借鉴小程序的样式文件，小程序不支持 sass 语法， 直接用的 css 格式
+ */
+
+.rc-home  {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #000000;
+  color: #ffffff;
+  font-size: 25px;
+}
+.rc-home .card {
+  width: 100%;
+}
+.detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.666667rem;
+  margin-bottom: 0.266667rem;
+}
+.detail .pubpblm_or_check_answer {
+  margin-right: 20rpx;
+}
+/*下方工具栏*/
+.rc-toolbar {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  font-size: 26rpx;
+  padding-bottom: 14rpx;
+}
+.rc-toolbar .tool-item {
+  width: 140rpx;
+  height: 100rpx;
+  text-align: center;
+
+}
+.first-item {
+  border-right: 1px solid #eee;
+  padding-top: 10rpx;
+}
+.last-item {
+  border-left: 1px solid #eee;
+}
+.rc-toolbar .bulb {
+  display: inline-block;
+  margin-top: 20rpx;
+  width: 20rpx;
+  height: 20rpx;
+  background-color: #ff0000;
+}
+.rc-toolbar.online .bulb {
+  border-radius: 50%;
+  background-color: #28cf6e;
+}
+.rc-toolbar .tool-item .iconfont {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+/*更多按钮打开的内容*/
+.toolbar-more-box {
+  position: absolute;
+  right: 2%;
+  bottom: 140rpx;
+  width: 140rpx;
+  height: 220rpx;
+  padding: 5rpx 10rpx;
+  background: rgba(0,0,0,0.72);
+  border-radius: 10rpx;
+  color: #fff;
+}
+.triangle {
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border-width: 20rpx;
+  border-color: rgba(0,0,0,0.72) transparent transparent transparent;
+  border-style: solid;
+}
+.danmubox {
+  border-bottom: 1rpx solid #999;
+}
+.danmubox .iconfont {
+  font-size: 50rpx;
+  vertical-align: middle;
+}
+.icon-danmu-open {color: #28cf6e;}
+
+.rc-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.72);
+  overflow: auto;
+}
+
+.mask-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*缩略图样式*/
+.thumbnail-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background: #efefef;
+  overflow: hidden;
+}
+.thumbnail-box .thumnail-scrollview {
+  height: 1100rpx;
+}
+.thumbnail-item {
+  float: left;
+  position: relative;
+  width: 320rpx;
+  overflow: hidden;
+  margin: 10px;
+  color: #4A4A4A;
+}
+.thumbnail-box .close-btn {
+  width: 100%;
+  margin: 0;
+}
+.thumbnail-item:nth-child(2n) {
+  float: right;
+}
+.gridimg {
+  width: 100%;
+}
+.thumbnail-item.active .gridimg {
+  box-sizing: border-box;
+  padding: 2px;
+  border: 2px solid #639EF4;
+}
+.gridlabel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 5rpx 10rpx;
+  background: rgba(0,0,0,0.72);
+  color: #ffffff;
+}
+
+.errmsg, .reconnect-box, .qrcode-box, .deprive-box, .problemtime-box {width: 600rpx;}
+
+/*二维码控制*/
+.qrcode-box button, .deprive-box button {
+  width: 220rpx;
+  background: none;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+.qrcode-box .qrcode {
+  font-size: 200rpx;
+}
+.qrcode-box .anhao {
+  margin-bottom: 30rpx;
+}
+.qrcode-box .desc {
+  margin-bottom: 30rpx;
+}
+.qrcode-box button {
+  width: 240rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+}
+/*夺权*/
+.deprive-box button {
+  width: 320rpx;
+}
+.deprive-box .mb {
+  margin-bottom: 30rpx;
+}
+
+/*发题蒙版*/
+.problemtime-box .direct-btns, .problemtime-box .simple-list {
+  margin: 0 auto;
+  width: 320rpx;
+}
+.problemtime-box .direct-btns button {
+  display: block;
+  margin-bottom: 20rpx;
+}
+.problemtime-box .simple-list button {
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+/*试题柱状图面板*/
+.problemresult-box {
+  padding-top: 50rpx;
+}
+.problemresult-box .bell-box {
+  color: #ffe872;
+  line-height: 80rpx;
+}
+.problemresult-box .bell-box .iconfont {
+  font-size: 72rpx;
+  color: #ffe872;
+}
+.problemresult-box .bell-box .time {
+  font-size: 50rpx;
+}
+.problemresult-box .statistics {
+  height: 100rpx;
+  line-height: 100rpx;
+  color: #fff;
+  font-size: 36rpx;
+}
+.problemresult-box .statistics .totalnum {
+  color: #ffe872;
+  font-size: 50rpx;
+}
+.problemresult-box .histogram-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: bottom;
+  height: 400rpx;
+  margin: 40rpx auto 100rpx;
+  border-bottom: 1px solid #fff;
+}
+.histogram-box .histogram-item {
+  flex: 1;
+  position: relative;
+}
+.histogram-item .bar {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -10px;
+  width: 20px;
+  height: 0;
+  background-color: #fff;
+}
+.histogram-item .bar.right {
+  background-color: #ffe872;
+}
+.histogram-item .bar span {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  color: #fff;
+}
+.histogram-item .bar .value {
+  top: -1.5rem;
+}
+.histogram-item .bar .label {
+  bottom: -2rem;
+}
+/*柱状图按钮*/
+.problemresult-box .group-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 50rpx;
+}
+.group-btns .btn-item {
+  flex: 1; 
+  text-align: center;
+  font-size: 30rpx;
+  color: #fff;
+}
+.btn-item .icon-wrapper {
+    position: relative;
+    margin: auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+  .icon-wrapper.screen { background: #28CF6E; }
+  .icon-wrapper.rank { background: #639EF4; }
+  .icon-wrapper.redpacket { background: #E64340; }
+  
+  .icon-wrapper image { 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    display: block;
+    margin: 0 auto;
+    max-width: 100px;
+    line-height: 56px;
+  }
+  .icon-wrapper.screen image { width: 34px; }
+  .icon-wrapper.rank image { width: 36px; }
+  .icon-wrapper.redpacket image { width: 25px; }
+
+/*试题详情*/
+.problemresultdetail-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  padding-top: 20rpx;
+  color: #4A4A4A;
+  overflow: auto;
+}
+.problemresultdetail-box .table-box {
+  height: 500rpx;
+}
+
+/*红包页面*/
+.redpacket-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  color: #4A4A4A;
+  overflow: auto;
+}
+.redpacket-box .rp-redhead {
+  position: relative;
+  box-sizing: border-box;
+  padding-top: 50rpx;
+  height: 250rpx;
+  overflow: hidden;
+  line-height: 60rpx;
+  color: #FFE595;
+  text-align: center;
+  font-size: 36rpx;
+}
+.redpacket-box .rp-redhead .oval {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 0;
+  width: 1000rpx;
+  height: 500rpx;
+  background-color: #E64340;
+  border-radius: 50%;
+}
+.redpacket-box .rp-redhead .desc {
+  position: relative;
+}
+.redpacket-box .action-box {
+  padding: 0 30rpx;
+}
+.redpacket-box .row {
+  margin-top: 60rpx;
+  height: 90rpx;
+}
+.redpacket-box .row .fz16 {
+  font-size: 32rpx;
+}
+.redpacket-box .choices {
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.redpacket-box .choices>view {
+  float: left;
+  text-align: center;
+}
+.redpacket-box .choices .choice-item {
+  width: 140rpx;
+  margin-right: 40rpx;
+  background-color: #EDF2F6;
+  font-size: 40rpx;
+  border-radius: 6rpx;
+}
+.redpacket-box .choices .mr0 {
+  margin-right: 0;
+}
+.redpacket-box .choices .more {
+  width: 100rpx;
+  color: #9B9B9B;
+  font-size: 36rpx;
+}
+.redpacket-box .choices .chosen {
+  background-color: #FFAE00;
+  color: #fff;
+}
+
+.redpacket-box .action-box .total {
+  margin-top: 60rpx;
+  margin-bottom: 30rpx;
+  height: 100rpx;
+  text-align: center;
+  font-size: 80rpx;
+}
+.redpacket-box .give-btn {
+  width: 560rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: 0 auto 20rpx;
+  background-color: #F08B88;
+  border-radius: 6rpx;
+  color: #fff;
+  text-align: center;
+  font-size: 40rpx;
+}
+.redpacket-box .give {}
+.redpacket-box .give-active {
+  background-color: #E64340;
+}
+.redpacket-box .giveup {
+  margin: 26rpx auto;
+  background-color: #fff;
+  border: 1px solid #E64340;
+  color: #E64340;
+}
+
+.redpacket-box .input-wrapper {
+  display: flex;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.redpacket-box .input-wrapper>view {
+  text-align: center;
+}
+.redpacket-box .input-wrapper .input-box {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-right: 20rpx;
+  border: 1px solid #C8C8C8;
+  background-color: #EDF2F6;
+  text-align: right;
+  border-radius: 6rpx;
+}
+.redpacket-box .input-wrapper .input-box input {
+  flex: 1;
+  width: 400rpx;
+  background-color: #EDF2F6;
+  border: 0;
+  padding-left: 20rpx;
+  font-size: 40rpx;
+  text-align: right;
+  padding-right: 20rpx;
+}
+.redpacket-box .input-wrapper .input-box input::-webkit-input-placeholder {
+  font-size: 36rpx;
+}
+.redpacket-box .input-wrapper .input-box span {
+  font-size: 40rpx;
+}
+.redpacket-box .input-wrapper .more, .redpacket-box .input-wrapper .back {
+  width: 140rpx;
+  color: #9B9B9B;
+  font-size: 36rpx;
+}
+/*支付确认弹层*/
+.paying-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.72);
+  overflow: auto;
+}
+.paying-wrapper .paying-content {
+  position: absolute;
+  top: 50%;
+  left: 40rpx;
+  right: 40rpx;
+  transform: translateY(-50%);
+  padding: 0 32rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  text-align: center;
+  color: #4A4A4A;
+}
+.paying-wrapper .confirm-box {
+  
+}
+.paying-wrapper .confirm-box .title {
+  height: 120rpx;
+  line-height: 120rpx;
+  font-size: 36rpx;
+  border-bottom: 1px solid #C8C8C8;
+}
+.paying-wrapper .confirm-box .kthb {
+  height: 40rpx;
+  margin-top: 34rpx;
+  font-size: 32rpx;
+}
+.paying-wrapper .confirm-box .total {
+  height: 120rpx;
+  font-size: 80rpx;
+}
+.paying-wrapper .confirm-box .wallet, .paying-wrapper .confirm-box .needmoremoney {
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: left;
+  text-indent: 80rpx;
+  border-top: 1px solid #C8C8C8;
+  border-bottom: 1px solid #C8C8C8;
+  font-size: 32rpx;
+  background: url(http://sfe.ykt.io/bank.png) 20rpx center no-repeat;
+}
+.paying-wrapper .confirm-box .needmoremoney {
+  border-top: 0;
+  background-image: url(http://sfe.ykt.io/wxlogo.png);
+}
+.paying-wrapper .confirm-box .confirm-btn {
+  margin: 44rpx auto;
+  width: 410rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background-color: #FFAE00;
+  color: #fff;
+  border-radius: 6rpx;
+  font-size: 32rpx;
+}
+.paying-wrapper .confirm-box .gray {
+  font-size: 28rpx;
+  color: #9B9B9B;
+}
+.paying-wrapper .paying {
+  padding: 100rpx;
+  font-size: 48rpx;
+}
+/*红包支付成功、失败的弹层*/
+.paying-wrapper .pay-success {}
+.paying-wrapper .pay-fail {}
+.paying-wrapper .pay-success .cg, .paying-wrapper .pay-fail .cg {
+  height: 200rpx;
+  line-height: 200rpx;
+  font-size: 48rpx;
+  color: #E64340;
+}
+.paying-wrapper .pay-success .wallet {
+  height: 80rpx;
+  line-height: 80rpx;
+  border-top: 1px solid #C8C8C8;
+  border-bottom: 1px solid #C8C8C8;
+  font-size: 36rpx;
+  background: url(http://sfe.ykt.io/bank.png) 20rpx center no-repeat;
+}
+.paying-wrapper .pay-success .wallet span {
+  font-size: 28rpx;
+  color: #9B9B9B;
+}
+.paying-wrapper .pay-success .confirm-btn, .paying-wrapper .pay-fail .confirm-btn {
+  margin: 44rpx auto;
+  width: 410rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background-color: #FFAE00;
+  color: #fff;
+  border-radius: 6rpx;
+}
+
+/*红包名单列表页面*/
+.redpacketlist-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  color: #4A4A4A;
+  overflow: auto;
+}
+.redpacketlist-box .rplist-wrapper {
+  text-align: center;
+}
+.redpacketlist-box .rplist-wrapper .head {
+  display: flex;
+  height: 110rpx;
+  align-items: center;
+  font-size: 36rpx;
+  border-bottom: 4rpx solid #C8C8C8;
+}
+.redpacketlist-box .rplist-wrapper .head>view {
+  flex: 1;
+}
+.redpacketlist-box .rplist-wrapper .redpacketlist-scrollview {
+  height: 600rpx;
+}
+.redpacketlist-box .rplist-wrapper .item {
+  display: flex;
+  height: 90rpx;
+  align-items: center;
+  font-size: 36rpx;
+}
+.redpacketlist-box .rplist-wrapper .item>view {
+  flex: 1;
+}
+.redpacketlist-box .rplist-wrapper .item:nth-child(2n+1) {
+  background: #EDF2F6;
+}
+.redpacketlist-box .rplist-wrapper .item .fz12 {
+  font-size: 24rpx;
+}
+
+.redpacketlist-box .button-box {
+  position: absolute;
+  left: 0;
+  bottom: 60rpx;
+  width: 100%;
+  height: 100rpx;
+  font-size: 36rpx;
+  text-align: center;
+}
+.redpacketlist-box .button-box .btn {
+  display: inline-block;
+  width: 250rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: 0 30rpx;
+  border: 1px solid #639EF4;
+  color: #639EF4;
+  border-radius: 6rpx;
+}
+.redpacketlist-box .button-box .refresh {
+  background-color: #639EF4;
+  color: #fff;
+}
+.redpacketlist-box .bottom-hint {
+  position: absolute;
+  left: 0;
+  bottom: 14rpx;
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+/*试卷相关页面，未发出的：paper， 已发出的：quiz*/
+.paper-box, .quiz-box {
+  height: 100%;
+  background-color: #EDF2F6;
+  color: #4A4A4A;
+}
+.paper-box .title, .quiz-box .title, .quizresultdetail-box .title {
+  margin-bottom: 20rpx;
+  line-height: 100rpx;
+  font-size: 40rpx;
+  background-color: #ffffff;
+}
+.paper-box .history-quiz {
+  margin-bottom: 20rpx;
+  background-color: #ffffff;
+  font-size: 34rpx;
+}
+.noborder:before, .noborder:after {
+  border: 0;
+}
+.paper-scrollview {
+  height: 700rpx;
+  background-color: #EDF2F6;
+}
+.quiz-box .paper-scrollview {
+  height: 1000rpx;
+}
+.paper-box .paper-item, .quiz-box .quiz-item {
+  padding: 15rpx 35rpx;
+  background-color: #ffffff;
+}
+.paper-box .paper-item.active {
+  border-left: 4px solid #639EF4;
+}
+.paper-box .paper-name, .quiz-box .quiz-name {
+  font-size: 36rpx;
+}
+.paper-box .paper-pub-btn {
+  display: block;
+  margin: 20rpx auto;
+  width: 550rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 36rpx;
+}
+.paper-box .paper-pub-btn.active {
+  background-color: #639EF4;
+  color: #ffffff;
+}
+/*试卷结果饼图页*/
+.quizresult-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  color: #4A4A4A;
+  overflow: auto;
+}
+.quizresult-box .title  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120rpx;
+  background-color: #ffffff;
+  color: #639EF4;
+}
+.quizresult-box .title .iconfont  {
+  font-size: 90rpx;
+}
+.quizresult-box .fsfb {
+  width: 90%;
+  margin: 0 auto 30rpx;
+  font-size: 36rpx;
+  border-bottom: 1px solid #C8C8C8;
+  color: #4A4A4A;
+}
+.pieSolid {
+  height: 500rpx;
+}
+.canvas {
+  width: 100%;
+  height: 200px;
+}
+.quizresult-box .btn-group button{
+  width: 80%;
+  margin: 10rpx;
+}
+
+/*试卷结果详情表格页*/
+.quizresultdetail-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  color: #4A4A4A;
+  overflow: auto;
+}
+.quizresultdetail-box .list-head {
+  display: flex;
+  height: 100rpx;
+  align-items: center;
+  border-bottom: 1px solid #C8C8C8;
+  font-size: 36rpx;
+}
+.quizresultdetail-box .flex-item {
+  flex: 1;
+}
+.quizresultdetail-scrollview {
+  height: 800rpx;
+}
+.quizresultdetail-box .quizresultdetail-item {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  font-size: 32rpx;
+}
+.quizresultdetail-box .quizresultdetail-item:nth-child(2n+1) {
+  background-color: #EDF2F6;
+}
