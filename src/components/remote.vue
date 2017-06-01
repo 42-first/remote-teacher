@@ -1,29 +1,42 @@
 <!-- 教师遥控器根组件 -->
 <template>
-  <div class="rc-home">
-    <div class="detail">
-      <div>
-        当前幻灯片<span class="">{{current}}/{{total}}</span>
+  <div class="root">
+    <div class="rc-home">
+      <!-- 当前幻灯片 -->
+      <div class="card-box upper">
+        <div class="detail">
+          <div>
+            当前幻灯片<span class="ct">{{current}}/{{total}}</span>
+          </div>
+          <div  class="pubpblm_or_check_answer">查看答案</div>
+        </div>
+        <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
-      <div  class="pubpblm_or_check_answer">查看答案</div>
-    </div>
-    <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
-    <div>下一张幻灯片</div>
-    <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
-    <Toolbar></Toolbar>
-    <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
-    <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
-      <component :is="initiativeCtrlMaskTpl"></component>
+      <!-- 下一张幻灯片 -->
+      <div class="card-box downer">
+        <div class="detail">下一张幻灯片</div>
+        <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
+      </div>
+      <!-- 工具栏 -->
+      <Toolbar></Toolbar>
     </div>
 
-    <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
-    <div class="rc-mask" v-show="!isToastCtrlMaskHidden">
-      <component :is="toastCtrlMaskTpl"></component>
-    </div>
+    <!-- 蒙版层 -->
+    <div class="templates">
+      <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
+      <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
+        <component :is="initiativeCtrlMaskTpl"></component>
+      </div>
 
-    <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
-    <div class="rc-mask" v-show="!isMsgMaskHidden">
-      <component :is="msgMaskTpl"></component>
+      <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
+      <div class="rc-mask" v-show="!isToastCtrlMaskHidden">
+        <component :is="toastCtrlMaskTpl"></component>
+      </div>
+
+      <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
+      <div class="rc-mask" v-show="!isMsgMaskHidden">
+        <component :is="msgMaskTpl"></component>
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +45,7 @@
   /*样式清零*/
   html, body {height: 100%;}
   @import "~@/style/base";
+  @import "~@/style/font/iconfont/iconfont.css";
   @import "~@/style/remote";
 </style>
 
@@ -52,7 +66,7 @@ export default {
       isBrandNewPPT: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
-      isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
+      isMsgMaskHidden: true,                 // 蒙版隐藏，错误信息类
       isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
       isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
       isSocketConnected: false,               // WebSocket 已连接

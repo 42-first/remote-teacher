@@ -2,6 +2,7 @@
  * @module 直接借鉴小程序的样式文件，小程序不支持 sass 语法， 直接用的 css 格式
  */
 
+.root {position: relative; height: 100%;}
 .rc-home  {
   display: flex;
   height: 100%;
@@ -10,20 +11,50 @@
   background: #000000;
   color: #ffffff;
   font-size: 25px;
+  /*卡片单元*/
+  .card-box {
+    height: 6.613333rem;
+    overflow: hidden;
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 0.666667rem;
+      margin-bottom: 0.266667rem;
+      font-size: 14px;
+      padding-left: 0.56rem;
+
+      .ct {
+        margin-left: 0.693333rem;
+        font-size: 18px;
+      }
+      .pubpblm_or_check_answer {
+        margin-right: 20rpx;
+      }
+    }
+    
+  }
+  .upper {
+    margin-top: 0.666667rem;
+  }
+  .downer {
+    opacity: 0.8;
+  }
+  .card {
+    width: 100%;
+  }
 }
-.rc-home .card {
-  width: 100%;
+
+[data-dpr="2"] .rc-home .detail {
+  font-size: 28px;
+  .ct {
+    font-size: 36px;
+  }
 }
-.detail {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 0.666667rem;
-  margin-bottom: 0.266667rem;
-}
-.detail .pubpblm_or_check_answer {
-  margin-right: 20rpx;
-}
+
+
+
 
 .rc-mask {
   position: absolute;
