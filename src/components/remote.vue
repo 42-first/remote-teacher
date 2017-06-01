@@ -8,7 +8,7 @@
           <div>
             当前幻灯片<span class="ct">{{current}}/{{total}}</span>
           </div>
-          <div  class="pubpblm_or_check_answer">查看答案</div>
+          <div  class="btn pubpblm_or_check_answer">查看答案</div>
         </div>
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>

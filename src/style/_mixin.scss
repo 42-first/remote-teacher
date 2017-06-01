@@ -1,0 +1,18 @@
+@import "./_variables";
+
+@mixin button(){
+	.btn {
+		font-size: 16px;
+		color: $white;
+		text-align: center;
+		background: $blue;
+		text-decoration: none;
+		border-radius: 5px;
+		height: 0.906667rem;
+		line-height: 0.906667rem;
+	}
+	[data-dpr="2"] .btn {
+		font-size: 32px;
+	}
+}
+	

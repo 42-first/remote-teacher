@@ -2,6 +2,10 @@
  * @module 直接借鉴小程序的样式文件，小程序不支持 sass 语法， 直接用的 css 格式
  */
 
+ @import "./_variables";
+ @import "./_mixin";
+ @include button;
+
 .root {position: relative; height: 100%;}
 .rc-home  {
   display: flex;
@@ -20,7 +24,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 0.666667rem;
+      height: 0.906667rem;
       margin-bottom: 0.266667rem;
       font-size: 14px;
       padding-left: 0.56rem;
@@ -30,7 +34,8 @@
         font-size: 18px;
       }
       .pubpblm_or_check_answer {
-        margin-right: 20rpx;
+        margin-right: 0.453333rem;
+        width: 2.4rem;
       }
     }
     
