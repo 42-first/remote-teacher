@@ -1,5 +1,6 @@
 @import "./_variables";
 
+/*蓝底白字定高不定宽的按钮*/
 @mixin button(){
 	.btn {
 		font-size: 16px;
