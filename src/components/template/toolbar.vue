@@ -6,10 +6,10 @@
 		    <div class="bulb"></div>
 		    <div>遥控器</div>
 		  </div>
-		  <div class="tool-item" bindtap="showThumbnail">
+		  <v-touch class="tool-item" v-on:tap="showThumbnail">
 		    <i class="iconfont icon-cascades"></i>
 		    缩略图
-		  </div>
+		  </v-touch>
 		  <div class="tool-item" bindtap="showPaperQuiz">
 		    <i class="iconfont icon-exercise"></i>
 		    课堂动态
@@ -124,7 +124,7 @@
 </style>
 
 <script>
-/* eslint-disable no-undef, no-unreachable, no-unused-vars */
+/* eslint-disable  */
 
 import request from '@/util/request'
 import API from '@/config/api'
@@ -137,18 +137,16 @@ export default {
     }
   },
   created () {
-    this.lessonid = this.$route.params.lessonid
-    // TODO 在hello中才能fetch
-    this.fetchPPTData()
+
   },
   methods: {
     /**
-     * 获取ppt数据
+     * 点开缩略图按钮
      *
      */
-    fetchPPTData () {
+    showThumbnail () {
+    	console.log(800)
     }
   }
 }
 </script>
-

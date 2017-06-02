@@ -4,7 +4,7 @@
     <div id="rc-home" class="rc-home">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
-        <div class="detail">
+        <div class="detail dontcallback">
           <div>
             当前幻灯片<span class="ct">{{current}}/{{total}}</span>
           </div>
@@ -18,7 +18,7 @@
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
-      <Toolbar></Toolbar>
+      <Toolbar class="dontcallback"></Toolbar>
     </div>
 
     <!-- 蒙版层 -->
@@ -40,14 +40,6 @@
     </div>
   </div>
 </template>
-
-<style lang="scss">
-  /*样式清零*/
-  html, body {height: 100%;}
-  @import "~@/style/base";
-  @import "~@/style/font/iconfont/iconfont.css";
-  @import "~@/style/remote";
-</style>
 
 <script>
 /* eslint-disable no-undef, no-unreachable, no-unused-vars, no-new */
@@ -96,14 +88,14 @@ export default {
     this.fetchPPTData()
   },
   mounted () {
-    console.log(99)
-    console.log(PreventMoveOverScroll)
     // 阻止微信露底 list中都是ID
     new PreventMoveOverScroll({
       list: ['rc-home']
     }, function (opAction) {
       if (opAction.isTap) {
+        console.log(88)
       } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
+        console.log(99)
       }
     })
   },
@@ -141,3 +133,10 @@ export default {
 }
 </script>
 
+<style lang="scss">
+  /*样式清零*/
+  html, body {height: 100%;}
+  @import "~@/style/base";
+  @import "~@/style/font/iconfont/iconfont.css";
+  @import "~@/style/remote";
+</style>
