@@ -22,7 +22,7 @@
     </div>
 
     <!-- 蒙版层 -->
-    <div class="templates">
+    <div id="templates" class="templates dontcallback">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component :is="initiativeCtrlMaskTpl"></component>
@@ -35,14 +35,14 @@
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
       <div class="rc-mask" v-show="!isMsgMaskHidden">
-        <component :is="msgMaskTpl"></component>
+        <component :is="msgMaskTpl" :err-type="2"></component>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-/* eslint-disable no-undef, no-unreachable, no-unused-vars, no-new */
+/* eslint-disable no-undef, no-new */
 
 import request from '@/util/request'
 import API from '@/config/api'
@@ -60,7 +60,7 @@ export default {
       isBrandNewPPT: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
-      isMsgMaskHidden: true,                 // 蒙版隐藏，错误信息类
+      isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
       isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
       isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
       isSocketConnected: false,               // WebSocket 已连接
@@ -90,7 +90,7 @@ export default {
   mounted () {
     // 阻止微信露底 list中都是ID
     new PreventMoveOverScroll({
-      list: ['rc-home']
+      list: ['rc-home', 'templates']
     }, function (opAction) {
       if (opAction.isTap) {
         console.log(88)

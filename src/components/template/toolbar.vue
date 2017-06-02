@@ -41,6 +41,30 @@
 	</div>
 </template>
 
+<script>
+
+export default {
+  name: 'Tollbar',
+  data () {
+    return {
+      lessonid: 0
+    }
+  },
+  created () {
+
+  },
+  methods: {
+    /**
+     * 点开缩略图按钮
+     *
+     */
+    showThumbnail () {
+      console.log(800)
+    }
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 /*下方工具栏*/
 .rc-toolbar {
@@ -78,13 +102,13 @@
 [data-dpr="2"] .rc-toolbar {
   font-size: 24px;
   .iconfont {
-  	font-size: 33px;
+    font-size: 33px;
   }
 }
 [data-dpr="3"] .rc-toolbar {
   font-size: 36px;
   .iconfont {
-  	font-size: 48px;
+    font-size: 48px;
   }
 }
 
@@ -122,31 +146,3 @@
 }
 .icon-danmu-open {color: #28cf6e;}
 </style>
-
-<script>
-/* eslint-disable  */
-
-import request from '@/util/request'
-import API from '@/config/api'
-
-export default {
-  name: 'Tollbar',
-  data () {
-    return {
-      lessonid: 0
-    }
-  },
-  created () {
-
-  },
-  methods: {
-    /**
-     * 点开缩略图按钮
-     *
-     */
-    showThumbnail () {
-    	console.log(800)
-    }
-  }
-}
-</script>
