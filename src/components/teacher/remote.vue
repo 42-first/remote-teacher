@@ -94,7 +94,8 @@ export default {
     self.pmos()
     self.killMask()
   },
-  methods: Object.assign({}, switches, {
+  mixins: [switches],
+  methods: {
     /**
      * 模仿微信小程序的 setData 用法，简易设置data
      *
@@ -153,7 +154,7 @@ export default {
         }
       })
     }
-  })
+  }
 }
 </script>
 
