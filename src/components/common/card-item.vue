@@ -1,51 +1,108 @@
 /*
- * 表格单元格 二级页面 课程中学生综合榜单
+ * 学生接收器 timeline item
  * @author: chenzhou
- * @update: 2017.4.18
+ * @update: 2017.5.31
  */
 
 <template>
-  <!-- 表格单元格 -->
-  <div v-if="column&&item">
+  <!--  -->
+  <section class="timeline-item" v-if="item">
 
-    <!-- type : 1序号 2文本 3用户名 4百分比 5分数 6日期 7数字 8标题(图标) 9查看详情 10反馈内容，弹幕内容 -->
-    <template v-if="column.type==1"><p class="table-cell number">{{ item[column.key] }}</p></template>
-    <template v-else-if="column.type==2"><p :class="[column.isLeft ? 'tl' : '', 'table-cell']">{{ item[column.key] }}</p></template>
-     <template v-else-if="column.type==10"><p :class="[column.isLeft ? 'tl' : '', 'table-cell']">“{{ item[column.key] }}”</p></template>
-    <template v-else-if="column.type==4"><p class="rate table-cell">{{ parseInt(item[column.key] * 100)}}% </p></template>
-    <template v-else-if="column.type==5"><p class="score table-cell number">{{ item[column.key] }}</p></template>
-    <template v-else-if="column.type==3">
-      <div class="student table-cell">
-        <img class="avatar" :src="item.avatar" />
-        <p class="name">{{ item[column.key] }}</p>
+    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 -->
+    <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
+    <!-- ppt模板 -->
+    <template v-else-if="item.type==2">
+      <div class="timeline__ppt">
+        <span class="ppt--pageno f14">第{{ item.pageIndex }}页</span>
+        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
+          <img class="cover" :src="item.src" >
+        </div>
+        <div class="ppt-footer">
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
+          <div class="ppt__opt f15" :data-pageindex="item.pageIndex" :data-presentationid="item.presentationid">
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleQuestion(item.pageIndex, item.presentationid)">不懂</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleStore(item.pageIndex, item.presentationid)">收藏</p>
+          </div>
+        </div>
       </div>
     </template>
-    <template v-else-if="column.type==6"><p class="datetime table-cell" v-line>{{ item[column.key]|date('YYYY-MM-DD HH:mm:ss') | newLine}}</p></template>
-    <template v-else-if="column.type==9"><p class="link table-cell">{{ column['title'] }}</p></template>
-    <template v-else-if="column.type==8">
-      <div class="log-title table-cell">
-        <p class="log-icon"><i :class="item.type|getTypeIcon"></i></p>
-        <p class="title">{{ item[column.key] }}</p>
+    <!-- 试卷模板 -->
+    <template v-else-if="item.type==4">
+      <div class="timeline__paper">
+        <div class="">
+          <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
+            <div class="paper-txt f18">
+              <p class="paper-name">{{ item.papername }}</p>
+              <p class="paper-count">共{{ item.count }}题</p>
+            </div>
+            <div class="">
+              <!-- http://sfe.ykt.io/o_1bhh6gui01h1nirm1l7j2gt12tv9.png -->
+              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
+            </div>
+          </a>
+        </div>
+        <div class="item-footer">
+          <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- 红包模板 -->
+    <template v-else-if="item.type==5">
+      <div class="timeline__paper">
+        <div :class="['paper-info', 'hongbao']">
+            <div class="paper-txt f18">
+              <p class="paper-name">{{ item.caption }}</p>
+            </div>
+            <div class="">
+              <!--  http://sfe.ykt.io/o_1bhhfttettbskmu8u61vd91plse.png -->
+              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
+            </div>
+        </div>
+        <div class="item-footer">
+          <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- 习题模板 -->
+    <template v-else-if="item.type==3">
+     <div class="timeline__paper">
+        <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :data-quizid="item.quizid">
+            <div class="paper-txt f18">
+              <p class="paper-name">{{ item.caption }}</p>
+              <p class="paper-count">第{{ item.pageIndex }}题</p>
+            </div>
+            <div class="">
+              <!-- http://sfe.ykt.io/o_1bhhfkpq9nu21eua1uf71a6519pj9.png -->
+              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">
+            </div>
+        </div>
+        <div class="item-footer">
+          <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
       </div>
     </template>
 
-  </div>
+  </section>
 
 </template>
 <script>
-  import Vue from 'vue'
-  Vue.directive('line', {
-      inserted: function (el) {
-          let $this = $(el);
-          let $text = $this.text();
-          $this.html($text.replace(/\s/, '<br/>'))
-      }
-  })
+  import timeago from 'timeago.js';
+
+  // 在这里设置相对时间
+  var timeagoInstance = timeago(null, new Date());
+
   export default {
-    name: 'Cell',
+    name: 'card-item',
     props: {
-      index: null,
-      column: null,
       item: null
     },
     data() {
@@ -58,39 +115,9 @@
 
     },
     filters: {
-        getTypeIcon(type){
-        let iconClass = 'icon-beforeclass';
-
-        if(type) {
-          switch(type) {
-            // 课前
-            case 1:
-            case 2:
-              iconClass = 'icon-before-class'
-              break;
-
-            // 课中
-            case 3:
-              iconClass = 'icon-classroom'
-              break;
-            // 课后
-            case 4:
-            case 5:
-              iconClass = 'icon-after-class'
-              break;
-
-            default:
-              iconClass = 'icon-classroom';
-               break;
-          }
-
-        }
-
-        return `iconfont ${iconClass}`;
-        },
-        newLine(time){
-            return time.replace(/\s+/gi, "\r\n");
-        }
+      getTimeago(time) {
+        return timeagoInstance.format(time, 'zh_CN');
+      }
     },
     methods: {
     },
@@ -104,82 +131,162 @@
 </script>
 
 <style lang="scss">
+
+  .timeline-item {
+    margin: 0 auto;
+    width: calc(100% - 0.906667rem);
+    border-bottom: 1px solid #C8C8C8;
+  }
+
+
   /*--------------------*\
-    $ 表格中单元格内容
+    $ common
+  \*--------------------*/
+
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /*--------------------*\
+    $ event消息
+  \*--------------------*/
+
+  .timeline__msg {
+    margin: 0.4rem auto;
+    width: 5.333333rem;
+    height: 0.8rem;
+    line-height: 0.8rem;
+
+    text-align: center;
+    color: #fff;
+    background: #9B9B9B;
+
+    border-radius: 0.4rem/50%;
+  }
+
+
+
+  /*--------------------*\
+    $ ppt模板
   \*--------------------*/
 
 
-  .table-cell {
-    font-size: 16px;
-    color: #4a4a4a;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-break: break-all;
-    box-sizing: border-box;
-  }
+  .timeline__ppt {
+    position: relative;
+    margin: 0.266667rem auto 0.4rem;
+    width: 100%;
 
-  .header .table-cell {
-    font-size: 18px;
-  }
+    .ppt__cover--wrapper {
+      margin: 0 auto 0.32rem;
+      width: 100%;
 
-  .table-cell.tl {
-    text-align: left;
-    padding: 0 30px 0 30px;
-  }
-
-  .table-cell.student {
-    display: flex; align-items: flex-start; justify-content: flex-start;
-    font-size: 14px;
-    padding-left: 25px;
-
-    .avatar {
-      display: block;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-    }
-    .name {
-      padding-left: 7px;
-      max-width: 58px;
-      line-height: 30px;
+      border: 1px solid #C8C8C8;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
 
-  .table-cell.score {
-    font-size: 24px;
-    color: #639EF4;
-  }
-
-  .link {
-    color: #639EF4;
-  }
-
-  .table-cell.datetime {
-    margin: auto;
-    font-size: 14px;
-  }
-
-  .log-title {
-    display: flex; align-items: flex-start; justify-content: flex-start;
-    padding-left: 40px;
-    line-height: 50px;
-
-    .log-icon {
-      i {
-        /*color: #639EF4;*/
-        font-size: 36px;
+      .cover {
+        display: block;
+        width: 100%;
       }
     }
 
-    .title {
-      padding-left: 15px;
+    .ppt--pageno {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      padding: 6px 14px;
+      color: #fff;
+      background: rgba(37,37,37, 0.6);
+    }
+
+    .ppt-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .ppt__opt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .ppt--action {
+          margin-left: 0.266667rem;
+          width: 1.6rem;
+          height: 0.666667rem;
+
+          color: #639EF4;
+          border: 1px solid #639EF4;
+          border-radius: 0.333333rem/50%;
+        }
+
+        .selected {
+          color: #fff;
+          background: #639EF4;
+        }
+      }
     }
 
   }
 
+
+
+  /*--------------------*\
+    $ 试卷模板
+  \*--------------------*/
+
+
+  .timeline__paper {
+    margin: 0.4rem auto;
+
+    .paper-info {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 0.266667rem;
+      padding: 0.28rem 0.586667rem 0.32rem 0.4rem;
+
+      color: #FFFFFF;
+      background: rgba(40,207,110,0.7);
+
+      border-radius: 4px;
+
+      .paper-txt {
+        text-align: left;
+      }
+    }
+
+    .paper-info.xt {
+      background: rgba(99,158,244,0.7);
+    }
+
+    .paper-info.hongbao {
+      color: #FFE595;
+      background: #e64340;
+    }
+
+    .paper-info.complete,
+    .paper-info.xt.complete {
+      background: #C8C8C8;
+    }
+
+    .paper-icon {
+      display: block;
+      width: 1.386667rem;
+    }
+  }
+
+
 </style>
+
+
+
+
+
+
+
+
+

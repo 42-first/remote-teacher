@@ -8,34 +8,64 @@
 
 <template>
   <section class="page">
-    <!-- header 返回 弹幕 投稿 标题 -->
-    <header class="student__header">
-      <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
-      <h3 class="header-title f18">学生遥控器</h3>
-      <div class="student__header--more">
-        <i class="iconfont icon-add f25"></i>
-        <div class="none"></div>
-      </div>
-    </header>
+    <section class="page-fixed">
+      <!-- header 返回 弹幕 投稿 标题 -->
+      <header class="student__header">
+        <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
+        <h3 class="header-title f18">{{ title }}</h3>
+        <div class="student__header--more">
+          <i class="iconfont icon-add f25"></i>
+          <div class="none"></div>
+        </div>
+      </header>
 
-    <!-- tab  -->
-    <section class="">
-      <ul class="student__tabs f15">
-        <li class="tab-item curr">全部</li>
-        <li class="tab-item">PPT</li>
-        <li class="tab-item">习题</li>
-        <li class="tab-item">试卷</li>
-        <li class="tab-item">红包</li>
+      <!-- tab  -->
+      <ul class="student__tabs f15" @click="handleShowTab">
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">全部</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">PPT</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']"data-index="3">习题</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']"data-index="4">试卷</li>
+        <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5">红包</li>
       </ul>
+    </section>
+
+
+    <!-- 接收器 时间轴 -->
+    <section class="student__timeline-wrapper">
+      <loadmore :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
+
+        <section class="student__timeline">
+          <!-- 时间轴内容列表 -->
+          <div class="timeline-wrapper" v-for="item in cards">
+            <Card-Item-Component :item="item" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+          </div>
+        </section>
+
+        <!--  <div slot="top" class="mint-loadmore-top">
+          <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
+          <span v-show="topStatus === 'loading'">Loading...</span>
+        </div> -->
+
+      </loadmore>
+    </section>
+
+
+    <!-- 接收器 新消息提醒 -->
+    <section class="student__msg">
+      <!-- <p class="">您有新的课堂动态</p> -->
     </section>
 
   </section>
 </template>
 <script>
-  import moment from 'moment'
-  import request from '@/util/request';
-  import _ from 'underscore';
-  import wsmixin from '@/components/student/student-socket';
+  // import moment from 'moment'
+  // import Promise from 'bluebird'
+  import request from '@/util/request'
+  import API from '@/util/Api'
+  // import _ from 'underscore'
+  import CardItemComponent from '@/components/common/card-item.vue'
+  import wsmixin from '@/components/student/student-socket'
+  import actionsmixin from '@/components/student/actions-mixin'
 
   export default {
     name: 'student-page',
@@ -43,6 +73,11 @@
     },
     data() {
       return {
+        isResetSocket: false,
+        socket: null,
+        topStatus: '',
+        //
+        title: '',
         // 课程ID
         lessonID: 0,
         // pptID
@@ -54,16 +89,25 @@
         userAuth: 0,
 
         // 当前tab下标
-        currTabIndex: 0,
+        currTabIndex: 1,
 
         // 是否观看模式
         observerMode: false,
         presentationList: null,
+        presentationMap: new Map(),
         quizList: null,
+        quizMap: new Map(),
+        // timeline列表
+        cards: [],
+        // 记录全部的事件
+        allEvents: [],
+        // 时间轴数据
+        timeline: {},
         commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
     },
     components: {
+      CardItemComponent
     },
     computed: {
     },
@@ -73,58 +117,156 @@
     },
     filters: {
     },
-    mixins: [ wsmixin],
+    mixins: [ wsmixin, actionsmixin ],
     methods: {
       /*
       * @method 接收器初始化
       */
       init(){
         let self = this;
+
+        this.lessonID = this.$route.params.lessonID;
+
+        this.iniTimeline(this.lessonID);
+      },
+      /*
+      * @method 等事件
+      */
+      initEvent() {
+
       },
       /*
       * @method 直播悬停反面等事件
       */
-      initEvent(){
+      iniTimeline() {
+        let self = this;
+        // this.getPresentationList();
 
+        Promise.all([this.getPresentationList()]).then(()=>{
+          self.testTimeline();
+        });
+      },
+
+     /*
+      * @method 测试环境初始化timeline
+      */
+      testTimeline() {
+        this.addMessage({ type: 1, message:"开课啦" });
+
+        this.addPPT({ type: 2, pageIndex:1, time: Date.now(), presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:2, time: "2017-01-15 12:00:00", presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:3, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:3, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
+
+        this.addPaper({ type: 4, title:"xxx", total: 10, quiz: 1, time: "2017-05-15 12:00:00" });
+        this.addPaper({ type: 4, title:"试卷测试数据", total: 12, quiz: 12, time: "2017-05-18 12:00:00" });
+
+        this.addProblem({ type: 3, pageIndex: 4, time:"2016-01-15 12:00:00", presentationid: this.presentationID });
+        this.addProblem({ type: 3, pageIndex: 5, time:"2016-01-15 12:00:00", presentationid: this.presentationID });
+
+        this.addHongbao({ type: 5, probid: 5, time: "2017-01-15 12:00:00", count: 5 });
       },
 
       /*
       * @method 读取直播的课程列表和auth信息
       * @param  init: 是否初始化socket
       */
-      getLiveLessons(init) {
+      getPresentationList() {
         let self = this;
-        let URL = '';
+        let URL = API.student.GET_PRESENTATION_LIST;
         let alessonids = [];
         let unLivePool = [];
-
-        if (process.env.NODE_ENV === 'production') {
-          URL = '/edu_admin/president/get_on_lessons/';
-        } else {
-          URL = '/static/mock/live/live.json';
+        let param = {
+          "lessonID": this.lessonID
         }
 
-        // lessons
-        request.get(URL)
-          .then(function (res) {
-            if(res.data.success) {
-              let data = res.data.data;
+        // if (process.env.NODE_ENV === 'production') {
+        // }
 
+        // lessons
+        return request.get(URL, param)
+          .then(function (data) {
+            if(data) {
+              self.presentationList = data.presentationList;
+              self.quizList = data.quizList;
+
+              // set presentation map
+              if(self.presentationList.length) {
+                self.presentationID = self.presentationList[0].presentationID;
+
+                for(let i = 0; i < self.presentationList.length; i++) {
+                  let presentation = self.presentationList[i];
+                  let pptData = presentation['Slides'];
+
+                  if(pptData.length) {
+                    pptData.forEach( (slide, index) => {
+                      // 收藏 不懂
+                      if( slide['Tag'] && slide['Tag'].length ) {
+                        slide['Tag'].forEach((tag)=>{
+                          tag === 1 && (slide['question'] = 1);
+                          tag === 2 && (slide['store'] = 1);
+                        })
+                      }
+
+                      // 问题结果
+                      if (slide['Problem'] && slide['Result']) {
+                        slide['Problem']['Result'] = slide['Result'];
+                      }
+                    });
+
+                    presentation['Slides'] = pptData;
+                  }
+
+                  self.presentationMap.set(presentation.presentationID, presentation);
+                }
+              }
+
+              // set quiz map
+              if(self.quizList.length) {
+                self.quizList.forEach( function(quiz, index) {
+                  self.quizMap.set(quiz.quizID, quiz);
+                });
+              }
+
+              // set title
+              let presentation = self.presentationMap.get(self.presentationID);
+              self.title = document.title = presentation.Title;
+
+              return data;
             }
-          })
-          .catch(function (error) {
-            console.log(error);
           });
       },
-
       /*
-       * @method 浏览器窗口变化数据变化
-       * 比例 4:3 16:9
-       */
-      handleResize() {
-        // 比例根据PPT计算下
-        let iHeight = $(window).height()-70;
-        let iWidth = iHeight * (16/9);
+      * @method 下拉刷新回调
+      * @param
+      */
+      refeshLoad(id) {
+        setTimeout(()=>{
+          this.$refs.loadmore.onTopLoaded();
+          this.addPPT({ type: 2, pageIndex: 6, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
+        }, 1500)
+      },
+      /*
+      * @method 下拉刷新touchend 回调
+      * @param
+      */
+      translateChange(translate) {
+        if(this.$refs.loadmore.topStatus === 'loading') {
+          this.$refs.loadmore.translate = 100;
+        }
+      },
+      /*
+      * @method 展示tab选项
+      * @param
+      */
+      handleShowTab() {
+        let target = event.target;
+        let tabIndex = +target.dataset['index'];
+
+        if(tabIndex) {
+          this.currTabIndex = tabIndex;
+        }
+
       },
       /*
        * @method 返回上一页
@@ -148,12 +290,37 @@
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
 
+  /*------------------*\
+    $ 组件样式重写
+  \*------------------*/
+
+  .mint-loadmore-spinner {
+    width: 0.533333rem !important;
+    height: 0.533333rem !important;
+  }
+
+  .mint-loadmore-top, .mint-loadmore-bottom {
+    margin-top: -1.333333rem;
+    text-align: center;
+    height: 1.333333rem !important;
+    line-height: 1.333333rem !important;
+    font-size: 0.426667rem;
+  }
+
   .page {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+  }
+
+  .page-fixed {
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 
 
@@ -179,26 +346,12 @@
 
     .header-title {
       flex: 1;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
-
-  /*
-  .student__header:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: auto;
-    top: 1.33rem;
-    height: 1px;
-    width: 100%;
-    background-color: #c4c4c4;
-    display: block;
-    z-index: 15;
-    -webkit-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
-  }
-  */
 
 
 
@@ -214,7 +367,7 @@
     justify-content: space-around;
 
     height: 1rem;
-
+    background: #fff;
     box-shadow: 0 4px 6px rgba(0,0,0, 0.2);
 
     .tab-item {
@@ -228,6 +381,32 @@
       border-bottom: 4px solid #639EF4;
     }
 
+  }
+
+
+
+  /*-------------------*\
+    $ 时间轴 列表
+  \*-------------------*/
+
+
+  .student__timeline-wrapper {
+    position: absolute;
+    top: 2.33rem;
+    left: 0;
+  }
+
+  .student__timeline {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+
+    width: 10rem;
+
+    .timeline-wrapper {
+      width: 100%;
+    }
   }
 
 
