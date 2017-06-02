@@ -1,6 +1,13 @@
 import axios from 'axios'
 import Promise from 'bluebird'
 
+// Promise
+window.Promise = window.Promise || Promise;
+
+// require('bluebird', function(Promise) {
+//   window.Promise = window.Promise || Promise;
+// })
+
 const handleResponse = (res) => {
   console.log('handleResponse', res.data)
 

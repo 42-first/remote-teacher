@@ -1,10 +1,16 @@
+import 'mint-ui/lib/loadmore/style.css';
+
 import Vue from 'vue'
 import Router from 'vue-router'
+import FastClick from 'fastclick'
+import Loadmore from 'mint-ui/lib/loadmore';
 import StudentPresentation from '@/components/student/student-presentation'
 import PPT from '@/components/student/ppt'
-import Hello from '@/components/Hello'
 
 Vue.use(Router)
+Vue.component('loadmore', Loadmore);
+
+FastClick.attach(document.body)
 
 export default new Router({
   base: process.env.NODE_ENV == 'production' ? "/remote" : "/",
@@ -14,7 +20,7 @@ export default new Router({
     {
       path: '/',
       name: 'onfound',
-      component: Hello,
+      component: PPT,
     },
     {
       path: '/:lessonID',
