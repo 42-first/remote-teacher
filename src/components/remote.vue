@@ -1,9 +1,9 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root">
-    <div class="rc-home">
+    <div id="rc-home" class="rc-home">
       <!-- 当前幻灯片 -->
-      <div class="card-box upper">
+      <div id="upper" class="card-box upper">
         <div class="detail">
           <div>
             当前幻灯片<span class="ct">{{current}}/{{total}}</span>
@@ -13,7 +13,7 @@
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
-      <div class="card-box downer">
+      <div id="downer" class="card-box downer">
         <div class="detail">下一张幻灯片</div>
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
@@ -50,12 +50,14 @@
 </style>
 
 <script>
-/* eslint-disable no-undef, no-unreachable */
+/* eslint-disable no-undef, no-unreachable, no-unused-vars, no-new */
 
 import request from '@/util/request'
 import API from '@/config/api'
 import Toolbar from '@/components/template/toolbar'
 import RcMaskErrormsg from '@/components/template/rc-mask-errormsg'
+// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
+import '@/util/preventoverscroll'
 
 export default {
   name: 'Remote',
@@ -92,6 +94,18 @@ export default {
     this.lessonid = this.$route.params.lessonid
     // TODO 在hello中才能fetch
     this.fetchPPTData()
+  },
+  mounted () {
+    console.log(99)
+    console.log(PreventMoveOverScroll)
+    // 阻止微信露底 list中都是ID
+    new PreventMoveOverScroll({
+      list: ['rc-home']
+    }, function (opAction) {
+      if (opAction.isTap) {
+      } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
+      }
+    })
   },
   methods: {
     /**

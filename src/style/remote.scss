@@ -41,7 +41,7 @@
     
   }
   .upper {
-    margin-top: 0.666667rem;
+    padding-top: 0.666667rem;
   }
   .downer {
     opacity: 0.8;
@@ -57,7 +57,12 @@
     font-size: 36px;
   }
 }
-
+[data-dpr="3"] .rc-home .detail {
+  font-size: 42px;
+  .ct {
+    font-size: 54px;
+  }
+}
 
 
 

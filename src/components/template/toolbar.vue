@@ -81,6 +81,12 @@
   	font-size: 33px;
   }
 }
+[data-dpr="3"] .rc-toolbar {
+  font-size: 36px;
+  .iconfont {
+  	font-size: 48px;
+  }
+}
 
 .rc-toolbar.online .bulb {
   border-radius: 50%;
