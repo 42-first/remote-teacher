@@ -49,7 +49,8 @@ import API from '@/config/api'
 import Toolbar from '@/components/teacher/template/toolbar'
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
-import '@/util/preventoverscroll'
+import '@/util/teacher-util/preventoverscroll'
+import switches from '@/util/teacher-util/switches'
 
 export default {
   name: 'Remote',
