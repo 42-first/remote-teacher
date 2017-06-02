@@ -1,6 +1,6 @@
 # remote-teacher
 
-> 雨课堂教师遥控器
+> 雨课堂遥控器接收器
 
 ## Build Setup
 

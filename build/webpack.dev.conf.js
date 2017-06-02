@@ -28,6 +28,14 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
+      chunks: ['app'],
+      inject: true
+    }),
+    // 学生接收器
+    new HtmlWebpackPlugin({
+      filename: 'student.html',
+      template: './src/pages/student/student.html',
+      chunks: ['student'],
       inject: true
     }),
     new FriendlyErrorsPlugin()

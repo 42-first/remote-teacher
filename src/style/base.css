@@ -1,3 +1,19 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font: 14px/1.5 -apple-system-font,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color: #4A4A4A;
+  /*background-color: #EDF2F6;*/
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/*-----------------------------*\
+    $ 样式重置 reset
+\*-----------------------------*/
+
 body, div, dl, dt, dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote，th,td{margin:0;padding:0;}
 table{border-collapse:collapse;border-spacing:0;}
 fieldset,img {border:0;}
@@ -5,49 +21,72 @@ address,caption, cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:no
 ol,ul {list-style:none;}
 caption,th{text-align:left;}
 h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
-q:before, q:after{content:' '}
+
+q:before, q:after{content:' ';}
 abbr,acronym{border:0;}
-a{
-    text-decoration:none;
+a {text-decoration:none;}
+
+
+/*-----------------------------*\
+    $ 基本字体大小
+\*-----------------------------*/
+
+[data-dpr="1"] .f12 {
+  font-size: 12px;
+}
+[data-dpr="2"] .f12 {
+    font-size: 24px;
+}
+[data-dpr="3"] .f12 {
+  font-size: 36px;
 }
 
-.f12{font-size:12px;}
-.f13{font-size:13px;}
-.f14{font-size:14px;}
-.f16{font-size:16px;}
-.f18{font-size:18px;}
-.f20{font-size:20px;}
-.f24{font-size: 24px;}
-.fb{font-weight:bold;}
-.fn{font-weight:normal;}
-.t2{text-indent:2em;}
-.lh150{line-height:150%}
-.lh180{line-height:180%}
-.lh200{line-height:200%}
-.unl{text-decoration:underline;}
-.no_unl{text-decoration:none;}
-
-
-.tl{text-align:left;}
-.tc{text-align:center;}
-.tr{text-align:right;}
-.bc{margin-left:auto;margin-right:auto;}
-.fl{float:left;display:inline;}
-.fr{float:right;display:inline;}
-.cb{clear:both;}
-.cl{clear:left;}
-.cr{clear:right;}
-.clearfix:after{content:'.';display:block;height:0;clear:both;visibility:hidden}
-.clearfix{display:inline-block;}
-.vm{vertical-align:center;}
-.pr{position:relative;}
-.pa{position:absolute;}
-.abs-right{position:absolute;right:0;}
-.zoom{zoom:1}
-.hidden{visibility:hidden;}
-.none{display:none;}
-
-.ellipsis{
-    white-space:nowrap;text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow: hidden;
+[data-dpr="1"] .f14 {
+  font-size: 14px;
+}
+[data-dpr="2"] .f14 {
+    font-size: 28px;
+}
+[data-dpr="3"] .f14 {
+  font-size: 42px;
 }
 
+[data-dpr="1"] .f15 {
+  font-size: 15px;
+}
+[data-dpr="2"] .f15 {
+    font-size: 30px;
+}
+[data-dpr="3"] .f15 {
+  font-size: 45px;
+}
+
+[data-dpr="1"] .f16 {
+  font-size: 16px;
+}
+[data-dpr="2"] .f16 {
+    font-size: 32px;
+}
+[data-dpr="3"] .f16 {
+  font-size: 48px;
+}
+
+[data-dpr="1"] .f18 {
+  font-size: 18px;
+}
+[data-dpr="2"] .f18 {
+    font-size: 36px;
+}
+[data-dpr="3"] .f18 {
+  font-size: 48px;
+}
+
+[data-dpr="1"] .f25 {
+  font-size: 25px;
+}
+[data-dpr="2"] .f25 {
+    font-size: 50px;
+}
+[data-dpr="3"] .f25 {
+  font-size: 75px;
+}
