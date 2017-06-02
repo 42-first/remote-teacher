@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import RemoteList from '@/components/remote-list'
-import Remote from '@/components/remote'
+import RemoteList from '@/components/teacher/remote-list'
+import Remote from '@/components/teacher/remote'
 
 Vue.use(Router)
 

@@ -46,8 +46,8 @@
 
 import request from '@/util/request'
 import API from '@/config/api'
-import Toolbar from '@/components/template/toolbar'
-import RcMaskErrormsg from '@/components/template/rc-mask-errormsg'
+import Toolbar from '@/components/teacher/template/toolbar'
+import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/preventoverscroll'
 
