@@ -48,7 +48,7 @@ export default {
     showOldHelloMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'rc-mask-errormsg',
+        msgMaskTpl: 'RcMaskErrormsg',
         errType: 1
       })
     },
@@ -58,7 +58,7 @@ export default {
     showEscMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'rc-mask-errormsg',
+        msgMaskTpl: 'RcMaskErrormsg',
         errType: 2
       })
     },
@@ -68,7 +68,7 @@ export default {
     showPcErrorMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'rc-mask-errormsg',
+        msgMaskTpl: 'RcMaskErrormsg',
         errType: 3
       })
     },
@@ -79,6 +79,8 @@ export default {
      */
     showWhichPage: function (msg) {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       // 有可能打开遥控器的时候ppt还没有开始上课，此时hello返回的slideindex可能是0
       let current = msg.slideindex || 1
       // 防止一开始hello的时候数据还没有加载进来

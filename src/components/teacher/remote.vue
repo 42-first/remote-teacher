@@ -35,7 +35,7 @@
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
       <div class="rc-mask" v-show="!isMsgMaskHidden">
-        <component :is="msgMaskTpl" :err-type="2"></component>
+        <component :is="msgMaskTpl" :err-type="errType"></component>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@ export default {
       msgMaskTpl: 'RcMaskErrormsg',
       toastCtrlMaskTpl: '',
       initiativeCtrlMaskTpl: '',
-      errType: -1,
+      errType: 2,
       connectCountDown: 10
     }
   },
@@ -93,6 +93,10 @@ export default {
 
     self.pmos()
     self.killMask()
+    self.showWhichPage({
+      slideindex: 2,
+      unlockedproblem: []
+    })
   },
   mixins: [switches],
   methods: {
