@@ -44,33 +44,33 @@ var actionsMixin = {
             default: break;
           }
 
-          if(item['type'] == 'slide'){
-                            addPPT({pageIndex:item['si'],time:item['dt'],presentationid:item['pres']});
-          }else if(item['type'] == 'problem'){
-                            addXT({pageIndex:item['si'], time:item['dt'],presentationid:item['pres']});
-                            socket_config['problem'][item['prob']] = item;
-                            if(mainView.activePage.name=='exercisepage'){
-                                showTimelime(item['prob']);
-                            }
-          }else if(item['type'] == 'quiz'){
-                            addPaper({quiz:item['quiz'],title:item['title'],total:item['total'],time:item['dt']});
-          }else if(item['type'] == 'event'){
-                            addMessageSection({message:item['title']});
-          }else if(item['type'] == 'redpacket'){
-                            Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
-                            Stu_hongbao.redpacket_info[item.redpacket] ={
-                                count:item.count
-                            };
-                            Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
-          }else if(item['type'] == 'updateredpacket'){
-                            //删除原来的消息
-                            Stu_hongbao.deleteHongBao({probid:item.redpacket});
-                            Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
-                            Stu_hongbao.redpacket_info[item.redpacket] ={
-                                count:item.count
-                            };
-                            Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
-                        }
+          // if(item['type'] == 'slide'){
+          //                   addPPT({pageIndex:item['si'],time:item['dt'],presentationid:item['pres']});
+          // }else if(item['type'] == 'problem'){
+          //                   addXT({pageIndex:item['si'], time:item['dt'],presentationid:item['pres']});
+          //                   socket_config['problem'][item['prob']] = item;
+          //                   if(mainView.activePage.name=='exercisepage'){
+          //                       showTimelime(item['prob']);
+          //                   }
+          // }else if(item['type'] == 'quiz'){
+          //                   addPaper({quiz:item['quiz'],title:item['title'],total:item['total'],time:item['dt']});
+          // }else if(item['type'] == 'event'){
+          //                   addMessageSection({message:item['title']});
+          // }else if(item['type'] == 'redpacket'){
+          //                   Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
+          //                   Stu_hongbao.redpacket_info[item.redpacket] ={
+          //                       count:item.count
+          //                   };
+          //                   Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
+          // }else if(item['type'] == 'updateredpacket'){
+          //                   //删除原来的消息
+          //                   Stu_hongbao.deleteHongBao({probid:item.redpacket});
+          //                   Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
+          //                   Stu_hongbao.redpacket_info[item.redpacket] ={
+          //                       count:item.count
+          //                   };
+          //                   Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
+          //               }
         });
       }
     },
