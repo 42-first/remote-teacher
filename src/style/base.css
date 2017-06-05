@@ -94,7 +94,27 @@ a {text-decoration: none;}
     font-size: 36px;
 }
 [data-dpr="3"] .f18 {
-  font-size: 48px;
+  font-size: 54px;
+}
+
+[data-dpr="1"] .f20 {
+  font-size: 20px;
+}
+[data-dpr="2"] .f20 {
+    font-size: 40px;
+}
+[data-dpr="3"] .f20 {
+  font-size: 60px;
+}
+
+[data-dpr="1"] .f24 {
+  font-size: 24px;
+}
+[data-dpr="2"] .f24 {
+    font-size: 48px;
+}
+[data-dpr="3"] .f24 {
+  font-size: 72px;
 }
 
 

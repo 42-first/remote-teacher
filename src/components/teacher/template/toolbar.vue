@@ -1,21 +1,21 @@
 <!-- 教师遥控器工具栏 -->
 <template>
 	<div class="toolbar-root">
-		<div class="rc-toolbar">
+		<div class="rc-toolbar f12">
 		  <div class="tool-item first-item" >
 		    <div class="bulb"></div>
 		    <div>遥控器</div>
 		  </div>
 		  <v-touch class="tool-item" v-on:tap="showThumbnail">
-		    <i class="iconfont icon-cascades"></i>
+		    <i class="iconfont icon-cascades f16"></i>
 		    缩略图
 		  </v-touch>
 		  <div class="tool-item" bindtap="showPaperQuiz">
-		    <i class="iconfont icon-exercise"></i>
+		    <i class="iconfont icon-exercise f16"></i>
 		    课堂动态
 		  </div>
 		  <div class="tool-item last-item" bindtap="toggleToolbarMoreBox">
-		    <i class="iconfont icon-more"></i>
+		    <i class="iconfont icon-more f16"></i>
 		    更多
 		  </div>
 		</div>
@@ -23,17 +23,17 @@
 		<!-- 更多的内容 -->
 		<div class="toolbar-more-box none">
 		  <div class="danmubox" bindtap="summonQrcodeMask">
-		    <i class="iconfont icon-erweima"></i>
+		    <i class="iconfont icon-erweima f16"></i>
 		    <span>二维码</span>
 		  </div>
 		  
 		  <div class="danmubox"  bindtap="setDanmuStatus">
-		    <i class="iconfont "></i>
+		    <i class="iconfont f16"></i>
 		    <span style="margin-left: 20rpx;">弹幕</span>
 		  </div>
 
 		  <div bindtap="setEndShow">
-		    <i class="iconfont icon-tuichu"></i>
+		    <i class="iconfont icon-tuichu f16"></i>
 		    <span style="margin-left: 32rpx;">结束</span>
 		  </div>
 		  <div class="triangle"></div>
@@ -72,7 +72,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 1.706667rem;
-  font-size: 12px;
 
   .tool-item {
     flex: 1;
@@ -82,7 +81,6 @@ export default {
       display: inline-block;
       width: 100%;
       text-align: center;
-      font-size: 16px;
     }
   }
   .first-item {
@@ -96,19 +94,6 @@ export default {
     width: 0.266667rem;
     height: 0.266667rem;
     background-color: #ff0000;
-  }
-}
-
-[data-dpr="2"] .rc-toolbar {
-  font-size: 24px;
-  .iconfont {
-    font-size: 33px;
-  }
-}
-[data-dpr="3"] .rc-toolbar {
-  font-size: 36px;
-  .iconfont {
-    font-size: 48px;
   }
 }
 

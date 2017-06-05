@@ -4,9 +4,9 @@
     <div id="rc-home" class="rc-home">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
-        <div class="detail dontcallback">
+        <div class="detail f14 dontcallback">
           <div>
-            当前幻灯片<span class="ct">{{current}}/{{total}}</span>
+            当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <div  class="btn pubpblm_or_check_answer">发送此题</div>
         </div>
@@ -14,7 +14,7 @@
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer">
-        <div class="detail">下一张幻灯片</div>
+        <div class="detail f14">下一张幻灯片</div>
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
@@ -35,7 +35,7 @@
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
       <div class="rc-mask" v-show="!isMsgMaskHidden">
-        <component :is="msgMaskTpl" :err-type="2"></component>
+        <component :is="msgMaskTpl" :err-type="errType"></component>
       </div>
     </div>
   </div>
@@ -51,11 +51,16 @@ import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
 import switches from '@/util/teacher-util/switches'
+import socketService from '@/util/teacher-util/socket-service'
 
 export default {
   name: 'Remote',
   data () {
     return {
+      // TODO 用户身份
+      userid: 265,                              // 用户id
+      avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
+      auth: '1e36e3fa-7317-474a-9977-12033be035be',                               // 用户身份
       lessonid: 0,
       presentationid: 0,
       isBrandNewPPT: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
@@ -65,7 +70,7 @@ export default {
       isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
       isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
       isSocketConnected: false,               // WebSocket 已连接
-      isConnectingHidden: true,                // 连接中隐藏
+      isConnectingHidden: true,               // 连接中隐藏
       total: '',                              // 总页数
       current: 1,                             // 当前页码，从1开始
       pptData: [],                            // ppt数据
@@ -75,7 +80,7 @@ export default {
       msgMaskTpl: 'RcMaskErrormsg',
       toastCtrlMaskTpl: '',
       initiativeCtrlMaskTpl: '',
-      errType: -1,
+      errType: 2,
       connectCountDown: 10
     }
   },
@@ -93,8 +98,13 @@ export default {
 
     self.pmos()
     self.killMask()
+    self.showWhichPage({
+      slideindex: 2,
+      unlockedproblem: []
+    })
+    self.initws()
   },
-  mixins: [switches],
+  mixins: [switches, socketService],
   methods: {
     /**
      * 模仿微信小程序的 setData 用法，简易设置data
