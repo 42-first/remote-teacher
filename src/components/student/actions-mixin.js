@@ -118,14 +118,26 @@ var actionsMixin = {
 
         // todo: 预加载图片
         let oImg = new Image();
-        oImg.onload = () => {
+        oImg.onload = (evt) => {
           if(index !== -1) {
             let data = self.cards[index - 1];
             data.src = slideData['Cover'];
           }
+
+          // test fileSize
+          // let reader = new FileReader();
+          // reader.onload = function(file) {
+          // }
+          // reader.readAsDataURL();
         };
 
         oImg.src = slideData['Cover'];
+
+        // 缓存中
+        if(oImg.complete || oImg.width) {
+        } else {
+        }
+
 
         if(!hasPPT) {
           data.src = slideData['Thumbnail'];

@@ -15,7 +15,10 @@
         <h3 class="header-title f18">{{ title }}</h3>
         <div class="student__header--more" @click="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
-          <div class="more-actions" v-if="isMore"></div>
+          <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
+            <p class="action f17 line"><i class="iconfont icon-lianxi f25"></i>发送弹幕</p>
+            <p class="action f17"><i class="iconfont icon-lianxi f25"></i>发送投稿</p>
+          </div>
         </div>
       </header>
 
@@ -326,6 +329,8 @@
        *
        */
       handleMoreActions() {
+        // let targetEl =
+
         if(this.isMore) {
           this.isMore = false;
         } else {
@@ -354,6 +359,7 @@
 
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
+  @import "~@/style/animate.css";
 
   /*------------------*\
     $ 组件样式重写
@@ -426,16 +432,37 @@
         top: 1.33rem;
         right: 0.1rem;
 
+        padding: 0 0.28rem;
         width: 4.0rem;
         height: 3.12rem;
 
+        color: #fff;
+
         background: rgba(51,51,51, 0.9);
         border-radius: 0.106667rem;
+
+        animation-duration: 0.3s;
+
+        .line {
+          border-bottom: 1px solid #C8C8C8;
+        }
+
+        .action {
+          padding: 0.266667rem 0;
+
+          line-height: 0.933333rem;
+          text-align: center;
+
+          .iconfont {
+            padding-right: 0.186667rem;
+            vertical-align: -0.066667rem;
+          }
+        }
       }
 
       .more-actions:before {
         position: absolute;
-        top: -0.386667rem;
+        top: -0.399rem;
         right: 0.28rem;
 
         content: '';
