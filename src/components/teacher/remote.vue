@@ -46,10 +46,11 @@
 
 import request from '@/util/request'
 import API from '@/config/api'
-import Toolbar from '@/components/template/toolbar'
-import RcMaskErrormsg from '@/components/template/rc-mask-errormsg'
+import Toolbar from '@/components/teacher/template/toolbar'
+import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
-import '@/util/preventoverscroll'
+import '@/util/teacher-util/preventoverscroll'
+import switches from '@/util/teacher-util/switches'
 
 export default {
   name: 'Remote',
@@ -88,18 +89,24 @@ export default {
     this.fetchPPTData()
   },
   mounted () {
-    // 阻止微信露底 list中都是ID
-    new PreventMoveOverScroll({
-      list: ['rc-home', 'templates']
-    }, function (opAction) {
-      if (opAction.isTap) {
-        console.log(88)
-      } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
-        console.log(99)
-      }
-    })
+    let self = this
+
+    self.pmos()
+    self.killMask()
   },
+  mixins: [switches],
   methods: {
+    /**
+     * 模仿微信小程序的 setData 用法，简易设置data
+     *
+     * @param {object} newData
+     */
+    setData (newData) {
+      let self = this
+      Object.keys(newData).forEach(attr => {
+        self[attr] = newData[attr]
+      })
+    },
     /**
      * 获取ppt数据
      *
@@ -128,6 +135,24 @@ export default {
           self.isPubCheckProblemBtnHidden = !isProblem
           self.isProblemPublished = isProblemPublished
         })
+    },
+    /**
+     * 阻止微信露底
+     *
+     */
+    pmos () {
+      let self = this
+      
+      // list中都是ID
+      new PreventMoveOverScroll({
+        list: ['rc-home', 'templates']
+      }, function (opAction) {
+        if (opAction.isTap) {
+          console.log(88)
+        } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
+          console.log(99)
+        }
+      })
     }
   }
 }

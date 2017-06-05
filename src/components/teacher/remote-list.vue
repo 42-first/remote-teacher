@@ -11,7 +11,7 @@
 
 <script>
 import request from '@/util/request'
-import API from '../config/api'
+import API from '@/config/api'
 
 export default {
   name: 'remote-list',

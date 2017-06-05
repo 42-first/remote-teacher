@@ -5,7 +5,7 @@
 
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+import router from './router/teacher'
 let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
 
