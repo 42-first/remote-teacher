@@ -114,29 +114,16 @@
   color: $white;
 }
 
-.errmsg, .reconnect-box, .qrcode-box, .deprive-box, .problemtime-box {width: 600rpx;}
+.errmsg, .reconnect-box, .deprive-box, .problemtime-box {width: 600rpx;}
 
 /*二维码控制*/
-.qrcode-box button, .deprive-box button {
-  width: 220rpx;
+.deprive-box button {
+  width: 220px;
   background: none;
   color: $white;
   border: 1px solid $white;
 }
-.qrcode-box .qrcode {
-  font-size: 200rpx;
-}
-.qrcode-box .anhao {
-  margin-bottom: 30rpx;
-}
-.qrcode-box .desc {
-  margin-bottom: 30rpx;
-}
-.qrcode-box button {
-  width: 240rpx;
-  height: 64rpx;
-  line-height: 64rpx;
-}
+
 /*夺权*/
 .deprive-box button {
   width: 320rpx;

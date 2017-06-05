@@ -103,7 +103,7 @@ export default {
 
       self.setData({
         isInitiativeCtrlMaskHidden: false,
-        // initiativeCtrlMaskTpl: 'rc-mask-qrcode'
+        initiativeCtrlMaskTpl: 'rc-mask-qrcode'
       })
     },
   }

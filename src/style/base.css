@@ -116,3 +116,13 @@ a {text-decoration:none;}
 [data-dpr="3"] .f25 {
   font-size: 75px;
 }
+
+[data-dpr="1"] .f32 {
+  font-size: 32px;
+}
+[data-dpr="2"] .f32 {
+    font-size: 64px;
+}
+[data-dpr="3"] .f32 {
+  font-size: 96px;
+}

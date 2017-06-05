@@ -25,7 +25,12 @@
     <div id="templates" class="templates dontcallback">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
-        <component :is="initiativeCtrlMaskTpl"></component>
+        <component
+          :is="initiativeCtrlMaskTpl"
+          :invite-code="inviteCode"
+          :is-brand-new-ppt="isBrandNewPpt"
+          :qrcode-status="qrcodeStatus"
+        ></component>
       </div>
 
       <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
@@ -35,7 +40,10 @@
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
       <div class="rc-mask" v-show="!isMsgMaskHidden">
-        <component :is="msgMaskTpl" :err-type="errType"></component>
+        <component
+          :is="msgMaskTpl"
+          :err-type="errType"
+        ></component>
       </div>
     </div>
   </div>
@@ -48,6 +56,8 @@ import request from '@/util/request'
 import API from '@/config/api'
 import Toolbar from '@/components/teacher/template/toolbar'
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
+import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
+
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
 import switches from '@/util/teacher-util/switches'
@@ -61,9 +71,11 @@ export default {
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
       auth: '1e36e3fa-7317-474a-9977-12033be035be',                               // 用户身份
+      inviteCode: 'Q01O6B',                         // 课堂暗号
+      socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
-      isBrandNewPPT: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
+      isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
@@ -81,12 +93,14 @@ export default {
       toastCtrlMaskTpl: '',
       initiativeCtrlMaskTpl: '',
       errType: 2,
-      connectCountDown: 10
+      connectCountDown: 10,
+      qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
     }
   },
   components: {
     Toolbar,
-    RcMaskErrormsg
+    RcMaskErrormsg,
+    RcMaskQrcode
   },
   created () {
     this.lessonid = this.$route.params.lessonid
