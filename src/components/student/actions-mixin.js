@@ -37,7 +37,13 @@ var actionsMixin = {
 
             // event
             case 'event':
-              this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
+              this.addPaper({ type: 1, message: item['title'] });
+
+              break;
+
+            // 红包
+            case 'redpacket', 'updateredpacket':
+              this.addHongbao({ type: 1, count: item.detail.length, time: item.dt });
 
               break;
 
@@ -127,6 +133,8 @@ var actionsMixin = {
           data.rate = presentation.Width / presentation.Height;
           data.hasQuestion = slideData['question'] == 1 ? true : false;
           data.hasStore = slideData['store'] == 1 ? true : false;
+          data.Width = presentation.Width;
+          data.Height = presentation.Height;
 
           this.cards.push(data);
           index = this.cards.length;
