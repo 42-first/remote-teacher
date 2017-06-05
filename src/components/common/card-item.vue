@@ -205,6 +205,8 @@
     margin: 0 auto;
     width: calc(100% - 0.906667rem);
     border-bottom: 1px solid #C8C8C8;
+
+    a {text-decoration: none;}
   }
 
 
