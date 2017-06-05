@@ -8,7 +8,9 @@
           <div>
             当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
           </div>
-          <div  class="btn pubpblm_or_check_answer">发送此题</div>
+          <div v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer">
+            {{isProblemPublished ? '查看答案' : '发送此题目'}}
+          </div>
         </div>
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
@@ -72,6 +74,7 @@ export default {
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
       auth: '1e36e3fa-7317-474a-9977-12033be035be',                               // 用户身份
       inviteCode: 'Q01O6B',                         // 课堂暗号
+
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
@@ -95,6 +98,7 @@ export default {
       errType: 2,
       connectCountDown: 10,
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
+      isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
     }
   },
   components: {
@@ -104,8 +108,6 @@ export default {
   },
   created () {
     this.lessonid = this.$route.params.lessonid
-    // TODO 在hello中才能fetch
-    this.fetchPPTData()
   },
   mounted () {
     let self = this
@@ -132,6 +134,44 @@ export default {
       })
     },
     /**
+     * 阻止微信露底
+     *
+     */
+    pmos () {
+      let self = this
+      
+      // list中都是ID
+      new PreventMoveOverScroll({
+        list: ['rc-home', 'templates']
+      }, function (opAction) {
+        let op = ''
+        if (opAction.isTap) {
+          op = 'next'
+        } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
+          op = opAction.isSwipeDown ? 'prev' : 'next'
+        }
+
+        self.sendSlideOp (op)
+      })
+    },
+    /**
+     * 发送前进后退的指令
+     *
+     * @param {string, number} op 'next' || 'prev'  to: 缩略图时的页码， undefined时则不发送
+     */
+    sendSlideOp (op, to) {
+      let self = this
+      let str = JSON.stringify({
+        'op': op,
+        'lessonid': self.lessonid,
+        'presentation': self.presentationid,
+        'msgid': 1234,
+        'to': to
+      })
+
+      self.socket.send(str)
+    },
+    /**
      * 获取ppt数据
      *
      */
@@ -147,37 +187,20 @@ export default {
         .then(jsonData => {
           console.log('fetchPPTData success', jsonData)
           let pptData = jsonData.presentationData.Slides
-          let current = 1 // TODO 如何全局获取current？ 模块开发
+          let current = self.current
           let isProblem = (typeof pptData[current - 1].Problem) !== 'undefined'
-          let isProblemPublished = false // TODO
-          // let isProblemPublished = self.data.unlockedproblem.includes(current)// 也是从1开始的页码
+          let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
 
           // fetchPPTData的主要目的是获取pptData total
           // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
-          self.pptData = pptData
-          self.total = pptData.length
-          self.isPubCheckProblemBtnHidden = !isProblem
-          self.isProblemPublished = isProblemPublished
+          self.setData({
+            pptData: pptData,
+            total: pptData.length,
+            isPubCheckProblemBtnHidden: !isProblem,
+            isProblemPublished: isProblemPublished
+          })
         })
     },
-    /**
-     * 阻止微信露底
-     *
-     */
-    pmos () {
-      let self = this
-      
-      // list中都是ID
-      new PreventMoveOverScroll({
-        list: ['rc-home', 'templates']
-      }, function (opAction) {
-        if (opAction.isTap) {
-          console.log(88)
-        } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
-          console.log(99)
-        }
-      })
-    }
   }
 }
 </script>
