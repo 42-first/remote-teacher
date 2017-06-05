@@ -30,6 +30,8 @@ q:before, q:after{content:' ';}
 abbr,acronym{border:0;}
 a {text-decoration:none;}
 
+.none { display: none; }
+
 
 /*-----------------------------*\
     $ 基本字体大小

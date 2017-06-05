@@ -13,9 +13,9 @@
       <header class="student__header">
         <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
-        <div class="student__header--more">
+        <div class="student__header--more" @click="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
-          <div class="none"></div>
+          <div class="more-actions" v-if="isMore"></div>
         </div>
       </header>
 
@@ -23,8 +23,8 @@
       <ul class="student__tabs f15" @click="handleShowTab">
         <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">全部</li>
         <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">PPT</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']"data-index="3">习题</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']"data-index="4">试卷</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">习题</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">试卷</li>
         <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5">红包</li>
       </ul>
     </section>
@@ -36,8 +36,8 @@
 
         <section class="student__timeline">
           <!-- 时间轴内容列表 -->
-          <div class="timeline-wrapper" v-for="item in cards">
-            <Card-Item-Component :item="item" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+          <div class="timeline-wrapper" v-for="(item, index) in cards">
+            <Card-Item-Component :item="item" :index="index" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
         </section>
 
@@ -55,7 +55,47 @@
       <!-- <p class="">您有新的课堂动态</p> -->
     </section>
 
+    <!-- 图片放大结构 -->
+    <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+      <div class="pswp__bg"></div>
+
+      <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+
+          <div class="pswp__top-bar">
+
+            <div class="pswp__counter"></div>
+
+              <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <router-view></router-view>
   </section>
+
 </template>
 <script>
   // import moment from 'moment'
@@ -103,6 +143,8 @@
         allEvents: [],
         // 时间轴数据
         timeline: {},
+        //
+        isMore: false,
         commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
     },
@@ -144,6 +186,16 @@
 
         Promise.all([this.getPresentationList()]).then(()=>{
           self.testTimeline();
+
+          setTimeout(()=>{
+            require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
+              window.PhotoSwipe = PhotoSwipe;
+              window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
+
+              console.log(PhotoSwipe);
+              console.log(PhotoSwipeUI_Default);
+            })
+          }, 1500)
         });
       },
 
@@ -185,8 +237,9 @@
 
         // lessons
         return request.get(URL, param)
-          .then(function (data) {
-            if(data) {
+          .then(function (res) {
+            if(res && res.data) {
+              let data = res.data;
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
 
@@ -269,6 +322,18 @@
 
       },
       /*
+       * @method more
+       *
+       */
+      handleMoreActions() {
+        if(this.isMore) {
+          this.isMore = false;
+        } else {
+          this.isMore = true;
+        }
+      },
+
+      /*
        * @method 返回上一页
        *
        */
@@ -316,7 +381,7 @@
   }
 
   .page-fixed {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     top: 0;
     left: 0;
@@ -341,7 +406,7 @@
     /* box-shadow: 0 4px 6px rgba(0,0,0, 0.2); */
 
     .student__header--back, .student__header--more {
-      width: 1rem;
+      width: 1.0rem;
     }
 
     .header-title {
@@ -351,6 +416,35 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
+    .student__header--more {
+      position: relative;
+      width: 1.2rem;
+
+      .more-actions {
+        position: absolute;
+        top: 1.33rem;
+        right: 0.1rem;
+
+        width: 4.0rem;
+        height: 3.12rem;
+
+        background: rgba(51,51,51, 0.9);
+        border-radius: 0.106667rem;
+      }
+
+      .more-actions:before {
+        position: absolute;
+        top: -0.386667rem;
+        right: 0.28rem;
+
+        content: '';
+        border: 0.2rem solid rgba(51,51,51, 0.9);
+        border-color: transparent transparent rgba(51,51,51, 0.9) transparent;
+      }
+
+    }
+
   }
 
 
@@ -394,6 +488,10 @@
     position: absolute;
     top: 2.33rem;
     left: 0;
+    bottom: 0;
+    overflow-y: scroll;
+
+    -webkit-overflow-scrolling: touch;
   }
 
   .student__timeline {

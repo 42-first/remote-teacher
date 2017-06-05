@@ -15,7 +15,9 @@
       <div class="timeline__ppt">
         <span class="ppt--pageno f14">第{{ item.pageIndex }}页</span>
         <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
-          <img class="cover" :src="item.src" >
+          <!-- <router-link :to="'/1/ppt/'+index"> -->
+          <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height)">
+          <!-- </router-link> -->
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
@@ -52,6 +54,7 @@
     <!-- 红包模板 -->
     <template v-else-if="item.type==5">
       <div class="timeline__paper">
+        <router-link :to="'/1/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
@@ -61,6 +64,7 @@
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
             </div>
         </div>
+        </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
@@ -103,6 +107,7 @@
   export default {
     name: 'card-item',
     props: {
+      index: 0,
       item: null
     },
     data() {
@@ -120,10 +125,74 @@
       }
     },
     methods: {
+      scaleImage(src, width, height) {
+        let targetEl = event.target;
+        let pswpElement = document.querySelector('.J_pswp');
+        let index = 0;
+        let items = [];
+
+        // build items array
+        let cards = this.$parent.$parent.cards;
+
+        cards.map((card)=>{
+          if(card.type === 2) {
+            items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
+          }
+        })
+
+        console.log(items);
+
+        items.forEach((item, i)=>{
+          if(item.src === src) {
+            index = i;
+          }
+        });
+
+        let options = {
+          index: index,
+          maxSpreadZoom: 5,
+          showAnimationDuration: 300,
+          hideAnimationDuration: 300,
+          showHideOpacity: true,
+
+          closeEl: false,
+          captionEl: false,
+          fullscreenEl: false,
+          zoomEl: false,
+          shareEl: false,
+          counterEl: false,
+          arrowEl: false,
+          preloaderEl: false,
+
+          tapToClose: true,
+
+          getThumbBoundsFn: function(index) {
+            // find thumbnail element
+            var thumbnail = targetEl;
+
+            // get window scroll Y
+            var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+            // optionally get horizontal scroll
+
+            // get position of element relative to viewport
+            var rect = thumbnail.getBoundingClientRect();
+
+            // w = width
+            return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
+
+          }
+        };
+
+        // Initializes and opens PhotoSwipe
+        let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+        gallery.init();
+      }
     },
     created() {
     },
     mounted() {
+      let self = this;
     },
     beforeDestroy() {
     }
@@ -194,7 +263,7 @@
     .ppt--pageno {
       position: absolute;
       top: 0;
-      left: 0;
+      right: 0;
 
       padding: 6px 14px;
       color: #fff;
