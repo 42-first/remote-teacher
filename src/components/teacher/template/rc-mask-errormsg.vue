@@ -1,6 +1,6 @@
 <!--组合错误信息面板-->
 <template>
-  <div class="mask-content" v-html="errMsgList[errType]"></div>
+  <div class="mask-content f20" v-html="errMsgList[errType]"></div>
 </template>
 
 <script>

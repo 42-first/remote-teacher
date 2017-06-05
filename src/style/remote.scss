@@ -26,12 +26,10 @@
       align-items: center;
       height: 0.906667rem;
       margin-bottom: 0.266667rem;
-      font-size: 14px;
       padding-left: 0.56rem;
 
       .ct {
         margin-left: 0.693333rem;
-        font-size: 18px;
       }
       .pubpblm_or_check_answer {
         margin-right: 0.453333rem;
@@ -51,20 +49,6 @@
   }
 }
 
-[data-dpr="2"] .rc-home .detail {
-  font-size: 28px;
-  .ct {
-    font-size: 36px;
-  }
-}
-[data-dpr="3"] .rc-home .detail {
-  font-size: 42px;
-  .ct {
-    font-size: 54px;
-  }
-}
-
-
 
 .rc-mask {
   position: absolute;
@@ -83,18 +67,8 @@
     text-align: center;
     transform: translate(-50%, -50%);
     color: $white;
-    font-size: 20px;
   }
 }
-
-[data-dpr="2"] .rc-mask .mask-content {
-  font-size: 40px;
-}
-[data-dpr="3"] .rc-mask .mask-content {
-  font-size: 60px;
-}
-
-
 
 /*缩略图样式*/
 .thumbnail-box {
