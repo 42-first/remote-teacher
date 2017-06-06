@@ -24,10 +24,11 @@ var actionsMixin = {
 
             // 幻灯片换页通知
             case 'problem':
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'] });
+              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
 
               // socket_config['problem'][item['prob']] = item;
               timeline['problem'][item['prob']] = item;
+              this.problemMap.set(item['prob'], item);
               // 当前问题需要计时
               break;
 
@@ -43,7 +44,7 @@ var actionsMixin = {
 
             // 红包
             case 'redpacket', 'updateredpacket':
-              this.addHongbao({ type: 1, count: item.detail.length, time: item.dt });
+              this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
 
               break;
 
@@ -77,6 +78,7 @@ var actionsMixin = {
           //                   };
           //                   Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
           //               }
+
         });
       }
     },
@@ -185,6 +187,7 @@ var actionsMixin = {
 
     /*
     * @method 新增习题
+    * { type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
@@ -197,7 +200,9 @@ var actionsMixin = {
         time: data.time,
         caption: slideData['Problem']['Type'] === 'Polling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
         status: slideData['Problem']['Result'] ? '已完成' : '未完成',
-        isComplete: slideData['Problem']['Result'] ? true : false
+        isComplete: slideData['Problem']['Result'] ? true : false,
+        problemID: slideData['Problem']['ProblemID'],
+        options: slideData['Problem']['Bullets']
       })
 
 
@@ -206,17 +211,17 @@ var actionsMixin = {
     },
 
     /*
-    * @method 新增习题
+    * @method 新增红包
+    * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
     */
     addHongbao(data) {
-      let caption = data.count + '位同学已赢得课堂红包';
+      let caption = data.length + '位同学已赢得课堂红包';
 
       if (data.count == 0) {
         caption = 'Hi，本题有课堂红包发送';
       }
 
       data = Object.assign(data, {
-        time: data.time,
         caption: caption
       })
 

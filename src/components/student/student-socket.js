@@ -136,8 +136,15 @@ var mixin = {
 
             break
 
-          // 幻灯片换页通知
-          case 'slidenav':
+          // 习题定时开始
+          case 'probleminfo':
+            let probID = msg['problemid']
+            let leaveTime = Math.floor((msg['now'] - msg['dt'])/1000)
+
+            leaveTime = msg['limit'] - leaveTime
+
+            // 习题组件实例中的定时方法
+            this.$children[1] && this.$children[1].setTiming(leaveTime);
 
             break
 
@@ -327,12 +334,14 @@ var mixin = {
     // },
 
     /*
-    * @method 加入课程直播
+    * @method 问题启动开始计时
     */
-    joinSocketLive(lessons) {
-      this.socket.send(JSON.stringify({
-        "op": "joinlesson",
-        "lessons": lessons
+    startTiming(problem) {
+      this.socket && this.socket.send(JSON.stringify({
+        'op': 'probleminfo',
+        'lessonid': this.lessonID,
+        'problemid': problem.problemID,
+        'msgid': problem.msgid
       }))
     }
   }

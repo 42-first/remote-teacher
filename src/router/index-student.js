@@ -6,6 +6,7 @@ import Router from 'vue-router'
 import Loadmore from 'mint-ui/lib/loadmore'
 import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
+import Exercise from '@/components/student/exercise'
 
 Vue.use(Router)
 Vue.component('loadmore', Loadmore);
@@ -36,8 +37,8 @@ export default new Router({
         {
           // 当 /:lessonID/exercise 匹配成功
           // exercise 会被渲染在 User 的 <router-view> 中
-          path: 'exercise/:id',
-          component: HongBao
+          path: 'exercise/:index',
+          component: Exercise
         }
       ]
     }

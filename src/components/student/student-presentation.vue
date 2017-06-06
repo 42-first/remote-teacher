@@ -102,13 +102,14 @@
 </template>
 <script>
   // import moment from 'moment'
-  // import Promise from 'bluebird'
   import request from '@/util/request'
   import API from '@/util/Api'
-  // import _ from 'underscore'
   import CardItemComponent from '@/components/common/card-item.vue'
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
+
+  // 子组件不需要引用直接使用
+  window.request = request;
 
   export default {
     name: 'student-page',
@@ -140,6 +141,10 @@
         presentationMap: new Map(),
         quizList: null,
         quizMap: new Map(),
+
+        // 习题map
+        problemMap: new Map(),
+
         // timeline列表
         cards: [],
         // 记录全部的事件
@@ -194,11 +199,14 @@
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
               window.PhotoSwipe = PhotoSwipe;
               window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
-
-              console.log(PhotoSwipe);
-              console.log(PhotoSwipeUI_Default);
             })
           }, 1500)
+
+          setTimeout(()=>{
+            require(['moment'], function(moment) {
+              window.moment = moment;
+            })
+          }, 2500)
         });
       },
 
@@ -216,10 +224,25 @@
         this.addPaper({ type: 4, title:"xxx", total: 10, quiz: 1, time: "2017-05-15 12:00:00" });
         this.addPaper({ type: 4, title:"试卷测试数据", total: 12, quiz: 12, time: "2017-05-18 12:00:00" });
 
-        this.addProblem({ type: 3, pageIndex: 4, time:"2016-01-15 12:00:00", presentationid: this.presentationID });
-        this.addProblem({ type: 3, pageIndex: 5, time:"2016-01-15 12:00:00", presentationid: this.presentationID });
+        this.addProblem({ type: 3, pageIndex: 4, time:"2016-01-15 12:00:00", presentationid: this.presentationID, limit: 60 });
+        this.addProblem({ type: 3, pageIndex: 5, time:"2016-01-15 12:00:00", presentationid: this.presentationID, limit: 60 });
 
-        this.addHongbao({ type: 5, probid: 5, time: "2017-01-15 12:00:00", count: 5 });
+        let event = {
+          "type": "redpacket",
+          "prob": 123,
+          "redpacket": "234",
+          "total": 500,
+          "count": 5,
+          "detail": [
+            {"uid": 45, "earning": 50, "dt": 1453348609053}, // earning以分为单位
+            {"uid": 46, "earning": 50, "dt": 1453358609053},
+            {"uid": 48, "earning": 50, "dt": 1453368609053},
+            {"uid": 41, "earning": 50, "dt": 1453378609053}
+          ],
+          "dt": 1453348609053  // Datetime 时间戳
+        };
+
+        this.addHongbao({ type: 5, redpacketID: 5, time: "2017-01-15 12:00:00", count: 9, length: 6, event: event, userID: this.userID || 46 });
       },
 
       /*
@@ -229,8 +252,6 @@
       getPresentationList() {
         let self = this;
         let URL = API.student.GET_PRESENTATION_LIST;
-        let alessonids = [];
-        let unLivePool = [];
         let param = {
           "lessonID": this.lessonID
         }
@@ -527,7 +548,8 @@
     align-items: center;
     justify-content: center;
 
-    width: 10rem;
+    min-width: 10rem;
+    width: 100%;
 
     .timeline-wrapper {
       width: 100%;

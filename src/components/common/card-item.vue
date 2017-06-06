@@ -76,16 +76,15 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :data-quizid="item.quizid">
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/1/exercise/'+index">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">第{{ item.pageIndex }}题</p>
             </div>
             <div class="">
-              <!-- http://sfe.ykt.io/o_1bhhfkpq9nu21eua1uf71a6519pj9.png -->
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">
             </div>
-        </div>
+        </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">

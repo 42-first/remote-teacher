@@ -8,86 +8,46 @@
 
 <template>
   <section class="page-hongbao">
-    <div class="hongbao-wrapper">
+    <div :class="['hongbao-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 红包头部信息 -->
       <section class="hongbao__header">
         <div class="hongbao__banner">
-          <p class="hongbao__title f25">你收到一个课堂红包</p>
+          <p class="hongbao__title f25">{{ title }}</p>
           <p class="hongbao__close" @click="handleBack"><i class="iconfont icon-wrong f25"></i></p>
         </div>
         <!-- 头像 -->
-        <div :class="['hongbao__user', isMine ? '' : 'mb100']" >
-          <img class="user-avatar" src="http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46" >
-          <p class="user-name f15"><span class="teacher_name">姓名</span>的课堂红包</p>
+        <div :class="['hongbao__user', mine ? '' : 'mb100']">
+          <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
+          <p class="user-name f15"><span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包</p>
         </div>
       </section>
 
       <!-- 我的红包 -->
-      <section class="hongbao__mine" v-if="isMine">
-        <p class="hongbao__mine--praise f25">好样的～，再接再厉</p>
-        <p class="hongbao__mine--money f40">￥ 5.00</p>
+      <section class="hongbao__mine" v-if="mine">
+        <p class="hongbao__mine--praise f25">{{ mine.praise }}</p>
+        <p class="hongbao__mine--money f40">￥ {{ (mine.earning/100).toFixed(2) }}</p>
         <P class="hongbao__mine--bank f15">已存入<a class="link" href="/v/index/bank">我的小金库</a></P>
       </section>
 
       <!-- 红包列表 -->
       <section class="hongbao__list-wrapper">
-        <div class="hongbao--count f18">已领 5/9 个红包</div>
+        <div class="hongbao--count f18">已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包</div>
         <ul class="">
-          <li class="hongbao-item">
-            <div class="rank hex"><p class="rank-order">1</p></div>
+
+          <li class="hongbao-item" v-for="(item, index) in hongbaoList">
+            <div :class="['rank', index < 3 ? 'hex': '']"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>
             <div class="avatar">
-              <img src="http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46" />
+              <img :src="item.profile.avatar" :alt="item.profile.name" />
             </div>
             <div class="hongbao-item--content">
-              <div class="name-tiem">
-                <p class="name f18">小明</p>
-                <p class="time f15">13:30</p>
+              <div class="name-time">
+                <p class="name f18">{{ item.profile.name }}</p>
+                <p class="time f15">{{ item.time|formatTime }}</p>
               </div>
-              <p class="f21">￥ 5.00</p>
+              <p class="f21">￥ {{ (item.amount/100).toFixed(2) }}</p>
             </div>
           </li>
 
-           <li class="hongbao-item">
-            <div class="rank hex"><p class="rank-order">1</p></div>
-            <div class="avatar">
-              <img src="http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46" />
-            </div>
-            <div class="hongbao-item--content">
-              <div class="name-tiem">
-                <p class="name f18">小明</p>
-                <p class="time f15">13:30</p>
-              </div>
-              <p class="f21">￥ 5.00</p>
-            </div>
-          </li>
-
-           <li class="hongbao-item">
-            <div class="rank hex"><p class="rank-order">1</p></div>
-            <div class="avatar">
-              <img src="http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46" />
-            </div>
-            <div class="hongbao-item--content">
-              <div class="name-tiem">
-                <p class="name f18">小明</p>
-                <p class="time f15">13:30</p>
-              </div>
-              <p class="f21">￥ 5.00</p>
-            </div>
-          </li>
-
-           <li class="hongbao-item">
-            <div class="rank hex"><p class="rank-order">1</p></div>
-            <div class="avatar">
-              <img src="http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46" />
-            </div>
-            <div class="hongbao-item--content">
-              <div class="name-tiem">
-                <p class="name f18">小明</p>
-                <p class="time f15">13:30</p>
-              </div>
-              <p class="f21">￥ 5.00</p>
-            </div>
-          </li>
         </ul>
       </section>
 
@@ -97,12 +57,19 @@
   </section>
 </template>
 <script>
+  import API from '@/util/Api'
+
   export default {
     name: 'hongbao-page',
     data() {
       return {
         index: 0,
-        isMine: false
+        opacity: 0,
+        title: '课堂红包',
+        summary: null,
+        mine: null,
+        teacher: null,
+        hongbaoList: null,
       };
     },
     beforeRouteEnter (to, from, next) {
@@ -114,8 +81,8 @@
          next();
       } else {
         next(vm => {
-          history.back()
-          // vm.router.go(-1)
+          // history.back()
+          vm.$router.go(-1)
         })
       }
     },
@@ -126,9 +93,67 @@
     watch: {
     },
     filters: {
+      formatTime(time) {
+        return moment(time).format('hh:mm:ss');
+      }
     },
     mixins: [],
     methods: {
+      /*
+      * @method 是否是我的红包
+      * @param problemID 问题ID
+      */
+      formatData(data) {
+        // 随机文案
+        let titleAry = ["答对了！你真棒！", "答对了！赞一个！", "答得漂亮~再接再厉~", "是的，必须奖励下你！", "答题小能手，红包接好~",
+          "答题小能手，我记住你了~", "机智如你，必须奖励~","聪颖如你，必须奖励~", "好样的，答得又快又准！","真棒！答得又快又准！"];
+
+        //
+        let mine = data.event && data.event.detail.find((item)=>{
+          return item.uid === data.userID;
+        });
+
+        console.log(mine);
+        this.mine = mine;
+
+        if(mine) {
+          this.title = '你收到一个课堂红包';
+          mine.praise = titleAry[parseInt(Math.random()*9, 10)];
+        } else {
+
+        }
+
+        setTimeout(()=>{
+          this.opacity = 1;
+        }, 20)
+      },
+
+      /*
+      * @method 红包详情
+      * @param problemID 问题ID
+      */
+      getRedEnvelopDetail(redpacketID) {
+        let self = this;
+        let URL = API.student.GET_RED_ENVELOPE_DETAIL;
+
+
+        if (process.env.NODE_ENV === 'production') {
+          URL = URL + redpacketID;
+        }
+
+        return request.get(URL)
+          .then(function (res) {
+            if(res && res.data) {
+              let data = res.data;
+
+              self.teacher = data.issuer.profile;
+              self.hongbaoList = data.issued_user_list;
+
+              return data;
+            }
+          });
+
+      },
       handleBack() {
         this.$router.back();
       }
@@ -137,10 +162,17 @@
       this.index = +this.$route.params.index;
       let cards = this.$parent.cards;
 
-      let data = cards[this.index];
+      this.summary = cards[this.index];
+
+      if(this.summary) {
+        console.log(this.summary);
+
+        this.formatData(this.summary);
+        this.getRedEnvelopDetail(this.summary.redpacketID);
+      }
+
     },
     mounted() {
-
     },
     beforeDestroy() {
     }
@@ -154,6 +186,10 @@
   \*------------------*/
 
   .hongbao-wrapper {
+    will-change: opacity;
+    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
+    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
+    cursor: zoom-in;
   }
 
   .page-hongbao {
@@ -320,8 +356,9 @@
 
         border-bottom: 1px solid rgba(151, 151, 151, 0.5);
 
-        .name-tiem {
+        .name-time {
           padding-left: 0.133333rem;
+          text-align: left;
         }
         .time {
           color: #9B9B9B;
