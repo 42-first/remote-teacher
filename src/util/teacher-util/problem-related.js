@@ -5,6 +5,11 @@
 import request from '@/util/request'
 import API from '@/config/api'
 
+// 发送试题
+import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
+// 试题柱状图页面
+import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
 let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
@@ -18,6 +23,10 @@ export default {
       problemResultData: null,                // 试题柱状图页数据
       problemResultDetailData: null,          // 试题柱状图详情页数据
     }
+  },
+  components: {
+    RcMaskProblemtime,
+    RcMaskProblemresult
   },
   methods: {
     /**
@@ -186,24 +195,27 @@ export default {
      */
     showProblemResult (inPageProblemID) {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       let slideData = self.data.pptData[current]
-      let problemData = slideData.Problem;
-      let bullets = problemData.Bullets;
-      let optionData = [];
+      let problemData = slideData.Problem
+      let bullets = problemData.Bullets
+      let optionData = []
 
       for (let i = 0; i < bullets.length; i++) {
         optionData.push({
           'label': bullets[i].Label,
-          'value': 0,
+          'value': 10,
           'isRight': new RegExp(bullets[i].Label).test(slideData.Answer)
-        });
-      };
+        })
+      }
+
       let initData = {
         "problemID": problemData.ProblemID,
         'RedEnvelopeID': problemData.RedEnvelopeID,
         'type': problemData.Type,
-        "total":0,
+        "total":20,
         "answer": slideData.Answer,
         "members":0,
         "graph":{
@@ -224,10 +236,10 @@ export default {
         problemResultData: initData,
         isProblemPublished: true,
         isInitiativeCtrlMaskHidden: false,
-        initiativeCtrlMaskTpl: 'rc-mask-problemresult'
+        initiativeCtrlMaskTpl: 'RcMaskProblemresult'
       })
 
-      self.refreshProblemResult(inPageProblemID);
+      // self.refreshProblemResult(inPageProblemID)
     },
     /**
      * 发试题后设置刷新柱状图倒计时页面的定时器

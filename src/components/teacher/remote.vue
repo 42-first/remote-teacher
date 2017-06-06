@@ -25,7 +25,7 @@
 
     <!-- 蒙版层 -->
     <div id="templates" class="templates dontcallback">
-      <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，第三优先级 -->
+      <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           :is="initiativeCtrlMaskTpl"
@@ -34,6 +34,8 @@
           :qrcode-status="qrcodeStatus"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
+
+          :problem-result-data="problemResultData"
         ></component>
       </div>
 
@@ -70,8 +72,6 @@ import Toolbar from '@/components/teacher/template/toolbar'
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 二维码控制蒙版
 import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
-// 发送试题
-import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
@@ -123,7 +123,6 @@ export default {
     Toolbar,
     RcMaskErrormsg,
     RcMaskQrcode,
-    RcMaskProblemtime
   },
   created () {
     this.lessonid = this.$route.params.lessonid
