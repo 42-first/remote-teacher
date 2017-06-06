@@ -2,7 +2,7 @@
 <template>
 	<div class="problemresult-box">
 		<!-- 关闭按钮 -->
-    <v-touch tag="i" class="iconfont icon-close f24"></v-touch>
+    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeProblemresult"></v-touch>
 
 		<!-- 上部时钟、人数统计 -->
     <section class="upper">
@@ -54,7 +54,14 @@
 	  created(){
 	  },
 	  methods: {
-	  	
+	  	/**
+	     * 关闭试题柱状图的按钮
+	     *
+	     * @event bindtap
+	     */
+	    closeProblemresult () {
+	    	this.$emit('closeProblemresult')
+	    }
 	  }
 	}
 </script>

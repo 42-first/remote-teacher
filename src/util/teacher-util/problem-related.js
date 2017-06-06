@@ -84,15 +84,17 @@ export default {
      */
     closeProblemresult () {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
+      let inPageProblemID = pptData[current].Problem.ProblemID
 
       this.setData({
         isInitiativeCtrlMaskHidden: true
       })
       //关闭刷新柱状图的定时器
-      clearInterval(refProblemTimer);
+      clearInterval(refProblemTimer)
       refProblemTimerNum = 0
 
       let str = JSON.stringify({
@@ -101,9 +103,7 @@ export default {
         'problemid': inPageProblemID
       })
 
-      wx.sendSocketMessage({
-        data: str
-      })
+      self.socket.send(str)
     },
     /**
      * 试题柱状图页面中的公布至屏幕按钮

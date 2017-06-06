@@ -36,6 +36,7 @@
           @chooseProblemDuration="unlockProblem"
 
           :problem-result-data="problemResultData"
+          @closeProblemresult="closeProblemresult"
         ></component>
       </div>
 
