@@ -22,10 +22,10 @@
 
 		<!-- 更多的内容 -->
 		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f18">
-		  <div class="more-item" bindtap="summonQrcodeMask">
+		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
 		    <i class="iconfont icon-erweima f24"></i>
 		    <span>二维码</span>
-		  </div>
+		  </v-touch>
 
 		  <div class="more-item" bindtap="setEndShow">
 		    <i class="iconfont icon-people f24"></i>
@@ -59,30 +59,29 @@ export default {
     /**
      * 点击工具栏更多按钮，显示隐藏更多按钮卡片
      *
-     * @event bindtap
+     * @event tap
      */
     toggleToolbarMoreBox () {
       let self = this
-      
+
       self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
     },
     /**
      * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
      *
-     * @event bindtap
+     * @event tap
      */
     summonQrcodeMask () {
       let self = this
       console.log('erweima')
       let str = JSON.stringify({
         'op': 'tryzoomqrcode',
-        'lessonid': self.data.lessonid,
+        'lessonid': self.$parent.lessonid,
         'qrcode': 99
       })
 
-      wx.sendSocketMessage({
-        data: str
-      })
+      self.$parent.socket.send(str)
+      self.isToolbarMoreBoxHidden = true
     },
   }
 }
