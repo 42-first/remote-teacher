@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "status": 200,
+  "answer": "B",
+  "members": 7,
+  "problemID": "8336",
+  "msg": "\u8bd5\u5377\u7ed3\u679c\u540c\u6b65\u6210\u529f",
+  "graph": {
+    "data": [
+      {
+        "value": 1,
+        "label": "A"
+      },
+      {
+        "value": 0,
+        "label": "B"
+      },
+      {
+        "value": 0,
+        "label": "C"
+      },
+      {
+        "value": 0,
+        "label": "D"
+      }
+    ]
+  },
+  "total": 1,
+  "problem_type": 1
+}

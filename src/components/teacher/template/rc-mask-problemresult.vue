@@ -95,8 +95,9 @@
 	  /* 中间柱状图 */
 	  .histogram-box {
 	  	margin: 0 auto;
+	  	padding-top: 1rem;
 	  	width: 8.8rem;
-	  	height: 6.426667rem;
+	  	height: 6rem;
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
