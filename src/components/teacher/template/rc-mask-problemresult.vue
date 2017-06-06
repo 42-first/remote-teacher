@@ -6,11 +6,11 @@
 
 		<!-- 上部时钟、人数统计 -->
     <section class="upper">
-    	<div class="f40">
+    	<div class="f40" v-if="problemResultData.isBellset">
 	      <i class="iconfont icon-clock f40"></i>
-	      <span class="time">00:45</span>
+	      <span class="time">{{problemDurationLeft}}</span>
 	    </div>
-	    <div class="f18">
+	    <div :class="['f18', {pt: !problemResultData.isBellset}]">
 	      已经有 <span>1</span> / <span>5</span> 位同学提交了答案
 	    </div>
     </section>
@@ -46,7 +46,7 @@
 <script>
 	export default {
 	  name: 'RcMaskProblemresult',
-	  props: ['problemResultData'],
+	  props: ['problemResultData', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    }
@@ -86,6 +86,10 @@
 	  	height: 3.466667rem;
 	  	padding-top: 0.8rem;
 	  	border-bottom: 1px solid #cccccc;
+
+	  	.pt {
+	  		padding-top: 1rem;
+	  	}
 	  }
 
 	  /* 中间柱状图 */

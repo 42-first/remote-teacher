@@ -206,7 +206,7 @@ export default {
       for (let i = 0; i < bullets.length; i++) {
         optionData.push({
           'label': bullets[i].Label,
-          'value': 10,
+          'value': 0,
           'isRight': new RegExp(bullets[i].Label).test(slideData.Answer)
         })
       }
@@ -215,7 +215,7 @@ export default {
         "problemID": problemData.ProblemID,
         'RedEnvelopeID': problemData.RedEnvelopeID,
         'type': problemData.Type,
-        "total":20,
+        "total":0,
         "answer": slideData.Answer,
         "members":0,
         "graph":{
