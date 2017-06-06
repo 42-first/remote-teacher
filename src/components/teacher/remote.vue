@@ -8,9 +8,9 @@
           <div>
             当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
           </div>
-          <div v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer">
+          <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
             {{isProblemPublished ? '查看答案' : '发送此题目'}}
-          </div>
+          </v-touch>
         </div>
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
@@ -56,14 +56,27 @@
 
 import request from '@/util/request'
 import API from '@/config/api'
+
+// 页面组件
+// 工具栏
 import Toolbar from '@/components/teacher/template/toolbar'
+// 错误蒙版
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
+// 二维码控制蒙版
 import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
+// 发送试题
+import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
+
+// js功能模块，放到 mixins 中
+// 一些开关
 import switches from '@/util/teacher-util/switches'
+// Websocket 服务
 import socketService from '@/util/teacher-util/socket-service'
+// 课堂试题相关
+import problemRelated from '@/util/teacher-util/problem-related'
 
 export default {
   name: 'Remote',
@@ -98,13 +111,13 @@ export default {
       errType: 2,
       connectCountDown: 10,
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
-      isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
     }
   },
   components: {
     Toolbar,
     RcMaskErrormsg,
-    RcMaskQrcode
+    RcMaskQrcode,
+    RcMaskProblemtime
   },
   created () {
     this.lessonid = this.$route.params.lessonid
@@ -120,7 +133,7 @@ export default {
     })
     self.initws()
   },
-  mixins: [switches, socketService],
+  mixins: [switches, socketService, problemRelated],
   methods: {
     /**
      * 模仿微信小程序的 setData 用法，简易设置data

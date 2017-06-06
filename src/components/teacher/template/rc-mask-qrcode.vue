@@ -31,8 +31,6 @@
 	    }
 	  },
 	  created(){
-	  	console.log(this.$parent)
-	  	console.log(this.$parent.socket)
 	  },
 	  methods: {
 	  	/**

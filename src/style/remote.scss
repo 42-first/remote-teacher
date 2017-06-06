@@ -114,36 +114,18 @@
   color: $white;
 }
 
-.errmsg, .reconnect-box, .deprive-box, .problemtime-box {width: 600rpx;}
+.errmsg, .reconnect-box, .deprive-box {width: 600rpx;}
 
-/*二维码控制*/
+
+/*夺权*/
 .deprive-box button {
-  width: 220px;
+  width: 320px;
   background: none;
   color: $white;
   border: 1px solid $white;
 }
-
-/*夺权*/
-.deprive-box button {
-  width: 320rpx;
-}
 .deprive-box .mb {
   margin-bottom: 30rpx;
-}
-
-/*发题蒙版*/
-.problemtime-box .direct-btns, .problemtime-box .simple-list {
-  margin: 0 auto;
-  width: 320rpx;
-}
-.problemtime-box .direct-btns button {
-  display: block;
-  margin-bottom: 20rpx;
-}
-.problemtime-box .simple-list button {
-  display: block;
-  margin-bottom: 20rpx;
 }
 
 /*试题柱状图面板*/
