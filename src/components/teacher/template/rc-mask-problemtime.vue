@@ -19,7 +19,7 @@
       	<v-touch class="btn higher_btn">直接发送</v-touch>
       </div>
     </section>
-    <v-touch class="btn cancel_btn higher_btn">取消</v-touch>
+    <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem">取消</v-touch>
   </div>
 </template>
 
@@ -35,20 +35,12 @@
 	  },
 	  methods: {
 	  	/**
-		   * 点击放大、缩小二维码的按钮，发送指令给 WebSocket
+		   * 取消发题
 		   *
 		   * @event tap
 		   */
-		  setQrcodeStatus () {
-		    let self = this
-		    let qrcodeStatus = self.qrcodeStatus
-		    let str = JSON.stringify({
-		      'op': 'tryzoomqrcode',
-		      'lessonid': self.$parent.lessonid,
-		      'qrcode': (qrcodeStatus === 1) ? 2 : 1
-		    })
-
-		    self.$parent.socket.send(str)
+		  cancelPublishProblem () {
+		    this.$emit('cancelPublishProblem')
 		  },
 	  }
 	}

@@ -32,6 +32,7 @@
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
+          @cancelPublishProblem="cancelPublishProblem"
         ></component>
       </div>
 
