@@ -112,7 +112,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'showpresentation') {
     // 一旦开始上课，二维码控制蒙版的上课按钮即为“继续上课”
     self.setData({
-      isBrandNewPPT: false
+      isBrandNewPpt: false
     })
     self.killMask()
     return
