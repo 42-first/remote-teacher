@@ -24,7 +24,7 @@
 	import config from '@/config/config'
 
 	export default {
-	  name: 'RcMaskErrormsg',
+	  name: 'RcMaskQrcode',
 	  props: ['inviteCode', 'isBrandNewPpt', 'qrcodeStatus'],
 	  data () {
 	    return {

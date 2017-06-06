@@ -14,29 +14,23 @@
 		    <i class="iconfont icon-exercise f16"></i>
 		    课堂动态
 		  </div>
-		  <div class="tool-item last-item" bindtap="toggleToolbarMoreBox">
+		  <v-touch class="tool-item last-item" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
 		    更多
-		  </div>
+		  </v-touch>
 		</div>
 
 		<!-- 更多的内容 -->
-		<div class="toolbar-more-box none">
-		  <div class="danmubox" bindtap="summonQrcodeMask">
-		    <i class="iconfont icon-erweima f16"></i>
+		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f18">
+		  <div class="more-item" bindtap="summonQrcodeMask">
+		    <i class="iconfont icon-erweima f24"></i>
 		    <span>二维码</span>
 		  </div>
-		  
-		  <div class="danmubox"  bindtap="setDanmuStatus">
-		    <i class="iconfont f16"></i>
-		    <span style="margin-left: 20rpx;">弹幕</span>
-		  </div>
 
-		  <div bindtap="setEndShow">
-		    <i class="iconfont icon-tuichu f16"></i>
-		    <span style="margin-left: 32rpx;">结束</span>
+		  <div class="more-item" bindtap="setEndShow">
+		    <i class="iconfont icon-people f24"></i>
+		    <span style="margin-left: 32rpx;">随机点名</span>
 		  </div>
-		  <div class="triangle"></div>
 		</div>
 	</div>
 </template>
@@ -45,9 +39,10 @@
 
 export default {
   name: 'Tollbar',
+  props: [],
   data () {
     return {
-      lessonid: 0
+      isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
     }
   },
   created () {
@@ -60,74 +55,100 @@ export default {
      */
     showThumbnail () {
       console.log(800)
-    }
+    },
+    /**
+     * 点击工具栏更多按钮，显示隐藏更多按钮卡片
+     *
+     * @event bindtap
+     */
+    toggleToolbarMoreBox () {
+      let self = this
+      
+      self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
+    },
+    /**
+     * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
+     *
+     * @event bindtap
+     */
+    summonQrcodeMask () {
+      let self = this
+      console.log('erweima')
+      let str = JSON.stringify({
+        'op': 'tryzoomqrcode',
+        'lessonid': self.data.lessonid,
+        'qrcode': 99
+      })
+
+      wx.sendSocketMessage({
+        data: str
+      })
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-/*下方工具栏*/
-.rc-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 1.706667rem;
+  /*下方工具栏*/
+  .toolbar-root {
+    position: relative;
+  }
+  .rc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 1.706667rem;
+    background: #222222;
 
-  .tool-item {
-    flex: 1;
-    text-align: center;
-
-    .iconfont {
-      display: inline-block;
-      width: 100%;
+    .tool-item {
+      flex: 1;
       text-align: center;
+
+      .iconfont {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+    .first-item {
+      border-right: 1px solid #eee;
+    }
+    .last-item {
+      border-left: 1px solid #eee;
+    }
+    .bulb {
+      display: inline-block;
+      width: 0.266667rem;
+      height: 0.266667rem;
+      background-color: #ff0000;
     }
   }
-  .first-item {
-    border-right: 1px solid #eee;
-  }
-  .last-item {
-    border-left: 1px solid #eee;
-  }
-  .bulb {
-    display: inline-block;
-    width: 0.266667rem;
-    height: 0.266667rem;
-    background-color: #ff0000;
-  }
-}
 
-.rc-toolbar.online .bulb {
-  border-radius: 50%;
-  background-color: #28cf6e;
-}
 
-/*更多按钮打开的内容*/
-.toolbar-more-box {
-  position: absolute;
-  right: 2%;
-  bottom: 140rpx;
-  width: 140rpx;
-  height: 220rpx;
-  padding: 5rpx 10rpx;
-  background: rgba(0,0,0,0.72);
-  border-radius: 10rpx;
-  color: #fff;
-}
-.triangle {
-  width: 0;
-  height: 0;
-  margin: 0 auto;
-  border-width: 20rpx;
-  border-color: rgba(0,0,0,0.72) transparent transparent transparent;
-  border-style: solid;
-}
-.danmubox {
-  border-bottom: 1rpx solid #999;
-}
-.danmubox .iconfont {
-  font-size: 50rpx;
-  vertical-align: middle;
-}
-.icon-danmu-open {color: #28cf6e;}
+  /*更多按钮打开的内容*/
+  .toolbar-more-box {
+    position: absolute;
+    right: 0.133333rem;
+    bottom: 2.026667rem;
+    width: 3.6rem;
+    height: 2.933333rem;
+
+    padding: 5rpx 10rpx;
+    background: #333333;
+    border-radius: 10px;
+    color: #ffffff;
+
+    .more-item {
+      margin: 0 auto;
+      width: 2.826667rem;
+      height: 1.44rem;
+      line-height: 1.44rem;
+      text-align: left;
+      border-bottom: 1px solid #979797;
+
+      &:last-child {
+        border: 0;
+      }
+    }
+  }
 </style>
