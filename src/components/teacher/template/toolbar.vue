@@ -73,7 +73,6 @@ export default {
      */
     summonQrcodeMask () {
       let self = this
-      console.log('erweima')
       let str = JSON.stringify({
         'op': 'tryzoomqrcode',
         'lessonid': self.$parent.lessonid,

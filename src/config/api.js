@@ -10,9 +10,7 @@ let SOCKET_HOST = ''
 
 /* eslint-disable key-spacing, comma-dangle */
 if (process.env.NODE_ENV === 'production') {
-  SOCKET_HOST = 'rain.xuetangx.com'
   api = {
-    socketurl:                      'ws://' + SOCKET_HOST + '/wsapp/',
     login:                          prefix + '/login',
     remote_control_list:            prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:        prefix + '/lesson/fetch_presentation_data',   // ppt数据
@@ -31,14 +29,12 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:            prefix + '/api/red/red_envelope_detail',      // 获取某个红包的详情
   }
 } else {
-  SOCKET_HOST = 'b.xuetangx.com'
   api = {
-    socketurl:                      'ws://' + SOCKET_HOST + '/wsapp/',
     login:                          '/login',
     remote_control_list:            '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:        '/static/mock/fetch_presentation_data.json',    // ppt数据
     lesson_quiz_list:               '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
-    publish_problem:                '/lesson/publish_problem/',                     // 发布试题
+    publish_problem:                '/static/mock/publish_problem.json',            // 发布试题
     problem_statistics:             '/lesson/problem_statistics',                   // 试题柱状图数据
     problem_result_detail:          '/lesson/problem_result_detail',                // 试题详情数据
     publish_lesson_paper:           '/lesson/publish_lesson_paper',                 // 发布试卷

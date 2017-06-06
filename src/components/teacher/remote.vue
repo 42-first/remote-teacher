@@ -33,6 +33,7 @@
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
           @cancelPublishProblem="cancelPublishProblem"
+          @chooseProblemDuration="unlockProblem"
         ></component>
       </div>
 
@@ -57,6 +58,10 @@
 
 import request from '@/util/request'
 import API from '@/config/api'
+
+if (process.env.NODE_ENV !== 'production') {
+  request.post = request.get
+}
 
 // 页面组件
 // 工具栏
@@ -214,6 +219,24 @@ export default {
             isProblemPublished: isProblemPublished
           })
         })
+    },
+    /**
+     * 将秒数转换成 MM:SS 格式
+     *
+     * @param {number} sec 秒数
+     */
+    sec2str (sec) {
+      if(sec == 0){
+          return '时间到';
+      }
+
+      var str = '';
+      var fen = Math.floor(sec/60);
+      var miao = sec%60;//
+      miao = (miao<10) ? ('0'+miao) : miao;
+
+      str += fen + ':' + miao;
+      return str;
     },
   }
 }

@@ -2,8 +2,9 @@
  * @module 发试题相关：发送试题、查看答案、试题倒计时、刷新柱状图、获取柱状图数据、获取试题答题详情
  */
 
-const config = require('@/config/config')
-const API = require('@/config/api')
+import request from '@/util/request'
+import API from '@/config/api'
+
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
 let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
@@ -13,8 +14,6 @@ export default {
     return {
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
       isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
-      problemTimePicker: config.problemTimePicker, // 发题时间选择
-      problemTimePickerIndex: 0,
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
       problemResultDetailData: null,          // 试题柱状图详情页数据
@@ -68,31 +67,6 @@ export default {
       this.setData({
         isInitiativeCtrlMaskHidden: true
       })
-    },
-    /**
-     * 更换发题选择的时间
-     *
-     * @event bindtap
-     * @param {Object} e ev对象
-     */
-    problemTimePickerChangeHandler (e) {
-      let duration = (e.detail.value - 0 + 3) * 60
-
-      this.setData({
-        problemTimePickerIndex: e.detail.value
-      })
-      this.unlockProblem(duration)
-    },
-    /**
-     * 点击按钮确认发送试题时间，多个按钮均使用，根据data-duration确定时限
-     *
-     * @event bindtap
-     * @param {Object} e ev对象
-     */
-    chooseProblemDuration (e) {
-      let duration = e.currentTarget.dataset.duration
-
-      this.unlockProblem(duration)
     },
     /**
      * 关闭试题柱状图的按钮
@@ -150,6 +124,8 @@ export default {
      */
     unlockProblem (duration) {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       let pptData = self.data.pptData
       let inPageProblemID = pptData[current].Problem.ProblemID;
@@ -162,24 +138,12 @@ export default {
         "limit": duration //-1为不限时，以秒为单位，60为一分钟
       };
 
-      app.request({
-        url: API.publish_problem,
-        method: 'POST',
-        data: postData,
-        success(data) {
-          if(data.data.success){
-            // 打开柱状图页面，倒计时
-            self.startBell(current, duration);
-            self.showProblemResult(inPageProblemID);
-          }
-        },
-        fail(error) {
-          console.log('error', error);
-        },
-        complete(what) {
-          console.log('complete', what);
-        },
-      })
+      request.post(API.publish_problem, postData)
+        .then(jsonData => {
+          // 打开柱状图页面，倒计时
+          self.startBell(current, duration);
+          self.showProblemResult(inPageProblemID);
+        })
     },
     /**
      * 柱状图倒计时功能函数

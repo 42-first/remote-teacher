@@ -5,18 +5,18 @@
       <div class="block" style="margin-bottom: 0.133333rem;">
       	<div class="title f16">限时发送</div>
       	<div class="btn-box">
-      		<v-touch class="btn normal_btn">30秒</v-touch>
-      		<v-touch class="btn normal_btn">1分钟</v-touch>
-      		<v-touch class="btn normal_btn">2分钟</v-touch>
-      		<v-touch class="btn normal_btn">3分钟</v-touch>
-      		<v-touch class="btn normal_btn">4分钟</v-touch>
-      		<v-touch class="btn normal_btn">5分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30秒</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(240)">4分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5分钟</v-touch>
       	</div>
       </div>
 
       <div class="block">
       	<div class="title f16">不限时发送</div>
-      	<v-touch class="btn higher_btn">直接发送</v-touch>
+      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">直接发送</v-touch>
       </div>
     </section>
     <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem">取消</v-touch>
@@ -42,6 +42,15 @@
 		  cancelPublishProblem () {
 		    this.$emit('cancelPublishProblem')
 		  },
+		  /**
+	     * 点击按钮确认发送试题时间，多个按钮均使用，根据data-duration确定时限
+	     *
+	     * @event bindtap
+	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟
+	     */
+	    chooseProblemDuration (duration) {
+	      this.$emit('chooseProblemDuration', duration)
+	    },
 	  }
 	}
 </script>
