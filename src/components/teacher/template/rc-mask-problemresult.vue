@@ -27,18 +27,20 @@
 
     <!-- 下方按钮 -->
     <section class="group-btns">
-      <div class="btn-item" bindtap="postProblemresult">
+      <v-touch class="btn-item" v-on:tap="postProblemresult">
         <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" />
         <div class="btn-desc f15">投屏</div>
-      </div>
-      <div class="btn-item" bindtap="showProblemresultdetail">
+      </v-touch>
+
+      <v-touch class="btn-item" v-on:tap="">
         <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
         <div class="btn-desc f15">查看详情</div>
-      </div>
-      <div class="btn-item" bindtap="tapRedpacketHandler">
+      </v-touch>
+
+      <v-touch class="btn-item" v-on:tap="">
         <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
         <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
-      </div>
+      </v-touch>
     </section>
   </div>
 </template>
@@ -61,7 +63,29 @@
 	     */
 	    closeProblemresult () {
 	    	this.$emit('closeProblemresult')
-	    }
+	    },
+	    /**
+	     * 试题柱状图页面中的公布至屏幕按钮
+	     *
+	     * @event bindtap
+	     */
+	    postProblemresult () {
+	    	// 数据都是在 remote.vue
+	      let self = this.$parent
+	      self.data = self // hack 复用小程序代码
+	      
+	      let current = self.data.current - 1
+	      let pptData = self.data.pptData
+	      let inPageProblemID = pptData[current].Problem.ProblemID;
+
+	      let str = JSON.stringify({
+	        'op': 'postproblemresult',
+	        'lessonid': self.data.lessonid,
+	        'problemid': inPageProblemID
+	      })
+
+	      self.socket.send(str)
+	    },
 	  }
 	}
 </script>

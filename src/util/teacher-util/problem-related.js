@@ -48,8 +48,10 @@ export default {
         //分5种情况，1：未退出遥控器且设置了时限 2：未退出遥控器且未设置时限 
         //3：刷新了遥控器且未设置时限 4：刷新了遥控器且设置了时限但是倒计时已经终止 5：刷新了遥控器且正在倒计时
         if(bellArr[current]){//情况1,情况2
+          console.log(91)
           self.showProblemResult(inPageProblemID);
         }else{
+          console.log(92)
           //查询当前题目的状态，收到node回复后再显示答案showProblemResult
           let str = JSON.stringify({
             'op': 'probleminfo',
@@ -105,27 +107,7 @@ export default {
 
       self.socket.send(str)
     },
-    /**
-     * 试题柱状图页面中的公布至屏幕按钮
-     *
-     * @event bindtap
-     */
-    postProblemresult () {
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
 
-      let str = JSON.stringify({
-        'op': 'postproblemresult',
-        'lessonid': self.data.lessonid,
-        'problemid': inPageProblemID
-      })
-
-      wx.sendSocketMessage({
-        data: str
-      })
-    },
     /**
      * 发送题目
      *
