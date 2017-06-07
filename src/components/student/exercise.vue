@@ -35,6 +35,8 @@
             <p class="options-label" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
+        <!-- 投票选择提示 -->
+        <p class="polling-count f20" v-if="problemType==='Polling'">您还可以再投{{ pollingCount }}票</p>
         <p :class="['submit-btn', 'f18', canSubmit ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit === 2 ? '提交中...': '提交答案' }}</p>
       </section>
 
@@ -66,6 +68,7 @@
         optionsSet: new Set(),
         // 问题类型
         problemType: '',
+        pollingCount: 0,
 
         isShowSubmit: true,
         isShowOption: true,
@@ -124,9 +127,15 @@
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: data.problemID, msgid: this.msgid++ });
 
+          // 投票类型
+          if(this.problemType === 'Polling') {
+            this.pollingCount = parseInt(this.oProblem['Answer'], 10);
+          }
+
           // todo: test测试
           this.setTiming(data.limit)
         }
+
 
         setTimeout(()=>{
           this.opacity = 1;
@@ -175,22 +184,32 @@
       handleSetOption(option) {
         let targetEl = event.target;
 
-        // 提交中
-        if(this.canSubmit === 2) {
+        // 提交中或者已完成
+        if(this.canSubmit === 2 || this.summary.isComplete) {
           return this;
         }
 
         if(this.optionsSet.has(option)) {
           targetEl.classList.remove('selected');
           this.optionsSet.delete(option);
-        } else {
-          // 是否多选
-          if(this.problemType !== 'MultipleChoice' && this.optionsSet.size > 0) {
-            return this;
+
+          if(this.problemType === 'Polling') {
+            this.pollingCount++;
           }
 
-          targetEl.classList.add('selected');
-          this.optionsSet.add(option);
+        } else {
+          // 是否多选
+          if(this.problemType === 'MultipleChoice') {
+            targetEl.classList.add('selected');
+            this.optionsSet.add(option);
+          } else if(this.problemType === 'singlechoice' && this.optionsSet.size > 0) {
+            targetEl.classList.add('selected');
+            this.optionsSet.add(option);
+          } else if(this.problemType === 'Polling' && this.pollingCount) {
+            this.pollingCount--;
+            targetEl.classList.add('selected');
+            this.optionsSet.add(option);
+          }
         }
 
         // 是否可以提交
@@ -386,6 +405,12 @@
         background: linear-gradient(to bottom, #28CF6E, #5CA9E4);
       }
     }
+  }
+
+  .polling-count {
+    padding-top: 0.25rem;
+    text-align: center;
+    color: #E64340;
   }
 
   .submit-btn {

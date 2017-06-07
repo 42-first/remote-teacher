@@ -26,7 +26,7 @@
       <section class="hongbao__mine" v-if="mine">
         <p class="hongbao__mine--praise f25">{{ mine.praise }}</p>
         <p class="hongbao__mine--money f40">￥ {{ (mine.earning/100).toFixed(2) }}</p>
-        <P class="hongbao__mine--bank f15">已存入<a class="link" href="/v/index/bank">我的小金库</a></P>
+        <P class="hongbao__mine--bank f15">已存入<a class="link" href="/v/index/bank">我的钱包</a></P>
       </section>
 
       <!-- 红包列表 -->
@@ -94,7 +94,7 @@
     },
     filters: {
       formatTime(time) {
-        return moment(time).format('hh:mm:ss');
+        return moment && moment(time).format('hh:mm:ss') || time;
       }
     },
     mixins: [],
