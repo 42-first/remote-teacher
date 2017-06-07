@@ -1,4 +1,4 @@
-<!--二维码控制面板-->
+<!--二维码控制面板 被父组件 remote.vue 引用 -->
 <template>
 	<div class="mask-content qrcode-box">
     <div class="anhao">

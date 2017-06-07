@@ -1,4 +1,4 @@
-<!-- 教师遥控器工具栏 -->
+<!-- 教师遥控器工具栏 被父组件 remote.vue 引用 -->
 <template>
 	<div class="toolbar-root">
 		<div class="rc-toolbar f12">
@@ -39,7 +39,7 @@
 
 export default {
   name: 'Tollbar',
-  props: [],
+  props: ['lessonid', 'socket'],
   data () {
     return {
       isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
@@ -75,11 +75,11 @@ export default {
       let self = this
       let str = JSON.stringify({
         'op': 'tryzoomqrcode',
-        'lessonid': self.$parent.lessonid,
+        'lessonid': self.lessonid,
         'qrcode': 99
       })
 
-      self.$parent.socket.send(str)
+      self.socket.send(str)
       self.isToolbarMoreBoxHidden = true
     },
   }

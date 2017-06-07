@@ -20,7 +20,11 @@
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
-      <Toolbar class="dontcallback"></Toolbar>
+      <Toolbar 
+        class="dontcallback"
+        :lessonid="lessonid"
+        :socket="socket"
+      ></Toolbar>
     </div>
 
     <!-- 蒙版层 -->

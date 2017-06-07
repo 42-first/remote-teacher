@@ -1,61 +1,98 @@
-<!--试题柱状图面板-->
+<!--试题柱状图面板、试题作答详情面板 被父组件 remote.vue 引用-->
 <template>
-	<div class="problemresult-box">
-		<!-- 关闭按钮 -->
-    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeProblemresult"></v-touch>
+	<div class="problem-root">
+		<!--试题柱状图面板-->
+		<div class="problemresult-box">
+			<!-- 关闭按钮 -->
+	    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeProblemresult"></v-touch>
 
-		<!-- 上部时钟、人数统计 -->
-    <section class="upper">
-    	<div class="f40" v-if="problemResultData.isBellset">
-	      <i class="iconfont icon-clock f40"></i>
-	      <span class="time">{{problemDurationLeft}}</span>
-	    </div>
-	    <div :class="['f18', {pt: !problemResultData.isBellset}]">
-	      已经有 <span>1</span> / <span>5</span> 位同学提交了答案
-	    </div>
-    </section>
+			<!-- 上部时钟、人数统计 -->
+	    <section class="upper">
+	    	<div class="f40" v-if="problemResultData.isBellset">
+		      <i class="iconfont icon-clock f40"></i>
+		      <span class="time">{{problemDurationLeft}}</span>
+		    </div>
+		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
+		      已经有 <span>1</span> / <span>5</span> 位同学提交了答案
+		    </div>
+	    </section>
 
-    <!-- 中间柱状图 -->
-    <section class="histogram-box">
-			<div class="histogram-item" v-for="item in problemResultData.graph.data">
-        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/problemResultData.total*100+'%'}">
-          <span class="value f18">{{item.value}}</span>
-          <span class="label f18">{{item.label}}</span>
-        </div>
-      </div>
-    </section>
+	    <!-- 中间柱状图 -->
+	    <section class="histogram-box">
+				<div class="histogram-item" v-for="item in problemResultData.graph.data">
+	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/problemResultData.total*100+'%'}">
+	          <span class="value f18">{{item.value}}</span>
+	          <span class="label f18">{{item.label}}</span>
+	        </div>
+	      </div>
+	    </section>
 
-    <!-- 下方按钮 -->
-    <section class="group-btns">
-      <v-touch class="btn-item" v-on:tap="postProblemresult">
-        <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" />
-        <div class="btn-desc f15">投屏</div>
-      </v-touch>
+	    <!-- 下方按钮 -->
+	    <section class="group-btns">
+	      <v-touch class="btn-item" v-on:tap="postProblemresult">
+	        <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" />
+	        <div class="btn-desc f15">投屏</div>
+	      </v-touch>
 
-      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
-        <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
-        <div class="btn-desc f15">查看详情</div>
-      </v-touch>
+	      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
+	        <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
+	        <div class="btn-desc f15">查看详情</div>
+	      </v-touch>
 
-      <v-touch class="btn-item" v-on:tap="">
-        <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
-        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
-      </v-touch>
-    </section>
-  </div>
+	      <v-touch class="btn-item" v-on:tap="">
+	        <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
+	        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
+	      </v-touch>
+	    </section>
+	  </div>
+		
+		<!-- 试题作答详情面板 -->
+		<RcMaskProblemresultDetail
+			v-show="!isProblemResultDetailHidden"
+			@closeProblemresultdetail="closeProblemresultdetail"
+		></RcMaskProblemresultDetail>
+	</div>
 </template>
 
 <script>
+	import request from '@/util/request'
+	import API from '@/config/api'
+
+	// 试题作答详情面板
+	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
+
 	export default {
 	  name: 'RcMaskProblemresult',
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'problemResultData', 'problemDurationLeft'],
 	  data () {
 	    return {
+	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
 	    }
+	  },
+	  computed: {
+	    inPageProblemID: function () {
+	      let current = this.current - 1
+	      let pptData = this.pptData
+	      return pptData[current].Problem.ProblemID
+	    }
+	  },
+	  components: {
+	    RcMaskProblemresultDetail
 	  },
 	  created(){
 	  },
 	  methods: {
+	  	/**
+	     * 模仿微信小程序的 setData 用法，简易设置data
+	     *
+	     * @param {object} newData
+	     */
+	    setData (newData) {
+	      let self = this
+	      Object.keys(newData).forEach(attr => {
+	        self[attr] = newData[attr]
+	      })
+	    },
 	  	/**
 	     * 关闭试题柱状图的按钮
 	     * 涉及设置父组件 data，所以传递事件给父组件
@@ -72,16 +109,11 @@
 	     */
 	    postProblemresult () {
 	      let self = this
-	      self.data = self // hack 复用小程序代码
-	      
-	      let current = self.data.current - 1
-	      let pptData = self.data.pptData
-	      let inPageProblemID = pptData[current].Problem.ProblemID;
 
 	      let str = JSON.stringify({
 	        'op': 'postproblemresult',
-	        'lessonid': self.data.lessonid,
-	        'problemid': inPageProblemID
+	        'lessonid': self.lessonid,
+	        'problemid': self.inPageProblemID
 	      })
 
 	      self.socket.send(str)
@@ -94,18 +126,49 @@
 	    showProblemresultdetail () {
 	    	// 数据都是在 remote.vue
 	      let self = this
-	      self.data = self // hack 复用小程序代码
-	      return
-
-	      let current = self.data.current - 1
-	      let pptData = self.data.pptData
-	      let inPageProblemID = pptData[current].Problem.ProblemID;
 
 	      self.setData({
 	        isProblemResultDetailHidden: false
 	      })
-	      self.refreshProblemResultDetail()
+	      // self.refreshProblemResultDetail()
 	    },
+	    /**
+	     * 关闭试题详情的按钮
+	     *
+	     * @event bindtap
+	     */
+	    closeProblemresultdetail () {
+	      this.setData({
+	        isProblemResultDetailHidden: true
+	      })
+	    },
+	    /**
+	     * 更新试题详情的数据
+	     *
+	     */
+	    refreshProblemResultDetail(){
+	      let self = this
+	      self.data = self // hack 复用小程序代码
+
+	      let current = self.data.current - 1
+	      let pptData = self.data.pptData
+	      let inPageProblemID = pptData[current].Problem.ProblemID
+
+	      let url = API.problem_result_detail
+
+	      if (process.env.NODE_ENV === 'production') {
+	        url = API.problem_result_detail + '/' + inPageProblemID + '/'
+	      }
+
+	      // 单次刷新
+	      request.get(url)
+	        .then(jsonData => {
+	          self.setData({
+              // 设置试卷详情数据
+              problemResultDetailData: jsonData
+            })
+	        })
+	    }
 	  }
 	}
 </script>

@@ -9,8 +9,6 @@ import API from '@/config/api'
 import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 // 试题柱状图页面
 import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
-// 试题答案详情面板
-// import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -20,7 +18,6 @@ export default {
   data () {
     return {
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
-      isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
       problemResultDetailData: null,          // 试题柱状图详情页数据
@@ -29,7 +26,6 @@ export default {
   components: {
     RcMaskProblemtime,
     RcMaskProblemresult,
-    // RcMaskProblemresultDetail
   },
   methods: {
     /**
@@ -51,10 +47,8 @@ export default {
         //分5种情况，1：未退出遥控器且设置了时限 2：未退出遥控器且未设置时限 
         //3：刷新了遥控器且未设置时限 4：刷新了遥控器且设置了时限但是倒计时已经终止 5：刷新了遥控器且正在倒计时
         if(bellArr[current]){//情况1,情况2
-          console.log(91)
           self.showProblemResult(inPageProblemID);
         }else{
-          console.log(92)
           //查询当前题目的状态，收到node回复后再显示答案showProblemResult
           let str = JSON.stringify({
             'op': 'probleminfo',
@@ -309,59 +303,5 @@ export default {
           })
         })
     },
-    /**
-     * 显示试题详情的按钮：查看详情
-     *
-     * @event bindtap
-     */
-    showProblemresultdetail () {
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
-
-      self.setData({
-        isProblemResultDetailHidden: false
-      })
-      self.refreshProblemResultDetail()
-    },
-    /**
-     * 关闭试题详情的按钮
-     *
-     * @event bindtap
-     */
-    closeProblemresultdetail () {
-      this.setData({
-        isProblemResultDetailHidden: true
-      })
-    },
-    refreshProblemResultDetail(){
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID
-
-      //单次刷新
-      app.request({
-        url: API.problem_result_detail + '/' + inPageProblemID + '/',
-        method: 'GET',
-        success(data) {
-          if(jsonData.success){
-            console.log(data)
-
-            self.setData({
-              // 设置柱状图数据
-              problemResultDetailData: jsonData
-            })
-          }
-        },
-        fail(error) {
-          console.log('error', error);
-        },
-        complete(what) {
-          // console.log('complete', what);
-        },
-      })
-    }
   }
 }
