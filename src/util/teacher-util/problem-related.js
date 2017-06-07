@@ -5,6 +5,11 @@
 import request from '@/util/request'
 import API from '@/config/api'
 
+// 发送试题
+import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
+// 试题柱状图页面
+import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
 let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
@@ -18,6 +23,10 @@ export default {
       problemResultData: null,                // 试题柱状图页数据
       problemResultDetailData: null,          // 试题柱状图详情页数据
     }
+  },
+  components: {
+    RcMaskProblemtime,
+    RcMaskProblemresult
   },
   methods: {
     /**
@@ -75,15 +84,17 @@ export default {
      */
     closeProblemresult () {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
+      let inPageProblemID = pptData[current].Problem.ProblemID
 
       this.setData({
         isInitiativeCtrlMaskHidden: true
       })
       //关闭刷新柱状图的定时器
-      clearInterval(refProblemTimer);
+      clearInterval(refProblemTimer)
       refProblemTimerNum = 0
 
       let str = JSON.stringify({
@@ -92,9 +103,7 @@ export default {
         'problemid': inPageProblemID
       })
 
-      wx.sendSocketMessage({
-        data: str
-      })
+      self.socket.send(str)
     },
     /**
      * 试题柱状图页面中的公布至屏幕按钮
@@ -186,19 +195,22 @@ export default {
      */
     showProblemResult (inPageProblemID) {
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       let slideData = self.data.pptData[current]
-      let problemData = slideData.Problem;
-      let bullets = problemData.Bullets;
-      let optionData = [];
+      let problemData = slideData.Problem
+      let bullets = problemData.Bullets
+      let optionData = []
 
       for (let i = 0; i < bullets.length; i++) {
         optionData.push({
           'label': bullets[i].Label,
           'value': 0,
           'isRight': new RegExp(bullets[i].Label).test(slideData.Answer)
-        });
-      };
+        })
+      }
+
       let initData = {
         "problemID": problemData.ProblemID,
         'RedEnvelopeID': problemData.RedEnvelopeID,
@@ -224,10 +236,10 @@ export default {
         problemResultData: initData,
         isProblemPublished: true,
         isInitiativeCtrlMaskHidden: false,
-        initiativeCtrlMaskTpl: 'rc-mask-problemresult'
+        initiativeCtrlMaskTpl: 'RcMaskProblemresult'
       })
 
-      self.refreshProblemResult(inPageProblemID);
+      self.refreshProblemResult(inPageProblemID)
     },
     /**
      * 发试题后设置刷新柱状图倒计时页面的定时器
@@ -236,6 +248,8 @@ export default {
      */
     refreshProblemResult(inPageProblemID){
       let self = this
+      self.data = self // hack 复用小程序代码
+
       let current = self.data.current - 1
       //不在柱状图页面的话就停止刷新
       // if(!refreshStatus)return;
@@ -280,39 +294,35 @@ export default {
      */
     getProblemResult(inPageProblemID){
       let self = this
+      self.data = self // hack 复用小程序代码
 
-      app.request({
-        url: API.problem_statistics + '/' + inPageProblemID + '/',
-        method: 'GET',
-        success(data) {
-          if(data.data.success){
-            let newGraphData = data.data.graph.data;
-            let total = data.data.total
-            let members = data.data.members
-            let _problemResultData = self.data.problemResultData
-            let _graphData = _problemResultData.graph.data
+      let url = API.problem_statistics
 
-            for (let i = 0; i < _graphData.length; i++) {
-              _graphData[i].value = newGraphData[i].value
-            };
+      if (process.env.NODE_ENV === 'production') {
+        url = API.problem_statistics + '/' + inPageProblemID + '/'
+      }
 
-            _problemResultData.total = total
-            _problemResultData.members = members
-            _problemResultData.graph.data = _graphData
+      request.get(url)
+        .then(jsonData => {
+          let newGraphData = jsonData.graph.data;
+          let total = jsonData.total
+          let members = jsonData.members
+          let _problemResultData = self.data.problemResultData
+          let _graphData = _problemResultData.graph.data
 
-            self.setData({
-              // 设置柱状图数据
-              problemResultData: _problemResultData
-            })
-          }
-        },
-        fail(error) {
-          console.log('error', error);
-        },
-        complete(what) {
-          // console.log('complete', what);
-        },
-      })
+          for (let i = 0; i < _graphData.length; i++) {
+            _graphData[i].value = newGraphData[i].value
+          };
+
+          _problemResultData.total = total
+          _problemResultData.members = members
+          _problemResultData.graph.data = _graphData
+
+          self.setData({
+            // 设置柱状图数据
+            problemResultData: _problemResultData
+          })
+        })
     },
     /**
      * 显示试题详情的按钮：查看详情
@@ -351,12 +361,12 @@ export default {
         url: API.problem_result_detail + '/' + inPageProblemID + '/',
         method: 'GET',
         success(data) {
-          if(data.data.success){
+          if(jsonData.success){
             console.log(data)
 
             self.setData({
               // 设置柱状图数据
-              problemResultDetailData: data.data
+              problemResultDetailData: jsonData
             })
           }
         },

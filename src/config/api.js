@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
     fetch_presentation_data:        '/static/mock/fetch_presentation_data.json',    // ppt数据
     lesson_quiz_list:               '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
     publish_problem:                '/static/mock/publish_problem.json',            // 发布试题
-    problem_statistics:             '/lesson/problem_statistics',                   // 试题柱状图数据
+    problem_statistics:             '/static/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:          '/lesson/problem_result_detail',                // 试题详情数据
     publish_lesson_paper:           '/lesson/publish_lesson_paper',                 // 发布试卷
     quiz_results_statistics:        '/api/quiz/quiz_results_statistics',            // 获取试卷饼图数据
