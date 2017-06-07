@@ -1,0 +1,64 @@
+{
+    "success": true,
+    "status": 1,
+    "msg": "",
+    "data": {
+        "amount": 3500,
+        "balance": 1000,
+        "issued_count": 5,
+        "issuer": {
+            "id":4,
+            "profile": {
+                "name": "刘典典",
+                "avatar_96": "http://wx.qlogo.cn/mmopen/Q3auHgzwzM6qXaOqwUEg80MB7fL3frUJsMtQeMNkmNyy5pTNFzPIPgULia5q9eVyLI3c2rXw2KBic6SCZ0PVCu8Q/46"
+            }
+        },
+        "issued_user_list":[
+            {
+                "user_id": 3,
+                "time": 1487333332000,
+                "amount": 135,
+                "profile":{
+                    "name":"陈舟",
+                    "avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq5N9KKzb7NS6ibMNOJiaqqkSqqWwIibjONFibvk3KSjfjUtS4WibL7r4ALsa1J7AtUE8pCGM4dRia9xOry/96"
+                }
+            },
+             {
+                "user_id": 3,
+                "time": 1487333332000,
+                "amount": 135,
+                "profile":{
+                    "name":"陈舟",
+                    "avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq5N9KKzb7NS6ibMNOJiaqqkSqqWwIibjONFibvk3KSjfjUtS4WibL7r4ALsa1J7AtUE8pCGM4dRia9xOry/96"
+                }
+            },
+             {
+                "user_id": 3,
+                "time": 1487333332000,
+                "amount": 135,
+                "profile":{
+                    "name":"陈舟",
+                    "avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq5N9KKzb7NS6ibMNOJiaqqkSqqWwIibjONFibvk3KSjfjUtS4WibL7r4ALsa1J7AtUE8pCGM4dRia9xOry/96"
+                }
+            },
+             {
+                "user_id": 3,
+                "time": 1487333332000,
+                "amount": 135,
+                "profile":{
+                    "name":"陈舟",
+                    "avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq5N9KKzb7NS6ibMNOJiaqqkSqqWwIibjONFibvk3KSjfjUtS4WibL7r4ALsa1J7AtUE8pCGM4dRia9xOry/96"
+                }
+            },
+            {
+                "user_id": 3,
+                "time": 1487333332000,
+                "amount": 135,
+                "profile":{
+                    "name":"周凯华",
+                    "avatar":"http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/96"
+                }
+            }
+        ]
+    }
+}

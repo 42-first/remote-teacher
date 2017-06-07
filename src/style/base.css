@@ -158,3 +158,23 @@ a {text-decoration: none;}
 [data-dpr="3"] .f40 {
   font-size: 120px;
 }
+
+[data-dpr="1"] .f45 {
+  font-size: 45px;
+}
+[data-dpr="2"] .f45 {
+    font-size: 90px;
+}
+[data-dpr="3"] .f45 {
+  font-size: 135px;
+}
+
+[data-dpr="1"] .f60 {
+  font-size: 60px;
+}
+[data-dpr="2"] .f60 {
+    font-size: 120px;
+}
+[data-dpr="3"] .f60 {
+  font-size: 180px;
+}
