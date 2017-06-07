@@ -29,6 +29,10 @@
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           :is="initiativeCtrlMaskTpl"
+          :lessonid="lessonid"
+          :ppt-data="pptData"
+          :current="current"
+          :socket="socket"
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
@@ -88,6 +92,7 @@ import problemRelated from '@/util/teacher-util/problem-related'
 
 export default {
   name: 'Remote',
+  // 找不到的data在 mixins 中
   data () {
     return {
       // TODO 用户身份

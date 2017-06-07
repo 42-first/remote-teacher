@@ -9,6 +9,8 @@ import API from '@/config/api'
 import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 // 试题柱状图页面
 import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+// 试题答案详情面板
+// import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -26,7 +28,8 @@ export default {
   },
   components: {
     RcMaskProblemtime,
-    RcMaskProblemresult
+    RcMaskProblemresult,
+    // RcMaskProblemresultDetail
   },
   methods: {
     /**

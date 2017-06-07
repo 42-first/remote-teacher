@@ -32,7 +32,7 @@
         <div class="btn-desc f15">投屏</div>
       </v-touch>
 
-      <v-touch class="btn-item" v-on:tap="">
+      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
         <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
         <div class="btn-desc f15">查看详情</div>
       </v-touch>
@@ -48,7 +48,7 @@
 <script>
 	export default {
 	  name: 'RcMaskProblemresult',
-	  props: ['problemResultData', 'problemDurationLeft'],
+	  props: ['lessonid', 'pptData', 'current', 'socket', 'problemResultData', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    }
@@ -58,6 +58,7 @@
 	  methods: {
 	  	/**
 	     * 关闭试题柱状图的按钮
+	     * 涉及设置父组件 data，所以传递事件给父组件
 	     *
 	     * @event bindtap
 	     */
@@ -70,8 +71,7 @@
 	     * @event bindtap
 	     */
 	    postProblemresult () {
-	    	// 数据都是在 remote.vue
-	      let self = this.$parent
+	      let self = this
 	      self.data = self // hack 复用小程序代码
 	      
 	      let current = self.data.current - 1
@@ -85,6 +85,26 @@
 	      })
 
 	      self.socket.send(str)
+	    },
+	    /**
+	     * 显示试题详情的按钮：查看详情
+	     *
+	     * @event bindtap
+	     */
+	    showProblemresultdetail () {
+	    	// 数据都是在 remote.vue
+	      let self = this
+	      self.data = self // hack 复用小程序代码
+	      return
+
+	      let current = self.data.current - 1
+	      let pptData = self.data.pptData
+	      let inPageProblemID = pptData[current].Problem.ProblemID;
+
+	      self.setData({
+	        isProblemResultDetailHidden: false
+	      })
+	      self.refreshProblemResultDetail()
 	    },
 	  }
 	}

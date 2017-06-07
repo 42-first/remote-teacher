@@ -142,17 +142,17 @@ function socketProcessMessage(msg){
   //刷新了遥控器页面，且点击的是查看答案按钮
   if (msg.op == 'probleminfo') {
 
-    if(msg.limit == -1){
+    if (msg.limit == -1 || typeof msg.limit === 'undefined') {
 
         //3：刷新了遥控器且未设置时限
         self.startBell(current, -1);
 
-    }else if((msg.now-msg.dt) >= msg.limit*1000){
+    } else if ((msg.now-msg.dt) >= msg.limit*1000) {
 
         //4：刷新了遥控器且设置了时限但是倒计时已经终止
         self.startBell(current, 0);
 
-    }else{
+    } else {
 
         //5：刷新了遥控器且正在倒计时
         var bellTimeLeft = msg.limit - Math.floor((msg.now-msg.dt)/1000);
