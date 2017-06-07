@@ -28,7 +28,7 @@ var actionsMixin = {
 
               // socket_config['problem'][item['prob']] = item;
               timeline['problem'][item['prob']] = item;
-              this.problemMap.set(item['prob'], item);
+              // this.problemMap.set(item['prob'], item);
               // 当前问题需要计时
               break;
 
@@ -193,6 +193,8 @@ var actionsMixin = {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation['Slides'];
       let slideData = pptData[data.pageIndex-1];
+
+      slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
 
       data = Object.assign(data, {
         pageIndex: data.pageIndex,

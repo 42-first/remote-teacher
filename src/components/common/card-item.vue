@@ -346,6 +346,7 @@
     .paper-icon {
       display: block;
       width: 1.386667rem;
+      min-height: 1.546667rem
     }
   }
 

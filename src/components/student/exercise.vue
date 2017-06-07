@@ -17,9 +17,9 @@
       </header>
 
       <!-- 定时时间 -->
-      <section class="exercise__timing" v-show="leaveTime>0">
-        <p class="exercise__timing--icon"><i class="iconfont icon-clock f40"></i></p>
-        <p class="exercise__timing--number f60">{{ sLeaveTime }}</p>
+      <section class="exercise__timing" v-show="summary&&summary.limit>0">
+        <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-clock"></i></p>
+        <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
       </section>
 
       <!-- 问题内容 -->
@@ -32,10 +32,10 @@
       <section class="" v-if="isShowOption">
         <ul class="exercise-options" v-if="summary">
           <li class="options-item f45" v-for="(item, index) in summary.options">
-            <p class="options-label selected">{{ item.Label }}</p>
+            <p class="options-label" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
-        <p class="submit-btn f18" v-if="isShowSubmit">提交答案</p>
+        <p :class="['submit-btn', 'f18', canSubmit ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit === 2 ? '提交中...': '提交答案' }}</p>
       </section>
 
       <div class="commit-diff" v-if="isShowSubmit"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
@@ -55,9 +55,18 @@
         opacity: 0,
         title: '习题',
         leaveTime: 0,
-        sLeaveTime: '00',
+        sLeaveTime: '',
+        timeOver: false,
         summary: null,
         options: null,
+        // 提交状态 0:不能提交 1：可以提交 2：提交中
+        canSubmit: 0,
+
+        // 选择的答案
+        optionsSet: new Set(),
+        // 问题类型
+        problemType: '',
+
         isShowSubmit: true,
         isShowOption: true,
         // 问题定时通信ID
@@ -87,8 +96,12 @@
     watch: {
     },
     filters: {
-      formatTime(time) {
-        return moment(time).format('hh:mm:ss');
+      setOption(option) {
+        let sClass = '';
+
+        // this.optionsSet.has(option) && (sClass = 'selected');
+
+        return `options-label ${sClass}`;
       }
     },
     mixins: [],
@@ -115,6 +128,9 @@
           this.setTiming(data.limit)
         }
 
+        setTimeout(()=>{
+          this.opacity = 1;
+        }, 20)
       },
 
       /*
@@ -122,12 +138,9 @@
       * @param
       */
       setTiming(leaveTime) {
-        // let startTime = data.time;
-        // let now = Date.now();
-
         this.leaveTime = leaveTime;
 
-        if (leaveTime >= 0) {
+        if (leaveTime > 0) {
           this.timer = setInterval(()=>{
             this.leaveTime--;
             let minutes = parseInt(this.leaveTime / 60, 10);
@@ -137,15 +150,70 @@
 
             this.sLeaveTime = minutes + ':' + seconds;
 
-            this.leaveTime === 0 && clearInterval(this.timer);
+            if(this.leaveTime === 0) {
+              this.sLeaveTime = '时间到';
+              clearInterval(this.timer);
+              this.timeOver = true;
+            }
+
           }, 1000)
         } else {
           // 时间到
         }
       },
 
+      /*
+      * @method 返回主页面
+      */
       handleBack() {
         this.$router.back();
+      },
+
+      /*
+      * @method 设置答案选项
+      */
+      handleSetOption(option) {
+        let targetEl = event.target;
+
+        // 提交中
+        if(this.canSubmit === 2) {
+          return this;
+        }
+
+        if(this.optionsSet.has(option)) {
+          targetEl.classList.remove('selected');
+          this.optionsSet.delete(option);
+        } else {
+          // 是否多选
+          if(this.problemType !== 'MultipleChoice' && this.optionsSet.size > 0) {
+            return this;
+          }
+
+          targetEl.classList.add('selected');
+          this.optionsSet.add(option);
+        }
+
+        // 是否可以提交
+        if(this.optionsSet.size){
+          this.canSubmit = 1;
+          console.log(this.optionsSet);
+        } else {
+          this.canSubmit = 0;
+        }
+      },
+
+      /*
+      * @method 提交答案
+      */
+      handleSubmit() {
+        // 是否可以提交
+        if(this.canSubmit === 1) {
+          this.canSubmit = 2;
+
+          clearInterval(this.timer);
+        }
+
+        // 是否超时deng
       }
     },
     created() {
@@ -158,7 +226,10 @@
       // 是否观察者模式
       this.observerMode = this.$parent.observerMode;
 
-      this.oProblem = this.$parent.problemMap.get(problemID);
+      this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+      // 问题类型
+      this.problemType =  this.oProblem['Type'];
+      console.log(this.problemType);
 
       if(problemID) {
         // this.formatData(this.summary);
@@ -213,7 +284,8 @@
     align-items: center;
     justify-content: center;
 
-    padding: 0.533333rem 0 0;
+    padding: 0.2rem 0 0;
+    min-height: 2.666667rem;
 
     .exercise__timing--icon {
       margin-right: 0.453333rem;
@@ -224,6 +296,7 @@
       border-radius: 50%;
 
       .iconfont {
+        font-size: 1.0rem;
         line-height: 1.4rem;
         color: #fff;
       }
@@ -303,6 +376,7 @@
 
         color: #fff;
         font-weight: lighter;
+        cursor: pointer;
 
         background: #C8C8C8;
         border-radius: 50%;
@@ -326,6 +400,11 @@
     background: #9B9B9B;
 
     border-radius: 4px;
+  }
+
+  .submit-btn.can {
+    background: #639EF4;
+    cursor: pointer;
   }
 
   .commit-diff {

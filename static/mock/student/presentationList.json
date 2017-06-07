@@ -56,14 +56,14 @@
                                     "Top": 426.937469
                                 },
                                 {
-                                    "Label": "C",
+                                    "Label": "E",
                                     "Width": 40.5,
                                     "Height": 40.5,
                                     "Left": 87.75,
                                     "Top": 359.437469
                                 },
                                 {
-                                    "Label": "D",
+                                    "Label": "F",
                                     "Width": 40.5,
                                     "Height": 40.5,
                                     "Left": 87.75,
@@ -116,20 +116,6 @@
                                     "Height": 40.5,
                                     "Left": 87.75,
                                     "Top": 426.937469
-                                },
-                                {
-                                    "Label": "C",
-                                    "Width": 40.5,
-                                    "Height": 40.5,
-                                    "Left": 87.75,
-                                    "Top": 359.437469
-                                },
-                                {
-                                    "Label": "D",
-                                    "Width": 40.5,
-                                    "Height": 40.5,
-                                    "Left": 87.75,
-                                    "Top": 426.937469
                                 }
                             ],
                             "Submit": {
@@ -138,7 +124,7 @@
                                 "Left": 553.8461,
                                 "Top": 467.437469
                             },
-                            "ProblemID":100,
+                            "ProblemID":101,
                             "Type": "Polling",
                             "Answer": "2",
                             "Score": 1
