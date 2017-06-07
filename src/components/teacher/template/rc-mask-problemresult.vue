@@ -49,7 +49,9 @@
 		<!-- 试题作答详情面板 -->
 		<RcMaskProblemresultDetail
 			v-show="!isProblemResultDetailHidden"
+			:problem-result-detail-data="problemResultDetailData"
 			@closeProblemresultdetail="closeProblemresultdetail"
+			@refreshProblemResultDetail="refreshProblemResultDetail"
 		></RcMaskProblemresultDetail>
 	</div>
 </template>
@@ -67,13 +69,12 @@
 	  data () {
 	    return {
 	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
+	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    }
 	  },
 	  computed: {
 	    inPageProblemID: function () {
-	      let current = this.current - 1
-	      let pptData = this.pptData
-	      return pptData[current].Problem.ProblemID
+	      return this.pptData[this.current - 1].Problem.ProblemID
 	    }
 	  },
 	  components: {
@@ -130,7 +131,7 @@
 	      self.setData({
 	        isProblemResultDetailHidden: false
 	      })
-	      // self.refreshProblemResultDetail()
+	      self.refreshProblemResultDetail()
 	    },
 	    /**
 	     * 关闭试题详情的按钮
@@ -144,27 +145,23 @@
 	    },
 	    /**
 	     * 更新试题详情的数据
+	     * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
 	     *
 	     */
 	    refreshProblemResultDetail(){
 	      let self = this
-	      self.data = self // hack 复用小程序代码
-
-	      let current = self.data.current - 1
-	      let pptData = self.data.pptData
-	      let inPageProblemID = pptData[current].Problem.ProblemID
-
 	      let url = API.problem_result_detail
 
 	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_result_detail + '/' + inPageProblemID + '/'
+	        url = API.problem_result_detail + '/' + self.inPageProblemID + '/'
 	      }
 
 	      // 单次刷新
 	      request.get(url)
 	        .then(jsonData => {
+	        	console.log(jsonData)
+	        	// 设置试卷详情数据
 	          self.setData({
-              // 设置试卷详情数据
               problemResultDetailData: jsonData
             })
 	        })
@@ -247,12 +244,12 @@
 			margin: 0 auto;
 		  display: flex;
 		  align-items: center;
-		  justify-content: center;
+		  justify-content: space-between;
 		  width: 7.466667rem;
 		  padding-top: 1.866667rem;
 
 		  .btn-item {
-			  flex: 1; 
+			  width: 1.6rem; 
 			  text-align: center;
 			  font-size: 30rpx;
 			  color: #fff;

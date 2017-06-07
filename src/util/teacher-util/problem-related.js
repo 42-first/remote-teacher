@@ -20,7 +20,6 @@ export default {
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
-      problemResultDetailData: null,          // 试题柱状图详情页数据
     }
   },
   components: {

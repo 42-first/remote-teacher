@@ -143,10 +143,20 @@ a {text-decoration: none;}
   font-size: 32px;
 }
 [data-dpr="2"] .f32 {
-    font-size: 64px;
+  font-size: 64px;
 }
 [data-dpr="3"] .f32 {
   font-size: 96px;
+}
+
+[data-dpr="1"] .f36 {
+  font-size: 36px;
+}
+[data-dpr="2"] .f36 {
+  font-size: 72px;
+}
+[data-dpr="3"] .f36 {
+  font-size: 108px;
 }
 
 [data-dpr="1"] .f40 {
@@ -167,6 +177,16 @@ a {text-decoration: none;}
 }
 [data-dpr="3"] .f45 {
   font-size: 135px;
+}
+
+[data-dpr="1"] .f50 {
+  font-size: 50px;
+}
+[data-dpr="2"] .f50 {
+    font-size: 100px;
+}
+[data-dpr="3"] .f50 {
+  font-size: 150px;
 }
 
 [data-dpr="1"] .f60 {
