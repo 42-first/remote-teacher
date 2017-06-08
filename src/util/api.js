@@ -10,13 +10,21 @@ if (process.env.NODE_ENV === 'production') {
         \*------------------*/
 
         student: {
-            "GET_PRESENTATION_LIST": "",
-            "GET_RED_ENVELOPE_DETAIL": "/api/red/red_envelope_detail/",
-            "COURSE_STUDENT_DANMU": "/static/mock/course/student_course_danmu.json"
+            // 课件习题列表
+            'GET_PRESENTATION_LIST': '',
+            // 红包详情
+            'GET_RED_ENVELOPE_DETAIL': '/api/red/red_envelope_detail/',
+            // 习题提交
+            'ANSWER_LESSON_PROBLEM': '/v/lesson/answer_lesson_problem',
+            // 更新PPT数据
+            'FETCH_PRESENTATION_DATA': '/lesson/fetch_presentation_data/',
+            // ppt收藏 不懂
+            'SET_LEESON_SILDE_TAG': '/lesson/post_studentlessonslide_tag',
+            'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
         /*------------------*\
-           $ 接收器 end
+          $ 接收器 end
         \*------------------*/
 
     }
@@ -29,10 +37,16 @@ if (process.env.NODE_ENV === 'production') {
 
         student: {
             // 课件习题列表
-            "GET_PRESENTATION_LIST": "/static/mock/student/presentationList.json",
+            'GET_PRESENTATION_LIST': '/static/mock/student/presentationList.json',
             // 红包详情
-            "GET_RED_ENVELOPE_DETAIL": "/static/mock/student/red_envelope_detail.json",
-            "COURSE_STUDENT_DANMU": "/static/mock/course/student_course_danmu.json"
+            'GET_RED_ENVELOPE_DETAIL': '/static/mock/student/red_envelope_detail.json',
+            // 习题提交
+            'ANSWER_LESSON_PROBLEM': '/static/mock/student/presentationList.json',
+            // 更新PPT数据
+            'FETCH_PRESENTATION_DATA': '/static/mock/student/presentationList.json',
+            // ppt收藏 不懂
+            'SET_LEESON_SILDE_TAG': '/static/mock/student/presentationList.json',
+            'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
         /*------------------*\

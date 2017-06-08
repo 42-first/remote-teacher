@@ -26,10 +26,7 @@ var actionsMixin = {
             case 'problem':
               this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
 
-              // socket_config['problem'][item['prob']] = item;
-              timeline['problem'][item['prob']] = item;
-              // this.problemMap.set(item['prob'], item);
-              // 当前问题需要计时
+              this.timeline['problem'][item['prob']] = item;
               break;
 
             // 试卷
@@ -38,7 +35,7 @@ var actionsMixin = {
 
             // event
             case 'event':
-              this.addPaper({ type: 1, message: item['title'] });
+              this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
 
               break;
 
@@ -50,46 +47,21 @@ var actionsMixin = {
 
             default: break;
           }
-
-          // if(item['type'] == 'slide'){
-          //                   addPPT({pageIndex:item['si'],time:item['dt'],presentationid:item['pres']});
-          // }else if(item['type'] == 'problem'){
-          //                   addXT({pageIndex:item['si'], time:item['dt'],presentationid:item['pres']});
-          //                   socket_config['problem'][item['prob']] = item;
-          //                   if(mainView.activePage.name=='exercisepage'){
-          //                       showTimelime(item['prob']);
-          //                   }
-          // }else if(item['type'] == 'quiz'){
-          //                   addPaper({quiz:item['quiz'],title:item['title'],total:item['total'],time:item['dt']});
-          // }else if(item['type'] == 'event'){
-          //                   addMessageSection({message:item['title']});
-          // }else if(item['type'] == 'redpacket'){
-          //                   Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
-          //                   Stu_hongbao.redpacket_info[item.redpacket] ={
-          //                       count:item.count
-          //                   };
-          //                   Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
-          // }else if(item['type'] == 'updateredpacket'){
-          //                   //删除原来的消息
-          //                   Stu_hongbao.deleteHongBao({probid:item.redpacket});
-          //                   Stu_hongbao.redpacket_hash[item.redpacket] = item.detail;
-          //                   Stu_hongbao.redpacket_info[item.redpacket] ={
-          //                       count:item.count
-          //                   };
-          //                   Stu_hongbao.addHongBao({probid:item.redpacket, time:item.dt,count:item.detail.length});
-          //               }
-
         });
       }
     },
+
     /*
     * @method 新增提醒消息
-    * data: { type: 1, message: '' }
+    * data: { type: 1, message: '', time: '' }
     */
     addMessage(data) {
-      data.type = 1;
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item)=>{
+        return item.type === 1 && item.message === data.message && item.time === data.time;
+      })
 
-      this.cards.push(data);
+      !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     },
 
@@ -125,12 +97,6 @@ var actionsMixin = {
             let data = self.cards[index - 1];
             data.src = slideData['Cover'];
           }
-
-          // test fileSize
-          // let reader = new FileReader();
-          // reader.onload = function(file) {
-          // }
-          // reader.readAsDataURL();
         };
 
         oImg.src = slideData['Cover'];
@@ -142,13 +108,15 @@ var actionsMixin = {
 
 
         if(!hasPPT) {
-          data.src = slideData['Thumbnail'];
-          // 宽高比
-          data.rate = presentation.Width / presentation.Height;
-          data.hasQuestion = slideData['question'] == 1 ? true : false;
-          data.hasStore = slideData['store'] == 1 ? true : false;
-          data.Width = presentation.Width;
-          data.Height = presentation.Height;
+          data = Object.assign(data, {
+            src: slideData['Thumbnail'],
+            rate: presentation.Width / presentation.Height,
+            hasQuestion: slideData['question'] == 1 ? true : false,
+            hasStore: slideData['store'] == 1 ? true : false,
+            Width: presentation.Width,
+            Height: presentation.Height,
+            slideID: slideData['lessonSlideID']
+          })
 
           this.cards.push(data);
           index = this.cards.length;
@@ -169,6 +137,10 @@ var actionsMixin = {
     */
     addPaper(data) {
       let oQuiz = this.quizMap.get(data.quiz);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item)=>{
+        return item.type === 4 && item.quiz === data.quiz;
+      })
 
       data = Object.assign(data, {
         papername: data.title,
@@ -180,10 +152,9 @@ var actionsMixin = {
         isComplete: oQuiz.answered
       })
 
-      this.cards.push(data);
+      !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     },
-
 
     /*
     * @method 新增习题
@@ -204,11 +175,16 @@ var actionsMixin = {
         status: slideData['Problem']['Result'] ? '已完成' : '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
-        options: slideData['Problem']['Bullets']
+        options: slideData['Problem']['Bullets'],
+        cover: slideData['Cover']
       })
 
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item)=>{
+        return item.type === 3 && item.time === data.time;
+      })
 
-      this.cards.push(data);
+      !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     },
 
@@ -227,8 +203,12 @@ var actionsMixin = {
         caption: caption
       })
 
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item)=>{
+        return item.type === 5 && item.time === data.time;
+      })
 
-      this.cards.push(data);
+      !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     }
   }

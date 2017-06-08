@@ -17,7 +17,7 @@
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line"><i class="iconfont icon-lianxi f25"></i>发送弹幕</p>
-            <p class="action f17"><i class="iconfont icon-lianxi f25"></i>发送投稿</p>
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-lianxi f25"></i>发送投稿</router-link>
           </div>
         </div>
       </header>
@@ -101,15 +101,19 @@
 
 </template>
 <script>
-  // import moment from 'moment'
   import request from '@/util/request'
   import API from '@/util/Api'
+
   import CardItemComponent from '@/components/common/card-item.vue'
+
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
 
   // 子组件不需要引用直接使用
   window.request = request;
+  if (process.env.NODE_ENV !== 'production') {
+    request.post = request.get
+  }
 
   export default {
     name: 'student-page',
@@ -137,6 +141,10 @@
 
         // 是否观看模式
         observerMode: false,
+        // 是否开启弹幕
+        danmuStatus: false,
+        // 课程是否结束
+        lessonStatus: 0,
         presentationList: null,
         presentationMap: new Map(),
         quizList: null,
@@ -150,7 +158,9 @@
         // 记录全部的事件
         allEvents: [],
         // 时间轴数据
-        timeline: {},
+        timeline: {
+          'problem': {}
+        },
         //
         isMore: false,
         commitDiffURL: '/lesson/lesson_submit_difficulties'
@@ -172,7 +182,7 @@
       /*
       * @method 接收器初始化
       */
-      init(){
+      init() {
         let self = this;
 
         this.lessonID = this.$route.params.lessonID;
@@ -193,7 +203,8 @@
         // this.getPresentationList();
 
         Promise.all([this.getPresentationList()]).then(()=>{
-          self.testTimeline();
+          // self.testTimeline();
+          self.initws();
 
           setTimeout(()=>{
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
@@ -261,7 +272,7 @@
 
         // lessons
         return request.get(URL, param)
-          .then(function (res) {
+          .then((res) => {
             if(res && res.data) {
               let data = res.data;
               self.presentationList = data.presentationList;
@@ -273,28 +284,8 @@
 
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
-                  let pptData = presentation['Slides'];
 
-                  if(pptData.length) {
-                    pptData.forEach( (slide, index) => {
-                      // 收藏 不懂
-                      if( slide['Tag'] && slide['Tag'].length ) {
-                        slide['Tag'].forEach((tag)=>{
-                          tag === 1 && (slide['question'] = 1);
-                          tag === 2 && (slide['store'] = 1);
-                        })
-                      }
-
-                      // 问题结果
-                      if (slide['Problem'] && slide['Result']) {
-                        slide['Problem']['Result'] = slide['Result'];
-                      }
-                    });
-
-                    presentation['Slides'] = pptData;
-                  }
-
-                  self.presentationMap.set(presentation.presentationID, presentation);
+                  self.formatPresentation(presentation);
                 }
               }
 
@@ -313,6 +304,77 @@
             }
           });
       },
+
+      /*
+      * @method 获取实时更新的数据
+      * @param presentationID
+      */
+
+      getUpdatePPTData(presentationID) {
+        let self = this;
+        let URL = API.student.FETCH_PRESENTATION_DATA;
+        let param = {
+          lessonID: this.lessonID,
+          presentationID: presentationID,
+          userAuth: this.userAuth,
+          userID: this.userID
+        };
+
+        if (process.env.NODE_ENV === 'production') {
+          URL = URL + presentationID;
+        }
+
+        self.presentationID = presentationID;
+
+        return request.get(URL, param).
+          then(function (res) {
+            if(res && res.data) {
+              let data = res.data;
+              let presentation = data.presentationData;
+
+              // set presentation map
+              self.formatPresentation(presentation);
+
+              // set title
+              self.title = document.title = presentation.Title;
+
+              return data;
+            }
+          });
+
+      },
+
+      /*
+      * @method 格式化ppt数据
+      * @param
+      */
+      formatPresentation(presentation) {
+        if(presentation) {
+          let pptData = presentation['Slides'];
+
+          if(pptData.length) {
+            pptData.forEach( (slide, index) => {
+              // 收藏 不懂
+              if( slide['Tag'] && slide['Tag'].length ) {
+                slide['Tag'].forEach((tag)=>{
+                  tag === 1 && (slide['question'] = 1);
+                  tag === 2 && (slide['store'] = 1);
+                })
+              }
+
+              // 问题结果
+              if (slide['Problem'] && slide['Result']) {
+                slide['Problem']['Result'] = slide['Result'];
+              }
+            });
+
+            presentation['Slides'] = pptData;
+          }
+
+          this.presentationMap.set(presentation.presentationID, presentation);
+        }
+      },
+
       /*
       * @method 下拉刷新回调
       * @param
@@ -320,7 +382,8 @@
       refeshLoad(id) {
         setTimeout(()=>{
           this.$refs.loadmore.onTopLoaded();
-          this.addPPT({ type: 2, pageIndex: 6, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
+          this.testTimeline();
+          // this.addPPT({ type: 2, pageIndex: 6, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
         }, 1500)
       },
       /*
@@ -343,14 +406,12 @@
         if(tabIndex) {
           this.currTabIndex = tabIndex;
         }
-
       },
       /*
        * @method more
        *
        */
       handleMoreActions() {
-        // let targetEl =
 
         if(this.isMore) {
           this.isMore = false;
@@ -536,6 +597,7 @@
     position: absolute;
     top: 2.33rem;
     left: 0;
+    right: 0;
     bottom: 0;
     overflow-y: scroll;
 

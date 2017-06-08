@@ -22,8 +22,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" :data-pageindex="item.pageIndex" :data-presentationid="item.presentationid">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleQuestion(item.pageIndex, item.presentationid)">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleStore(item.pageIndex, item.presentationid)">收藏</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.pageIndex, item.presentationid)">不懂</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.pageIndex, item.presentationid)">收藏</p>
           </div>
         </div>
       </div>
@@ -98,6 +98,7 @@
 
 </template>
 <script>
+  import API from '@/util/Api'
   import timeago from 'timeago.js';
 
   // 在这里设置相对时间
@@ -116,7 +117,6 @@
     watch: {
     },
     computed: {
-
     },
     filters: {
       getTimeago(time) {
@@ -186,6 +186,46 @@
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
         gallery.init();
+      },
+      /*
+      * @method ppt不懂,收藏
+      * tag 1 不懂 2 收藏
+      */
+      handleTag(tag, pageIndex, presentationid) {
+        let self = this;
+        let URL = API.student.SET_LEESON_SILDE_TAG;
+        let cards = this.$parent.$parent.cards;
+
+        let data = cards.find((card, index)=>{
+          return card.pageIndex === pageIndex && card.presentationid === presentationid
+        })
+
+        // 确实是否不懂
+        let tagType = data.hasQuestion ? 'cancel' : 'add';
+        let param = {
+          'tag': tag,
+          'lessonSlideID': data['slideID'],
+          'tagType': tagType
+        }
+
+        // test: todo
+        // tag === 1 && (data.hasQuestion = !data.hasQuestion);
+        // tag === 2 && (data.hasStore = !data.hasStore);
+
+        return request.post(URL, param).
+          then(function (res) {
+            if(res && res.data) {
+              // let data = res.data;
+              if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
+                return;
+              }
+
+              tag === 1 && (data.hasQuestion = !data.hasQuestion);
+              tag === 2 && (data.hasStore = !data.hasStore);
+
+              return res;
+            }
+          });
       }
     },
     created() {

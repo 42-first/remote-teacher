@@ -24,20 +24,20 @@
 
       <!-- 问题内容 -->
       <section class="exercise-content">
-        <p class="page-no f18"><span>6</span>/<span>9</span></p>
-        <img class="cover" src="http://7xo8b6.com2.z0.glb.qiniucdn.com/FmlcR6CYp-3nV_Cl2zjc8da4kiet" />
+        <p class="page-no f18"><span>第{{ summary.pageIndex }}页</span></p>
+        <img class="cover" :src="summary.cover" />
       </section>
 
       <!-- 问题选项 -->
       <section class="" v-if="isShowOption">
         <ul class="exercise-options" v-if="summary">
-          <li class="options-item f45" v-for="(item, index) in summary.options">
+          <li :class="['options-item', 'f45', problemType]" v-for="(item, index) in summary.options">
             <p class="options-label" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
         <!-- 投票选择提示 -->
         <p class="polling-count f20" v-if="problemType==='Polling'">您还可以再投{{ pollingCount }}票</p>
-        <p :class="['submit-btn', 'f18', canSubmit ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit === 2 ? '提交中...': '提交答案' }}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
       </section>
 
       <div class="commit-diff" v-if="isShowSubmit"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
@@ -61,7 +61,7 @@
         timeOver: false,
         summary: null,
         options: null,
-        // 提交状态 0:不能提交 1：可以提交 2：提交中
+        // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
 
         // 选择的答案
@@ -87,7 +87,6 @@
          next();
       } else {
         next(vm => {
-          // history.back()
           vm.$router.go(-1)
         })
       }
@@ -99,12 +98,27 @@
     watch: {
     },
     filters: {
-      setOption(option) {
-        let sClass = '';
+      setSubmitText(submitStatus) {
+        let text = '提交答案';
 
-        // this.optionsSet.has(option) && (sClass = 'selected');
+        if(submitStatus) {
+          switch (submitStatus) {
+            case 0:
+            case 1:
+              text = '提交答案';
+              break;
+            case 2:
+              text = '提交中...';
+              break;
+            case 3:
+              text = '提交完成';
+              break;
+            default:
+              break;
+          }
+        }
 
-        return `options-label ${sClass}`;
+        return text;
       }
     },
     mixins: [],
@@ -114,6 +128,15 @@
       * @param problemID 问题ID
       */
       init(data) {
+        let problemID = this.summary.problemID
+        this.title = this.$parent.title;
+
+        // 是否观察者模式
+        this.observerMode = this.$parent.observerMode;
+        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        // 问题类型
+        this.problemType = this.oProblem['Type'];
+
         // 是否观察者模式
         if(this.observerMode) {
           this.isShowOption = false;
@@ -132,10 +155,12 @@
             this.pollingCount = parseInt(this.oProblem['Answer'], 10);
           }
 
+          // 提交有困难地址
+          this.commitDiffURL = this.commitDiffURL + problemID;
+
           // todo: test测试
           this.setTiming(data.limit)
         }
-
 
         setTimeout(()=>{
           this.opacity = 1;
@@ -168,6 +193,7 @@
           }, 1000)
         } else {
           // 时间到
+          this.timeOver = true;
         }
       },
 
@@ -196,13 +222,12 @@
           if(this.problemType === 'Polling') {
             this.pollingCount++;
           }
-
         } else {
           // 是否多选
-          if(this.problemType === 'MultipleChoice') {
+          if(this.problemType === 'MultipleChoiceMA') {
             targetEl.classList.add('selected');
             this.optionsSet.add(option);
-          } else if(this.problemType === 'singlechoice' && this.optionsSet.size > 0) {
+          } else if(this.problemType === 'MultipleChoice' && this.optionsSet.size < 1) {
             targetEl.classList.add('selected');
             this.optionsSet.add(option);
           } else if(this.problemType === 'Polling' && this.pollingCount) {
@@ -215,7 +240,7 @@
         // 是否可以提交
         if(this.optionsSet.size){
           this.canSubmit = 1;
-          console.log(this.optionsSet);
+          console.log([...this.optionsSet].sort().join(''));
         } else {
           this.canSubmit = 0;
         }
@@ -225,14 +250,52 @@
       * @method 提交答案
       */
       handleSubmit() {
+        let self = this;
+        let URL = API.student.ANSWER_LESSON_PROBLEM;
+
         // 是否可以提交
         if(this.canSubmit === 1) {
+          // 是否超时
+          if(this.timeOver) {
+            this.canSubmit = 0;
+            return this;
+          }
+
           this.canSubmit = 2;
+
+          const startTime = this.summary.time;
+          const endTime = +new Date();
+          // 持续多少秒
+          const duration = (endTime - startTime)/1000;
+          const retryTimes = 0;
+
+          let param = {
+            'duration': duration,
+            'startTime': startTime,
+            'submit_time': endTime,
+            'lesson_problem_id': this.summary.problemID,
+            'result': [...this.optionsSet].sort().join(''),
+            'retry_times': retryTimes
+          }
+
+          return request.post(URL, param)
+            .then(function (res) {
+              if(res && res.data) {
+                let data = res.data;
+
+                self.canSubmit = 3;
+                clearInterval(self.timer);
+                return data;
+              }
+            }).then(function(res){
+              // 提交失败保存本地
+            })
+            .catch(error => {
+              //
+            });
 
           clearInterval(this.timer);
         }
-
-        // 是否超时deng
       }
     },
     created() {
@@ -240,23 +303,7 @@
       let cards = this.$parent.cards;
       this.summary = cards[this.index];
 
-      let problemID = this.summary.problemID
-      this.title = this.$parent.title;
-      // 是否观察者模式
-      this.observerMode = this.$parent.observerMode;
-
-      this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
-      // 问题类型
-      this.problemType =  this.oProblem['Type'];
-      console.log(this.problemType);
-
-      if(problemID) {
-        // this.formatData(this.summary);
-        this.commitDiffURL = this.commitDiffURL + problemID;
-
-        this.init(this.summary);
-      }
-
+      this.init(this.summary);
     },
     mounted() {
     },
@@ -398,12 +445,16 @@
         cursor: pointer;
 
         background: #C8C8C8;
-        border-radius: 50%;
+        /*border-radius: 50%;*/
       }
 
       .options-label.selected {
         background: linear-gradient(to bottom, #28CF6E, #5CA9E4);
       }
+    }
+
+    .options-item.MultipleChoice .options-label {
+      border-radius: 50%;
     }
   }
 
@@ -441,12 +492,6 @@
 
 
 </style>
-
-
-
-
-
-
 
 
 
