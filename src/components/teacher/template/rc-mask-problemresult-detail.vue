@@ -8,10 +8,21 @@
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
 	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
 	    </div>
+	    <div class="gap"></div>
 	    <div class="choice-list">
-	      <div class="choice-item">
-	      	<div class="item-hd">x a 2ren</div>
-	      	<div class="item-bd">renlibieo</div>
+	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
+	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
+	      		<i :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
+	      		<span class="f18 asw">{{choiceItem.label}}</span>
+	      		<span class="f14">{{choiceItem.members.length}}人</span>
+	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
+	      	</v-touch>
+	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]">
+	      		<div class="stu" v-for="stu in choiceItem.members">
+	      			<img :src="stu.avatar" alt="">
+	      			<div class="ellipsis">{{stu.name}}</div>
+	      		</div>
+	      	</div>
 	      </div>
 	    </div>
 	    
@@ -29,6 +40,7 @@
 	  props: ['problemResultDetailData'],
 	  data () {
 	    return {
+	    	showingIndex: -1 // 正在展示的题目的序号
 	    }
 	  },
 	  computed: {
@@ -57,7 +69,22 @@
 	     */
 	    refreshProblemResultDetail(){
 	      this.$emit('refreshProblemResultDetail')
-	    }
+	    },
+	    /**
+	     * 展示隐藏答案选项人名单
+	     *
+	     * @event bindtap
+	     * @param {object} index 被点击的答案项的序号，从0开始
+	     */
+	    toggleChoiceItem (index) {
+	      if (this.showingIndex === index) {
+	      	// 收起
+	      	this.showingIndex = -1
+	      } else {
+	      	this.showingIndex = index
+	      }
+	      
+	    },
 	  }
 	}
 </script>
@@ -76,9 +103,15 @@
 	  overflow: auto;
 
 	  .icon-close {
-	  	position: absolute;
+	  	position: fixed;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;
+	  }
+	  .icon-wrong {
+	  	color: #D0011B;
+	  }
+	  .icon-correct {
+	  	color: #7ED321;
 	  }
 	  .title {
 	  	height: 2.0rem;
@@ -107,8 +140,66 @@
 		  line-height: 1.6rem;
 		}
 
+		.gap {
+			height: 0.333333rem;
+			background: #EDF2F6;
+		}
+
+		.choice-item {
+			.item-hd {
+				height: 1.2rem;
+				line-height: 1.2rem;
+				padding: 0 0.533333rem;
+				background: #F6F6F6;
+				text-align: left;
+				border-top: 1px solid #C8C8C8;
+
+				.asw {
+					margin: 0 0.533333rem;
+				}
+				.right {
+					float: right;
+				}
+			}
+			/* 第一个顶部没有border */
+			&:first-child .item-hd {
+				border-top: 0;
+			}
+
+			.item-bd {
+				margin: 0.533333rem auto 0;
+				width: 8.64rem;
+				text-align: left;
+				overflow: hidden;
+
+			  .stu {
+			  	display: inline-block;
+			  	text-align: center;
+			  	margin-right: 0.57687496rem;
+			  	margin-bottom: 0.8rem;
+			  	width: 1.266667rem;
+			  	img {
+			  		width: 0.986667rem;
+			  		height: 0.986667rem;
+			  		border-radius: 50%;
+			  		margin-bottom: 0.386667rem;
+			  	}
+			  	&:nth-child(5n) {
+			  		margin-right: 0;
+			  	}
+			  	&:last-child {
+			  		margin-bottom: 0;
+			  	}
+			  }
+			}
+			.item-hidden {
+				height: 0;
+				margin: 0;
+			}
+		}
+
 		.refresh-btn {
-			position: absolute;
+			position: fixed;
 			left: 50%;
 			bottom: 0.666667rem;
 			transform: translateX(-50%);
