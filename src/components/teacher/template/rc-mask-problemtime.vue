@@ -1,4 +1,4 @@
-<!--发题选择时间面板-->
+<!--发题选择时间面板 被父组件 remote.vue 引用-->
 <template>
 	<div class="rc-mask">
     <section class="mask-content problemtime-box">
@@ -36,6 +36,7 @@
 	  methods: {
 	  	/**
 		   * 取消发题
+		   * 涉及设置父组件 data，所以传递事件给父组件
 		   *
 		   * @event tap
 		   */
@@ -44,6 +45,7 @@
 		  },
 		  /**
 	     * 点击按钮确认发送试题时间，多个按钮均使用，根据data-duration确定时限
+	     * 下一步是发题的复杂操作，涉及定时器、显示柱状图等，所以传递事件给父组件
 	     *
 	     * @event bindtap
 	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟

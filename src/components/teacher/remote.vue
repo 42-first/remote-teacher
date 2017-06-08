@@ -20,7 +20,11 @@
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
-      <Toolbar class="dontcallback"></Toolbar>
+      <Toolbar 
+        class="dontcallback"
+        :lessonid="lessonid"
+        :socket="socket"
+      ></Toolbar>
     </div>
 
     <!-- 蒙版层 -->
@@ -29,6 +33,10 @@
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           :is="initiativeCtrlMaskTpl"
+          :lessonid="lessonid"
+          :ppt-data="pptData"
+          :current="current"
+          :socket="socket"
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
@@ -88,13 +96,14 @@ import problemRelated from '@/util/teacher-util/problem-related'
 
 export default {
   name: 'Remote',
+  // 找不到的data在 mixins 中
   data () {
     return {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: '5903f4f7-aabf-45b8-aff4-44e4be8530bf',                               // 用户身份
-      inviteCode: 'BI3A5G',                         // 课堂暗号
+      auth: '9600852f-a463-49ac-bcf6-621b91b2efd3',                               // 用户身份
+      inviteCode: 'VFYTA4',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,

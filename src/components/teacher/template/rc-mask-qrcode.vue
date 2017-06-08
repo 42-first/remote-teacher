@@ -1,4 +1,4 @@
-<!--二维码控制面板-->
+<!--二维码控制面板 被父组件 remote.vue 引用 -->
 <template>
 	<div class="mask-content qrcode-box">
     <div class="anhao">
@@ -25,7 +25,7 @@
 
 	export default {
 	  name: 'RcMaskQrcode',
-	  props: ['inviteCode', 'isBrandNewPpt', 'qrcodeStatus'],
+	  props: ['lessonid', 'socket', 'inviteCode', 'isBrandNewPpt', 'qrcodeStatus'],
 	  data () {
 	    return {
 	    }
@@ -43,11 +43,11 @@
 		    let qrcodeStatus = self.qrcodeStatus
 		    let str = JSON.stringify({
 		      'op': 'tryzoomqrcode',
-		      'lessonid': self.$parent.lessonid,
+		      'lessonid': self.lessonid,
 		      'qrcode': (qrcodeStatus === 1) ? 2 : 1
 		    })
 
-		    self.$parent.socket.send(str)
+		    self.socket.send(str)
 		  },
 		  /**
 		   * 二维码控制页点击 开始上课、继续上课 按钮，发送指令给 WebSocket
@@ -58,10 +58,10 @@
 		    let self = this
 		    let str = JSON.stringify({
 		      'op': 'tryshowpresentation',
-		      'lessonid': self.$parent.lessonid
+		      'lessonid': self.lessonid
 		    })
 
-		    self.$parent.socket.send(str)
+		    self.socket.send(str)
 		  },
 	  }
 	}

@@ -18,15 +18,13 @@ export default {
   data () {
     return {
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
-      isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
-      problemResultDetailData: null,          // 试题柱状图详情页数据
     }
   },
   components: {
     RcMaskProblemtime,
-    RcMaskProblemresult
+    RcMaskProblemresult,
   },
   methods: {
     /**
@@ -105,27 +103,7 @@ export default {
 
       self.socket.send(str)
     },
-    /**
-     * 试题柱状图页面中的公布至屏幕按钮
-     *
-     * @event bindtap
-     */
-    postProblemresult () {
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
 
-      let str = JSON.stringify({
-        'op': 'postproblemresult',
-        'lessonid': self.data.lessonid,
-        'problemid': inPageProblemID
-      })
-
-      wx.sendSocketMessage({
-        data: str
-      })
-    },
     /**
      * 发送题目
      *
@@ -324,59 +302,5 @@ export default {
           })
         })
     },
-    /**
-     * 显示试题详情的按钮：查看详情
-     *
-     * @event bindtap
-     */
-    showProblemresultdetail () {
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
-
-      self.setData({
-        isProblemResultDetailHidden: false
-      })
-      self.refreshProblemResultDetail()
-    },
-    /**
-     * 关闭试题详情的按钮
-     *
-     * @event bindtap
-     */
-    closeProblemresultdetail () {
-      this.setData({
-        isProblemResultDetailHidden: true
-      })
-    },
-    refreshProblemResultDetail(){
-      let self = this
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID
-
-      //单次刷新
-      app.request({
-        url: API.problem_result_detail + '/' + inPageProblemID + '/',
-        method: 'GET',
-        success(data) {
-          if(jsonData.success){
-            console.log(data)
-
-            self.setData({
-              // 设置柱状图数据
-              problemResultDetailData: jsonData
-            })
-          }
-        },
-        fail(error) {
-          console.log('error', error);
-        },
-        complete(what) {
-          // console.log('complete', what);
-        },
-      })
-    }
   }
 }
