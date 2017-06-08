@@ -57,6 +57,7 @@
 		<!-- 试题课堂红包面板 -->
 		<RcMaskRedpacket
 			v-show="!isRedpacketHidden"
+			@giveupBonus="giveupBonus"
 		></RcMaskRedpacket>
 	</div>
 </template>
@@ -69,10 +70,6 @@
 	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 	// 试题课堂红包面板
 	import RcMaskRedpacket from '@/components/teacher/template/rc-mask-redpacket'
-
-	// js功能模块，放到 mixins 中
-	// 红包相关函数
-	import redpacket from '@/util/teacher-util/redpacket'
 
 	export default {
 	  name: 'RcMaskProblemresult',
@@ -95,7 +92,6 @@
 	  },
 	  created(){
 	  },
-	  mixins: [redpacket],
 	  methods: {
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -180,6 +176,47 @@
             })
 	        })
 	    },
+	    /**
+		   * 在柱状图页面中点击按钮显示设置红包页面
+		   * 被 rc-mask-problemresult.vue 引用
+		   *
+		   * @event bindtap
+		   */
+		  tapRedpacketHandler () {
+		    let self = this
+
+		    let REDID = self.problemResultData.RedEnvelopeID
+		    let PROBLEMID = self.problemResultData.problemID
+
+		    if (!REDID) {
+		      self.showRedpacket()
+		    } else {
+		      self.showRedpacketList()
+		    }
+		  },
+		  /**
+		   * 在柱状图页面中点击按钮显示设置红包页面
+		   *
+		   */
+		  showRedpacket () {
+		    let self = this
+
+		    self.setData({
+		      isRedpacketHidden: false
+		    })
+
+		    // self.fetchStuBank()
+		  },
+		  /**
+		   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
+		   *
+		   * @event bindtap
+		   */
+		  giveupBonus () {
+		    this.setData({
+		      isRedpacketHidden: true
+		    })
+		  },
 	  }
 	}
 </script>

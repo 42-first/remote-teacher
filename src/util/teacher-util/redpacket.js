@@ -34,37 +34,6 @@ function parsePriceValue (num) {
 
 export default {
   methods: {
-  	/**
-	   * 在柱状图页面中点击按钮显示设置红包页面
-	   * 被 rc-mask-problemresult.vue 引用
-	   *
-	   * @event bindtap
-	   */
-	  tapRedpacketHandler () {
-	    let self = this
-
-	    REDID = self.problemResultData.RedEnvelopeID
-	    PROBLEMID = self.problemResultData.problemID
-
-	    if (!REDID) {
-	      self.showRedpacket()
-	    } else {
-	      self.showRedpacketList()
-	    }
-	  },
-	  /**
-	   * 在柱状图页面中点击按钮显示设置红包页面
-	   *
-	   */
-	  showRedpacket () {
-	    let self = this
-
-	    self.setData({
-	      isRedpacketHidden: false
-	    })
-
-	    // self.fetchStuBank()
-	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
 	   *
@@ -73,9 +42,7 @@ export default {
 	  giveupBonus () {
 	    NUM_INPUT_VALUE = 0
 
-	    this.setData({
-	      isRedpacketHidden: true
-	    })
+	    this.$emit('giveupBonus')
 	  },
 	  /**
 	   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
@@ -159,32 +126,24 @@ export default {
 	   * 在红包图页面中点击红包个数按钮
 	   *
 	   * @event bindtap
-	   * @param {Object} e ev对象
+	   * @param {number} num 红包个数
 	   */
-	  tapBonusNumber (e) {
+	  tapBonusNumber (num) {
 	    let self = this
-	    let num = e.currentTarget.dataset.value
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    // dataset取得的都是字符串
-	    redPacketDataNS.bonusNumber = num - 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusNumber = num
 	    self.calcBonus()
 	  },
 	  /**
 	   * 在红包图页面中点击红包金额
 	   *
 	   * @event bindtap
-	   * @param {Object} e ev对象
+	   * @param {number} price 红包单价
 	   */
-	  tapBonusPrice (e) {
+	  tapBonusPrice (price) {
 	    let self = this
-	    let price = e.currentTarget.dataset.value
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    // dataset取得的都是字符串
-	    redPacketDataNS.bonusPrice = price - 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusPrice = price
 	    self.calcBonus()
 	  },
 	  /**
@@ -323,8 +282,9 @@ export default {
 	   */
 	  calcBonus () {
 	    let self = this
-	    let bonusNumber = self.data.redPacketDataNS.bonusNumber
-	    let bonusPrice = self.data.redPacketDataNS.bonusPrice
+
+	    let bonusNumber = self.redPacketDataNS.bonusNumber
+	    let bonusPrice = self.redPacketDataNS.bonusPrice
 	    
 	    // 注意：整数、字符串不能使用toFixed
 	    let temptotal = parsePriceValue(bonusNumber * bonusPrice);// 可能是0，整数、小数（小数可以用toFixed）
@@ -338,16 +298,13 @@ export default {
 	        temptotal = temptotal.toFixed(2);
 	    }
 
-	    let redPacketDataNS = self.data.redPacketDataNS
-
 	    if(temptotal == 0 || bonusPrice > 100){
-	        redPacketDataNS.isRedpacketDisabled = true
+	      self.redPacketDataNS.isRedpacketDisabled = true
 	    }else{
-	      redPacketDataNS.isRedpacketDisabled = false
+	      self.redPacketDataNS.isRedpacketDisabled = false
 	    }
 
-	    redPacketDataNS.bonusTotal = temptotal
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusTotal = temptotal
 	  },
 	  /**
 	   * 设置redPacketDataNS数据
@@ -396,6 +353,8 @@ export default {
 	   * @event bindtap
 	   */
 	  confirmBonus () {
+	  	console.log(90001)
+	  	return
 	    let self = this
 
 	    self.setData({

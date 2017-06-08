@@ -17,11 +17,11 @@
       </div>
       
       <div class="btn-type" v-show="redPacketDataNS.numInputHidden">
-        <div class="choices clearfix">
+        <div class="choices">
           <div class="btns">
-          	<div class="choice-item f20 redPacketDataNS.bonusNumber === 3 ? 'chosen' : ''" data-value="3" bindtap="tapBonusNumber">3</div>
-          	<div class="choice-item f20 redPacketDataNS.bonusNumber === 5 ? 'chosen' : ''" data-value="5" bindtap="tapBonusNumber">5</div>
-          	<div class="choice-item f20 redPacketDataNS.bonusNumber === 10 ? 'chosen' : ''" data-value="10" bindtap="tapBonusNumber">10</div>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusNumber === 3}]" v-on:tap="tapBonusNumber(3)">3</v-touch>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusNumber === 5}]" v-on:tap="tapBonusNumber(5)">5</v-touch>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusNumber === 10}]" v-on:tap="tapBonusNumber(10)">10</v-touch>
           </div>
           <div class="more f18" bindtap="openRPNumInput">更多</div>
         </div>
@@ -42,11 +42,11 @@
       </div>
       
       <div class="btn-type" v-show="redPacketDataNS.priceInputHidden">
-        <div class="choices" data-role="bonusPrice" data-value="0">
+        <div class="choices">
           <div class="btns">
-          	<div class="choice-item f20 redPacketDataNS.bonusPrice === 0.5 ? 'chosen' : ''" data-value="0.5" bindtap="tapBonusPrice">￥0.5</div>
-          	<div class="choice-item f20 redPacketDataNS.bonusPrice === 1 ? 'chosen' : ''" data-value="1" bindtap="tapBonusPrice">￥1</div>
-          	<div class="choice-item f20 redPacketDataNS.bonusPrice === 2 ? 'chosen' : ''" data-value="2" bindtap="tapBonusPrice">￥2</div>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusPrice === 0.5}]" v-on:tap="tapBonusPrice(0.5)">￥0.5</v-touch>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusPrice === 1}]" v-on:tap="tapBonusPrice(1)">￥1.00</v-touch>
+          	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusPrice === 2}]" v-on:tap="tapBonusPrice(2)">￥2.00</v-touch>
           </div>
           <div class="more f18" bindtap="openRPPriceInput">更多</div>
         </div>
@@ -64,8 +64,8 @@
 
       <div class="total f40">￥{{redPacketDataNS.bonusTotal}}</div>
 
-      <v-touch class="give-btn f20 !redPacketDataNS.isRedpacketDisabled ? 'give-active' : ''" :disabled="redPacketDataNS.isRedpacketDisabled" bindtap="confirmBonus">打赏</v-touch>
-      <v-touch class="giveup give-btn f20" bindtap="giveupBonus">不赏了，返回</v-touch>
+      <v-touch :class="['give-btn', 'f20', {'give-active': !redPacketDataNS.isRedpacketDisabled}]" v-bind:enabled="!redPacketDataNS.isRedpacketDisabled" v-on:tap="confirmBonus">打赏</v-touch>
+      <v-touch class="giveup give-btn f20" v-on:tap="giveupBonus">不赏了，返回</v-touch>
     </div>
     <!--确认金额页面-->
     
@@ -73,21 +73,46 @@
 </template>
 
 <script>
+	// js功能模块，放到 mixins 中
+	// 红包相关函数
+	import redpacket from '@/util/teacher-util/redpacket'
+
 	export default {
 	  name: 'RcMaskRedpacket',
 	  props: [],
 	  data () {
 	    return {
-	    	redPacketDataNS: {
-	    		numInputHidden: true,
-	    		priceInputHidden: true
-	    	}
+		    isRedpacketPayingWrapperHidden: true,   // 试题的发红包确认支付页面隐藏
+		    redPacketDataNS: {
+		      totalStuNumber: '--',                   // 班级总人数
+		      bonusNumber: 3,                         // 红包个数
+		      bonusPrice: 0,                          // 红包单个金额
+		      bonusTotal: '0.00',                     // 总打赏金额
+		      isRedpacketDisabled: true,              // 不能打赏
+		      numInputHidden: true,                   // 红包个数输入框隐藏
+		      priceInputHidden: true,                 // 红包金额输入框隐藏
+		      bankLeft: -1,                           // 雨课堂钱包余额（元）
+		      wxToPay: 0,                             // 需要微信支付的金额的展示（元）
+		    },
+		    payingStep: -1,  // 发红包所处阶段，未发：-1 支付中：0 支付成功：1 支付失败：2
+		    
 	    }
 	  },
 	  created(){
 	  },
+	  mixins: [redpacket],
 	  methods: {
-	  	
+	  	/**
+	     * 模仿微信小程序的 setData 用法，简易设置data
+	     *
+	     * @param {object} newData
+	     */
+	    setData (newData) {
+	      let self = this
+	      Object.keys(newData).forEach(attr => {
+	        self[attr] = newData[attr]
+	      })
+	    },
 	  }
 	}
 </script>
@@ -179,11 +204,11 @@
 					  border-radius: 0.08rem;
 					  text-align: center;
 					}
+					.chosen {
+					  background-color: #FFAE00;
+					  color: #fff;
+					}
 			  }
-				.chosen {
-				  background-color: #FFAE00;
-				  color: #fff;
-				}
 			}
 
 			.more, .back {
@@ -193,7 +218,7 @@
 			}
 
 			.total {
-			  margin-top: 1.2rem;
+			  margin-top: 0.9rem;
 			  margin-bottom: 0.266667rem;
 			  height: 1.333333rem;
 			  text-align: center;
