@@ -39,7 +39,7 @@
 	        <div class="btn-desc f15">查看详情</div>
 	      </v-touch>
 
-	      <v-touch class="btn-item" v-on:tap="">
+	      <v-touch v-show="problemResultData.type !== 'Polling'" class="btn-item" v-on:tap="tapRedpacketHandler">
 	        <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
 	        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
 	      </v-touch>
@@ -53,6 +53,11 @@
 			@closeProblemresultdetail="closeProblemresultdetail"
 			@refreshProblemResultDetail="refreshProblemResultDetail"
 		></RcMaskProblemresultDetail>
+
+		<!-- 试题课堂红包面板 -->
+		<RcMaskRedpacket
+			v-show="!isRedpacketHidden"
+		></RcMaskRedpacket>
 	</div>
 </template>
 
@@ -62,6 +67,12 @@
 
 	// 试题作答详情面板
 	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
+	// 试题课堂红包面板
+	import RcMaskRedpacket from '@/components/teacher/template/rc-mask-redpacket'
+
+	// js功能模块，放到 mixins 中
+	// 红包相关函数
+	import redpacket from '@/util/teacher-util/redpacket'
 
 	export default {
 	  name: 'RcMaskProblemresult',
@@ -70,6 +81,7 @@
 	    return {
 	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
+	    	isRedpacketHidden: true,                // 试题的发红包页面隐藏
 	    }
 	  },
 	  computed: {
@@ -78,10 +90,12 @@
 	    }
 	  },
 	  components: {
-	    RcMaskProblemresultDetail
+	    RcMaskProblemresultDetail,
+	    RcMaskRedpacket
 	  },
 	  created(){
 	  },
+	  mixins: [redpacket],
 	  methods: {
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -165,7 +179,7 @@
               problemResultDetailData: jsonData
             })
 	        })
-	    }
+	    },
 	  }
 	}
 </script>
