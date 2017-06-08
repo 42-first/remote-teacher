@@ -7,8 +7,11 @@
  */
 
 
-const SOCKET_HOST = location.host || 'b.xuetangx.com'
+// const SOCKET_HOST = location.host || 'b.xuetangx.com'
 window.socket = null
+
+// todo : test
+const SOCKET_HOST = location.hostname + ':8888'
 
 var mixin = {
   methods: {
@@ -40,7 +43,8 @@ var mixin = {
         }
 
         let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
-        window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
+        // window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
+        window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST)
 
         // 关闭
         this.socket.onclose = function(event) {
@@ -96,6 +100,9 @@ var mixin = {
     * @method 根据websocket信息策略处理
     */
     processMessage(msg) {
+      let timeline;
+      let item;
+
       if(msg.op) {
         // 弹幕状态
         msg["danmu"] && (this.danmuStatus = msg["danmu"])
@@ -103,7 +110,7 @@ var mixin = {
         switch(msg.op) {
           // 建立通信 时间轴事件
           case 'hello':
-            let timeline = msg['timeline']
+            timeline = msg['timeline']
 
             msg['presentation'] && (this.presentationID = msg['presentation'])
 
@@ -122,17 +129,80 @@ var mixin = {
 
           // 翻页
           case 'slidenav':
+            item = msg['slide'];
 
+            item && this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item });
+            break
+
+          // 解锁问题
+          case 'unlockproblem' :
+            item = msg['problem'];
+
+            if(item) {
+              timeline['problem'][item['prob']] = item;
+              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+            }
 
             break
 
+          // 新的试卷
+          case 'newquiz':
+            item = msg['quiz'];
+
+            item && this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item });
+            break
+
+          // 换一个PPT
+          case 'showpresentation':
+            this.presentationID = msg['presentation'];
+            timeline = msg['timeline'];
+
+            this.setTimeline(timeline)
+            break
+
+          // 开始弹幕
+          case 'turnondanmu':
+            item = msg['event'];
+
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+            this.danmuStatus = true;
+            break
+
+          // 关闭弹幕
+          case 'turnoffdanmu':
           // 幻灯片 结束放映
           case 'showfinished':
+            item = msg['event'];
+
+            this.addMessage({ type: 1, message: item['title'] });
+            this.danmuStatus = false;
+            break
+
+            break
+
+          // ppt更新
+          case 'presentationupdated':
+          case 'presentationcreated':
+
+            msg['presentation'] && (this.presentationID = msg['presentation']);
+
+            let presentationID = msg["presentation"]
+            this.getUpdatePPTData(presentationID)
+            break
+
+          // 试卷结束
+          case 'quizfinished':
+          case 'callpaused':
+            this.addMessage({ type: 1, message: item['title'] });
 
             break
 
            // 下课啦
           case 'lessonfinished':
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+
+            // 课程状态
+            this.lessonStatus = 1;
 
             break
 
@@ -145,6 +215,23 @@ var mixin = {
 
             // 习题组件实例中的定时方法
             this.$children[1] && this.$children[1].setTiming(leaveTime);
+
+            break
+
+          case 'fetchtimeline':
+            timeline = msg['timeline'];
+            let msgid = msg['msgid'];
+
+            this.setTimeline(timeline)
+
+            break
+
+          // 红包
+          case 'redpacket':
+          case 'updateredpacket':
+            item = msg.event
+
+            this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
 
             break
 
