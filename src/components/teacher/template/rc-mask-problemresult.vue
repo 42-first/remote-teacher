@@ -48,26 +48,22 @@
 		
 		<!-- 试题作答详情面板 -->
 		<RcMaskProblemresultDetail
+			ref="RcMaskProblemresultDetail"
 			v-show="!isProblemResultDetailHidden"
-			:problem-result-detail-data="problemResultDetailData"
 			@closeProblemresultdetail="closeProblemresultdetail"
-			@refreshProblemResultDetail="refreshProblemResultDetail"
 		></RcMaskProblemresultDetail>
 
 		<!-- 试题课堂红包面板 -->
 		<RcMaskRedpacket
 			ref="RcMaskRedpacket"
 			v-show="!isRedpacketHidden"
-			:problemid="inPageProblemID"
+			:problemid="problemid"
 			@giveupBonus="giveupBonus"
 		></RcMaskRedpacket>
 	</div>
 </template>
 
 <script>
-	import request from '@/util/request'
-	import API from '@/config/api'
-
 	// 试题作答详情面板
 	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 	// 试题课堂红包面板
@@ -79,12 +75,11 @@
 	  data () {
 	    return {
 	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
-	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    	isRedpacketHidden: true,                // 试题的发红包页面隐藏
 	    }
 	  },
 	  computed: {
-	    inPageProblemID: function () {
+	    problemid: function () {
 	      return this.pptData[this.current - 1].Problem.ProblemID
 	    }
 	  },
@@ -126,7 +121,7 @@
 	      let str = JSON.stringify({
 	        'op': 'postproblemresult',
 	        'lessonid': self.lessonid,
-	        'problemid': self.inPageProblemID
+	        'problemid': self.problemid
 	      })
 
 	      self.socket.send(str)
@@ -143,7 +138,7 @@
 	      self.setData({
 	        isProblemResultDetailHidden: false
 	      })
-	      self.refreshProblemResultDetail()
+	      self.$refs.RcMaskProblemresultDetail.$emit('refreshProblemResultDetail')
 	    },
 	    /**
 	     * 关闭试题详情的按钮
@@ -155,29 +150,7 @@
 	        isProblemResultDetailHidden: true
 	      })
 	    },
-	    /**
-	     * 更新试题详情的数据
-	     * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
-	     *
-	     */
-	    refreshProblemResultDetail(){
-	      let self = this
-	      let url = API.problem_result_detail
-
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_result_detail + '/' + self.inPageProblemID + '/'
-	      }
-
-	      // 单次刷新
-	      request.get(url)
-	        .then(jsonData => {
-	        	console.log(jsonData)
-	        	// 设置试卷详情数据
-	          self.setData({
-              problemResultDetailData: jsonData
-            })
-	        })
-	    },
+	    
 	    /**
 		   * 在柱状图页面中点击按钮显示设置红包页面
 		   * 被 rc-mask-problemresult.vue 引用

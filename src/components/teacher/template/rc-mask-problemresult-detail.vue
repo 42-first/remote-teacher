@@ -35,12 +35,16 @@
 </template>
 
 <script>
+	import request from '@/util/request'
+	import API from '@/config/api'
+
 	export default {
 	  name: 'RcMaskProblemresultDetail',
-	  props: ['problemResultDetailData'],
+	  props: [],
 	  data () {
 	    return {
-	    	showingIndex: -1 // 正在展示的题目的序号
+	    	problemResultDetailData: null,          // 试题柱状图详情页数据
+	    	showingIndex: -1 												// 正在展示的题目的序号
 	    }
 	  },
 	  computed: {
@@ -51,6 +55,12 @@
 	    }
 	  },
 	  created(){
+	  	let self = this
+
+	  	// 父组件点击 查看详情 按钮时发送事件给本子组件
+	  	self.$on('refreshProblemResultDetail', function (msg) {
+			  self.refreshProblemResultDetail()
+			})
 	  },
 	  methods: {
 	  	/**
@@ -61,14 +71,6 @@
 	     */
 	    closeProblemresultdetail () {
 	      this.$emit('closeProblemresultdetail')
-	    },
-	    /**
-	     * 更新试题详情的数据
-	     * 点击打开详情时要主动更新一下数据，所以把真正方法放在本父组件中，这里传递事件
-	     *
-	     */
-	    refreshProblemResultDetail(){
-	      this.$emit('refreshProblemResultDetail')
 	    },
 	    /**
 	     * 展示隐藏答案选项人名单
@@ -84,6 +86,26 @@
 	      	this.showingIndex = index
 	      }
 	      
+	    },
+	    /**
+	     * 更新试题详情的数据
+	     * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
+	     *
+	     */
+	    refreshProblemResultDetail(){
+	      let self = this
+	      let url = API.problem_result_detail
+
+	      if (process.env.NODE_ENV === 'production') {
+	        url = API.problem_result_detail + '/' + self.inPageProblemID + '/'
+	      }
+
+	      // 单次刷新
+	      request.get(url)
+	        .then(jsonData => {
+	        	// 设置试卷详情数据
+	          self.problemResultDetailData = jsonData
+	        })
 	    },
 	  }
 	}
