@@ -142,6 +142,15 @@ a {text-decoration: none;}
   font-size: 75px;
 }
 
+[data-dpr="1"] .f28 {
+  font-size: 28px;
+}
+[data-dpr="2"] .f28 {
+    font-size: 56px;
+}
+[data-dpr="3"] .f28 {
+  font-size: 84px;
+}
 
 [data-dpr="1"] .f32 {
   font-size: 32px;

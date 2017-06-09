@@ -1,6 +1,8 @@
 <!--试题课堂红包面板 被父组件 rc-mask-problemresult.vue 引用-->
 <template>
 	<div class="redpacket-box" >
+
+		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
       <div class="desc f20" v-show="redPacketDataNS.bonusTotal <= 100">您可以给回答正确且快速的<br>同学发红包以表奖励</div>
@@ -9,7 +11,8 @@
       	<span class="f36">100</span>元
       </div>
     </div>
-
+		
+		<!-- 选取、输入红包个数、金额、确认、取消 的页面 -->
     <div class="action-box">
       <div class="row f18">
       	红包个数
@@ -67,8 +70,41 @@
       <v-touch :class="['give-btn', 'f20', {'give-active': !redPacketDataNS.isRedpacketDisabled}]" v-bind:enabled="!redPacketDataNS.isRedpacketDisabled" v-on:tap="confirmBonus">打赏</v-touch>
       <v-touch class="giveup give-btn f20" v-on:tap="giveupBonus">不赏了，返回</v-touch>
     </div>
+
     <!--确认金额页面-->
-    
+    <div class="paying-wrapper" v-show="!isRedpacketPayingWrapperHidden">
+      <div class="paying-content confirm-box" v-show="payingStep === -1">
+	      <!-- 关闭按钮 -->
+		    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeRedpacketPayingWrapper"></v-touch>
+        <div class="title f18">请确认支付</div>
+        <div class="kthb f16">课堂红包</div>
+        <div class="total f40">￥{{redPacketDataNS.bonusTotal}}</div>
+        <div :class="['wallet', 'f16', {'nbt': redPacketDataNS.wxToPay > 0}]">雨课堂钱包<span class="gray f14">（余额￥<span>{{redPacketDataNS.bankLeft !== -1 ? redPacketDataNS.bankLeft : '加载中...'}}</span>）</span></div>
+        <div class="needmoremoney f16" v-show="redPacketDataNS.wxToPay > 0">
+          微信钱包
+          <span class="gray f14">（支付￥{{redPacketDataNS.wxToPay}}）</span>
+        </div>
+        <v-touch class="confirm-btn btn f18" v-bind:enabled="redPacketDataNS.bankLeft !== -1" v-on:tap="confirmPay">
+          确认支付
+        </v-touch>
+      </div>
+      <div class="paying-content paying f24" v-show="payingStep === 0">
+        支付中...
+      </div>
+      <div class="paying-content pay-success" v-show="payingStep === 1">
+        <div class="cg f28">支付成功!</div>
+        <div class="wallet f16">
+          雨课堂钱包
+          <span class="gray f14">（余额￥{{redPacketDataNS.bankLeft}}）</span>
+        </div>
+        <v-touch class="confirm-btn btn" bindtap="confirmPaySuccess">确认</v-touch>
+      </div>
+      <div class="paying-content pay-fail" v-show="payingStep === 2">
+        <div class="cg f28">支付失败!</div>
+        <div class="warn f18">零钱已退还至雨课堂钱包</div>
+        <v-touch class="confirm-btn btn" bindtap="confirmPayFail">返回</v-touch>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,7 +118,7 @@
 	  props: ['problemid'],
 	  data () {
 	    return {
-		    isRedpacketPayingWrapperHidden: true,   // 试题的发红包确认支付页面隐藏
+		    isRedpacketPayingWrapperHidden: true,   	// 试题的发红包确认支付页面隐藏
 		    NUM_INPUT_VALUE: '',									    // 记录红包个数输入框历史数值
 		    PRICE_INPUT_VALUE: '',									  // 记录红包金额输入框历史数值
 		    redPacketDataNS: {
@@ -103,9 +139,8 @@
 	  created(){
 	  	let self = this
 
-	  	// 父组件点击发红包按钮时发送事件给本子组件
+	  	// 父组件点击 课堂红包 按钮时发送事件给本子组件
 	  	self.$on('fetchStuBank', function (msg) {
-			  console.log('emited')
 			  self.fetchStuBank()
 			})
 	  },
@@ -252,6 +287,98 @@
 			  background-color: #fff;
 			  border: 0;
 			  color: #9B9B9B;
+			}
+		}
+
+		/*支付确认弹层*/
+		.paying-wrapper {
+		  position: absolute;
+		  top: 0;
+		  bottom: 0;
+		  left: 0;
+		  right: 0;
+		  background: rgba(0,0,0,0.72);
+		  overflow: auto;
+
+		  .paying-content {
+			  position: absolute;
+			  top: 50%;
+			  left: 0.453333rem;
+			  right: 0.453333rem;
+			  transform: translateY(-50%);
+			  padding: 0 0.426667rem;
+			  background: $white;
+			  border-radius: 0.133333rem;
+			  text-align: center;
+			  color: #000000;
+			}
+			.confirm-box {
+				.icon-close {
+			  	position: absolute;
+			  	right: 0.506667rem;
+			  	top: 0.506667rem;
+			  	color: #9B9B9B;
+			  }
+			  .title {
+				  height: 1.68rem;
+				  line-height: 1.68rem;
+				  border-bottom: 1px solid #C8C8C8;
+				}
+
+				.kthb {
+				  height: 0.666667rem;
+				  margin-top: 0.453333rem;
+				}
+
+				.total {
+				  height: 1.6rem;
+				}
+			}
+
+			.wallet, .needmoremoney {
+			  height: 1.066667rem;
+			  line-height: 1.066667rem;
+			  text-align: left;
+			  text-indent: 1.706667rem;
+			  border-top: 1px solid #C8C8C8;
+			  border-bottom: 1px solid #C8C8C8;
+			  background: url(http://sfe.ykt.io/bank.png) 0.8rem center no-repeat;
+			  background-size: 0.6rem;
+			}
+			.wallet.nbt {
+				border-bottom: 0
+			}
+			.needmoremoney {
+			  border-top: 0;
+			  background-image: url(http://sfe.ykt.io/wxlogo.png);
+			}
+			.gray {
+			  color: #9B9B9B;
+			}
+
+			.confirm-btn {
+			  margin: 0.426667rem auto;
+			  width: 5.44rem;
+			  height: 1.066667rem;
+			  line-height: 1.066667rem;
+			  background-color: #FFAE00;
+			}
+
+			.paying {
+			  padding: 100px;
+			  color: #4A4A4A;
+			}
+
+			/*红包支付成功、失败的弹层*/
+			.pay-success, .pay-fail {
+			  .cg {
+			  	height: 2.64rem;
+				  line-height: 2.64rem;
+				  color: #E64340;
+			  }
+			  .warn {
+			  	color: #9B9B9B;
+			  }
 			}
 		}
 	}

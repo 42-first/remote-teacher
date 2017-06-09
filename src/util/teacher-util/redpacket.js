@@ -292,13 +292,10 @@ export default {
 	   * @event bindtap
 	   */
 	  confirmBonus () {
-	  	console.log(90001)
-	  	return
 	    let self = this
 
-	    self.setData({
-	      isRedpacketPayingWrapperHidden: false
-	    })
+	    self.isRedpacketPayingWrapperHidden = false
+	    return
 
 	    let redPacketDataNS = self.redPacketDataNS
 	    // -1让钱包余额显示加载中
@@ -333,17 +330,15 @@ export default {
 	   *
 	   * @event bindtap
 	   */
-	  confirmPay () {
+	  confirmPay () {	  	
 	    // 协调要不要使用微信支付、钱包支付，并且回调中重置payingStep为1成功或2失败
 	    let self = this
-	    let redPacketDataNS = self.redPacketDataNS
-	    let bonusTotal = redPacketDataNS.bonusTotal
-	    let bonusNumber = redPacketDataNS.bonusNumber
-	    let wxToPay = redPacketDataNS.wxToPay
+	    let bonusTotal = self.redPacketDataNS.bonusTotal
+	    let bonusNumber = self.redPacketDataNS.bonusNumber
+	    let wxToPay = self.redPacketDataNS.wxToPay
 
-	    self.setData({
-	      payingStep: 0
-	    })
+	    self.payingStep = 2
+	    return
 
 	    payPromise = new Promise(function(resolve, reject){
 	      // 挂载resolve reject函数
