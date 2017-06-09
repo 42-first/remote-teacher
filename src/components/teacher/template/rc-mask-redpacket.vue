@@ -79,7 +79,7 @@
 
 	export default {
 	  name: 'RcMaskRedpacket',
-	  props: [],
+	  props: ['problemid'],
 	  data () {
 	    return {
 		    isRedpacketPayingWrapperHidden: true,   // 试题的发红包确认支付页面隐藏
@@ -101,6 +101,13 @@
 	    }
 	  },
 	  created(){
+	  	let self = this
+
+	  	// 父组件点击发红包按钮时发送事件给本子组件
+	  	self.$on('fetchStuBank', function (msg) {
+			  console.log('emited')
+			  self.fetchStuBank()
+			})
 	  },
 	  mixins: [redpacket],
 	  methods: {

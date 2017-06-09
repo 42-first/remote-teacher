@@ -56,7 +56,9 @@
 
 		<!-- 试题课堂红包面板 -->
 		<RcMaskRedpacket
+			ref="RcMaskRedpacket"
 			v-show="!isRedpacketHidden"
+			:problemid="inPageProblemID"
 			@giveupBonus="giveupBonus"
 		></RcMaskRedpacket>
 	</div>
@@ -205,7 +207,7 @@
 		      isRedpacketHidden: false
 		    })
 
-		    // self.fetchStuBank()
+		    self.$refs.RcMaskRedpacket.$emit('fetchStuBank')
 		  },
 		  /**
 		   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
@@ -215,6 +217,33 @@
 		  giveupBonus () {
 		    this.setData({
 		      isRedpacketHidden: true
+		    })
+		  },
+		  /**
+		   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
+		   *
+		   */
+		  showRedpacketList () {
+		    let self = this
+
+		    // 先清零红包详情
+		    self.resetRedPacketDetail()
+		    self.setData({
+		      isRedpacketListHidden: false
+		    })
+
+		    self.getBonusWinner(function(data){
+		      let list = data.issued_user_list;
+		      let redleft = data.quality - data.issued_count;
+		      let moneyleft = redleft*data.amount/data.quality;
+		      let redPacketDataNS = self.redPacketDataNS
+
+		      redPacketDataNS.issuedDetail = {
+		        list: list,
+		        redleft: redleft,
+		        moneyleft: moneyleft
+		      }
+		      self.resetRedPacketDataNS(redPacketDataNS)
 		    })
 		  },
 	  }

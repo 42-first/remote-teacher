@@ -7,7 +7,9 @@
  *
  */
 
+import request from '@/util/request'
 import API from '@/config/api'
+
 let REDID = 0              // 红包id，本模块全局使用
 let PROBLEMID = 0          // 试题id，本模块全局使用
 let OLD_NUM_INPUT_HIDDEN, OLD_PRICE_INPUT_HIDDEN // 记录之前input框状态，hack输入框层级最高的bug
@@ -41,33 +43,6 @@ export default {
 	    self.NUM_INPUT_VALUE = ''
 
 	    this.$emit('giveupBonus')
-	  },
-	  /**
-	   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
-	   *
-	   */
-	  showRedpacketList () {
-	    let self = this
-
-	    // 先清零红包详情
-	    self.resetRedPacketDetail()
-	    self.setData({
-	      isRedpacketListHidden: false
-	    })
-
-	    self.getBonusWinner(function(data){
-	      let list = data.issued_user_list;
-	      let redleft = data.quality - data.issued_count;
-	      let moneyleft = redleft*data.amount/data.quality;
-	      let redPacketDataNS = self.redPacketDataNS
-
-	      redPacketDataNS.issuedDetail = {
-	        list: list,
-	        redleft: redleft,
-	        moneyleft: moneyleft
-	      }
-	      self.resetRedPacketDataNS(redPacketDataNS)
-	    })
 	  },
 	  /**
 	   * 清零领取红包的名单
@@ -286,45 +261,30 @@ export default {
 	    self.redPacketDataNS.bonusTotal = temptotal
 	  },
 	  /**
-	   * 设置redPacketDataNS数据
-	   *
-	   */
-	  resetRedPacketDataNS (redPacketDataNS) {
-	    let self = this
-	    self.setData({
-	      redPacketDataNS: redPacketDataNS
-	    })
-	  },
-	  /**
 	   * 获取学生人数、钱包余额
 	   *
 	   * @param {Function} fn 回调函数
 	   */
 	  fetchStuBank (fn) {
 	    let self = this
+	    let url = API.prepare_red_envelope
 
-	    app.request({
-	      url: API.prepare_red_envelope + '/' + PROBLEMID,
-	      method: 'GET',
-	      success(DATA) {
-	        let data = DATA.data
-	        if(data.success){
-	          let totalStuNumber = data.data.classroom_students_count;
-	          let redPacketDataNS = self.redPacketDataNS
-	          let bankLeft = data.data.balance/100;
+      if (process.env.NODE_ENV === 'production') {
+        url = API.prepare_red_envelope + '/' + self.problemid
+      }
 
-	          bankLeft = bankLeft.toFixed(2);
-	          redPacketDataNS.totalStuNumber = totalStuNumber
-	          redPacketDataNS.bankLeft = bankLeft
-	          self.resetRedPacketDataNS(redPacketDataNS)
+      // 单次刷新
+      request.get(url)
+        .then(jsonData => {
+        	let totalStuNumber = jsonData.data.classroom_students_count;
+          let bankLeft = jsonData.data.balance/100;
 
-	          fn && fn();
-	        }
-	      },
-	      fail(error) {
-	        console.log('error', error);
-	      }
-	    })
+          bankLeft = bankLeft.toFixed(2);
+          self.redPacketDataNS.totalStuNumber = totalStuNumber
+          self.redPacketDataNS.bankLeft = bankLeft
+
+          fn && fn();
+        })
 	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “打赏” 按钮，之后弹出确认金额页面

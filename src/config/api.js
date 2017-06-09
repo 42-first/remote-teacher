@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
     quiz_results_statistics:        '/api/quiz/quiz_results_statistics',            // 获取试卷饼图数据
     quiz_results_detail:            '/api/quiz/quiz_results_detail',                // 获取试卷详情
     quiz_finish:                    '/api/quiz/quiz_finish',                        // 收卷
-    prepare_red_envelope:           '/api/red/prepare_red_envelope/1',              // 查询班级人数、钱包余额等，为发红包做准备
+    prepare_red_envelope:           '/static/mock/prepare_red_envelope.json',       // 查询班级人数、钱包余额等，为发红包做准备
     create_red_envelope:            '/api/red/create_red_envelope',                 // 向django后端发起红包支付
     payquery:                       '/pay/query',                                   // 微信支付后向node后端确认支付金额已经进入小金库
     orderpay:                       '/pay/mp/order/',                               // 向django下单要进行微信支付
