@@ -54,7 +54,7 @@
     <!-- 红包模板 -->
     <template v-else-if="item.type==5">
       <div class="timeline__paper">
-        <router-link :to="'/1/hongbao/'+index">
+        <router-link :to="'/'+lessonid+'/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
@@ -76,7 +76,7 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/1/exercise/'+index">
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">第{{ item.pageIndex }}题</p>
@@ -108,6 +108,7 @@
     name: 'card-item',
     props: {
       index: 0,
+      lessonid: 0,
       item: null
     },
     data() {
@@ -265,7 +266,9 @@
 
   .timeline__msg {
     margin: 0.4rem auto;
-    width: 5.333333rem;
+    display: inline-block;
+    padding: 0 0.4rem;
+    max-width: 14rem;
     height: 0.8rem;
     line-height: 0.8rem;
 

@@ -5,6 +5,8 @@ let api
 
 if (process.env.NODE_ENV === 'production') {
     api = {
+       // 用户权限
+       'GET_USER_INFO': 'v/lesson/lesson_user_info',
         /*------------------*\
            $ 接收器 start
         \*------------------*/
@@ -30,6 +32,9 @@ if (process.env.NODE_ENV === 'production') {
     }
 }else {
     api = {
+
+        // 用户权限
+        'GET_USER_INFO': '/static/mock/user_info.json',
 
         /*------------------*\
            $ 接收器 start

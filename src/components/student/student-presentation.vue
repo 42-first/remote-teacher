@@ -16,8 +16,8 @@
         <div class="student__header--more" @click="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <p class="action f17 line"><i class="iconfont icon-lianxi f25"></i>发送弹幕</p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-lianxi f25"></i>发送投稿</router-link>
+            <p class="action f17 line"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</p>
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-submission f25"></i>发送投稿</router-link>
           </div>
         </div>
       </header>
@@ -40,7 +40,7 @@
         <section class="student__timeline">
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards">
-            <Card-Item-Component :item="item" :index="index" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+            <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
         </section>
 
@@ -172,7 +172,9 @@
     computed: {
     },
     watch: {
-      pptHeight: function (Height) {
+      '$route' (to, from) {
+        // 对路由变化作出响应...
+        console.log(to.name);
       }
     },
     filters: {
@@ -180,29 +182,24 @@
     mixins: [ wsmixin, actionsmixin ],
     methods: {
       /*
-      * @method 接收器初始化
-      */
+       * @method 接收器初始化
+       */
       init() {
         let self = this;
 
-        this.lessonID = this.$route.params.lessonID;
+        this.lessonID = this.$route.params.lessonID || 3049;
 
         this.iniTimeline(this.lessonID);
       },
-      /*
-      * @method 等事件
-      */
-      initEvent() {
 
-      },
       /*
-      * @method 直播悬停反面等事件
-      */
-      iniTimeline() {
+       * @method 直播悬停反面等事件
+       */
+      iniTimeline(lessonID) {
         let self = this;
-        // this.getPresentationList();
 
-        Promise.all([this.getPresentationList()]).then(()=>{
+        Promise.all([this.getUserInfo(lessonID), this.getPresentationList()]).then(()=>{
+          // test
           // self.testTimeline();
           self.initws();
 
@@ -257,6 +254,31 @@
       },
 
       /*
+       * @method 用户权限
+       * @param  lessonID
+       */
+      getUserInfo(lessonID) {
+        let self = this;
+        let URL = API.GET_USER_INFO;
+        let param = {
+          'lessonID': lessonID
+        }
+
+        return request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              self.userID = data.user_id;
+              self.avatar = data.avatar;
+              self.userAuth = data.user_auth;
+
+              return data;
+            }
+          });
+      },
+
+      /*
       * @method 读取直播的课程列表和auth信息
       * @param  init: 是否初始化socket
       */
@@ -264,7 +286,7 @@
         let self = this;
         let URL = API.student.GET_PRESENTATION_LIST;
         let param = {
-          "lessonID": this.lessonID
+          'lessonID': this.lessonID
         }
 
         // if (process.env.NODE_ENV === 'production') {
@@ -277,10 +299,11 @@
               let data = res.data;
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
+              self.presentationID = data.presentation_id;
 
               // set presentation map
               if(self.presentationList.length) {
-                self.presentationID = self.presentationList[0].presentationID;
+                // self.presentationID = self.presentationList[0].presentationID;
 
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
@@ -382,10 +405,18 @@
       refeshLoad(id) {
         setTimeout(()=>{
           this.$refs.loadmore.onTopLoaded();
-          this.testTimeline();
+          // this.testTimeline();
+
+          this.socket.send(JSON.stringify({
+            'op': 'fetchtimeline',
+            'lessonid': this.lessonID,
+            'msgid': this.msgid++
+           }));
+
           // this.addPPT({ type: 2, pageIndex: 6, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
         }, 1500)
       },
+
       /*
       * @method 下拉刷新touchend 回调
       * @param
@@ -395,6 +426,7 @@
           this.$refs.loadmore.translate = 100;
         }
       },
+
       /*
       * @method 展示tab选项
       * @param
@@ -407,6 +439,7 @@
           this.currTabIndex = tabIndex;
         }
       },
+
       /*
        * @method more
        *
@@ -430,11 +463,12 @@
     },
     created() {
       this.init();
+      console.log('created');
     },
     mounted() {
+      console.log('mounted');
     },
     beforeDestroy() {
-
     }
   };
 </script>
@@ -537,7 +571,7 @@
 
           .iconfont {
             padding-right: 0.186667rem;
-            vertical-align: -0.066667rem;
+            vertical-align: -0.05rem;
           }
         }
       }
@@ -620,23 +654,3 @@
 
 
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
