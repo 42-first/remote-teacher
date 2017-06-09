@@ -1,0 +1,27 @@
+
+/*-----------------------------*\
+    $ mintui样式重写
+\*-----------------------------*/
+
+.mint-loadmore {
+  height: 100%;
+}
+
+.mint-loadmore-spinner {
+  width: 0.533333rem !important;
+  height: 0.533333rem !important;
+}
+
+.mint-loadmore-top, .mint-loadmore-bottom {
+  margin-top: -1.333333rem;
+  text-align: center;
+  height: 1.333333rem !important;
+  line-height: 1.333333rem !important;
+  font-size: 0.426667rem;
+}
+
+
+.mint-toast-text {
+  padding: 0 0.2rem;
+  font-size: 0.373333rem
+}

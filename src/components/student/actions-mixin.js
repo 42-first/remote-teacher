@@ -76,6 +76,11 @@ var actionsMixin = {
       let slideData = pptData[data.pageIndex-1];
       let index = -1;
 
+      // 如果是习题图片，则不添加
+      if (slideData['Problem']){
+        return;
+      }
+
       if (slideData['Cover']=='rain://error/upload-error') {
         if(!data.refresh) {
           this.addMessage({ type: 1, message: '幻灯片解析失败' });

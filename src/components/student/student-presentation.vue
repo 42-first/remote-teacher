@@ -16,7 +16,7 @@
         <div class="student__header--more" @click="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <p class="action f17 line"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</p>
+            <router-link :to="'/'+lessonID+'/danmu/'" tag="p" class="action f17 line"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</router-link>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-submission f25"></i>发送投稿</router-link>
           </div>
         </div>
@@ -96,6 +96,14 @@
 
     </section>
 
+    <!-- 网络不好 重新连接弹层 -->
+    <section class="student__net-mask" v-if="isReconnect">
+      <div class="content-block">
+        <p class=" f16">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
+        <p class="connect-btn f18">立即重连</p>
+      </div>
+    </section>
+
     <router-view></router-view>
   </section>
 
@@ -123,6 +131,12 @@
       return {
         isResetSocket: false,
         socket: null,
+        // socket重连
+        isReconnect: false,
+        // socket重连次数
+        reconnectcount: 0,
+        // socket重连倒计时
+        countdown: 10,
         topStatus: '',
         //
         title: '',
@@ -161,7 +175,7 @@
         timeline: {
           'problem': {}
         },
-        //
+        // 弹幕投稿是否展开
         isMore: false,
         commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
@@ -476,23 +490,7 @@
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
   @import "~@/style/animate.css";
-
-  /*------------------*\
-    $ 组件样式重写
-  \*------------------*/
-
-  .mint-loadmore-spinner {
-    width: 0.533333rem !important;
-    height: 0.533333rem !important;
-  }
-
-  .mint-loadmore-top, .mint-loadmore-bottom {
-    margin-top: -1.333333rem;
-    text-align: center;
-    height: 1.333333rem !important;
-    line-height: 1.333333rem !important;
-    font-size: 0.426667rem;
-  }
+  @import "~@/style/mintui.css";
 
   .page {
     position: absolute;
@@ -649,6 +647,41 @@
 
     .timeline-wrapper {
       width: 100%;
+    }
+  }
+
+
+
+  /*-------------------*\
+    $ 网络超时重连
+  \*-------------------*/
+
+  .student__net-mask {
+    z-index: 2;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+
+    .content-block {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+
+      transform: translate(-50%, -50%);
+
+      .connect-btn {
+        margin: 0.4rem auto;
+        width: 2.666667rem;
+        height: 0.933333rem;
+        line-height: 0.933333rem;
+        color: #fff;
+        border: 1px solid #fff;
+        border-radius: 10px;
+      }
     }
   }
 

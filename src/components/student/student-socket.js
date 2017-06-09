@@ -10,9 +10,6 @@
 const SOCKET_HOST =  'b.xuetangx.com' || location.host || 'b.xuetangx.com'
 window.socket = null
 
-// todo : test
-// const SOCKET_HOST = location.hostname + ':8888'
-
 var mixin = {
   methods: {
     /*
@@ -32,32 +29,41 @@ var mixin = {
     },
     /*
     * @method 初始化创建websocket实例
+    * param force 强制初始化
     */
-    initws() {
+    initws(force) {
       let self = this
 
+      this.isReconnect = false;
+
       try {
-        if(this.socket) {
+        if(this.socket&&!force) {
           this.isResetSocket = true
           this.closews()
         }
 
         let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
-        // window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST)
 
         // 关闭
         this.socket.onclose = function(event) {
-          if(!this.isResetSocket) {
-            setTimeout(()=>{
-              self.initws()
+          console.log('onclose');
+          clearInterval(self.xintiaoTimer);
+
+          if(!self.isResetSocket) {
+            setTimeout(() => {
+              self.reconnect();
             }, 1000)
           }
         }
 
         // 接收socket信息
         this.socket.onopen = function(event) {
-          self.isResetSocket = false
+          self.isResetSocket = false;
+          console.log('onopen');
+
+          // 心跳
+          self.sendXinTiao();
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
@@ -86,15 +92,27 @@ var mixin = {
     * @method 重新连接websocket
     */
     reconnect() {
+      this.isReconnect = true;
 
+      this.reconnectTimer = setInterval(()=>{
+        this.countdown--;
+
+        if(!this.countdown) {
+          clearInterval(this.reconnectTimer)
+          this.countdown = 10;
+          this.initws(true);
+        }
+      }, 1000)
+
+      console.log('reconnect')
     },
     /*
     * @method 发送心跳函数
     */
     sendXinTiao() {
-      setInterval(()=>{
+      this.xintiaoTimer = setInterval(()=>{
         this.socket.send(JSON.stringify({ op: 'xintiao', lessonid: this.lessonID }))
-      }, 3000)
+      }, 30000)
     },
     /*
     * @method 根据websocket信息策略处理
