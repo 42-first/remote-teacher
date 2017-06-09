@@ -48,31 +48,26 @@
 		
 		<!-- 试题作答详情面板 -->
 		<RcMaskProblemresultDetail
+			ref="RcMaskProblemresultDetail"
 			v-show="!isProblemResultDetailHidden"
-			:problem-result-detail-data="problemResultDetailData"
 			@closeProblemresultdetail="closeProblemresultdetail"
-			@refreshProblemResultDetail="refreshProblemResultDetail"
 		></RcMaskProblemresultDetail>
 
 		<!-- 试题课堂红包面板 -->
 		<RcMaskRedpacket
+			ref="RcMaskRedpacket"
 			v-show="!isRedpacketHidden"
+			:problemid="problemid"
+			@giveupBonus="giveupBonus"
 		></RcMaskRedpacket>
 	</div>
 </template>
 
 <script>
-	import request from '@/util/request'
-	import API from '@/config/api'
-
 	// 试题作答详情面板
 	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 	// 试题课堂红包面板
 	import RcMaskRedpacket from '@/components/teacher/template/rc-mask-redpacket'
-
-	// js功能模块，放到 mixins 中
-	// 红包相关函数
-	import redpacket from '@/util/teacher-util/redpacket'
 
 	export default {
 	  name: 'RcMaskProblemresult',
@@ -80,12 +75,11 @@
 	  data () {
 	    return {
 	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
-	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    	isRedpacketHidden: true,                // 试题的发红包页面隐藏
 	    }
 	  },
 	  computed: {
-	    inPageProblemID: function () {
+	    problemid: function () {
 	      return this.pptData[this.current - 1].Problem.ProblemID
 	    }
 	  },
@@ -95,7 +89,6 @@
 	  },
 	  created(){
 	  },
-	  mixins: [redpacket],
 	  methods: {
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -128,7 +121,7 @@
 	      let str = JSON.stringify({
 	        'op': 'postproblemresult',
 	        'lessonid': self.lessonid,
-	        'problemid': self.inPageProblemID
+	        'problemid': self.problemid
 	      })
 
 	      self.socket.send(str)
@@ -145,7 +138,7 @@
 	      self.setData({
 	        isProblemResultDetailHidden: false
 	      })
-	      self.refreshProblemResultDetail()
+	      self.$refs.RcMaskProblemresultDetail.$emit('refreshProblemResultDetail')
 	    },
 	    /**
 	     * 关闭试题详情的按钮
@@ -157,29 +150,75 @@
 	        isProblemResultDetailHidden: true
 	      })
 	    },
+	    
 	    /**
-	     * 更新试题详情的数据
-	     * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
-	     *
-	     */
-	    refreshProblemResultDetail(){
-	      let self = this
-	      let url = API.problem_result_detail
+		   * 在柱状图页面中点击按钮显示设置红包页面
+		   * 被 rc-mask-problemresult.vue 引用
+		   *
+		   * @event bindtap
+		   */
+		  tapRedpacketHandler () {
+		    let self = this
 
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_result_detail + '/' + self.inPageProblemID + '/'
-	      }
+		    let REDID = self.problemResultData.RedEnvelopeID
+		    let PROBLEMID = self.problemResultData.problemID
 
-	      // 单次刷新
-	      request.get(url)
-	        .then(jsonData => {
-	        	console.log(jsonData)
-	        	// 设置试卷详情数据
-	          self.setData({
-              problemResultDetailData: jsonData
-            })
-	        })
-	    },
+		    if (!REDID) {
+		      self.showRedpacket()
+		    } else {
+		      self.showRedpacketList()
+		    }
+		  },
+		  /**
+		   * 在柱状图页面中点击按钮显示设置红包页面
+		   *
+		   */
+		  showRedpacket () {
+		    let self = this
+
+		    self.setData({
+		      isRedpacketHidden: false
+		    })
+
+		    self.$refs.RcMaskRedpacket.$emit('fetchStuBank')
+		  },
+		  /**
+		   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
+		   *
+		   * @event bindtap
+		   */
+		  giveupBonus () {
+		    this.setData({
+		      isRedpacketHidden: true
+		    })
+		  },
+		  /**
+		   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
+		   *
+		   */
+		  showRedpacketList () {
+		    let self = this
+
+		    // 先清零红包详情
+		    self.resetRedPacketDetail()
+		    self.setData({
+		      isRedpacketListHidden: false
+		    })
+
+		    self.getBonusWinner(function(data){
+		      let list = data.issued_user_list;
+		      let redleft = data.quality - data.issued_count;
+		      let moneyleft = redleft*data.amount/data.quality;
+		      let redPacketDataNS = self.redPacketDataNS
+
+		      redPacketDataNS.issuedDetail = {
+		        list: list,
+		        redleft: redleft,
+		        moneyleft: moneyleft
+		      }
+		      self.resetRedPacketDataNS(redPacketDataNS)
+		    })
+		  },
 	  }
 	}
 </script>

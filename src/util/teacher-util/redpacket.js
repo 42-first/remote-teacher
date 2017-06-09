@@ -7,11 +7,11 @@
  *
  */
 
+import request from '@/util/request'
 import API from '@/config/api'
+
 let REDID = 0              // 红包id，本模块全局使用
 let PROBLEMID = 0          // 试题id，本模块全局使用
-let NUM_INPUT_VALUE = 0    // 记录红包个数输入框历史数值
-let PRICE_INPUT_VALUE = 0  // 记录红包金额输入框历史数值
 let OLD_NUM_INPUT_HIDDEN, OLD_PRICE_INPUT_HIDDEN // 记录之前input框状态，hack输入框层级最高的bug
 let payPromise = null      // 发红包的promise
 let payPromiseMethod = {}  // 挂载payPromise的 resolve reject 方法
@@ -34,75 +34,15 @@ function parsePriceValue (num) {
 
 export default {
   methods: {
-  	/**
-	   * 在柱状图页面中点击按钮显示设置红包页面
-	   * 被 rc-mask-problemresult.vue 引用
-	   *
-	   * @event bindtap
-	   */
-	  tapRedpacketHandler () {
-	    let self = this
-
-	    REDID = self.problemResultData.RedEnvelopeID
-	    PROBLEMID = self.problemResultData.problemID
-
-	    if (!REDID) {
-	      self.showRedpacket()
-	    } else {
-	      self.showRedpacketList()
-	    }
-	  },
-	  /**
-	   * 在柱状图页面中点击按钮显示设置红包页面
-	   *
-	   */
-	  showRedpacket () {
-	    let self = this
-
-	    self.setData({
-	      isRedpacketHidden: false
-	    })
-
-	    // self.fetchStuBank()
-	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
 	   *
 	   * @event bindtap
 	   */
 	  giveupBonus () {
-	    NUM_INPUT_VALUE = 0
+	    self.NUM_INPUT_VALUE = ''
 
-	    this.setData({
-	      isRedpacketHidden: true
-	    })
-	  },
-	  /**
-	   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
-	   *
-	   */
-	  showRedpacketList () {
-	    let self = this
-
-	    // 先清零红包详情
-	    self.resetRedPacketDetail()
-	    self.setData({
-	      isRedpacketListHidden: false
-	    })
-
-	    self.getBonusWinner(function(data){
-	      let list = data.issued_user_list;
-	      let redleft = data.quality - data.issued_count;
-	      let moneyleft = redleft*data.amount/data.quality;
-	      let redPacketDataNS = self.data.redPacketDataNS
-
-	      redPacketDataNS.issuedDetail = {
-	        list: list,
-	        redleft: redleft,
-	        moneyleft: moneyleft
-	      }
-	      self.resetRedPacketDataNS(redPacketDataNS)
-	    })
+	    this.$emit('giveupBonus')
 	  },
 	  /**
 	   * 清零领取红包的名单
@@ -111,7 +51,7 @@ export default {
 	  resetRedPacketDetail () {
 	    let self = this
 
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let redPacketDataNS = self.redPacketDataNS
 
 	    redPacketDataNS.issuedDetail = {
 	      list: [],
@@ -159,32 +99,24 @@ export default {
 	   * 在红包图页面中点击红包个数按钮
 	   *
 	   * @event bindtap
-	   * @param {Object} e ev对象
+	   * @param {number} num 红包个数
 	   */
-	  tapBonusNumber (e) {
+	  tapBonusNumber (num) {
 	    let self = this
-	    let num = e.currentTarget.dataset.value
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    // dataset取得的都是字符串
-	    redPacketDataNS.bonusNumber = num - 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusNumber = num
 	    self.calcBonus()
 	  },
 	  /**
 	   * 在红包图页面中点击红包金额
 	   *
 	   * @event bindtap
-	   * @param {Object} e ev对象
+	   * @param {number} price 红包单价
 	   */
-	  tapBonusPrice (e) {
+	  tapBonusPrice (price) {
 	    let self = this
-	    let price = e.currentTarget.dataset.value
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    // dataset取得的都是字符串
-	    redPacketDataNS.bonusPrice = price - 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusPrice = price
 	    self.calcBonus()
 	  },
 	  /**
@@ -194,11 +126,9 @@ export default {
 	   */
 	  openRPNumInput () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    redPacketDataNS.numInputHidden = false
-	    redPacketDataNS.bonusNumber = NUM_INPUT_VALUE
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.numInputHidden = false
+	    self.redPacketDataNS.bonusNumber = self.NUM_INPUT_VALUE || 0
 
 	    self.calcBonus()
 	  },
@@ -209,12 +139,9 @@ export default {
 	   */
 	  closeRPNumInput () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    redPacketDataNS.numInputHidden = true
-	    NUM_INPUT_VALUE = redPacketDataNS.bonusNumber
-	    redPacketDataNS.bonusNumber = 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.numInputHidden = true
+	    self.redPacketDataNS.bonusNumber = 0
 
 	    self.calcBonus()
 	  },
@@ -225,11 +152,9 @@ export default {
 	   */
 	  openRPPriceInput () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
 
-	    redPacketDataNS.priceInputHidden = false
-	    redPacketDataNS.bonusPrice = PRICE_INPUT_VALUE
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.priceInputHidden = false
+	    self.redPacketDataNS.bonusPrice = self.PRICE_INPUT_VALUE || 0
 
 	    self.calcBonus()
 	  },
@@ -240,12 +165,9 @@ export default {
 	   */
 	  closeRPPriceInput () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
-
-	    redPacketDataNS.priceInputHidden = true
-	    PRICE_INPUT_VALUE = redPacketDataNS.bonusPrice
-	    redPacketDataNS.bonusPrice = 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    
+	    self.redPacketDataNS.priceInputHidden = true
+	    self.redPacketDataNS.bonusPrice = 0
 
 	    self.calcBonus()
 	  },
@@ -257,9 +179,8 @@ export default {
 	   */
 	  RPNumInputHandler (e) {
 	    let self = this
-	    let _val = e.detail.value
-	    let totalStuNumber = self.data.redPacketDataNS.totalStuNumber
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let _val = e.target.value
+	    let totalStuNumber = self.redPacketDataNS.totalStuNumber
 
 	    // _val是字符串， toFixed方法返回字符串
 	    if(_val == parseFloat(_val)){
@@ -280,14 +201,10 @@ export default {
 	    }else{
 	      _val = ''
 	    }
-
-	    redPacketDataNS.bonusNumber = _val || 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusNumber = _val || 0
 
 	    self.calcBonus()
-	    return {
-	      value: _val
-	    }
+	    self.NUM_INPUT_VALUE = _val
 	  },
 	  /**
 	   * 红包金额输入框事件处理
@@ -297,8 +214,7 @@ export default {
 	   */
 	  RPPriceInputHandler (e) {
 	    let self = this
-	    let _val = e.detail.value
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let _val = e.target.value
 
 	    //是数字的话
 	    if(_val == parseFloat(_val)){
@@ -309,13 +225,10 @@ export default {
 	        _val = '';
 	    }
 
-	    redPacketDataNS.bonusPrice = _val || 0
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.bonusPrice = _val || 0
 
 	    self.calcBonus()
-	    return {
-	      value: _val
-	    }
+	    self.PRICE_INPUT_VALUE = _val
 	  },
 	  /**
 	   * 计算红包金额
@@ -323,8 +236,9 @@ export default {
 	   */
 	  calcBonus () {
 	    let self = this
-	    let bonusNumber = self.data.redPacketDataNS.bonusNumber
-	    let bonusPrice = self.data.redPacketDataNS.bonusPrice
+
+	    let bonusNumber = self.redPacketDataNS.bonusNumber
+	    let bonusPrice = self.redPacketDataNS.bonusPrice
 	    
 	    // 注意：整数、字符串不能使用toFixed
 	    let temptotal = parsePriceValue(bonusNumber * bonusPrice);// 可能是0，整数、小数（小数可以用toFixed）
@@ -338,26 +252,13 @@ export default {
 	        temptotal = temptotal.toFixed(2);
 	    }
 
-	    let redPacketDataNS = self.data.redPacketDataNS
-
 	    if(temptotal == 0 || bonusPrice > 100){
-	        redPacketDataNS.isRedpacketDisabled = true
+	      self.redPacketDataNS.isRedpacketDisabled = true
 	    }else{
-	      redPacketDataNS.isRedpacketDisabled = false
+	      self.redPacketDataNS.isRedpacketDisabled = false
 	    }
 
-	    redPacketDataNS.bonusTotal = temptotal
-	    self.resetRedPacketDataNS(redPacketDataNS)
-	  },
-	  /**
-	   * 设置redPacketDataNS数据
-	   *
-	   */
-	  resetRedPacketDataNS (redPacketDataNS) {
-	    let self = this
-	    self.setData({
-	      redPacketDataNS: redPacketDataNS
-	    })
+	    self.redPacketDataNS.bonusTotal = temptotal
 	  },
 	  /**
 	   * 获取学生人数、钱包余额
@@ -366,29 +267,24 @@ export default {
 	   */
 	  fetchStuBank (fn) {
 	    let self = this
+	    let url = API.prepare_red_envelope
 
-	    app.request({
-	      url: API.prepare_red_envelope + '/' + PROBLEMID,
-	      method: 'GET',
-	      success(DATA) {
-	        let data = DATA.data
-	        if(data.success){
-	          let totalStuNumber = data.data.classroom_students_count;
-	          let redPacketDataNS = self.data.redPacketDataNS
-	          let bankLeft = data.data.balance/100;
+      if (process.env.NODE_ENV === 'production') {
+        url = API.prepare_red_envelope + '/' + self.problemid
+      }
 
-	          bankLeft = bankLeft.toFixed(2);
-	          redPacketDataNS.totalStuNumber = totalStuNumber
-	          redPacketDataNS.bankLeft = bankLeft
-	          self.resetRedPacketDataNS(redPacketDataNS)
+      // 单次刷新
+      request.get(url)
+        .then(jsonData => {
+        	let totalStuNumber = jsonData.data.classroom_students_count;
+          let bankLeft = jsonData.data.balance/100;
 
-	          fn && fn();
-	        }
-	      },
-	      fail(error) {
-	        console.log('error', error);
-	      }
-	    })
+          bankLeft = bankLeft.toFixed(2);
+          self.redPacketDataNS.totalStuNumber = totalStuNumber
+          self.redPacketDataNS.bankLeft = bankLeft
+
+          fn && fn();
+        })
 	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “打赏” 按钮，之后弹出确认金额页面
@@ -396,13 +292,15 @@ export default {
 	   * @event bindtap
 	   */
 	  confirmBonus () {
+	  	console.log(90001)
+	  	return
 	    let self = this
 
 	    self.setData({
 	      isRedpacketPayingWrapperHidden: false
 	    })
 
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let redPacketDataNS = self.redPacketDataNS
 	    // -1让钱包余额显示加载中
 	    redPacketDataNS.bankLeft = -1
 	    // 记录输入框的状态后把输入框隐藏掉
@@ -414,7 +312,7 @@ export default {
 
 	    // 获取钱包余额,确认微信需要支付多少
 	    self.fetchStuBank(() => {
-	      let redPacketDataNS = self.data.redPacketDataNS
+	      let redPacketDataNS = self.redPacketDataNS
 	      let bankLeft = redPacketDataNS.bankLeft
 	      let bonusTotal = redPacketDataNS.bonusTotal
 	      let _wxpay = bonusTotal - bankLeft
@@ -438,7 +336,7 @@ export default {
 	  confirmPay () {
 	    // 协调要不要使用微信支付、钱包支付，并且回调中重置payingStep为1成功或2失败
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let redPacketDataNS = self.redPacketDataNS
 	    let bonusTotal = redPacketDataNS.bonusTotal
 	    let bonusNumber = redPacketDataNS.bonusNumber
 	    let wxToPay = redPacketDataNS.wxToPay
@@ -560,7 +458,7 @@ export default {
 	   */
 	  connectLittleBank () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let redPacketDataNS = self.redPacketDataNS
 	    let bonusTotal = redPacketDataNS.bonusTotal
 	    let bonusNumber = redPacketDataNS.bonusNumber
 
@@ -604,9 +502,9 @@ export default {
 
 	    REDID = data.data.id;
 
-	    let current = self.data.current - 1
-	    let _pptData = self.data.pptData
-	    let _problemResultData = self.data.problemResultData
+	    let current = self.current - 1
+	    let _pptData = self.pptData
+	    let _problemResultData = self.problemResultData
 
 	    _pptData[current].Problem.RedEnvelopeID = REDID
 	    _problemResultData.RedEnvelopeID = REDID
@@ -664,7 +562,7 @@ export default {
 	   */
 	  restoreInputHiddenStatus () {
 	    let self = this
-	    let redPacketDataNS = self.data.redPacketDataNS
+	    let redPacketDataNS = self.redPacketDataNS
 
 	    // 恢复输入框的老状态
 	    redPacketDataNS.numInputHidden = OLD_NUM_INPUT_HIDDEN
