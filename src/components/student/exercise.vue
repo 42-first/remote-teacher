@@ -18,21 +18,21 @@
 
       <!-- 定时时间 -->
       <section class="exercise__timing" v-show="summary&&summary.limit>0">
-        <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-clock"></i></p>
+        <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-timing"></i></p>
         <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
       </section>
 
       <!-- 问题内容 -->
       <section class="exercise-content">
-        <p class="page-no f18"><span>第{{ summary.pageIndex }}页</span></p>
-        <img class="cover" :src="summary.cover" />
+        <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
+        <img class="cover" :src="summary&&summary.cover" />
       </section>
 
       <!-- 问题选项 -->
       <section class="" v-if="isShowOption">
         <ul class="exercise-options" v-if="summary">
-          <li :class="['options-item', 'f45', problemType]" v-for="(item, index) in summary.options">
-            <p class="options-label" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
+          <li :class="['options-item', 'f45', problemType]" v-for="(item, index) in options">
+            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
         <!-- 投票选择提示 -->
@@ -87,7 +87,7 @@
          next();
       } else {
         next(vm => {
-          vm.$router.go(-1)
+          vm.$router.back();
         })
       }
     },
@@ -128,14 +128,20 @@
       * @param problemID 问题ID
       */
       init(data) {
-        let problemID = this.summary.problemID
+        let problemID = data.problemID;
         this.title = this.$parent.title;
+
+        if(!problemID) {
+          return ;
+        }
 
         // 是否观察者模式
         this.observerMode = this.$parent.observerMode;
         this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
+        // 选项
+        this.options = data.options;
 
         // 是否观察者模式
         if(this.observerMode) {
@@ -148,7 +154,7 @@
           this.isShowSubmit = false;
         } else {
           // 开始启动定时
-          data.limit > 0 && this.$parent.startTiming({ problemID: data.problemID, msgid: this.msgid++ });
+          data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
 
           // 投票类型
           if(this.problemType === 'Polling') {
@@ -197,6 +203,51 @@
         }
       },
 
+      /**
+      * 模仿微信小程序的 setData 用法，简易设置data
+      *
+      * @param {object} newData
+      */
+      setData (newData) {
+        let self = this
+        Object.keys(newData).forEach(attr => {
+          self[attr] = newData[attr]
+        })
+      },
+
+      /*
+      * @method 设置答案选项是否选中
+      * @param option: 选项
+      *        isSelected: 是否选中
+      *        multi: 是否多选
+      */
+      setOptions(option, isSelected, multi) {
+        let options = this.options;
+
+        options = options.map( (element, index) => {
+          if(!isSelected) {
+            // 取消
+            element.Label === option && (element.selected = isSelected);
+          } else {
+            if(multi) {
+              // 多选
+              element.Label === option && (element.selected = isSelected);
+            } else {
+              // 单选
+              if(element.Label === option) {
+                element.selected = isSelected;
+              } else {
+                element.selected = false;
+              }
+            }
+          }
+
+          return element;
+        });
+
+        this.options = options;
+      },
+
       /*
       * @method 返回主页面
       */
@@ -216,7 +267,7 @@
         }
 
         if(this.optionsSet.has(option)) {
-          targetEl.classList.remove('selected');
+          this.setOptions(option, false);
           this.optionsSet.delete(option);
 
           if(this.problemType === 'Polling') {
@@ -227,18 +278,21 @@
           if(this.problemType === 'MultipleChoiceMA') {
             targetEl.classList.add('selected');
             this.optionsSet.add(option);
-          } else if(this.problemType === 'MultipleChoice' && this.optionsSet.size < 1) {
-            targetEl.classList.add('selected');
+          } else if(this.problemType === 'MultipleChoice') {
+            // targetEl.classList.add('selected');
+            this.setOptions(option, true, false);
+            this.optionsSet.clear();
             this.optionsSet.add(option);
           } else if(this.problemType === 'Polling' && this.pollingCount) {
             this.pollingCount--;
-            targetEl.classList.add('selected');
+            // targetEl.classList.add('selected');
+            this.setOptions(option, true, true);
             this.optionsSet.add(option);
           }
         }
 
         // 是否可以提交
-        if(this.optionsSet.size){
+        if(this.optionsSet.size) {
           this.canSubmit = 1;
           console.log([...this.optionsSet].sort().join(''));
         } else {
@@ -303,7 +357,14 @@
       let cards = this.$parent.cards;
       this.summary = cards[this.index];
 
-      this.init(this.summary);
+      if(this.summary) {
+        this.init(this.summary);
+      } else {
+        // this.$parent.init();
+        setTimeout(()=>{
+          this.init(this.summary);
+        }, 1500)
+      }
     },
     mounted() {
     },

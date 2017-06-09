@@ -7,11 +7,11 @@
  */
 
 
-// const SOCKET_HOST = location.host || 'b.xuetangx.com'
+const SOCKET_HOST =  'b.xuetangx.com' || location.host || 'b.xuetangx.com'
 window.socket = null
 
 // todo : test
-const SOCKET_HOST = location.hostname + ':8888'
+// const SOCKET_HOST = location.hostname + ':8888'
 
 var mixin = {
   methods: {
@@ -43,8 +43,8 @@ var mixin = {
         }
 
         let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
-        // window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
-        window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST)
+        window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
+        // window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST)
 
         // 关闭
         this.socket.onclose = function(event) {

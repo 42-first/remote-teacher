@@ -1,0 +1,166 @@
+{
+    "success": true,
+    "status": 1,
+    "msg": "",
+    "data": {
+       "presentation_id": 2931,
+
+        "presentationList": [
+            {
+                "Slides": [
+                    {
+                        "Cover2": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FtbYGAqx5AYhPbU_V004QrEj8tY1",
+                        "Cover":"rain://error/upload-error",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FtMVyA6AHXEknthwG2b68La_3A3w",
+                        "lessonSlideID":1,
+                        "Tag":[1,2]
+                    },
+                    {
+                        "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/Fl490J3kZvs0NB7ht-FzrFirbnJd",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/Fo5Ol34dfQG7s7H6PeLVWmAmU5j-",
+                        "lessonSlideID":2,
+                        "Tag":[1]
+                    },
+                    {
+                        "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/Fif8kr_8bSBns54ADDbccTkcVR2G",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FpOvCoLM4IcIb_cgn2yFozQzpcCp",
+                        "lessonSlideID":3
+                    },
+                    {
+                        "Problem": {
+                            "Bullets": [
+                                {
+                                    "Label": "A",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 224.437485
+                                },
+                                {
+                                    "Label": "B",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 291.937469
+                                },
+                                {
+                                    "Label": "C",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 359.437469
+                                },
+                                {
+                                    "Label": "D",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 426.937469
+                                },
+                                {
+                                    "Label": "E",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 359.437469
+                                },
+                                {
+                                    "Label": "F",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 426.937469
+                                }
+                           ],
+                           "Submit": {
+                                "Width": 121.5,
+                                "Height": 32.4,
+                                "Left": 553.8461,
+                               "Top": 467.437469
+                            },
+                            "ProblemID":100,
+                            "Type": "MultipleChoice",
+                            "Answer": "2",
+                            "Score": 1
+                        },
+                        "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FmlcR6CYp-3nV_Cl2zjc8da4kiet",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FvnICuvqa-1PNcXqnEXl55YAAnv3",
+                         "lessonSlideID":4,
+                        "Tag":[2]
+                    },
+                    {
+                        "Problem": {
+                            "Bullets": [
+                                {
+                                    "Label": "A",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 224.437485
+                                },
+                                {
+                                    "Label": "B",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 291.937469
+                                },
+                                {
+                                    "Label": "C",
+                                    "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 359.437469
+                                },
+                                {
+                                    "Label": "D",
+                                     "Width": 40.5,
+                                    "Height": 40.5,
+                                    "Left": 87.75,
+                                    "Top": 426.937469
+                                }
+                            ],
+                            "Submit": {
+                                "Width": 121.5,
+                                "Height": 32.4,
+                                "Left": 553.8461,
+                                "Top": 467.437469
+                            },
+                            "ProblemID":123,
+                            "Type": "Polling",
+                            "Answer": "2",
+                            "Score": 1
+                        },
+                        "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FmlcR6CYp-3nV_Cl2zjc8da4kiet",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FvnICuvqa-1PNcXqnEXl55YAAnv3",
+                        "lessonSlideID":5,
+                        "Tag":[2]
+                    },
+                    {
+                        "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FgHyml182Ak4nMaPY-htxuO7yKsv",
+                        "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FnR2mgsEtwGEbywXC8FbZXW_U2pK",
+                        "lessonSlideID":6
+                    },
+                    {
+                       "Cover": "http://7xo8b6.com2.z0.glb.qiniucdn.com/FjNek73jH7dFrKinHxsNd9hMXD8k",
+                       "Thumbnail": "http://7xo8b6.com2.z0.glb.qiniucdn.com/Fkn06k0BgzjUHB181mt-43fI1rVF",
+                       "lessonSlideID":7
+                    }
+                ],
+                "Title": "一体两翼，完善机制\u000b——2015年秋季学期工作",
+                "Width": 720,
+                "Height": 540,
+                "Version": "0.2",
+                "LessonID":3,
+                "presentationID": 21
+            }
+        ],
+        "quizList": [{
+            "quizID":1,
+            "answered": true
+        },{
+            "quizID": 12,
+            "answered": false
+        }]
+    }
+}
