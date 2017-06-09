@@ -97,7 +97,7 @@
           雨课堂钱包
           <span class="gray f14">（余额￥{{redPacketDataNS.bankLeft}}）</span>
         </div>
-        <v-touch class="confirm-btn btn" bindtap="confirmPaySuccess">确认</v-touch>
+        <v-touch class="confirm-btn btn" v-on:tap="confirmPaySuccess">确认</v-touch>
       </div>
       <div class="paying-content pay-fail" v-show="payingStep === 2">
         <div class="cg f28">支付失败!</div>

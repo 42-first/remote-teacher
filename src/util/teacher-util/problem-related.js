@@ -38,7 +38,7 @@ export default {
 
       let current = self.data.current - 1
       let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
+      let inPageProblemID = pptData[current].Problem.ProblemID
 
       if(self.data.isProblemPublished){
         // 查看答案
@@ -46,7 +46,7 @@ export default {
         //分5种情况，1：未退出遥控器且设置了时限 2：未退出遥控器且未设置时限 
         //3：刷新了遥控器且未设置时限 4：刷新了遥控器且设置了时限但是倒计时已经终止 5：刷新了遥控器且正在倒计时
         if(bellArr[current]){//情况1,情况2
-          self.showProblemResult(inPageProblemID);
+          self.showProblemResult(inPageProblemID)
         }else{
           //查询当前题目的状态，收到node回复后再显示答案showProblemResult
           let str = JSON.stringify({
@@ -115,7 +115,7 @@ export default {
 
       let current = self.data.current - 1
       let pptData = self.data.pptData
-      let inPageProblemID = pptData[current].Problem.ProblemID;
+      let inPageProblemID = pptData[current].Problem.ProblemID
 
       let postData = {
         "lessonid": self.data.lessonid,
@@ -123,13 +123,13 @@ export default {
         "slideindex": self.data.current,
         "problemid": inPageProblemID,
         "limit": duration //-1为不限时，以秒为单位，60为一分钟
-      };
+      }
 
       request.post(API.publish_problem, postData)
         .then(jsonData => {
           // 打开柱状图页面，倒计时
-          self.startBell(current, duration);
-          self.showProblemResult(inPageProblemID);
+          self.startBell(current, duration)
+          self.showProblemResult(inPageProblemID)
         })
     },
     /**
@@ -140,30 +140,30 @@ export default {
      */
     startBell (index, initTime) {
       let self = this
-      bellArr[index] = {};
+      bellArr[index] = {}
 
       // 利用隐式类型转换
       if(initTime == -1){
         //未设置时限
-        bellArr[index].hasLimit = false;
+        bellArr[index].hasLimit = false
       }else{
         //设置时限
-        bellArr[index].hasLimit = true;
-        bellArr[index].sec = initTime;
+        bellArr[index].hasLimit = true
+        bellArr[index].sec = initTime
 
         let START = +new Date()
 
         //某个习题独有的计时器
         bellArr[index].timer = setInterval(function(){
           let NOW = +new Date()
-          bellArr[index].sec = initTime - Math.round((NOW - START)/1000);
+          bellArr[index].sec = initTime - Math.round((NOW - START)/1000)
           console.log(index, bellArr[index].sec)
 
           if(bellArr[index].sec <= 0){
-            bellArr[index].sec = 0;
-            clearInterval(bellArr[index].timer);
+            bellArr[index].sec = 0
+            clearInterval(bellArr[index].timer)
           }
-        }, 1000);
+        }, 1000)
       }
     },
     /**
@@ -201,7 +201,7 @@ export default {
           "data":optionData
         },
         'isBellset': bellArr[current].hasLimit
-      };
+      }
 
       // 控制发送试题按钮文案时使用的是showWhichPage中的msg.unlockedproblem
       // 此处只是记录下数据
@@ -219,6 +219,21 @@ export default {
 
       self.refreshProblemResult(inPageProblemID)
     },
+
+    /**
+     * 在试题的发红包页面发红包成功后接收子组件传过来的事件 
+     * rc-mask-redpacket.vue -> rc-mask-problemresult.vue -> remote.vue
+     * 设置本试题的红包id，是的课堂红包按钮文案改为红包名单
+     *
+     * @event 子组件 rc-mask-problemresult.vue 传过来的事件
+     * @param {Object} RedEnvelopeID 红包id
+     */
+    connectLittleBankSuccess (RedEnvelopeID) {
+      let self = this
+
+      console.log('主页收到红包id', RedEnvelopeID)
+      self.problemResultData.RedEnvelopeID = RedEnvelopeID
+    },
     /**
      * 发试题后设置刷新柱状图倒计时页面的定时器
      *
@@ -230,31 +245,31 @@ export default {
 
       let current = self.data.current - 1
       //不在柱状图页面的话就停止刷新
-      // if(!refreshStatus)return;
+      // if(!refreshStatus)return
 
-      let hasLimit = bellArr[current] && bellArr[current].hasLimit;
+      let hasLimit = bellArr[current] && bellArr[current].hasLimit
 
-      clearInterval(refProblemTimer);
+      clearInterval(refProblemTimer)
       refProblemTimer = setInterval(function(){
-        refProblemTimerNum++;
+        refProblemTimerNum++
         if(refProblemTimerNum%3 == 0){
-          self.getProblemResult(inPageProblemID);
+          self.getProblemResult(inPageProblemID)
         }
 
         //更新闹钟时间
         //有可能该题没有设置闹钟
         if(hasLimit){
-          let sec = bellArr[current].sec;
+          let sec = bellArr[current].sec
           self.setData({
             problemDurationLeft: self.sec2str(sec)
           })
 
           if(sec === 0){
-            clearInterval(refProblemTimer);
+            clearInterval(refProblemTimer)
             refProblemTimerNum = 0
           }
         }
-      }, 1000);
+      }, 1000)
 
       //更新闹钟时间
       //有可能该题没有设置闹钟
@@ -263,7 +278,7 @@ export default {
           problemDurationLeft: self.sec2str(bellArr[current].sec)
         })
       }
-      self.getProblemResult(inPageProblemID);
+      self.getProblemResult(inPageProblemID)
     },
     /**
      * 发试题后request获取柱状图倒计时页面的数据
@@ -282,7 +297,7 @@ export default {
 
       request.get(url)
         .then(jsonData => {
-          let newGraphData = jsonData.graph.data;
+          let newGraphData = jsonData.graph.data
           let total = jsonData.total
           let members = jsonData.members
           let _problemResultData = self.data.problemResultData
@@ -290,7 +305,7 @@ export default {
 
           for (let i = 0; i < _graphData.length; i++) {
             _graphData[i].value = newGraphData[i].value
-          };
+          }
 
           _problemResultData.total = total
           _problemResultData.members = members

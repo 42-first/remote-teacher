@@ -46,6 +46,7 @@
           :problem-result-data="problemResultData"
           :problem-duration-left="problemDurationLeft"
           @closeProblemresult="closeProblemresult"
+          @connectLittleBankSuccess="connectLittleBankSuccess"
         ></component>
       </div>
 
