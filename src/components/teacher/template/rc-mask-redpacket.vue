@@ -3,8 +3,8 @@
 	<div class="redpacket-box" >
     <div class="rp-redhead">
       <div class="oval"></div>
-      <div class="desc f20">您可以给回答正确且快速的<br>同学发红包以表奖励</div>
-      <div class="desc f20" style="display: none; color: #fff;">
+      <div class="desc f20" v-show="redPacketDataNS.bonusTotal <= 100">您可以给回答正确且快速的<br>同学发红包以表奖励</div>
+      <div class="desc f20" v-show="redPacketDataNS.bonusTotal > 100" style="color: #fff;">
       	单个红包金额不可超过
       	<span class="f36">100</span>元
       </div>
@@ -23,17 +23,17 @@
           	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusNumber === 5}]" v-on:tap="tapBonusNumber(5)">5</v-touch>
           	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusNumber === 10}]" v-on:tap="tapBonusNumber(10)">10</v-touch>
           </div>
-          <div class="more f18" bindtap="openRPNumInput">更多</div>
+          <v-touch class="more f18" v-on:tap="openRPNumInput">更多</v-touch>
         </div>
       </div>
       
       <div class="input-type" v-show="!redPacketDataNS.numInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
-            <input type="number" placeholder="请输入红包个数" bindinput="RPNumInputHandler"/>
+            <input type="number" placeholder="请输入红包个数" v-model="NUM_INPUT_VALUE" v-on:input="RPNumInputHandler"/>
             <span>个</span>
           </div>
-          <div class="back f18" bindtap="closeRPNumInput">返回</div>
+          <v-touch class="back f18" v-on:tap="closeRPNumInput">返回</v-touch>
         </div>
       </div>
 
@@ -48,17 +48,17 @@
           	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusPrice === 1}]" v-on:tap="tapBonusPrice(1)">￥1.00</v-touch>
           	<v-touch :class="['choice-item', 'f20', {'chosen': redPacketDataNS.bonusPrice === 2}]" v-on:tap="tapBonusPrice(2)">￥2.00</v-touch>
           </div>
-          <div class="more f18" bindtap="openRPPriceInput">更多</div>
+          <v-touch class="more f18" v-on:tap="openRPPriceInput">更多</v-touch>
         </div>
       </div>
       
       <div class="input-type" v-show="!redPacketDataNS.priceInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
-            <input type="number" placeholder="请填写红包金额" bindinput="RPPriceInputHandler" />
+            <input type="number" placeholder="请填写红包金额" v-model="PRICE_INPUT_VALUE" v-on:input="RPPriceInputHandler" />
             <span>元</span>
           </div>
-          <div class="back f18" bindtap="closeRPPriceInput">返回</div>
+          <v-touch class="back f18" v-on:tap="closeRPPriceInput">返回</v-touch>
         </div>
       </div>
 
@@ -83,6 +83,8 @@
 	  data () {
 	    return {
 		    isRedpacketPayingWrapperHidden: true,   // 试题的发红包确认支付页面隐藏
+		    NUM_INPUT_VALUE: '',									    // 记录红包个数输入框历史数值
+		    PRICE_INPUT_VALUE: '',									  // 记录红包金额输入框历史数值
 		    redPacketDataNS: {
 		      totalStuNumber: '--',                   // 班级总人数
 		      bonusNumber: 3,                         // 红包个数
