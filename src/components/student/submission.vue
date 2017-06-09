@@ -31,7 +31,7 @@
         </div>
       </section>
 
-      <section class="submission__submit f17">确认发送</section>
+      <section class="submission__submit f17" @click="handleSend">确认发送</section>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
@@ -91,6 +91,8 @@
         index: 0,
         opacity: 0,
         title: '投稿',
+        // 0 初始化状态 1可以发送 2发送中 3发送完成
+        sendStatus: 0,
         text: '',
         hasImage: false,
         count: 0,
@@ -145,10 +147,10 @@
          });
       },
       /*
-      * @method 红包详情
-      * @param problemID 问题ID
+      * @method 发送投稿
+      * @param
       */
-      getRedEnvelopDetail(redpacketID) {
+      sendSubmission() {
         let self = this;
         let URL = API.student.GET_RED_ENVELOPE_DETAIL;
 
@@ -262,13 +264,15 @@
 
         gallery.init();
       },
+      handleSend() {
+
+      },
       handleBack() {
         this.$router.back();
       }
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
-      // this.init();
     },
     mounted() {
     },

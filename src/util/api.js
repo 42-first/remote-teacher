@@ -22,6 +22,8 @@ if (process.env.NODE_ENV === 'production') {
             'FETCH_PRESENTATION_DATA': '/lesson/fetch_presentation_data/',
             // ppt收藏 不懂
             'SET_LEESON_SILDE_TAG': '/lesson/post_studentlessonslide_tag',
+            // 发送danmu
+            'SEND_DANMU': '/api/danmu/send_danmu',
             'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
@@ -51,6 +53,8 @@ if (process.env.NODE_ENV === 'production') {
             'FETCH_PRESENTATION_DATA': '/static/mock/student/presentationList.json',
             // ppt收藏 不懂
             'SET_LEESON_SILDE_TAG': '/static/mock/student/presentationList.json',
+            // 发送danmu
+            'SEND_DANMU': '/static/mock/student/presentationList.json',
             'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
