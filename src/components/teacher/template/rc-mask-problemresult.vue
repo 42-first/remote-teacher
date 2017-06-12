@@ -59,6 +59,7 @@
 			v-show="!isRedpacketHidden"
 			:problemid="problemid"
 			@giveupBonus="giveupBonus"
+			@connectLittleBankSuccess="connectLittleBankSuccess"
 		></RcMaskRedpacket>
 	</div>
 </template>
@@ -191,6 +192,19 @@
 		    this.setData({
 		      isRedpacketHidden: true
 		    })
+		  },
+		  /**
+		   * 在试题的发红包页面发红包成功后接收子组件传过来的事件
+		   * rc-mask-redpacket.vue -> rc-mask-problemresult.vue -> remote.vue
+		   * 发送给父组件 remote.vue 设置本试题的红包id，使得课堂红包按钮文案改为红包名单
+		   *
+		   * @event 子组件 rc-mask-redpacket.vue 传过来的事件
+		   * @param {Object} RedEnvelopeID 红包id
+		   */
+		  connectLittleBankSuccess (RedEnvelopeID) {
+		    // 告诉父组件红包发送成功
+		    console.log('柱状图页收到红包id', RedEnvelopeID)
+	    	this.$emit('connectLittleBankSuccess', RedEnvelopeID)
 		  },
 		  /**
 		   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面

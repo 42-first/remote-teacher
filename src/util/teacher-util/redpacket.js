@@ -8,10 +8,10 @@
  */
 
 import request from '@/util/request'
+import Promise from 'bluebird'
 import API from '@/config/api'
 
 let REDID = 0              // 红包id，本模块全局使用
-let PROBLEMID = 0          // 试题id，本模块全局使用
 let OLD_NUM_INPUT_HIDDEN, OLD_PRICE_INPUT_HIDDEN // 记录之前input框状态，hack输入框层级最高的bug
 let payPromise = null      // 发红包的promise
 let payPromiseMethod = {}  // 挂载payPromise的 resolve reject 方法
@@ -20,14 +20,14 @@ let payPromiseMethod = {}  // 挂载payPromise的 resolve reject 方法
 function parsePriceValue (num) {
   // 确保输入最多小数点后2位
   if (num < 0.01)
-    return "0.0";
+    return "0.0"
   else {
-    var hNum = num * 100;
-    var hNumInt = parseInt(hNum);
+    var hNum = num * 100
+    var hNumInt = parseInt(hNum)
     if (hNum - hNumInt > 0.999999)
-      hNumInt++;
+      hNumInt++
 
-    return hNumInt / 100;
+    return hNumInt / 100
   }
 }
 
@@ -79,7 +79,7 @@ export default {
 	        }
 	      },
 	      fail(error) {
-	        console.log('error', error);
+	        console.log('error', error)
 	      }
 	    })
 	  },
@@ -219,10 +219,10 @@ export default {
 	    //是数字的话
 	    if(_val == parseFloat(_val)){
 	        if(_val*100 != parseInt(_val*100)){
-	            _val = parsePriceValue(Math.abs(_val));// by wangshuaiguo 2017-02-17 23: 00: 01
+	            _val = parsePriceValue(Math.abs(_val))// by wangshuaiguo 2017-02-17 23: 00: 01
 	        }
 	    }else{
-	        _val = '';
+	        _val = ''
 	    }
 
 	    self.redPacketDataNS.bonusPrice = _val || 0
@@ -241,15 +241,15 @@ export default {
 	    let bonusPrice = self.redPacketDataNS.bonusPrice
 	    
 	    // 注意：整数、字符串不能使用toFixed
-	    let temptotal = parsePriceValue(bonusNumber * bonusPrice);// 可能是0，整数、小数（小数可以用toFixed）
+	    let temptotal = parsePriceValue(bonusNumber * bonusPrice)// 可能是0，整数、小数（小数可以用toFixed）
 	    if(temptotal == 0){
-	        temptotal = '0.00';
+	        temptotal = '0.00'
 	    }else if(temptotal == parseInt(temptotal)){
 	        // 整数
 	        // temptotal = parseFloat(temptotal+'.00')
-	        temptotal = temptotal+'.00';
+	        temptotal = temptotal+'.00'
 	    }else{
-	        temptotal = temptotal.toFixed(2);
+	        temptotal = temptotal.toFixed(2)
 	    }
 
 	    if(temptotal == 0 || bonusPrice > 100){
@@ -276,14 +276,14 @@ export default {
       // 单次刷新
       request.get(url)
         .then(jsonData => {
-        	let totalStuNumber = jsonData.data.classroom_students_count;
-          let bankLeft = jsonData.data.balance/100;
+        	let totalStuNumber = jsonData.data.classroom_students_count
+          let bankLeft = jsonData.data.balance/100
 
-          bankLeft = bankLeft.toFixed(2);
+          bankLeft = bankLeft.toFixed(2)
           self.redPacketDataNS.totalStuNumber = totalStuNumber
           self.redPacketDataNS.bankLeft = bankLeft
 
-          fn && fn();
+          fn && fn()
         })
 	  },
 	  /**
@@ -292,29 +292,21 @@ export default {
 	   * @event bindtap
 	   */
 	  confirmBonus () {
-	  	console.log(90001)
-	  	return
 	    let self = this
 
-	    self.setData({
-	      isRedpacketPayingWrapperHidden: false
-	    })
-
-	    let redPacketDataNS = self.redPacketDataNS
+	    self.isRedpacketPayingWrapperHidden = false
 	    // -1让钱包余额显示加载中
-	    redPacketDataNS.bankLeft = -1
+	    self.redPacketDataNS.bankLeft = -1
 	    // 记录输入框的状态后把输入框隐藏掉
-	    OLD_NUM_INPUT_HIDDEN = redPacketDataNS.numInputHidden
-	    OLD_PRICE_INPUT_HIDDEN = redPacketDataNS.priceInputHidden
-	    redPacketDataNS.numInputHidden = true
-	    redPacketDataNS.priceInputHidden = true
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    OLD_NUM_INPUT_HIDDEN = self.redPacketDataNS.numInputHidden
+	    OLD_PRICE_INPUT_HIDDEN = self.redPacketDataNS.priceInputHidden
+	    self.redPacketDataNS.numInputHidden = true
+	    self.redPacketDataNS.priceInputHidden = true
 
 	    // 获取钱包余额,确认微信需要支付多少
 	    self.fetchStuBank(() => {
-	      let redPacketDataNS = self.redPacketDataNS
-	      let bankLeft = redPacketDataNS.bankLeft
-	      let bonusTotal = redPacketDataNS.bonusTotal
+	      let bankLeft = self.redPacketDataNS.bankLeft
+	      let bonusTotal = self.redPacketDataNS.bonusTotal
 	      let _wxpay = bonusTotal - bankLeft
 
 	      // 整数使用.toFixed(2)报错
@@ -324,8 +316,7 @@ export default {
 	        _wxpay = _wxpay.toFixed(2)
 	      }
 
-	      redPacketDataNS.wxToPay = _wxpay
-	      self.resetRedPacketDataNS(redPacketDataNS)
+	      self.redPacketDataNS.wxToPay = _wxpay
 	    })
 	  },
 	  /**
@@ -333,17 +324,14 @@ export default {
 	   *
 	   * @event bindtap
 	   */
-	  confirmPay () {
+	  confirmPay () {	  	
 	    // 协调要不要使用微信支付、钱包支付，并且回调中重置payingStep为1成功或2失败
 	    let self = this
-	    let redPacketDataNS = self.redPacketDataNS
-	    let bonusTotal = redPacketDataNS.bonusTotal
-	    let bonusNumber = redPacketDataNS.bonusNumber
-	    let wxToPay = redPacketDataNS.wxToPay
+	    let bonusTotal = self.redPacketDataNS.bonusTotal
+	    let bonusNumber = self.redPacketDataNS.bonusNumber
+	    let wxToPay = self.redPacketDataNS.wxToPay
 
-	    self.setData({
-	      payingStep: 0
-	    })
+	    self.payingStep = 0
 
 	    payPromise = new Promise(function(resolve, reject){
 	      // 挂载resolve reject函数
@@ -369,9 +357,7 @@ export default {
 	      self.connectLittleBankSuccess(data)
 	    }).catch(error => {
 	      // 支付失败
-	      self.setData({
-	        payingStep: 2
-	      })
+	      self.payingStep = 2
 	    })
 	  },
 	  /**
@@ -403,15 +389,15 @@ export default {
 	              // 微信jssdk支付和小程序支付的回调不一样，jssdk是 'chooseWXPay:ok'
 	              if(res.errMsg == "requestPayment:ok" ) {
 	                //支付成功
-	                // payCB && payCB('success');
-	                payCB && payCB({success: true, out_trade_no: jsonData.data.out_trade_no});
+	                // payCB && payCB('success')
+	                payCB && payCB({success: true, out_trade_no: jsonData.data.out_trade_no})
 	              }else{
-	                  myToast(res.errMsg);
+	                  myToast(res.errMsg)
 	              }
 	            },
 	            fail: function(errMsg){
 	              console.log('resfail', errMsg)
-	              payCB && payCB({success: false, errMsg: 'failorcancel'});
+	              payCB && payCB({success: false, errMsg: 'failorcancel'})
 	            }
 	          })
 	        } else {
@@ -442,13 +428,13 @@ export default {
 	        console.log(data)
 	        
 	        if(data.status === 0 && data.data.trade_state === 'SUCCESS'){
-	          self.connectLittleBank();
+	          self.connectLittleBank()
 	        }else{
 	          payPromiseMethod.reject('支付失败')
 	        }
 	      },
 	      fail(error) {
-	        console.log('error', error);
+	        console.log('error', error)
 	      }
 	    })
 	  },
@@ -458,49 +444,42 @@ export default {
 	   */
 	  connectLittleBank () {
 	    let self = this
-	    let redPacketDataNS = self.redPacketDataNS
-	    let bonusTotal = redPacketDataNS.bonusTotal
-	    let bonusNumber = redPacketDataNS.bonusNumber
+	    let bonusTotal = self.redPacketDataNS.bonusTotal
+	    let bonusNumber = self.redPacketDataNS.bonusNumber
 
 	    let postData = {
 	      'cid': 1,
-	      'rid': PROBLEMID,
+	      'rid': self.problemid,
 	      'amount': parseInt((bonusTotal*100).toFixed(0)),
 	      'quality': bonusNumber
 	    }
-	    app.request({
-	      url: API.create_red_envelope,
-	      method: 'POST',
-	      data: postData,
-	      success(DATA) {
-	        let data = DATA.data
-	        if(data.success){
-	          payPromiseMethod.resolve(data);
-	        }else{
-	          payPromiseMethod.reject('支付失败')
-	        }
-	      },
-	      fail(error) {
-	        console.log('error', error);
-	      }
-	    })
+
+	    request.post(API.create_red_envelope, postData)
+        .then(jsonData => {
+        	// 不需要判断success，在request模块中判断如果success为false，会直接reject
+          payPromiseMethod.resolve(jsonData)
+        })
 	  },
 	  /**
 	   * 向雨课堂钱包发起的支付成功了（最终的成功）之后的回调函数
 	   *
-	   * @param {Object} data 支付成功返回，包含红包id
+	   * @param {Object} jsonData 支付成功返回，包含红包id
 	   */
-	  connectLittleBankSuccess (data) {
+	  connectLittleBankSuccess (jsonData) {
 	    let self = this
 
-	    self.setData({
-	      payingStep: 1
-	    })
+	    self.payingStep = 1
+	    console.log('支付成了')
 
 	    // 重置钱包余额
 	    self.fetchStuBank()
+	    // 告诉父组件红包发送成功
+	    console.log('红包页emit红包id', jsonData.data.id)
+	    // rc-mask-redpacket.vue -> rc-mask-problemresult.vue -> remote.vue
+	    self.$emit('connectLittleBankSuccess', jsonData.data.id)
+	    return
 
-	    REDID = data.data.id;
+	    // TODO 红包发送成功以后通知柱状图页、主页面修改 redid
 
 	    let current = self.current - 1
 	    let _pptData = self.pptData
@@ -509,12 +488,6 @@ export default {
 	    _pptData[current].Problem.RedEnvelopeID = REDID
 	    _problemResultData.RedEnvelopeID = REDID
 
-	    self.setData({
-	      // 更新 pptData 中的红包id
-	      pptData: _pptData,
-	      // 让柱状图中的按钮文案立即改变（否则只改上面一个也行）
-	      problemResultData: _problemResultData
-	    })
 	  },
 	  /**
 	   * 在试题的红包页面，最终确认后，成功，点击“确认”按钮
@@ -524,10 +497,11 @@ export default {
 	  confirmPaySuccess () {
 	    let self = this
 	    this.setData({
-	      isRedpacketHidden: true,
 	      isRedpacketPayingWrapperHidden: true,
 	      payingStep: -1
 	    })
+	    // 关闭红包页面
+	    self.giveupBonus()
 	  },
 	  /**
 	   * 在试题的红包页面，最终确认后，失败，点击“确认”按钮
@@ -537,7 +511,6 @@ export default {
 	  confirmPayFail () {
 	    let self = this
 	    this.setData({
-	      isRedpacketHidden: true,
 	      isRedpacketPayingWrapperHidden: true,
 	      payingStep: -1
 	    })
@@ -551,10 +524,7 @@ export default {
 	    let self = this
 
 	    self.restoreInputHiddenStatus()
-
-	    self.setData({
-	      isRedpacketPayingWrapperHidden: true
-	    })
+	    self.isRedpacketPayingWrapperHidden = true
 	  },
 	  /**
 	   * 恢复红包个数、金额输入框的之前的显示状态
@@ -562,13 +532,10 @@ export default {
 	   */
 	  restoreInputHiddenStatus () {
 	    let self = this
-	    let redPacketDataNS = self.redPacketDataNS
 
 	    // 恢复输入框的老状态
-	    redPacketDataNS.numInputHidden = OLD_NUM_INPUT_HIDDEN
-	    redPacketDataNS.priceInputHidden = OLD_PRICE_INPUT_HIDDEN
-
-	    self.resetRedPacketDataNS(redPacketDataNS)
+	    self.redPacketDataNS.numInputHidden = OLD_NUM_INPUT_HIDDEN
+	    self.redPacketDataNS.priceInputHidden = OLD_PRICE_INPUT_HIDDEN
 	  }
   }
 }
