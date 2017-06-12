@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Promise from 'bluebird'
+import Cookies from 'js-cookie'
 
 // Promise
 window.Promise = window.Promise || Promise;
@@ -40,6 +41,9 @@ export default {
 
   post (url, params) {
     params = params || {}
+
+    // post统一csrftoken
+    axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken') || ''
 
     return axios
       .post(url, params)

@@ -125,6 +125,8 @@ var mixin = {
         // 弹幕状态
         msg["danmu"] && (this.danmuStatus = msg["danmu"])
 
+        console.log('danmuStatus:'+ this.danmuStatus);
+
         switch(msg.op) {
           // 建立通信 时间轴事件
           case 'hello':
@@ -231,8 +233,7 @@ var mixin = {
 
             leaveTime = msg['limit'] - leaveTime
 
-            // 习题组件实例中的定时方法
-            this.$children[1] && this.$children[1].setTiming(leaveTime);
+            this.calcLeaveTime(leaveTime);
 
             break
 

@@ -108,13 +108,14 @@
 
         return request.post(URL, params)
           .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+            if(res) {
+              // 弹幕返回数据结构 danmuID success
+              let data = res;
 
               setTimeout(() => {
                 self.sendStatus = 3;
                 self.handleBack();
-              }, 3000)
+              }, 2000)
 
               // socket通信
               socket.send(JSON.stringify({

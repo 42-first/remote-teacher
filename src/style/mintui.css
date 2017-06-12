@@ -25,3 +25,36 @@
   padding: 0 0.2rem;
   font-size: 0.373333rem
 }
+
+
+.mint-msgbox {
+  font-size: 0.426667rem;
+}
+
+.mint-msgbox-header {
+  padding: 0.4rem 0 0;
+}
+
+.mint-msgbox-title {
+  font-size: 0.426667rem;
+}
+
+.mint-msgbox-content {
+  padding: 0.266667rem 0.266667rem 0.413333rem;
+  min-height: 0.96rem;
+}
+
+.mint-msgbox-message {
+  line-height: 0.933333rem;
+}
+
+
+.mint-msgbox-btns {
+  height: 1.066667rem;
+  line-height: 1.066667rem;
+}
+
+.mint-msgbox-btn {
+  line-height: 0.933333rem;
+  font-size: 0.426667rem;
+}
