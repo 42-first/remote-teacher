@@ -111,17 +111,6 @@ a {text-decoration: none;}
   font-size: 60px;
 }
 
-[data-dpr="1"] .f24 {
-  font-size: 24px;
-}
-[data-dpr="2"] .f24 {
-    font-size: 48px;
-}
-[data-dpr="3"] .f24 {
-  font-size: 72px;
-}
-
-
 [data-dpr="1"] .f21 {
   font-size: 21px;
 }
@@ -130,6 +119,16 @@ a {text-decoration: none;}
 }
 [data-dpr="3"] .f21 {
   font-size: 63px;
+}
+
+[data-dpr="1"] .f24 {
+  font-size: 24px;
+}
+[data-dpr="2"] .f24 {
+    font-size: 48px;
+}
+[data-dpr="3"] .f24 {
+  font-size: 72px;
 }
 
 [data-dpr="1"] .f25 {
