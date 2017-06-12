@@ -102,7 +102,7 @@
       <div class="paying-content pay-fail" v-show="payingStep === 2">
         <div class="cg f28">支付失败!</div>
         <div class="warn f18">零钱已退还至雨课堂钱包</div>
-        <v-touch class="confirm-btn btn" bindtap="confirmPayFail">返回</v-touch>
+        <v-touch class="confirm-btn btn" v-on:tap="confirmPayFail">返回</v-touch>
       </div>
     </div>
   </div>

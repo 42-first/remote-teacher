@@ -230,9 +230,11 @@ export default {
      */
     connectLittleBankSuccess (RedEnvelopeID) {
       let self = this
+      let current = self.data.current - 1
 
       console.log('主页收到红包id', RedEnvelopeID)
       self.problemResultData.RedEnvelopeID = RedEnvelopeID
+      self.pptData[current].Problem.RedEnvelopeID = RedEnvelopeID
     },
     /**
      * 发试题后设置刷新柱状图倒计时页面的定时器

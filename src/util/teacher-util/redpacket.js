@@ -514,6 +514,8 @@ export default {
 	      isRedpacketPayingWrapperHidden: true,
 	      payingStep: -1
 	    })
+	    // 关闭红包页面
+	    self.giveupBonus()
 	  },
 	  /**
 	   * 在试题的红包页面，点击 “打赏” 按钮之后弹出的确认金额页面中，取消支付，点击“关闭的X”按钮
