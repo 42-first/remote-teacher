@@ -180,20 +180,13 @@
 
         return request.post(URL, params)
           .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+            if(res) {
+              let data = res;
 
               setTimeout(() => {
                 self.sendStatus = 3;
                 self.handleBack();
               }, 3000)
-
-              // socket通信
-              // socket.send(JSON.stringify({
-              //   op: 'newdanmu',
-              //   lessonid: self.lessonID,
-              //   danmu: content
-              // }));
 
               self.$toast({
                 message: '发送成功',
@@ -208,8 +201,33 @@
        * @method 上传图片
        * @param
        */
-      uploadImage(data) {
+      uploadImage(data, fileType) {
+        let self = this;
+        let URL = API.student.UPLOAD_PIC;
+        let params = {
+          'pic_type': ''
+        };
 
+        let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
+        let sBase64 = data.substr(data.indexOf(',') + 1);
+        params['pic_data'] = sBase64;
+        params['pic_type'] = picType;
+
+        return request.post(URL, params)
+          .then(function (res) {
+            if(res && res.data) {
+              let data = res.data;
+
+              self.imageURL = data.pic_url;
+              console.log(self.imageURL);
+
+              if(self.sendStatus === 0) {
+                self.sendStatus = 1;
+              }
+
+              return self.imageURL;
+            }
+          });
       },
       handleChooseImage() {
         console.log(wx);
@@ -237,11 +255,12 @@
           imgEl.src = self.imageData = data;
 
           // 上传图片
-
+          self.uploadImage(data, file.type)
           self.hasImage = true;
         };
 
         reader.readAsDataURL(file);
+        console.log(file);
       },
       handlelaodImg() {
         let target = event.target;

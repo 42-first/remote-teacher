@@ -23,9 +23,8 @@ Vue.$toast = Vue.prototype.$toast = Toast;
 // FastClick.attach(document.body)
 
 export default new Router({
-  base: process.env.NODE_ENV == 'production' ? "/remote" : "/",
-  // history
-  mode: 'hash',
+  base: process.env.NODE_ENV === 'production' ? '/lesson/student' : '/',
+  mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
   routes: [
     {
       path: '/',

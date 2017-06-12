@@ -194,6 +194,21 @@ var actionsMixin = {
     },
 
     /*
+    * @method 计时习题 计算剩余时间
+    * @params
+    */
+    calcLeaveTime(leaveTime) {
+      // 记录问题剩余时间并开始计时
+      let oProblem = this.problemMap.get(probID);
+      if(oProblem) {
+        oProblem.leaveTime = leaveTime
+
+        // 习题组件实例中的定时方法
+        this.$children[1] && this.$children[1].setTiming(leaveTime);
+      }
+    },
+
+    /*
     * @method 新增红包
     * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
     */

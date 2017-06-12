@@ -152,6 +152,13 @@
         // 是否完成
         if(data.isComplete) {
           this.isShowSubmit = false;
+
+          let result = this.oProblem['Result'];
+
+          result && result.split('').forEach((option) => {
+            this.setOptions(option, true, true);
+          });
+
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -164,8 +171,10 @@
           // 提交有困难地址
           this.commitDiffURL = this.commitDiffURL + problemID;
 
-          // todo: test测试
-          this.setTiming(data.limit)
+          if (process.env.NODE_ENV !== 'production') {
+            // todo: test测试
+            this.setTiming(data.limit)
+          }
         }
 
         setTimeout(()=>{
@@ -201,18 +210,6 @@
           // 时间到
           this.timeOver = true;
         }
-      },
-
-      /**
-      * 模仿微信小程序的 setData 用法，简易设置data
-      *
-      * @param {object} newData
-      */
-      setData (newData) {
-        let self = this
-        Object.keys(newData).forEach(attr => {
-          self[attr] = newData[attr]
-        })
       },
 
       /*
@@ -305,6 +302,7 @@
       */
       handleSubmit() {
         let self = this;
+        let problemID = this.summary.problemID;
         let URL = API.student.ANSWER_LESSON_PROBLEM;
 
         // 是否可以提交
@@ -327,18 +325,34 @@
             'duration': duration,
             'startTime': startTime,
             'submit_time': endTime,
-            'lesson_problem_id': this.summary.problemID,
+            'lesson_problem_id': problemID,
             'result': [...this.optionsSet].sort().join(''),
             'retry_times': retryTimes
           }
+
+          this.oProblem['Result'] = param['result'];
+          let problem = self.$parent.problemMap.get(problemID)
 
           return request.post(URL, param)
             .then(function (res) {
               if(res && res.data) {
                 let data = res.data;
 
+                self.summary = Object.assign(self.summary, {
+                  status: '已完成',
+                  isComplete: true
+                })
+
+                problem = Object.assign(problem, {
+                  'Problem': self.oProblem
+                })
+                self.$parent.problemMap.set(problemID, problem);
+
                 self.canSubmit = 3;
                 clearInterval(self.timer);
+
+                self.$router.back();
+
                 return data;
               }
             }).then(function(res){
@@ -360,7 +374,6 @@
       if(this.summary) {
         this.init(this.summary);
       } else {
-        // this.$parent.init();
         setTimeout(()=>{
           this.init(this.summary);
         }, 1500)

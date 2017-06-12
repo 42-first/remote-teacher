@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 
         student: {
             // 课件习题列表
-            'GET_PRESENTATION_LIST': '',
+            'GET_PRESENTATION_LIST': ' /v/lesson/lesson_info_v2',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/api/red/red_envelope_detail/',
             // 习题提交
@@ -25,9 +25,9 @@ if (process.env.NODE_ENV === 'production') {
             // 发送danmu
             'SEND_DANMU': '/api/danmu/send_danmu',
             // 发送投稿
-            'SEND_SUBMISSION': '/v/tougao/create',
+            'SEND_SUBMISSION': '/v/api/tougao/create',
             // 上传图片
-            'UPLOAD_PIC': '/v/tougao/pic_uplaod',
+            'UPLOAD_PIC': '/v/api/tougao/pic_upload',
             'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 

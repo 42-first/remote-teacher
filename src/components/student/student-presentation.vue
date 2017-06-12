@@ -16,7 +16,7 @@
         <div class="student__header--more" @click="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <router-link :to="'/'+lessonID+'/danmu/'" tag="p" class="action f17 line"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</router-link>
+            <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</p>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-submission f25"></i>发送投稿</router-link>
           </div>
         </div>
@@ -213,9 +213,11 @@
         let self = this;
 
         Promise.all([this.getUserInfo(lessonID), this.getPresentationList()]).then(()=>{
-          // test
-          self.testTimeline();
           self.initws();
+
+          if (process.env.NODE_ENV !== 'production') {
+            self.testTimeline();
+          }
 
           setTimeout(()=>{
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
@@ -300,11 +302,8 @@
         let self = this;
         let URL = API.student.GET_PRESENTATION_LIST;
         let param = {
-          'lessonID': this.lessonID
+          'lesson_id': this.lessonID
         }
-
-        // if (process.env.NODE_ENV === 'production') {
-        // }
 
         // lessons
         return request.get(URL, param)
@@ -313,11 +312,13 @@
               let data = res.data;
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
-              self.presentationID = data.presentation_id;
+              self.presentationID = data.activePresentationID;
+
+              // 课程已结束（学生）
+              // STATUS_ERROR_LESSON_END_STUDENT = 601
 
               // set presentation map
               if(self.presentationList.length) {
-                // self.presentationID = self.presentationList[0].presentationID;
 
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
@@ -335,7 +336,7 @@
 
               // set title
               let presentation = self.presentationMap.get(self.presentationID);
-              self.title = document.title = presentation.Title;
+              presentation.Title && (self.title = document.title = presentation.Title);
 
               return data;
             }
@@ -459,11 +460,22 @@
        *
        */
       handleMoreActions() {
-
         if(this.isMore) {
           this.isMore = false;
         } else {
           this.isMore = true;
+        }
+      },
+
+      /*
+       * @method 开启弹幕
+       *
+       */
+      handleOpenDanmu() {
+        if(this.danmuStatus) {
+          this.$router.push({ path: 'danmu' });
+        } else {
+          this.$messagebox('提示', '老师暂时还未开放弹幕，等等吧～');
         }
       },
 
