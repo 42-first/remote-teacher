@@ -1,4 +1,5 @@
 /**
+ * 仅用于 rc-mask-redpacket.vue 组件
  * @module 红包相关：打开红包页面、红包名单、发送红包等
  *
  * 把用于不同组件的函数放到一个mixin中，不同的组件都引用这个mixin，
@@ -11,7 +12,6 @@ import request from '@/util/request'
 import Promise from 'bluebird'
 import API from '@/config/api'
 
-let REDID = 0              // 红包id，本模块全局使用
 let OLD_NUM_INPUT_HIDDEN, OLD_PRICE_INPUT_HIDDEN // 记录之前input框状态，hack输入框层级最高的bug
 let payPromise = null      // 发红包的promise
 let payPromiseMethod = {}  // 挂载payPromise的 resolve reject 方法
@@ -43,57 +43,6 @@ export default {
 	    self.NUM_INPUT_VALUE = ''
 
 	    this.$emit('giveupBonus')
-	  },
-	  /**
-	   * 清零领取红包的名单
-	   *
-	   */
-	  resetRedPacketDetail () {
-	    let self = this
-
-	    let redPacketDataNS = self.redPacketDataNS
-
-	    redPacketDataNS.issuedDetail = {
-	      list: [],
-	      redleft: '--',
-	      moneyleft: '--'
-	    }
-	    self.resetRedPacketDataNS(redPacketDataNS)
-	  },
-	  /**
-	   * 获取领取红包的名单
-	   *
-	   * @param {function} fn 回调函数
-	   */
-	  getBonusWinner (fn) {
-	    let self = this
-
-	    app.request({
-	      url: API.red_envelope_detail + '/' + REDID,
-	      method: 'GET',
-	      success(DATA) {
-	        let data = DATA.data
-
-	        if(data.success){
-	          fn && fn(data.data)
-	        }
-	      },
-	      fail(error) {
-	        console.log('error', error)
-	      }
-	    })
-	  },
-	  /**
-	   * 关闭已经发送红包的试题的红包名单列表页面，返回柱状图页面
-	   *
-	   * @event bindtap
-	   */
-	  closeRedpacketList () {
-	    let self = this
-
-	    self.setData({
-	      isRedpacketListHidden: true
-	    })
 	  },
 	  /**
 	   * 在红包图页面中点击红包个数按钮
@@ -477,17 +426,6 @@ export default {
 	    console.log('红包页emit红包id', jsonData.data.id)
 	    // rc-mask-redpacket.vue -> rc-mask-problemresult.vue -> remote.vue
 	    self.$emit('connectLittleBankSuccess', jsonData.data.id)
-	    return
-
-	    // TODO 红包发送成功以后通知柱状图页、主页面修改 redid
-
-	    let current = self.current - 1
-	    let _pptData = self.pptData
-	    let _problemResultData = self.problemResultData
-
-	    _pptData[current].Problem.RedEnvelopeID = REDID
-	    _problemResultData.RedEnvelopeID = REDID
-
 	  },
 	  /**
 	   * 在试题的红包页面，最终确认后，成功，点击“确认”按钮

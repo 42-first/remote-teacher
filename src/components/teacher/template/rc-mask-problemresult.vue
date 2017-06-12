@@ -61,6 +61,14 @@
 			@giveupBonus="giveupBonus"
 			@connectLittleBankSuccess="connectLittleBankSuccess"
 		></RcMaskRedpacket>
+
+		<!-- 试题课堂红包名单面板 -->
+		<RcMaskRedpacketlist
+			ref="RcMaskRedpacketlist"
+			v-show="!isRedpacketListHidden"
+			:redid="problemResultData.RedEnvelopeID"
+			@closeRedpacketList="closeRedpacketList"
+		></RcMaskRedpacketlist>
 	</div>
 </template>
 
@@ -69,6 +77,8 @@
 	import RcMaskProblemresultDetail from '@/components/teacher/template/rc-mask-problemresult-detail'
 	// 试题课堂红包面板
 	import RcMaskRedpacket from '@/components/teacher/template/rc-mask-redpacket'
+	// 试题课堂红包名单面板
+	import RcMaskRedpacketlist from '@/components/teacher/template/rc-mask-redpacketlist'
 
 	export default {
 	  name: 'RcMaskProblemresult',
@@ -77,6 +87,7 @@
 	    return {
 	    	isProblemResultDetailHidden: true,      // 试题回答的详情隐藏
 	    	isRedpacketHidden: true,                // 试题的发红包页面隐藏
+	    	isRedpacketListHidden: true,            // 试题的红包名单列表页面隐藏
 	    }
 	  },
 	  computed: {
@@ -86,7 +97,8 @@
 	  },
 	  components: {
 	    RcMaskProblemresultDetail,
-	    RcMaskRedpacket
+	    RcMaskRedpacket,
+	    RcMaskRedpacketlist
 	  },
 	  created(){
 	  },
@@ -112,7 +124,7 @@
 	    	this.$emit('closeProblemresult')
 	    },
 	    /**
-	     * 试题柱状图页面中的公布至屏幕按钮
+	     * 试题柱状图页面中的 投屏 按钮
 	     *
 	     * @event bindtap
 	     */
@@ -203,7 +215,6 @@
 		   */
 		  connectLittleBankSuccess (RedEnvelopeID) {
 		    // 告诉父组件红包发送成功
-		    console.log('柱状图页收到红包id', RedEnvelopeID)
 	    	this.$emit('connectLittleBankSuccess', RedEnvelopeID)
 		  },
 		  /**
@@ -213,24 +224,19 @@
 		  showRedpacketList () {
 		    let self = this
 
-		    // 先清零红包详情
-		    self.resetRedPacketDetail()
+		    self.isRedpacketListHidden = false
+		    self.$refs.RcMaskRedpacketlist.$emit('refreshRedPacketDetail')
+		  },
+		  /**
+		   * 关闭已经发送红包的试题的红包名单列表页面，返回柱状图页面
+		   *
+		   * @event bindtap
+		   */
+		  closeRedpacketList () {
+		    let self = this
+
 		    self.setData({
-		      isRedpacketListHidden: false
-		    })
-
-		    self.getBonusWinner(function(data){
-		      let list = data.issued_user_list;
-		      let redleft = data.quality - data.issued_count;
-		      let moneyleft = redleft*data.amount/data.quality;
-		      let redPacketDataNS = self.redPacketDataNS
-
-		      redPacketDataNS.issuedDetail = {
-		        list: list,
-		        redleft: redleft,
-		        moneyleft: moneyleft
-		      }
-		      self.resetRedPacketDataNS(redPacketDataNS)
+		      isRedpacketListHidden: true
 		    })
 		  },
 	  }
