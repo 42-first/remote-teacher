@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production') {
     create_red_envelope:            '/static/mock/create_red_envelope.json',        // 向django后端发起红包支付
     payquery:                       '/pay/query',                                   // 微信支付后向node后端确认支付金额已经进入小金库
     orderpay:                       '/pay/mp/order/',                               // 向django下单要进行微信支付
-    red_envelope_detail:            '/api/red/red_envelope_detail',                 // 获取某个红包的详情
+    red_envelope_detail:            '/static/mock/red_envelope_detail.json',        // 获取某个红包的详情
   }
 }
 

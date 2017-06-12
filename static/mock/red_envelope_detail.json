@@ -1,0 +1,32 @@
+{
+  "msg": "ok",
+  "data": {
+    "amount": 300,
+    "issued_count": 1,
+    "cid": 1,
+    "rid": 8674,
+    "balance": 200,
+    "quality": 3,
+    "issued_user_list": [
+      {
+        "profile": {
+          "user_id": 501,
+          "name": "馨Yao💃💃💃",
+          "avatar": "http://wx.qlogo.cn/mmopen/Q3auHgzwzM4B95yZ1sjGsFS5v383X56DsjiaFmxeoS2p7u8jOuD5HeSLfwoUudQbVBaOFm48Tsic3rx1u4BuEk0A/64"
+        },
+        "amount": 100,
+        "user_id": 501,
+        "time2": "2017-06-12 15:19:30",
+        "time": 1497251970000
+      }
+    ],
+    "issuer": {
+      "profile": {
+        "name": "刘俊洋",
+        "avatar_96": "http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/96"
+      },
+      "id": 265
+    }
+  },
+  "success": true
+}
