@@ -6,7 +6,7 @@ let api
 if (process.env.NODE_ENV === 'production') {
     api = {
        // 用户权限
-       'GET_USER_INFO': 'v/lesson/lesson_user_info',
+       'GET_USER_INFO': '/v/lesson/lesson_user_info',
         /*------------------*\
            $ 接收器 start
         \*------------------*/
@@ -24,6 +24,10 @@ if (process.env.NODE_ENV === 'production') {
             'SET_LEESON_SILDE_TAG': '/lesson/post_studentlessonslide_tag',
             // 发送danmu
             'SEND_DANMU': '/api/danmu/send_danmu',
+            // 发送投稿
+            'SEND_SUBMISSION': '/v/tougao/create',
+            // 上传图片
+            'UPLOAD_PIC': '/v/tougao/pic_uplaod',
             'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
@@ -55,6 +59,10 @@ if (process.env.NODE_ENV === 'production') {
             'SET_LEESON_SILDE_TAG': '/static/mock/student/presentationList.json',
             // 发送danmu
             'SEND_DANMU': '/static/mock/student/presentationList.json',
+            // 发送投稿
+            'SEND_SUBMISSION': 'v/tougao/create',
+            // 上传图片
+            'UPLOAD_PIC': 'v/tougao/pic_uplaod',
             'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
         }
 
