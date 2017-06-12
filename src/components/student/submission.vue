@@ -31,12 +31,12 @@
         </div>
       </section>
 
-      <section class="submission__submit f17" @click="handleSend">确认发送</section>
+      <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 3 ? 'disable': '']" @click="handleSend">确认发送</section>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
         <a><input type=file accept="image/*" capture="camera" value="拍照" >拍照</a>
-        <a><input type="file" accept="image/*" capture="user" value="自拍" >自拍</a>
+        <a><input type=file accept="image/*" capture="user" value="自拍" >自拍</a>
       </section>
 
     </div>
@@ -94,6 +94,7 @@
         // 0 初始化状态 1可以发送 2发送中 3发送完成
         sendStatus: 0,
         text: '',
+        imageURL: '',
         hasImage: false,
         count: 0,
         imageData: null,
@@ -125,8 +126,21 @@
       text(newValue, oldValue) {
         let value = newValue && newValue.substr(0, 140);
 
-        this.count = value && value.length;
+        this.count = value && value.length || 0;
         this.text = value;
+
+        if(this.count) {
+          this.sendStatus = 1;
+        } else {
+          this.sendStatus = 0;
+        }
+      },
+      sendStatus(newValue, oldValue) {
+        if(newValue === 2) {
+          this.submitText = '正在发送';
+        } else if(newValue === 3) {
+          this.submitText = '发送完成';
+        }
       }
     },
     filters: {
@@ -152,24 +166,49 @@
       */
       sendSubmission() {
         let self = this;
-        let URL = API.student.GET_RED_ENVELOPE_DETAIL;
+        let URL = API.student.SEND_SUBMISSION;
+        let socket = this.$parent.socket;
+        const content = this.text.replace(/^\s+|\s+$/g, '');
+        let params = {
+          'content': content,
+          'pic': this.imageURL,
+          'lesson_id': this.lessonID
+        };
 
+        // 发送中
+        this.sendStatus = 2;
 
-        if (process.env.NODE_ENV === 'production') {
-          URL = URL + redpacketID;
-        }
-
-        return request.get(URL)
+        return request.post(URL, params)
           .then(function (res) {
             if(res && res.data) {
               let data = res.data;
 
-              self.teacher = data.issuer.profile;
-              self.hongbaoList = data.issued_user_list;
+              setTimeout(() => {
+                self.sendStatus = 3;
+                self.handleBack();
+              }, 3000)
+
+              // socket通信
+              // socket.send(JSON.stringify({
+              //   op: 'newdanmu',
+              //   lessonid: self.lessonID,
+              //   danmu: content
+              // }));
+
+              self.$toast({
+                message: '发送成功',
+                duration: 3000
+              });
 
               return data;
             }
           });
+      },
+      /*
+       * @method 上传图片
+       * @param
+       */
+      uploadImage(data) {
 
       },
       handleChooseImage() {
@@ -197,6 +236,8 @@
           let imgEl = self.$el.querySelector('.J_preview_img');
           imgEl.src = self.imageData = data;
 
+          // 上传图片
+
           self.hasImage = true;
         };
 
@@ -204,13 +245,11 @@
       },
       handlelaodImg() {
         let target = event.target;
-        debugger
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;
 
         this.rate = this.width/this.height;
-
       },
       handleDeleteImg() {
         this.hasImage = false;
@@ -265,7 +304,7 @@
         gallery.init();
       },
       handleSend() {
-
+        this.sendSubmission();
       },
       handleBack() {
         this.$router.back();
@@ -446,6 +485,10 @@
     border-radius: 0.106667rem;
   }
 
+  .submission__submit.disable {
+    background: #c8c8c8;
+  }
+
   .camera-list {
     a {
       position: relative;
@@ -470,23 +513,5 @@
 
 
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

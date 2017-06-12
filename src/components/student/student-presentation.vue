@@ -214,7 +214,7 @@
 
         Promise.all([this.getUserInfo(lessonID), this.getPresentationList()]).then(()=>{
           // test
-          // self.testTimeline();
+          self.testTimeline();
           self.initws();
 
           setTimeout(()=>{
@@ -275,7 +275,7 @@
         let self = this;
         let URL = API.GET_USER_INFO;
         let param = {
-          'lessonID': lessonID
+          'lesson_id': lessonID
         }
 
         return request.get(URL, param)

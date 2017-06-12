@@ -113,6 +113,7 @@
 
               setTimeout(() => {
                 self.sendStatus = 3;
+                self.handleBack();
               }, 3000)
 
               // socket通信
