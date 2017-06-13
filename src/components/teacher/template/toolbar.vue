@@ -54,7 +54,7 @@ export default {
      *
      */
     showThumbnail () {
-      console.log(800)
+      this.$emit('showThumbnail')
     },
     /**
      * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -106,12 +106,16 @@ export default {
   .toolbar-root {
     position: relative;
   }
+  /* 当蒙版是缩略图时，底部的工具栏要露出来 */
+  .mask-isthumbnail {
+    z-index: 10;
+  }
   .rc-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 1.706667rem;
-    background: #222222;
+    background: rgba(34,34,34,0.9);
 
     .tool-item {
       flex: 1;

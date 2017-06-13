@@ -20,23 +20,28 @@
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
+      <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
-        class="dontcallback"
+        :class="['dontcallback', {'mask-isthumbnail': initiativeCtrlMaskTpl === 'RcMaskThumbnail'}]"
         :lessonid="lessonid"
         :socket="socket"
+        @showThumbnail="showThumbnail"
       ></Toolbar>
     </div>
 
     <!-- 蒙版层 -->
     <div id="templates" class="templates dontcallback">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
+      <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
           :lessonid="lessonid"
+          :presentationid="presentationid"
           :ppt-data="pptData"
           :current="current"
+          :total="total"
           :socket="socket"
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
@@ -86,6 +91,8 @@ import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
 // 随机点名面板
 import RcMaskRandomcall from '@/components/teacher/template/rc-mask-randomcall'
+// 缩略图面板
+import RcMaskThumbnail from '@/components/teacher/template/rc-mask-thumbnail'
 
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
@@ -106,8 +113,8 @@ export default {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: '42c25f99-7f77-45e6-aee2-9ec4f8d8330d',                               // 用户身份
-      inviteCode: 'T0W7BZ',                         // 课堂暗号
+      auth: '9448aea9-e0b8-435a-8075-636fba0f2606',                               // 用户身份
+      inviteCode: 'ZZZF98',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
@@ -136,7 +143,8 @@ export default {
     Toolbar,
     RcMaskErrormsg,
     RcMaskQrcode,
-    RcMaskRandomcall
+    RcMaskRandomcall,
+    RcMaskThumbnail
   },
   created () {
     this.lessonid = this.$route.params.lessonid
@@ -145,11 +153,11 @@ export default {
     let self = this
 
     self.pmos()
-    self.killMask()
-    self.showWhichPage({
-      slideindex: 2,
-      unlockedproblem: []
-    })
+    // self.killMask()
+    // self.showWhichPage({
+    //   slideindex: 2,
+    //   unlockedproblem: []
+    // })
     self.initws()
   },
   mixins: [switches, socketService, problemRelated],
@@ -250,6 +258,18 @@ export default {
 
       str += fen + ':' + miao;
       return str;
+    },
+    /**
+     * 点开缩略图按钮
+     *
+     */
+    showThumbnail () {
+      let self = this
+
+      self.setData({
+        isInitiativeCtrlMaskHidden: false,
+        initiativeCtrlMaskTpl: 'RcMaskThumbnail'
+      })
     },
   }
 }

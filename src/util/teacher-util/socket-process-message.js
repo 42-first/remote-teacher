@@ -6,7 +6,7 @@
 
 function socketProcessMessage(msg){
   let self = this
-  let current = self.data.current - 1
+  let current = self.current - 1
 
   // 通杀，针对所有指令，并不只是hello
   if(msg.shownow){

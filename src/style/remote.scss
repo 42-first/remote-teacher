@@ -70,50 +70,6 @@
   }
 }
 
-/*缩略图样式*/
-.thumbnail-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  background: #efefef;
-  overflow: hidden;
-}
-.thumbnail-box .thumnail-scrollview {
-  height: 1100rpx;
-}
-.thumbnail-item {
-  float: left;
-  position: relative;
-  width: 320rpx;
-  overflow: hidden;
-  margin: 10px;
-  color: #4A4A4A;
-}
-.thumbnail-box .close-btn {
-  width: 100%;
-  margin: 0;
-}
-.thumbnail-item:nth-child(2n) {
-  float: right;
-}
-.gridimg {
-  width: 100%;
-}
-.thumbnail-item.active .gridimg {
-  box-sizing: border-box;
-  padding: 2px;
-  border: 2px solid #639EF4;
-}
-.gridlabel {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 5rpx 10rpx;
-  background: rgba(0,0,0,0.72);
-  color: $white;
-}
-
 .errmsg, .reconnect-box, .deprive-box {width: 600rpx;}
 
 
@@ -127,8 +83,6 @@
 .deprive-box .mb {
   margin-bottom: 30rpx;
 }
-
-
 
 
 /*试卷相关页面，未发出的：paper， 已发出的：quiz*/
