@@ -17,6 +17,9 @@
 </template>
 
 <script>
+  import request from '@/util/request'
+  import API from '@/config/api'
+
   export default {
     name: 'RcMaskThumbnail',
     props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket'],
@@ -33,6 +36,8 @@
         let container = this.$el.querySelector('.scroll-box')
         let currentPage = container.querySelector('#t'+self.current)
         container.scrollTop = currentPage.offsetTop
+
+        self.fetchPresentationTag()
       })
     },
     methods: {
@@ -55,6 +60,24 @@
         })
 
         self.socket.send(str)
+      },
+      /**
+       * 获取缩略图页 不懂 等标志的信息
+       *
+       */
+      fetchPresentationTag: function () {
+        let self = this
+
+        let url = API.presentation_tag
+
+        if (process.env.NODE_ENV === 'production') {
+          url = API.presentation_tag + '/' + self.inPageProblemID + '/'
+        }
+
+        request.get(url)
+          .then(jsonData => {
+            console.log('presentation_tag', jsonData)
+          })
       },
     }
   }

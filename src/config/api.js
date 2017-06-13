@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:            prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:        prefix + '/lesson/fetch_presentation_data',   // ppt数据
     lesson_quiz_list:               prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
+    presentation_tag:               prefix + '/lesson/presentation_tag',          // 获取缩略图页 不懂 等标志的信息
     publish_problem:                prefix + '/lesson/publish_problem/',          // 发布试题
     problem_statistics:             prefix + '/lesson/problem_statistics',        // 试题柱状图数据
     problem_result_detail:          prefix + '/lesson/problem_result_detail',     // 试题详情数据
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:            '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:        '/static/mock/fetch_presentation_data.json',    // ppt数据
     lesson_quiz_list:               '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
+    presentation_tag:               '/static/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     publish_problem:                '/static/mock/publish_problem.json',            // 发布试题
     problem_statistics:             '/static/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:          '/static/mock/problem_result_detail.json',      // 试题详情数据
