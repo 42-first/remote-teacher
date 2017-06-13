@@ -159,6 +159,7 @@
             this.setOptions(option, true, true);
           });
 
+          data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -209,6 +210,7 @@
         } else {
           // 时间到
           this.timeOver = true;
+          this.sLeaveTime = '时间到';
         }
       },
 
@@ -259,7 +261,7 @@
         let targetEl = event.target;
 
         // 提交中或者已完成
-        if(this.canSubmit === 2 || this.summary.isComplete) {
+        if(this.canSubmit === 2 || this.summary.isComplete || this.timeOver) {
           return this;
         }
 
@@ -315,10 +317,10 @@
 
           this.canSubmit = 2;
 
-          const startTime = this.summary.time;
-          const endTime = +new Date();
+          const startTime = Math.ceil(this.summary.time/1000);
+          const endTime = Math.ceil(+new Date()/1000);
           // 持续多少秒
-          const duration = (endTime - startTime)/1000;
+          const duration = endTime - startTime;
           const retryTimes = 0;
 
           let param = {
@@ -359,6 +361,14 @@
             .catch(error => {
               // 提交失败保存本地
               self.saveAnswer(param);
+              self.$toast({
+                message: '当前网络不畅，请检查系统已保存并将自动重复提交',
+                duration: 3000
+              });
+
+              setTimeout(() => {
+                self.$router.back();
+              }, 3000)
             });
 
           clearInterval(this.timer);

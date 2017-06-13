@@ -135,9 +135,6 @@ var mixin = {
             if(timeline && timeline.length === 0) {
               // 服务端没有此presetationID,重新链接发送
               setTimeout(()=>{
-                // if(retrycount < 5) {
-                //   this.socket.close()
-                // }
               }, 20000)
             } else {
               this.setTimeline(timeline)
@@ -157,8 +154,8 @@ var mixin = {
             item = msg['problem'];
 
             if(item) {
-              timeline['problem'][item['prob']] = item;
               this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+              this.timeline['problem'][item['prob']] = item;
             }
 
             break
@@ -232,7 +229,7 @@ var mixin = {
 
             leaveTime = msg['limit'] - leaveTime
 
-            this.calcLeaveTime(leaveTime);
+            this.calcLeaveTime(leaveTime, probID);
 
             break
 

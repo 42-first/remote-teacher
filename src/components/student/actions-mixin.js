@@ -33,6 +33,8 @@ var actionsMixin = {
             case 'quiz':
               this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
 
+              break;
+
             // event
             case 'event':
               this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
@@ -153,8 +155,8 @@ var actionsMixin = {
         href: '/quiz/quiz_info/' + data.quiz,
         count: data.total,
         time: data.time,
-        status: oQuiz.answered ? '已完成' : '未完成',
-        isComplete: oQuiz.answered
+        status: oQuiz && oQuiz.answered ? '已完成' : '未完成',
+        isComplete: oQuiz && oQuiz.answered || false
       })
 
       !hasEvent && this.cards.push(data);
@@ -197,14 +199,14 @@ var actionsMixin = {
     * @method 计时习题 计算剩余时间
     * @params
     */
-    calcLeaveTime(leaveTime) {
+    calcLeaveTime(leaveTime, probID) {
       // 记录问题剩余时间并开始计时
       let oProblem = this.problemMap.get(probID);
       if(oProblem) {
         oProblem.leaveTime = leaveTime
 
         // 习题组件实例中的定时方法
-        this.$children[1] && this.$children[1].setTiming(leaveTime);
+        this.$children[2] && this.$children[2].setTiming(leaveTime);
       }
     },
 

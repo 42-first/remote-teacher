@@ -100,7 +100,7 @@
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
         <p class=" f16">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
-        <p class="connect-btn f18">立即重连</p>
+        <p class="connect-btn f18" @click="handleReconnect">立即重连</p>
       </div>
     </section>
 
@@ -238,7 +238,7 @@
           // 设置自动提交
           setInterval(() => {
             self.autoSendAnswers();
-          }, 30000)
+          }, 10000)
         });
       },
 
@@ -498,7 +498,7 @@
        */
       handleOpenDanmu() {
         if(this.danmuStatus) {
-          this.$router.push({ path: 'danmu' });
+          this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
         } else {
           this.$messagebox('提示', '老师暂时还未开放弹幕，等等吧～');
         }
@@ -514,6 +514,17 @@
         timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
         this.hasMsg = false;
       },
+
+      /*
+       * @method 立即重连
+       *
+       */
+      handleReconnect() {
+        clearInterval(this.reconnectTimer)
+        this.countdown = 10;
+        this.initws(true);
+      },
+
       /*
        * @method 返回上一页
        *
