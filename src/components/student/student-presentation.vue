@@ -366,15 +366,15 @@
 
         return request.get(URL, param).
           then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+            if(res) {
+              let data = res;
               let presentation = data.presentationData;
 
               // set presentation map
               self.formatPresentation(presentation);
 
               // set title
-              self.title = document.title = presentation.Title;
+              presentation.Title && (self.title = document.title = presentation.Title);
 
               return data;
             }
@@ -675,13 +675,14 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.55);
 
     .content-block {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 100%;
+      color: #fff;
 
       transform: translate(-50%, -50%);
 
