@@ -209,14 +209,9 @@
           'tagType': tagType
         }
 
-        // test: todo
-        // tag === 1 && (data.hasQuestion = !data.hasQuestion);
-        // tag === 2 && (data.hasStore = !data.hasStore);
-
         return request.post(URL, param).
           then(function (res) {
-            if(res && res.data) {
-              // let data = res.data;
+            if(res) {
               if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
                 return;
               }

@@ -24,11 +24,11 @@
 
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
-        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">全部</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">PPT</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">习题</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">试卷</li>
-        <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5">红包</li>
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="student.nav.all">全部</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="student.nav.ppt">PPT</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="student.nav.problem">习题</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="student.nav.quiz">试卷</li>
+        <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5" data-language-key="student.nav.hongbao">红包</li>
       </ul>
     </section>
 
@@ -37,7 +37,7 @@
     <section class="student__timeline-wrapper">
       <loadmore :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
 
-        <section class="student__timeline">
+        <section class="student__timeline J_cards">
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
@@ -54,8 +54,8 @@
 
 
     <!-- 接收器 新消息提醒 -->
-    <section class="student__msg">
-      <!-- <p class="">您有新的课堂动态</p> -->
+    <section class="student__msg f16" v-show="hasMsg" @click="handleScrollToTop">
+      <p class="">您有新的课堂动态</p>
     </section>
 
     <!-- 图片放大结构 -->
@@ -116,6 +116,7 @@
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
+  import exercisemixin from '@/components/student/exercise-mixin'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -153,6 +154,8 @@
         // 当前tab下标
         currTabIndex: 1,
 
+        // 是否有新消息
+        hasMsg: false,
         // 是否观看模式
         observerMode: false,
         // 是否开启弹幕
@@ -193,7 +196,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -212,7 +215,7 @@
       iniTimeline(lessonID) {
         let self = this;
 
-        Promise.all([this.getUserInfo(lessonID), this.getPresentationList()]).then(()=>{
+        Promise.all([this.getPresentationList()]).then(()=>{
           self.initws();
 
           if (process.env.NODE_ENV !== 'production') {
@@ -231,6 +234,11 @@
               window.moment = moment;
             })
           }, 2500)
+
+          // 设置自动提交
+          setInterval(() => {
+            self.autoSendAnswers();
+          }, 30000)
         });
       },
 
@@ -310,6 +318,12 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
+              // auth
+              self.userID = data.userID;
+              self.avatar = data.avatar;
+              self.userAuth = data.userAuth;
+
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
@@ -319,7 +333,6 @@
 
               // set presentation map
               if(self.presentationList.length) {
-
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
 
@@ -339,6 +352,18 @@
               presentation.Title && (self.title = document.title = presentation.Title);
 
               return data;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+
+            if(error && error.status_code === 601) {
+              // 课程结束
+              console.log('课程结束');
+              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+            } else if(error && error.status_code === 603) {
+              // 没有权限
+              console.log('没有权限');
             }
           });
       },
@@ -366,15 +391,15 @@
 
         return request.get(URL, param).
           then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+            if(res) {
+              let data = res;
               let presentation = data.presentationData;
 
               // set presentation map
               self.formatPresentation(presentation);
 
               // set title
-              self.title = document.title = presentation.Title;
+              presentation.Title && (self.title = document.title = presentation.Title);
 
               return data;
             }
@@ -393,8 +418,8 @@
           if(pptData.length) {
             pptData.forEach( (slide, index) => {
               // 收藏 不懂
-              if( slide['Tag'] && slide['Tag'].length ) {
-                slide['Tag'].forEach((tag)=>{
+              if( slide['tag'] && slide['tag'].length ) {
+                slide['tag'].forEach((tag)=>{
                   tag === 1 && (slide['question'] = 1);
                   tag === 2 && (slide['store'] = 1);
                 })
@@ -480,6 +505,16 @@
       },
 
       /*
+       * @method 滚动到最顶部
+       *
+       */
+      handleScrollToTop() {
+        let timelineEl = document.querySelector('.J_cards')
+
+        timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
+        this.hasMsg = false;
+      },
+      /*
        * @method 返回上一页
        *
        */
@@ -492,7 +527,9 @@
       console.log('created');
     },
     mounted() {
-      console.log('mounted');
+    },
+    updated() {
+      console.log('updated');
     },
     beforeDestroy() {
     }
@@ -662,6 +699,22 @@
     }
   }
 
+  .student__msg {
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+
+    margin: auto;
+    padding: 0 .4rem;
+    height: .8rem;
+    line-height: .8rem;
+    text-align: center;
+    color: #fff;
+    background: #9b9b9b;
+    border-radius: .4rem/50%;
+  }
+
 
 
   /*-------------------*\
@@ -675,13 +728,14 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.55);
 
     .content-block {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 100%;
+      color: #fff;
 
       transform: translate(-50%, -50%);
 

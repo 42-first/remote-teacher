@@ -271,7 +271,15 @@
         this.rate = this.width/this.height;
       },
       handleDeleteImg() {
-        this.hasImage = false;
+        let self = this;
+
+        this.$messagebox.confirm('确定删除图片?').then(action => {
+          if(action === 'confirm') {
+            self.hasImage = false;
+          }
+        });
+
+        // this.hasImage = false;
       },
       handleScaleImage() {
         let targetEl = event.target;
@@ -323,7 +331,7 @@
         gallery.init();
       },
       handleSend() {
-        this.sendSubmission();
+         this.sendStatus === 1 && this.sendSubmission();
       },
       handleBack() {
         this.$router.back();

@@ -94,7 +94,7 @@
     },
     filters: {
       formatTime(time) {
-        return moment && moment(time).format('hh:mm:ss') || time;
+        return moment && moment(time).format('HH:mm:ss') || time;
       }
     },
     mixins: [],

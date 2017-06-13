@@ -6,95 +6,101 @@
  *
  */
 
+import API from '@/util/Api'
 
 var exerciseMixin = {
   methods: {
     /*
-    * @method 保存习题到
-    * data: { type: 1, message: '', time: '' }
+    * @method 保存习题答案
+    * @param
     */
-    addMessage(data) {
-      // 是否含有重复数据
-      let hasEvent = this.cards.find((item)=>{
-        return item.type === 1 && item.message === data.message && item.time === data.time;
-      })
+    saveAnswer(data) {
+      let key = 'answer_problem';
+      let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      data.retry_times = data.retry_times + 1;
+      answerPostList.push(data);
+
+      let value = JSON.stringify(answerPostList);
+
+      localStorage.setItem(key, value);
     },
 
     /*
-    * @method 新增PPT
-    * data: { type: 2, pageIndex: 2, presentationid: 100, time: '' }
+    * @method 读取答案
+    * @param
     */
-    addPPT(data) {
+    getAnswer(key) {
+      key = key || 'answer_problem';
+      let value = localStorage.getItem(key);
+
+      return JSON.parse(value);
+    },
+
+    removeAnswer(key) {
+      localStorage.removeItem(key);
+    },
+
+    /*
+    * @method 设置问题状态
+    * @param problemID
+    */
+    setProblemStatus(problemID, data) {
+      let cards = this.cards;
+      let problem = this.problemMap.get(problemID)
+      let card = cards.find((item) => {
+        return item.type === 3 && item.problemID === problemID;
+      })
+
+      // 处理习题状态 提交过得设置已完成
+      card = Object.assign(card, {
+        status: '已完成',
+        isComplete: true
+      })
+
+      problem['Problem']['Result'] = data['result'];
+      this.problemMap.set(problemID, problem);
+
+      this.addMessage({ type: 1, message: '第' + card.pageIndex + '页习题已自动提交成功', time: +new Date() });
+    },
+
+    /*
+    * @method 自动提交习题答案
+    * @param
+    */
+    autoSendAnswers() {
       let self = this;
-      let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation['Slides'];
-      let slideData = pptData[data.pageIndex-1];
-      let index = -1;
+      let key = 'answer_problem';
+      let URL = API.student.RETRY_ANSWER_LESSON_PROBLEM;
+      let answerPostList = this.getAnswer(key);
 
-      // 如果是习题图片，则不添加
-      if (slideData['Problem']){
-        return;
-      }
+      if(answerPostList && answerPostList.length ) {
+        return request.post(URL, answerPostList)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+              let problemAnswers =  data.problem_answers;
 
-      if (slideData['Cover']=='rain://error/upload-error') {
-        if(!data.refresh) {
-          this.addMessage({ type: 1, message: '幻灯片解析失败' });
-        }
-      } else if(slideData['Cover']=='rain://error/export-error'){
-        if(!data.refresh) {
-          this.addMessage({ type: 1, message: '幻灯片上传失败' });
-        }
-      } else {
-        // 是否含有重复数据
-        let hasPPT = this.cards.find((item)=>{
-          return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
-        })
+              problemAnswers.forEach((answer, index) => {
+                if(answer['status_code']) {
+                  //
+                  let problemID = answer['lesson_problem_id'];
+                  self.setProblemStatus(problemID, answerPostList[index]);
+                }
+              });
 
-        // todo: 预加载图片
-        let oImg = new Image();
-        oImg.onload = (evt) => {
-          if(index !== -1) {
-            let data = self.cards[index - 1];
-            data.src = slideData['Cover'];
-          }
-        };
+              self.removeAnswer(key);
 
-        oImg.src = slideData['Cover'];
-
-        // 缓存中
-        if(oImg.complete || oImg.width) {
-        } else {
-        }
-
-
-        if(!hasPPT) {
-          data = Object.assign(data, {
-            src: slideData['Thumbnail'],
-            rate: presentation.Width / presentation.Height,
-            hasQuestion: slideData['question'] == 1 ? true : false,
-            hasStore: slideData['store'] == 1 ? true : false,
-            Width: presentation.Width,
-            Height: presentation.Height,
-            slideID: slideData['lessonSlideID']
+              return problemAnswers;
+            }
           })
-
-          this.cards.push(data);
-          index = this.cards.length;
-        }
-
-        // tab是全部或者ppt 滚动到视线位置
-        if( this.currTabIndex === 1 || this.currTabIndex === 2 ) {
-          // this.$el.querySelector('').scrollIntoView(true);
-        }
+          .catch(error => {
+            Raven && Raven.captureMessage("习题提交失败:" + error);
+          });
+      } else {
+        return this;
       }
-
-      this.allEvents.push(data);
     }
-
-
   }
 }
 

@@ -13,6 +13,16 @@ const handleResponse = (res) => {
   if (res.data.success) {
     return Promise.resolve(res.data)
   } else {
+    // 没有权限
+    if(res.data.status_code === 2) {
+      location.href = '/v/index/course/normalcourse/error/2';
+    }
+
+    // 没有填写信息 跳转个人信息完善页
+    if(res.data.status_code === 5) {
+      location.href = '/v/index/edituserinfo_simple?next_url=back';
+    }
+
     return Promise.reject(res.data)
   }
 }

@@ -334,7 +334,7 @@
           let problem = self.$parent.problemMap.get(problemID)
 
           return request.post(URL, param)
-            .then(function (res) {
+            .then((res) => {
               if(res && res.data) {
                 let data = res.data;
 
@@ -355,15 +355,30 @@
 
                 return data;
               }
-            }).then(function(res){
-              // 提交失败保存本地
             })
             .catch(error => {
-              //
+              // 提交失败保存本地
+              self.saveAnswer(param);
             });
 
           clearInterval(this.timer);
         }
+      },
+
+      /*
+      * @method 保存习题答案
+      * @param
+      */
+      saveAnswer(data) {
+        let key = 'answer_problem';
+        let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
+
+        data.retry_times = data.retry_times + 1;
+        answerPostList.push(data);
+
+        let value = JSON.stringify(answerPostList);
+
+        localStorage.setItem(key, value);
       }
     },
     created() {

@@ -3,6 +3,9 @@
     "status": 1,
     "msg": "",
     "data": {
+      "userID": 337,
+      "avatar":"http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
+      "userAuth": "ee8eb544-fd8d-41d8-8e8d-6842aaa3d06c",
         "presentationID": 2990,
         "presentationList": [
 

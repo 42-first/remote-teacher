@@ -5,6 +5,7 @@
 
 .mint-loadmore {
   height: 100%;
+  overflow: auto;
 }
 
 .mint-loadmore-spinner {
