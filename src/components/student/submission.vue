@@ -331,7 +331,7 @@
         gallery.init();
       },
       handleSend() {
-        this.sendSubmission();
+         this.sendStatus === 1 && this.sendSubmission();
       },
       handleBack() {
         this.$router.back();

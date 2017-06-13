@@ -6,6 +6,7 @@
  *
  */
 
+import API from '@/util/Api'
 
 var exerciseMixin = {
   methods: {
@@ -14,8 +15,13 @@ var exerciseMixin = {
     * @param
     */
     saveAnswer(data) {
-      let key = '';
-      let value = JSON.stringify(data);
+      let key = 'answer_problem';
+      let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
+
+      data.retry_times = data.retry_times + 1;
+      answerPostList.push(data);
+
+      let value = JSON.stringify(answerPostList);
 
       localStorage.setItem(key, value);
     },
@@ -25,12 +31,76 @@ var exerciseMixin = {
     * @param
     */
     getAnswer(key) {
+      key = key || 'answer_problem';
       let value = localStorage.getItem(key);
 
       return JSON.parse(value);
+    },
+
+    removeAnswer(key) {
+      localStorage.removeItem(key);
+    },
+
+    /*
+    * @method 设置问题状态
+    * @param problemID
+    */
+    setProblemStatus(problemID, data) {
+      let cards = this.cards;
+      let problem = this.problemMap.get(problemID)
+      let card = cards.find((item) => {
+        return item.type === 3 && item.problemID === problemID;
+      })
+
+      // 处理习题状态 提交过得设置已完成
+      card = Object.assign(card, {
+        status: '已完成',
+        isComplete: true
+      })
+
+      problem['Problem']['Result'] = data['result'];
+      this.problemMap.set(problemID, problem);
+
+      this.addMessage({ type: 1, message: '第' + card.pageIndex + '页习题已自动提交成功', time: +new Date() });
+    },
+
+    /*
+    * @method 自动提交习题答案
+    * @param
+    */
+    autoSendAnswers() {
+      let self = this;
+      let key = 'answer_problem';
+      let URL = API.student.RETRY_ANSWER_LESSON_PROBLEM;
+      let answerPostList = this.getAnswer(key);
+
+      if(answerPostList && answerPostList.length ) {
+        return request.post(URL, answerPostList)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+              let problemAnswers =  data.problem_answers;
+
+              problemAnswers.forEach((answer, index) => {
+                if(answer['status_code']) {
+                  //
+                  let problemID = answer['lesson_problem_id'];
+                  self.setProblemStatus(problemID, answerPostList[index]);
+                }
+              });
+
+              self.removeAnswer(key);
+
+              return problemAnswers;
+            }
+          })
+          .catch(error => {
+            Raven && Raven.captureMessage("习题提交失败:" + error);
+          });
+      } else {
+        return this;
+      }
     }
-
-
   }
 }
 

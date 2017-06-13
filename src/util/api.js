@@ -18,6 +18,8 @@ if (process.env.NODE_ENV === 'production') {
             'GET_RED_ENVELOPE_DETAIL': '/api/red/red_envelope_detail/',
             // 习题提交
             'ANSWER_LESSON_PROBLEM': '/v/lesson/answer_lesson_problem',
+            // 习题自动提交
+            'RETRY_ANSWER_LESSON_PROBLEM': '/v/lesson/retry_answer_lesson_problem',
             // 更新PPT数据
             'FETCH_PRESENTATION_DATA': '/lesson/fetch_presentation_data/',
             // ppt收藏 不懂
@@ -27,8 +29,7 @@ if (process.env.NODE_ENV === 'production') {
             // 发送投稿
             'SEND_SUBMISSION': '/v/api/tougao/create',
             // 上传图片
-            'UPLOAD_PIC': '/v/api/tougao/pic_upload',
-            'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
+            'UPLOAD_PIC': '/v/api/tougao/pic_upload'
         }
 
         /*------------------*\
@@ -53,6 +54,8 @@ if (process.env.NODE_ENV === 'production') {
             'GET_RED_ENVELOPE_DETAIL': '/static/mock/student/red_envelope_detail.json',
             // 习题提交
             'ANSWER_LESSON_PROBLEM': '/static/mock/student/presentationList.json',
+            // 习题自动提交
+            'RETRY_ANSWER_LESSON_PROBLEM': '/static/mock/student/presentationList.json',
             // 更新PPT数据
             'FETCH_PRESENTATION_DATA': '/static/mock/student/presentationList.json',
             // ppt收藏 不懂
@@ -62,8 +65,7 @@ if (process.env.NODE_ENV === 'production') {
             // 发送投稿
             'SEND_SUBMISSION': 'v/tougao/create',
             // 上传图片
-            'UPLOAD_PIC': 'v/tougao/pic_uplaod',
-            'COURSE_STUDENT_DANMU': '/static/mock/course/student_course_danmu.json'
+            'UPLOAD_PIC': 'v/tougao/pic_uplaod'
         }
 
         /*------------------*\

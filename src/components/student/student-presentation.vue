@@ -116,6 +116,7 @@
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
+  import exercisemixin from '@/components/student/exercise-mixin'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -193,7 +194,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -212,7 +213,7 @@
       iniTimeline(lessonID) {
         let self = this;
 
-        Promise.all([this.getUserInfo(lessonID), this.getPresentationList()]).then(()=>{
+        Promise.all([this.getPresentationList()]).then(()=>{
           self.initws();
 
           if (process.env.NODE_ENV !== 'production') {
@@ -231,6 +232,11 @@
               window.moment = moment;
             })
           }, 2500)
+
+          // 设置自动提交
+          setInterval(() => {
+            self.autoSendAnswers();
+          }, 30000)
         });
       },
 
@@ -310,6 +316,12 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
+              // auth
+              self.userID = data.userID;
+              self.avatar = data.avatar;
+              self.userAuth = data.userAuth;
+
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
@@ -319,7 +331,6 @@
 
               // set presentation map
               if(self.presentationList.length) {
-
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
 
@@ -339,6 +350,18 @@
               presentation.Title && (self.title = document.title = presentation.Title);
 
               return data;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+
+            if(error && error.status_code === 601) {
+              // 课程结束
+              console.log('课程结束');
+              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+            } else if(error && error.status_code === 603) {
+              // 没有权限
+              console.log('没有权限');
             }
           });
       },
@@ -393,8 +416,8 @@
           if(pptData.length) {
             pptData.forEach( (slide, index) => {
               // 收藏 不懂
-              if( slide['Tag'] && slide['Tag'].length ) {
-                slide['Tag'].forEach((tag)=>{
+              if( slide['tag'] && slide['tag'].length ) {
+                slide['tag'].forEach((tag)=>{
                   tag === 1 && (slide['question'] = 1);
                   tag === 2 && (slide['store'] = 1);
                 })
@@ -492,7 +515,6 @@
       console.log('created');
     },
     mounted() {
-      console.log('mounted');
     },
     beforeDestroy() {
     }
