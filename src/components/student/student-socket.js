@@ -85,7 +85,6 @@ var mixin = {
         }
       } catch (error) {
         Raven.captureException(error)
-        // myApp.alert("您的设备在连接服务时出现了错误，请尝试重试...","")
       }
     },
     /*
@@ -120,12 +119,11 @@ var mixin = {
     processMessage(msg) {
       let timeline;
       let item;
+      let hasMsg = true;
 
       if(msg.op) {
         // 弹幕状态
         msg["danmu"] && (this.danmuStatus = msg["danmu"])
-
-        console.log('danmuStatus:'+ this.danmuStatus);
 
         switch(msg.op) {
           // 建立通信 时间轴事件
@@ -213,6 +211,7 @@ var mixin = {
           // 试卷结束
           case 'quizfinished':
           case 'callpaused':
+            item = msg.event
             this.addMessage({ type: 1, message: item['title'] });
 
             break
@@ -254,7 +253,16 @@ var mixin = {
 
             break
 
-          default: break
+          default:
+            hasMsg = false;
+            break
+        }
+
+        let timelineEl = document.querySelector('.J_cards')
+        let clientRect = timelineEl.getBoundingClientRect()
+
+        if(hasMsg && clientRect && clientRect.top < 0) {
+          this.hasMsg = true;
         }
       }
     },

@@ -10,7 +10,11 @@ let pages = {
   // 学生遥控器
   'student': {
     'nav': {
-
+      'all' : '全部',
+      'ppt' : 'PPT',
+      'problem' : '习题',
+      'quiz' : '试卷',
+      'hongbao' : '红包'
     }
   }
 };

@@ -24,11 +24,11 @@
 
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
-        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">全部</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">PPT</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">习题</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">试卷</li>
-        <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5">红包</li>
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="student.nav.all">全部</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="student.nav.ppt">PPT</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="student.nav.problem">习题</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="student.nav.quiz">试卷</li>
+        <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5" data-language-key="student.nav.hongbao">红包</li>
       </ul>
     </section>
 
@@ -37,7 +37,7 @@
     <section class="student__timeline-wrapper">
       <loadmore :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
 
-        <section class="student__timeline">
+        <section class="student__timeline J_cards">
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
@@ -54,8 +54,8 @@
 
 
     <!-- 接收器 新消息提醒 -->
-    <section class="student__msg">
-      <!-- <p class="">您有新的课堂动态</p> -->
+    <section class="student__msg f16" v-show="hasMsg" @click="handleScrollToTop">
+      <p class="">您有新的课堂动态</p>
     </section>
 
     <!-- 图片放大结构 -->
@@ -154,6 +154,8 @@
         // 当前tab下标
         currTabIndex: 1,
 
+        // 是否有新消息
+        hasMsg: false,
         // 是否观看模式
         observerMode: false,
         // 是否开启弹幕
@@ -503,6 +505,16 @@
       },
 
       /*
+       * @method 滚动到最顶部
+       *
+       */
+      handleScrollToTop() {
+        let timelineEl = document.querySelector('.J_cards')
+
+        timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
+        this.hasMsg = false;
+      },
+      /*
        * @method 返回上一页
        *
        */
@@ -515,6 +527,9 @@
       console.log('created');
     },
     mounted() {
+    },
+    updated() {
+      console.log('updated');
     },
     beforeDestroy() {
     }
@@ -682,6 +697,22 @@
     .timeline-wrapper {
       width: 100%;
     }
+  }
+
+  .student__msg {
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+
+    margin: auto;
+    padding: 0 .4rem;
+    height: .8rem;
+    line-height: .8rem;
+    text-align: center;
+    color: #fff;
+    background: #9b9b9b;
+    border-radius: .4rem/50%;
   }
 
 
