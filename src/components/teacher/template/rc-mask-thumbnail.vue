@@ -7,7 +7,7 @@
       <div>习题</div>
     </section>
     <div class="scroll-box allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15">不懂: TODO</div>
@@ -26,6 +26,14 @@
     },
     
     created () {
+      let self = this
+
+      // 点击 缩略图 按钮 父组件发送事件给本子组件，想要滚动到当前页
+      self.$on('showThumbnail', function () {
+        let container = this.$el.querySelector('.scroll-box')
+        let currentPage = container.querySelector('#t'+self.current)
+        container.scrollTop = currentPage.offsetTop
+      })
     },
     methods: {
       /**
@@ -81,6 +89,7 @@
 
     .scroll-box {
       height: 100%;
+      position: relative;
       padding: 0 0.453333rem;
       margin-bottom: 0.4rem;
       overflow: auto;

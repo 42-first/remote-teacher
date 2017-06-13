@@ -15,7 +15,7 @@
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
-      <div id="downer" class="card-box downer">
+      <div id="downer" class="card-box downer" v-if="current < pptData.length">
         <div class="detail f14">下一张幻灯片</div>
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
@@ -270,6 +270,10 @@ export default {
         isInitiativeCtrlMaskHidden: false,
         initiativeCtrlMaskTpl: 'RcMaskThumbnail'
       })
+
+      setTimeout(() => {
+        self.$refs.InitiativeCtrlMask.$emit('showThumbnail')
+      }, 100)
     },
   }
 }
