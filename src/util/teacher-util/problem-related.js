@@ -1,4 +1,5 @@
 /**
+ * 仅用于 remote.vue 组件
  * @module 发试题相关：发送试题、查看答案、试题倒计时、刷新柱状图、获取柱状图数据、获取试题答题详情
  */
 
@@ -17,6 +18,8 @@ let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
 export default {
   data () {
     return {
+      unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
+      isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据

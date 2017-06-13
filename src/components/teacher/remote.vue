@@ -83,6 +83,8 @@ import Toolbar from '@/components/teacher/template/toolbar'
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 二维码控制蒙版
 import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
+// 随机点名面板
+import RcMaskRandomcall from '@/components/teacher/template/rc-mask-randomcall'
 
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
@@ -103,15 +105,13 @@ export default {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: '66875877-09dd-4ac5-8bc3-f427534b6259',                               // 用户身份
-      inviteCode: 'XK3A5G',                         // 课堂暗号
+      auth: 'cc32fb8c-7406-47cd-a52a-7f8732fd62c6',                               // 用户身份
+      inviteCode: 'S2FUSI',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
       isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
-      unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
-      isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
       isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
       isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
@@ -135,6 +135,7 @@ export default {
     Toolbar,
     RcMaskErrormsg,
     RcMaskQrcode,
+    RcMaskRandomcall
   },
   created () {
     this.lessonid = this.$route.params.lessonid

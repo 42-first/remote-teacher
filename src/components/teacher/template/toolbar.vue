@@ -27,10 +27,10 @@
 		    <span>二维码</span>
 		  </v-touch>
 
-		  <div class="more-item" bindtap="setEndShow">
+		  <v-touch class="more-item" v-on:tap="callWakeup">
 		    <i class="iconfont icon-people f24"></i>
 		    <span style="margin-left: 32rpx;">随机点名</span>
-		  </div>
+		  </v-touch>
 		</div>
 	</div>
 </template>
@@ -77,6 +77,21 @@ export default {
         'op': 'tryzoomqrcode',
         'lessonid': self.lessonid,
         'qrcode': 99
+      })
+
+      self.socket.send(str)
+      self.isToolbarMoreBoxHidden = true
+    },
+    /**
+     * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
+     *
+     * @event tap
+     */
+    callWakeup () {
+      let self = this
+      let str = JSON.stringify({
+        'op': 'callwakeup',
+        'lessonid': self.lessonid
       })
 
       self.socket.send(str)

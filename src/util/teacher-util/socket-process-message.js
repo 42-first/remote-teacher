@@ -205,6 +205,90 @@ function socketProcessMessage(msg){
     }
   }
 
+  // 唤起随机点名
+  if (msg.op == 'callwokeup') {
+    self.setData({
+      isInitiativeCtrlMaskHidden: false,
+      initiativeCtrlMaskTpl: 'RcMaskRandomcall'
+    })
+    return
+    $('[data-role=stu_num]').html(msg.sc)
+    $('.random_roll_call_box .desc1').show()
+    $('.random_roll_call_box .desc2').hide()
+    $('.random_roll_call_box .desc3').hide()
+    $('.random_roll_call_box').show()
+  }
+
+  // 开始了随机点名
+  if (msg.op == 'callstarted') {
+    clearTimeout(remoteNS.rollBtnTimer)
+    remoteNS.MSGID_BACK = msg.msgid
+    setCallStep1()
+  }
+
+  // 暂停了随机点名
+  if (msg.op == 'callpaused') {
+    clearTimeout(remoteNS.rollBtnTimer)
+    remoteNS.MSGID_BACK = msg.msgid
+    setCallStep2()
+
+    OLD_CALL_NAME = msg.name
+    OLD_CALL_SID = msg.sid
+    $('#chosen_box').show()
+
+    if(OLD_CALL_SID){
+      $('.random_roll_call_box .now')
+        .html(OLD_CALL_NAME + '<br>' + OLD_CALL_SID)
+        .removeClass('lh61')
+        .show()
+    }else{
+      $('.random_roll_call_box .now')
+        .html(OLD_CALL_NAME)
+        .addClass('lh61')
+        .show()
+    }
+  }
+
+  // 点击随机点名继续上课的回执
+  if (msg.op == 'closedmask' && msg.type == 'call') {
+    clearTimeout(remoteNS.rollBtnTimer)
+    $('.random_roll_call_box').hide()
+    $('.nostuhint').hide()
+    setCallStep2()
+
+    $('.random_roll_call_box .now').html('').hide()
+    if(OLD_CALL_NAME){
+      $('.random_roll_call_box .list').prepend([
+        '<li>',
+          '<div class="left">'+OLD_CALL_NAME+'</div>',
+          '<div class="right">'+OLD_CALL_SID+'</div>',
+        '</li>'
+      ].join(''))
+      OLD_CALL_NAME = ''
+      OLD_CALL_SID = ''
+    }
+  }
+
+  // 获取随机点名名单列表
+  if (msg.op == 'calledlist') {
+      var str = ''
+
+      for (var i = 0; i < msg.calledlist.length; i++) {
+        str += [
+          '<li>',
+            '<div class="left">'+msg.calledlist[i].name+'</div>',
+            '<div class="right">'+msg.calledlist[i].sid+'</div>',
+          '</li>'
+        ].join('');
+      };
+
+      $('.random_roll_call_box .list').html(str)
+
+      if(msg.calledlist.length){
+        $('#chosen_box').show()
+      }
+  }
+
 }
 
 export default socketProcessMessage
