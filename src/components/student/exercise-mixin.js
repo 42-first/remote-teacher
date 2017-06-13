@@ -75,17 +75,26 @@ var exerciseMixin = {
       let answerPostList = this.getAnswer(key);
 
       if(answerPostList && answerPostList.length ) {
-        return request.post(URL, answerPostList)
+        let param = [];
+        answerPostList.forEach((item) => {
+          param.push({
+            'lesson_problem_id': item['lesson_problem_id'],
+            'submit_time': item['submit_time'],
+            'result': item['result'],
+            'retry_times': item['retry_times']
+          });
+        })
+
+        return request.post(URL, param)
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
               let problemAnswers =  data.problem_answers;
 
               problemAnswers.forEach((answer, index) => {
-                if(answer['status_code']) {
-                  //
+                if(answer['status_code'] === 0) {
                   let problemID = answer['lesson_problem_id'];
-                  self.setProblemStatus(problemID, answerPostList[index]);
+                  self.setProblemStatus(problemID, param[index]);
                 }
               });
 
