@@ -46,7 +46,7 @@ function socketProcessMessage(msg){
     })
 
     // 初始化弹幕按钮
-    msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
+    // msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
     
     // TODO 初次联通，node有时会丢失msg.presentation
     self.setData({
@@ -55,6 +55,21 @@ function socketProcessMessage(msg){
 
     // 翻到初始页面（不一定是第一页），当前页有没有发试题按钮及状态在fetchPPTData的回调中处理
     self.showWhichPage(msg)
+
+    // 随机点名相关代码
+    if((typeof msg.call !== 'undefined') && msg.call != -1){
+      // $('[data-role=stu_num]').html(msg.sc)
+
+      let str = JSON.stringify({
+        'op': 'calledlist',
+        'lessonid': self.lessonid,
+        'page': 0,
+        'size': 20
+      })
+
+      self.socket.send(str)
+      // $('.random_roll_call_box').show()
+    }
 
     // 根据qrcode是否为0判断是否显示二维码控制页，不为0，则显示
     if(msg.qrcode !== 0){
@@ -203,6 +218,7 @@ function socketProcessMessage(msg){
       self.killMask()
       self.showQrcodeMask()
     }
+    return
   }
 
   // 唤起随机点名
@@ -211,82 +227,58 @@ function socketProcessMessage(msg){
       isInitiativeCtrlMaskHidden: false,
       initiativeCtrlMaskTpl: 'RcMaskRandomcall'
     })
+
+    setTimeout(() => {
+      self.$refs.InitiativeCtrlMask.$emit('callwokeup', msg)
+    }, 100)
+
+    // 有可能是刷新了遥控器，并且之前点过名
+    let str = JSON.stringify({
+      'op': 'calledlist',
+      'lessonid': self.lessonid,
+      'page': 0,
+      'size': 20
+    })
+
+    self.socket.send(str)
     return
-    $('[data-role=stu_num]').html(msg.sc)
-    $('.random_roll_call_box .desc1').show()
-    $('.random_roll_call_box .desc2').hide()
-    $('.random_roll_call_box .desc3').hide()
-    $('.random_roll_call_box').show()
   }
 
   // 开始了随机点名
   if (msg.op == 'callstarted') {
-    clearTimeout(remoteNS.rollBtnTimer)
-    remoteNS.MSGID_BACK = msg.msgid
-    setCallStep1()
+    self.$refs.InitiativeCtrlMask.$emit('callstarted', msg)
+    return
   }
 
   // 暂停了随机点名
   if (msg.op == 'callpaused') {
-    clearTimeout(remoteNS.rollBtnTimer)
-    remoteNS.MSGID_BACK = msg.msgid
-    setCallStep2()
-
-    OLD_CALL_NAME = msg.name
-    OLD_CALL_SID = msg.sid
-    $('#chosen_box').show()
-
-    if(OLD_CALL_SID){
-      $('.random_roll_call_box .now')
-        .html(OLD_CALL_NAME + '<br>' + OLD_CALL_SID)
-        .removeClass('lh61')
-        .show()
-    }else{
-      $('.random_roll_call_box .now')
-        .html(OLD_CALL_NAME)
-        .addClass('lh61')
-        .show()
-    }
+    self.$refs.InitiativeCtrlMask.$emit('callpaused', msg)
+    return
   }
 
   // 点击随机点名继续上课的回执
   if (msg.op == 'closedmask' && msg.type == 'call') {
-    clearTimeout(remoteNS.rollBtnTimer)
-    $('.random_roll_call_box').hide()
-    $('.nostuhint').hide()
-    setCallStep2()
+    self.setData({
+      isInitiativeCtrlMaskHidden: true
+    })
 
-    $('.random_roll_call_box .now').html('').hide()
-    if(OLD_CALL_NAME){
-      $('.random_roll_call_box .list').prepend([
-        '<li>',
-          '<div class="left">'+OLD_CALL_NAME+'</div>',
-          '<div class="right">'+OLD_CALL_SID+'</div>',
-        '</li>'
-      ].join(''))
-      OLD_CALL_NAME = ''
-      OLD_CALL_SID = ''
-    }
+    // 通知第一层蒙版（即当前的随机点名）点击继续上课 回执成功
+    self.$refs.InitiativeCtrlMask.$emit('closedmask', msg)
+    return
   }
 
   // 获取随机点名名单列表
   if (msg.op == 'calledlist') {
-      var str = ''
+    self.setData({
+      isInitiativeCtrlMaskHidden: false,
+      initiativeCtrlMaskTpl: 'RcMaskRandomcall'
+    })
 
-      for (var i = 0; i < msg.calledlist.length; i++) {
-        str += [
-          '<li>',
-            '<div class="left">'+msg.calledlist[i].name+'</div>',
-            '<div class="right">'+msg.calledlist[i].sid+'</div>',
-          '</li>'
-        ].join('');
-      };
+    setTimeout(() => {
+      self.$refs.InitiativeCtrlMask.$emit('calledlist', msg)
+    }, 100)
 
-      $('.random_roll_call_box .list').html(str)
-
-      if(msg.calledlist.length){
-        $('#chosen_box').show()
-      }
+    return
   }
 
 }

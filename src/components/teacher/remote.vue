@@ -32,6 +32,7 @@
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
+          ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
           :lessonid="lessonid"
           :ppt-data="pptData"
@@ -105,8 +106,8 @@ export default {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: 'cc32fb8c-7406-47cd-a52a-7f8732fd62c6',                               // 用户身份
-      inviteCode: 'S2FUSI',                         // 课堂暗号
+      auth: '42c25f99-7f77-45e6-aee2-9ec4f8d8330d',                               // 用户身份
+      inviteCode: 'T0W7BZ',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
