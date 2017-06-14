@@ -112,11 +112,10 @@ export default {
   data () {
     return {
       // TODO 用户身份
-      userid: 265,                              // 用户id
-      avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: '1f43b54d-718e-47ef-af15-8300adce5b65',                               // 用户身份
-      inviteCode: 'TJ9QZ0',                         // 课堂暗号
-
+      userid: -1,                             // 用户id
+      avatar: '',                             // 用户头像
+      auth: '',                               // 用户身份
+      inviteCode: '',                         // 课堂暗号
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
@@ -154,12 +153,7 @@ export default {
     let self = this
 
     self.pmos()
-    // self.killMask()
-    // self.showWhichPage({
-    //   slideindex: 2,
-    //   unlockedproblem: []
-    // })
-    self.initws()
+    self.fetchUserInfo().then(self.initws)
   },
   mixins: [switches, socketService, problemRelated],
   methods: {
@@ -211,6 +205,26 @@ export default {
       })
 
       self.socket.send(str)
+    },
+    /**
+     * 获取用户数据
+     *
+     */
+    fetchUserInfo () {
+      let self = this
+      let url = API.userinfo
+
+      return request.get(url,{'lesson_id': self.lessonid})
+        .then(jsonData => {
+          console.log('userinfo success', jsonData)
+
+          self.setData({
+            userid: jsonData.data.user_id,
+            avatar: jsonData.data.avatar,
+            inviteCode: jsonData.data.invite_code,
+            auth: jsonData.data.user_auth
+          })
+        })
     },
     /**
      * 获取ppt数据
