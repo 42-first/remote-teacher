@@ -7,10 +7,10 @@
       <div>习题</div>
     </section>
     <div class="scroll-box allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
-        <div class="f15">不懂: TODO</div>
+        <div v-if="doubtList[index]" class="f15">不懂: {{doubtList[index]}}</div>
       </v-touch>
     </div>
   </div>
@@ -25,6 +25,7 @@
     props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket'],
     data () {
       return {
+        doubtList: []
       }
     },
     
@@ -77,6 +78,7 @@
         request.get(url)
           .then(jsonData => {
             console.log('presentation_tag', jsonData)
+            self.doubtList = jsonData.data.doubt
           })
       },
     }
@@ -124,6 +126,7 @@
         overflow: hidden;
         margin-bottom: 1.36rem;
         color: $white;
+        text-align: center;
 
         &:nth-child(2n) {
           float: right;

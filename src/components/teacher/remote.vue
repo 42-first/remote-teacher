@@ -114,8 +114,8 @@ export default {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: 'c9d329ff-3052-4036-99ee-e905bed4b5e9',                               // 用户身份
-      inviteCode: 'UL3A5G',                         // 课堂暗号
+      auth: '1f43b54d-718e-47ef-af15-8300adce5b65',                               // 用户身份
+      inviteCode: 'TJ9QZ0',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
