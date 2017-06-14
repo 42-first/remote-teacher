@@ -15,7 +15,12 @@ let pages = {
       'problem' : '习题',
       'quiz' : '试卷',
       'hongbao' : '红包'
+    },
+    'ppt': {
+      'unknow' : '不懂',
+      'store' : '收藏'
     }
+
   }
 };
 
