@@ -102,7 +102,8 @@
   import timeago from 'timeago.js';
 
   // 在这里设置相对时间
-  var timeagoInstance = timeago(null, new Date());
+  // var timeagoInstance = timeago(null, new Date());
+  var timeagoInstance = timeago();
 
   export default {
     name: 'card-item',
@@ -121,7 +122,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time, 'zh_CN');
+        return timeagoInstance.format(time - 10000, 'zh_CN');
       }
     },
     methods: {

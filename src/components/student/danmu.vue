@@ -244,7 +244,11 @@
   }
 
   .danmu__submit.disable {
-    background: #c8c8c8;
+    background: #999999;
+  }
+
+  .danmu__submit:active:not(.disable) {
+    background: rgba(99,158,244,0.7);
   }
 
 

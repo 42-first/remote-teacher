@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
             // 更新PPT数据
             'FETCH_PRESENTATION_DATA': '/lesson/fetch_presentation_data/',
             // ppt收藏 不懂
-            'SET_LEESON_SILDE_TAG': '/lesson/post_studentlessonslide_tag',
+            'SET_LEESON_SILDE_TAG': '/v/lesson/post_studentlessonslide_tag',
             // 发送danmu
             'SEND_DANMU': '/api/danmu/send_danmu',
             // 发送投稿
