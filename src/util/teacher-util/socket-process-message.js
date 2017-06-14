@@ -140,10 +140,9 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'lessonfinished') {
     // 结束授课
-    // location.href = OUTSIDE;
-    wx.redirectTo({
-      url: '../index/index'
-    })
+    location.href = '/v/index/course/normalcourse';
+    // TODO 如何获取课程id 班级id
+    // location.href = '/v/index/course/normalcourse/manage_classroom/161/2409/';
     return
   }
 
