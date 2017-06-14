@@ -227,9 +227,9 @@ function socketProcessMessage(msg){
       initiativeCtrlMaskTpl: 'RcMaskRandomcall'
     })
 
-    setTimeout(() => {
+    Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('callwokeup', msg)
-    }, 100)
+    })
 
     // 有可能是刷新了遥控器，并且之前点过名
     let str = JSON.stringify({
@@ -273,9 +273,9 @@ function socketProcessMessage(msg){
       initiativeCtrlMaskTpl: 'RcMaskRandomcall'
     })
 
-    setTimeout(() => {
+    Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('calledlist', msg)
-    }, 100)
+    })
 
     return
   }

@@ -285,10 +285,9 @@ export default {
         isInitiativeCtrlMaskHidden: false,
         initiativeCtrlMaskTpl: 'RcMaskThumbnail'
       })
-
-      setTimeout(() => {
+      Vue.nextTick(function () {
         self.$refs.InitiativeCtrlMask.$emit('showThumbnail')
-      }, 100)
+      })
     },
     /**
      * 点击 遥控器 按钮

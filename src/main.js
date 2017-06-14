@@ -10,6 +10,7 @@ let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
 
 Vue.config.productionTip = false
+window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
 
 /* eslint-disable no-new */
 new Vue({
