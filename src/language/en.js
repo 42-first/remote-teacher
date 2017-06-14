@@ -15,6 +15,10 @@ let pages = {
       'problem' : 'problem',
       'quiz' : 'quiz',
       'hongbao' : 'hongbao'
+    },
+    'ppt': {
+      'unknow' : 'unknow',
+      'store' : 'store'
     }
   }
 };

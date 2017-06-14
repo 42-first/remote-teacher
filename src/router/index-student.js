@@ -15,6 +15,14 @@ import Exercise from '@/components/student/exercise'
 import Submission from '@/components/student/submission'
 import Danmu from '@/components/student/danmu'
 
+// 国际化
+import language from '@/util/language'
+window.language = language;
+setTimeout(() => {
+  language.requireRes('en');
+  // language.requireRes('zh_CN');
+}, 0)
+
 Vue.use(Router)
 Vue.component('loadmore', Loadmore);
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;

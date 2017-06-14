@@ -22,8 +22,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" :data-pageindex="item.pageIndex" :data-presentationid="item.presentationid">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.pageIndex, item.presentationid)">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.pageIndex, item.presentationid)">收藏</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.pageIndex, item.presentationid)" data-language-key="student.ppt.unknow">不懂</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.pageIndex, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 10000, 'zh_CN');
+        return timeagoInstance.format(time - 10000, language.options['lang'] === 'en' ? 'en': 'zh_CN');
       }
     },
     methods: {
@@ -322,7 +322,9 @@
 
         .ppt--action {
           margin-left: 0.266667rem;
-          width: 1.6rem;
+          display: inline-block;
+          padding: 0 0.266667rem;
+          /* width: 1.6rem; */
           height: 0.666667rem;
 
           color: #639EF4;

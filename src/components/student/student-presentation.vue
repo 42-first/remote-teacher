@@ -541,6 +541,7 @@
     },
     updated() {
       console.log('updated');
+      window.language.translate(this.$el);
     },
     beforeDestroy() {
     }
