@@ -10,10 +10,10 @@
 		    <i class="iconfont icon-cascades f16"></i>
 		    缩略图
 		  </v-touch>
-		  <div class="tool-item" bindtap="showPaperQuiz">
+		  <v-touch class="tool-item" v-on:tap="showActivity">
 		    <i class="iconfont icon-exercise f16"></i>
 		    课堂动态
-		  </div>
+		  </v-touch>
 		  <v-touch class="tool-item last-item" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
 		    更多
@@ -55,6 +55,13 @@ export default {
      */
     showThumbnail () {
       this.$emit('showThumbnail')
+    },
+    /**
+     * 点击 课堂动态 按钮
+     *
+     */
+    showActivity () {
+      this.$emit('showActivity')
     },
     /**
      * 点击 遥控器 按钮

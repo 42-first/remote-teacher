@@ -1,0 +1,17 @@
+{
+  "msg": "",
+  "data": {
+    "students": [
+      {
+        "profile": {
+          "nickname": "\u821f",
+          "name": "\u821f",
+          "avatar_96": "http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq5N9KKzb7NS6ibMNOJiaqqkSqqWwIibjONFibvk3KSjfjUtS4WibL7r4ALsa1J7AtUE8pCGM4dRia9xOry/96"
+        },
+        "id": 337,
+        "time": "12:23"
+      }
+    ]
+  },
+  "success": true
+}

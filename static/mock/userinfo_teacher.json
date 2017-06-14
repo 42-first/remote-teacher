@@ -2,12 +2,20 @@
   "success": true,
   "msg": "",
   "data":{
-    "user_id": 265,
-    "avatar":"http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64",
-    "invite_code": "TJ9QZ0",
-    "user_auth": "1f43b54d-718e-47ef-af15-8300adce5b65",
-    "courseid": 161,
-    "classroomid": 2409,
-    "coursename": "八"
+    "user":{
+        "user_id":265,
+        "avatar":"http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64",
+        "user_auth": "2c9bded6-3c07-4fe4-a54d-5d296073d646"
+     },
+     "lesson":{
+         "invite_code": "Z1LAN2"
+     },
+     "classroom":{
+         "classroomid": 2409
+     },
+     "course":{
+         "coursename": "八",
+         "courseid": 161
+     }
   }
 }
