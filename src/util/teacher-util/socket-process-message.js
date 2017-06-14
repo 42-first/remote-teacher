@@ -140,9 +140,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'lessonfinished') {
     // 结束授课
-    location.href = '/v/index/course/normalcourse';
-    // TODO 如何获取课程id 班级id
-    // location.href = '/v/index/course/normalcourse/manage_classroom/161/2409/';
+    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
 

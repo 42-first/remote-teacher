@@ -116,6 +116,9 @@ export default {
       avatar: '',                             // 用户头像
       auth: '',                               // 用户身份
       inviteCode: '',                         // 课堂暗号
+      courseid: '',                           // 课程id 以 八>了 班为例，是 八 的id
+      classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
+      coursename: '',                         // 课程名称 以 八>了 班为例，是 八
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
@@ -222,7 +225,10 @@ export default {
             userid: jsonData.data.user_id,
             avatar: jsonData.data.avatar,
             inviteCode: jsonData.data.invite_code,
-            auth: jsonData.data.user_auth
+            auth: jsonData.data.user_auth,
+            courseid: jsonData.data.courseid,    
+            classroomid: jsonData.data.classroomid,          
+            coursename: jsonData.data.coursename,
           })
         })
     },
