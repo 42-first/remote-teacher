@@ -36,7 +36,8 @@
           </li>
         </ul>
         <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="problemType==='Polling'">您还可以再投{{ pollingCount }}票</p>
+        <p class="polling-count f20" v-if="problemType==='Polling' && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
+        <p class="polling-count f20" v-if="summary && !summary.isComplete && problemType==='Polling' && selectedPollingCount === pollingCount">您还未投票</p>
         <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
       </section>
 
@@ -68,6 +69,7 @@
         optionsSet: new Set(),
         // 问题类型
         problemType: '',
+        selectedPollingCount: 0,
         pollingCount: 0,
 
         isShowSubmit: true,
@@ -159,15 +161,26 @@
             this.setOptions(option, true, true);
           });
 
-          data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.sLeaveTime = '已完成';
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
 
           // 投票类型
           if(this.problemType === 'Polling') {
-            this.pollingCount = parseInt(this.oProblem['Answer'], 10);
+            this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
           }
+
+          this.options.forEach((item) => {
+            // 是否有选项
+            if(item.selected) {
+              this.canSubmit = 1;
+              this.optionsSet.add(item.Label);
+
+              this.problemType === 'Polling' && this.selectedPollingCount--;
+            }
+          })
 
           // 提交有困难地址
           this.commitDiffURL = this.commitDiffURL + problemID;
@@ -270,21 +283,19 @@
           this.optionsSet.delete(option);
 
           if(this.problemType === 'Polling') {
-            this.pollingCount++;
+            this.selectedPollingCount++;
           }
         } else {
           // 是否多选
           if(this.problemType === 'MultipleChoiceMA') {
-            targetEl.classList.add('selected');
+            this.setOptions(option, true, true);
             this.optionsSet.add(option);
           } else if(this.problemType === 'MultipleChoice') {
-            // targetEl.classList.add('selected');
             this.setOptions(option, true, false);
             this.optionsSet.clear();
             this.optionsSet.add(option);
-          } else if(this.problemType === 'Polling' && this.pollingCount) {
-            this.pollingCount--;
-            // targetEl.classList.add('selected');
+          } else if(this.problemType === 'Polling' && this.selectedPollingCount) {
+            this.selectedPollingCount--;
             this.setOptions(option, true, true);
             this.optionsSet.add(option);
           }
@@ -352,6 +363,7 @@
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
+                this.sLeaveTime = '已完成';
 
                 self.$router.back();
 
@@ -572,14 +584,18 @@
     line-height: 1.066667rem;
 
     color: #fff;
-    background: #9B9B9B;
+    background: #999999;
 
     border-radius: 4px;
+    cursor: pointer;
   }
 
   .submit-btn.can {
     background: #639EF4;
-    cursor: pointer;
+  }
+
+  .submit-btn.can:active {
+    background: rgba(99,158,244,0.7);
   }
 
   .commit-diff {

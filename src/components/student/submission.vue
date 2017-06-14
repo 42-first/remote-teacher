@@ -173,7 +173,7 @@
           'content': content,
           'pic': this.imageURL,
           'lesson_id': this.lessonID
-        };
+        }
 
         // 发送中
         this.sendStatus = 2;
@@ -513,7 +513,11 @@
   }
 
   .submission__submit.disable {
-    background: #c8c8c8;
+    background: #999999;
+  }
+
+  .submission__submit:active:not(.disable) {
+    background: rgba(99,158,244,0.7);
   }
 
   .camera-list {
