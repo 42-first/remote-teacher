@@ -26,6 +26,7 @@
         :lessonid="lessonid"
         :socket="socket"
         @showThumbnail="showThumbnail"
+        @goHome="goHome"
       ></Toolbar>
     </div>
 
@@ -113,8 +114,8 @@ export default {
       // TODO 用户身份
       userid: 265,                              // 用户id
       avatar: 'http://wx.qlogo.cn/mmopen/vi_32/QAZ5gLTK2Atz3EiawtM9Gibdmia1YibRRaqib1MJWibGolKhQzEia8ZatXgibjYsJAfrBWj0z1CZ15ic1rNicQcBypUgbGibg/64',                             // 用户头像
-      auth: '9448aea9-e0b8-435a-8075-636fba0f2606',                               // 用户身份
-      inviteCode: 'ZZZF98',                         // 课堂暗号
+      auth: 'c9d329ff-3052-4036-99ee-e905bed4b5e9',                               // 用户身份
+      inviteCode: 'UL3A5G',                         // 课堂暗号
 
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
@@ -274,6 +275,18 @@ export default {
       setTimeout(() => {
         self.$refs.InitiativeCtrlMask.$emit('showThumbnail')
       }, 100)
+    },
+    /**
+     * 点击 遥控器 按钮
+     * 一般是用于主动关闭缩略图蒙版
+     *
+     */
+    goHome () {
+      let self = this
+
+      self.setData({
+        isInitiativeCtrlMaskHidden: true
+      })
     },
   }
 }
