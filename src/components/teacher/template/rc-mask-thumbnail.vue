@@ -2,15 +2,36 @@
 <template>
 	<div class="thumbnail-box">
     <section class="tab-box f15">
-      <div>PPT</div>
-      <div>不懂</div>
-      <div>习题</div>
+      <v-touch :class="['item', {'active': tab === 1}]" v-on:tap="swichType(1)">PPT</v-touch>
+      <div class="bar" v-show="tab === 3"></div>
+      <v-touch :class="['item', {'active': tab === 2}]" v-on:tap="swichType(2)">不懂</v-touch>
+      <div class="bar" v-show="tab === 1"></div>
+      <v-touch :class="['item', {'active': tab === 3}]" v-on:tap="swichType(3)">习题</v-touch>
     </section>
-    <div class="scroll-box allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
+
+    <!-- PPT 类型 -->
+    <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
-        <div class="f15">不懂: TODO</div>
+        <div v-if="doubtList[index]" class="f15">不懂: {{doubtList[index]}}</div>
+      </v-touch>
+    </div>
+    
+    <!-- 不懂 类型 -->
+    <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
+      <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
+        <img :src="pptData[item.index].Thumbnail" alt="" class="gridimg">
+        <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
+        <div class="f15">不懂: {{item.val}}</div>
+      </v-touch>
+    </div>
+    
+    <!-- 习题 类型 -->
+    <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
+        <img :src="item.Thumbnail" alt="" class="gridimg">
+        <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
   </div>
@@ -25,22 +46,60 @@
     props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket'],
     data () {
       return {
+        tab: 1,         // 缩略图当前tab
+        doubtList: [],  // 不懂人员分布
       }
     },
-    
+    computed: {
+      // 从高到低排序"不懂""
+      doubtSorted: function () {
+        let self = this
+        let doubtList = self.doubtList
+        let arr = []
+
+        for (let i = doubtList.length - 1; i >= 0; i--) {
+          arr[i] = {
+            'index': i,
+            'val': doubtList[i]
+          }
+        }
+
+        arr.sort((a, b) => b.val - a.val)
+        return arr
+      }
+    },
     created () {
       let self = this
 
       // 点击 缩略图 按钮 父组件发送事件给本子组件，想要滚动到当前页
       self.$on('showThumbnail', function () {
-        let container = this.$el.querySelector('.scroll-box')
+        let container = self.$el.querySelector('.scroll-box1')
         let currentPage = container.querySelector('#t'+self.current)
         container.scrollTop = currentPage.offsetTop
+
+        // 不懂的总是显示最上面
+        self.$el.querySelector('.scroll-box2').scrollTop = 0
+
+        let container3 = self.$el.querySelector('.scroll-box3')
+        let currentPage3 = container.querySelector('#t'+self.current)
+        container3.scrollTop = currentPage3.offsetTop
 
         self.fetchPresentationTag()
       })
     },
     methods: {
+      /**
+       * 切换上方的 PPT 不懂 习题
+       *
+       * @event bindtap
+       * @param {number} tab  1 PPT 2 不懂 3 习题
+       */
+      swichType: function (tab) {
+        let self = this
+        
+        self.tab = tab
+        console.log(self.doubtSorted)
+      },
       /**
        * 点击缩略图按钮给WebSocket发指令要进入某页
        *
@@ -77,6 +136,7 @@
         request.get(url)
           .then(jsonData => {
             console.log('presentation_tag', jsonData)
+            self.doubtList = jsonData.data.doubt
           })
       },
     }
@@ -105,8 +165,17 @@
       text-align: center;
       color: $blue;
 
-      &>div {
+      .item {
         flex: 1;
+      }
+      .bar {
+        width: 1px;
+        background: $blue;
+        margin: 0.173333rem 0;
+      }
+      .active {
+        background: $blue;
+        color: $white;
       }
     }
 
@@ -124,6 +193,7 @@
         overflow: hidden;
         margin-bottom: 1.36rem;
         color: $white;
+        text-align: center;
 
         &:nth-child(2n) {
           float: right;

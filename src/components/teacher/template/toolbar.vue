@@ -2,10 +2,10 @@
 <template>
 	<div class="toolbar-root">
 		<div class="rc-toolbar f12">
-		  <div class="tool-item first-item" >
+		  <v-touch class="tool-item first-item" v-on:tap="goHome">
 		    <div class="bulb"></div>
 		    <div>遥控器</div>
-		  </div>
+		  </v-touch>
 		  <v-touch class="tool-item" v-on:tap="showThumbnail">
 		    <i class="iconfont icon-cascades f16"></i>
 		    缩略图
@@ -50,11 +50,19 @@ export default {
   },
   methods: {
     /**
-     * 点开缩略图按钮
+     * 点击 缩略图 按钮
      *
      */
     showThumbnail () {
       this.$emit('showThumbnail')
+    },
+    /**
+     * 点击 遥控器 按钮
+     * 一般是用于主动关闭缩略图蒙版
+     *
+     */
+    goHome () {
+      this.$emit('goHome')
     },
     /**
      * 点击工具栏更多按钮，显示隐藏更多按钮卡片
