@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   api = {
-    userinfo:                       '/static/mock/userinfo.json',
+    userinfo:                       '/static/mock/userinfo_teacher.json',
     remote_control_list:            '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:        '/static/mock/fetch_presentation_data.json',    // ppt数据
     lesson_quiz_list:               '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
