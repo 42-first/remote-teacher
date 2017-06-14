@@ -29,10 +29,9 @@
     
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
-        <div v-if="doubtList[index]" class="f15">不懂: {{doubtList[index]}}</div>
       </v-touch>
     </div>
   </div>
@@ -80,6 +79,10 @@
 
         // 不懂的总是显示最上面
         self.$el.querySelector('.scroll-box2').scrollTop = 0
+
+        let container3 = self.$el.querySelector('.scroll-box3')
+        let currentPage3 = container.querySelector('#t'+self.current)
+        container3.scrollTop = currentPage3.offsetTop
 
         self.fetchPresentationTag()
       })
