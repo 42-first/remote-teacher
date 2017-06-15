@@ -40,6 +40,8 @@
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
           :lessonid="lessonid"
+          :avatar="avatar"
+          :coursename="coursename"
           :presentationid="presentationid"
           :ppt-data="pptData"
           :current="current"
