@@ -369,6 +369,10 @@
         if(this.canSubmit === 1) {
           // 是否超时
           if(this.timeOver) {
+            this.$toast({
+              message: '时间已过，不能再提交啦～',
+              duration: 3000
+            });
             this.canSubmit = 0;
             return this;
           }
@@ -572,7 +576,8 @@
     justify-content: center;
 
     padding: 0.2rem 0 0;
-    min-height: 2.666667rem;
+    height: 2.6rem;
+    /*min-height: 2.666667rem;*/
 
     .exercise__timing--icon {
       margin-right: 0.453333rem;
@@ -686,7 +691,7 @@
   }
 
   .submit-btn {
-    margin: 1rem auto 1.226667rem;
+    margin: 0.8rem auto 1.226667rem;
 
     width: 7.333333rem;
     height: 1.066667rem;

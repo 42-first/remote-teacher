@@ -351,7 +351,9 @@
 
               // set title
               let presentationData = self.presentationMap.get(self.presentationID);
-              presentationData.Title && ( document.title = self.title = presentationData.Title);
+              presentationData.Title && (self.title = presentationData.Title);
+              // 课程title
+              document.title = data.classroom && data.classroom.courseName;
 
               return presentationData;
             }
@@ -400,7 +402,7 @@
               self.formatPresentation(presentation, presentationID);
 
               // set title
-              presentation.Title && (document.title = self.title = presentation.Title);
+              presentation.Title && (self.title = presentation.Title);
 
               return presentation;
             }

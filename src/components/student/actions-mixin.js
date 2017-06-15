@@ -227,7 +227,7 @@ var actionsMixin = {
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
-        return item.type === 5 && item.time === data.time;
+        return item.type === 5 && item.redpacketID === data.redpacketID;
       })
 
       !hasEvent && this.cards.push(data);
