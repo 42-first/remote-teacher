@@ -6,10 +6,10 @@
         <img :src="avatar" alt="">
         {{coursename}}
       </div>
-      <div class="student f17">
+      <v-touch class="student f17" v-on:tap="showParticipantList">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
-        <span>当前学生96位&gt;</span>
-      </div>
+        <span>当前学生{{participantList.length}}位&gt;</span>
+      </v-touch>
     </section>
     <div class="activity-item f18">
       <div>试卷</div>
@@ -31,6 +31,12 @@
         <i class="iconfont icon-forward f20"></i>
       </div>
     </div>
+
+    <RcMaskActivityParticipantlist
+      v-show="!isParticipantlistHidden"
+      :participant-list="participantList"
+      @closeParticipantList="closeParticipantList"
+    ></RcMaskActivityParticipantlist>
   </div>
 </template>
 
@@ -38,16 +44,23 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  // 全部人员名单
+  import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
+
+
   export default {
     name: 'RcMaskActivity',
     props: ['lessonid', 'coursename', 'avatar'],
     data () {
       return {
-        participantList: [],   // 当前学生名单
-        avatarList: [],        // 头像列表，最多取10个
+        participantList: [],           // 当前学生名单
+        avatarList: [],                // 头像列表，最多取10个
+        isParticipantlistHidden: true, // 全部人员名单隐藏
       }
     },
-    
+    components: {
+      RcMaskActivityParticipantlist
+    },
     created () {
       let self = this
 
@@ -78,6 +91,24 @@
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
           })
+      },
+      /**
+       * 点击 学生头像列表 按钮展示全部人员名单
+       *
+       * @event bindtap
+       */
+      showParticipantList () {
+        let self = this
+        self.isParticipantlistHidden = false
+      },
+      /**
+       * 点击 返回 按钮关闭全部人员名单
+       *
+       * @event bindtap
+       */
+      closeParticipantList () {
+        let self = this
+        self.isParticipantlistHidden = true
       },
     }
   }

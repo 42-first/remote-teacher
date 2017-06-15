@@ -22,7 +22,7 @@
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
-        :class="['dontcallback', {'mask-isthumbnail': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
+        :class="['dontcallback', {'higher-than-InitiativeCtrlMask': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
         :lessonid="lessonid"
         :socket="socket"
         @showThumbnail="showThumbnail"
