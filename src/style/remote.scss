@@ -85,55 +85,7 @@
 }
 
 
-/*试卷相关页面，未发出的：paper， 已发出的：quiz*/
-.paper-box, .quiz-box {
-  height: 100%;
-  background-color: #EDF2F6;
-  color: #4A4A4A;
-}
-.paper-box .title, .quiz-box .title, .quizresultdetail-box .title {
-  margin-bottom: 20rpx;
-  line-height: 100rpx;
-  font-size: 40rpx;
-  background-color: $white;
-}
-.paper-box .history-quiz {
-  margin-bottom: 20rpx;
-  background-color: $white;
-  font-size: 34rpx;
-}
-.noborder:before, .noborder:after {
-  border: 0;
-}
-.paper-scrollview {
-  height: 700rpx;
-  background-color: #EDF2F6;
-}
-.quiz-box .paper-scrollview {
-  height: 1000rpx;
-}
-.paper-box .paper-item, .quiz-box .quiz-item {
-  padding: 15rpx 35rpx;
-  background-color: $white;
-}
-.paper-box .paper-item.active {
-  border-left: 4px solid #639EF4;
-}
-.paper-box .paper-name, .quiz-box .quiz-name {
-  font-size: 36rpx;
-}
-.paper-box .paper-pub-btn {
-  display: block;
-  margin: 20rpx auto;
-  width: 550rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-  font-size: 36rpx;
-}
-.paper-box .paper-pub-btn.active {
-  background-color: #639EF4;
-  color: $white;
-}
+
 /*试卷结果饼图页*/
 .quizresult-box {
   position: absolute;

@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
     userinfo:                           '/static/mock/userinfo_teacher.json',
     remote_control_list:                '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:            '/static/mock/fetch_presentation_data.json',    // ppt数据
-    lesson_quiz_list:                   '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
+    lesson_quiz_list:                   '/static/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
     presentation_tag:                   '/static/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/static/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
     publish_problem:                    '/static/mock/publish_problem.json',            // 发布试题

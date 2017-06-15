@@ -11,12 +11,12 @@
         <span>当前学生{{participantList.length}}位&gt;</span>
       </v-touch>
     </section>
-    <div class="activity-item f18">
+    <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>试卷</div>
       <div>
         <i class="iconfont icon-forward f20"></i>
       </div>
-    </div>
+    </v-touch>
     <div class="activity-item f18">
       <div>弹幕</div>
       <div>
@@ -37,6 +37,13 @@
       :participant-list="participantList"
       @closeParticipantList="closeParticipantList"
     ></RcMaskActivityParticipantlist>
+
+    <RcMaskActivityPaper
+      ref="RcMaskActivityPaper"
+      v-show="!isPaperHidden"
+      :lessonid="lessonid"
+      @closePaper="closePaper"
+    ></RcMaskActivityPaper>
   </div>
 </template>
 
@@ -46,6 +53,8 @@
 
   // 全部人员名单
   import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
+  // 试卷列表
+  import RcMaskActivityPaper from '@/components/teacher/template/rc-mask-activity-paper'
 
 
   export default {
@@ -53,20 +62,21 @@
     props: ['lessonid', 'coursename', 'avatar'],
     data () {
       return {
-        participantList: [],           // 当前学生名单
-        avatarList: [],                // 头像列表，最多取10个
-        isParticipantlistHidden: true, // 全部人员名单隐藏
+        participantList: [],            // 当前学生名单
+        avatarList: [],                 // 头像列表，最多取10个
+        isParticipantlistHidden: true,  // 全部人员名单隐藏
+        isPaperHidden: true,            // 试卷列表隐藏
       }
     },
     components: {
-      RcMaskActivityParticipantlist
+      RcMaskActivityParticipantlist,
+      RcMaskActivityPaper
     },
     created () {
       let self = this
 
       // 点击 课堂动态 按钮 父组件发送事件给本子组件，获取学生名单、投稿数等
       self.$on('RcMaskActivity', function () {
-        // teaching_lesson_participant_list
         self.fetchParticipantList()
       })
     },
@@ -86,7 +96,6 @@
 
         request.get(url)
           .then(jsonData => {
-            console.log('teaching_lesson_participant_list', jsonData)
             self.participantList = jsonData.data.students.reverse()
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
@@ -109,6 +118,26 @@
       closeParticipantList () {
         let self = this
         self.isParticipantlistHidden = true
+      },
+      /**
+       * 点击 试卷 按钮展示试卷列表
+       *
+       * @event bindtap
+       */
+      showPaper () {
+        let self = this
+        self.isPaperHidden = false
+
+        self.$refs.RcMaskActivityPaper.$emit('showPaper')
+      },
+      /**
+       * 点击 返回 按钮关闭试卷列表
+       *
+       * @event bindtap
+       */
+      closePaper () {
+        let self = this
+        self.isPaperHidden = true
       },
     }
   }
