@@ -86,7 +86,7 @@ var actionsMixin = {
       })
 
       // 如果是习题图片，则不添加
-      if (slideData['Problem'] || hasPPT && data.isFetch ) {
+      if (!slideData || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
@@ -188,7 +188,7 @@ var actionsMixin = {
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
-        return item.type === 3 && item.time === data.time;
+        return item.type === 3 && item.pageIndex === data.pageIndex && item.presentationid && data.presentationid;
       })
 
       !hasEvent && this.cards.push(data);
@@ -227,7 +227,7 @@ var actionsMixin = {
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
-        return item.type === 5 && item.time === data.time;
+        return item.type === 5 && item.redpacketID === data.redpacketID;
       })
 
       !hasEvent && this.cards.push(data);

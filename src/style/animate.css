@@ -3,6 +3,8 @@
   will-change: opacity;
   animation-duration: 0.5s;
   animation-fill-mode: both;
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
 }
 
 

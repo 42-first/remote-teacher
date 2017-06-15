@@ -111,6 +111,7 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/Api'
+  // import { setWeixinTitle } from '@/util/util'
 
   import CardItemComponent from '@/components/common/card-item.vue'
 
@@ -140,7 +141,7 @@
         countdown: 10,
         topStatus: '',
         //
-        title: '',
+        title: '学生接收器',
         // 课程ID
         lessonID: 0,
         // pptID
@@ -216,8 +217,11 @@
       iniTimeline(lessonID) {
         let self = this;
 
-        Promise.all([this.getPresentationList()]).then(()=>{
+        Promise.all([this.getPresentationList()]).then((res) => {
           self.initws();
+
+          // this.title = res[0].Title;
+          // document.title = res[0].Title;
 
           if (process.env.NODE_ENV !== 'production') {
             self.testTimeline();
@@ -329,15 +333,12 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
 
-              // 课程已结束（学生）
-              // STATUS_ERROR_LESSON_END_STUDENT = 601
-
               // set presentation map
               if(self.presentationList.length) {
                 for(let i = 0; i < self.presentationList.length; i++) {
                   let presentation = self.presentationList[i];
 
-                  self.formatPresentation(presentation);
+                  self.formatPresentation(presentation, presentation.presentationID);
                 }
               }
 
@@ -349,10 +350,12 @@
               }
 
               // set title
-              let presentation = self.presentationMap.get(self.presentationID);
-              presentation.Title && (self.title = document.title = presentation.Title);
+              let presentationData = self.presentationMap.get(self.presentationID);
+              presentationData.Title && (self.title = presentationData.Title);
+              // 课程title
+              document.title = data.classroom && data.classroom.courseName;
 
-              return data;
+              return presentationData;
             }
           })
           .catch(error => {
@@ -373,7 +376,6 @@
       * @method 获取实时更新的数据
       * @param presentationID
       */
-
       getUpdatePPTData(presentationID) {
         let self = this;
         let URL = API.student.FETCH_PRESENTATION_DATA;
@@ -397,12 +399,12 @@
               let presentation = data.presentationData;
 
               // set presentation map
-              self.formatPresentation(presentation);
+              self.formatPresentation(presentation, presentationID);
 
               // set title
-              presentation.Title && (self.title = document.title = presentation.Title);
+              presentation.Title && (self.title = presentation.Title);
 
-              return data;
+              return presentation;
             }
           });
 
@@ -412,7 +414,7 @@
       * @method 格式化ppt数据
       * @param
       */
-      formatPresentation(presentation) {
+      formatPresentation(presentation, presentationID) {
         if(presentation) {
           let pptData = presentation['Slides'];
 
@@ -435,7 +437,7 @@
             presentation['Slides'] = pptData;
           }
 
-          this.presentationMap.set(presentation.presentationID, presentation);
+          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
         }
       },
 
@@ -453,8 +455,6 @@
             'lessonid': this.lessonID,
             'msgid': this.msgid++
            }));
-
-          // this.addPPT({ type: 2, pageIndex: 6, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
         }, 1500)
       },
 
@@ -593,6 +593,8 @@
 
     .header-title {
       flex: 1;
+
+      color: #2a2a2a;
 
       overflow: hidden;
       white-space: nowrap;

@@ -117,7 +117,7 @@
                 self.handleBack();
               }, 2000)
 
-              // socket通信
+              // todo: del 新版接收器去掉此通信socket通信
               socket.send(JSON.stringify({
                 op: 'newdanmu',
                 lessonid: self.lessonID,
@@ -204,6 +204,8 @@
       width: 100%;
       height: 5.066667rem;
       border-width: 0;
+
+      -webkit-user-select: auto;
     }
 
     .danmu-textarea::-webkit-input-placeholder {
