@@ -37,6 +37,12 @@
         <div class="btn-desc f15">查看详情</div>
       </v-touch>
     </section>
+
+    <RcMaskActivityPaperQuizresultDetail
+      ref="RcMaskActivityPaperQuizresultDetail"
+      v-show="!isQuizresultDetailHidden"
+      @closeQuizresultDetail="closeQuizresultDetail"
+    ></RcMaskActivityPaperQuizresultDetail>
   </div>
 </template>
 
@@ -44,13 +50,20 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  // 已发试卷详情页
+  import RcMaskActivityPaperQuizresultDetail from '@/components/teacher/template/rc-mask-activity-paper-quizresult-detail'
+
   export default {
     name: 'RcMaskActivityPaperQuizresult',
     props: ['lessonid', 'socket'],
     data () {
       return {
-        quizid: -1,     // 已发试卷的id
+        quizid: -1,                       // 已发试卷的id
+        isQuizresultDetailHidden: true,   // 已发试卷详情页隐藏
       }
+    },
+    components: {
+      RcMaskActivityPaperQuizresultDetail
     },
     created () {
       let self = this
@@ -139,21 +152,20 @@
        * @event bindtap
        */
       showQuizresultDetail () {
-        // 数据都是在 remote.vue
         let self = this
 
         self.isQuizresultDetailHidden = false
-        self.$refs.RcMaskQuizresultDetail.$emit('refreshProblemResultDetail')
+        self.$refs.RcMaskActivityPaperQuizresultDetail.$emit('showQuizresultDetail')
       },
       /**
-       * 关闭试题详情的按钮
+       * 关闭已发试卷详情页
        *
        * @event bindtap
        */
-      closeProblemresultdetail () {
-        this.setData({
-          isProblemResultDetailHidden: true
-        })
+      closeQuizresultDetail () {
+        let self = this
+
+        self.isQuizresultDetailHidden = true
       },
       
       /**
