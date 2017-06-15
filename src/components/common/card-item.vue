@@ -12,18 +12,16 @@
     <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
-      <div class="timeline__ppt">
-        <span class="ppt--pageno f14">第{{ item.pageIndex }}页</span>
+      <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
+        <span class="ppt--pageno f14" data-language-complex="1">第{{ item.pageIndex }}页</span>
         <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
-          <!-- <router-link :to="'/1/ppt/'+index"> -->
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height)">
-          <!-- </router-link> -->
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
-          <div class="ppt__opt f15" :data-pageindex="item.pageIndex" :data-presentationid="item.presentationid">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.pageIndex, item.presentationid)" data-language-key="student.ppt.unknow">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.pageIndex, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
+          <div class="ppt__opt f15" v-show="!observerMode">
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="student.ppt.unknow">不懂</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
           </div>
         </div>
       </div>
@@ -38,7 +36,6 @@
               <p class="paper-count">共{{ item.count }}题</p>
             </div>
             <div class="">
-              <!-- http://sfe.ykt.io/o_1bhh6gui01h1nirm1l7j2gt12tv9.png -->
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
             </div>
           </a>
@@ -46,7 +43,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <span class="status">{{ item.status }}</span>
+            <span class="status" data-language-common="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -67,9 +64,6 @@
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
-          <div class="f14">
-            <span class="status">{{ item.status }}</span>
-          </div>
         </div>
       </div>
     </template>
@@ -88,7 +82,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <span class="status">{{ item.status }}</span>
+            <span class="status" data-language-common="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -108,6 +102,7 @@
   export default {
     name: 'card-item',
     props: {
+      tabindex: 1,
       index: 0,
       lessonid: 0,
       item: null
@@ -193,20 +188,25 @@
       * @method ppt不懂,收藏
       * tag 1 不懂 2 收藏
       */
-      handleTag(tag, pageIndex, presentationid) {
+      handleTag(tag, slideID, presentationid) {
         let self = this;
         let URL = API.student.SET_LEESON_SILDE_TAG;
         let cards = this.$parent.$parent.cards;
 
-        let data = cards.find((card, index)=>{
-          return card.pageIndex === pageIndex && card.presentationid === presentationid
+        let ppts = cards.filter((card, index)=>{
+          return card.slideID === slideID && card.presentationid === presentationid
         })
 
         // 确实是否不懂
-        let tagType = data.hasQuestion ? 'cancel' : 'add';
+        let tagType = ppts.length && ppts[0].hasQuestion ? 'cancel' : 'add';
+        // 是否收藏
+        if(tag === 2) {
+          tagType = ppts.length && ppts[0].hasStore ? 'cancel' : 'add';
+        }
+
         let param = {
           'tag': tag,
-          'lessonSlideID': data['slideID'],
+          'lessonSlideID': slideID,
           'tagType': tagType
         }
 
@@ -217,8 +217,10 @@
                 return;
               }
 
-              tag === 1 && (data.hasQuestion = !data.hasQuestion);
-              tag === 2 && (data.hasStore = !data.hasStore);
+              ppts.forEach( (element, index) => {
+                tag === 1 && (element.hasQuestion = !element.hasQuestion);
+                tag === 2 && (element.hasStore = !element.hasStore);
+              });
 
               return res;
             }
@@ -226,6 +228,17 @@
       }
     },
     created() {
+      let cards = this.$parent.$parent.cards;
+
+      // 观看者
+      this.observerMode = this.$parent.$parent.observerMode;
+
+      // 时间动态显示 每分钟更新一次
+      setInterval(() => {
+        cards.forEach((item) => {
+          item.time = item.time - 1;
+        })
+      }, 60000)
     },
     mounted() {
       let self = this;

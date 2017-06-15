@@ -40,7 +40,7 @@
         <section class="student__timeline J_cards">
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards">
-            <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+            <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
         </section>
 
@@ -205,6 +205,7 @@
         let self = this;
 
         this.lessonID = this.$route.params.lessonID || 3049;
+        this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false
 
         this.iniTimeline(this.lessonID);
       },
@@ -248,16 +249,16 @@
       testTimeline() {
         this.addMessage({ type: 1, message:"开课啦" });
 
-        this.addPPT({ type: 2, pageIndex:1, time: Date.now(), presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:2, time: "2017-01-15 12:00:00", presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:3, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:3, time: "2016-01-15 12:00:00", presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:2, time: 1497431406048, presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:3, time: 1497431046048, presentationid: this.presentationID });
+        this.addPPT({ type: 2, pageIndex:3, time: 1497431446048, presentationid: this.presentationID });
 
-        this.addPaper({ type: 4, title:"xxx", total: 10, quiz: 1, time: "2017-05-15 12:00:00" });
-        this.addPaper({ type: 4, title:"试卷测试数据", total: 12, quiz: 12, time: "2017-05-18 12:00:00" });
+        this.addPaper({ type: 4, title:"xxx", total: 10, quiz: 1, time: 1497431446048 });
+        this.addPaper({ type: 4, title:"试卷测试数据", total: 12, quiz: 12, time: 1497431440048 });
 
-        this.addProblem({ type: 3, pageIndex: 4, time:"2016-01-15 12:00:00", presentationid: this.presentationID, limit: 60 });
-        this.addProblem({ type: 3, pageIndex: 5, time:"2016-01-15 12:00:00", presentationid: this.presentationID, limit: 60 });
+        this.addProblem({ type: 3, pageIndex: 4, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
+        this.addProblem({ type: 3, pageIndex: 5, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
 
         let event = {
           "type": "redpacket",
@@ -274,7 +275,7 @@
           "dt": 1453348609053  // Datetime 时间戳
         };
 
-        this.addHongbao({ type: 5, redpacketID: 5, time: "2017-01-15 12:00:00", count: 9, length: 6, event: event, userID: this.userID || 46 });
+        this.addHongbao({ type: 5, redpacketID: 5, time: 1497431446048, count: 9, length: 6, event: event, userID: this.userID || 46 });
       },
 
       /*

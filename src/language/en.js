@@ -7,6 +7,11 @@
  */
 
 let pages = {
+  // 根据状态显示的动态文字 例如'已完成' '未完成'
+  'status': {
+    '未完成': 'uncomplete',
+    '已完成': 'complete'
+  },
   // 学生遥控器
   'student': {
     'nav': {

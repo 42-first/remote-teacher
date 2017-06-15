@@ -121,6 +121,7 @@
               socket.send(JSON.stringify({
                 op: 'newdanmu',
                 lessonid: self.lessonID,
+                danmuid: data.danmuID,
                 danmu: message
               }));
 

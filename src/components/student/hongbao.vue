@@ -70,6 +70,7 @@
         mine: null,
         teacher: null,
         hongbaoList: null,
+        userID: null
       };
     },
     beforeRouteEnter (to, from, next) {
@@ -110,7 +111,7 @@
 
         //
         let mine = data.event && data.event.detail.find((item)=>{
-          return item.uid === data.userID;
+          return item.uid === this.userID;
         });
 
         console.log(mine);
@@ -161,6 +162,7 @@
     created() {
       this.index = +this.$route.params.index;
       let cards = this.$parent.cards;
+      this.userID = this.$parent.userID;
 
       this.summary = cards[this.index];
 

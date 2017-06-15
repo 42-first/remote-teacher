@@ -237,7 +237,7 @@ var mixin = {
             timeline = msg['timeline'];
             let msgid = msg['msgid'];
 
-            this.setTimeline(timeline)
+            this.setTimeline(timeline, true)
 
             break
 
