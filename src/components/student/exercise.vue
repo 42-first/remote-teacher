@@ -17,7 +17,7 @@
       </header>
 
       <!-- 定时时间 -->
-      <section class="exercise__timing" v-show="summary&&summary.limit>0">
+      <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0">
         <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-timing"></i></p>
         <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
       </section>
@@ -39,6 +39,13 @@
         <p class="polling-count f20" v-if="problemType==='Polling' && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
         <p class="polling-count f20" v-if="summary && !summary.isComplete && problemType==='Polling' && selectedPollingCount === pollingCount">您还未投票</p>
         <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
+
+      </section>
+
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">当前为观看模式，无法答题</p>
+        <p class="submit-btn can f18" @click="handleBack">返回</p>
       </section>
 
       <div class="commit-diff" v-if="isShowSubmit"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
@@ -64,6 +71,8 @@
         options: null,
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
+
+        observerMode: false,
 
         // 选择的答案
         optionsSet: new Set(),

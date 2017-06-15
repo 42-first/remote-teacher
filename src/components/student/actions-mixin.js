@@ -11,14 +11,15 @@ var actionsMixin = {
   methods: {
     /*
     * @method 创建更新timeline
+    * @param timeline isFetch
     */
-    setTimeline(timeline) {
+    setTimeline(timeline, isFetch) {
       if (timeline && timeline.length) {
         timeline.forEach( (item, index) => {
           switch(item['type']) {
             // ppt
             case 'slide':
-              this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid:item['pres'] });
+              this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], isFetch: isFetch });
 
               break;
 
@@ -42,7 +43,8 @@ var actionsMixin = {
               break;
 
             // 红包
-            case 'redpacket', 'updateredpacket':
+            case 'redpacket':
+            case 'updateredpacket':
               this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
 
               break;
@@ -78,8 +80,13 @@ var actionsMixin = {
       let slideData = pptData[data.pageIndex-1];
       let index = -1;
 
+      // 是否含有重复数据
+      let hasPPT = this.cards.find((item)=>{
+        return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
+      })
+
       // 如果是习题图片，则不添加
-      if (slideData['Problem']){
+      if (slideData['Problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
@@ -92,11 +99,6 @@ var actionsMixin = {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
       } else {
-        // 是否含有重复数据
-        let hasPPT = this.cards.find((item)=>{
-          return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
-        })
-
         // todo: 预加载图片
         let oImg = new Image();
         oImg.onload = (evt) => {
@@ -113,21 +115,19 @@ var actionsMixin = {
         } else {
         }
 
+        data = Object.assign(data, {
+          src: slideData['Thumbnail'],
+          rate: presentation.Width / presentation.Height,
+          hasQuestion: slideData['question'] == 1 ? true : false,
+          hasStore: slideData['store'] == 1 ? true : false,
+          Width: presentation.Width,
+          Height: presentation.Height,
+          slideID: slideData['lessonSlideID'],
+          isRepeat: hasPPT ? true : false
+        })
 
-        if(!hasPPT) {
-          data = Object.assign(data, {
-            src: slideData['Thumbnail'],
-            rate: presentation.Width / presentation.Height,
-            hasQuestion: slideData['question'] == 1 ? true : false,
-            hasStore: slideData['store'] == 1 ? true : false,
-            Width: presentation.Width,
-            Height: presentation.Height,
-            slideID: slideData['lessonSlideID']
-          })
-
-          this.cards.push(data);
-          index = this.cards.length;
-        }
+        this.cards.push(data);
+        index = this.cards.length;
 
         // tab是全部或者ppt 滚动到视线位置
         if( this.currTabIndex === 1 || this.currTabIndex === 2 ) {
@@ -217,7 +217,7 @@ var actionsMixin = {
     addHongbao(data) {
       let caption = data.length + '位同学已赢得课堂红包';
 
-      if (data.count == 0) {
+      if (data.length == 0) {
         caption = 'Hi，本题有课堂红包发送';
       }
 

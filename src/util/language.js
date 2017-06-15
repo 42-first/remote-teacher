@@ -63,6 +63,7 @@ class Language {
       return this;
     }
 
+    // 标准的静态文字
     let allEle = pageEl.querySelectorAll('[data-language-key]');
 
     allEle.forEach((element) => {
@@ -70,11 +71,35 @@ class Language {
       let aPath = key.split('.');
       let value = element.innerText;
 
+      // 标准的静态文字
       aPath.forEach((path, index) => {
         index === 0 && (value = this.languageRes[path]);
         index && (value = value[path]);
       })
 
+      element.innerText = value;
+    })
+
+    // 根据状态显示的动态文字 例如'已完成' '未完成'
+    allEle = pageEl.querySelectorAll('[data-language-common]');
+
+    allEle.forEach((element) => {
+      let obj = element.dataset.languageCommon;
+      let key = element.innerText;
+      let value = element.innerText;
+
+      value = this.languageRes[obj][key] || value
+      element.innerText = value;
+    })
+
+    // 复杂模式 静态文字和业务数据混合在一起 暂定根据位置定位提取业务数据
+    allEle = pageEl.querySelectorAll('[data-language-complex]');
+
+    allEle.forEach((element) => {
+      let key = element.dataset.languageComplex;
+      let value = element.innerText;
+
+      // todo: 根据特征或者规则 提取业务数据
       element.innerText = value;
     })
 
