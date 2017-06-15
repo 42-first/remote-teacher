@@ -4,7 +4,7 @@
     <!-- 已发试卷 -->
     <section class="list upper">
       <div class="title f17">已发试卷</div>
-      <v-touch class="item" v-for="quiz in quizList" v-on:tap="showQuizResult(quiz.quiz_id)">
+      <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
         <div class="desc f18">
           {{quiz.title}} <br>
           <span class="f14"> {{quiz.time}}</span>
@@ -16,7 +16,7 @@
     <!-- 试卷库 -->
     <section class="list downer">
       <div class="title f17">我的试卷库</div>
-      <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
+      <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
         <div class="desc f18">
           {{paper.title}} <br>
           <span class="f14">{{paper.time}}</span>
@@ -36,13 +36,24 @@
         </div>
       </div>
     </div>
+
     <v-touch class="back-btn f18" v-on:tap="closePaper">返回</v-touch>
+
+    <RcMaskActivityPaperQuizresult
+      ref="RcMaskActivityPaperQuizresult"
+      v-show="!isQuizresultHidden"
+      :lessonid="lessonid"
+      :socket="socket"
+    ></RcMaskActivityPaperQuizresult>
   </div>
 </template>
 
 <script>
   import request from '@/util/request'
   import API from '@/config/api'
+
+  // 已发试卷饼图页
+  import RcMaskActivityPaperQuizresult from '@/components/teacher/template/rc-mask-activity-paper-quizresult'
 
   export default {
     name: 'RcMaskActivityPaper',
@@ -58,7 +69,11 @@
           total: -1
         },
         isPubmodalHidden: true,   // 发布模态框隐藏
+        isQuizresultHidden: true, // 已发试卷饼图页隐藏
       }
+    },
+    components: {
+      RcMaskActivityPaperQuizresult
     },
     created () {
       let self = this
@@ -193,33 +208,10 @@
        * @param {number} quizid 发布的试卷的id
        */
       showQuizResult(quizid){
-        console.log('进入查看饼图页TODO')
-        return
-        QUIZID = quizid
-
         let self = this
 
-        quizTimeBellCount = 1;
-
-        self.setData({
-          isQuizResultHidden: false,
-          // HACK 小程序中如果赋予的新值是undefined的话，根本不会进行赋值，也不会覆盖之前的值
-          isPaperCollected: finishedQuizList['id'+quizid] || false
-        })
-
-        if(!self.data.isPaperCollected){
-          refPaperTimer = setInterval(function(){
-            self.getPaperResult(quizid);
-          }, 3000);
-
-          quizTimeBellTimer = setInterval(function(){
-              self.setData({
-                paperTimePassed: self.sec2str(quizTimeBellCount++)
-              })
-          }, 1000);
-        }
-        
-        self.getPaperResult(quizid);
+        self.isQuizresultHidden = false
+        self.$refs.RcMaskActivityPaperQuizresult.$emit('showQuizResult', quizid)
       },
     }
   }
