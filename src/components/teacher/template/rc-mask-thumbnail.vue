@@ -94,7 +94,7 @@
        * @event bindtap
        * @param {number} tab  1 PPT 2 不懂 3 习题
        */
-      swichType: function (tab) {
+      swichType (tab) {
         let self = this
         
         self.tab = tab
@@ -106,7 +106,7 @@
        * @event bindtap
        * @param {number} to 翻到的页码 从1开始
        */
-      tapThumbnail: function (to) {
+      tapThumbnail (to) {
         let self = this
         console.log(to)
 
@@ -124,7 +124,7 @@
        * 获取缩略图页 不懂 等标志的信息
        *
        */
-      fetchPresentationTag: function () {
+      fetchPresentationTag () {
         let self = this
 
         let url = API.presentation_tag

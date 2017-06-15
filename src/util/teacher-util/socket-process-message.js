@@ -140,9 +140,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'lessonfinished') {
     // 结束授课
-    location.href = '/v/index/course/normalcourse';
-    // TODO 如何获取课程id 班级id
-    // location.href = '/v/index/course/normalcourse/manage_classroom/161/2409/';
+    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
 
@@ -227,9 +225,9 @@ function socketProcessMessage(msg){
       initiativeCtrlMaskTpl: 'RcMaskRandomcall'
     })
 
-    setTimeout(() => {
+    Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('callwokeup', msg)
-    }, 100)
+    })
 
     // 有可能是刷新了遥控器，并且之前点过名
     let str = JSON.stringify({
@@ -273,9 +271,9 @@ function socketProcessMessage(msg){
       initiativeCtrlMaskTpl: 'RcMaskRandomcall'
     })
 
-    setTimeout(() => {
+    Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('calledlist', msg)
-    }, 100)
+    })
 
     return
   }

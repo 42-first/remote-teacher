@@ -22,10 +22,11 @@
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
-        :class="['dontcallback', {'mask-isthumbnail': initiativeCtrlMaskTpl === 'RcMaskThumbnail'}]"
+        :class="['dontcallback', {'mask-isthumbnail': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
         :lessonid="lessonid"
         :socket="socket"
         @showThumbnail="showThumbnail"
+        @showActivity="showActivity"
         @goHome="goHome"
       ></Toolbar>
     </div>
@@ -33,7 +34,7 @@
     <!-- 蒙版层 -->
     <div id="templates" class="templates dontcallback">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
-      <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
+      <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           ref="InitiativeCtrlMask"
@@ -94,6 +95,8 @@ import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
 import RcMaskRandomcall from '@/components/teacher/template/rc-mask-randomcall'
 // 缩略图面板
 import RcMaskThumbnail from '@/components/teacher/template/rc-mask-thumbnail'
+// 课堂动态面板
+import RcMaskActivity from '@/components/teacher/template/rc-mask-activity'
 
 // 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 import '@/util/teacher-util/preventoverscroll'
@@ -116,6 +119,9 @@ export default {
       avatar: '',                             // 用户头像
       auth: '',                               // 用户身份
       inviteCode: '',                         // 课堂暗号
+      courseid: '',                           // 课程id 以 八>了 班为例，是 八 的id
+      classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
+      coursename: '',                         // 课程名称 以 八>了 班为例，是 八
       socket: null,                           // 全局 Websocket 实例对象
       lessonid: 0,
       presentationid: 0,
@@ -144,7 +150,8 @@ export default {
     RcMaskErrormsg,
     RcMaskQrcode,
     RcMaskRandomcall,
-    RcMaskThumbnail
+    RcMaskThumbnail,
+    RcMaskActivity
   },
   created () {
     this.lessonid = this.$route.params.lessonid
@@ -219,10 +226,13 @@ export default {
           console.log('userinfo success', jsonData)
 
           self.setData({
-            userid: jsonData.data.user_id,
-            avatar: jsonData.data.avatar,
-            inviteCode: jsonData.data.invite_code,
-            auth: jsonData.data.user_auth
+            userid: jsonData.data.user.user_id,
+            avatar: jsonData.data.user.avatar,
+            auth: jsonData.data.user.user_auth,
+            inviteCode: jsonData.data.lesson.invite_code,
+            courseid: jsonData.data.course.courseid,
+            coursename: jsonData.data.course.coursename,
+            classroomid: jsonData.data.classroom.classroomid
           })
         })
     },
@@ -285,10 +295,24 @@ export default {
         isInitiativeCtrlMaskHidden: false,
         initiativeCtrlMaskTpl: 'RcMaskThumbnail'
       })
-
-      setTimeout(() => {
+      Vue.nextTick(function () {
         self.$refs.InitiativeCtrlMask.$emit('showThumbnail')
-      }, 100)
+      })
+    },
+    /**
+     * 点开 课堂动态 按钮
+     *
+     */
+    showActivity () {
+      let self = this
+
+      self.setData({
+        isInitiativeCtrlMaskHidden: false,
+        initiativeCtrlMaskTpl: 'RcMaskActivity'
+      })
+      Vue.nextTick(function () {
+        self.$refs.InitiativeCtrlMask.$emit('RcMaskActivity')
+      })
     },
     /**
      * 点击 遥控器 按钮
