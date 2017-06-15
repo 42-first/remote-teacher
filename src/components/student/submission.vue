@@ -392,6 +392,7 @@
       width: 100%;
       height: 4.266667rem;
       border-width: 0;
+      -webkit-user-select: auto;
     }
 
     .submission-textarea::-webkit-input-placeholder {

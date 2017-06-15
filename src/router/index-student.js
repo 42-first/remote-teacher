@@ -29,6 +29,7 @@ Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
 
 // FastClick.attach(document.body)
+document.addEventListener('touchstart', function(){},false);
 
 export default new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/student' : '/',
