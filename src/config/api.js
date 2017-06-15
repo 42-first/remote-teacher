@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
     publish_problem:                    '/static/mock/publish_problem.json',            // 发布试题
     problem_statistics:                 '/static/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              '/static/mock/problem_result_detail.json',      // 试题详情数据
-    publish_lesson_paper:               '/lesson/publish_lesson_paper',                 // 发布试卷
+    publish_lesson_paper:               '/static/mock/publish_lesson_paper.json',       // 发布试卷
     quiz_results_statistics:            '/api/quiz/quiz_results_statistics',            // 获取试卷饼图数据
     quiz_results_detail:                '/api/quiz/quiz_results_detail',                // 获取试卷详情
     quiz_finish:                        '/api/quiz/quiz_finish',                        // 收卷

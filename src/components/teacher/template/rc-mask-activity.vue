@@ -42,6 +42,7 @@
       ref="RcMaskActivityPaper"
       v-show="!isPaperHidden"
       :lessonid="lessonid"
+      :socket="socket"
       @closePaper="closePaper"
     ></RcMaskActivityPaper>
   </div>
@@ -59,7 +60,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket'],
     data () {
       return {
         participantList: [],            // 当前学生名单
