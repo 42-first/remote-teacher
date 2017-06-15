@@ -2,7 +2,14 @@
 <template>
 	<div class="activity-box">
     <section class="head f20">
-      计算机软件与工程
+      <div class="teacher">
+        <img :src="avatar" alt="">
+        {{coursename}}
+      </div>
+      <v-touch class="student f17" v-on:tap="showParticipantList">
+        <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
+        <span>当前学生{{participantList.length}}位&gt;</span>
+      </v-touch>
     </section>
     <div class="activity-item f18">
       <div>试卷</div>
@@ -24,6 +31,12 @@
         <i class="iconfont icon-forward f20"></i>
       </div>
     </div>
+
+    <RcMaskActivityParticipantlist
+      v-show="!isParticipantlistHidden"
+      :participant-list="participantList"
+      @closeParticipantList="closeParticipantList"
+    ></RcMaskActivityParticipantlist>
   </div>
 </template>
 
@@ -31,14 +44,23 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  // 全部人员名单
+  import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
+
+
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket'],
+    props: ['lessonid', 'coursename', 'avatar'],
     data () {
       return {
+        participantList: [],           // 当前学生名单
+        avatarList: [],                // 头像列表，最多取10个
+        isParticipantlistHidden: true, // 全部人员名单隐藏
       }
     },
-    
+    components: {
+      RcMaskActivityParticipantlist
+    },
     created () {
       let self = this
 
@@ -65,7 +87,28 @@
         request.get(url)
           .then(jsonData => {
             console.log('teaching_lesson_participant_list', jsonData)
+            self.participantList = jsonData.data.students.reverse()
+            // 下面又翻转过来只是为了hack float  left样式
+            self.avatarList = self.participantList.slice(0, 10).reverse()
           })
+      },
+      /**
+       * 点击 学生头像列表 按钮展示全部人员名单
+       *
+       * @event bindtap
+       */
+      showParticipantList () {
+        let self = this
+        self.isParticipantlistHidden = false
+      },
+      /**
+       * 点击 返回 按钮关闭全部人员名单
+       *
+       * @event bindtap
+       */
+      closeParticipantList () {
+        let self = this
+        self.isParticipantlistHidden = true
       },
     }
   }
@@ -83,10 +126,37 @@
     
 
     .head {
+      box-sizing: border-box;
       height: 3.68rem;
+      padding: 0.733333rem 0.533333rem 0;
       margin-bottom: 0.386667rem;
       background: #39383E;
       color: $white;
+
+      .teacher {
+        margin-bottom: 0.653333rem;
+        img {
+          width: 0.933333rem;
+          height: 0.933333rem;
+          border-radius: 50%;
+          vertical-align: middle;
+        }
+      }
+
+      .student {
+        img {
+          float: left;
+          width: 0.533333rem;
+          height: 0.533333rem;
+          border-radius: 50%;
+          margin-top: 0.133333rem;
+          margin-right: -0.133333rem;
+        }
+        span {
+          float: left;
+          margin-left: 0.266667rem;
+        }
+      }
     }
 
     .activity-item {

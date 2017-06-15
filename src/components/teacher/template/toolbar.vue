@@ -122,7 +122,7 @@ export default {
     position: relative;
   }
   /* 当蒙版是缩略图时，底部的工具栏要露出来 */
-  .mask-isthumbnail {
+  .higher-than-InitiativeCtrlMask {
     z-index: 10;
   }
   .rc-toolbar {
