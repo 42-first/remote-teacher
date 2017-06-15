@@ -86,7 +86,7 @@ var actionsMixin = {
       })
 
       // 如果是习题图片，则不添加
-      if (slideData['Problem'] || hasPPT && data.isFetch ) {
+      if (!slideData || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
         return;
       }
 

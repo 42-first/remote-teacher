@@ -136,8 +136,6 @@
           }
         })
 
-        console.log(items);
-
         items.forEach((item, i)=>{
           if(item.src === src) {
             index = i;

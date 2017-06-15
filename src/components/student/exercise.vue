@@ -25,7 +25,7 @@
       <!-- 问题内容 -->
       <section class="exercise-content">
         <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
-        <img class="cover" :src="summary&&summary.cover" />
+        <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
       <!-- 问题选项 -->
@@ -51,6 +51,44 @@
       <div class="commit-diff" v-if="isShowSubmit"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
 
     </div>
+
+    <!-- 图片放大结构 -->
+    <section class="pswp J_exercise_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+      <div class="pswp__bg"></div>
+
+      <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+
+          <div class="pswp__top-bar">
+
+            <div class="pswp__counter"></div>
+
+              <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+      </div>
+
+    </section>
 
   </section>
 </template>
@@ -394,6 +432,69 @@
 
           clearInterval(this.timer);
         }
+      },
+
+      /*
+      * @method 图片加载完成
+      */
+      handlelaodImg() {
+        let target = event.target;
+
+        this.width = target.naturalWidth || target.width;
+        this.height = target.naturalHeight || target.width;
+      },
+
+      /*
+      * @method 图片放大
+      */
+      handleScaleImage() {
+        let targetEl = event.target;
+        let pswpElement = this.$el.querySelector('.J_exercise_pswp');
+        let index = 0;
+        let items = [];
+
+        // build items array
+        items.unshift({ src: this.summary && this.summary.cover, w: this.width || 750, h: this.height || 520 });
+
+        let options = {
+          index: 0,
+          maxSpreadZoom: 5,
+          showAnimationDuration: 300,
+          hideAnimationDuration: 300,
+          showHideOpacity: true,
+
+          closeEl: false,
+          captionEl: false,
+          fullscreenEl: false,
+          zoomEl: false,
+          shareEl: false,
+          counterEl: false,
+          arrowEl: false,
+          preloaderEl: false,
+
+          tapToClose: true,
+
+          getThumbBoundsFn: function(index) {
+            // find thumbnail element
+            var thumbnail = targetEl;
+
+            // get window scroll Y
+            var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+            // optionally get horizontal scroll
+
+            // get position of element relative to viewport
+            var rect = thumbnail.getBoundingClientRect();
+
+            // w = width
+            return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
+
+          }
+        };
+
+        // Initializes and opens PhotoSwipe
+        let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+        gallery.init();
       },
 
       /*
