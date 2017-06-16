@@ -28,6 +28,10 @@ if (process.env.NODE_ENV === 'production') {
             'SEND_DANMU': '/api/danmu/send_danmu',
             // 发送投稿
             'SEND_SUBMISSION': '/v/api/tougao/create',
+            // 我的投稿列表
+            'GET_SUBMISSION_LIST': '/v/api/tougao/student/list',
+            // 删除投稿
+            'DELETE_SUBMISSION': 'v/api/tougao/delete',
             // 上传图片
             'UPLOAD_PIC': '/v/api/tougao/pic_upload'
         }
@@ -63,7 +67,11 @@ if (process.env.NODE_ENV === 'production') {
             // 发送danmu
             'SEND_DANMU': '/static/mock/student/presentationList.json',
             // 发送投稿
-            'SEND_SUBMISSION': 'v/tougao/create',
+            'SEND_SUBMISSION': '/v/tougao/create',
+            // 我的投稿列表
+            'GET_SUBMISSION_LIST': '/static/mock/student/tougao_list.json',
+            // 删除投稿
+            'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
             'UPLOAD_PIC': 'v/tougao/pic_uplaod'
         }
