@@ -50,6 +50,7 @@
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
+          :is-danmu-open="isDanmuOpen"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
 
@@ -145,6 +146,7 @@ export default {
       errType: 2,
       connectCountDown: 10,
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
+      isDanmuOpen: false,                     // 弹幕是否处于打开状态
     }
   },
   components: {

@@ -35,16 +35,16 @@ if (process.env.NODE_ENV === 'production') {
     userinfo:                           '/static/mock/userinfo_teacher.json',
     remote_control_list:                '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:            '/static/mock/fetch_presentation_data.json',    // ppt数据
-    lesson_quiz_list:                   '/api/mina/lesson_quiz_list',                   // 试卷数据（已发布、未发布）
+    lesson_quiz_list:                   '/static/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
     presentation_tag:                   '/static/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/static/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
     publish_problem:                    '/static/mock/publish_problem.json',            // 发布试题
     problem_statistics:                 '/static/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              '/static/mock/problem_result_detail.json',      // 试题详情数据
-    publish_lesson_paper:               '/lesson/publish_lesson_paper',                 // 发布试卷
+    publish_lesson_paper:               '/static/mock/publish_lesson_paper.json',       // 发布试卷
     quiz_results_statistics:            '/api/quiz/quiz_results_statistics',            // 获取试卷饼图数据
-    quiz_results_detail:                '/api/quiz/quiz_results_detail',                // 获取试卷详情
-    quiz_finish:                        '/api/quiz/quiz_finish',                        // 收卷
+    quiz_results_detail:                '/static/mock/quiz_results_detail.json',        // 获取试卷详情
+    quiz_finish:                        '/static/mock/quiz_finish.json',                // 收卷
     prepare_red_envelope:               '/static/mock/prepare_red_envelope.json',       // 查询班级人数、钱包余额等，为发红包做准备
     create_red_envelope:                '/static/mock/create_red_envelope.json',        // 向django后端发起红包支付
     payquery:                           '/pay/query',                                   // 微信支付后向node后端确认支付金额已经进入小金库

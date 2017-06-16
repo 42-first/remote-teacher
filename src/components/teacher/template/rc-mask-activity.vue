@@ -11,19 +11,19 @@
         <span>当前学生{{participantList.length}}位&gt;</span>
       </v-touch>
     </section>
-    <div class="activity-item f18">
+    <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>试卷</div>
       <div>
         <i class="iconfont icon-forward f20"></i>
       </div>
-    </div>
-    <div class="activity-item f18">
+    </v-touch>
+    <v-touch class="activity-item f18" v-on:tap="showDanmubox">
       <div>弹幕</div>
       <div>
-        已开启
+        <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
         <i class="iconfont icon-forward f20"></i>
       </div>
-    </div>
+    </v-touch>
     <div class="activity-item f18">
       <div>投稿</div>
       <div>
@@ -37,6 +37,23 @@
       :participant-list="participantList"
       @closeParticipantList="closeParticipantList"
     ></RcMaskActivityParticipantlist>
+
+    <RcMaskActivityPaper
+      ref="RcMaskActivityPaper"
+      v-show="!isPaperHidden"
+      :lessonid="lessonid"
+      :socket="socket"
+      @closePaper="closePaper"
+    ></RcMaskActivityPaper>
+
+    <RcMaskActivityDanmubox
+      ref="RcMaskActivityDanmu"
+      v-show="!isDanmuboxHidden"
+      :lessonid="lessonid"
+      :socket="socket"
+      :is-danmu-open="isDanmuOpen"
+      @closeDanmubox="closeDanmubox"
+    ></RcMaskActivityDanmubox>
   </div>
 </template>
 
@@ -46,27 +63,34 @@
 
   // 全部人员名单
   import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
+  // 试卷列表
+  import RcMaskActivityPaper from '@/components/teacher/template/rc-mask-activity-paper'
+  // 弹幕控制页面
+  import RcMaskActivityDanmubox from '@/components/teacher/template/rc-mask-activity-danmubox'
 
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen'],
     data () {
       return {
-        participantList: [],           // 当前学生名单
-        avatarList: [],                // 头像列表，最多取10个
-        isParticipantlistHidden: true, // 全部人员名单隐藏
+        participantList: [],            // 当前学生名单
+        avatarList: [],                 // 头像列表，最多取10个
+        isParticipantlistHidden: true,  // 全部人员名单隐藏
+        isPaperHidden: true,            // 试卷列表隐藏
+        isDanmuboxHidden: true,         // 弹幕控制页面隐藏
       }
     },
     components: {
-      RcMaskActivityParticipantlist
+      RcMaskActivityParticipantlist,
+      RcMaskActivityPaper,
+      RcMaskActivityDanmubox
     },
     created () {
       let self = this
 
       // 点击 课堂动态 按钮 父组件发送事件给本子组件，获取学生名单、投稿数等
       self.$on('RcMaskActivity', function () {
-        // teaching_lesson_participant_list
         self.fetchParticipantList()
       })
     },
@@ -86,7 +110,6 @@
 
         request.get(url)
           .then(jsonData => {
-            console.log('teaching_lesson_participant_list', jsonData)
             self.participantList = jsonData.data.students.reverse()
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
@@ -109,6 +132,46 @@
       closeParticipantList () {
         let self = this
         self.isParticipantlistHidden = true
+      },
+      /**
+       * 点击 试卷 按钮展示试卷列表
+       *
+       * @event bindtap
+       */
+      showPaper () {
+        let self = this
+        self.isPaperHidden = false
+
+        self.$refs.RcMaskActivityPaper.$emit('showPaper')
+      },
+      /**
+       * 点击 弹幕 按钮展示弹幕控制
+       *
+       * @event bindtap
+       */
+      showDanmubox () {
+        let self = this
+        self.isDanmuboxHidden = false
+
+        self.$refs.RcMaskActivityDanmu.$emit('showDanmubox')
+      },
+      /**
+       * 点击 返回 按钮关闭试卷列表
+       *
+       * @event bindtap
+       */
+      closePaper () {
+        let self = this
+        self.isPaperHidden = true
+      },
+      /**
+       * 点击 返回 返回课堂动态
+       *
+       * @event bindtap
+       */
+      closeDanmubox () {
+        let self = this
+        self.isDanmuboxHidden = true
       },
     }
   }
