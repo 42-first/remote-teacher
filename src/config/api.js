@@ -29,6 +29,7 @@ if (process.env.NODE_ENV === 'production') {
     payquery:                           prefix + '/pay/query',                        // 微信支付后向node后端确认支付金额已经进入小金库
     orderpay:                           prefix + '/pay/mp/order/',                    // 向django下单要进行微信支付
     red_envelope_detail:                prefix + '/api/red/red_envelope_detail',      // 获取某个红包的详情
+    danmulist:                          prefix + '/v/api/danmu/list_danmu_v2',        // 弹幕列表
   }
 } else {
   api = {
@@ -50,6 +51,7 @@ if (process.env.NODE_ENV === 'production') {
     payquery:                           '/pay/query',                                   // 微信支付后向node后端确认支付金额已经进入小金库
     orderpay:                           '/pay/mp/order/',                               // 向django下单要进行微信支付
     red_envelope_detail:                '/static/mock/red_envelope_detail.json',        // 获取某个红包的详情
+    danmulist:                          '/static/mock/danmulist.json',                  // 弹幕列表
   }
 }
 

@@ -1,0 +1,22 @@
+{
+  "msg": "",
+  "data": {
+    "sender_list": [
+      {
+        "danmu_id": 461,
+        "message": "过低估计退出投屏退出投屏退出投屏退出投屏退出投屏退出投屏退出投屏退出投屏退出投屏退出投屏",
+        "user_id": 39,
+        "avatar": "http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "time": "2017-06-16 15:44"
+      },
+      {
+        "danmu_id": 460,
+        "message": "复合肥",
+        "user_id": 39,
+        "avatar": "http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "time": "2017-06-16 15:44"
+      }
+    ]
+  },
+  "success": true
+}
