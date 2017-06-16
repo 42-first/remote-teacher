@@ -31,6 +31,7 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:                prefix + '/api/red/red_envelope_detail',      // 获取某个红包的详情
     danmulist:                          prefix + '/v/api/danmu/list_danmu_v2',        // 弹幕列表
     submissionlist:                     prefix + '/v/api/tougao/teacher/list',        // 投稿列表
+    collectsubmission:                  prefix + '/v/api/tougao/collect',             // 收藏投稿
   }
 } else {
   api = {
@@ -54,6 +55,7 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:                '/static/mock/red_envelope_detail.json',        // 获取某个红包的详情
     danmulist:                          '/static/mock/danmulist.json',                  // 弹幕列表
     submissionlist:                     '/static/mock/submissionlist.json',             // 投稿列表
+    collectsubmission:                  '/static/mock/collectsubmission.json',          // 收藏投稿
   }
 }
 

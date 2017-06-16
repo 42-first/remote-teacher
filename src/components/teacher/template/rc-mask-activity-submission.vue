@@ -4,7 +4,7 @@
     <div class="gap"></div>
     <section class="list">
 
-      <div class="item-with-gap" v-for="item in submissionList" :key="item.id">
+      <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
         <div class="item">
           <div class="detail">
             <img :src="item.user_avatar" class="avatar" alt="">
@@ -17,7 +17,8 @@
           <div class="action-box">
             <div class="time f15">{{item.create_time.substring(11)}}</div>
             <div class="action f15">
-             <v-touch class="coll" v-on:tap="collectSubmission">收藏</v-touch>
+              <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">已收藏</v-touch>
+              <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">收藏</v-touch>
 
               <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">投屏</v-touch>
               <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
@@ -121,18 +122,21 @@
        * 收藏投稿
        *
        * @event bindtap
+       * @param {number, number, number} submissionid; index序号; status 0 将要取消收藏  1 将要收藏
        */
-      collectSubmission () {
+      collectSubmission (submissionid, index, status) {
         let self = this
+        let url = API.collectsubmission
 
-        let str = JSON.stringify({
-          'op': 'closemask',
-          'lessonid': self.lessonid,
-          'type': 'post',
-          'msgid': 1234
-        })
+        let postData = {
+          'tougao_id': submissionid
+        }
 
-        self.socket.send(str)
+        request.post(url, postData)
+          .then(jsonData => {
+            // 不需要判断success，在request模块中判断如果success为false，会直接reject
+            self.submissionList[index].is_collect = !!status
+          })
       },
     }
   }

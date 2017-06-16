@@ -3,14 +3,25 @@
   "msg": "",
   "data":{
     "tougao_list":[
-      {"create_time":"2016-07-14 13:12",
-      "id":345,
-      "content":"我是投稿我是投稿我是投稿我是投稿我是投稿",
-      "pic":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
-      "user_id":567,
-      "user_name":"用户名",
-      "user_avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
-      "is_collect":true
+      {
+        "create_time":"2016-07-14 13:12",
+        "id":345,
+        "content":"我是投稿我是投稿我是投稿我是投稿我是投稿",
+        "pic":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "user_id":567,
+        "user_name":"用户名",
+        "user_avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "is_collect":true
+      },
+      {
+        "create_time":"2016-07-14 13:12",
+        "id":345,
+        "content":"我是投稿我是投稿我是投稿我是投稿我是投稿",
+        "pic":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "user_id":567,
+        "user_name":"用户名",
+        "user_avatar":"http://wx.qlogo.cn/mmopen/vBfxXHReCpa1BWVHq3RWOJ1rQ5YLicww1f5o4v0ChBB1KQqiasF5v4icQGJNfmD7EHqRwsib16x0zZQaQWsWKpj46KstVNDn52be/0",
+        "is_collect":false
       }
     ],
     "direction": 1,
