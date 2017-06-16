@@ -17,7 +17,7 @@
           <div class="action-box">
             <div class="time f15">{{item.time.substring(11)}}</div>
             <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)">投屏</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id">退出投屏</v-touch>
+            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmmask">退出投屏</v-touch>
           </div>
         </div>
         <div class="gap"></div>
@@ -109,6 +109,23 @@
           'lessonid': self.lessonid,
           'danmu': message,
           'danmuid': danmuid,
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+      },
+      /**
+       * 退出弹幕投屏蒙版
+       *
+       * @event bindtap
+       */
+      closeDanmmask () {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'closemask',
+          'lessonid': self.lessonid,
+          'type': 'danmu',
           'msgid': 1234
         })
 

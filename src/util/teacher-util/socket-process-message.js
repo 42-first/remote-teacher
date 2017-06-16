@@ -186,7 +186,7 @@ function socketProcessMessage(msg){
   }
 
   // 弹幕投屏
-  if (msg.op == 'showndanmu') {
+  if (msg.op == 'danmushown') {
     self.postingDanmuid = msg.danmuid
     return
   }
@@ -259,15 +259,25 @@ function socketProcessMessage(msg){
     return
   }
 
-  // 点击随机点名继续上课的回执
-  if (msg.op == 'closedmask' && msg.type == 'call') {
-    self.setData({
-      isInitiativeCtrlMaskHidden: true
-    })
+  
+  if (msg.op == 'closedmask') {
+    // 点击随机点名继续上课的回执
+    if (msg.type == 'call') {
+      self.setData({
+        isInitiativeCtrlMaskHidden: true
+      })
 
-    // 通知第一层蒙版（即当前的随机点名）点击继续上课 回执成功
-    self.$refs.InitiativeCtrlMask.$emit('closedmask', msg)
-    return
+      // 通知第一层蒙版（即当前的随机点名）点击继续上课 回执成功
+      self.$refs.InitiativeCtrlMask.$emit('closedmask', msg)
+      return
+    }
+
+    // 退出弹幕投屏蒙版
+    if (msg.type == 'danmu') {
+      self.postingDanmuid = -1
+      return
+    }
+    
   }
 
   // 获取随机点名名单列表
