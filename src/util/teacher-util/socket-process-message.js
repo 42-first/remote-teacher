@@ -185,6 +185,12 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 弹幕投屏
+  if (msg.op == 'showndanmu') {
+    self.postingDanmuid = msg.danmuid
+    return
+  }
+
   //关于qrcode为99、101、102的分析详见tower记录
   //链接：https://tower.im/projects/1a3a5c7ea6ff4a109296d3c5039c9c19/docs/0c842a038c3f41648a25a169f6fd8e46/#6e559264aaeb4662ba74888c912ce019
   if (msg.op == 'qrcodezoomed') {

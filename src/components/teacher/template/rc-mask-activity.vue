@@ -52,6 +52,7 @@
       :lessonid="lessonid"
       :socket="socket"
       :is-danmu-open="isDanmuOpen"
+      :posting-danmuid="postingDanmuid"
       @closeDanmubox="closeDanmubox"
     ></RcMaskActivityDanmubox>
   </div>
@@ -71,7 +72,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid'],
     data () {
       return {
         participantList: [],            // 当前学生名单

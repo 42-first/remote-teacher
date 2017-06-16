@@ -16,8 +16,8 @@
           </div>
           <div class="action-box">
             <div class="time f15">{{item.time.substring(11)}}</div>
-            <v-touch class="f15" v-show="postingid !== item.danmu_id">投屏</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingid === item.danmu_id">退出投屏</v-touch>
+            <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)">投屏</v-touch>
+            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id">退出投屏</v-touch>
           </div>
         </div>
         <div class="gap"></div>
@@ -34,11 +34,10 @@
 
   export default {
     name: 'RcMaskActivityDanmubox',
-    props: ['lessonid', 'socket', 'isDanmuOpen'],
+    props: ['lessonid', 'socket', 'isDanmuOpen', 'postingDanmuid'],
     data () {
       return {
         danmuList: [],    // 弹幕列表
-        postingid: -1,    // 正在投屏的弹幕的id
       }
     },
     created () {
@@ -95,6 +94,25 @@
             // 设置试卷详情数据
             self.danmuList = jsonData.data.sender_list
           })
+      },
+      /**
+       * 投屏
+       *
+       * @event bindtap
+       * @param {number, string} danmuid message
+       */
+      postDanmu (danmuid, message) {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'showdanmu',
+          'lessonid': self.lessonid,
+          'danmu': message,
+          'danmuid': danmuid,
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
       },
     }
   }
