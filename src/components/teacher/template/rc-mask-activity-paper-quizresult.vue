@@ -41,6 +41,7 @@
     <RcMaskActivityPaperQuizresultDetail
       ref="RcMaskActivityPaperQuizresultDetail"
       v-show="!isQuizresultDetailHidden"
+      :quizid="quizid"
       @closeQuizresultDetail="closeQuizresultDetail"
     ></RcMaskActivityPaperQuizresultDetail>
   </div>
