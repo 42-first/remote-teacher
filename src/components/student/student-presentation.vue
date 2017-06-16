@@ -229,7 +229,7 @@
           // document.title = res[0].Title;
 
           if (process.env.NODE_ENV !== 'production') {
-            self.testTimeline();
+            // self.testTimeline();
           }
 
           setTimeout(()=>{
@@ -539,9 +539,6 @@
         let targetEl = event.target;
 
         this.isMore = false;
-        // if(!targetEl.classList.contains('J_more')) {
-        //   this.isMore = false;
-        // }
       },
 
       /*
@@ -560,7 +557,7 @@
     },
     updated() {
       console.log('updated');
-      window.language.translate(this.$el);
+      window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
     }

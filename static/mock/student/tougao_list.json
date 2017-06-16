@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "msg": "",
+  "data":{
+    "tougao_list":[
+      {"create_time":"2016-07-14 13:12",
+      "id":345,
+      "content":"我是投稿",
+      "pic":"1.jpg",
+      "user_id":567,
+      "user_name":"用户名",
+      "user_avatar":"2.jpg"
+      }
+    ],
+    "direction": 0,
+    "lesson_id":12,
+    "rest_num":99,
+    "response_num":1
+  }
+}
