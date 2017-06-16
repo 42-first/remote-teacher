@@ -7,13 +7,13 @@
  */
 
 <template>
-  <section class="page">
+  <section class="page" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
         <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
-        <div class="student__header--more" @click="handleMoreActions">
+        <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</p>
@@ -192,7 +192,12 @@
     watch: {
       '$route' (to, from) {
         // 对路由变化作出响应...
+        console.log(from.name);
         console.log(to.name);
+
+        // if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
+        //   typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
+        // }
       }
     },
     filters: {
@@ -527,6 +532,19 @@
       },
 
       /*
+       * @method 页面事件过滤
+       *
+       */
+      handleFilter() {
+        let targetEl = event.target;
+
+        this.isMore = false;
+        // if(!targetEl.classList.contains('J_more')) {
+        //   this.isMore = false;
+        // }
+      },
+
+      /*
        * @method 返回上一页
        *
        */
@@ -726,7 +744,7 @@
     line-height: .8rem;
     text-align: center;
     color: #fff;
-    background: #9b9b9b;
+    background: rgba(155, 155, 155, 0.75);
     border-radius: .4rem/50%;
   }
 

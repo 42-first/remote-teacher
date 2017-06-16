@@ -416,7 +416,14 @@
                 clearInterval(self.timer);
                 this.sLeaveTime = '已完成';
 
-                self.$router.back();
+                this.$toast({
+                  message: '提交成功',
+                  duration: 2000
+                });
+
+                setTimeout(() => {
+                  self.$router.back();
+                }, 2000)
 
                 return data;
               }

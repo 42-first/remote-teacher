@@ -48,13 +48,19 @@ var mixin = {
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
-          clearInterval(self.xintiaoTimer);
-
-          if(!self.isResetSocket) {
-            setTimeout(() => {
-              self.reconnect();
-            }, 1000)
+          // 先尝试连接两次
+          if(self.reconnectcount > 1) {
+            if(!self.isResetSocket) {
+              setTimeout(() => {
+                self.reconnect();
+              }, 1000)
+            }
+          } else {
+            self.reconnectcount++;
+            this.initws(true);
           }
+
+          clearInterval(self.xintiaoTimer);
         }
 
         // 接收socket信息

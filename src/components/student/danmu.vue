@@ -83,7 +83,7 @@
         if(newValue === 2) {
           this.submitText = '正在发送';
         } else if(newValue === 3) {
-          this.submitText = '发送完成';
+          this.submitText = '发送成功';
         }
       }
     },
@@ -111,9 +111,14 @@
             if(res) {
               // 弹幕返回数据结构 danmuID success
               let data = res;
+              self.sendStatus = 3;
+
+              self.$toast({
+                message: '发送成功',
+                duration: 2000
+              });
 
               setTimeout(() => {
-                self.sendStatus = 3;
                 self.handleBack();
               }, 2000)
 
@@ -124,11 +129,6 @@
                 danmuid: data.danmuID,
                 danmu: message
               }));
-
-              self.$toast({
-                message: '发送成功',
-                duration: 3000
-              });
 
               return data;
             }
@@ -171,7 +171,7 @@
   }
 
   .page-danmu {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     top: 0;
     left: 0;

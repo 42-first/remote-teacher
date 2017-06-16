@@ -220,6 +220,7 @@
 
       color: #FFE595;
       background-image: url('http://sfe.ykt.io/o_1bhriotgh176ansqjom1kelmdfe.png');
+      background-size: 100% 100%;
     }
 
     .hongbao__title {
