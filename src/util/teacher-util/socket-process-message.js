@@ -46,7 +46,7 @@ function socketProcessMessage(msg){
     })
 
     // 初始化弹幕按钮
-    // msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
+    msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
     
     // TODO 初次联通，node有时会丢失msg.presentation
     self.setData({

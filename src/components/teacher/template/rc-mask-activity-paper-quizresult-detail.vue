@@ -75,7 +75,6 @@
 
         request.get(url)
           .then(jsonData => {
-            console.log('quiz_results_detail', jsonData)
             self.quizResultDetailData = jsonData.data
           })
       },

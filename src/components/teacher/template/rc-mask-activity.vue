@@ -17,13 +17,13 @@
         <i class="iconfont icon-forward f20"></i>
       </div>
     </v-touch>
-    <div class="activity-item f18">
+    <v-touch class="activity-item f18" v-on:tap="showDanmubox">
       <div>弹幕</div>
       <div>
-        已开启
+        <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
         <i class="iconfont icon-forward f20"></i>
       </div>
-    </div>
+    </v-touch>
     <div class="activity-item f18">
       <div>投稿</div>
       <div>
@@ -45,6 +45,15 @@
       :socket="socket"
       @closePaper="closePaper"
     ></RcMaskActivityPaper>
+
+    <RcMaskActivityDanmubox
+      ref="RcMaskActivityDanmu"
+      v-show="!isDanmuboxHidden"
+      :lessonid="lessonid"
+      :socket="socket"
+      :is-danmu-open="isDanmuOpen"
+      @closeDanmubox="closeDanmubox"
+    ></RcMaskActivityDanmubox>
   </div>
 </template>
 
@@ -56,22 +65,26 @@
   import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
   // 试卷列表
   import RcMaskActivityPaper from '@/components/teacher/template/rc-mask-activity-paper'
+  // 弹幕控制页面
+  import RcMaskActivityDanmubox from '@/components/teacher/template/rc-mask-activity-danmubox'
 
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen'],
     data () {
       return {
         participantList: [],            // 当前学生名单
         avatarList: [],                 // 头像列表，最多取10个
         isParticipantlistHidden: true,  // 全部人员名单隐藏
         isPaperHidden: true,            // 试卷列表隐藏
+        isDanmuboxHidden: true,         // 弹幕控制页面隐藏
       }
     },
     components: {
       RcMaskActivityParticipantlist,
-      RcMaskActivityPaper
+      RcMaskActivityPaper,
+      RcMaskActivityDanmubox
     },
     created () {
       let self = this
@@ -132,6 +145,17 @@
         self.$refs.RcMaskActivityPaper.$emit('showPaper')
       },
       /**
+       * 点击 弹幕 按钮展示弹幕控制
+       *
+       * @event bindtap
+       */
+      showDanmubox () {
+        let self = this
+        self.isDanmuboxHidden = false
+
+        self.$refs.RcMaskActivityDanmu.$emit('showDanmubox')
+      },
+      /**
        * 点击 返回 按钮关闭试卷列表
        *
        * @event bindtap
@@ -139,6 +163,15 @@
       closePaper () {
         let self = this
         self.isPaperHidden = true
+      },
+      /**
+       * 点击 返回 返回课堂动态
+       *
+       * @event bindtap
+       */
+      closeDanmubox () {
+        let self = this
+        self.isDanmuboxHidden = true
       },
     }
   }
