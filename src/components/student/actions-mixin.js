@@ -61,8 +61,8 @@ var actionsMixin = {
     */
     addMessage(data) {
       // 是否含有重复数据
-      let hasEvent = this.cards.find((item)=>{
-        return item.type === 1 && item.message === data.message && item.time === data.time;
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 1 && item.message === data.message;
       })
 
       !hasEvent && this.cards.push(data);
@@ -99,7 +99,7 @@ var actionsMixin = {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
       } else {
-        // todo: 预加载图片
+        // 预加载图片
         let oImg = new Image();
         oImg.onload = (evt) => {
           if(index !== -1) {
@@ -111,9 +111,8 @@ var actionsMixin = {
         oImg.src = slideData['Cover'];
 
         // 缓存中
-        if(oImg.complete || oImg.width) {
-        } else {
-        }
+        // if(oImg.complete || oImg.width) {
+        // }
 
         data = Object.assign(data, {
           src: slideData['Thumbnail'],

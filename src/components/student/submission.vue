@@ -31,7 +31,9 @@
         </div>
       </section>
 
-      <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 3 ? 'disable': '']" @click="handleSend">确认发送</section>
+      <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus === 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
+
+      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine f15">查看我的投稿</router-link>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
@@ -91,8 +93,9 @@
         index: 0,
         opacity: 0,
         title: '投稿',
-        // 0 初始化状态 1可以发送 2发送中 3发送完成
+        // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成
         sendStatus: 0,
+        submitText: '确认发送',
         text: '',
         imageURL: '',
         hasImage: false,
@@ -130,16 +133,18 @@
         this.text = value;
 
         if(this.count) {
-          this.sendStatus = 1;
+          this.sendStatus = 2;
         } else {
           this.sendStatus = 0;
         }
       },
       sendStatus(newValue, oldValue) {
-        if(newValue === 2) {
+        if(newValue === 3) {
           this.submitText = '正在发送';
-        } else if(newValue === 3) {
-          this.submitText = '发送完成';
+        } else if(newValue === 1) {
+          this.submitText = '图片上传中';
+        } else if(newValue === 4) {
+          this.submitText = '发送成功';
         }
       }
     },
@@ -150,16 +155,6 @@
     },
     mixins: [],
     methods: {
-      init(){
-        wx.config({
-          debug: true,
-          appId: 'wx025cddf4e326abb7',
-          timestamp: '1496904200',
-          nonceStr: '7ku72mub2ch5xxe',
-          signature: 'b4b003b2400a99e370beaab84d6025aceecb0b12',
-          jsApiList: [ 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType',  'scanQRCode' ]
-         });
-      },
       /*
       * @method 发送投稿
       * @param
@@ -167,7 +162,6 @@
       sendSubmission() {
         let self = this;
         let URL = API.student.SEND_SUBMISSION;
-        let socket = this.$parent.socket;
         const content = this.text.replace(/^\s+|\s+$/g, '');
         let params = {
           'content': content,
@@ -176,21 +170,21 @@
         }
 
         // 发送中
-        this.sendStatus = 2;
+        this.sendStatus = 3;
 
         return request.post(URL, params)
           .then(function (res) {
             if(res) {
               let data = res;
+              self.sendStatus = 4;
 
               setTimeout(() => {
-                self.sendStatus = 3;
                 self.handleBack();
-              }, 3000)
+              }, 2000)
 
               self.$toast({
                 message: '发送成功',
-                duration: 3000
+                duration: 2000
               });
 
               return data;
@@ -213,17 +207,14 @@
         params['pic_data'] = sBase64;
         params['pic_type'] = picType;
 
+        this.sendStatus = 1;
         return request.post(URL, params)
           .then(function (res) {
             if(res && res.data) {
               let data = res.data;
 
               self.imageURL = data.pic_url;
-              console.log(self.imageURL);
-
-              if(self.sendStatus === 0) {
-                self.sendStatus = 1;
-              }
+              self.sendStatus = 2;
 
               return self.imageURL;
             }
@@ -276,10 +267,11 @@
         this.$messagebox.confirm('确定删除图片?').then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
+            self.imageURL = '';
+
+            !self.text && (self.sendStatus = 0);
           }
         });
-
-        // this.hasImage = false;
       },
       handleScaleImage() {
         let targetEl = event.target;
@@ -331,7 +323,7 @@
         gallery.init();
       },
       handleSend() {
-         this.sendStatus === 1 && this.sendSubmission();
+         this.sendStatus === 2 && this.sendSubmission();
       },
       handleBack() {
         this.$router.back();
@@ -361,7 +353,7 @@
   }
 
   .page-submission {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     top: 0;
     left: 0;
@@ -502,7 +494,7 @@
   }
 
   .submission__submit {
-    margin: 0.68rem auto 1.333333rem;
+    margin: 0.68rem auto 0.533333rem;
     width: 7.733333rem;
     height: 1.173333rem;
     line-height: 1.173333rem;
@@ -545,5 +537,3 @@
 
 
 </style>
-
-

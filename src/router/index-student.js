@@ -13,6 +13,7 @@ import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
 import Exercise from '@/components/student/exercise'
 import Submission from '@/components/student/submission'
+import SubmissionList from '@/components/student/submission-list'
 import Danmu from '@/components/student/danmu'
 
 // 国际化
@@ -34,6 +35,9 @@ document.addEventListener('touchstart', function(){},false);
 export default new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/student' : '/',
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
+  // scrollBehavior (to, from, savedPosition) {
+  //   return { x: 0, y: 0 }
+  // },
   routes: [
     {
       path: '/',
@@ -49,18 +53,27 @@ export default new Router({
           // 当 /:hongbao/ppt 匹配成功，
           // hongbao 会被渲染在 User 的 <router-view> 中
           path: 'hongbao/:index',
+          name: 'student-hongbao-page',
           component: HongBao
         },
         {
           path: 'exercise/:index',
+          name: 'student-exercise-page',
           component: Exercise
         },
         {
           path: 'submission',
+          name: 'student-submission-page',
           component: Submission
         },
         {
+          path: 'submission_list',
+          name: 'student-submissionlist-page',
+          component: SubmissionList
+        },
+        {
           path: 'danmu',
+          name: 'student-danmu-page',
           component: Danmu
         }
       ]

@@ -281,7 +281,7 @@
 
     text-align: center;
     color: #fff;
-    background: #9B9B9B;
+    background: rgba(155, 155, 155, 0.75);
 
     border-radius: 0.4rem/50%;
   }
