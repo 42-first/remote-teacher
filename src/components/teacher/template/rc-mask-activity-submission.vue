@@ -1,30 +1,34 @@
-<!-- 弹幕控制页面 被父组件 rc-mask-activity.vue 引用 -->
+<!-- 投稿控制页面 被父组件 rc-mask-activity.vue 引用 -->
 <template>
-	<div class="danmu-box allowscrollcallback">
-    <div class="desc f20">
-      <span>弹幕</span>
-      <v-touch  tag="i" :class="['iconfont', 'f40', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
-    </div>
+	<div class="submission-box allowscrollcallback">
     <div class="gap"></div>
     <section class="list">
 
-      <div class="item-with-gap" v-for="item in danmuList" :key="item.danmu_id">
+      <div class="item-with-gap" v-for="item in submissionList" :key="item.id">
         <div class="item">
           <div class="detail">
-            <img :src="item.avatar" alt="">
-            <div class="danmu f18">{{item.message}}</div>
+            <img :src="item.user_avatar" class="avatar" alt="">
+            <div class="cont f18">
+              <span class="author f15">{{item.user_name}}</span><br>
+              {{item.content}}<br>
+              <img :src="item.pic" class="pic" alt="">
+            </div>
           </div>
           <div class="action-box">
-            <div class="time f15">{{item.time.substring(11)}}</div>
-            <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)">投屏</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
+            <div class="time f15">{{item.create_time.substring(11)}}</div>
+            <div class="action f15">
+             <v-touch class="coll" v-on:tap="collectSubmission">收藏</v-touch>
+
+              <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">投屏</v-touch>
+              <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
+            </div>
           </div>
         </div>
         <div class="gap"></div>
       </div>
 
     </section>
-    <v-touch class="back-btn f18" v-on:tap="closeDanmubox">返回</v-touch>
+    <v-touch class="back-btn f18" v-on:tap="closeSubmissionbox">返回</v-touch>
   </div>
 </template>
 
@@ -33,20 +37,20 @@
   import API from '@/config/api'
 
   export default {
-    name: 'RcMaskActivityDanmubox',
-    props: ['lessonid', 'socket', 'isDanmuOpen', 'postingDanmuid'],
+    name: 'RcMaskActivitySubmission',
+    props: ['lessonid', 'socket', 'postingSubmissionid'],
     data () {
       return {
-        danmuList: [],    // 弹幕列表
+        submissionList: [],    // 投稿列表
       }
     },
     created () {
       let self = this
 
 
-      // 父组件点击 弹幕 按钮时发送事件给本子组件
-      self.$on('showDanmubox', function (msg) {
-        self.refreshDanmulist()
+      // 父组件点击 投稿 按钮时发送事件给本子组件
+      self.$on('showSubmission', function (msg) {
+        self.refreshSubmissionlist()
       })
     },
     methods: {
@@ -55,78 +59,76 @@
        *
        * @event bindtap
        */
-      closeDanmubox () {
-        this.$emit('closeDanmubox')
-        this.closeDanmumask()
-      },
-      /**
-       * 点击弹幕按钮，设置是否允许弹幕
-       *
-       * @event bindtap
-       */
-      setDanmuStatus () {
-        let self = this
-        let op = self.isDanmuOpen ? 'turnoffdanmu' : 'turnondanmu'
-        let desc = self.isDanmuOpen ? '关闭' : '开启'
-        let str = JSON.stringify({
-          'op': op,
-          'lessonid': self.lessonid,
-          'event': {
-            'type': 'event',
-            'title': '老师已' + desc + '弹幕',
-            'dt': (new Date()).getTime()  //Datetime 时间戳
-          }
-        })
-
-        self.socket.send(str)
+      closeSubmissionbox () {
+        this.$emit('closeSubmissionbox')
+        this.closeSubmissionmask()
       },
       /**
        * 更新试题详情的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
        *
        */
-      refreshDanmulist(){
+      refreshSubmissionlist(){
         let self = this
-        let url = API.danmulist
+        let url = API.submissionlist
 
         // 单次刷新
-        request.get(url, {lesson_id: self.lessonid})
-          .then(jsonData => {
+        request.get(url, {
+          'lesson_id': self.lessonid,
+          'count': 100,
+          'direction': 1
+        }).then(jsonData => {
             // 设置试卷详情数据
-            self.danmuList = jsonData.data.sender_list
+            self.submissionList = jsonData.data.tougao_list
           })
       },
       /**
        * 投屏
        *
        * @event bindtap
-       * @param {number, string} danmuid message
+       * @param {number} submissionid
        */
-      postDanmu (danmuid, message) {
+      postSubmission (submissionid) {
         let self = this
 
         let str = JSON.stringify({
-          'op': 'showdanmu',
+          'op': 'showpost',
           'lessonid': self.lessonid,
-          'danmu': message,
-          'danmuid': danmuid,
+          'postid': submissionid,
           'msgid': 1234
         })
 
         self.socket.send(str)
       },
       /**
-       * 退出弹幕投屏蒙版
+       * 退出投稿投屏蒙版
        *
        * @event bindtap
        */
-      closeDanmumask () {
+      closeSubmissionmask () {
         let self = this
 
         let str = JSON.stringify({
           'op': 'closemask',
           'lessonid': self.lessonid,
-          'type': 'danmu',
+          'type': 'post',
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+      },
+      /**
+       * 收藏投稿
+       *
+       * @event bindtap
+       */
+      collectSubmission () {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'closemask',
+          'lessonid': self.lessonid,
+          'type': 'post',
           'msgid': 1234
         })
 
@@ -138,7 +140,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
-  .danmu-box {
+  .submission-box {
     position: absolute;
     z-index: 20; /* 遮盖toolbar */
     left: 0;
@@ -149,24 +151,6 @@
     color: #4A4A4A;
     overflow: auto;
 
-    .desc {
-      padding: 0 0.4rem;
-      height: 1.466667rem;
-      line-height: 1.466667rem;
-      
-      span {
-        color: $blue;
-      }
-
-      .iconfont {
-        float: right;
-        margin-top: 0.1rem;
-        vertical-align: middle;
-      }
-      .icon-danmu-open {
-        color: $blue;
-      }
-    }
 
     .gap {
       height: 0.266667rem;
@@ -180,18 +164,25 @@
 
         .detail {
           display: flex;
-          align-items: center;
           margin-bottom: 0.4rem;
           padding-top: 0.266667rem;
 
-          img {
+          .avatar {
             margin-right: 0.4rem;
             width: 0.986667rem;
             height: 0.986667rem;
             border-radius: 50%;
           }
-          .danmu {
+          .cont {
             flex: 1;
+
+            .author {
+              color: $blue;
+            }
+
+            .pic {
+              width: 100%;
+            }
           }
         }
 
@@ -204,6 +195,16 @@
 
           .time {
             color: #9B9B9B;
+          }
+
+          .action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .coll {
+              margin-right: 0.666667rem;
+            }
           }
           .cancel-post-btn {
             background: $blue;
