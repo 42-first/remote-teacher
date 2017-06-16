@@ -44,6 +44,7 @@
       v-show="!isQuizresultHidden"
       :lessonid="lessonid"
       :socket="socket"
+      @closeQuizresult="closeQuizresult"
     ></RcMaskActivityPaperQuizresult>
   </div>
 </template>
@@ -175,9 +176,8 @@
           'paperID': self.paperChosen.id
         }
 
-        request.post(API.publish_lesson_paper, postData)
+        request.post(url, postData)
           .then(jsonData => {
-            console.log('publish_lesson_paper', jsonData)
             // TODO
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
             //维护试题列表的发布记录
@@ -212,6 +212,15 @@
 
         self.isQuizresultHidden = false
         self.$refs.RcMaskActivityPaperQuizresult.$emit('showQuizResult', quizid)
+      },
+      /**
+       * 点击关闭试卷结果饼图页的按钮
+       *
+       */
+      closeQuizresult () {
+        let self = this
+
+        self.isQuizresultHidden = true
       },
     }
   }

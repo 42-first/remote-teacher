@@ -22,9 +22,9 @@
 
     <!-- 下方按钮 -->
     <section class="group-btns">
-      <v-touch class="btn-item" v-on:tap="tapRedpacketHandler">
+      <v-touch class="btn-item" v-on:tap="collectQuiz">
         <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
-        <div class="btn-desc f15">收卷</div>
+        <div class="btn-desc f15">收卷文案TODO</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="postQuizresult">
@@ -113,25 +113,58 @@
       closeQuizresult () {
         let self = this
 
-        self.endTimers()
+        // self.endTimers()
 
         let str = JSON.stringify({
           'op': 'closequizresult',
-          'lessonid': self.data.lessonid,
-          'quizid': QUIZID
+          'lessonid': self.lessonid,
+          'quizid': self.quizid
         })
 
-        wx.sendSocketMessage({
-          data: str
-        })
-
-        this.setData({
-          isQuizResultHidden: true,
-          paperTimePassed: '--:--'
-        })
+        self.socket.send(str)
+        // TODO
+        // paperTimePassed = '--:--'
+        self.$emit('closeQuizresult')
       },
       /**
-       * 试题柱状图页面中的 投屏 按钮
+       * 收卷
+       *
+       * @event bindtap
+       */
+      collectQuiz () {
+        let self = this
+        let url = API.quiz_finish
+
+        let postData = {
+          'quizID': self.quizid
+        }
+
+        request.post(url, postData)
+          .then(jsonData => {
+            console.log('quiz_finish', jsonData)
+            // 不需要判断success，在request模块中判断如果success为false，会直接reject
+            let data = DATA.data
+
+            let str = JSON.stringify({
+              'op': 'quizfinished',
+              'lessonid': self.lessonid,
+              'quizid': self.quizid,
+              'title': jsonData.title
+            })
+
+            self.socket.send(str)
+
+            // TODO
+            // self.endTimers()
+            // self.setData({
+            //   isPaperCollected: true
+            // })
+            //记录已经收卷的quizID
+            // finishedQuizList['id'+QUIZID] = true
+          })
+      },
+      /**
+       * 公布至屏幕
        *
        * @event bindtap
        */
@@ -139,9 +172,9 @@
         let self = this
 
         let str = JSON.stringify({
-          'op': 'postproblemresult',
+          'op': 'postquizresult',
           'lessonid': self.lessonid,
-          'problemid': self.problemid
+          'quizid': self.quizid
         })
 
         self.socket.send(str)
@@ -166,25 +199,6 @@
         let self = this
 
         self.isQuizresultDetailHidden = true
-      },
-      
-      /**
-       * 在柱状图页面中点击按钮显示设置红包页面
-       * 被 rc-mask-problemresult.vue 引用
-       *
-       * @event bindtap
-       */
-      tapRedpacketHandler () {
-        let self = this
-
-        let REDID = self.problemResultData.RedEnvelopeID
-        let PROBLEMID = self.problemResultData.problemID
-
-        if (!REDID) {
-          self.showRedpacket()
-        } else {
-          self.showRedpacketList()
-        }
       },
     }
   }
