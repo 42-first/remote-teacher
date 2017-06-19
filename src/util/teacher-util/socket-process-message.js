@@ -191,6 +191,12 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 投稿投屏
+  if (msg.op == 'postshown') {
+    self.postingSubmissionid = msg.postid
+    return
+  }
+
   //关于qrcode为99、101、102的分析详见tower记录
   //链接：https://tower.im/projects/1a3a5c7ea6ff4a109296d3c5039c9c19/docs/0c842a038c3f41648a25a169f6fd8e46/#6e559264aaeb4662ba74888c912ce019
   if (msg.op == 'qrcodezoomed') {
@@ -275,6 +281,12 @@ function socketProcessMessage(msg){
     // 退出弹幕投屏蒙版
     if (msg.type == 'danmu') {
       self.postingDanmuid = -1
+      return
+    }
+
+    // 退出投稿投屏蒙版
+    if (msg.type == 'post') {
+      self.postingSubmissionid = -1
       return
     }
     

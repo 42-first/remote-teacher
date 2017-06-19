@@ -24,13 +24,13 @@
         <i class="iconfont icon-forward f20"></i>
       </div>
     </v-touch>
-    <div class="activity-item f18">
+    <v-touch class="activity-item f18" v-on:tap="showSubmission">
       <div>投稿</div>
       <div>
-        55
+        TODO
         <i class="iconfont icon-forward f20"></i>
       </div>
-    </div>
+    </v-touch>
 
     <RcMaskActivityParticipantlist
       v-show="!isParticipantlistHidden"
@@ -47,7 +47,7 @@
     ></RcMaskActivityPaper>
 
     <RcMaskActivityDanmubox
-      ref="RcMaskActivityDanmu"
+      ref="RcMaskActivityDanmubox"
       v-show="!isDanmuboxHidden"
       :lessonid="lessonid"
       :socket="socket"
@@ -55,6 +55,15 @@
       :posting-danmuid="postingDanmuid"
       @closeDanmubox="closeDanmubox"
     ></RcMaskActivityDanmubox>
+
+    <RcMaskActivitySubmission
+      ref="RcMaskActivitySubmission"
+      v-show="!isSubmissionHidden"
+      :lessonid="lessonid"
+      :socket="socket"
+      :posting-submissionid="postingSubmissionid"
+      @closeSubmissionbox="closeSubmissionbox"
+    ></RcMaskActivitySubmission>
   </div>
 </template>
 
@@ -68,11 +77,13 @@
   import RcMaskActivityPaper from '@/components/teacher/template/rc-mask-activity-paper'
   // 弹幕控制页面
   import RcMaskActivityDanmubox from '@/components/teacher/template/rc-mask-activity-danmubox'
+  // 投稿控制页面
+  import RcMaskActivitySubmission from '@/components/teacher/template/rc-mask-activity-submission'
 
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -80,12 +91,14 @@
         isParticipantlistHidden: true,  // 全部人员名单隐藏
         isPaperHidden: true,            // 试卷列表隐藏
         isDanmuboxHidden: true,         // 弹幕控制页面隐藏
+        isSubmissionHidden: true,       // 投稿控制页面隐藏
       }
     },
     components: {
       RcMaskActivityParticipantlist,
       RcMaskActivityPaper,
-      RcMaskActivityDanmubox
+      RcMaskActivityDanmubox,
+      RcMaskActivitySubmission
     },
     created () {
       let self = this
@@ -154,7 +167,18 @@
         let self = this
         self.isDanmuboxHidden = false
 
-        self.$refs.RcMaskActivityDanmu.$emit('showDanmubox')
+        self.$refs.RcMaskActivityDanmubox.$emit('showDanmubox')
+      },
+      /**
+       * 点击 投稿 按钮展示投稿控制
+       *
+       * @event bindtap
+       */
+      showSubmission () {
+        let self = this
+        self.isSubmissionHidden = false
+
+        self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
       },
       /**
        * 点击 返回 按钮关闭试卷列表
@@ -173,6 +197,15 @@
       closeDanmubox () {
         let self = this
         self.isDanmuboxHidden = true
+      },
+      /**
+       * 点击 返回 返回课堂动态
+       *
+       * @event bindtap
+       */
+      closeSubmissionbox () {
+        let self = this
+        self.isSubmissionHidden = true
       },
     }
   }

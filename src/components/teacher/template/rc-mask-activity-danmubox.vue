@@ -17,7 +17,7 @@
           <div class="action-box">
             <div class="time f15">{{item.time.substring(11)}}</div>
             <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)">投屏</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmmask">退出投屏</v-touch>
+            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
           </div>
         </div>
         <div class="gap"></div>
@@ -57,6 +57,7 @@
        */
       closeDanmubox () {
         this.$emit('closeDanmubox')
+        this.closeDanmumask()
       },
       /**
        * 点击弹幕按钮，设置是否允许弹幕
@@ -119,7 +120,7 @@
        *
        * @event bindtap
        */
-      closeDanmmask () {
+      closeDanmumask () {
         let self = this
 
         let str = JSON.stringify({
@@ -173,6 +174,7 @@
     }
 
     .list {
+      padding-bottom: 1.466667rem;
       .item {
         padding: 0 0.4rem;
 
