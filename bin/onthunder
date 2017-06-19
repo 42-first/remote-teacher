@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+// rsync -avz /Users/liujunyang/henry/work/rainvue/static/ bl:/home/bl_deploy/vue_static
+var process = require('child_process');
+var staticPath = __dirname.replace('bin', 'dist/');
+var order = 'rsync -avz '+ staticPath +' thunder:/home/thunder/frontend/thunder/vue_lesson';
+process.exec(order,
+  function (error, stdout, stderr) {
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
+
