@@ -13,7 +13,7 @@
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
-        <span class="ppt--pageno f14" :data-language-complex='{"key":"pageIndex","values":[item.pageIndex]}'>第{{ item.pageIndex }}页</span>
+        <span class="ppt--pageno f14" data-language-complex="student-pageIndex" :data-page-index="item.pageIndex">第{{ item.pageIndex }}页</span>
         <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height)">
         </div>
@@ -33,7 +33,7 @@
           <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.papername }}</p>
-              <p class="paper-count" :data-language-complex='{"key":"quizCount","values":[item.count]}'>共{{ item.count }}题</p>
+              <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
             </div>
             <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
@@ -73,7 +73,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" :data-language-complex='{"key":"problemIndex","values":[item.pageIndex]}'>第{{ item.pageIndex }}题</p>
+              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}题</p>
             </div>
             <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">

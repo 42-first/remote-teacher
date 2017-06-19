@@ -12,6 +12,11 @@ let pages = {
     '未完成': 'uncomplete',
     '已完成': 'complete'
   },
+  'complex': {
+    'pageIndex': 'the $pageIndex$ page',
+    'quizCount': 'A total of two $quizCount$ questions',
+    'problemIndex': 'the $problemIndex$ questions'
+  },
   // 学生遥控器
   'student': {
     'nav': {
