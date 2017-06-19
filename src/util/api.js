@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
             // 我的投稿列表
             'GET_SUBMISSION_LIST': '/v/api/tougao/student/list',
             // 删除投稿
-            'DELETE_SUBMISSION': 'v/api/tougao/delete',
+            'DELETE_SUBMISSION': '/v/api/tougao/delete',
             // 上传图片
             'UPLOAD_PIC': '/v/api/tougao/pic_upload'
         }

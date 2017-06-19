@@ -33,7 +33,7 @@
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus === 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
-      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine f15">查看我的投稿</router-link>
+      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">查看我的投稿</router-link>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
@@ -143,7 +143,9 @@
           this.submitText = '正在发送';
         } else if(newValue === 1) {
           this.submitText = '图片上传中';
-        } else if(newValue === 4) {
+        } else if(newValue === 2) {
+          this.submitText = '确认发送';
+        }else if(newValue === 4) {
           this.submitText = '发送成功';
         }
       }

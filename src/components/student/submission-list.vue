@@ -12,7 +12,7 @@
       <!-- header 批量操作 删除等 -->
       <section class="header ">
         <div class="header-inner f16">
-          <input class="selected-box" type="checkbox" /><span v-if="selectedCount">{{ selectedCount }}</span>
+          <input class="selected-box" type="checkbox" disabled /><span v-if="selectedCount">{{ selectedCount }}</span>
           <p class="action" v-show="!canSelect" @click="handleSetSelected">批量操作</p>
           <p class="action delete" v-show="canSelect" @click="handleDelete">删除</p>
         </div>
@@ -21,33 +21,72 @@
       <!-- 我的投稿列表 -->
       <section class="submission-mine">
         <ul class="submission-list">
-          <li class="item">
+          <li class="item" v-for="(item, index) in submissionlist">
             <!-- 选择控件 -->
-            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" @change="handleSelect" data-id="1" /></div>
+            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" @change="handleSelect" :data-id="item.id" /></div>
 
             <!-- 投稿时间 -->
             <div class="item-date">
               <p class="">
-                <span class="date-day f25">{{ 1497604731249|formatTime('DD') }}</span>
-                <span class="date-month f14">{{ 1497604731249|formatTime('MM月') }}</span>
+                <span class="date-day f25">{{ item.create_time|formatTime('DD') }}</span>
+                <span class="date-month f14">{{ item.create_time|formatTime('MM月') }}</span>
               </p>
-              <p class="date-time f14">{{ 1497604731249|formatTime('HH:mm') }}</p>
+              <p class="date-time f14">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
 
             <!-- 投稿内容 -->
             <div class="item-content">
-              <p class="f15">这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符，这里全部显示。一二三一二三这里是文字描述</p>
-              <img class="item-image" src="http://sfe.ykt.io/o_1binunron17essoc1jq21km2cp09.jpeg" alt="" />
+              <p class="f15">{{ item.content }}</p>
+              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic" alt="" />
             </div>
           </li>
         </ul>
       </section>
 
     </div>
+
+    <!-- 图片放大结构 -->
+    <section class="pswp J_submissionlist_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+      <div class="pswp__bg"></div>
+
+      <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+
+          <div class="pswp__top-bar">
+
+            <div class="pswp__counter"></div>
+
+              <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+      </div>
+
+    </section>
   </section>
 </template>
 <script>
   import API from '@/util/Api'
+  import moment from 'moment'
 
   export default {
     name: 'submission-page',
@@ -58,7 +97,8 @@
         selectedCount: 0,
         submissionlist: null,
         canSelect: false,
-        aIDs: []
+        optionsSet: new Set(),
+        scaleImages: []
       };
     },
     components: {
@@ -81,9 +121,10 @@
         let self = this;
         let URL = API.student.GET_SUBMISSION_LIST;
         let params = {
+          'start': 0,
           'count': 100,
           'lesson_id': this.lessonID,
-          'direction': 1
+          'direction': 0
         }
 
         return request.get(URL, params)
@@ -91,7 +132,7 @@
             if(res && res.data) {
               let data = res.data;
 
-              self.submissionlist = data.tougao_list;
+              self.submissionlist = data.tougou_list;
               return data;
             }
           });
@@ -111,6 +152,19 @@
         return request.post(URL, params)
           .then(function (res) {
             if(res) {
+              // 删除成功后 将列表数据更新
+              let data = [];
+              self.selectedCount--;
+
+              self.submissionlist.forEach( (submission) => {
+                // statements
+                if(submission.id !== id) {
+                  data.push(submission);
+                }
+              });
+
+              self.submissionlist = data;
+
               return res;
             }
           });
@@ -119,22 +173,28 @@
       handlelaodImg() {
         let target = event.target;
 
-        this.width = target.naturalWidth || target.width;
-        this.height = target.naturalHeight || target.width;
+        let width = target.naturalWidth || target.width;
+        let height = target.naturalHeight || target.width;
 
         this.rate = this.width/this.height;
+
+        this.scaleImages.push({ src: target.src, w: width || 750, h: height || 520 });
       },
+
       handleScaleImage() {
         let targetEl = event.target;
-        let pswpElement = this.$el.querySelector('.J_submission_pswp');
+        let pswpElement = this.$el.querySelector('.J_submissionlist_pswp');
         let index = 0;
-        let items = [];
+        let items = this.scaleImages;
 
-        // build items array
-        items.unshift({ src: this.imageData, w: this.width || 750, h: this.height || 520 });
+        items.forEach( function(element, i) {
+          if(element.src === targetEl.src){
+            index = i;
+          }
+        });
 
         let options = {
-          index: 0,
+          index: index,
           maxSpreadZoom: 5,
           showAnimationDuration: 300,
           hideAnimationDuration: 300,
@@ -180,6 +240,13 @@
       */
       handleDelete() {
         // 批量删除
+        let options = [...this.optionsSet];
+
+        if(options.length) {
+          options.forEach( (id, index) => {
+            this.deleteSubmission(+id);
+          });
+        }
       },
 
       /*
@@ -188,22 +255,27 @@
       */
       handleSelect() {
         let target = event.target;
+        let id = target.dataset.id;
 
         if(target.checked) {
           this.selectedCount++;
-          this.aIDs.push(target.dataset.id);
+          this.optionsSet.add(id);
         } else {
           this.selectedCount--;
 
-          // 删除
+          this.optionsSet.has(id) && this.optionsSet.delete(id);
         }
       },
+
       /*
       * @method 批量设置
       * @param
       */
       handleSetSelected() {
         this.canSelect = true;
+      },
+      handleResize() {
+
       },
       handleBack() {
         this.$router.back();
@@ -212,22 +284,18 @@
     created() {
       this.lessonID = +this.$route.params.lessonID;
       this.getMySubmission();
+
+      window.addEventListener('resize', this.handleResize);
     },
     mounted() {
     },
     beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize);
     }
   };
 </script>
 
 <style lang="scss">
-  .page-wrapper {
-    will-change: opacity;
-    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    cursor: zoom-in;
-  }
-
   .page-submissionlist {
     z-index: 1;
     position: fixed;
@@ -236,10 +304,20 @@
     width: 100%;
     height: 100%;
 
-    background: #fff;
-
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+
+    background: #fff;
+  }
+
+  .page-wrapper {
+    width: 100%;
+    height: 100%;
+
+    will-change: opacity;
+    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
+    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
+    cursor: zoom-in;
   }
 
   .selected-box {
@@ -254,13 +332,21 @@
   \*------------------*/
 
   .header {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
 
     padding: 0 0.4rem;
-    height: 1.173333rem;
-    line-height: 1.173333rem;
+
+    background: #fff;
 
     border-bottom: 1px solid #979797;
 
@@ -290,6 +376,11 @@
 
 
   .submission-mine {
+    position: absolute;
+    top: 1.173333rem;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
     padding: 0 0.453333rem;
 
     .submission-list {
