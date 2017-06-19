@@ -8,7 +8,7 @@
 
 <template>
   <section class="page-exercise">
-    <div :class="['exercise-wrapper', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['animated', opacity ? 'zoomIn': '']">
       <!-- 练习导航 -->
       <header class="student__header">
         <p class="student__header--back" @click="handleBack"><i class="iconfont icon-back f25"></i></p>
@@ -23,7 +23,7 @@
       </section>
 
       <!-- 问题内容 -->
-      <section class="exercise-content">
+      <section class="exercise-content" :style="{ height: (10 - 0.906667)/rate + 'rem' }">
         <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
@@ -124,7 +124,8 @@
         // 问题定时通信ID
         msgid: 1,
         timer: null,
-        commitDiffURL: '/lesson/lesson_submit_difficulties/'
+        commitDiffURL: '/lesson/lesson_submit_difficulties/',
+        rate: 1
       };
     },
     beforeRouteEnter (to, from, next) {
@@ -453,6 +454,8 @@
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;
+
+        this.rate = this.width/this.height;
       },
 
       /*
@@ -531,10 +534,6 @@
 
       if(this.summary) {
         this.init(this.summary);
-      } else {
-        setTimeout(()=>{
-          this.init(this.summary);
-        }, 1500)
       }
     },
     mounted() {
@@ -548,15 +547,8 @@
 <style lang="scss">
 
   /*------------------*\
-    $ 红包详情页
+    $ 习题详情页
   \*------------------*/
-
-  .exercise-wrapper {
-    will-change: opacity;
-    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    cursor: zoom-in;
-  }
 
   .page-exercise {
     z-index: 2;

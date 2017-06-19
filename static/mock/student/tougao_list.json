@@ -1,20 +1,75 @@
 {
-  "success": true,
-  "msg": "",
-  "data":{
-    "tougao_list":[
-      {"create_time":"2016-07-14 13:12",
-      "id":345,
-      "content":"我是投稿",
-      "pic":"1.jpg",
-      "user_id":567,
-      "user_name":"用户名",
-      "user_avatar":"2.jpg"
-      }
-    ],
-    "direction": 0,
-    "lesson_id":12,
-    "rest_num":99,
-    "response_num":1
-  }
+    "msg": "",
+    "data": {
+        "direction": 0,
+        "rest_num": 0,
+        "response_num": 7,
+        "tougou_list": [
+            {
+                "user_id": 22,
+                "pic": "wewerew",
+                "content": "wewerew",
+                "create_time": "2017-06-16 16:37",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 21
+            },
+            {
+                "user_id": 22,
+                "pic": "氓庐啪氓艩鈥�",
+                "content": "氓庐啪氓艩鈥�",
+                "create_time": "2017-06-16 14:00",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 20
+            },
+            {
+                "user_id": 22,
+                "pic": "vzbhzhdh",
+                "content": "vzbhzhdh",
+                "create_time": "2017-06-16 13:44",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 19
+            },
+            {
+                "user_id": 22,
+                "pic": "忙鈥澛久︹€澛久┞Ｅ�",
+                "content": "忙鈥澛久︹€澛久┞Ｅ�",
+                "create_time": "2017-06-16 12:51",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 18
+            },
+            {
+                "user_id": 22,
+                "pic": "猫掳垄猫掳垄氓鈥︹€灻ヂ寂�",
+                "content": "猫掳垄猫掳垄氓鈥︹€灻ヂ寂�",
+                "create_time": "2017-06-16 12:29",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 17
+            },
+            {
+                "user_id": 22,
+                "pic": "忙鈥♀€毭ヂ锯€斆ぢ凰溍モ€÷�",
+                "content": "忙鈥♀€毭ヂ锯€斆ぢ凰溍モ€÷�",
+                "create_time": "2017-06-16 12:28",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 16
+            },
+            {
+                "user_id": 22,
+                "pic": "uuu",
+                "content": "uuu",
+                "create_time": "2017-06-16 10:11",
+                "user_avatar": "http://wx.qlogo.cn/mmopen/6GE4NNaKReXBLqxBKJMW8c3H5Vc7iaUVyPOxVViapqDDkByL1H9ETHPU39jpBUOfmSWTbRNyFZnx9VMKhGkFouw8xtGd2r9KMO/0",
+                "user_name": "氓鈥樎モ€÷ヂ嵟�",
+                "id": 15
+            }
+        ],
+        "lesson_id": 3211
+    },
+    "success": true
 }
