@@ -9,6 +9,8 @@
 <template>
   <section class="page-submission">
     <div :class="['hongbao-wrapper', 'animated', opacity ? 'zoomIn': '']">
+      <div class="submission-inner">
+
       <!-- 文字编辑 -->
       <section class="submission__text">
         <div class="submission__textarea--wrapper f17">
@@ -30,6 +32,8 @@
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
       </section>
+
+      </div>
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus === 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
@@ -355,10 +359,14 @@
     width: 100%;
     height: 100%;
 
-    background: #fff;
+    background: #EDF2F6;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .submission-inner {
+    background: #fff;
   }
 
 
@@ -368,7 +376,7 @@
 
   .submission__text {
     position: relative;
-    margin: 0.266667rem 0.453333rem;
+    margin: 0 0.453333rem 0.266667rem;
 
     background: #fff;
     border-bottom: 1px solid #C8C8C8;
@@ -403,7 +411,8 @@
   \*------------------*/
 
   .submission__pic {
-    margin: 1.066667rem auto 2.266667rem;
+    margin: 1.066667rem auto 0.266667rem;
+    padding-bottom: 2rem;
 
     .submission__pic--add {
       position: relative;
@@ -418,8 +427,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
         bottom: 0;
+        width: 100%;
         opacity: 0;
       }
     }
@@ -489,7 +498,7 @@
   }
 
   .submission__submit {
-    margin: 0.68rem auto 0.533333rem;
+    margin: 0 auto 0.533333rem;
     width: 7.733333rem;
     height: 1.173333rem;
     line-height: 1.173333rem;

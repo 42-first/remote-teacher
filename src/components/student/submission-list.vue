@@ -381,7 +381,7 @@
 
       .item {
         display: flex;
-        align-items: baseline;
+        align-items: flex-start;
         justify-content: center;
 
         padding-top: 0.533333rem;
@@ -390,6 +390,7 @@
 
         .item-checkbox {
           width: 0.4rem;
+          padding-top: 0.36rem;
         }
 
         .item-date {

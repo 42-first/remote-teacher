@@ -35,7 +35,7 @@
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
-      <loadmore :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
+      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
 
         <section class="student__timeline J_cards">
           <!-- 时间轴内容列表 -->
@@ -181,6 +181,8 @@
         },
         // 弹幕投稿是否展开
         isMore: false,
+        // todo: 是否新版本 隐藏功能
+        version: 1,
         commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
     },
@@ -195,9 +197,11 @@
         console.log(from.name);
         console.log(to.name);
 
-        // if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
-        //   typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
-        // }
+        if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
+          setTimeout(() => {
+            typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
+          }, 300)
+        }
       }
     },
     filters: {
@@ -249,6 +253,8 @@
           setInterval(() => {
             self.autoSendAnswers();
           }, 10000)
+
+          self.bindTouchEvents();
         });
       },
 
@@ -453,7 +459,6 @@
       refeshLoad(id) {
         setTimeout(()=>{
           this.$refs.loadmore.onTopLoaded();
-          // this.testTimeline();
 
           this.socket.send(JSON.stringify({
             'op': 'fetchtimeline',
@@ -468,9 +473,35 @@
       * @param
       */
       translateChange(translate) {
+        // console.log(translate);
         if(this.$refs.loadmore.topStatus === 'loading') {
           this.$refs.loadmore.translate = 100;
         }
+      },
+
+      /*
+      * @method handleTimeline滚动检测
+      * @param
+      */
+      handleTouchMove() {
+        let target = event.currentTarget;
+
+        if(this.hasMsg && target.scrollTop < 200) {
+          this.hasMsg = false;
+        }
+      },
+
+      /*
+      * @method 绑定滚动事件
+      * @param
+      */
+      bindTouchEvents() {
+        this.$el.querySelector('.J_timeline').addEventListener('touchmove', this.handleTouchMove);
+        this.$el.querySelector('.J_timeline').addEventListener('touchend', this.handleTouchMove);
+      },
+      unbindTouchEvents() {
+        this.$el.querySelector('.J_timeline').removeEventListener('touchmove', this.handleTouchMove);
+        this.$el.querySelector('.J_timeline').removeEventListener('touchend', this.handleTouchMove);
       },
 
       /*
@@ -515,9 +546,10 @@
        *
        */
       handleScrollToTop() {
-        let timelineEl = document.querySelector('.J_cards')
+        let timelineEl = this.$el.querySelector('.J_cards')
 
-        timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
+        // timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
+        timelineEl.scrollIntoView();
         this.hasMsg = false;
       },
 
@@ -551,15 +583,14 @@
     },
     created() {
       this.init();
-      console.log('created');
     },
     mounted() {
     },
     updated() {
-      console.log('updated');
       window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
+      this.unbindTouchEvents();
     }
   };
 </script>

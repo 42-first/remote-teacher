@@ -17,7 +17,7 @@
         <div v-if="doubtList[index]" class="f15">不懂: {{doubtList[index]}}</div>
       </v-touch>
     </div>
-    
+
     <!-- 不懂 类型 -->
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
@@ -26,7 +26,7 @@
         <div class="f15">不懂: {{item.val}}</div>
       </v-touch>
     </div>
-    
+
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
@@ -96,7 +96,7 @@
        */
       swichType (tab) {
         let self = this
-        
+
         self.tab = tab
         console.log(self.doubtSorted)
       },
@@ -130,7 +130,7 @@
         let url = API.presentation_tag
 
         if (process.env.NODE_ENV === 'production') {
-          url = API.presentation_tag + '/' + self.inPageProblemID + '/'
+          url = API.presentation_tag + '/' + self.presentationid + '/'
         }
 
         request.get(url)
