@@ -163,13 +163,6 @@
     $ 文字编辑
   \*------------------*/
 
-  .hongbao-wrapper {
-    will-change: opacity;
-    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    cursor: zoom-in;
-  }
-
   .page-danmu {
     z-index: 1;
     position: fixed;

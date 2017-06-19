@@ -1,10 +1,10 @@
 
 .animated {
   will-change: opacity;
-  animation-duration: 0.5s;
+  animation-duration: 0.35s;
   animation-fill-mode: both;
   -webkit-transform-style: preserve-3d;
-  -webkit-backface-visibility: hidden;
+  /* -webkit-backface-visibility: hidden; */
 }
 
 

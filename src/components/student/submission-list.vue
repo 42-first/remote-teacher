@@ -154,10 +154,9 @@
             if(res) {
               // 删除成功后 将列表数据更新
               let data = [];
-              self.selectedCount--;
+              self.selectedCount > 0 && self.selectedCount--;
 
               self.submissionlist.forEach( (submission) => {
-                // statements
                 if(submission.id !== id) {
                   data.push(submission);
                 }
@@ -175,8 +174,9 @@
 
         let width = target.naturalWidth || target.width;
         let height = target.naturalHeight || target.width;
+        let rate = width/height;
 
-        this.rate = this.width/this.height;
+        rate > 1 && (target.style.width = '100%');
 
         this.scaleImages.push({ src: target.src, w: width || 750, h: height || 520 });
       },
@@ -297,27 +297,21 @@
 
 <style lang="scss">
   .page-submissionlist {
-    z-index: 1;
+    z-index: 2;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: #fff;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-
-    background: #fff;
   }
 
   .page-wrapper {
     width: 100%;
-    height: 100%;
-
-    will-change: opacity;
-    -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
-    cursor: zoom-in;
+    min-height: 100%;
   }
 
   .selected-box {
@@ -415,6 +409,7 @@
           color: #333333;
 
           .item-image {
+            display: block;
             width: 3.733333rem;
           }
         }
