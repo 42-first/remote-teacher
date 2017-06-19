@@ -21,7 +21,7 @@ function socketProcessMessage(msg){
       return
     }
 
-    if(msg.addinversion == 0){
+    if(msg.addinversion === 0){
       isOldVersion = true; //老版本
 
       // TODO 提示版本过低并始终蒙版

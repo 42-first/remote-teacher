@@ -98,7 +98,6 @@
         //归零饼图
         clearInterval(refPaperTimer)
         clearInterval(quizTimeBellTimer)
-        quizTimeBellCount = 1
         self.paperTimePassed = '--:--'
       },
       /**
@@ -127,6 +126,7 @@
         let self = this
 
         self.endTimers()
+        quizTimeBellCount = 1
 
         self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
 
@@ -159,7 +159,6 @@
           .then(jsonData => {
             // 设置试卷详情数据
             console.log('quiz_results_statistics', jsonData)
-            // self.problemResultDetailData = jsonData
             self.stuCommited = jsonData.total
             self.stuTotal = jsonData.members
             
@@ -270,12 +269,10 @@
             self.socket.send(str)
 
             // TODO
-            // self.endTimers()
-            // self.setData({
-            //   isPaperCollected: true
-            // })
-            //记录已经收卷的quizID
-            // finishedQuizList['id'+QUIZID] = true
+            self.endTimers()
+            self.isPaperCollected = true
+            // 记录已经收卷的quizID
+            self.$emit('collectQuiz', self.quizid)
           })
       },
       /**

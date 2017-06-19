@@ -77,7 +77,7 @@
         request.get(url, {
           'lesson_id': self.lessonid,
           'count': 100,
-          'direction': 1
+          'direction': 0
         }).then(jsonData => {
             // 设置试卷详情数据
             self.submissionList = jsonData.data.tougao_list

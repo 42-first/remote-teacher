@@ -46,6 +46,7 @@
       :socket="socket"
       :finished-quiz-list="finishedQuizList"
       @closeQuizresult="closeQuizresult"
+      @collect-quiz="collectQuiz"
     ></RcMaskActivityPaperQuizresult>
   </div>
 </template>
@@ -213,6 +214,16 @@
         let self = this
 
         self.isQuizresultHidden = true
+      },
+      /**
+       * 记录已经收卷的quizID
+       *
+       * @param {number} quizid 收卷试卷的id
+       */
+      collectQuiz (quizid) {
+        let self = this
+
+        self.finishedQuizList['id'+quizid] = true
       },
     }
   }
