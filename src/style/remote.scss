@@ -69,17 +69,3 @@
     color: $white;
   }
 }
-
-.errmsg, .reconnect-box, .deprive-box {width: 600rpx;}
-
-
-/*夺权*/
-.deprive-box button {
-  width: 320px;
-  background: none;
-  color: $white;
-  border: 1px solid $white;
-}
-.deprive-box .mb {
-  margin-bottom: 30rpx;
-}

@@ -65,7 +65,15 @@
 
       <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
       <div class="rc-mask" v-show="!isToastCtrlMaskHidden">
-        <component :is="toastCtrlMaskTpl"></component>
+        <component
+          :is="toastCtrlMaskTpl"
+          :lessonid="lessonid"
+          :courseid="courseid"
+          :classroomid="classroomid"
+          :socket="socket"
+          :is-robber="isRobber"
+          :is-robbing.sync="isRobbing"
+        ></component>
       </div>
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
@@ -97,6 +105,8 @@ if (process.env.NODE_ENV !== 'production') {
 import Toolbar from '@/components/teacher/template/toolbar'
 // 错误蒙版
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
+// 夺权面板
+import RcMaskDeprive from '@/components/teacher/template/rc-mask-deprive'
 // 二维码控制蒙版
 import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
 // 随机点名面板
@@ -159,6 +169,7 @@ export default {
   components: {
     Toolbar,
     RcMaskErrormsg,
+    RcMaskDeprive,
     RcMaskQrcode,
     RcMaskRandomcall,
     RcMaskThumbnail,
