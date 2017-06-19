@@ -126,7 +126,7 @@
        */
       collectSubmission (submissionid, index, status) {
         let self = this
-        let url = API.collectsubmission
+        let url = status ? API.collectsubmission : API.collectsubmission_cancel
 
         let postData = {
           'tougao_id': submissionid
