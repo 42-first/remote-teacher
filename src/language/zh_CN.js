@@ -13,8 +13,9 @@ let pages = {
     '已完成': '已完成'
   },
   'complex': {
-    '1': '第{{ pageIndex }}页',
-    '2': ''
+    'pageIndex': '第$pageIndex$页',
+    'quizCount': '共$quizCount$题',
+    'problemIndex': '第$problemIndex$题'
   },
   // 学生遥控器
   'student': {

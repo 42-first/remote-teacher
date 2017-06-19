@@ -98,11 +98,31 @@ class Language {
     allEle.forEach((element) => {
       let key = element.dataset.languageComplex;
       let value = element.innerText;
+      let info = element.dataset;
 
-      // todo: 根据特征或者规则 提取业务数据
-      element.innerText = value;
+      // console.log(key.key);
+
+      let sTpl = this.languageRes['complex'][key.split('-')[1]];
+      console.log(sTpl);
+
+      // 根据特征或者规则 提取业务数据
+      let text = this.temple(sTpl, info)
+      console.log(text);
+
+      element.innerText = text || value;
     })
 
+  }
+
+  /*
+   * @method 混合模式模板
+   * @param
+   */
+  temple(tpl, value) {
+    return tpl.replace(/\$\w+\$/g, (matchs) => {
+      let returns = value[matchs.replace(/\$/g, '')];
+      return typeof returns === 'undefined' ? '' : returns;
+    });
   }
 }
 
