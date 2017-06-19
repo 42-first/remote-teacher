@@ -72,6 +72,9 @@
       <div class="rc-mask" v-show="!isMsgMaskHidden">
         <component
           :is="msgMaskTpl"
+          :lessonid="lessonid"
+          :courseid="courseid"
+          :classroomid="classroomid"
           :err-type="errType"
         ></component>
       </div>
@@ -231,8 +234,6 @@ export default {
 
       return request.get(url,{'lesson_id': self.lessonid})
         .then(jsonData => {
-          console.log('userinfo success', jsonData)
-
           self.setData({
             userid: jsonData.data.user.user_id,
             avatar: jsonData.data.user.avatar,
@@ -258,7 +259,6 @@ export default {
 
       request.get(url)
         .then(jsonData => {
-          console.log('fetchPPTData success', jsonData)
           let pptData = jsonData.presentationData.Slides
           let current = self.current
           let isProblem = (typeof pptData[current - 1].Problem) !== 'undefined'
