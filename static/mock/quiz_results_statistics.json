@@ -1,0 +1,20 @@
+{
+  "quizID": "923",
+  "total": 1,
+  "data": [
+    {
+      "count": 0,
+      "to": 2,
+      "from": 1.5
+    },
+    {
+      "count": 1,
+      "to": 1.5,
+      "from": 0
+    }
+  ],
+  "members": 19,
+  "time": 158.293505,
+  "success": true,
+  "msg": "ok"
+}

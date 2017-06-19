@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production') {
     problem_statistics:                 '/static/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              '/static/mock/problem_result_detail.json',      // 试题详情数据
     publish_lesson_paper:               '/static/mock/publish_lesson_paper.json',       // 发布试卷
-    quiz_results_statistics:            '/api/quiz/quiz_results_statistics',            // 获取试卷饼图数据
+    quiz_results_statistics:            '/static/mock/quiz_results_statistics.json',    // 获取试卷饼图数据
     quiz_results_detail:                '/static/mock/quiz_results_detail.json',        // 获取试卷详情
     quiz_finish:                        '/static/mock/quiz_finish.json',                // 收卷
     prepare_red_envelope:               '/static/mock/prepare_red_envelope.json',       // 查询班级人数、钱包余额等，为发红包做准备

@@ -44,6 +44,7 @@
       v-show="!isQuizresultHidden"
       :lessonid="lessonid"
       :socket="socket"
+      :finished-quiz-list="finishedQuizList"
       @closeQuizresult="closeQuizresult"
     ></RcMaskActivityPaperQuizresult>
   </div>
@@ -71,6 +72,7 @@
         },
         isPubmodalHidden: true,   // 发布模态框隐藏
         isQuizresultHidden: true, // 已发试卷饼图页隐藏
+        finishedQuizList: {},     // 给已经收卷的试卷做标记
       }
     },
     components: {
@@ -112,20 +114,12 @@
             self.paperList = jsonData.data.quiz_data.paper_list
             self.quizList = jsonData.data.quiz_data.quiz_list
 
-            return
-            let quiz_data = data.data.data.quiz_data
-            let _quiz_list = quiz_data.quiz_list
-            console.log('success', quiz_data);
-
-            self.setData({
-              paperData: quiz_data
-            })
+            let quizList =self.quizList
 
             // 有可能老师刷新了遥控器，而之前已经有已经收卷的试卷
-            // finishedQuizList['id'+quizID];
-            for (var i = 0, _len = _quiz_list.length; i < _len; i++) {
-              var _tmpID = _quiz_list[i].quiz_id;
-              finishedQuizList['id'+_tmpID] = _quiz_list[i].quiz_end;
+            for (let i = 0; i < quizList.length; i++) {
+              let tmpID = quizList[i].quiz_id;
+              self.finishedQuizList['id'+tmpID] = quizList[i].quiz_end;
             }
           })
       },
@@ -178,11 +172,9 @@
 
         request.post(url, postData)
           .then(jsonData => {
-            // TODO
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
             //维护试题列表的发布记录
-            let _paperData = self.paperList
-            let thePaper = _paperData[self.paperChosen.index]
+            let thePaper = self.paperList[self.paperChosen.index]
 
             thePaper.quiz_id = jsonData.quizID;
             self.quizList.unshift(thePaper);

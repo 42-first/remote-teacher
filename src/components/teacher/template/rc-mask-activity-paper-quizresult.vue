@@ -8,23 +8,26 @@
     <section class="upper">
       <div class="f60">
         <i class="iconfont icon-clock f40"></i>
-        <span class="time">00:45</span>
+        <span class="time">{{paperTimePassed}}</span>
       </div>
       <div class="f18">
-        已有 <span>1</span> / <span>5TODO</span> 位同学提交了试卷
+        已有 <span>{{stuCommited}}</span> / <span>{{stuTotal}}</span> 位同学提交了试卷
       </div>
     </section>
 
     <!-- 中间饼图 -->
     <section class="chart-box">
-      分数分布
+      <div class="fsfb f18">分数分布</div>
+      <div id="pieSolid" class="pie-solid">
+        <svg id="quizpie" class="f16" width="100%" ></svg>
+    </div>
     </section>
 
     <!-- 下方按钮 -->
     <section class="group-btns">
       <v-touch class="btn-item" v-on:tap="collectQuiz">
         <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
-        <div class="btn-desc f15">收卷文案TODO</div>
+        <div class="btn-desc f15">{{isPaperCollected ? '已收卷' : '收卷'}}</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="postQuizresult">
@@ -48,19 +51,28 @@
 </template>
 
 <script>
+  let quizTimeBellTimer = null  // 试卷饼图正计时的定时器
+  let refPaperTimer = null      // 刷新试卷饼图的定时器
+  let quizTimeBellCount = 1     // 刷新试卷饼图的辅助数字
+
   import request from '@/util/request'
   import API from '@/config/api'
+  import drawRingSolid from '@/util/teacher-util/drawsvg'
 
   // 已发试卷详情页
   import RcMaskActivityPaperQuizresultDetail from '@/components/teacher/template/rc-mask-activity-paper-quizresult-detail'
 
   export default {
     name: 'RcMaskActivityPaperQuizresult',
-    props: ['lessonid', 'socket'],
+    props: ['lessonid', 'socket', 'finishedQuizList'],
     data () {
       return {
         quizid: -1,                       // 已发试卷的id
         isQuizresultDetailHidden: true,   // 已发试卷详情页隐藏
+        isPaperCollected: false,          // 已收卷
+        paperTimePassed: '--:--',         // 已经过去的时间
+        stuCommited: '--',                // 已经交卷学生个数
+        stuTotal: '--',                   // 总学生数目
       }
     },
     components: {
@@ -72,39 +84,144 @@
       // 点击 已发试卷 或 发布了一个试卷 父组件发送事件给本子组件，显示已发试卷饼图等信息
       self.$on('showQuizResult', function (quizid) {
         self.quizid = quizid
+        self.showQuizResult()
       })
     },
     methods: {
       /**
+       * 归零、结束定时器等
+       *
+       */
+      endTimers () {
+        let self = this
+
+        //归零饼图
+        clearInterval(refPaperTimer)
+        clearInterval(quizTimeBellTimer)
+        quizTimeBellCount = 1
+        self.paperTimePassed = '--:--'
+      },
+      /**
+       * 将秒数转换成 MM:SS 格式
+       *
+       * @param {number} sec 秒数
+       */
+      sec2str (sec) {
+        if(sec == 0){
+            return '时间到';
+        }
+
+        var str = '';
+        var fen = Math.floor(sec/60);
+        var miao = sec%60;//
+        miao = (miao<10) ? ('0'+miao) : miao;
+
+        str += fen + ':' + miao;
+        return str;
+      },
+      /**
        * 查看试卷结果饼图页(发布试卷后或查看历史发布)
        *
        */
-      showQuizResult(){
+      showQuizResult () {
         let self = this
 
-        return
+        self.endTimers()
 
-        quizTimeBellCount = 1;
+        self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
 
-        self.setData({
-          isQuizResultHidden: false,
-          // HACK 小程序中如果赋予的新值是undefined的话，根本不会进行赋值，也不会覆盖之前的值
-          isPaperCollected: finishedQuizList['id'+quizid] || false
-        })
-
-        if(!self.data.isPaperCollected){
-          refPaperTimer = setInterval(function(){
-            self.getPaperResult(quizid);
+        if (!self.isPaperCollected) {
+          refPaperTimer = setInterval(function () {
+            self.getPaperResult();
           }, 3000);
 
-          quizTimeBellTimer = setInterval(function(){
-              self.setData({
-                paperTimePassed: self.sec2str(quizTimeBellCount++)
-              })
+          quizTimeBellTimer = setInterval(function () {
+              self.paperTimePassed = self.sec2str(quizTimeBellCount++)
           }, 1000);
         }
         
-        self.getPaperResult(quizid);
+        self.getPaperResult();
+      },
+      /**
+       * 获取试卷结果数据
+       *
+       */
+      getPaperResult(){
+        let self = this
+        let url = API.quiz_results_statistics
+
+        if (process.env.NODE_ENV === 'production') {
+          url = API.quiz_results_statistics + '/' + self.quizid + '/'
+        }
+
+        // 单次刷新
+        request.get(url)
+          .then(jsonData => {
+            // 设置试卷详情数据
+            console.log('quiz_results_statistics', jsonData)
+            // self.problemResultDetailData = jsonData
+            self.stuCommited = jsonData.total
+            self.stuTotal = jsonData.members
+            
+            jsonData.time = Math.floor(jsonData.time)
+            // quizTimeBellCount跟上真实计时
+            if (Math.abs(quizTimeBellCount - jsonData.time) > 2) {
+              quizTimeBellCount = jsonData.time
+            }
+            // 如果已经收卷就直接塞时间
+            if (self.isPaperCollected) {
+              self.paperTimePassed = self.sec2str(quizTimeBellCount)
+            }
+
+            // return
+            // $('#pieSolid').empty();
+            // $('#pieSolid').html('<svg width="100%" height="176px"></svg>');
+
+            // data.data[0].count+= 3;
+            // var range = ['95以上','85-94','75-84','60-74','60以下'];
+            // var arr1 = [1,10,10,10,69];
+            var range = [];
+            var arr1 = [];
+
+            for (var i = 0; i < jsonData.data.length; i++) {
+                var item = jsonData.data[i];
+                range.push(item.from + '~' + item.to);
+                arr1.push(item.count);
+            };
+
+            drawRingSolid(range,arr1);
+            return
+            //没人做题就不画饼图
+            if(data.total == 0){
+                $('#pieSolid').html('<div style="height: 176px; text-align: center; font-size: 1.8rem; line-height: 170px;">还没有学生提交~</div>');
+            }else{
+                $('#pieSolid').html('<svg width="100%" height="176px"></svg>');
+                fnNS.drawRingSolid(range,arr1);
+            }
+
+
+
+            let series = []
+            let total = data.total
+
+            for (let i = 0; i < data.data.length; i++) {
+              let item = data.data[i]
+              let name = item.from + '~' + item.to + ' （' + item.count + '/' + total + '）'
+
+              series.push({
+                name: name,
+                data: item.count
+              })
+            }
+
+            //没人做题就不画饼图
+            if(data.total !== 0){
+              self.setData({
+                hasStuCommitPaper: true
+              })
+              self.drawRingChart(series)
+            }
+          })
       },
       /**
        * 点击关闭试卷结果饼图页的按钮
@@ -114,7 +231,6 @@
       closeQuizresult () {
         let self = this
 
-        // self.endTimers()
 
         let str = JSON.stringify({
           'op': 'closequizresult',
@@ -123,9 +239,8 @@
         })
 
         self.socket.send(str)
-        // TODO
-        // paperTimePassed = '--:--'
         self.$emit('closeQuizresult')
+        self.endTimers()
       },
       /**
        * 收卷
@@ -144,7 +259,6 @@
           .then(jsonData => {
             console.log('quiz_finish', jsonData)
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            let data = DATA.data
 
             let str = JSON.stringify({
               'op': 'quizfinished',
@@ -230,19 +344,21 @@
       width: 8.8rem;
       min-height: 3.466667rem;
       padding-top: 0.8rem;
-      border-bottom: 1px solid #cccccc;
+      
     }
 
     /* 中间饼图 */
-    .histogram-box {
+    .chart-box {
       margin: 0 auto;
-      padding-top: 1rem;
+      padding-top: 0.266667rem;
       width: 8.8rem;
-      height: 6rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: bottom;
+      height: 6.533333rem;
+      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
       
+      .fsfb {
+        text-align: center;
+      }
     }
     
     /* 下方按钮 */
