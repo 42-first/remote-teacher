@@ -5,14 +5,14 @@
     <div class="" v-show="isRobber">
       <div>当前有老师正在上课<br>您希望</div>
       <v-touch class="btn _btn" v-on:tap="tryDepriveRemote">{{isRobbing ? '正在夺权...' : '我要上课夺主权'}}</v-touch>
-      <v-touch class="btn _btn">以学生身份进入</v-touch>
+      <v-touch class="btn _btn" v-on:tap="gotoStu">以学生身份进入</v-touch>
       <v-touch class="btn _btn" v-on:tap="exitRC" >退出</v-touch>
     </div>
 
     <div class="" v-show="!isRobber">
       <div>其他老师已登录<br>您已被迫下线</div>
       <v-touch class="btn _btn" v-on:tap="exitRC">退出</v-touch>
-      <v-touch class="btn _btn">以学生身份进入</v-touch>
+      <v-touch class="btn _btn" v-on:tap="gotoStu">以学生身份进入</v-touch>
       <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" >{{isRobbing ? '正在夺权...' : '我要夺回主权'}}</v-touch>
     </div>
     
@@ -55,6 +55,14 @@
 		   */
 		  exitRC () {
 		    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+		  },
+		  /**
+		   * 以学生身份进入
+		   *
+		   * @event bindtap
+		   */
+		  gotoStu () {
+		    location.href = '/lesson/student/'+ self.lessonid +'?force=lecture'
 		  },
 	  }
 	}
