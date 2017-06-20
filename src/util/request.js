@@ -10,7 +10,8 @@ import Cookies from 'js-cookie'
 })
 
 const handleResponse = (res) => {
-  if (res.data.success) {
+  // 支付接口使用的 status 判断
+  if (res.data.success || res.data.status === 0) {
     return Promise.resolve(res.data)
   } else {
     // 没有权限
