@@ -6,11 +6,11 @@
 
 let api
 let prefix = ''
-let SOCKET_HOST = ''
 
 /* eslint-disable key-spacing, comma-dangle */
 if (process.env.NODE_ENV === 'production') {
   api = {
+    lesson_status:                      prefix + '/v/lesson/lesson_status',
     userinfo:                           prefix + '/v/lesson/lesson_user_info',
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:            prefix + '/lesson/fetch_presentation_data',   // ppt数据
@@ -37,6 +37,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   api = {
+    lesson_status:                      '/static/mock/lesson_status.json',
     userinfo:                           '/static/mock/userinfo_teacher.json',
     remote_control_list:                '/static/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:            '/static/mock/fetch_presentation_data.json',    // ppt数据

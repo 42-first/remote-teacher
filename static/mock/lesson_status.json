@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "msg": "",
+  "data":{
+    "is_lesson_end": 0,
+    "has_access_classroom":1
+  }
+}
