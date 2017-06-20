@@ -93,6 +93,7 @@ class Language {
     })
 
     // 复杂模式 静态文字和业务数据混合在一起 暂定根据位置定位提取业务数据
+    // key: page-tplname
     allEle = pageEl.querySelectorAll('[data-language-complex]');
 
     allEle.forEach((element) => {
@@ -100,9 +101,11 @@ class Language {
       let value = element.innerText;
       let info = element.dataset;
 
-      // console.log(key.key);
+      const keys = key.split('-');
+      const pageName = keys.length > 0 && keys[0];
+      const tplName = keys.length > 0 && keys[1];
 
-      let sTpl = this.languageRes['complex'][key.split('-')[1]];
+      let sTpl = this.languageRes[pageName]['complex'][tplName];
       console.log(sTpl);
 
       // 根据特征或者规则 提取业务数据

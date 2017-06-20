@@ -88,8 +88,8 @@ var actionsMixin = {
       // 如果是习题图片，则不添加
       if (!slideData || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
 
-        slideData && slideData['Problem'] &&
-        this.addProblem({ type: 3, pageIndex: data.pageIndex, time: data.time, presentationid: data.presentationid, limit: -1, event: null });
+        // slideData && slideData['Problem'] && data.isFetch &&
+        // this.addProblem({ type: 3, pageIndex: data.pageIndex, time: data.time, presentationid: data.presentationid, limit: -1, event: null });
 
         return;
       }

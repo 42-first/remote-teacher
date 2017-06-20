@@ -19,4 +19,11 @@
 
     text-align: center;
   }
+
+  #app * {
+    box-sizing: border-box;
+    text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  }
 </style>

@@ -12,13 +12,13 @@ let pages = {
     '未完成': '未完成',
     '已完成': '已完成'
   },
-  'complex': {
-    'pageIndex': '第$pageIndex$页',
-    'quizCount': '共$quizCount$题',
-    'problemIndex': '第$problemIndex$题'
-  },
   // 学生遥控器
   'student': {
+    'complex': {
+      'pageIndex': '第$pageIndex$页',
+      'quizCount': '共$quizCount$题',
+      'problemIndex': '第$problemIndex$题'
+    },
     'nav': {
       'all' : '全部',
       'ppt' : 'PPT',
