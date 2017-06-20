@@ -11,13 +11,13 @@
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
-        <p class="student__header--back"><i class="iconfont icon-back f25"></i></p>
+        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-back f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-danmu1 f21"></i>发送弹幕</p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17"><i class="iconfont icon-submission f25"></i>发送投稿</router-link>
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8"><i class="iconfont icon-submission f25"></i>发送投稿</router-link>
           </div>
         </div>
       </header>
@@ -111,7 +111,6 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/Api'
-  // import { setWeixinTitle } from '@/util/util'
 
   import CardItemComponent from '@/components/common/card-item.vue'
 
@@ -182,7 +181,7 @@
         // 弹幕投稿是否展开
         isMore: false,
         // todo: 是否新版本 隐藏功能
-        version: 1,
+        version: 0.9,
         commitDiffURL: '/lesson/lesson_submit_difficulties'
       };
     },
@@ -215,9 +214,10 @@
         let self = this;
 
         this.lessonID = this.$route.params.lessonID || 3049;
-        this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false
+        this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 
         this.iniTimeline(this.lessonID);
+        this.getSoftVersion(this.lessonID);
       },
 
       /*
@@ -312,6 +312,29 @@
               self.userID = data.user_id;
               self.avatar = data.avatar;
               self.userAuth = data.user_auth;
+
+              return data;
+            }
+          });
+      },
+
+      /*
+       * @method 软件版本号
+       * @param  lessonID
+       */
+      getSoftVersion(lessonID) {
+        let self = this;
+        let URL = API.GET_SOFT_VERSION;
+        let param = {
+          'lesson_id': lessonID
+        }
+
+        return request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              self.version = +data.ppt_version;
 
               return data;
             }
@@ -577,8 +600,9 @@
        * @method 返回上一页
        *
        */
-      doBack(){
-        this.$router.back();
+      handleBack(){
+        // this.$router.back();
+        history.go(-1);
       }
     },
     created() {

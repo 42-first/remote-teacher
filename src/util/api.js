@@ -5,8 +5,12 @@ let api
 
 if (process.env.NODE_ENV === 'production') {
     api = {
-       // 用户权限
-       'GET_USER_INFO': '/v/lesson/lesson_user_info',
+        // 用户权限
+        'GET_USER_INFO': '/v/lesson/lesson_user_info',
+
+        // 软件版本号
+        'GET_SOFT_VERSION': '/v/lessson/lesson_ppt_version',
+
         /*------------------*\
            $ 接收器 start
         \*------------------*/
