@@ -177,6 +177,7 @@ export default {
   },
   created () {
     this.lessonid = this.$route.params.lessonid
+    this.fetchLessonStatus()
   },
   mounted () {
     let self = this
@@ -234,6 +235,22 @@ export default {
       })
 
       self.socket.send(str)
+    },
+    /**
+     * 查询当前课程是否已经结束，结束的话跳转到我的课程页
+     *
+     */
+    fetchLessonStatus () {
+      let self = this
+      let url = API.lesson_status
+
+      return request.get(url,{'lesson_id': self.lessonid})
+        .then(jsonData => {
+          if (jsonData.data.is_lesson_end) {
+            // 0未结束 1已结束
+            location.href = '/v/index'
+          }
+        })
     },
     /**
      * 获取用户数据
