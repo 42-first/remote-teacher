@@ -86,7 +86,7 @@
 </template>
 <script>
   import API from '@/util/Api'
-  import moment from 'moment'
+  // import moment from 'moment'
 
   export default {
     name: 'submission-page',
@@ -282,6 +282,10 @@
       }
     },
     created() {
+      !moment && require(['moment'], function(moment) {
+        window.moment = moment;
+      })
+
       this.lessonID = +this.$route.params.lessonID;
       this.getMySubmission();
 

@@ -1,13 +1,13 @@
 import axios from 'axios'
-import Promise from 'bluebird'
+// import Promise from 'bluebird'
 import Cookies from 'js-cookie'
 
 // Promise
-window.Promise = window.Promise || Promise;
+// window.Promise = window.Promise || Promise;
 
-// require('bluebird', function(Promise) {
-//   window.Promise = window.Promise || Promise;
-// })
+!Promise && require(['bluebird'], function(Promise) {
+  window.Promise = window.Promise || Promise;
+})
 
 const handleResponse = (res) => {
   if (res.data.success) {

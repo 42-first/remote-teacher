@@ -1,12 +1,12 @@
-// import 'mint-ui/lib/loadmore/style.css'
-// import 'mint-ui/lib/radio/toast.css';
-import 'mint-ui/lib/style.css';
+import 'mint-ui/lib/loadmore/style.css'
+import 'mint-ui/lib/toast/style.css'
+import 'mint-ui/lib/message-box/style.css'
 
 import Vue from 'vue'
 import Router from 'vue-router'
 // import FastClick from 'fastclick'
 import Loadmore from 'mint-ui/lib/loadmore'
-import Toast from 'mint-ui/lib/toast';
+import Toast from 'mint-ui/lib/toast'
 import MessageBox from 'mint-ui/lib/message-box';
 
 import StudentPresentation from '@/components/student/student-presentation'
@@ -15,6 +15,7 @@ import Exercise from '@/components/student/exercise'
 import Submission from '@/components/student/submission'
 import SubmissionList from '@/components/student/submission-list'
 import Danmu from '@/components/student/danmu'
+
 
 // 国际化
 import language from '@/util/language'
