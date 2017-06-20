@@ -27,7 +27,7 @@
     <v-touch class="activity-item f18" v-on:tap="showSubmission">
       <div>投稿</div>
       <div>
-        TODO
+        <span class="info f12" v-show="newtougao">{{newtougao}}</span>
         <i class="iconfont icon-forward f20"></i>
       </div>
     </v-touch>
@@ -83,7 +83,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newtougao'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -179,6 +179,8 @@
         self.isSubmissionHidden = false
 
         self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
+        // 清零投稿未读数
+        self.$emit('checkTougao')
       },
       /**
        * 点击 返回 按钮关闭试卷列表
@@ -265,6 +267,17 @@
       margin-bottom: 0.266667rem;
       background: $white;
       color: #333333;
+
+      .info {
+        display: inline-block;
+        width: 0.666667rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        text-align: center;
+        background: #D0021B;
+        border-radius: 0.25rem;
+        color: $white;
+      }
     }
   }
 </style>
