@@ -13,7 +13,7 @@
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
-		      已经有 <span>1</span> / <span>5TODO</span> 位同学提交了答案
+		      已经有 <span>{{problemResultData.total}}</span> / <span>{{problemResultData.members}}</span> 位同学提交了答案
 		    </div>
 	    </section>
 
