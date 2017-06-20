@@ -109,7 +109,7 @@
     },
     filters: {
       formatTime(time, format) {
-        return moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
+        return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
       }
     },
     methods: {
@@ -132,7 +132,7 @@
             if(res && res.data) {
               let data = res.data;
 
-              self.submissionlist = data.tougou_list;
+              self.submissionlist = data.tougao_list || data.tougou_list;
               return data;
             }
           });
@@ -282,7 +282,7 @@
       }
     },
     created() {
-      !moment && require(['moment'], function(moment) {
+      !window.moment && require(['moment'], function(moment) {
         window.moment = moment;
       })
 
