@@ -7,13 +7,15 @@
     <div class="gap"></div>
     <section class="list">
       <div class="item f17" v-for="item in participantList" :key="item.id">
-        <div class="name">
+        <div class="name ellipsis">
           <img :src="item.profile.avatar_96" alt="">
           <span>{{item.profile.name}}</span>
         </div>
         <div class="wayin">
           <span class="time">{{item.time}}</span>
-          <span>TODO扫码</span>
+          <span v-show="item.source === 1">扫码签到</span>
+          <span v-show="item.source === 2">邀请码</span>
+          <span v-show="item.source === 3">我的课程</span>
         </div>
       </div>
     </section>
@@ -22,6 +24,7 @@
 </template>
 
 <script>
+  // source代表学生签到的来源  1代表扫码  2代表邀请码   3代表我的课程-正在上课
   export default {
     name: 'RcMaskActivityParticipantlist',
     props: ['participantList'],
@@ -79,6 +82,7 @@
         height: 1.693333rem;
 
         .name {
+          width: 4.0rem;
           img {
             width: 1.2rem;
             height: 1.2rem;
@@ -90,6 +94,9 @@
 
         .wayin .time {
           margin-right: 0.76rem;
+        }
+        .hide {
+          display: none;
         }
       }
     }
