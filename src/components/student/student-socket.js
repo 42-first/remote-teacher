@@ -57,7 +57,7 @@ var mixin = {
             }
           } else {
             self.reconnectcount++;
-            this.initws(true);
+            self.initws(true);
           }
 
           clearInterval(self.xintiaoTimer);
@@ -262,7 +262,7 @@ var mixin = {
         }
 
         let timelineEl = document.querySelector('.J_cards')
-        let clientRect = timelineEl.getBoundingClientRect()
+        let clientRect = timelineEl && timelineEl.getBoundingClientRect()
 
         if(hasMsg && clientRect && clientRect.top < 0) {
           this.hasMsg = true;

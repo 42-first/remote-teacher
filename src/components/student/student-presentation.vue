@@ -682,7 +682,7 @@
 
         padding: 0 0.28rem;
         width: 4.0rem;
-        height: 3.12rem;
+        /*height: 3.12rem;*/
 
         color: #fff;
 
