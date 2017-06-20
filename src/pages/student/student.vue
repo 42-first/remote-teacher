@@ -20,7 +20,7 @@
     text-align: center;
   }
 
-  #app * {
+  html * {
     box-sizing: border-box;
     text-size-adjust: 100%;
     -webkit-touch-callout: none;

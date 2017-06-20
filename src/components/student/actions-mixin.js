@@ -209,7 +209,8 @@ var actionsMixin = {
         oProblem.leaveTime = leaveTime
 
         // 习题组件实例中的定时方法
-        this.$children[2] && this.$children[2].setTiming(leaveTime);
+        this.$children[1] && this.$children[1].setTiming && this.$children[1].setTiming(leaveTime);
+        this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
       }
     },
 
