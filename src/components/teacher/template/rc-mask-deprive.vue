@@ -54,6 +54,8 @@
 		   * @event bindtap
 		   */
 		  exitRC () {
+		  	let self = this
+
 		    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
 		  },
 		  /**
@@ -62,6 +64,8 @@
 		   * @event bindtap
 		   */
 		  gotoStu () {
+		  	let self = this
+		  	
 		    location.href = '/lesson/student/'+ self.lessonid +'?force=lecture'
 		  },
 	  }

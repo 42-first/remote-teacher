@@ -285,6 +285,8 @@ export default {
             coursename: jsonData.data.course.coursename,
             classroomid: jsonData.data.classroom.classroomid
           })
+
+          window.USERID = jsonData.data.user.user_id
         })
     },
     /**
@@ -388,11 +390,13 @@ export default {
 
       let url1 = API.presentation_tag
 
-      if (process.env.NODE_ENV === 'production') {
-        url1 = API.presentation_tag + '/' + self.presentationid + '/'
-      }
+      
 
       pollingPresentationTagTimer = setInterval(() => {
+        if (process.env.NODE_ENV === 'production') {
+          url1 = API.presentation_tag + '/' + self.presentationid + '/'
+        }
+
         request.get(url1)
           .then(jsonData => {
             let doubt = jsonData.data.doubt

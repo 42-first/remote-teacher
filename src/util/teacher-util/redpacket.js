@@ -293,7 +293,7 @@ export default {
 	      }else{
 	        let wxmoney = Math.round(wxToPay*100)
 	        // wxmoney = 1// 测试强制只充1分钱
-	        self.orderWXPayThenPay(wxmoney, app.globalData.userid, function(res){
+	        self.orderWXPayThenPay(wxmoney, function(res){
 	          if(res.success){
 	            self.wxpayCallback(res.out_trade_no)
 	          }else{
@@ -314,51 +314,44 @@ export default {
 	   *
 	   * @event bindtap
 	   */
-	  orderWXPayThenPay (money, user_id, payCB) {
+	  orderWXPayThenPay (money, payCB) {
 	    let self = this
 
 	    //money是0，负数，小数都会报错{"status":50000,"message":"invalid total_fee"}
-	    app.request({
-	      url: API.orderpay,
-	      method: 'POST',
-	      data: { "money": money, "user_id": user_id, "source": 'mini' },
-	      success(DATA) {
-	        let jsonData = DATA.data
+	    let postData = {
+	    	'money': money,
+	    	'user_id': USERID
+	    }
 
-	        if (jsonData.status === 0) {
-	          wx.requestPayment({
-	            timeStamp: jsonData.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-	            nonceStr: jsonData.data.nonceStr, // 支付签名随机串，不长于 32 位
-	            package: jsonData.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-	            signType: jsonData.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-	            paySign: jsonData.data.paySign, // 支付签名
-	            success: function (res) {
-	              console.log('res', res)
-	              // 支付成功后的回调函数
-	              // 微信jssdk支付和小程序支付的回调不一样，jssdk是 'chooseWXPay:ok'
-	              if(res.errMsg == "requestPayment:ok" ) {
-	                //支付成功
-	                // payCB && payCB('success')
-	                payCB && payCB({success: true, out_trade_no: jsonData.data.out_trade_no})
-	              }else{
-	                  myToast(res.errMsg)
-	              }
-	            },
-	            fail: function(errMsg){
-	              console.log('resfail', errMsg)
-	              payCB && payCB({success: false, errMsg: 'failorcancel'})
-	            }
-	          })
-	        } else {
-	          myToast(jsonData.status + jsonData.message)
-	          payPromiseMethod.reject('支付失败')
-	        }
-	      },
-	      fail(error) {
-	        console.log('error', error)
-	        myToast('微信订单提交失败,请稍后重试！')
-	      }
-	    })
+	    request.post(API.orderpay, postData)
+        .then(jsonData => {
+        	// 不需要判断success，在request模块中判断如果success为false，会直接reject
+        	console.log('要生成微信订单', jsonData)
+        	wx.chooseWXPay({
+            timestamp: jsonData.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+            nonceStr: jsonData.data.nonceStr, // 支付签名随机串，不长于 32 位
+            package: jsonData.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+            signType: jsonData.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+            paySign: jsonData.data.paySign, // 支付签名
+            success: function (res) {
+              console.log('res', res)
+              // 支付成功后的回调函数
+              // 微信jssdk支付和小程序支付的回调不一样，jssdk是 'chooseWXPay:ok'
+              if(res.errMsg == "chooseWXPay:ok" ) {
+                //支付成功
+                // payCB && payCB('success')
+                payCB && payCB({success: true, out_trade_no: jsonData.data.out_trade_no})
+              }else{
+                  payPromiseMethod.reject('支付失败')
+              }
+            },
+            fail: function(errMsg){
+              payCB && payCB({success: false, errMsg: 'failorcancel'})
+            }
+          })
+        }).catch(() => {
+        	payPromiseMethod.reject('支付失败')
+        })
 	  },
 	  /**
 	   * 微信支付后向node后端确认支付金额已经进入小金库
@@ -367,13 +360,15 @@ export default {
 	   */
 	  wxpayCallback (out_trade_no) {
 	    let self = this
+	    let postData = {
+	    	'out_trade_no': out_trade_no
+	    }
 
-	    app.request({
-	      url: API.payquery,
-	      method: 'POST',
-	      data: { "out_trade_no": out_trade_no, "source": 'mini'},
-	      success(DATA) {
-	        let data = DATA.data
+	    request.post(API.payquery, postData)
+        .then(jsonData => {
+        	// 不需要判断success，在request模块中判断如果success为false，会直接reject
+        	console.log('查询支付后状态', jsonData)
+        	let data = jsonData.data
 	        console.log(data)
 	        
 	        if(data.status === 0 && data.data.trade_state === 'SUCCESS'){
@@ -381,11 +376,10 @@ export default {
 	        }else{
 	          payPromiseMethod.reject('支付失败')
 	        }
-	      },
-	      fail(error) {
-	        console.log('error', error)
-	      }
-	    })
+        	
+        }).catch(() => {
+        	payPromiseMethod.reject('支付失败')
+        })
 	  },
 	  /**
 	   * 向django后端发起红包支付
