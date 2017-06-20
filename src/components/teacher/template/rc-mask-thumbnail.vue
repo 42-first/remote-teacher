@@ -4,7 +4,10 @@
     <section class="tab-box f15">
       <v-touch :class="['item', {'active': tab === 1}]" v-on:tap="swichType(1)">PPT</v-touch>
       <div class="bar" v-show="tab === 3"></div>
-      <v-touch :class="['item', {'active': tab === 2}]" v-on:tap="swichType(2)">不懂</v-touch>
+      <v-touch :class="['item', {'active': tab === 2}]" v-on:tap="swichType(2)">
+        不懂
+        <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
+      </v-touch>
       <div class="bar" v-show="tab === 1"></div>
       <v-touch :class="['item', {'active': tab === 3}]" v-on:tap="swichType(3)">习题</v-touch>
     </section>
@@ -43,7 +46,7 @@
 
   export default {
     name: 'RcMaskThumbnail',
-    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket'],
+    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket', 'newdoubt'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -98,7 +101,9 @@
         let self = this
 
         self.tab = tab
-        console.log(self.doubtSorted)
+        if (tab === 2) {
+          self.$emit('checkDoubt')
+        }
       },
       /**
        * 点击缩略图按钮给WebSocket发指令要进入某页
@@ -135,7 +140,6 @@
 
         request.get(url)
           .then(jsonData => {
-            console.log('presentation_tag', jsonData)
             self.doubtList = jsonData.data.doubt
           })
       },
@@ -157,7 +161,7 @@
     .tab-box {
       display: flex;
       margin: 0.4rem auto;
-      width: 5.386667rem;
+      width: 8.0rem;
       height: 0.906667rem;
       line-height: 0.906667rem;
       border: 1px solid $blue;
@@ -166,7 +170,21 @@
       color: $blue;
 
       .item {
+        position: relative;
         flex: 1;
+
+        .info {
+          position: absolute;
+          right: 0.133333rem;
+          top: 0;
+          width: 0.666667rem;
+          height: 0.6rem;
+          line-height: 0.6rem;
+          text-align: center;
+          background: $blue;
+          border-radius: 0.25rem;
+          color: $white;
+        }
       }
       .bar {
         width: 1px;

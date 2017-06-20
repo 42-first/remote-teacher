@@ -25,6 +25,7 @@
         :class="['dontcallback', {'higher-than-InitiativeCtrlMask': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
         :lessonid="lessonid"
         :socket="socket"
+        :newdoubt="newdoubt"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -53,8 +54,10 @@
           :is-danmu-open="isDanmuOpen"
           :posting-danmuid="postingDanmuid"
           :posting-submissionid="postingSubmissionid"
+          :newdoubt="newdoubt"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
+          @checkDoubt="checkDoubt"
 
           :problem-result-data="problemResultData"
           :problem-duration-left="problemDurationLeft"
@@ -127,6 +130,9 @@ import socketService from '@/util/teacher-util/socket-service'
 // 课堂试题相关
 import problemRelated from '@/util/teacher-util/problem-related'
 
+let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
+let oldDoubt = 0                       // 记录不懂人数，便于教师点击过后清零
+
 export default {
   name: 'Remote',
   // 找不到的data在 mixins 中
@@ -164,6 +170,7 @@ export default {
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
       postingSubmissionid: -1,                // 正在投屏的投稿的id
+      newdoubt: 0,                            //  未查看的不懂人次总数
     }
   },
   components: {
@@ -184,6 +191,7 @@ export default {
 
     self.pmos()
     self.fetchUserInfo().then(self.initws)
+    self.pollingPresentationTag()
   },
   mixins: [switches, socketService, problemRelated],
   methods: {
@@ -361,6 +369,44 @@ export default {
       self.setData({
         isInitiativeCtrlMaskHidden: true
       })
+    },
+    /**
+     * 轮询获取缩略图页 不懂 等标志的信息
+     *
+     */
+    pollingPresentationTag () {
+      let self = this
+
+      clearInterval(pollingPresentationTagTimer)
+
+      let url = API.presentation_tag
+
+      if (process.env.NODE_ENV === 'production') {
+        url = API.presentation_tag + '/' + self.presentationid + '/'
+      }
+
+      pollingPresentationTagTimer = setInterval(() => {
+        request.get(url)
+          .then(jsonData => {
+            let doubt = jsonData.data.doubt
+            let sum = 0
+
+            doubt.forEach(item => {
+              sum += item
+            })
+            self.newdoubt = sum - oldDoubt
+          })
+      }, 3*1000)
+    },
+    /**
+     * 用户缩略图点击了 不懂 按钮，清零不懂数
+     *
+     */
+    checkDoubt () {
+      let self = this
+      oldDoubt = self.newdoubt || oldDoubt // 防止反复点击把oldDoubt置零
+      self.newdoubt = 0
+      
     },
   }
 }
