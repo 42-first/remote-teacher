@@ -25,6 +25,8 @@
         :class="['dontcallback', {'higher-than-InitiativeCtrlMask': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
         :lessonid="lessonid"
         :socket="socket"
+        :newdoubt="newdoubt"
+        :newtougao="newtougao"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -53,8 +55,12 @@
           :is-danmu-open="isDanmuOpen"
           :posting-danmuid="postingDanmuid"
           :posting-submissionid="postingSubmissionid"
+          :newdoubt="newdoubt"
+          :newtougao="newtougao"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
+          @checkDoubt="checkDoubt"
+          @checkTougao="checkTougao"
 
           :problem-result-data="problemResultData"
           :problem-duration-left="problemDurationLeft"
@@ -127,6 +133,11 @@ import socketService from '@/util/teacher-util/socket-service'
 // 课堂试题相关
 import problemRelated from '@/util/teacher-util/problem-related'
 
+let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
+let pollingTougaoTimer = null          // 轮询获取投稿数的信息
+let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
+let oldTougao = 0                      // 记录投稿人次，便于教师点击过后清零
+
 export default {
   name: 'Remote',
   // 找不到的data在 mixins 中
@@ -164,6 +175,8 @@ export default {
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
       postingSubmissionid: -1,                // 正在投屏的投稿的id
+      newdoubt: 0,                            //  未查看的不懂人次总数
+      newtougao: 0,                           //  未查看的投稿人次总数
     }
   },
   components: {
@@ -184,6 +197,7 @@ export default {
 
     self.pmos()
     self.fetchUserInfo().then(self.initws)
+    self.pollingPresentationTag()
   },
   mixins: [switches, socketService, problemRelated],
   methods: {
@@ -361,6 +375,67 @@ export default {
       self.setData({
         isInitiativeCtrlMaskHidden: true
       })
+    },
+    /**
+     * 轮询获取缩略图页 不懂 等标志的信息
+     *
+     */
+    pollingPresentationTag () {
+      let self = this
+
+      clearInterval(pollingPresentationTagTimer)
+      clearInterval(pollingTougaoTimer)
+
+      let url1 = API.presentation_tag
+
+      if (process.env.NODE_ENV === 'production') {
+        url1 = API.presentation_tag + '/' + self.presentationid + '/'
+      }
+
+      pollingPresentationTagTimer = setInterval(() => {
+        request.get(url1)
+          .then(jsonData => {
+            let doubt = jsonData.data.doubt
+            let sum = 0
+
+            doubt.forEach(item => {
+              sum += item
+            })
+            self.newdoubt = sum - oldDoubt
+          })
+      }, 10*1000)
+
+      let url2 = API.submissionlist
+
+      pollingPresentationTagTimer = setInterval(() => {
+        request.get(url2, {
+          'lesson_id': self.lessonid,
+          'count': 100,
+          'direction': 0
+        }).then(jsonData => {
+            let sum = jsonData.data.tougao_list.length
+
+            self.newtougao = sum - oldTougao
+          })
+      }, 10*1000)
+    },
+    /**
+     * 用户缩略图点击了 不懂 按钮，清零不懂数
+     *
+     */
+    checkDoubt () {
+      let self = this
+      oldDoubt = self.newdoubt || oldDoubt // 防止反复点击把oldDoubt置零
+      self.newdoubt = 0
+    },
+    /**
+     * 用户课堂动态点击了 投稿 按钮，清零投稿数
+     *
+     */
+    checkTougao () {
+      let self = this
+      oldTougao = self.newtougao || oldTougao // 防止反复点击把 oldTougao 置零
+      self.newtougao = 0
     },
   }
 }

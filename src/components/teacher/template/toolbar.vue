@@ -9,10 +9,12 @@
 		  <v-touch class="tool-item" v-on:tap="showThumbnail">
 		    <i class="iconfont icon-cascades f16"></i>
 		    缩略图
+        <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch class="tool-item" v-on:tap="showActivity">
 		    <i class="iconfont icon-exercise f16"></i>
 		    课堂动态
+        <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
 		  <v-touch class="tool-item last-item" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
@@ -37,87 +39,87 @@
 
 <script>
 
-export default {
-  name: 'Tollbar',
-  props: ['lessonid', 'socket'],
-  data () {
-    return {
-      isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
+  export default {
+    name: 'Tollbar',
+    props: ['lessonid', 'socket', 'newdoubt', 'newtougao'],
+    data () {
+      return {
+        isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
+      }
+    },
+    created () {
+
+    },
+    methods: {
+      /**
+       * 点击 缩略图 按钮
+       *
+       */
+      showThumbnail () {
+        this.$emit('showThumbnail')
+      },
+      /**
+       * 点击 课堂动态 按钮
+       *
+       */
+      showActivity () {
+        this.$emit('showActivity')
+      },
+      /**
+       * 点击 遥控器 按钮
+       * 一般是用于主动关闭缩略图蒙版
+       *
+       */
+      goHome () {
+        this.$emit('goHome')
+      },
+      /**
+       * 点击工具栏更多按钮，显示隐藏更多按钮卡片
+       *
+       * @event tap
+       */
+      toggleToolbarMoreBox () {
+        let self = this
+
+        self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
+      },
+      /**
+       * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
+       *
+       * @event tap
+       */
+      summonQrcodeMask () {
+        let self = this
+        let str = JSON.stringify({
+          'op': 'tryzoomqrcode',
+          'lessonid': self.lessonid,
+          'qrcode': 99
+        })
+
+        self.socket.send(str)
+        self.isToolbarMoreBoxHidden = true
+      },
+      /**
+       * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
+       *
+       * @event tap
+       */
+      callWakeup () {
+        let self = this
+        let str = JSON.stringify({
+          'op': 'callwakeup',
+          'lessonid': self.lessonid
+        })
+
+        self.socket.send(str)
+        self.isToolbarMoreBoxHidden = true
+      },
     }
-  },
-  created () {
-
-  },
-  methods: {
-    /**
-     * 点击 缩略图 按钮
-     *
-     */
-    showThumbnail () {
-      this.$emit('showThumbnail')
-    },
-    /**
-     * 点击 课堂动态 按钮
-     *
-     */
-    showActivity () {
-      this.$emit('showActivity')
-    },
-    /**
-     * 点击 遥控器 按钮
-     * 一般是用于主动关闭缩略图蒙版
-     *
-     */
-    goHome () {
-      this.$emit('goHome')
-    },
-    /**
-     * 点击工具栏更多按钮，显示隐藏更多按钮卡片
-     *
-     * @event tap
-     */
-    toggleToolbarMoreBox () {
-      let self = this
-
-      self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
-    },
-    /**
-     * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
-     *
-     * @event tap
-     */
-    summonQrcodeMask () {
-      let self = this
-      let str = JSON.stringify({
-        'op': 'tryzoomqrcode',
-        'lessonid': self.lessonid,
-        'qrcode': 99
-      })
-
-      self.socket.send(str)
-      self.isToolbarMoreBoxHidden = true
-    },
-    /**
-     * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
-     *
-     * @event tap
-     */
-    callWakeup () {
-      let self = this
-      let str = JSON.stringify({
-        'op': 'callwakeup',
-        'lessonid': self.lessonid
-      })
-
-      self.socket.send(str)
-      self.isToolbarMoreBoxHidden = true
-    },
   }
-}
 </script>
 
 <style lang="scss" scoped>
-  /*下方工具栏*/
+  @import "~@/style/_variables";
   .toolbar-root {
     position: relative;
   }
@@ -133,26 +135,37 @@ export default {
     background: rgba(34,34,34,0.9);
 
     .tool-item {
+      position: relative;
       flex: 1;
       text-align: center;
+      border-right: 1px solid #eee;
 
       .iconfont {
         display: inline-block;
         width: 100%;
         text-align: center;
       }
-    }
-    .first-item {
-      border-right: 1px solid #eee;
+
+      .info {
+        position: absolute;
+        right: 0.133333rem;
+        top: 0;
+        width: 0.666667rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        text-align: center;
+        background: #D0021B;
+        border-radius: 0.25rem;
+      }
     }
     .last-item {
-      border-left: 1px solid #eee;
+      border-right: 0;
     }
     .bulb {
       display: inline-block;
       width: 0.266667rem;
       height: 0.266667rem;
-      background-color: #ff0000;
+      background-color: $blue;
     }
   }
 
