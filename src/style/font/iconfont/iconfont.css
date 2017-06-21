@@ -15,16 +15,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* [data-dpr="1"] .iconfont {
-  font-size: 16px;
-}
-[data-dpr="2"] .iconfont {
-    font-size: 32px;
-}
-[data-dpr="3"] .iconfont {
-  font-size: 48px;
-} */
-
 .icon-fangda:before { content: "\e631"; }
 
 .icon-suoxiao:before { content: "\e62f"; }
