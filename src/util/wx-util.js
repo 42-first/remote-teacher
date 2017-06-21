@@ -15,7 +15,7 @@ function configWX () {
     .then(jsonData => {
     	// 不需要判断success，在request模块中判断如果success为false，会直接reject
     	console.log('weixin configing', jsonData)
-    	var data = res.data.js_config;
+    	var data = jsonData.data.js_config;
 
       wx.config({
         debug: false,
