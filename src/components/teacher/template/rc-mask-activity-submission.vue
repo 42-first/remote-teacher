@@ -76,7 +76,8 @@
         // 单次刷新
         request.get(url, {
           'lesson_id': self.lessonid,
-          'count': 100,
+          'start': 10000000000000000000,
+          'count': 10000000000000000000,
           'direction': 0
         }).then(jsonData => {
             // 设置试卷详情数据
