@@ -123,10 +123,7 @@
   .toolbar-root {
     position: relative;
   }
-  /* 当蒙版是缩略图时，底部的工具栏要露出来 */
-  .higher-than-InitiativeCtrlMask {
-    z-index: 10;
-  }
+  
   .rc-toolbar {
     display: flex;
     align-items: center;
