@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:            prefix + '/lesson/fetch_presentation_data',   // ppt数据
     lesson_quiz_list:                   prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
-    presentation_tag:                   prefix + '/lesson/presentation_tag',          // 获取缩略图页 不懂 等标志的信息
+    presentation_tag:                   prefix + '/v/lesson/presentation_tag',          // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   prefix + '/v/lesson/teaching_lesson_participant_list',  // 获取签到学生名单
     publish_problem:                    prefix + '/lesson/publish_problem/',          // 发布试题
     problem_statistics:                 prefix + '/v/lesson/problem_statistics',        // 试题柱状图数据
