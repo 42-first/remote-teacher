@@ -75,6 +75,7 @@ function socketProcessMessage(msg){
     if(msg.qrcode !== 0){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.setData({
+        isMsgMaskHidden: true,
         qrcodeStatus: msg.qrcode
       })
       self.showQrcodeMask()
