@@ -106,11 +106,11 @@ class Language {
       const tplName = keys.length > 0 && keys[1];
 
       let sTpl = this.languageRes[pageName]['complex'][tplName];
-      console.log(sTpl);
+      // console.log(sTpl);
 
       // 根据特征或者规则 提取业务数据
       let text = this.temple(sTpl, info)
-      console.log(text);
+      // console.log(text);
 
       element.innerText = text || value;
     })
