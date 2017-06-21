@@ -117,7 +117,7 @@ var mixin = {
     sendXinTiao() {
       this.xintiaoTimer = setInterval(()=>{
         this.socket.send(JSON.stringify({ op: 'xintiao', lessonid: this.lessonID }))
-      }, 30000)
+      }, 60000)
     },
     /*
     * @method 根据websocket信息策略处理
