@@ -33,12 +33,9 @@ Vue.$toast = Vue.prototype.$toast = Toast;
 // FastClick.attach(document.body)
 document.addEventListener('touchstart', function(){},false);
 
-export default new Router({
+const studentRouter = new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/student' : '/',
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
-  // scrollBehavior (to, from, savedPosition) {
-  //   return { x: 0, y: 0 }
-  // },
   routes: [
     {
       path: '/',
@@ -81,3 +78,12 @@ export default new Router({
     }
   ]
 })
+
+studentRouter.afterEach(route=>{
+  // google统计
+  setTimeout(() => {
+    typeof ga === 'function' && ga('send', 'pageview', location.pathname);
+  }, 1000);
+});
+
+export default studentRouter;
