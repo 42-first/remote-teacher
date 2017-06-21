@@ -214,13 +214,14 @@ var mixin = {
           // 试卷结束
           case 'quizfinished':
           case 'callpaused':
-            item = msg.event
+            item = msg['event'];
             this.addMessage({ type: 1, message: item['title'] });
 
             break
 
            // 下课啦
           case 'lessonfinished':
+            item = msg['event'];
             this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
 
             // 课程状态
@@ -250,7 +251,7 @@ var mixin = {
           // 红包
           case 'redpacket':
           case 'updateredpacket':
-            item = msg.event
+            item = msg['event'];
 
             this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
 
