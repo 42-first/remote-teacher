@@ -140,7 +140,7 @@
         countdown: 10,
         topStatus: '',
         //
-        title: '学生接收器',
+        title: '雨课堂',
         // 课程ID
         lessonID: 0,
         // pptID

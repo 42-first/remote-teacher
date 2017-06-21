@@ -337,6 +337,7 @@
           padding: 0 0.266667rem;
           /* width: 1.6rem; */
           height: 0.666667rem;
+          line-height: 0.666667rem;
 
           color: #639EF4;
           border: 1px solid #639EF4;
