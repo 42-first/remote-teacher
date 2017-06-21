@@ -100,6 +100,7 @@
 /* eslint-disable no-undef, no-new */
 
 import request from '@/util/request'
+import {configWX} from '@/util/wx-util'
 import API from '@/config/api'
 
 if (process.env.NODE_ENV !== 'production') {
@@ -191,6 +192,7 @@ export default {
   created () {
     this.lessonid = this.$route.params.lessonid
     this.fetchLessonStatus()
+    configWX()
   },
   mounted () {
     let self = this
