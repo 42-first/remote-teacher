@@ -41,10 +41,9 @@
 
   export default {
     name: 'Tollbar',
-    props: ['lessonid', 'socket', 'newdoubt', 'newtougao'],
+    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden'],
     data () {
       return {
-        isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
       }
     },
     created () {
@@ -81,7 +80,7 @@
       toggleToolbarMoreBox () {
         let self = this
 
-        self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
+        self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
       },
       /**
        * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
@@ -123,10 +122,7 @@
   .toolbar-root {
     position: relative;
   }
-  /* 当蒙版是缩略图时，底部的工具栏要露出来 */
-  .higher-than-InitiativeCtrlMask {
-    z-index: 10;
-  }
+
   .rc-toolbar {
     display: flex;
     align-items: center;

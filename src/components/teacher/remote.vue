@@ -22,11 +22,12 @@
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
-        :class="['dontcallback', {'higher-than-InitiativeCtrlMask': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity'}]"
+        :class="['dontcallback']"
         :lessonid="lessonid"
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
+        :isToolbarMoreBoxHidden.sync="isToolbarMoreBoxHidden"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -34,9 +35,9 @@
     </div>
 
     <!-- 蒙版层 -->
-    <div id="templates" class="templates dontcallback">
+    <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
+    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback', {'yield-toolbar': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity', 'yield-toolbar-more': !isToolbarMoreBoxHidden}]">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
-      <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           ref="InitiativeCtrlMask"
@@ -178,6 +179,7 @@ export default {
       postingSubmissionid: -1,                // 正在投屏的投稿的id
       newdoubt: 0,                            //  未查看的不懂人次总数
       newtougao: 0,                           //  未查看的投稿人次总数
+      isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
     }
   },
   components: {
