@@ -261,13 +261,28 @@
           self.bindTouchEvents();
 
           // sentry 配置
-          typeof Raven !== 'undefined' && Raven.setUserContext({
-            userid: self.userID
-          });
+          this.setSentry();
         });
       },
 
-     /*
+      /*
+      * @method sentry ga 配置
+      */
+      setSentry() {
+        if(typeof Raven !== 'undefined') {
+          Raven.config('http://1a033df516274a349716c21d7d4ce6b2@rain-sentry.xuetangx.com/4').install();
+          Raven.setUserContext({ userid: this.userID });
+        } else {
+          setTimeout(() => {
+            Raven.config('http://1a033df516274a349716c21d7d4ce6b2@rain-sentry.xuetangx.com/4').install();
+            Raven.setUserContext({ userid: this.userID });
+          }, 1500)
+        }
+
+        typeof ga === 'function' && ga('set', 'userId', this.userID);
+      },
+
+      /*
       * @method 测试环境初始化timeline
       */
       testTimeline() {
