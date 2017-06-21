@@ -34,7 +34,7 @@
     </div>
 
     <!-- 蒙版层 -->
-    <div id="templates" class="templates dontcallback">
+    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" class="templates dontcallback">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
       <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
