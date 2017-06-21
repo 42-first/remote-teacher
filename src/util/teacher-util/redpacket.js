@@ -318,7 +318,7 @@ export default {
 	  orderWXPayThenPay (money, payCB) {
 	    let self = this
 
-	    wxpay().catch(() => {
+	    wxpay(money, payCB).catch(() => {
       	payPromiseMethod.reject('支付失败')
       })
 	  },
