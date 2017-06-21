@@ -83,7 +83,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newtougao'],
+    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newtougao', 'isRcMaskActivityAtRoot'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -107,6 +107,8 @@
       self.$on('RcMaskActivity', function () {
         self.fetchParticipantList()
       })
+    },
+    updated () {
     },
     methods: {
       /**
@@ -137,6 +139,8 @@
       showParticipantList () {
         let self = this
         self.isParticipantlistHidden = false
+
+        self.setAtRootFalse()
       },
       /**
        * 点击 返回 按钮关闭全部人员名单
@@ -146,6 +150,8 @@
       closeParticipantList () {
         let self = this
         self.isParticipantlistHidden = true
+
+        self.setAtRootTrue()
       },
       /**
        * 点击 试卷 按钮展示试卷列表
@@ -157,6 +163,8 @@
         self.isPaperHidden = false
 
         self.$refs.RcMaskActivityPaper.$emit('showPaper')
+
+        self.setAtRootFalse()
       },
       /**
        * 点击 弹幕 按钮展示弹幕控制
@@ -168,6 +176,8 @@
         self.isDanmuboxHidden = false
 
         self.$refs.RcMaskActivityDanmubox.$emit('showDanmubox')
+
+        self.setAtRootFalse()
       },
       /**
        * 点击 投稿 按钮展示投稿控制
@@ -181,6 +191,8 @@
         self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
         // 清零投稿未读数
         self.$emit('checkTougao')
+
+        self.setAtRootFalse()
       },
       /**
        * 点击 返回 按钮关闭试卷列表
@@ -190,6 +202,8 @@
       closePaper () {
         let self = this
         self.isPaperHidden = true
+
+        self.setAtRootTrue()
       },
       /**
        * 点击 返回 返回课堂动态
@@ -199,6 +213,8 @@
       closeDanmubox () {
         let self = this
         self.isDanmuboxHidden = true
+
+        self.setAtRootTrue()
       },
       /**
        * 点击 返回 返回课堂动态
@@ -208,6 +224,26 @@
       closeSubmissionbox () {
         let self = this
         self.isSubmissionHidden = true
+
+        self.setAtRootTrue()
+      },
+      /**
+       * 确认当前在课堂动态根部页面
+       *
+       */
+      setAtRootTrue () {
+        let self = this
+
+        self.$emit('update:isRcMaskActivityAtRoot', true)
+      },
+      /**
+       * 确认当前在课堂动态页面的子页面
+       *
+       */
+      setAtRootFalse () {
+        let self = this
+
+        self.$emit('update:isRcMaskActivityAtRoot', false)
       },
     }
   }
