@@ -236,9 +236,6 @@
         Promise.all([this.getPresentationList()]).then((res) => {
           self.initws();
 
-          // this.title = res[0].Title;
-          // document.title = res[0].Title;
-
           if (process.env.NODE_ENV !== 'production') {
             // self.testTimeline();
           }
@@ -262,6 +259,11 @@
           }, 10000)
 
           self.bindTouchEvents();
+
+          // sentry 配置
+          typeof Raven !== 'undefined' && Raven.setUserContext({
+            userid: self.userID
+          });
         });
       },
 
