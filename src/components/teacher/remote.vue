@@ -431,7 +431,8 @@ export default {
       pollingPresentationTagTimer = setInterval(() => {
         request.get(url2, {
           'lesson_id': self.lessonid,
-          'count': 100,
+          'start': 10000000000000000000,
+          'count': 10000000000000000000,
           'direction': 0
         }).then(jsonData => {
             let sum = jsonData.data.tougao_list.length
