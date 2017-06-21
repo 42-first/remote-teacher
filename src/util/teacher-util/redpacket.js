@@ -336,11 +336,7 @@ export default {
 	    request.post(API.payquery, postData)
         .then(jsonData => {
         	// 不需要判断success，在request模块中判断如果success为false，会直接reject
-        	console.log('查询支付后状态', jsonData)
-        	let data = jsonData.data
-	        console.log(data)
-	        
-	        if(data.status === 0 && data.data.trade_state === 'SUCCESS'){
+	        if(jsonData.status === 0 && jsonData.data.trade_state === 'SUCCESS'){
 	          self.connectLittleBank()
 	        }else{
 	          payPromiseMethod.reject('支付失败')

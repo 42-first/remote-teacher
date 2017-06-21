@@ -18,7 +18,7 @@ function configWX () {
     	let data = jsonData.data.js_config;
 
       wx.config({
-        debug: true,
+        debug: false,
         appId: data.appId,
         timestamp: data.timestamp,
         nonceStr: data.nonceStr,
@@ -28,7 +28,7 @@ function configWX () {
         'downloadVoice', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType',  'scanQRCode',  'chooseWXPay', 'openProductSpecificView',  'addCard',  'chooseCard', 'openCard' ]
       });
     }).catch(() => {
-    	alert('微信配置失败')
+    	console.error('微信配置失败')
     })
 }
 
@@ -51,7 +51,6 @@ function wxpay (money, payCB) {
         signType: jsonData.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
         paySign: jsonData.data.paySign, // 支付签名
         success: function (res) {
-        	alert(JSON.stringify(res))
           // 支付成功后的回调函数
           // 微信jssdk支付和小程序支付的回调不一样，jssdk是 'chooseWXPay:ok'
           if(res.errMsg == "chooseWXPay:ok" ) {
@@ -63,7 +62,7 @@ function wxpay (money, payCB) {
           }
         },
         fail: function(errMsg){
-        	alert(JSON.stringify(errMsg))
+        	console.error(JSON.stringify(errMsg))
           payCB && payCB({success: false, errMsg: 'failorcancel'})
         }
       })
