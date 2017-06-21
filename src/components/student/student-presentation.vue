@@ -182,7 +182,8 @@
         isMore: false,
         // todo: 是否新版本 隐藏功能
         version: 0.9,
-        commitDiffURL: '/lesson/lesson_submit_difficulties'
+        commitDiffURL: '/lesson/lesson_submit_difficulties',
+        backURL: ''
       };
     },
     components: {
@@ -200,6 +201,12 @@
           setTimeout(() => {
             typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
           }, 300)
+        }
+      },
+      lessonStatus (newValue, oldValue) {
+        // 下课啦
+        if(newValue === 1) {
+          this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
         }
       }
     },
@@ -601,8 +608,11 @@
        *
        */
       handleBack(){
-        // this.$router.back();
-        history.go(-1);
+        if(this.backURL) {
+          location.href = this.backURL;
+        } else {
+          history.go(-1);
+        }
       }
     },
     created() {
