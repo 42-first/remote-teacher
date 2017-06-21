@@ -27,7 +27,7 @@
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
-        :isToolbarMoreBoxHidden.sync="isToolbarMoreBoxHidden"
+        :is-toolbar-more-box-hidden.sync="isToolbarMoreBoxHidden"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -36,7 +36,7 @@
 
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
-    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback', {'yield-toolbar': initiativeCtrlMaskTpl === 'RcMaskThumbnail' || initiativeCtrlMaskTpl === 'RcMaskActivity', 'yield-toolbar-more': !isToolbarMoreBoxHidden}]">
+    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback', {'yield-toolbar': isYieldToolbar, 'yield-toolbar-more': !isToolbarMoreBoxHidden}]">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
@@ -58,6 +58,7 @@
           :posting-submissionid="postingSubmissionid"
           :newdoubt="newdoubt"
           :newtougao="newtougao"
+          :is-rc-mask-activity-at-root.sync="isRcMaskActivityAtRoot"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
@@ -180,6 +181,18 @@ export default {
       newdoubt: 0,                            //  未查看的不懂人次总数
       newtougao: 0,                           //  未查看的投稿人次总数
       isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
+      isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
+    }
+  },
+  computed: {
+    // 判断在 InitiativeCtrlMask 蒙版时是否显示工具栏部分
+    isYieldToolbar: function () {
+      let self = this
+      
+      // 当前蒙版是缩略图或课堂动态根组件时，显示工具栏（课堂动态子页面不显示工具栏）
+      let status = self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
+
+      return status
     }
   },
   components: {
