@@ -148,6 +148,7 @@
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
+      document.title = '弹幕';
     },
     mounted() {
     },

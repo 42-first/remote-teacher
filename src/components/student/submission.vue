@@ -323,6 +323,7 @@
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
+      document.title = '投稿';
     },
     mounted() {
     },
