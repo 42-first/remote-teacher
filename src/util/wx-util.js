@@ -63,6 +63,10 @@ function wxpay (money, payCB) {
         },
         fail: function(errMsg){
         	console.error(JSON.stringify(errMsg))
+          payCB && payCB({success: false, errMsg: 'failorfail'})
+        },
+        cancel: function(errMsg){
+          console.error(JSON.stringify(errMsg))
           payCB && payCB({success: false, errMsg: 'failorcancel'})
         }
       })
