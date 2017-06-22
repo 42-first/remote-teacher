@@ -176,6 +176,14 @@ function socketProcessMessage(msg){
     self.showProblemResult(msg.problemid);
   }
 
+  // pc端发题，通知我
+  if (msg.op == 'unlockproblem') {
+    let current = self.data.current - 1
+    self.startBell(current, msg.problem.limit)
+    self.isProblemPublished = true,
+    return
+  }
+
   if (msg.op == 'turnondanmu') {
     self.openDanmuBtn()
     return
