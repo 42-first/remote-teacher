@@ -180,6 +180,7 @@
           }
           .cont {
             flex: 1;
+            word-break: break-word;
 
             .author {
               color: $blue;
