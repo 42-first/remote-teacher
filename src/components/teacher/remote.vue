@@ -205,9 +205,15 @@ export default {
     RcMaskActivity
   },
   created () {
-    this.lessonid = this.$route.params.lessonid
-    this.fetchLessonStatus()
-    configWX()
+    let self = this
+
+    self.lessonid = self.$route.params.lessonid
+    
+    self.fetchPPTVersion()
+      .then(() => {
+        self.fetchLessonStatus()
+        configWX()
+      })
   },
   mounted () {
     let self = this
@@ -266,6 +272,22 @@ export default {
       })
 
       self.socket.send(str)
+    },
+    /**
+     * 查询当前课程是否已经结束，结束的话跳转到我的课程页
+     *
+     */
+    fetchPPTVersion () {
+      let self = this
+      let url = API.lesson_ppt_version
+
+      return request.get(url,{'lesson_id': self.lessonid})
+        .then(jsonData => {
+          if (jsonData.data.ppt_version < 0.9) {
+            // 0.8版本有随机点名功能； 0.9+的版本有投屏等功能
+            location.href = '/v/lesson/lesson_info/'+ self.lessonid
+          }
+        })
     },
     /**
      * 查询当前课程是否已经结束，结束的话跳转到我的课程页

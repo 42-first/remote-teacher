@@ -10,6 +10,7 @@ let prefix = ''
 /* eslint-disable key-spacing, comma-dangle */
 if (process.env.NODE_ENV === 'production') {
   api = {
+    lesson_ppt_version:                 prefix + '/v/lesson/lesson_ppt_version',
     lesson_status:                      prefix + '/v/lesson/lesson_status',
     userinfo:                           prefix + '/v/lesson/lesson_user_info',
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   api = {
+    lesson_ppt_version:                '/static/mock/lesson_ppt_version.json',
     lesson_status:                      '/static/mock/lesson_status.json',
     userinfo:                           '/static/mock/userinfo_teacher.json',
     remote_control_list:                '/static/mock/remote_control_list.json',        // 遥控器列表
