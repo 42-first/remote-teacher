@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '*',
-      name: 'remote-list',
+      name: 'remote-fallback',
       component: RemoteList
     }
   ]

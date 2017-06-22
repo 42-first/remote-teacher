@@ -1,10 +1,11 @@
 <template>
   <!-- 教师遥控器列表 -->
   <div class="hello">
-    <h1>遥控器列表</h1>
-    <button>刷新还是轮询？</button>
-    <div v-for="item in list">
-      <router-link :to="'/' + item.id">遥控器id：{{item.id}}</router-link>
+    <h1 class=" title f20">您可以控制的遥控器</h1>
+    <div class="list" v-for="item in list">
+      <div class="item">
+        <router-link :to="'/' + item.id" class="link f18">遥控器：{{item.title}}</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -41,22 +42,22 @@ export default {
 }
 </script>
 
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
+<style lang="scss" scoped>
+  @import "~@/style/_variables";
+  .title {
+    margin: 0.5rem;
+    text-align: center;
+  }
+  .list {
+    
+    .item {
+      margin-bottom: 0.266667rem;
+      padding: 0 1rem;
+      background: $blue;
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+      .link {
+        color: $white;
+      }
+    }
+  }
 </style>
