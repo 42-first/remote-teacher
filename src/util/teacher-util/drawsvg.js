@@ -2,15 +2,70 @@
  * @module 画饼图
  */
 
+let DPR = document.querySelector('html').dataset.dpr - 0
+let CENTER, RADIUS_OUTTER, RADIUS_INNER // 圆环中心，圆环外径，圆环内径
+let TEXTCONFIG // 右侧文字间距的设置
+
 // 圆心位置
-let CENTER = {
-  x: 100,
-  y: 100
+switch (DPR) {
+  case 1:
+    CENTER = {
+      x: 50,
+      y: 50
+    }
+    RADIUS_OUTTER = 50
+    RADIUS_INNER = 40
+    TEXTCONFIG = {
+      kuandu: 100, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 5, // 圆点半径
+      fanwei: 10, // 分数范围距离圆点的距离 text1
+      renshu: 65, // 人数距离圆点的距离 text2
+      xiegang: 75, // 斜杠距离圆点的距离 text3
+      zongrenshu: 80, // 总人数距离圆点的距离 text4
+      hangjianju: 20, // 注释文案的行间距
+      wenzipianyi: 5, // 文字比圆点往下的偏移
+      zongrenshufz: 12 // 总人数的字体大小
+    }
+    break
+  case 2:
+    CENTER = {
+      x: 100,
+      y: 100
+    }
+    RADIUS_OUTTER = 100
+    RADIUS_INNER = 80
+    TEXTCONFIG = {
+      kuandu: 200, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 10, // 圆点半径
+      fanwei: 20, // 分数范围距离圆点的距离 text1
+      renshu: 130, // 人数距离圆点的距离 text2
+      xiegang: 150, // 斜杠距离圆点的距离 text3
+      zongrenshu: 160, // 总人数距离圆点的距离 text4
+      hangjianju: 40, // 注释文案的行间距
+      wenzipianyi: 10, // 文字比圆点往下的偏移
+      zongrenshufz: 24 // 总人数的字体大小
+    }
+    break
+  case 3:
+    CENTER = {
+      x: 150,
+      y: 150
+    }
+    RADIUS_OUTTER = 150
+    RADIUS_INNER = 120
+    TEXTCONFIG = {
+      kuandu: 300, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 15, // 圆点半径
+      fanwei: 30, // 分数范围距离圆点的距离 text1
+      renshu: 195, // 人数距离圆点的距离 text2
+      xiegang: 225, // 斜杠距离圆点的距离 text3
+      zongrenshu: 240, // 总人数距离圆点的距离 text4
+      hangjianju: 60, // 注释文案的行间距
+      wenzipianyi: 15, // 文字比圆点往下的偏移
+      zongrenshufz: 36 // 总人数的字体大小
+    }
+    break
 }
-// 圆环外径
-let RADIUS_OUTTER = 100
-// 圆环内径
-let RADIUS_INNER = 80
 
 //计算在一定的圆心和半径的圆上，某个角度上的点的位置
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -171,30 +226,30 @@ function drawPieSolid (ele, range, arr1, config){
     var text2 = createSVG('text');
     var text3 = createSVG('text');
     var text4 = createSVG('text');
-    x = svgWidth-200; y = 37+40*i;
+    x = svgWidth-TEXTCONFIG.kuandu; y = 37+TEXTCONFIG.hangjianju*i;
     circle.setAttribute("cx", x);
     circle.setAttribute("cy", y);
-    circle.setAttribute("r", 10);
+    circle.setAttribute("r", TEXTCONFIG.circle);
     circle.setAttribute("fill", color[i]);
 
-    text1.setAttribute("x", x+20+"px");
-    text1.setAttribute("y", y+10+"px");
+    text1.setAttribute("x", x+TEXTCONFIG.fanwei+"px");
+    text1.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text2.setAttribute("x", x+125+"px");
-    text2.setAttribute("y", y+10+"px");
+    text2.setAttribute("x", x+TEXTCONFIG.renshu+"px");
+    text2.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text3.setAttribute("x", x+150+"px");
-    text3.setAttribute("y", y+10+"px");
+    text3.setAttribute("x", x+TEXTCONFIG.xiegang+"px");
+    text3.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text4.setAttribute("x", x+160+"px");
-    text4.setAttribute("y", y+10+"px");
+    text4.setAttribute("x", x+TEXTCONFIG.zongrenshu+"px");
+    text4.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
 
     text1.setAttribute("fill", "#FFFFFF");
     text2.setAttribute("fill", "#FFFFFF");
     text3.setAttribute("fill", "#FFFFFF");
     text4.setAttribute("fill", "#FFFFFF");
-    text4.setAttribute("style", "font-size: 25px");
+    text4.setAttribute("style", "font-size: "+TEXTCONFIG.zongrenshufz+"px");
 
 
     text1.textContent = range[i];
