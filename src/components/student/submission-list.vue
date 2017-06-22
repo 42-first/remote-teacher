@@ -309,13 +309,14 @@
     height: 100%;
     background: #fff;
 
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
   }
 
   .page-wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    min-height: 100%;
+    height: 100%;
   }
 
   .selected-box {
@@ -330,10 +331,10 @@
   \*------------------*/
 
   .header {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
+    // z-index: 1;
+    // position: fixed;
+    // top: 0;
+    // left: 0;
     width: 100%;
     height: 1.173333rem;
     line-height: 1.173333rem;
@@ -374,12 +375,22 @@
 
 
   .submission-mine {
-    position: absolute;
-    top: 1.173333rem;
-    left: 0;
+    // position: absolute;
+    // top: 1.173333rem;
+    // left: 0;
+    // width: 100%;
+    // min-height: 100%;
+    // padding: 0 0.453333rem;
+
+    // overflow-y: scroll;
+    // -webkit-overflow-scrolling: touch;
+
+    flex: 1;
     width: 100%;
-    min-height: 100%;
     padding: 0 0.453333rem;
+
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 
     .submission-list {
 
