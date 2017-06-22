@@ -23,7 +23,7 @@
 		</div>
 
 		<!-- 更多的内容 -->
-		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f18">
+		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
 		    <i class="iconfont icon-erweima f24"></i>
 		    <span>二维码</span>
