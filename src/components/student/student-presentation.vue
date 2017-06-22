@@ -35,7 +35,7 @@
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
-      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" ref="loadmore">
+      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" ref="loadmore">
 
         <section class="student__timeline J_cards">
           <!-- 时间轴内容列表 -->
