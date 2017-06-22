@@ -139,6 +139,7 @@
         // socket重连倒计时
         countdown: 10,
         topStatus: '',
+        topDistance: 140,
         //
         title: '雨课堂',
         // 课程ID

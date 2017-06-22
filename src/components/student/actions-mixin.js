@@ -76,8 +76,8 @@ var actionsMixin = {
     addPPT(data) {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation['Slides'];
-      let slideData = pptData[data.pageIndex-1];
+      let pptData = presentation && presentation['Slides'];
+      let slideData = pptData && pptData[data.pageIndex-1];
       let index = -1;
 
       // 是否含有重复数据
@@ -87,10 +87,6 @@ var actionsMixin = {
 
       // 如果是习题图片，则不添加
       if (!slideData || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
-
-        // slideData && slideData['Problem'] && data.isFetch &&
-        // this.addProblem({ type: 3, pageIndex: data.pageIndex, time: data.time, presentationid: data.presentationid, limit: -1, event: null });
-
         return;
       }
 
