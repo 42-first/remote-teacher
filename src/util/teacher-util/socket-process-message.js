@@ -180,7 +180,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'unlockproblem') {
     let current = self.data.current - 1
     self.startBell(current, msg.problem.limit)
-    self.isProblemPublished = true,
+    self.isProblemPublished = true
     return
   }
 
