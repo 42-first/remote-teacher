@@ -414,7 +414,8 @@ export default {
       let self = this
 
       self.setData({
-        isInitiativeCtrlMaskHidden: true
+        isInitiativeCtrlMaskHidden: true,
+        initiativeCtrlMaskTpl: ''
       })
     },
     /**
