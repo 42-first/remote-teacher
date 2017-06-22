@@ -19,24 +19,24 @@
     <section class="chart-box">
       <div class="fsfb f18">分数分布</div>
       <div id="pieSolid" class="pie-solid">
-        <svg id="quizpie" class="f16" width="100%" ></svg>
+        <svg id="quizpie" class="f16" width="100%" height="200px"></svg>
     </div>
     </section>
 
     <!-- 下方按钮 -->
     <section class="group-btns">
       <v-touch class="btn-item" v-on:tap="collectQuiz">
-        <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
+        <!-- <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" /> -->
         <div class="btn-desc f15">{{isPaperCollected ? '已收卷' : '收卷'}}</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="postQuizresult">
-        <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" />
+        <!-- <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" /> -->
         <div class="btn-desc f15">投屏</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="showQuizresultDetail">
-        <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
+        <!-- <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" /> -->
         <div class="btn-desc f15">查看详情</div>
       </v-touch>
     </section>
@@ -57,7 +57,7 @@
 
   import request from '@/util/request'
   import API from '@/config/api'
-  import drawRingSolid from '@/util/teacher-util/drawsvg'
+  import {drawRingSolid} from '@/util/teacher-util/drawsvg'
 
   // 已发试卷详情页
   import RcMaskActivityPaperQuizresultDetail from '@/components/teacher/template/rc-mask-activity-paper-quizresult-detail'
@@ -188,7 +188,7 @@
                 arr1.push(item.count);
             };
 
-            drawRingSolid(range,arr1);
+            drawRingSolid('#quizpie', range,arr1);
             return
             //没人做题就不画饼图
             if(data.total == 0){
@@ -355,6 +355,12 @@
       
       .fsfb {
         text-align: center;
+        margin-bottom: 1.0rem;
+      }
+
+      .pie-solid {
+        width: 80%;
+        margin: 0 auto;
       }
     }
     

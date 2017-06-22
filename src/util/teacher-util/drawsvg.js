@@ -2,6 +2,16 @@
  * @module 画饼图
  */
 
+// 圆心位置
+let CENTER = {
+  x: 100,
+  y: 100
+}
+// 圆环外径
+let RADIUS_OUTTER = 100
+// 圆环内径
+let RADIUS_INNER = 80
+
 //计算在一定的圆心和半径的圆上，某个角度上的点的位置
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
@@ -45,7 +55,7 @@ function createSVG(tag)
 
 //画弧线
 //var arr = [20,30,150];
-function drawPie (arr){
+function drawPie (ele, arr){
   // var arr = [0,0,0];
 
   //1.算比例
@@ -68,7 +78,7 @@ function drawPie (arr){
     aAngle[i]=240*aScale[i];
   }
 
-  var svg=$('#piecontainer').find('svg')[0];
+  var svgDom=document.querySelector(ele);
 
   var r = 70;
   var centX = 150,centY=75;
@@ -76,28 +86,32 @@ function drawPie (arr){
   var path=createSVG('path');
   path.setAttribute("d", describeArc(centX, centY,r, 240, 240+aAngle[0]));
   path.setAttribute("style","fill:white;stroke:#3fe3c2;stroke-width:4");
-  svg.appendChild(path);
+  svgDom.appendChild(path);
 
   var path2=createSVG('path');
   path2.setAttribute("d", describeArc(centX, centY, r, 240+aAngle[0],240+aAngle[0]+aAngle[1]));
   path2.setAttribute("style","fill:white;stroke:#c8cfdb;stroke-width:4");
-  svg.appendChild(path2);
+  svgDom.appendChild(path2);
 
   var path3=createSVG('path');
   path3.setAttribute("d", describeArc(centX, centY, r, 240+aAngle[0]+aAngle[1],240+240 ));
   path3.setAttribute("style","fill:white;stroke:#e7e7e7;stroke-width:2");
-  svg.appendChild(path3);
+  svgDom.appendChild(path3);
 };
 
 //var range = ['2.85~3.0','2.55~2.85','2.25~2.55','1.8~2.25','0~1.8']
 //var arr1 = [0,0,0,0,1];
-function drawPieSolid (range,arr1,config){
+function drawPieSolid (ele, range, arr1, config){
+  var svgDom=document.querySelector(ele);
+
+  while (svgDom.lastChild) {
+    svgDom.removeChild(svgDom.lastChild);
+  }
   var sum1 = 0;
   for(var i = 0; i < arr1.length; i++) sum1 += arr1[i];
 
-  var color = ['#9fe0f6','#3fe3c3','#9defbf','#f4d4ad','#f5f185'];
-  var svg1=document.querySelector('#quizpie');
-  console.log(svg1)
+  // var color = ['#9fe0f6','#3fe3c3','#9defbf','#f4d4ad','#f5f185'];
+  var color = ['#346EB9', '#8BFFE5', '#51F3CF', '#3ACCD3', '#3AA4D3']
   if(sum1 > 0){
     var aScale1=[];
     for(var i=0;i<arr1.length;i++)
@@ -115,8 +129,8 @@ function drawPieSolid (range,arr1,config){
       }
     }
 
-    var r1 = 70;
-    var centX1 = 80, centY1 = 80, startAngle1 = 0, endAngle1 = aAngle1[0];
+    var r1 = RADIUS_OUTTER;
+    var centX1 = CENTER.x, centY1 = CENTER.y, startAngle1 = 0, endAngle1 = aAngle1[0];
 
     var start = {}, end = {}, arcSweep;
 
@@ -131,50 +145,48 @@ function drawPieSolid (range,arr1,config){
       var tpath=createSVG('path');
       tpath.setAttribute("d", describeSliceOfPie(centX1, centY1,r1, start, end, arcSweep));
       tpath.setAttribute("style","fill:"+color[i]+";stroke-width:1;stroke:#c7cfda;opacity:0.8");
-      svg1.appendChild(tpath);
+      svgDom.appendChild(tpath);
       startAngle1 += aAngle1[i];
     }
 
     //return;
   }else{
-    var r1 = 70;
-    var centX1 = 80, centY1 = 80;
+    var r1 = RADIUS_OUTTER;
+    var centX1 = CENTER.x, centY1 = CENTER.y;
     var tpath=createSVG('circle');
     tpath.setAttribute("cx",centX1);
     tpath.setAttribute("cy",centY1);
     tpath.setAttribute("r",r1);
     tpath.setAttribute("style","fill:#c8cfdb;stroke-width:1;stroke:#c7cfda;opacity:0.8");
-    svg1.appendChild(tpath);
+    svgDom.appendChild(tpath);
   }
 
 
   var x, y;
-  // var svgWidth = $("#pieSolid")[0].offsetWidth;
-  var svgWidth = document.querySelector('#pieSolid').offsetWidth
+  var svgWidth = svgDom.parentElement.offsetWidth
   for(var i = 0; i < arr1.length; i++)
   {
-    var rect = createSVG('rect');
+    var circle = createSVG('circle');
     var text1 = createSVG('text');
     var text2 = createSVG('text');
     var text3 = createSVG('text');
     var text4 = createSVG('text');
-    x = svgWidth-170; y = 37+20*i;
-    rect.setAttribute("x", x+"px");
-    rect.setAttribute("y", y+"px");
-    rect.setAttribute("width","16px");
-    rect.setAttribute("height","10px");
-    rect.setAttribute("style","fill:"+color[i]+";pacity:0.8");
+    x = svgWidth-200; y = 37+40*i;
+    circle.setAttribute("cx", x);
+    circle.setAttribute("cy", y);
+    circle.setAttribute("r", 10);
+    circle.setAttribute("fill", color[i]);
 
     text1.setAttribute("x", x+20+"px");
     text1.setAttribute("y", y+10+"px");
 
-    text2.setAttribute("x", x+105+"px");
+    text2.setAttribute("x", x+125+"px");
     text2.setAttribute("y", y+10+"px");
 
-    text3.setAttribute("x", x+130+"px");
+    text3.setAttribute("x", x+150+"px");
     text3.setAttribute("y", y+10+"px");
 
-    text4.setAttribute("x", x+137+"px");
+    text4.setAttribute("x", x+160+"px");
     text4.setAttribute("y", y+10+"px");
 
 
@@ -182,45 +194,43 @@ function drawPieSolid (range,arr1,config){
     text2.setAttribute("fill", "#FFFFFF");
     text3.setAttribute("fill", "#FFFFFF");
     text4.setAttribute("fill", "#FFFFFF");
+    text4.setAttribute("style", "font-size: 25px");
 
 
     text1.textContent = range[i];
     text2.textContent = arr1[i];
     text3.textContent = '/';
     text4.textContent = sum1;
-    svg1.appendChild(text1);
-    svg1.appendChild(rect);
-    svg1.appendChild(text2);
-    svg1.appendChild(text3);
-    svg1.appendChild(text4);
+    svgDom.appendChild(text1);
+    svgDom.appendChild(circle);
+    svgDom.appendChild(text2);
+    svgDom.appendChild(text3);
+    svgDom.appendChild(text4);
   }
 
   //添加总分显示
-  if (arguments.length>=3){
+  if (arguments.length>=4){
     x = svgWidth-170; y = 37+15+20*5;
     var text5 = createSVG('text');
     text5.setAttribute("x", x+"px");
     text5.setAttribute("y", y+"px");
     text5.setAttribute("style", "font-size:16px");
     text5.textContent = "总分:"+config.total+"分";
-    svg1.appendChild(text5);
+    svgDom.appendChild(text5);
   }
 
 };
 
-function drawRingSolid (range,arr1){
-  drawPieSolid(range,arr1);
-  var svg1=document.querySelector('#quizpie');
-  var centX1 = 80, centY1 = 80, r1 = 70;
+function drawRingSolid (ele, range,arr1){
+  var svgDom=document.querySelector(ele);
+  drawPieSolid(ele, range, arr1);
+  var centX1 = CENTER.x, centY1 = CENTER.y, r1 = RADIUS_INNER;
   var circle = createSVG('circle');
   circle.setAttribute("cx", centX1);
   circle.setAttribute("cy", centY1);
   circle.setAttribute("r", r1>>1);
-  circle.setAttribute("fill", "#fff");
-  svg1.appendChild(circle);
+  circle.setAttribute("fill", "#000000");
+  svgDom.appendChild(circle);
 }
 
-var svg1=document.querySelector('#quizpie')
-// console.log(svg1.offsetWidth)
-
-export default drawRingSolid
+export {drawPieSolid, drawRingSolid}
