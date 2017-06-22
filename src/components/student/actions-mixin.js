@@ -185,6 +185,10 @@ var actionsMixin = {
         cover: slideData['Cover']
       })
 
+      // 预加载习题图片
+      let oImg = new Image();
+      oImg.src = slideData && slideData['Cover'];
+
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
         return item.type === 3 && item.pageIndex === data.pageIndex && item.presentationid && data.presentationid;
