@@ -161,7 +161,7 @@
               text = '提交中...';
               break;
             case 3:
-              text = '提交完成';
+              text = '提交成功';
               break;
             default:
               break;
