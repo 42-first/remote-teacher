@@ -122,12 +122,12 @@
               }, 2000)
 
               // todo: del 新版接收器去掉此通信socket通信
-              socket.send(JSON.stringify({
-                op: 'newdanmu',
-                lessonid: self.lessonID,
-                danmuid: data.danmuID,
-                danmu: message
-              }));
+              // socket.send(JSON.stringify({
+              //   op: 'newdanmu',
+              //   lessonid: self.lessonID,
+              //   danmuid: data.danmuID,
+              //   danmu: message
+              // }));
 
               return data;
             }

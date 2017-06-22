@@ -73,7 +73,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}题</p>
+              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
             </div>
             <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">
