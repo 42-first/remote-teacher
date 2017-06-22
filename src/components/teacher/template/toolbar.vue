@@ -96,7 +96,7 @@
         })
 
         self.socket.send(str)
-        self.isToolbarMoreBoxHidden = true
+        self.$emit('update:isToolbarMoreBoxHidden', true)
       },
       /**
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
@@ -111,7 +111,7 @@
         })
 
         self.socket.send(str)
-        self.isToolbarMoreBoxHidden = true
+        self.$emit('update:isToolbarMoreBoxHidden', true)
       },
     }
   }

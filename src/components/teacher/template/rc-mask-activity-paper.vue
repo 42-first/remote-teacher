@@ -136,6 +136,7 @@
         self.paperChosen.index = index
         self.paperChosen.id = paperid
         self.paperChosen.title = papertitle
+        self.paperChosen.total = papertotal
         self.isPubmodalHidden = false
       },
       /**
@@ -179,7 +180,6 @@
 
             thePaper.quiz_id = jsonData.quizID;
             self.quizList.unshift(thePaper);
-            self.closePubmodal()
 
             // 显示饼图页
             self.showQuizResult(jsonData.quizID);
@@ -193,6 +193,7 @@
             })
 
             self.socket.send(str)
+            self.closePubmodal()
           })
       },
       /**
