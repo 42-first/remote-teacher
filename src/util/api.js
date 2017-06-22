@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
             // ppt收藏 不懂
             'SET_LEESON_SILDE_TAG': '/v/lesson/post_studentlessonslide_tag',
             // 发送danmu
-            'SEND_DANMU': '/api/danmu/send_danmu',
+            'SEND_DANMU': '/v/api/danmu/send_danmu',
             // 发送投稿
             'SEND_SUBMISSION': '/v/api/tougao/create',
             // 我的投稿列表

@@ -142,6 +142,7 @@
         topDistance: 120,
         //
         title: '雨课堂',
+        courseName: '',
         // 课程ID
         lessonID: 0,
         // pptID
@@ -199,6 +200,7 @@
         console.log(to.name);
 
         if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
+          document.title = this.courseName && this.courseName;
           setTimeout(() => {
             typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
           }, 300)
@@ -412,7 +414,7 @@
               let presentationData = self.presentationMap.get(self.presentationID);
               presentationData.Title && (self.title = presentationData.Title);
               // 课程title
-              document.title = data.classroom && data.classroom.courseName;
+              document.title = self.courseName = data.classroom && data.classroom.courseName;
 
               return presentationData;
             }
