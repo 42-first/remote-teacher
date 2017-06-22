@@ -209,12 +209,12 @@
 
 			.input-wrapper {
 			  display: flex;
+			  justify-content: space-between;
 			  height: 1.066667rem;
 			  line-height: 1.066667rem;
 
 				.input-box {
 				  display: flex;
-				  flex: 1;
 				  align-items: center;
 				  padding-right: 0.373333rem;
 				  border: 1px solid #C8C8C8;
@@ -223,7 +223,7 @@
 				  border-radius: 0.08rem;
 
 				  input {
-					  flex: 1;
+					  width: 5.5rem;
 					  background-color: #EDF2F6;
 					  border: 0;
 					  padding: 0 0.266667rem;
@@ -257,7 +257,7 @@
 
 			.more, .back {
 				text-align: right;
-			  width: 1.333333rem;
+			  width: 1.8rem;
 			  color: #9B9B9B;
 			}
 
