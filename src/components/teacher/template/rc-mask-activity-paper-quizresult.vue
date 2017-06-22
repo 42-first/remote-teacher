@@ -98,7 +98,6 @@
         //归零饼图
         clearInterval(refPaperTimer)
         clearInterval(quizTimeBellTimer)
-        self.paperTimePassed = '--:--'
       },
       /**
        * 将秒数转换成 MM:SS 格式

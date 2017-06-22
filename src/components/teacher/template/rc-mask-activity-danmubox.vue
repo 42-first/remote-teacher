@@ -192,6 +192,7 @@
           }
           .danmu {
             flex: 1;
+            word-break: break-word;
           }
         }
 

@@ -111,6 +111,7 @@
 
         .name {
           width: 3.866667rem;
+          text-align: left;
           img {
             width: 1.2rem;
             height: 1.2rem;
