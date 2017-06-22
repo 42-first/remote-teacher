@@ -19,7 +19,7 @@
     <section class="chart-box">
       <div class="fsfb f18">分数分布</div>
       <div id="pieSolid" class="pie-solid">
-        <svg id="quizpie" class="f16" width="100%" height="4.0rem"></svg>
+        <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem"></svg>
     </div>
     </section>
 
@@ -73,6 +73,7 @@
         paperTimePassed: '--:--',         // 已经过去的时间
         stuCommited: '--',                // 已经交卷学生个数
         stuTotal: '--',                   // 总学生数目
+        isSVGHidden: true,                // 饼图svg隐藏
       }
     },
     components: {
@@ -125,6 +126,8 @@
         let self = this
 
         self.endTimers()
+        self.isSVGHidden = true
+        self.paperTimePassed = '--:--'
         quizTimeBellCount = 1
 
         self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
@@ -158,6 +161,7 @@
           .then(jsonData => {
             // 设置试卷详情数据
             console.log('quiz_results_statistics', jsonData)
+            self.isSVGHidden = false
             self.stuCommited = jsonData.total
             self.stuTotal = jsonData.members
             
