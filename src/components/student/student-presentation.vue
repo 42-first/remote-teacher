@@ -394,6 +394,9 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
 
+              // classroom
+              self.classroom = data.classroom;
+
               // set presentation map
               if(self.presentationList.length) {
                 for(let i = 0; i < self.presentationList.length; i++) {
@@ -631,7 +634,8 @@
         if(this.backURL) {
           location.href = this.backURL;
         } else {
-          history.go(-1);
+          // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
+          location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
         }
       }
     },

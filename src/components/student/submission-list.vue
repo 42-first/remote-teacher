@@ -239,14 +239,18 @@
       * @param
       */
       handleDelete() {
+        let self = this;
         // 批量删除
         let options = [...this.optionsSet];
 
-        if(options.length) {
-          options.forEach( (id, index) => {
-            this.deleteSubmission(+id);
-          });
-        }
+        this.$messagebox.confirm('确定删除选中的投稿?').then(action => {
+          if(action === 'confirm' && options.length) {
+            options.forEach( (id, index) => {
+              self.deleteSubmission(+id);
+            });
+          }
+        });
+
       },
 
       /*

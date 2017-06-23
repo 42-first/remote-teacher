@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
 
         student: {
             // 课件习题列表
-            'GET_PRESENTATION_LIST': ' /v/lesson/lesson_info_v2',
+            'GET_PRESENTATION_LIST': '/v/lesson/lesson_info_v2',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/api/red/red_envelope_detail/',
             // 习题提交
