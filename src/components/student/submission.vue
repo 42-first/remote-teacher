@@ -8,7 +8,7 @@
 
 <template>
   <section class="page-submission">
-    <div :class="['hongbao-wrapper', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <div class="submission-inner">
 
       <!-- 文字编辑 -->

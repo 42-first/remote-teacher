@@ -8,7 +8,7 @@
 
 <template>
   <section class="page-danmu">
-    <div :class="['hongbao-wrapper', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['danmu-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 文字编辑 -->
       <section class="danmu__text">
         <div class="danmu__textarea--wrapper f17">
@@ -163,6 +163,11 @@
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .danmu-wrapper {
+    width: 100%;
+    height: 100%;
   }
 
 
