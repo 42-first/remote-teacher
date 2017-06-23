@@ -42,7 +42,7 @@
         </div>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
-          <div class="f14">
+          <div class="f14" v-show="!observerMode">
             <span class="status" data-language-common="status">{{ item.status }}</span>
           </div>
         </div>
@@ -81,7 +81,7 @@
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
-          <div class="f14">
+          <div class="f14" v-show="!observerMode">
             <span class="status" data-language-common="status">{{ item.status }}</span>
           </div>
         </div>
