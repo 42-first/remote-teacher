@@ -12,9 +12,9 @@
       <!-- 文字编辑 -->
       <section class="danmu__text">
         <div class="danmu__textarea--wrapper f17">
-          <textarea class="danmu-textarea J_feed_content" maxlength="70" placeholder="说点啥好~" v-model="text"></textarea>
+          <textarea class="danmu-textarea J_feed_content" maxlength="50" placeholder="说点啥好~" v-model="text"></textarea>
           <div class="danmu-footer">
-            <p class="">(<span class="">{{ count }}</span>/70)</p>
+            <p class="">(<span class="">{{ count }}</span>/50)</p>
           </div>
         </div>
       </section>
@@ -54,8 +54,8 @@
     },
     watch: {
       text(newValue, oldValue) {
-        // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 70);
-        let value = newValue && newValue.substr(0, 70);
+        // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 50);
+        let value = newValue && newValue.substr(0, 50);
 
         this.count = value && value.length || 0;
         this.text = value;
