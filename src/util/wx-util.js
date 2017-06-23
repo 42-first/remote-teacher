@@ -25,7 +25,8 @@ function configWX () {
         signature: data.signature,
         jsApiList: [ 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ','onMenuShareWeibo', 'onMenuShareQZone', 'showMenuItems',
         'translateVoice', 'startRecord', 'stopRecord', 'onVoiceRecordEnd', 'playVoice', 'onVoicePlayEnd', 'pauseVoice','stopVoice', 'uploadVoice',
-        'downloadVoice', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType',  'scanQRCode',  'chooseWXPay', 'openProductSpecificView',  'addCard',  'chooseCard', 'openCard' ]
+        'downloadVoice', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType',  'scanQRCode',  'chooseWXPay',
+        'openProductSpecificView',  'addCard',  'chooseCard', 'openCard', 'hideMenuItems' ]
       });
     }).catch(() => {
     	console.error('微信配置失败')

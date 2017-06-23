@@ -111,6 +111,7 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/Api'
+  import { configWX } from '@/util/wx-util'
 
   import CardItemComponent from '@/components/common/card-item.vue'
 
@@ -228,6 +229,17 @@
 
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
+
+        // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
+        configWX();
+        wx && wx.ready(() => {
+          wx.hideMenuItems({
+            menuList: [
+              'menuItem:share:appMessage', 'menuItem:share:timeline',
+              'menuItem:share:qq', 'menuItem:share:weiboApp',
+              'menuItem:favorite', 'menuItem:share:QZone']
+          });
+        });
       },
 
       /*
