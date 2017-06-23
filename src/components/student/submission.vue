@@ -117,6 +117,7 @@
     },
     watch: {
       text(newValue, oldValue) {
+        // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 140);
         let value = newValue && newValue.substr(0, 140);
 
         this.count = value && value.length || 0;

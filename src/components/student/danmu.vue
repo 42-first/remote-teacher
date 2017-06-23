@@ -48,28 +48,16 @@
         count: 0
       };
     },
-    // beforeRouteEnter (to, from, next) {
-    //   // 在渲染该组件的对应路由被 confirm 前调用
-    //   // 不！能！获取组件实例 `this`
-    //   // 因为当钩子执行前，组件实例还没被创建
-
-    //   if(from.name === 'student-presentation-page') {
-    //     next();
-    //   } else {
-    //     next(vm => {
-    //       vm.$router.go(-1)
-    //     })
-    //   }
-    // },
     components: {
     },
     computed: {
     },
     watch: {
       text(newValue, oldValue) {
+        // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 70);
         let value = newValue && newValue.substr(0, 70);
 
-        this.count = value && this.text.replace(/^\s+|\s+$/g, '').length || 0;
+        this.count = value && value.length || 0;
         this.text = value;
 
         if(this.count) {
