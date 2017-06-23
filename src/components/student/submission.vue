@@ -199,6 +199,18 @@
         params['pic_data'] = sBase64;
         params['pic_type'] = picType;
 
+        // jpg,jpeg,bmp,png,gif
+        if(!/png|jpg|jpeg/.test(picType)) {
+          this.$toast({
+            message: '当前仅支持图片格式，请重新上传',
+            duration: 2000
+          });
+
+          this.imageURL = '';
+
+          return this;
+        }
+
         this.sendStatus = 1;
         return request.post(URL, params)
           .then(function (res) {
