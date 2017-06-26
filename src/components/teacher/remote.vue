@@ -301,7 +301,7 @@ export default {
         .then(jsonData => {
           if (jsonData.data.is_lesson_end) {
             // 0未结束 1已结束
-            location.href = '/v/index'
+            location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
           }
         })
     },
