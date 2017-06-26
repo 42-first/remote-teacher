@@ -2,7 +2,7 @@
 <template>
 	<div class="activity-box">
     <section class="head f20">
-      <div class="teacher">
+      <div class="teacher ellipsis">
         <img :src="avatar" alt="">
         {{coursename}}
       </div>

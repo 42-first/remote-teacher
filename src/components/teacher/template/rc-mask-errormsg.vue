@@ -36,7 +36,9 @@
 	      request.post(url, postData)
 	        .then(jsonData => {
 	          // 不需要判断success，在request模块中判断如果success为false，会直接reject
-	          location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+	          // 跳转到课程小结页
+	          location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
 	        })
 		  },
 	  }
