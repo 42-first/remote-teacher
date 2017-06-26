@@ -11,8 +11,10 @@
     <div :class="['page-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- header 批量操作 删除等 -->
       <section class="header ">
+        <!-- 全选 -->
+        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" value="all" v-model="selectAll" /><label for="all">全选</label></div>
         <div class="header-inner f16">
-          <input class="selected-box" type="checkbox" disabled /><span v-if="selectedCount">{{ selectedCount }}</span>
+          <!-- <input class="selected-box" type="checkbox" disabled /><span v-if="selectedCount">{{ selectedCount }}</span> -->
           <p class="action" v-show="!canSelect" @click="handleSetSelected">批量操作</p>
           <p class="action delete" v-show="canSelect" @click="handleDelete">删除</p>
         </div>
@@ -23,7 +25,7 @@
         <ul class="submission-list">
           <li class="item" v-for="(item, index) in submissionlist">
             <!-- 选择控件 -->
-            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" @change="handleSelect" :data-id="item.id" /></div>
+            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="item.checked" @change="handleSelect" :data-id="item.id" /></div>
 
             <!-- 投稿时间 -->
             <div class="item-date">
@@ -98,6 +100,7 @@
         submissionlist: null,
         canSelect: false,
         optionsSet: new Set(),
+        selectAll: false,
         scaleImages: []
       };
     },
@@ -106,6 +109,23 @@
     computed: {
     },
     watch: {
+      selectAll(newValue, oldValue) {
+        this.optionsSet.clear();
+
+        if(newValue) {
+          this.submissionlist.forEach( (item, index) => {
+            // statements
+            item.checked = true;
+            this.optionsSet.add(item.id);
+          });
+
+        } else {
+           this.submissionlist.forEach( (item, index) => {
+            item.checked = false;
+            this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
+          });
+        }
+      }
     },
     filters: {
       formatTime(time, format) {
@@ -243,7 +263,7 @@
         // 批量删除
         let options = [...this.optionsSet];
 
-        this.$messagebox.confirm('确定删除选中的投稿?').then(action => {
+        this.$messagebox.confirm('确定删除所选投稿?').then(action => {
           if(action === 'confirm' && options.length) {
             options.forEach( (id, index) => {
               self.deleteSubmission(+id);
@@ -268,7 +288,10 @@
           this.selectedCount--;
 
           this.optionsSet.has(id) && this.optionsSet.delete(id);
+          // this.selectAll = false;
         }
+
+        // this.selectedCount === this.submissionlist.length && (this.selectAll = true);
       },
 
       /*
@@ -286,8 +309,11 @@
       }
     },
     created() {
+      let self = this;
+
       !window.moment && require(['moment'], function(moment) {
         window.moment = moment;
+        self.submissionlist = self.submissionlist;
       })
 
       this.lessonID = +this.$route.params.lessonID;
@@ -335,10 +361,6 @@
   \*------------------*/
 
   .header {
-    // z-index: 1;
-    // position: fixed;
-    // top: 0;
-    // left: 0;
     width: 100%;
     height: 1.173333rem;
     line-height: 1.173333rem;
@@ -347,11 +369,18 @@
     align-items: center;
     justify-content: flex-end;
 
-    padding: 0 0.4rem;
+    padding: 0 0.45rem;
 
     background: #fff;
 
     border-bottom: 1px solid #979797;
+
+    .header-selectall {
+      label {
+        padding-left: 0.106667rem;
+        vertical-align: 0.026667rem;
+      }
+    }
 
     .header-inner {
       display: flex;
