@@ -14,7 +14,7 @@
       <!-- 文字编辑 -->
       <section class="submission__text">
         <div class="submission__textarea--wrapper f17">
-          <textarea class="submission-textarea J_feed_content" maxlength="400" placeholder="这里可以为空" v-model="text"></textarea>
+          <textarea class="submission-textarea J_feed_content" maxlength="140" placeholder="这里可以为空" v-model="text"></textarea>
           <div class="submission-footer">
             <p class="">(<span class="">{{ count }}</span>/140)</p>
           </div>
@@ -237,9 +237,9 @@
           }
         });
       },
-      handleChooseImageChange() {
+      handleChooseImageChange(evt) {
         let self = this;
-        let targetEl = event.target;
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
 
         let file = targetEl.files[0];
         let reader = new FileReader();
@@ -258,8 +258,8 @@
         reader.readAsDataURL(file);
         console.log(file);
       },
-      handlelaodImg() {
-        let target = event.target;
+      handlelaodImg(evt) {
+        let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;

@@ -12,7 +12,7 @@
       <!-- 文字编辑 -->
       <section class="danmu__text">
         <div class="danmu__textarea--wrapper f17">
-          <textarea class="danmu-textarea J_feed_content" maxlength="50" placeholder="说点啥好~" v-model="text"></textarea>
+          <textarea class="danmu-textarea J_feed_content" placeholder="说点啥好~" v-model="text"></textarea>
           <div class="danmu-footer">
             <p class="">(<span class="">{{ count }}</span>/50)</p>
           </div>
