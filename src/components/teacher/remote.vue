@@ -1,7 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root">
-    <div id="rc-home" class="rc-home">
+    <div id="rc-home" class="rc-home" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
@@ -146,7 +146,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
-      // TODO 用户身份
+      isEnterEnded: false,                    // 遥控器进入是否结束
       userid: -1,                             // 用户id
       avatar: '',                             // 用户头像
       auth: '',                               // 用户身份
@@ -172,7 +172,7 @@ export default {
       msgMaskTpl: 'RcMaskErrormsg',
       toastCtrlMaskTpl: '',
       initiativeCtrlMaskTpl: '',
-      errType: 2,
+      errType: 5,
       connectCountDown: 10,
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
@@ -307,6 +307,8 @@ export default {
           if (jsonData.data.is_lesson_end) {
             // 0未结束 1已结束
             location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
+          } else {
+            self.isEnterEnded = true
           }
         })
     },
