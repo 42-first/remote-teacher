@@ -208,6 +208,11 @@ export default {
     let self = this
 
     self.lessonid = self.$route.params.lessonid
+    // 保存本地不懂、投稿已读数
+    oldDoubt = localStorage.getItem('oldDoubt'+self.lessonid) || 0
+    oldDoubt -= 0
+    oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
+    oldTougao -= 0
 
     // HACK
     // 在iphone中存在缓存的现象，左滑能重新进入页面但是不会重新加载js
@@ -478,6 +483,7 @@ export default {
     checkDoubt () {
       let self = this
       oldDoubt = self.newdoubt || oldDoubt // 防止反复点击把oldDoubt置零
+      localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
       self.newdoubt = 0
     },
     /**
@@ -487,6 +493,7 @@ export default {
     checkTougao () {
       let self = this
       oldTougao = self.newtougao || oldTougao // 防止反复点击把 oldTougao 置零
+      localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },
   }
