@@ -208,12 +208,17 @@ export default {
     let self = this
 
     self.lessonid = self.$route.params.lessonid
-    
-    self.fetchPPTVersion()
-      .then(() => {
-        self.fetchLessonStatus()
-        configWX()
-      })
+
+    // HACK
+    // 在iphone中存在缓存的现象，左滑能重新进入页面但是不会重新加载js
+    // 此处通过hack onpageshow 来fix结课后进入遥控器跳走后左滑就能留在遥控器的情况
+    window.onpageshow = function () {
+      self.fetchPPTVersion()
+        .then(() => {
+          self.fetchLessonStatus()
+          configWX()
+        })
+    }
   },
   mounted () {
     let self = this
@@ -301,7 +306,7 @@ export default {
         .then(jsonData => {
           if (jsonData.data.is_lesson_end) {
             // 0未结束 1已结束
-            location.href = '/v/index'
+            location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
           }
         })
     },

@@ -146,6 +146,15 @@ function socketProcessMessage(msg){
   }
 
   if (msg.op == 'slidenav') {
+    // 新遥控器不会套presentationid，如果在ppt退出全屏放映的时候进入的遥控器，
+    // hello中不会得到presentationid，ppt全屏后遥控器会收到qrcodezooomed，
+    // 但是依然没有presentationid，此处hack在slidenav中判断presentationid，
+    // 如果不一样就更新并fetchPPTData
+    if (self.presentationid !== msg.slide.pres) {
+      self.presentationid = msg.slide.pres
+      self.fetchPPTData()
+    }
+
     // 换页
     msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     self.showWhichPage(msg)
