@@ -11,10 +11,9 @@
     <div :class="['page-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- header 批量操作 删除等 -->
       <section class="header ">
-        <!-- 全选 -->
-        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" value="all" v-model="selectAll" /><label for="all">全选</label></div>
+        <!-- 全选 v-model="selectAll"-->
+        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="selectAll" @change="handleCheckedAll" value="all" /><label for="all">全选</label></div>
         <div class="header-inner f16">
-          <!-- <input class="selected-box" type="checkbox" disabled /><span v-if="selectedCount">{{ selectedCount }}</span> -->
           <p class="action" v-show="!canSelect" @click="handleSetSelected">批量操作</p>
           <p class="action delete" v-show="canSelect" @click="handleDelete">删除</p>
         </div>
@@ -25,7 +24,7 @@
         <ul class="submission-list">
           <li class="item" v-for="(item, index) in submissionlist">
             <!-- 选择控件 -->
-            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="item.checked" @change="handleSelect" :data-id="item.id" /></div>
+            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="item.checked" @change="handleSelect" :data-id="item.id" :data-index="index" /></div>
 
             <!-- 投稿时间 -->
             <div class="item-date">
@@ -88,10 +87,9 @@
 </template>
 <script>
   import API from '@/util/Api'
-  // import moment from 'moment'
 
   export default {
-    name: 'submission-page',
+    name: 'submission-list-page',
     data() {
       return {
         opacity: 0,
@@ -109,23 +107,23 @@
     computed: {
     },
     watch: {
-      selectAll(newValue, oldValue) {
-        this.optionsSet.clear();
+      // selectAll(newValue, oldValue) {
+      //   this.optionsSet.clear();
 
-        if(newValue) {
-          this.submissionlist.forEach( (item, index) => {
-            // statements
-            item.checked = true;
-            this.optionsSet.add(item.id);
-          });
+      //   if(newValue) {
+      //     this.submissionlist.forEach( (item, index) => {
+      //       // statements
+      //       item.checked = true;
+      //       this.optionsSet.add(item.id);
+      //     });
 
-        } else {
-           this.submissionlist.forEach( (item, index) => {
-            item.checked = false;
-            this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
-          });
-        }
-      }
+      //   } else {
+      //     this.submissionlist.forEach( (item, index) => {
+      //       item.checked = false;
+      //       this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
+      //     });
+      //   }
+      // }
     },
     filters: {
       formatTime(time, format) {
@@ -274,12 +272,37 @@
       },
 
       /*
+      * @method 全部选中或者取消
+      * @param
+      */
+      handleCheckedAll() {
+        let target = event.target;
+
+        this.optionsSet.clear();
+        if(target.checked) {
+          this.submissionlist.forEach( (item, index) => {
+            item.checked = true;
+            this.optionsSet.add(item.id);
+          });
+        } else {
+          this.submissionlist.forEach( (item, index) => {
+            item.checked = false;
+            this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
+          });
+        }
+
+        this.selectAll = target.checked;
+        this.submissionlist = this.submissionlist.slice(0);
+      },
+
+      /*
       * @method 选中
       * @param
       */
       handleSelect() {
         let target = event.target;
-        let id = target.dataset.id;
+        let id = +target.dataset.id;
+        let index = +target.dataset.index;
 
         if(target.checked) {
           this.selectedCount++;
@@ -288,10 +311,11 @@
           this.selectedCount--;
 
           this.optionsSet.has(id) && this.optionsSet.delete(id);
-          // this.selectAll = false;
+          this.selectAll = false;
         }
 
-        // this.selectedCount === this.submissionlist.length && (this.selectAll = true);
+        this.submissionlist[index].checked = target.checked;
+        this.optionsSet.size === this.submissionlist.length && (this.selectAll = true);
       },
 
       /*
@@ -313,7 +337,7 @@
 
       !window.moment && require(['moment'], function(moment) {
         window.moment = moment;
-        self.submissionlist = self.submissionlist;
+        self.submissionlist = self.submissionlist.slice(0);
       })
 
       this.lessonID = +this.$route.params.lessonID;
