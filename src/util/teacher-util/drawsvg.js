@@ -16,15 +16,16 @@ switch (DPR) {
     RADIUS_OUTTER = 50
     RADIUS_INNER = 40
     TEXTCONFIG = {
-      kuandu: 100, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
-      circle: 5, // 圆点半径
-      fanwei: 10, // 分数范围距离圆点的距离 text1
-      renshu: 65, // 人数距离圆点的距离 text2
-      xiegang: 75, // 斜杠距离圆点的距离 text3
-      zongrenshu: 80, // 总人数距离圆点的距离 text4
-      hangjianju: 20, // 注释文案的行间距
-      wenzipianyi: 5, // 文字比圆点往下的偏移
-      zongrenshufz: 12 // 总人数的字体大小
+      zhushixiayi: 10,    // 右侧标注向下的偏移
+      kuandu: 160,        // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 5,          // 圆点半径
+      fanwei: 10,         // 分数范围距离圆点的距离 text1
+      renshu: 85,         // 人数距离范围的距离 text2
+      xiegang: 30,        // 斜杠距离人数的距离 text3
+      zongrenshu: 5,      // 总人数距离斜杠的距离 text4
+      hangjianju: 20,     // 注释文案的行间距
+      wenzipianyi: 5,     // 文字比圆点往下的偏移
+      zongrenshufz: 12    // 总人数的字体大小
     }
     break
   case 2:
@@ -35,15 +36,16 @@ switch (DPR) {
     RADIUS_OUTTER = 100
     RADIUS_INNER = 80
     TEXTCONFIG = {
-      kuandu: 200, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
-      circle: 10, // 圆点半径
-      fanwei: 20, // 分数范围距离圆点的距离 text1
-      renshu: 130, // 人数距离圆点的距离 text2
-      xiegang: 150, // 斜杠距离圆点的距离 text3
-      zongrenshu: 160, // 总人数距离圆点的距离 text4
-      hangjianju: 40, // 注释文案的行间距
-      wenzipianyi: 10, // 文字比圆点往下的偏移
-      zongrenshufz: 24 // 总人数的字体大小
+      zhushixiayi: 20,     // 右侧标注向下的偏移
+      kuandu: 320,         // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 10,          // 圆点半径
+      fanwei: 20,          // 分数范围距离圆点的距离 text1
+      renshu: 170,         // 人数距离范围的距离 text2
+      xiegang: 60,         // 斜杠距离人数的距离 text3
+      zongrenshu: 10,      // 总人数距离斜杠的距离 text4
+      hangjianju: 40,      // 注释文案的行间距
+      wenzipianyi: 10,     // 文字比圆点往下的偏移
+      zongrenshufz: 24     // 总人数的字体大小
     }
     break
   case 3:
@@ -54,17 +56,28 @@ switch (DPR) {
     RADIUS_OUTTER = 150
     RADIUS_INNER = 120
     TEXTCONFIG = {
-      kuandu: 300, // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
-      circle: 15, // 圆点半径
-      fanwei: 30, // 分数范围距离圆点的距离 text1
-      renshu: 195, // 人数距离圆点的距离 text2
-      xiegang: 225, // 斜杠距离圆点的距离 text3
-      zongrenshu: 240, // 总人数距离圆点的距离 text4
-      hangjianju: 60, // 注释文案的行间距
-      wenzipianyi: 15, // 文字比圆点往下的偏移
-      zongrenshufz: 36 // 总人数的字体大小
+      zhushixiayi: 30,     // 右侧标注向下的偏移
+      kuandu: 480,         // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      circle: 15,          // 圆点半径
+      fanwei: 30,          // 分数范围距离圆点的距离 text1
+      renshu: 255,         // 人数距离范围的距离 text2
+      xiegang: 90,         // 斜杠距离人数的距离 text3
+      zongrenshu: 15,      // 总人数距离斜杠的距离 text4
+      hangjianju: 60,      // 注释文案的行间距
+      wenzipianyi: 15,     // 文字比圆点往下的偏移
+      zongrenshufz: 36     // 总人数的字体大小
     }
     break
+}
+
+// 把人数补全到3位，如 1 补全为001
+function add3wei (num) {
+  if (num < 10) {
+    return '    ' + num 
+  } else if (num < 100) {
+    return '  ' + num
+  }
+  return num
 }
 
 //计算在一定的圆心和半径的圆上，某个角度上的点的位置
@@ -226,7 +239,7 @@ function drawPieSolid (ele, range, arr1, config){
     var text2 = createSVG('text');
     var text3 = createSVG('text');
     var text4 = createSVG('text');
-    x = svgWidth-TEXTCONFIG.kuandu; y = 37+TEXTCONFIG.hangjianju*i;
+    x = svgWidth-TEXTCONFIG.kuandu; y = TEXTCONFIG.zhushixiayi+TEXTCONFIG.hangjianju*i;
     circle.setAttribute("cx", x);
     circle.setAttribute("cy", y);
     circle.setAttribute("r", TEXTCONFIG.circle);
@@ -235,13 +248,13 @@ function drawPieSolid (ele, range, arr1, config){
     text1.setAttribute("x", x+TEXTCONFIG.fanwei+"px");
     text1.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text2.setAttribute("x", x+TEXTCONFIG.renshu+"px");
+    text2.setAttribute("x", x+TEXTCONFIG.fanwei+TEXTCONFIG.renshu+"px");
     text2.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text3.setAttribute("x", x+TEXTCONFIG.xiegang+"px");
+    text3.setAttribute("x", x+TEXTCONFIG.fanwei+TEXTCONFIG.renshu+TEXTCONFIG.xiegang+"px");
     text3.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
-    text4.setAttribute("x", x+TEXTCONFIG.zongrenshu+"px");
+    text4.setAttribute("x", x+TEXTCONFIG.fanwei+TEXTCONFIG.renshu+TEXTCONFIG.xiegang+TEXTCONFIG.zongrenshu+"px");
     text4.setAttribute("y", y+TEXTCONFIG.wenzipianyi+"px");
 
 
@@ -250,10 +263,10 @@ function drawPieSolid (ele, range, arr1, config){
     text3.setAttribute("fill", "#FFFFFF");
     text4.setAttribute("fill", "#FFFFFF");
     text4.setAttribute("style", "font-size: "+TEXTCONFIG.zongrenshufz+"px");
-
+    text2.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
 
     text1.textContent = range[i];
-    text2.textContent = arr1[i];
+    text2.textContent = add3wei(arr1[i]);
     text3.textContent = '/';
     text4.textContent = sum1;
     svgDom.appendChild(text1);

@@ -19,7 +19,7 @@
     <section class="chart-box">
       <div class="fsfb f18">分数分布</div>
       <div id="pieSolid" class="pie-solid">
-        <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem"></svg>
+        <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem" xml:space="preserve"></svg>
     </div>
     </section>
 
@@ -362,7 +362,7 @@
       }
 
       .pie-solid {
-        width: 80%;
+        width: 90%;
         margin: 0 auto;
       }
     }
