@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
     teaching_lesson_participant_list:   prefix + '/v/lesson/teaching_lesson_participant_list',  // 获取签到学生名单
     publish_problem:                    prefix + '/lesson/publish_problem/',          // 发布试题
     problem_statistics:                 prefix + '/v/lesson/problem_statistics',        // 试题柱状图数据
-    problem_result_detail:              prefix + '/lesson/problem_result_detail',     // 试题详情数据
+    problem_result_detail:              prefix + '/v/lesson/problem_result_detail',     // 试题详情数据
     publish_lesson_paper:               prefix + '/lesson/publish_lesson_paper',      // 发布试卷
     quiz_results_statistics:            prefix + '/api/quiz/quiz_results_statistics', // 获取试卷饼图数据
     quiz_results_detail:                prefix + '/api/quiz/quiz_results_detail',     // 获取试卷详情

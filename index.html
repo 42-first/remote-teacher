@@ -11,7 +11,53 @@
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+       <!-- 启动加载动画二 -->
+      <canvas id="canvas" style="display: block;position: absolute;top: 50%;left: 50%; width: 100%; height: 400px; transform: translate(-50%, -50%);"></canvas>
+      <script>
+        var canvas = document.querySelector('#canvas');
+        var ctx = canvas.getContext('2d');
+
+        canvas.width = parseInt(getComputedStyle(canvas).width);
+        canvas.height = parseInt(getComputedStyle(canvas).height);
+
+        var P = 4;
+        var A = 4;
+
+        function draw(shift) {
+          var w = canvas.width;
+          var h = canvas.height;
+
+          shift = shift >= 500*Math.PI ? shift - 100*Math.PI : shift;
+          ctx.clearRect(0, 0, w, h);
+
+          var grd = ctx.createLinearGradient(0, 0, w, h);
+          grd.addColorStop(0, '#4a8bf5');
+          grd.addColorStop(1, '#f16b55');
+          ctx.strokeStyle = grd;
+          ctx.lineCap = 'round';
+
+          for (var i = 0; i < w; ) {
+            var _A = Math.abs(A*Math.cos(2*i));
+            ctx.beginPath();
+            var pos = Math.exp(-_A * i / w) * Math.sin(P * Math.PI * (i + shift) / w);
+            pos *= h / 2;
+            var lw = Math.exp(-_A * i / w) * Math.sin(3 * Math.PI * (i - shift) / w) * 2;
+            ctx.lineWidth = (lw)+1;
+            ctx.lineTo(i, h / 2 - pos);
+            ctx.closePath();
+            ctx.stroke();
+            i += 1;
+          }
+
+          window.requestAnimationFrame(() => {
+            draw(shift + 1);
+          });
+        }
+
+        draw(0);
+      </script>
+    </div>
     <!-- built files will be auto injected -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
