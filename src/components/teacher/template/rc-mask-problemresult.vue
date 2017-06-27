@@ -151,7 +151,7 @@
 	      self.setData({
 	        isProblemResultDetailHidden: false
 	      })
-	      self.$refs.RcMaskProblemresultDetail.$emit('refreshProblemResultDetail')
+	      self.$refs.RcMaskProblemresultDetail.$emit('refreshProblemResultDetail', self.problemid)
 	    },
 	    /**
 	     * 关闭试题详情的按钮

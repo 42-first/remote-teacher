@@ -44,7 +44,8 @@
 	  data () {
 	    return {
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
-	    	showingIndex: -1 												// 正在展示的题目的序号
+	    	showingIndex: -1,												// 正在展示的题目的序号
+	    	problemid: 0,
 	    }
 	  },
 	  computed: {
@@ -58,7 +59,8 @@
 	  	let self = this
 
 	  	// 父组件点击 查看详情 按钮时发送事件给本子组件
-	  	self.$on('refreshProblemResultDetail', function (msg) {
+	  	self.$on('refreshProblemResultDetail', function (problemid) {
+	  		self.problemid = problemid
 			  self.refreshProblemResultDetail()
 			})
 	  },
@@ -97,7 +99,7 @@
 	      let url = API.problem_result_detail
 
 	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_result_detail + '/' + self.inPageProblemID + '/'
+	        url = API.problem_result_detail + '/' + self.problemid + '/'
 	      }
 
 	      // 单次刷新

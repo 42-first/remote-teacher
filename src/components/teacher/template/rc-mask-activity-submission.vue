@@ -20,7 +20,10 @@
               <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">已收藏</v-touch>
               <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">收藏</v-touch>
 
-              <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">投屏</v-touch>
+              <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                <i class="iconfont icon-clock f24"></i>
+                todo投屏
+              </v-touch>
               <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
             </div>
           </div>

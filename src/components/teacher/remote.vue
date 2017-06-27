@@ -1,7 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root">
-    <div id="rc-home" class="rc-home">
+    <div id="rc-home" class="rc-home" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
@@ -146,7 +146,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
-      // TODO 用户身份
+      isEnterEnded: false,                    // 遥控器进入是否结束
       userid: -1,                             // 用户id
       avatar: '',                             // 用户头像
       auth: '',                               // 用户身份
@@ -172,7 +172,7 @@ export default {
       msgMaskTpl: 'RcMaskErrormsg',
       toastCtrlMaskTpl: '',
       initiativeCtrlMaskTpl: '',
-      errType: 2,
+      errType: 5,
       connectCountDown: 10,
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
@@ -208,6 +208,11 @@ export default {
     let self = this
 
     self.lessonid = self.$route.params.lessonid
+    // 保存本地不懂、投稿已读数
+    oldDoubt = localStorage.getItem('oldDoubt'+self.lessonid) || 0
+    oldDoubt -= 0
+    oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
+    oldTougao -= 0
 
     // HACK
     // 在iphone中存在缓存的现象，左滑能重新进入页面但是不会重新加载js
@@ -307,6 +312,8 @@ export default {
           if (jsonData.data.is_lesson_end) {
             // 0未结束 1已结束
             location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
+          } else {
+            self.isEnterEnded = true
           }
         })
     },
@@ -476,6 +483,7 @@ export default {
     checkDoubt () {
       let self = this
       oldDoubt = self.newdoubt || oldDoubt // 防止反复点击把oldDoubt置零
+      localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
       self.newdoubt = 0
     },
     /**
@@ -485,6 +493,7 @@ export default {
     checkTougao () {
       let self = this
       oldTougao = self.newtougao || oldTougao // 防止反复点击把 oldTougao 置零
+      localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },
   }
