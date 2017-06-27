@@ -208,6 +208,7 @@
           });
 
           this.imageURL = '';
+          this.hasImage = false;
 
           return this;
         }
