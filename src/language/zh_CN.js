@@ -17,7 +17,7 @@ let pages = {
     'complex': {
       'pageIndex': '第$pageIndex$页',
       'quizCount': '共$quizCount$题',
-      'problemIndex': '第$problemIndex$题'
+      'problemIndex': '第$problemIndex$页'
     },
     'nav': {
       'all' : '全部',

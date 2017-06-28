@@ -236,24 +236,24 @@
         let file = targetEl.files[0];
         let reader = new FileReader();
 
+        if(file.size) {
+          const size = parseInt(file.size/1024/1024, 10);
+
+          if(size >= 10) {
+            this.$toast({
+              message: '图片不可超过10M，请重试',
+              duration: 2000
+            });
+
+            return this;
+          }
+        }
+
         reader.onload = function(e) {
           let data = e.target.result;
 
           let imgEl = self.$el.querySelector('.J_preview_img');
           imgEl.src = self.imageData = data;
-
-          if(file.size) {
-            const size = parseInt(file.size/1024/1024, 10);
-
-            if(size >= 10) {
-              self.$toast({
-                message: '图片不可超过10M，请重试',
-                duration: 2000
-              });
-
-              return this;
-            }
-          }
 
           // 上传图片
           self.uploadImage(data, file.type)
