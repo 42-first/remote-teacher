@@ -1,30 +1,38 @@
 <!-- 试卷列表 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="paper-box allowscrollcallback">
-    <!-- 已发试卷 -->
-    <section class="list upper" v-show="quizList.length">
-      <div class="title f17">已发试卷</div>
-      <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
-        <div class="desc f18">
-          {{quiz.title}} <br>
-          <span class="f14"> {{quiz.time}}</span>
-        </div>
-        <i class="iconfont icon-forward f14"></i>
-      </v-touch>
-    </section>
+    <!-- 没有试卷 -->
+    <div v-show="!paperList.length" class="no-paper-box">
+      <img src="~images/teacher/no-paper.png" alt="">
+      <div class="hint f12">去试试雨课堂桌面端插件吧</div>
+    </div>
+    <div v-show="paperList.length">
+      <!-- 已发试卷 -->
+      <section class="list upper" v-show="quizList.length">
+        <div class="title f17">已发试卷</div>
+        <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
+          <div class="desc f18">
+            {{quiz.title}} <br>
+            <span class="f14"> {{quiz.time}}</span>
+          </div>
+          <i class="iconfont icon-forward f14"></i>
+        </v-touch>
+      </section>
+      
+      <!-- 试卷库 -->
+      <section class="list downer">
+        <div class="title f17">我的试卷库</div>
+        
+        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
+          <div class="desc f18">
+            {{paper.title}} <br>
+            <span class="f14">{{paper.time}}</span>
+          </div>
+          <i class="iconfont icon-forward f14"></i>
+        </v-touch>
+      </section>
+    </div>
     
-    <!-- 试卷库 -->
-    <section class="list downer">
-      <div class="title f17">我的试卷库</div>
-      <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
-        <div class="desc f18">
-          {{paper.title}} <br>
-          <span class="f14">{{paper.time}}</span>
-        </div>
-        <i class="iconfont icon-forward f14"></i>
-      </v-touch>
-    </section>
-
     <div class="rc-mask pub-modal" v-show="!isPubmodalHidden">
       <div class="pub-inner">
         <div class="title f20">发布试卷</div>
@@ -242,6 +250,26 @@
     background: #EDF2F6;
     color: #000000;
     overflow: auto;
+
+    .no-paper-box {
+      box-sizing: border-box;
+      height: 100%;
+      background: $white;
+      text-align: center;
+      
+      img {
+        display: inline-block;
+        width: 5.88rem;
+        transform: translateY(50%);
+      }
+      .hint {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        width: 100%;
+        color: #9B9B9B;
+      }
+    }
 
     .list {
       padding-top: 0.4rem;
