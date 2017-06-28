@@ -8,7 +8,7 @@
 
 <template>
   <section class="page-submissionlist">
-    <div :class="['page-wrapper', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['page-wrapper', 'animated', opacity ? 'zoomIn': '']" v-if="!isEmpty">
       <!-- header 批量操作 删除等 -->
       <section class="header ">
         <!-- 全选 v-model="selectAll"-->
@@ -84,6 +84,13 @@
       </div>
 
     </section>
+
+    <!-- 空状态 -->
+    <section class="page-empty" v-if="isEmpty">
+      <img class="page-empty-img" src="http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png" alt="" />
+      <p class="page-empty-btn f18" @click="handleBack">返回</p>
+    </section>
+
   </section>
 </template>
 <script>
@@ -93,6 +100,7 @@
     name: 'submission-list-page',
     data() {
       return {
+        isEmpty: false,
         opacity: 0,
         title: '我的投稿',
         selectedCount: 0,
@@ -152,6 +160,10 @@
               let data = res.data;
 
               self.submissionlist = data.tougao_list || data.tougou_list;
+
+              if(!self.submissionlist.length) {
+                self.isEmpty = true;
+              }
               return data;
             }
           });
@@ -379,6 +391,39 @@
     height: 0.373333rem;
     border: 1px solid #333333;
   }
+
+
+
+  /*------------------*\
+    $ 空状态
+  \*------------------*/
+
+  .page-empty {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .page-empty-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: block;
+    }
+
+    .page-empty-btn {
+      position: absolute;
+      bottom: 0;
+      height: 1.466667rem;
+      width: 100%;
+      line-height: 1.466667rem;
+      color: #fff;
+      background: #639EF4;
+    }
+  }
+
 
 
   /*------------------*\
