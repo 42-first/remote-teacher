@@ -32,7 +32,7 @@
       <section class="" v-if="isShowOption">
         <ul class="exercise-options" v-if="summary">
           <li :class="['options-item', 'f45', problemType]" v-for="(item, index) in options">
-            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label)" :data-option="item.Label">{{ item.Label }}</p>
+            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label, $event)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
         <!-- 投票选择提示 -->
@@ -48,7 +48,7 @@
         <p class="submit-btn can f18" @click="handleBack">返回</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
+      <div class="commit-diff" v-if="isShowSubmit||timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
 
     </div>
 
@@ -318,8 +318,9 @@
       /*
       * @method 设置答案选项
       */
-      handleSetOption(option) {
-        let targetEl = event.target;
+      handleSetOption(option, evt) {
+        // let targetEl = event.target;
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
 
         // 提交中或者已完成
         if(this.canSubmit === 2 || this.summary.isComplete || this.timeOver) {
@@ -449,8 +450,8 @@
       /*
       * @method 图片加载完成
       */
-      handlelaodImg() {
-        let target = event.target;
+      handlelaodImg(evt) {
+        let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;
@@ -461,8 +462,8 @@
       /*
       * @method 图片放大
       */
-      handleScaleImage() {
-        let targetEl = event.target;
+      handleScaleImage(evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
         let pswpElement = this.$el.querySelector('.J_exercise_pswp');
         let index = 0;
         let items = [];

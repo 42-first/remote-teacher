@@ -548,8 +548,8 @@
       * @method handleTimeline滚动检测
       * @param
       */
-      handleTouchMove() {
-        let target = event.currentTarget;
+      handleTouchMove(evt) {
+        let target = typeof event !== 'undefined' && event.currentTarget || evt.currentTarget;
 
         if(this.hasMsg && target.scrollTop < 200) {
           this.hasMsg = false;
@@ -573,8 +573,8 @@
       * @method 展示tab选项
       * @param
       */
-      handleShowTab() {
-        let target = event.target;
+      handleShowTab(evt) {
+        let target = typeof event !== 'undefined' && event.target || evt.target;
         let tabIndex = +target.dataset['index'];
 
         if(tabIndex) {
@@ -632,8 +632,8 @@
        * @method 页面事件过滤
        *
        */
-      handleFilter() {
-        let targetEl = event.target;
+      handleFilter(evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target
 
         this.isMore = false;
       },

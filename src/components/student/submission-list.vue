@@ -38,7 +38,8 @@
             <!-- 投稿内容 -->
             <div class="item-content">
               <p class="f15">{{ item.content }}</p>
-              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic" alt="" />
+              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic" :data-src="item.pic" alt="" />
+              <!-- <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic + '?imageMogr2/thumbnail/260x'" :data-src="item.pic" alt="" /> -->
             </div>
           </li>
         </ul>
