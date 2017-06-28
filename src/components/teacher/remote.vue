@@ -222,6 +222,14 @@ export default {
         .then(() => {
           self.fetchLessonStatus()
           configWX()
+          wx.ready(() => {
+            wx.hideMenuItems({
+              menuList: [
+                'menuItem:share:appMessage', 'menuItem:share:timeline',
+                'menuItem:share:qq', 'menuItem:share:weiboApp',
+                'menuItem:favorite', 'menuItem:share:QZone']
+            });
+          });
         })
     }
   },
