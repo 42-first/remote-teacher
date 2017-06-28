@@ -525,6 +525,8 @@
           padding-left: 0.133333rem;
           text-align: justify;
 
+          word-break: break-all;
+
           color: #333333;
 
           .item-image {
