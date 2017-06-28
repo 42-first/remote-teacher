@@ -214,26 +214,6 @@ export default {
     oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
     oldTougao -= 0
 
-    // HACK
-    // 在iphone中存在缓存的现象，左滑能重新进入页面但是不会重新加载js
-    // 此处通过hack onpageshow 来fix结课后进入遥控器跳走后左滑就能留在遥控器的情况
-    
-    // window.onpageshow = function () {
-    //   self.fetchPPTVersion()
-    //     .then(() => {
-    //       self.fetchLessonStatus()
-    //       configWX()
-    //       wx.ready(() => {
-    //         wx.hideMenuItems({
-    //           menuList: [
-    //             'menuItem:share:appMessage', 'menuItem:share:timeline',
-    //             'menuItem:share:qq', 'menuItem:share:weiboApp',
-    //             'menuItem:favorite', 'menuItem:share:QZone']
-    //         });
-    //       });
-    //     })
-    // }
-
     configWX()
     wx.ready(() => {
       wx.hideMenuItems({
@@ -303,40 +283,6 @@ export default {
       self.socket.send(str)
     },
     /**
-     * 查询当前课程是否已经结束，结束的话跳转到我的课程页
-     *
-     */
-    fetchPPTVersion () {
-      let self = this
-      let url = API.lesson_ppt_version
-
-      return request.get(url,{'lesson_id': self.lessonid})
-        .then(jsonData => {
-          if (jsonData.data.ppt_version < 0.9) {
-            // 0.8版本有随机点名功能； 0.9+的版本有投屏等功能
-            location.href = '/v/lesson/lesson_info/'+ self.lessonid
-          }
-        })
-    },
-    /**
-     * 查询当前课程是否已经结束，结束的话跳转到我的课程页
-     *
-     */
-    fetchLessonStatus () {
-      let self = this
-      let url = API.lesson_status
-
-      return request.get(url,{'lesson_id': self.lessonid})
-        .then(jsonData => {
-          if (jsonData.data.is_lesson_end) {
-            // 0未结束 1已结束
-            location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
-          } else {
-            self.isEnterEnded = true
-          }
-        })
-    },
-    /**
      * 获取用户数据
      *
      */
@@ -386,6 +332,8 @@ export default {
             isPubCheckProblemBtnHidden: !isProblem,
             isProblemPublished: isProblemPublished
           })
+
+          self.isEnterEnded = true
         })
     },
     /**
