@@ -320,6 +320,7 @@
       */
       handleSetOption(option) {
         let targetEl = event.target;
+        // typeof event !== 'undefined' && event.target || evt.target;
 
         // 提交中或者已完成
         if(this.canSubmit === 2 || this.summary.isComplete || this.timeOver) {
