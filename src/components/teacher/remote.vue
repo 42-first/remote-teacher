@@ -217,13 +217,32 @@ export default {
     // HACK
     // 在iphone中存在缓存的现象，左滑能重新进入页面但是不会重新加载js
     // 此处通过hack onpageshow 来fix结课后进入遥控器跳走后左滑就能留在遥控器的情况
-    window.onpageshow = function () {
-      self.fetchPPTVersion()
-        .then(() => {
-          self.fetchLessonStatus()
-          configWX()
-        })
-    }
+    
+    // window.onpageshow = function () {
+    //   self.fetchPPTVersion()
+    //     .then(() => {
+    //       self.fetchLessonStatus()
+    //       configWX()
+    //       wx.ready(() => {
+    //         wx.hideMenuItems({
+    //           menuList: [
+    //             'menuItem:share:appMessage', 'menuItem:share:timeline',
+    //             'menuItem:share:qq', 'menuItem:share:weiboApp',
+    //             'menuItem:favorite', 'menuItem:share:QZone']
+    //         });
+    //       });
+    //     })
+    // }
+
+    configWX()
+    wx.ready(() => {
+      wx.hideMenuItems({
+        menuList: [
+          'menuItem:share:appMessage', 'menuItem:share:timeline',
+          'menuItem:share:qq', 'menuItem:share:weiboApp',
+          'menuItem:favorite', 'menuItem:share:QZone']
+      });
+    });
   },
   mounted () {
     let self = this

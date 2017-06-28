@@ -2,7 +2,7 @@
 <template>
 	<div class="paper-box allowscrollcallback">
     <!-- 已发试卷 -->
-    <section class="list upper">
+    <section class="list upper" v-show="quizList.length">
       <div class="title f17">已发试卷</div>
       <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
         <div class="desc f18">
