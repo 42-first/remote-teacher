@@ -48,7 +48,7 @@
         <p class="submit-btn can f18" @click="handleBack">返回</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit||timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
+      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
 
     </div>
 
