@@ -1,37 +1,45 @@
 <!-- 投稿控制页面 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="submission-box allowscrollcallback">
-    <div class="gap"></div>
-    <section class="list">
+    <!-- 没有投稿 -->
+    <div v-show="!submissionList.length" class="no-paper-box">
+      <img src="~images/teacher/no-tougao.png" alt="">
+      <div class="hint f12">可在学生接收器的＋号中投稿</div>
+    </div>
+    <div v-show="submissionList.length">
+      <div class="gap"></div>
+      <section class="list">
 
-      <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
-        <div class="item">
-          <div class="detail">
-            <img :src="item.user_avatar" class="avatar" alt="">
-            <div class="cont f18">
-              <span class="author f15">{{item.user_name}}</span><br>
-              {{item.content}}<br>
-              <img :src="item.pic" class="pic" alt="">
+        <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
+          <div class="item">
+            <div class="detail">
+              <img :src="item.user_avatar" class="avatar" alt="">
+              <div class="cont f18">
+                <span class="author f15">{{item.user_name}}</span><br>
+                {{item.content}}<br>
+                <img :src="item.pic" class="pic" alt="">
+              </div>
+            </div>
+            <div class="action-box">
+              <div class="time f15">{{item.create_time.substring(11)}}</div>
+              <div class="action f15">
+                <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">已收藏</v-touch>
+                <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">收藏</v-touch>
+
+                <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                  <i class="iconfont icon-clock f24"></i>
+                  todo投屏
+                </v-touch>
+                <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
+              </div>
             </div>
           </div>
-          <div class="action-box">
-            <div class="time f15">{{item.create_time.substring(11)}}</div>
-            <div class="action f15">
-              <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">已收藏</v-touch>
-              <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">收藏</v-touch>
-
-              <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
-                <i class="iconfont icon-clock f24"></i>
-                todo投屏
-              </v-touch>
-              <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
-            </div>
-          </div>
+          <div class="gap"></div>
         </div>
-        <div class="gap"></div>
-      </div>
 
-    </section>
+      </section>
+    </div>
+    
     <v-touch class="back-btn f18" v-on:tap="closeSubmissionbox">返回</v-touch>
   </div>
 </template>
@@ -159,6 +167,25 @@
     color: #4A4A4A;
     overflow: auto;
 
+    .no-paper-box {
+      box-sizing: border-box;
+      height: 100%;
+      background: $white;
+      text-align: center;
+      
+      img {
+        display: inline-block;
+        width: 7.213333rem;
+        transform: translateY(50%);
+      }
+      .hint {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        width: 100%;
+        color: #9B9B9B;
+      }
+    }
 
     .gap {
       height: 0.266667rem;
