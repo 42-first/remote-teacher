@@ -38,6 +38,8 @@
 	import request from '@/util/request'
 	import API from '@/config/api'
 
+	let isFirstEnter = true
+
 	export default {
 	  name: 'RcMaskProblemresultDetail',
 	  props: [],
@@ -107,7 +109,27 @@
 	        .then(jsonData => {
 	        	// 设置试卷详情数据
 	          self.problemResultDetailData = jsonData
+
+	          if (isFirstEnter) {
+	          	// 新打开的时候，默认展示正确的
+	          	self.openRightItem(jsonData)
+	          	isFirstEnter = false
+	          }
 	        })
+	    },
+	    /**
+	     * 展开正确选项人名单
+	     *
+	     * @param {object} jsonData 详情数据
+	     */
+	    openRightItem (jsonData) {
+	    	let self = this
+
+	      for (let i = 0; i < jsonData.data.length; i++) {
+        	if (jsonData.data[i].label === jsonData.answer) {
+        		self.showingIndex = i
+        	}
+        }
 	    },
 	  }
 	}
