@@ -200,8 +200,8 @@
           });
       },
 
-      handlelaodImg() {
-        let target = event.target;
+      handlelaodImg(evt) {
+        let target = typeof event !== 'undefined' && event.target || evt.target;
 
         let width = target.naturalWidth || target.width;
         let height = target.naturalHeight || target.width;
@@ -212,8 +212,8 @@
         this.scaleImages.push({ src: target.src, w: width || 750, h: height || 520 });
       },
 
-      handleScaleImage() {
-        let targetEl = event.target;
+      handleScaleImage(evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
         let pswpElement = this.$el.querySelector('.J_submissionlist_pswp');
         let index = 0;
         let items = this.scaleImages;

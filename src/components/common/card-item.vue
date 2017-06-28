@@ -15,7 +15,7 @@
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
         <span class="ppt--pageno f14" data-language-complex="student-pageIndex" :data-page-index="item.pageIndex">第{{ item.pageIndex }}页</span>
         <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
-          <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height)">
+          <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
@@ -121,8 +121,8 @@
       }
     },
     methods: {
-      scaleImage(src, width, height) {
-        let targetEl = event.target;
+      scaleImage(src, width, height, evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
