@@ -215,6 +215,12 @@ export default {
     oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
     oldTougao -= 0
 
+    // 保存本地正在投屏的弹幕、投稿id
+    self.postingDanmuid = localStorage.getItem('postingDanmuid'+self.lessonid) || -1
+    self.postingDanmuid -= 0
+    self.postingSubmissionid = localStorage.getItem('postingSubmissionid'+self.lessonid) || -1
+    self.postingSubmissionid -= 0
+
     configWX()
     wx.ready(() => {
       wx.hideMenuItems({

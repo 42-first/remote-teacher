@@ -206,12 +206,16 @@ function socketProcessMessage(msg){
   // 弹幕投屏
   if (msg.op == 'danmushown') {
     self.postingDanmuid = msg.danmuid
+
+    localStorage.setItem('postingDanmuid'+self.lessonid, msg.postid)
     return
   }
 
   // 投稿投屏
   if (msg.op == 'postshown') {
     self.postingSubmissionid = msg.postid
+
+    localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
     return
   }
 
@@ -299,12 +303,16 @@ function socketProcessMessage(msg){
     // 退出弹幕投屏蒙版
     if (msg.type == 'danmu') {
       self.postingDanmuid = -1
+
+      localStorage.setItem('postingDanmuid'+self.lessonid, -1)
       return
     }
 
     // 退出投稿投屏蒙版
     if (msg.type == 'post') {
       self.postingSubmissionid = -1
+
+      localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
       return
     }
     
