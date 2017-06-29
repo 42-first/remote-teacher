@@ -59,6 +59,7 @@
           :newdoubt="newdoubt"
           :newtougao="newtougao"
           :is-rc-mask-activity-at-root.sync="isRcMaskActivityAtRoot"
+          @goHome="goHome"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"

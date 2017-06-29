@@ -54,7 +54,7 @@
       :socket="socket"
       :finished-quiz-list="finishedQuizList"
       @closeQuizresult="closeQuizresult"
-      @collect-quiz="collectQuiz"
+      @collectQuiz="collectQuiz"
     ></RcMaskActivityPaperQuizresult>
   </div>
 </template>
@@ -231,7 +231,6 @@
        */
       collectQuiz (quizid) {
         let self = this
-
         self.finishedQuizList['id'+quizid] = true
       },
     }
