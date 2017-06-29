@@ -115,21 +115,62 @@
 	          	self.openRightItem(jsonData)
 	          	isFirstEnter = false
 	          }
+
+	          // 投票类型每回要算投票数最多的
+	          if (jsonData.problem_type === 3) {
+	          	self.findBigPoll(jsonData)
+	          }
 	        })
 	    },
 	    /**
-	     * 展开正确选项人名单
+	     * 找到默认打开那一条：投票类型：人数最多；普通题目：正确选项
 	     *
 	     * @param {object} jsonData 详情数据
 	     */
 	    openRightItem (jsonData) {
 	    	let self = this
 
+	      self.showingIndex = jsonData.problem_type === 3 ? self.findBigPoll(jsonData) : self.findRightAnswer(jsonData)
+	    },
+	    /**
+	     * 找出正确选项的序号
+	     *
+	     * @param {object} jsonData 详情数据
+	     */
+	    findRightAnswer (jsonData) {
+	    	let self = this
+
 	      for (let i = 0; i < jsonData.data.length; i++) {
         	if (jsonData.data[i].label === jsonData.answer) {
-        		self.showingIndex = i
+        		return i
         	}
         }
+	    },
+	    /**
+	     * 算出投票类型的票数最多的序号
+	     *
+	     * @param {object} jsonData 详情数据
+	     */
+	    findBigPoll (jsonData) {
+	    	let self = this
+
+	    	let result = {
+	    		index: -1,
+	    		total: -1
+	    	}
+
+	      for (let i = 0; i < jsonData.data.length; i++) {
+	      	let _total = jsonData.data[i].members.length
+        	if (result.total < _total) {
+        		result = {
+        			index: i,
+        			total: _total
+        		}
+        	}
+        }
+
+        self.problemResultDetailData.answer = jsonData.data[result.index].label
+        return result.index
 	    },
 	  }
 	}
