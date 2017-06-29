@@ -195,8 +195,12 @@
         let item = { src: src, w: width || 750, h: height || 520 };
         let oImg = new Image();
         oImg.onload = (e) => {
-          item.w = oImg.naturalWidth || oImg.width;
-          item.h = oImg.naturalHeight || oImg.height;
+          this.scaleImages.forEach( (imgItem) => {
+            if(src === imgItem.src) {
+              imgItem.w = oImg.naturalWidth || oImg.width;
+              imgItem.h = oImg.naturalHeight || oImg.height;
+            }
+          });
         };
         oImg.src = src;
 
