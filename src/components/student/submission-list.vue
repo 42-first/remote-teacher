@@ -38,8 +38,7 @@
             <!-- 投稿内容 -->
             <div class="item-content">
               <p class="f15">{{ item.content }}</p>
-              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic" :data-src="item.pic" alt="" />
-              <!-- <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.pic + '?imageMogr2/thumbnail/260x'" :data-src="item.pic" alt="" /> -->
+              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
             </div>
           </li>
         </ul>
@@ -116,23 +115,6 @@
     computed: {
     },
     watch: {
-      // selectAll(newValue, oldValue) {
-      //   this.optionsSet.clear();
-
-      //   if(newValue) {
-      //     this.submissionlist.forEach( (item, index) => {
-      //       // statements
-      //       item.checked = true;
-      //       this.optionsSet.add(item.id);
-      //     });
-
-      //   } else {
-      //     this.submissionlist.forEach( (item, index) => {
-      //       item.checked = false;
-      //       this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
-      //     });
-      //   }
-      // }
     },
     filters: {
       formatTime(time, format) {
@@ -202,14 +184,23 @@
 
       handlelaodImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
+        let src = target.dataset.src || target.src;
 
         let width = target.naturalWidth || target.width;
-        let height = target.naturalHeight || target.width;
+        let height = target.naturalHeight || target.height;
         let rate = width/height;
 
         rate > 1 && (target.style.width = '100%');
 
-        this.scaleImages.push({ src: target.src, w: width || 750, h: height || 520 });
+        let item = { src: src, w: width || 750, h: height || 520 };
+        let oImg = new Image();
+        oImg.onload = (e) => {
+          item.w = oImg.naturalWidth || oImg.width;
+          item.h = oImg.naturalHeight || oImg.height;
+        };
+        oImg.src = src;
+
+        this.scaleImages.push(item);
       },
 
       handleScaleImage(evt) {
