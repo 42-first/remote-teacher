@@ -113,7 +113,10 @@
        */
       tapThumbnail (to) {
         let self = this
-        console.log(to)
+        if (self.current === to) {
+          self.$emit('goHome')
+          return
+        }
 
         let str = JSON.stringify({
           'op': 'navtoslide',
