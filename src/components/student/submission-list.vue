@@ -209,12 +209,13 @@
 
       handleScaleImage(evt) {
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
+        let src = targetEl.dataset.src || targetEl.src;
         let pswpElement = this.$el.querySelector('.J_submissionlist_pswp');
         let index = 0;
         let items = this.scaleImages;
 
         items.forEach( function(element, i) {
-          if(element.src === targetEl.src){
+          if(element.src === src){
             index = i;
           }
         });
