@@ -2,9 +2,9 @@
 <template>
 	<div class="submission-box allowscrollcallback">
     <!-- 没有投稿 -->
-    <div v-show="!submissionList.length" class="no-paper-box">
+    <div v-show="submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
-      <div class="hint f12">可在学生接收器的＋号中投稿</div>
+      <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f25"></i> 号中投稿吧！</div>
     </div>
     <div v-show="submissionList.length">
       <div class="gap"></div>
