@@ -169,7 +169,7 @@
         	}
         }
 
-        self.problemResultDetailData.answer = jsonData.data[result.index].label
+        self.problemResultDetailData.answer = result.index === -1 ? '' : jsonData.data[result.index].label
         return result.index
 	    },
 	  }
