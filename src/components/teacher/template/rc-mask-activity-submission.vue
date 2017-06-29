@@ -17,7 +17,7 @@
               <div class="cont f18">
                 <span class="author f15">{{item.user_name}}</span><br>
                 {{item.content}}<br>
-                <img :src="item.pic" class="pic" alt="">
+                <img :src="item.thumb" class="pic" alt="">
               </div>
             </div>
             <div class="action-box">
