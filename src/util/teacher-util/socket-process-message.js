@@ -28,16 +28,17 @@ function socketProcessMessage(msg){
       return
     }
 
+    // 这个情况是用户进入后发现遥控器正被使用，需要显示我要夺权
+    if(msg.op === 'hello' && msg.state === 'occupied'){
+      self.isMsgMaskHidden = true
+      self.openDeprive('isRobber')
+      return;
+    }
+
     if(!msg.presentation){
       // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
       self.showEscMask()
       return
-    }
-
-    // 这个情况是用户进入后发现遥控器正被使用，需要显示我要夺权
-    if(msg.op === 'hello' && msg.state === 'occupied'){
-      self.openDeprive('isRobber')
-      return;
     }
 
     // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
