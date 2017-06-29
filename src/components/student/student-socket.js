@@ -196,9 +196,8 @@ var mixin = {
             item = msg['event'];
 
             this.addMessage({ type: 1, message: item['title'] });
-            this.danmuStatus = false;
-            break
-
+            // 产品确认 幻灯片切换不处理弹幕状态
+            // this.danmuStatus = false;
             break
 
           // ppt更新
