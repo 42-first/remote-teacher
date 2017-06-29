@@ -102,6 +102,7 @@
         submitText: '确认发送',
         text: '',
         imageURL: '',
+        imageThumbURL: '',
         hasImage: false,
         count: 0,
         imageData: null,
@@ -159,6 +160,7 @@
         let params = {
           'content': content,
           'pic': this.imageURL,
+          'thumb': this.imageThumbURL,
           'lesson_id': this.lessonID
         }
 
@@ -208,6 +210,7 @@
           });
 
           this.imageURL = '';
+          this.imageThumbURL = '';
           this.hasImage = false;
 
           return this;
@@ -220,6 +223,7 @@
               let data = res.data;
 
               self.imageURL = data.pic_url;
+              self.imageThumbURL = data.thumb_url
               self.sendStatus = 2;
 
               return self.imageURL;
@@ -278,6 +282,7 @@
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';
+            self.imageThumbURL = '';
 
             !self.text && (self.sendStatus = 0);
           }
@@ -491,8 +496,9 @@
         top: 0;
         right: 0;
 
-        width: 0.693333rem;
-        height: 0.693333rem;
+        width: 0.773333rem;
+        height: 0.773333rem;
+        line-height: 0.75rem;
 
         color: #fff;
         background: rgba(0,0,0,0.6);
