@@ -512,7 +512,7 @@
         }
 
         .item-date {
-          width: 1.666667rem;
+          width: 1.7rem;
           color: #000000;
 
           .date-time {
@@ -524,6 +524,8 @@
           flex: 1;
           padding-left: 0.133333rem;
           text-align: justify;
+
+          word-break: break-all;
 
           color: #333333;
 
