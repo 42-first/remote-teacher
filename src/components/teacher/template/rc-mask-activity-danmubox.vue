@@ -6,7 +6,13 @@
       <v-touch  tag="i" :class="['iconfont', 'f40', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
-    <section class="list">
+
+    <!-- 没有试卷 -->
+    <div v-show="!danmuList.length" class="no-paper-box">
+      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
+      <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="">
+    </div>
+    <section v-show="danmuList.length" class="list">
 
       <div class="item-with-gap" v-for="item in danmuList" :key="item.danmu_id">
         <div class="item">
@@ -148,6 +154,26 @@
     background: $white;
     color: #4A4A4A;
     overflow: auto;
+
+    .no-paper-box {
+      box-sizing: border-box;
+      height: 100%;
+      background: $white;
+      text-align: center;
+      
+      img {
+        display: inline-block;
+        width: 5.88rem;
+        transform: translateY(50%);
+      }
+      .hint {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        width: 100%;
+        color: #9B9B9B;
+      }
+    }
 
     .desc {
       padding: 0 0.4rem;

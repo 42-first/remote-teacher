@@ -4,7 +4,7 @@
     <!-- 没有试卷 -->
     <div v-show="!paperList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
-      <div class="hint f12">去试试雨课堂桌面端插件吧</div>
+      <div class="hint f12">试试从雨课堂桌面端制作并上传试卷吧</div>
     </div>
     <div v-show="paperList.length">
       <!-- 已发试卷 -->
