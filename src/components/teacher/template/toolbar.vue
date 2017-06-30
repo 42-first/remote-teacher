@@ -6,17 +6,17 @@
         <i class="iconfont icon-yaokong f16"></i>
 		    <div>遥控器</div>
 		  </v-touch>
-		  <v-touch class="tool-item" v-on:tap="showThumbnail">
+		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
 		    <i class="iconfont icon-apps f16"></i>
 		    缩略图
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
-		  <v-touch class="tool-item" v-on:tap="showActivity">
+		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
 		    <i class="iconfont icon-dongtai f16"></i>
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch class="tool-item last-item" v-on:tap="toggleToolbarMoreBox">
+		  <v-touch :class="['tool-item', 'last-item', {'active': !isToolbarMoreBoxHidden}]" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
 		    更多
 		  </v-touch>
@@ -44,6 +44,7 @@
     props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
     data () {
       return {
+        activeIndex: 0,   // 当前正在高亮的工具栏tab序号
       }
     },
     created () {
@@ -56,6 +57,7 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
+        this.activeIndex = 1
       },
       /**
        * 点击 课堂动态 按钮
@@ -63,6 +65,7 @@
        */
       showActivity () {
         this.$emit('showActivity')
+        this.activeIndex = 2
       },
       /**
        * 点击 遥控器 按钮
@@ -71,6 +74,7 @@
        */
       goHome () {
         this.$emit('goHome')
+        this.activeIndex = 0
       },
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -157,7 +161,9 @@
     .last-item {
       border-right: 0;
     }
-
+    .active {
+      color: $blue;
+    }
     .online {
       color: $blue;
     }
