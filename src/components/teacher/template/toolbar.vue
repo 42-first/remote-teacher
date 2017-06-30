@@ -156,6 +156,7 @@
         text-align: center;
         background: #D0021B;
         border-radius: 0.25rem;
+        color: $white;
       }
     }
     .last-item {
