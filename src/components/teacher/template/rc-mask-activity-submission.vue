@@ -23,12 +23,18 @@
             <div class="action-box">
               <div class="time f15">{{item.create_time.substring(11)}}</div>
               <div class="action f15">
-                <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">已收藏</v-touch>
-                <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">收藏</v-touch>
+                <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
+                  <i class="iconfont icon-like f15" style="color: #E1142D;"></i>
+                  已收藏
+                </v-touch>
+                <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
+                <i class="iconfont icon-like1 f15"></i>
+                  收藏
+                </v-touch>
 
                 <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
-                  <i class="iconfont icon-clock f24"></i>
-                  todo投屏
+                  <i class="iconfont icon-tpupin f15" style="color: #639EF4;"></i>
+                  投屏
                 </v-touch>
                 <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
               </div>
