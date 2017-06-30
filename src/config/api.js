@@ -32,6 +32,7 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:                prefix + '/api/red/red_envelope_detail',      // 获取某个红包的详情
     danmulist:                          prefix + '/v/api/danmu/list_danmu_v2',        // 弹幕列表
     submissionlist:                     prefix + '/v/api/tougao/teacher/list',        // 投稿列表
+    tougaostatus:                       prefix + '/v/api/tougao/status',              // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  prefix + '/v/api/tougao/collect',             // 收藏投稿
     collectsubmission_cancel:           prefix + '/v/api/tougao/collect_cancel',      // 取消收藏投稿
     end_lesson:                         prefix + '/v/lesson/end_lesson',              // 主动结束课程
@@ -60,6 +61,7 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:                '/static/mock/red_envelope_detail.json',        // 获取某个红包的详情
     danmulist:                          '/static/mock/danmulist.json',                  // 弹幕列表
     submissionlist:                     '/static/mock/submissionlist.json',             // 投稿列表
+    tougaostatus:                       '/static/mock/tougaostatus.json',               // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  '/static/mock/collectsubmission.json',          // 收藏投稿
     collectsubmission_cancel:           '/static/mock/collectsubmission_cancel.json',   // 取消收藏投稿
     end_lesson:                         '/static/mock/end_lesson.json',                 // 主动结束课程
