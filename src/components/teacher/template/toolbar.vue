@@ -7,7 +7,7 @@
 		    <div>遥控器</div>
 		  </v-touch>
 		  <v-touch class="tool-item" v-on:tap="showThumbnail">
-		    <i class="iconfont icon-cascades f16"></i>
+		    <i class="iconfont icon-apps f16"></i>
 		    缩略图
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
