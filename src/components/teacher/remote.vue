@@ -27,6 +27,7 @@
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
+        :is-socket-connected="isSocketConnected"
         :is-toolbar-more-box-hidden.sync="isToolbarMoreBoxHidden"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"

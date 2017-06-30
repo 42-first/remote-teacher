@@ -46,6 +46,8 @@ let mixin = {
 
         // 关闭
         this.socket.onclose = function(event) {
+          self.isSocketConnected = false
+
           if(!this.isResetSocket) {
             setTimeout(()=>{
               self.initws()
@@ -56,6 +58,7 @@ let mixin = {
         // 接收socket信息
         this.socket.onopen = function(event) {
           self.isResetSocket = false
+          self.isSocketConnected = true
           self.sendXinTiao()
 
           self.socket.onmessage = function (event) {

@@ -2,8 +2,8 @@
 <template>
 	<div class="toolbar-root">
 		<div class="rc-toolbar f12">
-		  <v-touch class="tool-item first-item" v-on:tap="goHome">
-		    <div class="bulb"></div>
+		  <v-touch class="tool-item first-item" :class="isSocketConnected ? 'online' : 'offline'" v-on:tap="goHome">
+        <i class="iconfont icon-yaokong f16"></i>
 		    <div>遥控器</div>
 		  </v-touch>
 		  <v-touch class="tool-item" v-on:tap="showThumbnail">
@@ -12,7 +12,7 @@
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch class="tool-item" v-on:tap="showActivity">
-		    <i class="iconfont icon-exercise f16"></i>
+		    <i class="iconfont icon-dongtai f16"></i>
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
@@ -30,7 +30,7 @@
 		  </v-touch>
 
 		  <v-touch class="more-item" v-on:tap="callWakeup">
-		    <i class="iconfont icon-people f24"></i>
+		    <i class="iconfont icon-suijidianming f24"></i>
 		    <span style="margin-left: 32rpx;">随机点名</span>
 		  </v-touch>
 		</div>
@@ -41,7 +41,7 @@
 
   export default {
     name: 'Tollbar',
-    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden'],
+    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
     data () {
       return {
       }
@@ -157,11 +157,12 @@
     .last-item {
       border-right: 0;
     }
-    .bulb {
-      display: inline-block;
-      width: 0.266667rem;
-      height: 0.266667rem;
-      background-color: $blue;
+
+    .online {
+      color: $blue;
+    }
+    .offline {
+      color: #f40;
     }
   }
 

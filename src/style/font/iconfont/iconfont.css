@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1498730689808'); /* IE9*/
-  src: url('iconfont.eot?t=1498730689808#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1498730689808') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1498730689808') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1498730689808#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1498822035141'); /* IE9*/
+  src: url('iconfont.eot?t=1498822035141#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1498822035141') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1498822035141') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1498822035141#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -15,237 +15,53 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-fangda:before { content: "\e631"; }
+.icon-dongtai:before { content: "\e603"; }
 
-.icon-suoxiao:before { content: "\e62f"; }
+.icon-yaokong:before { content: "\e604"; }
 
-.icon-fill-star:before { content: "\e62a"; }
+.icon-apps:before { content: "\e605"; }
 
-.icon-cascades:before { content: "\e618"; }
+.icon-more:before { content: "\e606"; }
 
-.icon-blackboard:before { content: "\e61d"; }
+.icon-tougao:before { content: "\e607"; }
 
-.icon-question:before { content: "\e623"; }
+.icon-shijuan:before { content: "\e608"; }
 
-.icon-form:before { content: "\e60e"; }
+.icon-danmu:before { content: "\e609"; }
 
-.icon-answercard:before { content: "\e61c"; }
+.icon-tuichufangying:before { content: "\e60a"; }
 
-.icon-forward:before { content: "\e602"; }
+.icon-erweima:before { content: "\e60b"; }
 
-.icon-squarecheckfill:before { content: "\e603"; }
+.icon-suijidianming:before { content: "\e60c"; }
 
-.icon-square:before { content: "\e604"; }
+.icon-miaobiao:before { content: "\e60d"; }
 
-.icon-roundadd:before { content: "\e605"; }
+.icon-hongbao:before { content: "\e60e"; }
 
-.icon-tou:before { content: "\e633"; }
+.icon-guanbi:before { content: "\e60f"; }
 
-.icon-iconfontcha:before { content: "\e64c"; }
+.icon-tpupin:before { content: "\e610"; }
 
-.icon-back:before { content: "\e606"; }
+.icon-touping:before { content: "\e611"; }
 
-.icon-add:before { content: "\e62d"; }
+.icon-guanbi1:before { content: "\e612"; }
 
-.icon-voice:before { content: "\e608"; }
+.icon-v:before { content: "\e613"; }
 
-.icon-voicefill:before { content: "\e609"; }
+.icon-shuaxin:before { content: "\e614"; }
 
-.icon-next:before { content: "\e613"; }
+.icon-icon-test:before { content: "\e615"; }
 
-.icon-download:before { content: "\e630"; }
+.icon-yes:before { content: "\e616"; }
 
-.icon-zhuye:before { content: "\e64b"; }
+.icon-xiangyou:before { content: "\e617"; }
 
-.icon-clock:before { content: "\e601"; }
+.icon-like:before { content: "\e618"; }
 
-.icon-unfold:before { content: "\e60c"; }
+.icon-like1:before { content: "\e619"; }
 
-.icon-creativefill:before { content: "\e619"; }
+.icon-danmukai:before { content: "\e61a"; }
 
-.icon-close:before { content: "\e60a"; }
-
-.icon-preview:before { content: "\e620"; }
-
-.icon-star:before { content: "\e62b"; }
-
-.icon-pinglun:before { content: "\e641"; }
-
-.icon-fill-apps:before { content: "\e61b"; }
-
-.icon-danmu:before { content: "\e628"; }
-
-.icon-apps:before { content: "\e60d"; }
-
-.icon-folderopen:before { content: "\e607"; }
-
-.icon-fill-question:before { content: "\e61e"; }
-
-.icon-iconfont74:before { content: "\e646"; }
-
-.icon-tuichu:before { content: "\e624"; }
-
-.icon-people:before { content: "\e60f"; }
-
-.icon-scppt:before { content: "\e625"; }
-
-.icon-lianjieline54:before { content: "\e645"; }
-
-.icon-xiao40:before { content: "\e637"; }
-
-.icon-erweima:before { content: "\e634"; }
-
-.icon-shenfenzheng:before { content: "\e679"; }
-
-.icon-more:before { content: "\e62e"; }
-
-.icon-fold:before { content: "\e610"; }
-
-.icon-tag:before { content: "\e64e"; }
-
-.icon-pause:before { content: "\e611"; }
-
-.icon-saoma:before { content: "\e636"; }
-
-.icon-warning:before { content: "\e600"; }
-
-.icon-trash:before { content: "\e614"; }
-
-.icon-close1:before { content: "\e63b"; }
-
-.icon-video:before { content: "\e615"; }
-
-.icon-iphone:before { content: "\e64a"; }
-
-.icon-danmu-close:before { content: "\e629"; }
-
-.icon-danmu-open:before { content: "\e62c"; }
-
-.icon-wrong:before { content: "\e622"; }
-
-.icon-correct:before { content: "\e61a"; }
-
-.icon-choose:before { content: "\e63c"; }
-
-.icon-xuanze:before { content: "\e64d"; }
-
-.icon-exercise:before { content: "\e626"; }
-
-.icon-info:before { content: "\e617"; }
-
-.icon-sanjiaoxing:before { content: "\e640"; }
-
-.icon-pen:before { content: "\e61f"; }
-
-.icon-edit:before { content: "\e60b"; }
-
-.icon-review:before { content: "\e621"; }
-
-.icon-score:before { content: "\e612"; }
-
-.icon-didian:before { content: "\e647"; }
-
-.icon-fabulishi:before { content: "\e638"; }
-
-.icon-warning1:before { content: "\e64f"; }
-
-.icon-lianxi:before { content: "\e627"; }
-
-.icon-toupiao:before { content: "\e632"; }
-
-.icon-people1:before { content: "\e648"; }
-
-.icon-sousuo:before { content: "\e616"; }
-
-.icon-elevator:before { content: "\e635"; }
-
-.icon-weixin-copy:before { content: "\e650"; }
-
-.icon-icon37:before { content: "\e644"; }
-
-.icon-jiantou-copy-copy-copy:before { content: "\e63a"; }
-
-.icon-erweima1:before { content: "\e63d"; }
-
-.icon-riqi:before { content: "\e653"; }
-
-.icon-diannao:before { content: "\e649"; }
-
-.icon-chai:before { content: "\e654"; }
-
-.icon-zan:before { content: "\e655"; }
-
-.icon-view:before { content: "\e656"; }
-
-.icon-qabtn:before { content: "\e63e"; }
-
-.icon-qalist:before { content: "\e63f"; }
-
-.icon-sanjiaoxingshang:before { content: "\e642"; }
-
-.icon-sanjiaoxingxia:before { content: "\e643"; }
-
-.icon-usergroup:before { content: "\e657"; }
-
-.icon-refresh:before { content: "\e639"; }
-
-.icon-danmu1:before { content: "\e651"; }
-
-.icon-timing:before { content: "\e652"; }
-
-.icon-submission:before { content: "\e658"; }
-
-.icon-ykq-tab-active:before { content: "\e659"; }
-
-.icon-ykq-tab-normal:before { content: "\e65a"; }
-
-.icon-ykq-tab-active1:before { content: "\e65b"; }
-
-.icon-ykq-tab-normal1:before { content: "\e65c"; }
-
-.icon-ykq_tab_active:before { content: "\e65d"; }
-
-.icon-ykq_tab_normal:before { content: "\e65e"; }
-
-.icon-ykq_tab_normal1:before { content: "\e65f"; }
-
-.icon-ykq_tab_active1:before { content: "\e660"; }
-
-.icon-buzan:before { content: "\e661"; }
-
-.icon-fanhui:before { content: "\e662"; }
-
-.icon-dakai:before { content: "\e663"; }
-
-.icon-duihao:before { content: "\e664"; }
-
-.icon-shiti_guanbitouping:before { content: "\e665"; }
-
-.icon-keqianyuxi_fabu:before { content: "\e666"; }
-
-.icon-keqianyuxi_shouqi:before { content: "\e667"; }
-
-.icon-tougao_shoucang:before { content: "\e668"; }
-
-.icon-zan1:before { content: "\e669"; }
-
-.icon-ykq_tab_danmu:before { content: "\e66a"; }
-
-.icon-tougao_bushoucang:before { content: "\e66b"; }
-
-.icon-ykq_tab_shijuan:before { content: "\e66c"; }
-
-.icon-ykq_tab_tougao:before { content: "\e66d"; }
-
-.icon-shiti_hongbao:before { content: "\e66e"; }
-
-.icon-keqianyuxi_yuyinliebiao:before { content: "\e66f"; }
-
-.icon-shiti_touping:before { content: "\e670"; }
-
-.icon-shiti_chakanxiangqing:before { content: "\e671"; }
-
-.icon-erweima11:before { content: "\e672"; }
-
-.icon-suijidianming:before { content: "\e673"; }
+.icon-danmuguan:before { content: "\e61b"; }
 
