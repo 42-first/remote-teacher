@@ -2,7 +2,7 @@
 <template>
 	<div class="submission-box allowscrollcallback">
     <!-- 没有投稿 -->
-    <div v-show="submissionList.length" class="no-paper-box">
+    <div v-show="!submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
       <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f25"></i> 号中投稿吧！</div>
     </div>
@@ -46,7 +46,14 @@
       </section>
     </div>
     
-    <v-touch class="back-btn f18" v-on:tap="closeSubmissionbox">返回</v-touch>
+    <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
+      <span v-show="isAskingItemStatus">正在投屏中...</span>
+      <span v-show="isItemDeleted">学生已删除此投稿</span>
+    </div>
+    <div class="button-box f18">
+      <v-touch class="btn" v-on:tap="refreshSubmissionlist">刷新</v-touch>
+      <v-touch class="btn f18" v-on:tap="closeSubmissionbox">返回</v-touch>
+    </div>
   </div>
 </template>
 
@@ -59,7 +66,9 @@
     props: ['lessonid', 'socket', 'postingSubmissionid'],
     data () {
       return {
-        submissionList: [],    // 投稿列表
+        submissionList: [],           // 投稿列表
+        isAskingItemStatus: false,    // 正在查询投稿状态
+        isItemDeleted: false,         // 投稿已经被删除
       }
     },
     created () {
@@ -110,14 +119,39 @@
       postSubmission (submissionid) {
         let self = this
 
-        let str = JSON.stringify({
-          'op': 'showpost',
-          'lessonid': self.lessonid,
-          'postid': submissionid,
-          'msgid': 1234
-        })
+        // let str = JSON.stringify({
+        //   'op': 'showpost',
+        //   'lessonid': self.lessonid,
+        //   'postid': submissionid,
+        //   'msgid': 1234
+        // })
 
-        self.socket.send(str)
+        // self.socket.send(str)
+
+        // 因为学生能够删除投稿，修改投屏方式为ajax
+        // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691
+        self.isAskingItemStatus = true
+        let url = API.tougaostatus
+
+        let postData = {
+          'lesson_id': self.lessonid,
+          'tougao_id': submissionid
+        }
+
+        request.post(url, postData)
+          .then(jsonData => {
+            // 不需要判断success，在request模块中判断如果success为false，会直接reject
+            self.isAskingItemStatus = false
+            if (jsonData.data.is_deleted) {
+              self.isItemDeleted = true
+              setTimeout(() => {
+                self.isItemDeleted = false
+              }, 1000)
+            }
+          })
+          .catch(() => {
+            self.isAskingItemStatus = false
+          })
       },
       /**
        * 退出投稿投屏蒙版
@@ -259,17 +293,35 @@
         }
       }
     }
-
-    .back-btn {
+    
+    .toast-box {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: 4.0rem;
+      height: 1.466667rem;
+      line-height: 1.466667rem;
+      transform: translate(-50%, -50%);
+      border-radius: 0.08rem;
+      text-align: center;
+      background: #333333;
+      color: $white;
+    }
+    .button-box {
+      display: flex;
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
       height: 1.466667rem;
-      line-height: 1.466667rem;
       text-align: center;
-      background: $blue;
-      color: $white;
+
+      .btn {
+        flex: 1;
+        border-radius: 0;
+        height: 1.466667rem;
+        line-height: 1.466667rem;
+      }
     }
   }
 </style>
