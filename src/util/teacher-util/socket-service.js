@@ -8,9 +8,19 @@
 
 import socketProcessMessage from '@/util/teacher-util/socket-process-message'
 
-const SOCKET_HOST = 'b.xuetangx.com' || (location.host.indexOf('192.168') !== -1 && 'b.xuetangx.com') || location.host
-window.socket = null
+// const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.xuetangx.com' : location.host
+const SOCKET_HOST  = 'b.xuetangx.com'
+
 let xintiaoTimer = null
+
+/*
+ * 在连网状态下断网，立即重连3次，还连不上的话之后隔3秒再连第四次，如果还连不上则显示10秒
+ * 倒计时重连蒙版，中间用户可以点击立即重连。无论是立即重连还是倒计时到时重连不上，则继续
+ * 新一轮的10秒倒计时。
+ *
+ */
+let retryCount = 0                // 断了以后立马重连的次数，正计数，最大是3次
+let connectCountDownTimer = null  // 10秒倒计时的定时器，用的setTimeout
 
 let mixin = {
   methods: {
@@ -18,6 +28,7 @@ let mixin = {
     * @method 关闭websocket
     */
     closews() {
+      let self = this
       let socket = this.socket
 
       try {
@@ -37,7 +48,6 @@ let mixin = {
 
       try {
         if(this.socket) {
-          this.isResetSocket = true
           this.closews()
         }
 
@@ -46,17 +56,37 @@ let mixin = {
 
         // 关闭
         this.socket.onclose = function(event) {
-          if(!this.isResetSocket) {
-            setTimeout(()=>{
+          self.closews()
+          self.isSocketConnected = false
+          // self.$refs.MsgMask.$emit('socketClosed')
+
+          retryCount++;
+          if (retryCount < 3){
+            self.initws()
+          }else if(retryCount === 3){
+            setTimeout(function(){
               self.initws()
-            }, 1000)
+            }, 3000);
+          }else if(retryCount >= 4){
+            self.setData({
+              isMsgMaskHidden: false,
+              connectCountDown: 10,
+              isConnectingHidden: true,
+              msgMaskTpl: 'rc-mask-reconnect'
+            })
+            self.countDown()
           }
         }
 
         // 接收socket信息
         this.socket.onopen = function(event) {
-          self.isResetSocket = false
+          self.isSocketConnected = true
           self.sendXinTiao()
+
+          // 归零 WebSocket 重连
+          retryCount = 0;
+          clearTimeout(connectCountDownTimer)
+          self.connectCountDown = 10
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
@@ -81,12 +111,6 @@ let mixin = {
       }
     },
     /*
-    * @method 重新连接websocket
-    */
-    reconnect() {
-
-    },
-    /*
     * @method 发送心跳函数
     */
     sendXinTiao() {
@@ -101,7 +125,37 @@ let mixin = {
      * @param {Object} data WebSocket指令
      * WebSocket 通信文档 https://tower.im/projects/1a3a5c7ea6ff4a109296d3c5039c9c19/docs/0c842a038c3f41648a25a169f6fd8e46/#7947c5ddeee5464384592b9b285f8cc8
      */
-    socketProcessMessage
+    socketProcessMessage,
+    /**
+     * WebSocket 重连倒计时
+     *
+     */
+    countDown () {
+      let self = this
+      clearTimeout(connectCountDownTimer)
+
+      if(self.connectCountDown === 0){
+        self.triggerReconnect()
+        return
+      }
+
+      connectCountDownTimer = setTimeout(() => {
+        self.connectCountDown -= 1
+        self.countDown()
+      }, 1000)
+    },
+     /**
+     * WebSocket 立即重连
+     *
+     */
+    triggerReconnect () {
+      let self = this
+      
+      clearTimeout(connectCountDownTimer)
+      self.isConnectingHidden = false
+      self.connectCountDown = 10
+      setTimeout(self.initws, 1000)
+    },
   }
 }
 

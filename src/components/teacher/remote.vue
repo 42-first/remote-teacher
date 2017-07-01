@@ -75,6 +75,7 @@
       <!-- 遥控器遮罩层（被动弹出控制类，可关闭）：夺权面板，第二优先级 -->
       <div class="rc-mask" v-show="!isToastCtrlMaskHidden">
         <component
+          ref="ToastCtrlMask"
           :is="toastCtrlMaskTpl"
           :lessonid="lessonid"
           :courseid="courseid"
@@ -88,11 +89,15 @@
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
       <div class="rc-mask" v-show="!isMsgMaskHidden">
         <component
+          ref="MsgMask"
           :is="msgMaskTpl"
           :lessonid="lessonid"
           :courseid="courseid"
           :classroomid="classroomid"
           :err-type="errType"
+          :connect-count-down="connectCountDown"
+          :is-connecting-hidden="isConnectingHidden"
+          @triggerReconnect="triggerReconnect"
         ></component>
       </div>
     </div>
@@ -115,6 +120,8 @@ if (process.env.NODE_ENV !== 'production') {
 import Toolbar from '@/components/teacher/template/toolbar'
 // 错误蒙版
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
+// 断网重连蒙版
+import RcMaskReconnect from '@/components/teacher/template/rc-mask-reconnect'
 // 夺权面板
 import RcMaskDeprive from '@/components/teacher/template/rc-mask-deprive'
 // 二维码控制蒙版
@@ -163,7 +170,6 @@ export default {
       isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
       isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
       isSocketConnected: false,               // WebSocket 已连接
-      isConnectingHidden: true,               // 连接中隐藏
       total: '',                              // 总页数
       current: 1,                             // 当前页码，从1开始
       pptData: [],                            // ppt数据
@@ -175,6 +181,7 @@ export default {
       initiativeCtrlMaskTpl: '',
       errType: 5,
       connectCountDown: 10,
+      isConnectingHidden: true,               // 连接中隐藏
       qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
@@ -199,6 +206,7 @@ export default {
   components: {
     Toolbar,
     RcMaskErrormsg,
+    RcMaskReconnect,
     RcMaskDeprive,
     RcMaskQrcode,
     RcMaskRandomcall,
@@ -398,7 +406,7 @@ export default {
      */
     goHome () {
       let self = this
-
+      
       self.setData({
         isInitiativeCtrlMaskHidden: true,
         initiativeCtrlMaskTpl: ''
