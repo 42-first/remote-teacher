@@ -14,36 +14,36 @@
     <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
-          <i class="iconfont icon-shijuan f20"></i>
+          <i class="iconfont icon-shiti_shijuan f20"></i>
         </div>
         试卷
       </div>
       <div>
-        <i class="iconfont icon-xiangyou f20"></i>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showDanmubox">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
-          <i class="iconfont icon-danmu f15"></i>
+          <i class="iconfont icon-danmu1 f15"></i>
         </div>
         弹幕
       </div>
       <div>
         <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
-        <i class="iconfont icon-xiangyou f20"></i>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showSubmission">
       <div>
         <div class="iconbox" style="background: #FF576B;">
-          <i class="iconfont icon-tougao f18"></i>
+          <i class="iconfont icon-submission f18"></i>
         </div>
         投稿
       </div>
       <div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
-        <i class="iconfont icon-xiangyou f20"></i>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
 

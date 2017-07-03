@@ -15,7 +15,7 @@
             {{quiz.title}} <br>
             <span class="f14"> {{quiz.time}}</span>
           </div>
-          <i class="iconfont icon-xiangyou f14"></i>
+          <i class="iconfont icon-dakai f14"></i>
         </v-touch>
       </section>
       
@@ -28,7 +28,7 @@
             {{paper.title}} <br>
             <span class="f14">{{paper.time}}</span>
           </div>
-          <i class="iconfont icon-xiangyou f14"></i>
+          <i class="iconfont icon-dakai f14"></i>
         </v-touch>
       </section>
     </div>

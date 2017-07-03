@@ -4,7 +4,7 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 关闭按钮 -->
-	    <v-touch tag="i" class="iconfont icon-guanbi f24" v-on:tap="closeProblemresult"></v-touch>
+	    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeProblemresult"></v-touch>
 
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
@@ -31,21 +31,21 @@
 	    <section class="group-btns">
 	      <v-touch class="btn-item" v-on:tap="postProblemresult">
 	      	<div class="iconbox" style="background: #28CF6E;">
-	      	  <i class="iconfont icon-tpupin f20"></i>
+	      	  <i class="iconfont icon-shiti_touping f28"></i>
 	      	</div>
 	        <div class="btn-desc f15">投屏</div>
 	      </v-touch>
 
 	      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
 	        <div class="iconbox" style="background: #EEBC28;">
-	      	  <i class="iconfont icon-touping f25"></i>
+	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
 	        <div class="btn-desc f15">查看详情</div>
 	      </v-touch>
 
 	      <v-touch v-show="problemResultData.type !== 'Polling'" class="btn-item" v-on:tap="tapRedpacketHandler">
 	        <div class="iconbox" style="background: #E64340;">
-	      	  <i class="iconfont icon-hongbao f25" style="color: #DCBC83;"></i>
+	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
 	      </v-touch>
@@ -256,7 +256,7 @@
 	  text-align: center;
 	  color: $white;
 
-	  .icon-guanbi {
+	  .icon-shiti_guanbitouping {
 	  	position: absolute;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;

@@ -3,7 +3,7 @@
 	<div class="problemresultdetail-box">
 		<div v-if="problemResultDetailData">
 			<!-- 关闭按钮 -->
-	    <v-touch tag="i" class="iconfont icon-guanbi f24" v-on:tap="closeProblemresultdetail"></v-touch>
+	    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeProblemresultdetail"></v-touch>
 	    <div class="title f18">{{problemResultDetailData.problem_type === 3 ? '票数最多' : '本题正确选项为'}}</div>
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
 	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
@@ -27,7 +27,7 @@
 	    </div>
 	    
 	    <v-touch class="btn refresh-btn f17"  v-on:tap="refreshProblemResultDetail">
-	    	<i class="iconfont icon-shuaxin f20"></i>
+	    	<i class="iconfont icon-refresh f20"></i>
 	    	刷新详情
 	    </v-touch>
 		</div>
@@ -189,7 +189,7 @@
 	  text-align: center;
 	  overflow: auto;
 
-	  .icon-guanbi {
+	  .icon-shiti_guanbitouping {
 	  	position: fixed;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;
