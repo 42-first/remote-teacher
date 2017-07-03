@@ -7,7 +7,8 @@
     <!-- 上部时钟 -->
     <section class="upper">
       <div class="f60">
-        <i class="iconfont icon-miaobiao f40"></i>
+        <!-- <i class="iconfont icon-timing f40"></i> -->
+        <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
       <div class="f18">
@@ -350,6 +351,11 @@
       width: 8.8rem;
       min-height: 3.466667rem;
       padding-top: 0.8rem;
+
+      .jishi {
+        width: 1.1rem;
+        vertical-align: middle;
+      }
       
     }
 

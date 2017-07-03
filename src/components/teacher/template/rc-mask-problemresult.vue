@@ -9,7 +9,8 @@
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
 	    	<div class="f40" v-if="problemResultData.isBellset">
-		      <i class="iconfont icon-timing f40"></i>
+		      <!-- <i class="iconfont icon-timing f40"></i> -->
+		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
@@ -271,7 +272,11 @@
 	  	height: 3.466667rem;
 	  	padding-top: 0.8rem;
 	  	border-bottom: 1px solid #cccccc;
-
+			
+			.jishi {
+				width: 0.8rem;
+				vertical-align: middle;
+			}
 	  	.pt {
 	  		padding-top: 1rem;
 	  	}
