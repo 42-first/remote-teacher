@@ -294,7 +294,7 @@
           compress: {
             width: 1600,
             height: 1600,
-            quality: .6
+            quality: .75
           }
         };
 
