@@ -253,8 +253,12 @@
 <!-- TODO 柱状图滑动 icon图片？ -->
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+	.problem-root {
+		height: 100%;
+	}
 	.problemresult-box {
 	  position: relative;
+	  height: 100%;
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
