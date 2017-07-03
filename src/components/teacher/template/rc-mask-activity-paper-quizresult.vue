@@ -11,7 +11,7 @@
         <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
-      <div class="f18">
+      <div class="f18" v-show="!isSVGHidden">
         已有 <span>{{stuCommited}}</span> / <span>{{stuTotal}}</span> 位同学提交了试卷
       </div>
     </section>
@@ -19,6 +19,7 @@
     <!-- 中间饼图 -->
     <section class="chart-box">
       <div class="fsfb f18">分数分布</div>
+      <div v-show="isSVGHidden" class="hmy f18">还没有学生提交</div>
       <div id="pieSolid" class="pie-solid">
         <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem" xml:space="preserve"></svg>
     </div>
@@ -166,6 +167,11 @@
         // 单次刷新
         request.get(url)
           .then(jsonData => {
+            //没人做题就不画饼图
+            if(jsonData.total === 0){
+              self.isSVGHidden = true
+              return
+            }
             // 设置试卷详情数据
             console.log('quiz_results_statistics', jsonData)
             self.isSVGHidden = false
@@ -182,13 +188,6 @@
               self.paperTimePassed = self.sec2str(quizTimeBellCount)
             }
 
-            // return
-            // $('#pieSolid').empty();
-            // $('#pieSolid').html('<svg width="100%" height="176px"></svg>');
-
-            // data.data[0].count+= 3;
-            // var range = ['95以上','85-94','75-84','60-74','60以下'];
-            // var arr1 = [1,10,10,10,69];
             var range = [];
             var arr1 = [];
 
@@ -199,37 +198,6 @@
             };
 
             drawRingSolid('#quizpie', range,arr1);
-            return
-            //没人做题就不画饼图
-            if(data.total == 0){
-                $('#pieSolid').html('<div style="height: 176px; text-align: center; font-size: 1.8rem; line-height: 170px;">还没有学生提交~</div>');
-            }else{
-                $('#pieSolid').html('<svg width="100%" height="176px"></svg>');
-                fnNS.drawRingSolid(range,arr1);
-            }
-
-
-
-            let series = []
-            let total = data.total
-
-            for (let i = 0; i < data.data.length; i++) {
-              let item = data.data[i]
-              let name = item.from + '~' + item.to + ' （' + item.count + '/' + total + '）'
-
-              series.push({
-                name: name,
-                data: item.count
-              })
-            }
-
-            //没人做题就不画饼图
-            if(data.total !== 0){
-              self.setData({
-                hasStuCommitPaper: true
-              })
-              self.drawRingChart(series)
-            }
           })
       },
       /**
@@ -371,6 +339,11 @@
       .fsfb {
         text-align: center;
         margin-bottom: 1.0rem;
+      }
+
+      .hmy {
+        margin-top: 2rem;
+        color: $blue;
       }
 
       .pie-solid {
