@@ -517,7 +517,7 @@
 
           .item-image {
             display: block;
-            width: 7.573333rem;
+            width: 3.466667rem;
             max-width: 100%;
             max-height: 7.04rem;
           }

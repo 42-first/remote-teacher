@@ -129,7 +129,7 @@
         if(this.count) {
            this.sendStatus === 0 && (this.sendStatus = 2);
         } else {
-          !this.hasImage && this.sendStatus = 0;
+          !this.hasImage && (this.sendStatus = 0);
         }
       },
       sendStatus(newValue, oldValue) {
