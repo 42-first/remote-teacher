@@ -224,8 +224,9 @@ var mixin = {
             item = msg['event'];
             this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
 
-            // 课程状态
+            // 课程状态 弹幕状态
             this.lessonStatus = 1;
+            this.danmuStatus = false;
 
             break
 
