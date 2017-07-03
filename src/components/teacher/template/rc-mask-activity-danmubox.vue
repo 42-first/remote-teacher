@@ -3,7 +3,7 @@
 	<div class="danmu-box allowscrollcallback">
     <div class="desc f20">
       <span>弹幕</span>
-      <v-touch  tag="i" :class="['iconfont', 'f40', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
+      <v-touch  tag="i" :class="['iconfont', 'f32', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
 
@@ -22,7 +22,7 @@
           </div>
           <div class="action-box">
             <div class="time f15">{{item.time.substring(11)}}</div>
-            <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)">投屏</v-touch>
+            <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f18" style="color: #639EF4;"></i>投屏</v-touch>
             <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
           </div>
         </div>

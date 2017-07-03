@@ -4,12 +4,12 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 关闭按钮 -->
-	    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeProblemresult"></v-touch>
+	    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeProblemresult"></v-touch>
 
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
 	    	<div class="f40" v-if="problemResultData.isBellset">
-		      <i class="iconfont icon-clock f40"></i>
+		      <i class="iconfont icon-miaobiao f40"></i>
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
@@ -30,17 +30,23 @@
 	    <!-- 下方按钮 -->
 	    <section class="group-btns">
 	      <v-touch class="btn-item" v-on:tap="postProblemresult">
-	        <img src="http://sfe.ykt.io/o_1bb62k4e41s1i1r0b1is3nf11tku9.png" />
+	      	<div class="iconbox" style="background: #28CF6E;">
+	      	  <i class="iconfont icon-shiti_touping f28"></i>
+	      	</div>
 	        <div class="btn-desc f15">投屏</div>
 	      </v-touch>
 
 	      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
-	        <img src="http://sfe.ykt.io/o_1bb62l9qvf141gio1q86g6i1pdee.png" />
+	        <div class="iconbox" style="background: #EEBC28;">
+	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+	      	</div>
 	        <div class="btn-desc f15">查看详情</div>
 	      </v-touch>
 
 	      <v-touch v-show="problemResultData.type !== 'Polling'" class="btn-item" v-on:tap="tapRedpacketHandler">
-	        <img src="http://sfe.ykt.io/o_1bb62m7q7i8t1c6q1cn4150u1v8vj.png" />
+	        <div class="iconbox" style="background: #E64340;">
+	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
+	      	</div>
 	        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
 	      </v-touch>
 	    </section>
@@ -250,7 +256,7 @@
 	  text-align: center;
 	  color: $white;
 
-	  .icon-close {
+	  .icon-shiti_guanbitouping {
 	  	position: absolute;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;
@@ -328,8 +334,17 @@
 			  font-size: 30rpx;
 			  color: #fff;
 
-			  img {
-			  	margin-bottom: 0.4rem;
+			  .iconbox {
+			  	margin: 0 auto 0.4rem;
+			  	width: 1.493333rem;
+			  	height: 1.493333rem;
+			  	line-height: 1.493333rem;
+			  	text-align: center;
+			  	border-radius: 50%;
+
+			  	.iconfont {
+			  		color: $white;
+			  	}
 			  }
 			}
 		}

@@ -2,21 +2,21 @@
 <template>
 	<div class="toolbar-root">
 		<div class="rc-toolbar f12">
-		  <v-touch class="tool-item first-item" v-on:tap="goHome">
-		    <div class="bulb"></div>
+		  <v-touch class="tool-item first-item" :class="isSocketConnected ? 'online' : 'offline'" v-on:tap="goHome">
+        <i class="iconfont icon-ykq_tab_active2 f16"></i>
 		    <div>遥控器</div>
 		  </v-touch>
-		  <v-touch class="tool-item" v-on:tap="showThumbnail">
-		    <i class="iconfont icon-cascades f16"></i>
+		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
+		    <i class="iconfont icon-ykq_tab_normal2 f16"></i>
 		    缩略图
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
-		  <v-touch class="tool-item" v-on:tap="showActivity">
-		    <i class="iconfont icon-exercise f16"></i>
+		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
+		    <i class="iconfont icon-ykq_tab_normal1 f16"></i>
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch class="tool-item last-item" v-on:tap="toggleToolbarMoreBox">
+		  <v-touch :class="['tool-item', 'last-item', {'active': !isToolbarMoreBoxHidden}]" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
 		    更多
 		  </v-touch>
@@ -25,12 +25,12 @@
 		<!-- 更多的内容 -->
 		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
-		    <i class="iconfont icon-erweima f24"></i>
+		    <i class="iconfont icon-erweima1 f24"></i>
 		    <span>二维码</span>
 		  </v-touch>
 
 		  <v-touch class="more-item" v-on:tap="callWakeup">
-		    <i class="iconfont icon-people f24"></i>
+		    <i class="iconfont icon-suijidianming1 f24"></i>
 		    <span style="margin-left: 32rpx;">随机点名</span>
 		  </v-touch>
 		</div>
@@ -41,9 +41,10 @@
 
   export default {
     name: 'Tollbar',
-    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden'],
+    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
     data () {
       return {
+        activeIndex: 0,   // 当前正在高亮的工具栏tab序号
       }
     },
     created () {
@@ -56,6 +57,7 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
+        this.activeIndex = 1
       },
       /**
        * 点击 课堂动态 按钮
@@ -63,6 +65,7 @@
        */
       showActivity () {
         this.$emit('showActivity')
+        this.activeIndex = 2
       },
       /**
        * 点击 遥控器 按钮
@@ -71,6 +74,7 @@
        */
       goHome () {
         this.$emit('goHome')
+        this.activeIndex = 0
       },
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -152,16 +156,20 @@
         text-align: center;
         background: #D0021B;
         border-radius: 0.25rem;
+        color: $white;
       }
     }
     .last-item {
       border-right: 0;
     }
-    .bulb {
-      display: inline-block;
-      width: 0.266667rem;
-      height: 0.266667rem;
-      background-color: $blue;
+    .active {
+      color: $blue;
+    }
+    .online {
+      color: $blue;
+    }
+    .offline {
+      color: #f40;
     }
   }
 

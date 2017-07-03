@@ -27,6 +27,7 @@
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
+        :is-socket-connected="isSocketConnected"
         :is-toolbar-more-box-hidden.sync="isToolbarMoreBoxHidden"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
@@ -198,7 +199,7 @@ export default {
       let self = this
       
       // 当前蒙版是缩略图或课堂动态根组件时，显示工具栏（课堂动态子页面不显示工具栏）
-      let status = self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
+      let status = (self.msgMaskTpl !== 'rc-mask-reconnect') && self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
 
       return status
     }

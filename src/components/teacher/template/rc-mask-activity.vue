@@ -12,23 +12,38 @@
       </v-touch>
     </section>
     <v-touch class="activity-item f18" v-on:tap="showPaper">
-      <div>试卷</div>
       <div>
-        <i class="iconfont icon-forward f20"></i>
+        <div class="iconbox" style="background: #50E3C2;">
+          <i class="iconfont icon-shiti_shijuan f20"></i>
+        </div>
+        试卷
+      </div>
+      <div>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showDanmubox">
-      <div>弹幕</div>
+      <div>
+        <div class="iconbox" style="background: #BF7EF8;">
+          <i class="iconfont icon-danmu1 f15"></i>
+        </div>
+        弹幕
+      </div>
       <div>
         <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
-        <i class="iconfont icon-forward f20"></i>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showSubmission">
-      <div>投稿</div>
+      <div>
+        <div class="iconbox" style="background: #FF576B;">
+          <i class="iconfont icon-submission f18"></i>
+        </div>
+        投稿
+      </div>
       <div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
-        <i class="iconfont icon-forward f20"></i>
+        <i class="iconfont icon-dakai f20"></i>
       </div>
     </v-touch>
 
@@ -303,6 +318,19 @@
       margin-bottom: 0.266667rem;
       background: $white;
       color: #333333;
+
+      .iconbox {
+        display: inline-block;
+        width: 0.933333rem;
+        height: 0.933333rem;
+        text-align: center; 
+        line-height: 0.933333rem;
+        border-radius: 50%;
+
+        .iconfont {
+          color: $white;
+        }
+      }
 
       .info {
         display: inline-block;
