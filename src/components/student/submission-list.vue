@@ -474,16 +474,6 @@
 
 
   .submission-mine {
-    // position: absolute;
-    // top: 1.173333rem;
-    // left: 0;
-    // width: 100%;
-    // min-height: 100%;
-    // padding: 0 0.453333rem;
-
-    // overflow-y: scroll;
-    // -webkit-overflow-scrolling: touch;
-
     flex: 1;
     width: 100%;
     padding: 0 0.453333rem;
@@ -527,7 +517,9 @@
 
           .item-image {
             display: block;
-            width: 3.733333rem;
+            width: 7.573333rem;
+            max-width: 100%;
+            max-height: 7.04rem;
           }
         }
 

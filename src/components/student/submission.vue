@@ -127,7 +127,7 @@
         this.text = value;
 
         if(this.count) {
-           this.sendStatus === 0 && this.sendStatus = 2;
+           this.sendStatus === 0 && (this.sendStatus = 2);
         } else {
           !this.hasImage && this.sendStatus = 0;
         }
