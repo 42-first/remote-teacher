@@ -193,7 +193,7 @@ function compress(file, options, callback) {
                 if(/;base64,null/.test(dataURL) || /;base64,$/.test(dataURL)){
                     // 压缩出错，以文件方式上传的，采用原文件上传
                     console.warn('Compress fail, dataURL is ' + dataURL + '. Next will use origin file to upload.');
-                    callback(file, fileType);
+                    callback(dataURL, fileType);
                 }else{
                     let blob = dataURItoBlob(dataURL);
                     blob.id = file.id;
@@ -209,7 +209,7 @@ function compress(file, options, callback) {
                     callback();
                 }else{
                     file.base64 = dataURL;
-                    callback(file, fileType);
+                    callback(dataURL, fileType);
                 }
             }
         };
