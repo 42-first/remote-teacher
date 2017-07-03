@@ -315,6 +315,7 @@
     
     /* 发布试卷模态框 */
     .pub-modal {
+      position: fixed;
       z-index: 10;
 
       .pub-inner {
