@@ -37,6 +37,11 @@
 		    <i class="iconfont icon-suijidianming1 f24"></i>
 		    <span style="margin-left: 32rpx;">随机点名</span>
 		  </v-touch>
+
+      <v-touch class="more-item" v-on:tap="setEndShow">
+        <i class="iconfont icon-tuichu f24"></i>
+        <span style="margin-left: 32rpx;">退出放映</span>
+      </v-touch>
 		</div>
 	</div>
 </template>
@@ -45,7 +50,7 @@
 
   export default {
     name: 'Tollbar',
-    props: ['lessonid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
+    props: ['lessonid', 'presentationid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
     data () {
       return {
         activeIndex: 0,   // 当前正在高亮的工具栏tab序号
@@ -121,6 +126,21 @@
         self.socket.send(str)
         self.$emit('update:isToolbarMoreBoxHidden', true)
       },
+      /**
+       * 点击更多->退出放映按钮，设置结束授课
+       *
+       * @event bindtap
+       */
+      setEndShow () {
+        let self = this
+        let str = JSON.stringify({
+          'op': 'endshow',
+          'lessonid': self.lessonid,
+          'presentation': self.presentationid
+        })
+
+        self.socket.send(str)
+      },
     }
   }
 </script>
@@ -184,9 +204,8 @@
     right: 0.133333rem;
     bottom: 2.026667rem;
     width: 3.6rem;
-    height: 2.933333rem;
+    height: 4.5rem;
 
-    padding: 5rpx 10rpx;
     background: #333333;
     border-radius: 10px;
     color: #ffffff;

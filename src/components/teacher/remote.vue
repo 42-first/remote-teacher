@@ -24,6 +24,7 @@
       <Toolbar 
         :class="['dontcallback']"
         :lessonid="lessonid"
+        :presentationid="presentationid"
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
