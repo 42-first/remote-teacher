@@ -208,7 +208,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'danmushown') {
     self.postingDanmuid = msg.danmuid
 
-    localStorage.setItem('postingDanmuid'+self.lessonid, msg.postid)
+    localStorage.setItem('postingDanmuid'+self.lessonid, msg.danmuid)
     return
   }
 
