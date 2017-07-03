@@ -7,7 +7,8 @@
     <!-- 上部时钟 -->
     <section class="upper">
       <div class="f60">
-        <i class="iconfont icon-miaobiao f40"></i>
+        <!-- <i class="iconfont icon-timing f40"></i> -->
+        <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
       <div class="f18">
@@ -29,21 +30,21 @@
         <div class="iconbox" style="background: #14C4E9;">
           <i class="iconfont icon-shiti_shijuan f28"></i>
         </div>
-        <div class="btn-desc f15">{{isPaperCollected ? '已收卷' : '收卷'}}</div>
+        <div class="btn-desc f14">{{isPaperCollected ? '已收卷' : '收卷'}}</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="postQuizresult">
         <div class="iconbox" style="background: #28CF6E;">
           <i class="iconfont icon-shiti_touping f28"></i>
         </div>
-        <div class="btn-desc f15">投屏</div>
+        <div class="btn-desc f14">投屏</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="showQuizresultDetail">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>
-        <div class="btn-desc f15">查看详情</div>
+        <div class="btn-desc f14">查看详情</div>
       </v-touch>
     </section>
 
@@ -328,7 +329,7 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .quizresult-box {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 0;
@@ -350,6 +351,11 @@
       width: 8.8rem;
       min-height: 3.466667rem;
       padding-top: 0.8rem;
+
+      .jishi {
+        width: 1.1rem;
+        vertical-align: middle;
+      }
       
     }
 
