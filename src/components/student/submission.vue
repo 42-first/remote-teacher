@@ -90,7 +90,7 @@
 </template>
 <script>
   import API from '@/util/Api'
-  import { compress }  from '@/util/image'
+  import {compress} from '@/util/image'
 
   export default {
     name: 'submission-page',
@@ -235,7 +235,7 @@
       handleChooseImage() {
         console.log(wx);
       },
-      compress(res, fileType) {
+      compress2(res, fileType) {
         let self = this;
         let img = new Image();
         // 需要处理下微信header高度
@@ -291,9 +291,11 @@
 
         // 图片处理参数
         let options = {
-          width: 1600,
-          height: 1600,
-          quality: .6
+          compress: {
+            width: 1600,
+            height: 1600,
+            quality: .6
+          }
         };
 
         // 压缩 浏览器旋转 微信崩溃等问题
