@@ -257,7 +257,8 @@
             }
 
             .pic {
-              max-width: 100%;
+              max-width: 7.573333rem;
+              max-height: 7.04rem;
             }
           }
         }
