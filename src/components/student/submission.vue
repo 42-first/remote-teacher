@@ -90,6 +90,7 @@
 </template>
 <script>
   import API from '@/util/Api'
+  import {compress} from '@/util/image'
 
   export default {
     name: 'submission-page',
@@ -234,7 +235,7 @@
       handleChooseImage() {
         console.log(wx);
       },
-      compress(res, fileType) {
+      compress2(res, fileType) {
         let self = this;
         let img = new Image();
         // 需要处理下微信header高度
@@ -244,17 +245,17 @@
           let cvs = document.createElement('canvas'),
             ctx = cvs.getContext('2d');
 
-          if(img.height > maxHeight) {
-            img.width *= maxHeight / img.height;
-            img.height = maxHeight;
-          }
+          // if(img.height > maxHeight) {
+          //   img.width *= maxHeight / img.height;
+          //   img.height = maxHeight;
+          // }
 
           cvs.width = img.width;
           cvs.height = img.height;
           ctx.clearRect(0, 0, cvs.width, cvs.height);
           ctx.drawImage(img, 0, 0, img.width, img.height);
 
-          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.75);
+          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.6);
           let imgEl = self.$el.querySelector('.J_preview_img');
           imgEl.src = dataUrl;
 
@@ -268,10 +269,10 @@
       handleChooseImageChange(evt) {
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
+        let imgEl = this.$el.querySelector('.J_preview_img');
 
         let file = targetEl.files[0];
         let fileType = file.type;
-        let reader = new FileReader();
 
         console.log('MIME类型：' + fileType);
 
@@ -288,23 +289,33 @@
           }
         }
 
-        reader.onload = function(e) {
-          let data = e.target.result;
-
-          self.compress(data, fileType);
-
-          // let imgEl = self.$el.querySelector('.J_preview_img');
-          // imgEl.src = data;
-
-          // Promise.all([ self.compress(data) ]).then((res) => {
-          // });
-
-          // 上传图片
-          // self.uploadImage(data, fileType);
-          // self.hasImage = true;
+        // 图片处理参数
+        let options = {
+          compress: {
+            width: 1600,
+            height: 1600,
+            quality: .6
+          }
         };
 
-        reader.readAsDataURL(file);
+        // 压缩 浏览器旋转 微信崩溃等问题
+        compress(file, options, function(dataUrl) {
+          if(dataUrl) {
+            imgEl.src = dataUrl;
+
+            // 上传图片
+            self.uploadImage(dataUrl, fileType);
+            self.hasImage = true;
+          }
+        });
+
+        // let reader = new FileReader();
+        // reader.onload = function(e) {
+        //   let data = e.target.result;
+
+        //   self.compress(data, fileType);
+        // };
+        // reader.readAsDataURL(file);
       },
       handlelaodImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
