@@ -9,7 +9,7 @@
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
 	    	<div class="f40" v-if="problemResultData.isBellset">
-		      <i class="iconfont icon-miaobiao f40"></i>
+		      <i class="iconfont icon-timing f40"></i>
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
@@ -33,21 +33,21 @@
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
 	      	</div>
-	        <div class="btn-desc f15">投屏</div>
+	        <div class="btn-desc f14">投屏</div>
 	      </v-touch>
 
 	      <v-touch class="btn-item" v-on:tap="showProblemresultdetail">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
-	        <div class="btn-desc f15">查看详情</div>
+	        <div class="btn-desc f14">查看详情</div>
 	      </v-touch>
 
 	      <v-touch v-show="problemResultData.type !== 'Polling'" class="btn-item" v-on:tap="tapRedpacketHandler">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f15">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
+	        <div class="btn-desc f14">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
 	      </v-touch>
 	    </section>
 	  </div>
