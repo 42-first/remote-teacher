@@ -2,17 +2,21 @@
 <template>
 	<div class="toolbar-root">
 		<div class="rc-toolbar f12">
-		  <v-touch class="tool-item first-item" :class="isSocketConnected ? 'online' : 'offline'" v-on:tap="goHome">
+		  <!-- <v-touch class="tool-item first-item" :class="isSocketConnected ? 'online' : 'offline'" v-on:tap="goHome">
         <i class="iconfont icon-ykq_tab_active2 f16"></i>
 		    <div>遥控器</div>
-		  </v-touch>
+		  </v-touch> -->
+      <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
+        <i class="iconfont f16" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
+        <div>遥控器</div>
+      </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
-		    <i class="iconfont icon-ykq_tab_normal2 f16"></i>
+		    <i class="iconfont f16" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
 		    缩略图
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
-		    <i class="iconfont icon-ykq_tab_normal1 f16"></i>
+		    <i class="iconfont f16" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
