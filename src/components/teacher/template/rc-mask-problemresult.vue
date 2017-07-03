@@ -57,6 +57,7 @@
 		<RcMaskProblemresultDetail
 			ref="RcMaskProblemresultDetail"
 			v-show="!isProblemResultDetailHidden"
+			:problem-result-data="problemResultData"
 			@closeProblemresultdetail="closeProblemresultdetail"
 		></RcMaskProblemresultDetail>
 

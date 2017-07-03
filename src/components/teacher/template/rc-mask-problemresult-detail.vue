@@ -42,7 +42,7 @@
 
 	export default {
 	  name: 'RcMaskProblemresultDetail',
-	  props: [],
+	  props: ['problemResultData'],
 	  data () {
 	    return {
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
@@ -118,7 +118,7 @@
 
 	          // 投票类型每回要算投票数最多的
 	          if (jsonData.problem_type === 3) {
-	          	self.findBigPoll(jsonData)
+	          	self.findBigPoll()
 	          }
 	        })
 	    },
@@ -130,7 +130,12 @@
 	    openRightItem (jsonData) {
 	    	let self = this
 
-	      self.showingIndex = jsonData.problem_type === 3 ? self.findBigPoll(jsonData) : self.findRightAnswer(jsonData)
+	      // self.showingIndex = jsonData.problem_type === 3 ? self.findBigPoll(jsonData) : self.findRightAnswer(jsonData)
+
+	      // 投票类型不打开默认选项
+	      if (jsonData.problem_type !== 3) {
+	      	self.showingIndex = self.findRightAnswer(jsonData)
+	      }
 	    },
 	    /**
 	     * 找出正确选项的序号
@@ -147,30 +152,28 @@
         }
 	    },
 	    /**
-	     * 算出投票类型的票数最多的序号
+	     * 算出投票类型的票数最多的选项
 	     *
-	     * @param {object} jsonData 详情数据
 	     */
-	    findBigPoll (jsonData) {
+	    findBigPoll () {
 	    	let self = this
-
+	    	let GD = self.problemResultData.graph.data // 柱状图的数据
 	    	let result = {
-	    		index: -1,
-	    		total: -1
+	    		'label': '',
+	    		'value': -1
+	    	}
+	    	for (var i = 0; i < GD.length; i++) {
+	    		if (result.value  === GD[i].value) {
+			    	result.label += GD[i].label
+	    		} else if (result.value  < GD[i].value) {
+	    			result = {
+			    		'label': GD[i].label,
+			    		'value': GD[i].value
+			    	}
+	    		}
 	    	}
 
-	      for (let i = 0; i < jsonData.data.length; i++) {
-	      	let _total = jsonData.data[i].members.length
-        	if (result.total < _total) {
-        		result = {
-        			index: i,
-        			total: _total
-        		}
-        	}
-        }
-
-        self.problemResultDetailData.answer = result.index === -1 ? '' : jsonData.data[result.index].label
-        return result.index
+	    	self.problemResultDetailData.answer = result.label
 	    },
 	  }
 	}
