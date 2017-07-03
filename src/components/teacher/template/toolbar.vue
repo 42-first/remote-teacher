@@ -140,6 +140,7 @@
         })
 
         self.socket.send(str)
+        self.$emit('update:isToolbarMoreBoxHidden', true)
       },
     }
   }
