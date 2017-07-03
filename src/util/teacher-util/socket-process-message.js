@@ -159,6 +159,13 @@ function socketProcessMessage(msg){
     // 换页
     msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     self.showWhichPage(msg)
+
+    // 换页会退出投屏的
+    self.postingDanmuid = -1
+    localStorage.setItem('postingDanmuid'+self.lessonid, -1)
+    self.postingSubmissionid = -1
+    localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
+      
     return
   }
   
