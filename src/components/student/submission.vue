@@ -236,24 +236,25 @@
       },
       compress(res, fileType) {
         let self = this;
-        let img = new Image(),
-          maxHeight = 750;
+        let img = new Image();
+        // 需要处理下微信header高度
+        let maxHeight = window.innerHeight || 1214;
 
         img.onload = function () {
           let cvs = document.createElement('canvas'),
-              ctx = cvs.getContext('2d');
+            ctx = cvs.getContext('2d');
 
           if(img.height > maxHeight) {
             img.width *= maxHeight / img.height;
             img.height = maxHeight;
           }
+
           cvs.width = img.width;
           cvs.height = img.height;
           ctx.clearRect(0, 0, cvs.width, cvs.height);
           ctx.drawImage(img, 0, 0, img.width, img.height);
 
-          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.6);
-
+          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.75);
           let imgEl = self.$el.querySelector('.J_preview_img');
           imgEl.src = dataUrl;
 
