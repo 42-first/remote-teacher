@@ -24,11 +24,12 @@
       <!-- 图片 -->
       <section class="submission__pic">
         <div v-if="!hasImage">
-          <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange"></div>
+          <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
           <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
         </div>
         <div class="pic-view" v-show="hasImage">
           <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" src="" alt="" @load="handlelaodImg" @click="handleScaleImage" />
+          <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
       </section>
@@ -233,12 +234,45 @@
       handleChooseImage() {
         console.log(wx);
       },
+      compress(res, fileType) {
+        let self = this;
+        let img = new Image(),
+          maxHeight = 750;
+
+        img.onload = function () {
+          let cvs = document.createElement('canvas'),
+              ctx = cvs.getContext('2d');
+
+          if(img.height > maxHeight) {
+            img.width *= maxHeight / img.height;
+            img.height = maxHeight;
+          }
+          cvs.width = img.width;
+          cvs.height = img.height;
+          ctx.clearRect(0, 0, cvs.width, cvs.height);
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+
+          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.6);
+
+          let imgEl = self.$el.querySelector('.J_preview_img');
+          imgEl.src = dataUrl;
+
+          // 上传图片
+          self.uploadImage(dataUrl, fileType);
+          self.hasImage = true;
+        }
+
+        img.src = res;
+      },
       handleChooseImageChange(evt) {
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
 
         let file = targetEl.files[0];
+        let fileType = file.type;
         let reader = new FileReader();
+
+        console.log('MIME类型：' + fileType);
 
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
@@ -256,16 +290,20 @@
         reader.onload = function(e) {
           let data = e.target.result;
 
-          let imgEl = self.$el.querySelector('.J_preview_img');
-          imgEl.src = self.imageData = data;
+          self.compress(data, fileType);
+
+          // let imgEl = self.$el.querySelector('.J_preview_img');
+          // imgEl.src = data;
+
+          // Promise.all([ self.compress(data) ]).then((res) => {
+          // });
 
           // 上传图片
-          self.uploadImage(data, file.type)
-          self.hasImage = true;
+          // self.uploadImage(data, fileType);
+          // self.hasImage = true;
         };
 
         reader.readAsDataURL(file);
-        console.log(file);
       },
       handlelaodImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
@@ -295,7 +333,7 @@
         let items = [];
 
         // build items array
-        items.unshift({ src: this.imageData, w: this.width || 750, h: this.height || 520 });
+        items.unshift({ src: this.imageURL, w: this.width || 750, h: this.height || 520 });
 
         let options = {
           index: 0,
