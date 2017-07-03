@@ -127,9 +127,9 @@
         this.text = value;
 
         if(this.count) {
-          this.sendStatus = 2;
+           this.sendStatus === 0 && (this.sendStatus = 2);
         } else {
-          this.sendStatus = 0;
+          !this.hasImage && (this.sendStatus = 0);
         }
       },
       sendStatus(newValue, oldValue) {
@@ -341,11 +341,12 @@
       handleScaleImage() {
         let targetEl = event.target;
         let pswpElement = this.$el.querySelector('.J_submission_pswp');
+        let imgEl = this.$el.querySelector('.J_preview_img');
         let index = 0;
         let items = [];
 
         // build items array
-        items.unshift({ src: this.imageURL, w: this.width || 750, h: this.height || 520 });
+        items.unshift({ src: this.imageURL || imgEl.src, w: this.width || 750, h: this.height || 520 });
 
         let options = {
           index: 0,
