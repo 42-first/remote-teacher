@@ -467,7 +467,7 @@ export default {
      */
     checkDoubt () {
       let self = this
-      oldDoubt = doubtTotalSum
+      oldDoubt = doubtTotalSum || oldDoubt // 有可能刚进页面还不到10秒就点击了查看缩略图，这时 doubtTotalSum 为0，而 oldDoubt 从storage取出来并不是0
       localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
       self.newdoubt = 0
     },
@@ -477,7 +477,7 @@ export default {
      */
     checkTougao () {
       let self = this
-      oldTougao = tougaoTotalSum
+      oldTougao = tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },
