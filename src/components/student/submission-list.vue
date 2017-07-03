@@ -508,7 +508,7 @@
 
         .item-content {
           flex: 1;
-          padding-left: 0.133333rem;
+          padding-left: 0.52rem;
           text-align: justify;
 
           word-break: break-all;
