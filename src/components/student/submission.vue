@@ -442,7 +442,7 @@
     border-bottom: 1px solid #C8C8C8;
 
     .submission-textarea {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.52rem;
       padding: 0.133333rem;
 
       width: 100%;
