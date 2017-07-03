@@ -149,6 +149,8 @@ let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标
 let pollingTougaoTimer = null          // 轮询获取投稿数的信息
 let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
 let oldTougao = 0                      // 记录投稿人次，便于教师点击过后清零
+let doubtTotalSum = 0                  // 不懂总数
+let tougaoTotalSum = 0                 // 投稿总数
 
 export default {
   name: 'Remote',
@@ -435,27 +437,27 @@ export default {
         request.get(url1)
           .then(jsonData => {
             let doubt = jsonData.data.doubt
-            let sum = 0
+            doubtTotalSum = 0
 
             doubt.forEach(item => {
-              sum += item
+              doubtTotalSum += item
             })
-            self.newdoubt = sum - oldDoubt
+            self.newdoubt = doubtTotalSum - oldDoubt
           })
       }, 10*1000)
 
       let url2 = API.submissionlist
 
-      pollingPresentationTagTimer = setInterval(() => {
+      pollingTougaoTimer = setInterval(() => {
         request.get(url2, {
           'lesson_id': self.lessonid,
           'start': 10000000000000000000,
           'count': 10000000000000000000,
           'direction': 0
         }).then(jsonData => {
-            let sum = jsonData.data.tougao_list.length
+            tougaoTotalSum = jsonData.data.tougao_list.length
 
-            self.newtougao = sum - oldTougao
+            self.newtougao = tougaoTotalSum - oldTougao
           })
       }, 10*1000)
     },
@@ -465,7 +467,7 @@ export default {
      */
     checkDoubt () {
       let self = this
-      oldDoubt = self.newdoubt || oldDoubt // 防止反复点击把oldDoubt置零
+      oldDoubt = doubtTotalSum
       localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
       self.newdoubt = 0
     },
@@ -475,7 +477,7 @@ export default {
      */
     checkTougao () {
       let self = this
-      oldTougao = self.newtougao || oldTougao // 防止反复点击把 oldTougao 置零
+      oldTougao = tougaoTotalSum
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },
