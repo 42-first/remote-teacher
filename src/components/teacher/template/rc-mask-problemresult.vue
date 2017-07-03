@@ -255,6 +255,7 @@
 	  position: relative;
 	  text-align: center;
 	  color: $white;
+	  background: #000000;
 
 	  .icon-shiti_guanbitouping {
 	  	position: absolute;
