@@ -7,7 +7,7 @@
  */
 
 
-const SOCKET_HOST =  'b.xuetangx.com' || location.host || 'b.xuetangx.com'
+const SOCKET_HOST = location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
