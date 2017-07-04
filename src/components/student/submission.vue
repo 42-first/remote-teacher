@@ -36,7 +36,7 @@
 
       </div>
 
-      <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus === 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
+      <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
       <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">查看我的投稿</router-link>
 
@@ -99,7 +99,7 @@
         index: 0,
         opacity: 0,
         title: '投稿',
-        // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成
+        // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成 5课程已结束
         sendStatus: 0,
         submitText: '确认发送',
         text: '',
@@ -120,6 +120,11 @@
     },
     watch: {
       text(newValue, oldValue) {
+        // 课程结束啦
+        if(this.sendStatus === 5) {
+          return this;
+        }
+
         // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 140);
         let value = newValue && newValue.substr(0, 140);
 
@@ -139,8 +144,10 @@
           this.submitText = '图片上传中';
         } else if(newValue === 2) {
           this.submitText = '确认发送';
-        }else if(newValue === 4) {
+        } else if(newValue === 4) {
           this.submitText = '发送成功';
+        } else if(newValue === 5) {
+          this.submitText = '课程已结束';
         }
       }
     },
@@ -275,6 +282,10 @@
         let fileType = file.type;
 
         console.log('MIME类型：' + fileType);
+        // 课程结束啦
+        if(this.sendStatus === 5) {
+          return this;
+        }
 
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
@@ -389,7 +400,7 @@
         gallery.init();
       },
       handleSend() {
-         this.sendStatus === 2 && this.sendSubmission();
+        this.sendStatus === 2 && this.sendSubmission();
       },
       handleBack() {
         this.$router.back();
@@ -398,6 +409,9 @@
     created() {
       this.lessonID = +this.$route.params.lessonID;
       document.title = '投稿';
+
+      // 课程结束啦
+      this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
     },
     mounted() {
     },

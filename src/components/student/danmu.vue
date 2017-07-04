@@ -24,7 +24,7 @@
         温馨提示：发送前请自行审查用词
       </section>
 
-      <section :class="['danmu__submit', 'f17', sendStatus === 0 || sendStatus === 3 ? 'disable': '']" @click="handelSend">{{ submitText }}</section>
+      <section :class="['danmu__submit', 'f17', sendStatus === 0 || sendStatus >= 3 ? 'disable': '']" @click="handelSend">{{ submitText }}</section>
 
     </div>
 
@@ -40,7 +40,7 @@
         index: 0,
         opacity: 0,
 
-        // 0 初始化状态 1可以发送 2发送中 3发送完成
+        // 0 初始化状态 1可以发送 2发送中 3发送完成 4课程已结束
         sendStatus: 0,
         submitText: '确认发送',
         title: '弹幕',
@@ -54,6 +54,11 @@
     },
     watch: {
       text(newValue, oldValue) {
+        // 课程结束啦
+        if(this.sendStatus === 4) {
+          return this;
+        }
+
         // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 50);
         let value = newValue && newValue.substr(0, 50);
 
@@ -71,6 +76,8 @@
           this.submitText = '正在发送';
         } else if(newValue === 3) {
           this.submitText = '发送成功';
+        } else if(newValue === 4) {
+          this.submitText = '课程已结束';
         }
       }
     },
@@ -137,6 +144,9 @@
     created() {
       this.lessonID = +this.$route.params.lessonID;
       document.title = '弹幕';
+
+      // 课程结束啦
+      this.$parent.lessonStatus === 1 && (this.sendStatus = 4);
     },
     mounted() {
     },
