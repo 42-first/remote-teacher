@@ -28,7 +28,7 @@
 	    
 	    <v-touch class="btn refresh-btn f17"  v-on:tap="refreshProblemResultDetail">
 	    	<i class="iconfont icon-refresh f20"></i>
-	    	刷新详情
+	    	刷新
 	    </v-touch>
 		</div>
   </div>
