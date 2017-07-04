@@ -104,7 +104,8 @@ function socketProcessMessage(msg){
     if(msg.addinversion === -1){
       self.showPcErrorMask()
     }else{
-      self.showQrcodeMask()
+      // self.showQrcodeMask()
+      // self.killMask()
     }
     return
   }
