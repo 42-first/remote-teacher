@@ -101,7 +101,7 @@
     }
     
     .hmy {
-      margin-top: 2rem;
+      margin-top: 6rem;
       color: $blue;
     }
 
