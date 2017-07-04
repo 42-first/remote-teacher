@@ -112,7 +112,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'presentationcreated' || msg.op == 'presentationupdated') {
     //presentationcreated是打开了新的ppt，
     //但是遥控器上还被遮罩住，等到showpresentation指令，才会去掉遮罩，显示新ppt的内容
-    if(self.data.presentationid !== msg.presentation){
+    if(self.presentationid !== msg.presentation){
       //切换ppt的话显示二维码控制页面
       self.killMask()
       self.showQrcodeMask()
