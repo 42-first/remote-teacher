@@ -12,8 +12,9 @@
       </div>
     </div>
     <div class="gap"></div>
+    <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
     <section class="list">
-      <div class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
+      <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
           <img :src="item.avatar" alt="">
           <span>{{item.name}}</span>
@@ -97,6 +98,11 @@
     .gap {
       height: 0.266667rem;
       background: #EDF2F6;
+    }
+    
+    .hmy {
+      margin-top: 2rem;
+      color: $blue;
     }
 
     .list {
