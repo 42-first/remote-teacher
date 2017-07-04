@@ -20,7 +20,7 @@
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'last-item', {'active': !isToolbarMoreBoxHidden}]" v-on:tap="toggleToolbarMoreBox">
+		  <v-touch :class="['tool-item', 'last-item']" v-on:tap="toggleToolbarMoreBox">
 		    <i class="iconfont icon-more f16"></i>
 		    更多
 		  </v-touch>
