@@ -8,7 +8,7 @@
     <section class="upper">
       <div class="f60">
         <!-- <i class="iconfont icon-timing f40"></i> -->
-        <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+        <img class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
       <div class="f18" v-show="!isSVGHidden">
@@ -321,7 +321,7 @@
       padding-top: 0.8rem;
 
       .jishi {
-        width: 1.1rem;
+        width: 1.2rem;
         vertical-align: middle;
       }
       
@@ -333,8 +333,8 @@
       padding-top: 0.266667rem;
       width: 8.8rem;
       height: 6.533333rem;
-      border-top: 1px solid #cccccc;
-      border-bottom: 1px solid #cccccc;
+      border-top: 1px solid #C8C8C8;
+      border-bottom: 1px solid #C8C8C8;
       
       .fsfb {
         text-align: center;

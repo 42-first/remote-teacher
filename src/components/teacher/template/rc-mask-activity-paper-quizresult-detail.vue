@@ -2,7 +2,7 @@
 <template>
 	<div class="quizresultdetail-box">
     <div class="list f17" style="padding: 0 0.4rem;">
-      <div class="item f17">
+      <div class="item f17" style="border-bottom: none;">
         <div class="name ellipsis">
         </div>
         <div class="detail">
@@ -147,6 +147,7 @@
         border-radius: 0;
         height: 1.466667rem;
         line-height: 1.466667rem;
+        box-shadow: none;
       }
     }
   }

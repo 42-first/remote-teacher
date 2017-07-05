@@ -9,7 +9,7 @@
             当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
-            {{isProblemPublished ? '查看答案' : '发送此题目'}}
+            {{isProblemPublished ? '查看答案' : '发送此题'}}
           </v-touch>
         </div>
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />

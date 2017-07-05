@@ -347,19 +347,19 @@
           right: 0;
           bottom: 0;
           height: 1.32rem;
-          border: 1px solid #C8C8C8;
+          border: 0.013333rem solid #C8C8C8;
 
           .cancel, .confirm {
             flex: 1;
           }
           .cancel {
-            color: #C8C8C8;
+            color: #9B9B9B;
           }
           .confirm {
             color: $blue;
           }
           .bar {
-            width: 1px;
+            width: 0.013333rem;
             height: 100%;
             background: #C8C8C8;
           }

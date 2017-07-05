@@ -7,21 +7,21 @@
 		    <div>遥控器</div>
 		  </v-touch> -->
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
-        <i class="iconfont f16" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
+        <i class="iconfont f24" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
         <div>遥控器</div>
       </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
-		    <i class="iconfont f16" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
+		    <i class="iconfont f24" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
 		    缩略图
-        <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
+        <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
-		    <i class="iconfont f16" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
+		    <i class="iconfont f24" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
 		    课堂动态
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', 'last-item']" v-on:tap="toggleToolbarMoreBox">
-		    <i class="iconfont icon-more f16"></i>
+		    <i class="iconfont f24" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_avtive' "></i>
 		    更多
 		  </v-touch>
 		</div>
@@ -29,7 +29,7 @@
 		<!-- 更多的内容 -->
 		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
-		    <i class="iconfont icon-erweima1 f24"></i>
+		    <i class="iconfont icon-ykq_erweima f24"></i>
 		    <span>二维码</span>
 		  </v-touch>
 
@@ -163,7 +163,7 @@
       position: relative;
       flex: 1;
       text-align: center;
-      border-right: 1px solid #eee;
+      // border-right: 1px solid #eee;
 
       .iconfont {
         display: inline-block;
@@ -175,13 +175,18 @@
         position: absolute;
         right: 0.133333rem;
         top: 0;
-        width: 0.666667rem;
-        height: 0.6rem;
-        line-height: 0.6rem;
+        // width: 0.666667rem;
+        // height: 0.6rem;
+        // line-height: 0.6rem;
+        min-width: 0.4rem;
+        padding: 0 0.04rem;
         text-align: center;
         background: #D0021B;
-        border-radius: 0.25rem;
+        border-radius: 0.32rem;
         color: $white;
+      }
+      .suoluetu-info {
+        background: $blue;
       }
     }
     .last-item {
@@ -218,6 +223,10 @@
       line-height: 1.44rem;
       text-align: left;
       border-bottom: 1px solid #979797;
+
+      .iconfont {
+        margin-right: 0.2rem;
+      }
 
       &:last-child {
         border: 0;

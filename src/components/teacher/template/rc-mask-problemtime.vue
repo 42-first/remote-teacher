@@ -61,7 +61,7 @@
 	@import "~@/style/_variables";
 	/*发题蒙版*/
 	.problemtime-box {
-		transform: translate(-50%, -60%);
+		transform: translate(-50%, -70%);
 	  width: 7.733333rem;
 
 	  .title {

@@ -166,7 +166,7 @@
       margin: 0.4rem auto;
       width: 8.0rem;
       height: 0.906667rem;
-      line-height: 0.906667rem;
+      line-height: 0.8rem;
       border: 1px solid $blue;
       border-radius: 0.08rem;
       text-align: center;
@@ -192,7 +192,7 @@
       .bar {
         width: 1px;
         background: $blue;
-        margin: 0.173333rem 0;
+        margin: 0.22rem 0;
       }
       .active {
         background: $blue;
@@ -212,7 +212,7 @@
         position: relative;
         width: 4.4rem;
         overflow: hidden;
-        margin-bottom: 1.36rem;
+        margin-bottom: 0.4rem;
         color: $white;
         text-align: center;
 
@@ -235,15 +235,15 @@
           width: 1.866667rem;
           height: 0.8rem;
           line-height: 0.8rem;
-          border-radius: 0 0 0 0.1rem;
+          border-radius: 0 0 0 0.05rem;
           text-align: center;
           background: rgba(0,0,0,0.72);
           color: $white;
         }
       }
       .item.active .gridimg {
-        padding: 2px;
-        border: 2px solid $blue;
+        padding: 0.053333rem;
+        border: 0.08rem solid $blue;
       }
     }
   }

@@ -3,47 +3,47 @@
 	<div class="activity-box">
     <section class="head f20">
       <div class="teacher ellipsis">
-        <img :src="avatar" alt="">
-        {{coursename}}
+        <img :src="avatar" alt="" style="display: inline-block;">
+        <span style="display: inline-block; padding-top: 0.1rem;">{{coursename}}</span>
       </div>
       <v-touch class="student f17" v-on:tap="showParticipantList">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
-        <span>当前学生{{participantList.length}}位&gt;</span>
+        <span>&nbsp;当前学生{{participantList.length}}位<i class="iconfont icon-dakai f15"></i></span>
       </v-touch>
     </section>
     <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
-          <i class="iconfont icon-shiti_shijuan f20"></i>
+          <i class="iconfont icon-ykq_tab_shijuan f21"></i>
         </div>
         试卷
       </div>
-      <div>
-        <i class="iconfont icon-dakai f20"></i>
+      <div class="dakai-box">
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showDanmubox">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
-          <i class="iconfont icon-danmu1 f15"></i>
+          <i class="iconfont icon-ykq_tab_danmu f21"></i>
         </div>
         弹幕
       </div>
-      <div>
-        <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
-        <i class="iconfont icon-dakai f20"></i>
+      <div class="dakai-box">
+        <span style="color: #cccccc; margin-right: 0.1rem;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showSubmission">
       <div>
         <div class="iconbox" style="background: #FF576B;">
-          <i class="iconfont icon-submission f18"></i>
+          <i class="iconfont icon-ykq_tab_tougao f21"></i>
         </div>
         投稿
       </div>
-      <div>
-        <span class="info f12" v-show="newtougao">{{newtougao}}</span>
-        <i class="iconfont icon-dakai f20"></i>
+      <div class="dakai-box">
+        <span style="margin-right: 0.1rem;" class="info f12" v-show="newtougao">{{newtougao}}</span>
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
 
@@ -280,14 +280,15 @@
       height: 3.68rem;
       padding: 0.733333rem 0.533333rem 0;
       margin-bottom: 0.386667rem;
-      background: #39383E;
+      background: #1C1B20;
       color: $white;
 
       .teacher {
         margin-bottom: 0.653333rem;
         img {
-          width: 0.933333rem;
-          height: 0.933333rem;
+          width: 1.0rem;
+          height: 1.0rem;
+          border: 2px solid $white;
           border-radius: 50%;
           vertical-align: middle;
         }
@@ -296,8 +297,9 @@
       .student {
         img {
           float: left;
-          width: 0.533333rem;
-          height: 0.533333rem;
+          width: 0.56rem;
+          height: 0.56rem;
+          border: 1px solid $white;
           border-radius: 50%;
           margin-top: 0.133333rem;
           margin-right: -0.133333rem;
@@ -323,6 +325,7 @@
         display: inline-block;
         width: 0.933333rem;
         height: 0.933333rem;
+        margin-right: 0.3rem;
         text-align: center; 
         line-height: 0.933333rem;
         border-radius: 50%;
@@ -330,6 +333,10 @@
         .iconfont {
           color: $white;
         }
+      }
+
+      .dakai-box {
+        margin-top: 0.186667rem;
       }
 
       .info {

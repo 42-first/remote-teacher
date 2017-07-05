@@ -13,7 +13,7 @@
 		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
-		    <div :class="['f18', {pt: !problemResultData.isBellset}]">
+		    <div :class="['f18', 'yjy', {pt: !problemResultData.isBellset}]">
 		      已经有 <span>{{problemResultData.total}}</span> / <span>{{problemResultData.members}}</span> 位同学提交了答案
 		    </div>
 	    </section>
@@ -279,11 +279,14 @@
 	  	border-bottom: 1px solid #cccccc;
 			
 			.jishi {
-				width: 0.8rem;
+				width: 0.9rem;
 				vertical-align: middle;
 			}
+			.yjy {
+				padding-top: 0.5rem;
+			}
 	  	.pt {
-	  		padding-top: 1rem;
+	  		padding-top: 1.3rem;
 	  	}
 	  }
 
