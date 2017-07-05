@@ -132,6 +132,7 @@ function socketProcessMessage(msg){
     self.setData({
       isBrandNewPpt: false
     })
+    self.showWhichPage(msg)
     self.killMask()
     return
   }
