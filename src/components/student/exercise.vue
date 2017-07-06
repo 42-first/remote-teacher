@@ -104,7 +104,7 @@
         opacity: 0,
         title: '习题',
         leaveTime: 0,
-        sLeaveTime: '',
+        sLeaveTime: '00:00',
         timeOver: false,
         summary: null,
         options: null,
