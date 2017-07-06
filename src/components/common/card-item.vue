@@ -76,9 +76,10 @@
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
             </div>
-            <div class="">
+            <i class="iconfont icon-shiti_shijuan f60"></i>
+            <!--  <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">
-            </div>
+            </div> -->
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
@@ -371,7 +372,7 @@
       justify-content: space-between;
 
       margin-bottom: 0.266667rem;
-      padding: 0.26rem 0.586667rem 0.3rem 0.4rem;
+      padding: 0.26rem 0.4rem 0.3rem;
 
       color: #FFFFFF;
       background: rgba(40,207,110,0.7);
