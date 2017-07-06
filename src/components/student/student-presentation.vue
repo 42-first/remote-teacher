@@ -16,7 +16,7 @@
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-ykq_tab_danmu f21"></i>发送弹幕</p>
+            <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-ykq_tab_danmu f25"></i>发送弹幕</p>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8"><i class="iconfont icon-ykq_tab_tougao f25"></i>发送投稿</router-link>
           </div>
         </div>
@@ -749,7 +749,7 @@
 
           .iconfont {
             padding-right: 0.186667rem;
-            vertical-align: -0.05rem;
+            vertical-align: -0.08rem;
           }
         }
       }
