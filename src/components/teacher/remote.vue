@@ -419,7 +419,7 @@ export default {
         initiativeCtrlMaskTpl: ''
       })
       
-      if (opt.isSlideHome) {
+      if (opt && opt.isSlideHome) {
         self.$refs.Toolbar.$emit('isSlideHome')
       }
     },

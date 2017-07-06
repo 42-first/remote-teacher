@@ -17,7 +17,7 @@
     <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
-          <i class="iconfont icon-ykq_tab_shijuan f21"></i>
+          <i class="iconfont icon-shiti_shijuan f21"></i>
         </div>
         试卷
       </div>
