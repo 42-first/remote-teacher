@@ -3,7 +3,7 @@
 	<div class="danmu-box allowscrollcallback">
     <div class="desc f20">
       <span>弹幕</span>
-      <v-touch  tag="i" :class="['iconfont', 'f32', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
+      <v-touch  tag="i" :class="['iconfont', 'f45', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
 
@@ -22,7 +22,7 @@
           </div>
           <div class="action-box">
             <div class="time f15">{{item.time.substring(11)}}</div>
-            <v-touch class="f15" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f18" style="color: #639EF4;"></i>投屏</v-touch>
+            <v-touch class="f15 gray" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
             <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
           </div>
         </div>
@@ -151,7 +151,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: $white;
+    background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
 
@@ -179,6 +179,7 @@
       padding: 0 0.4rem;
       height: 1.466667rem;
       line-height: 1.466667rem;
+      background: $white;
       
       span {
         color: $blue;
@@ -188,6 +189,9 @@
         float: right;
         margin-top: 0.1rem;
         vertical-align: middle;
+      }
+      .icon-danmu-close {
+        color: #9B9B9B;
       }
       .icon-danmu-open {
         color: $blue;
@@ -203,10 +207,11 @@
       padding-bottom: 1.466667rem;
       .item {
         padding: 0 0.4rem;
+        background: $white;
 
         .detail {
           display: flex;
-          align-items: center;
+          // align-items: center;
           margin-bottom: 0.4rem;
           padding-top: 0.266667rem;
 
@@ -230,6 +235,9 @@
           margin-left: 1.386667rem;
 
           .time {
+            color: #9B9B9B;
+          }
+          .gray {
             color: #9B9B9B;
           }
           .cancel-post-btn {

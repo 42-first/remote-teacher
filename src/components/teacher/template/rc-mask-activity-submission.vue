@@ -23,17 +23,17 @@
             <div class="action-box">
               <div class="time f15">{{item.create_time.substring(11)}}</div>
               <div class="action f15">
-                <v-touch class="coll" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
-                  <i class="iconfont icon-tougao_shoucang1 f15" style="color: #E1142D;"></i>
+                <v-touch class="coll gray" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
+                  <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
                   已收藏
                 </v-touch>
-                <v-touch class="coll" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
-                <i class="iconfont icon-tougao_bushoucang f15"></i>
+                <v-touch class="coll gray" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
+                <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
                   收藏
                 </v-touch>
 
-                <v-touch v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
-                  <i class="iconfont icon-shiti_touping f18" style="color: #639EF4;"></i>
+                <v-touch  class="gray" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                  <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                   投屏
                 </v-touch>
                 <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
@@ -269,6 +269,10 @@
           align-items: center;
           height: 1rem;
           margin-left: 1.386667rem;
+          
+          .gray {
+            color: #9B9B9B;
+          }
 
           .time {
             color: #9B9B9B;

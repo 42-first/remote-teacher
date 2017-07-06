@@ -104,7 +104,8 @@ function socketProcessMessage(msg){
     if(msg.addinversion === -1){
       self.showPcErrorMask()
     }else{
-      self.showQrcodeMask()
+      // self.showQrcodeMask()
+      // self.killMask()
     }
     return
   }
@@ -112,7 +113,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'presentationcreated' || msg.op == 'presentationupdated') {
     //presentationcreated是打开了新的ppt，
     //但是遥控器上还被遮罩住，等到showpresentation指令，才会去掉遮罩，显示新ppt的内容
-    if(self.data.presentationid !== msg.presentation){
+    if(self.presentationid !== msg.presentation){
       //切换ppt的话显示二维码控制页面
       self.killMask()
       self.showQrcodeMask()
@@ -131,6 +132,7 @@ function socketProcessMessage(msg){
     self.setData({
       isBrandNewPpt: false
     })
+    self.showWhichPage(msg)
     self.killMask()
     return
   }
@@ -159,6 +161,8 @@ function socketProcessMessage(msg){
     // 换页
     msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     self.showWhichPage(msg)
+    // 从缩略图翻页了，工具栏的高亮不能在缩略图，要回到遥控器上
+    self.goHome({isSlideHome: true})
 
     // 换页会退出投屏的
     self.postingDanmuid = -1

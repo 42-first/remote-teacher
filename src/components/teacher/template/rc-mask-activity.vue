@@ -2,48 +2,51 @@
 <template>
 	<div class="activity-box">
     <section class="head f20">
-      <div class="teacher ellipsis">
+      <div class="teacher ellipsis clearfix">
         <img :src="avatar" alt="">
-        {{coursename}}
+        <span class="coursename">{{coursename}}</span>
       </div>
       <v-touch class="student f17" v-on:tap="showParticipantList">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
-        <span>当前学生{{participantList.length}}位&gt;</span>
+        <span class="dqxs">
+          当前学生{{participantList.length}}位
+          <i class="iconfont icon-dakai f15"></i>
+        </span>
       </v-touch>
     </section>
     <v-touch class="activity-item f18" v-on:tap="showPaper">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
-          <i class="iconfont icon-shiti_shijuan f20"></i>
+          <i class="iconfont icon-ykq_tab_shijuan f21"></i>
         </div>
         试卷
       </div>
-      <div>
-        <i class="iconfont icon-dakai f20"></i>
+      <div class="dakai-box">
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showDanmubox">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
-          <i class="iconfont icon-danmu1 f15"></i>
+          <i class="iconfont icon-ykq_tab_danmu f21"></i>
         </div>
         弹幕
       </div>
-      <div>
-        <span style="color: #cccccc;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
-        <i class="iconfont icon-dakai f20"></i>
+      <div class="dakai-box">
+        <span class="kg">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
     <v-touch class="activity-item f18" v-on:tap="showSubmission">
       <div>
         <div class="iconbox" style="background: #FF576B;">
-          <i class="iconfont icon-submission f18"></i>
+          <i class="iconfont icon-ykq_tab_tougao f21"></i>
         </div>
         投稿
       </div>
-      <div>
+      <div class="dakai-box">
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
-        <i class="iconfont icon-dakai f20"></i>
+        <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
 
@@ -280,31 +283,41 @@
       height: 3.68rem;
       padding: 0.733333rem 0.533333rem 0;
       margin-bottom: 0.386667rem;
-      background: #39383E;
+      background: #1C1B20;
       color: $white;
 
       .teacher {
         margin-bottom: 0.653333rem;
         img {
-          width: 0.933333rem;
-          height: 0.933333rem;
+          float: left;
+          width: 1.0rem;
+          height: 1.0rem;
+          border: 2px solid $white;
           border-radius: 50%;
           vertical-align: middle;
+        }
+
+        .coursename {
+          float: left;
+          margin-top: 0.146667rem;
+          margin-left: 0.133333rem;
         }
       }
 
       .student {
         img {
           float: left;
-          width: 0.533333rem;
-          height: 0.533333rem;
+          width: 0.56rem;
+          height: 0.56rem;
+          border: 1px solid $white;
           border-radius: 50%;
           margin-top: 0.133333rem;
           margin-right: -0.133333rem;
         }
-        span {
+        .dqxs {
           float: left;
-          margin-left: 0.266667rem;
+          margin-top: 0.04rem;
+          margin-left: 0.333333rem;
         }
       }
     }
@@ -323,6 +336,7 @@
         display: inline-block;
         width: 0.933333rem;
         height: 0.933333rem;
+        margin-right: 0.3rem;
         text-align: center; 
         line-height: 0.933333rem;
         border-radius: 50%;
@@ -332,11 +346,23 @@
         }
       }
 
+      .dakai-box {
+        margin-top: 0.186667rem;
+      }
+
+      .kg {
+        float: left;
+        margin-top: 0.053333rem;
+        margin-right: 0.1rem;
+        color: #cccccc;
+      }
+
       .info {
-        display: inline-block;
-        width: 0.666667rem;
-        height: 0.6rem;
-        line-height: 0.6rem;
+        float: left;
+        margin-top: 0.173333rem;
+        margin-right: 0.16rem;
+        min-width: 0.3rem;
+        padding: 0 0.1rem;
         text-align: center;
         background: #D0021B;
         border-radius: 0.25rem;

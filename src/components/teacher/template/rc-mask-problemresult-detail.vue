@@ -3,7 +3,10 @@
 	<div class="problemresultdetail-box">
 		<div v-if="problemResultDetailData">
 			<!-- 关闭按钮 -->
-	    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeProblemresultdetail"></v-touch>
+			<v-touch class="close-box"  v-on:tap="closeProblemresultdetail">
+	    	<i class="iconfont icon-ykq-shiti-guanbi f24"></i>
+	    </v-touch>
+	    
 	    <div class="title f18">{{problemResultDetailData.problem_type === 3 ? '票数最多' : '本题正确选项为'}}</div>
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
 	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
@@ -14,7 +17,7 @@
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
 	      		<i v-show="problemResultDetailData.problem_type !== 3" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
 	      		<span class="f18 asw">{{choiceItem.label}}</span>
-	      		<span class="f14">{{choiceItem.members.length}}人</span>
+	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}人</span>
 	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
 	      	</v-touch>
 	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]">
@@ -28,7 +31,7 @@
 	    
 	    <v-touch class="btn refresh-btn f17"  v-on:tap="refreshProblemResultDetail">
 	    	<i class="iconfont icon-refresh f20"></i>
-	    	刷新详情
+	    	刷新
 	    </v-touch>
 		</div>
   </div>
@@ -191,12 +194,15 @@
 	  color: #4A4A4A;
 	  text-align: center;
 	  overflow: auto;
-
-	  .icon-shiti_guanbitouping {
-	  	position: fixed;
+		
+		.close-box {
+			position: absolute;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;
-	  }
+	  	width: 1.066667rem;
+	  	height: 1.066667rem;
+		}
+
 	  .icon-wrong {
 	  	color: #D0011B;
 	  }
@@ -211,7 +217,7 @@
 	  .answer-box {
 		  height: 3.066667rem;
 		  display: flex;
-		  align-items: center;
+		  // align-items: center;
 		  justify-content: center;
 
 		  .anser-item {

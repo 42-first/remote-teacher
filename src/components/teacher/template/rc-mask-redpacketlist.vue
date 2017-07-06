@@ -29,7 +29,7 @@
     <div class="hint f14">未领取的红包将于24小时后返还至您的雨课堂钱包</div>
 
     <div class="button-box f18">
-      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">刷新详情</v-touch>
+      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">刷新</v-touch>
       <v-touch class="btn" v-on:tap="closeRedpacketList">返回</v-touch>
     </div>
    

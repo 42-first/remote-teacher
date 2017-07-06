@@ -9,7 +9,7 @@
             当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
-            {{isProblemPublished ? '查看答案' : '发送此题目'}}
+            {{isProblemPublished ? '查看答案' : '发送此题'}}
           </v-touch>
         </div>
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
@@ -22,6 +22,7 @@
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
+        ref="Toolbar"
         :class="['dontcallback']"
         :lessonid="lessonid"
         :presentationid="presentationid"
@@ -407,14 +408,20 @@ export default {
      * 点击 遥控器 按钮
      * 一般是用于主动关闭缩略图蒙版
      *
+     * @param {object} opt {isSlideHome: boolean} 判断是不是从缩略图回来的，
+     * 是的话要主动通知工具栏切换高亮
      */
-    goHome () {
+    goHome (opt) {
       let self = this
       
       self.setData({
         isInitiativeCtrlMaskHidden: true,
         initiativeCtrlMaskTpl: ''
       })
+      
+      if (opt.isSlideHome) {
+        self.$refs.Toolbar.$emit('isSlideHome')
+      }
     },
     /**
      * 轮询获取缩略图页 不懂 等标志的信息
