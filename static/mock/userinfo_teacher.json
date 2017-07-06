@@ -4,12 +4,11 @@
   "data":{
     "user":{
         "user_id": 265,
-        "avatar": 
-"http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
-        "user_auth": "fdd27264-3cbc-422b-9cd9-95de0178bfc0"
+        "avatar": "http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
+        "user_auth": "36d47eac-c25f-4678-ab8c-349be4ddbf87"
      },
      "lesson":{
-         "invite_code": "WXNWL7"
+         "invite_code": "RHMAN2"
      },
      "classroom":{
          "classroomid": 2409
