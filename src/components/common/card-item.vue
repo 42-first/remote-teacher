@@ -57,9 +57,10 @@
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
             </div>
-            <div class="">
+            <i class="iconfont icon-shiti_hongbao f60">
+            <!-- <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
-            </div>
+            </div> -->
         </div>
         </router-link>
         <div class="item-footer">
@@ -370,7 +371,7 @@
       justify-content: space-between;
 
       margin-bottom: 0.266667rem;
-      padding: 0.28rem 0.586667rem 0.32rem 0.4rem;
+      padding: 0.26rem 0.586667rem 0.3rem 0.4rem;
 
       color: #FFFFFF;
       background: rgba(40,207,110,0.7);
