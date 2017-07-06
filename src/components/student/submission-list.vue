@@ -284,8 +284,8 @@
       * @method 全部选中或者取消
       * @param
       */
-      handleCheckedAll() {
-        let target = event.target;
+      handleCheckedAll(evt) {
+        let target =  typeof event !== 'undefined' && event.target || evt.target;
 
         this.optionsSet.clear();
         if(target.checked) {
