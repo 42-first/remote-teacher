@@ -585,9 +585,6 @@
       margin-right: 0.453333rem;
       width: 1.293333rem;
       height: 1.466667rem;
-      background: #639EF4;
-
-      border-radius: 50%;
 
       .iconfont {
         font-size: 1.0rem;
