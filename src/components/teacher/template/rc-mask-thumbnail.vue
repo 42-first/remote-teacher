@@ -37,6 +37,19 @@
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
+
+    <Toolbar 
+      ref="Toolbar"
+      :lessonid="lessonid"
+      :presentationid="presentationid"
+      :socket="socket"
+      :newdoubt="newdoubt"
+      :newtougao="newtougao"
+      :active-index="1"
+      :is-socket-connected="isSocketConnected"
+      @goHome="goHome"
+      @showActivity="showActivity"
+    ></Toolbar>
   </div>
 </template>
 
@@ -44,9 +57,12 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  // 工具栏
+  import Toolbar from '@/components/teacher/template/toolbar'
+
   export default {
     name: 'RcMaskThumbnail',
-    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket', 'newdoubt'],
+    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket', 'newdoubt', 'newtougao', 'isSocketConnected'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -71,11 +87,14 @@
         return arr
       }
     },
+    components: {
+      Toolbar,
+    },
     created () {
       let self = this
 
       // 点击 缩略图 按钮 父组件发送事件给本子组件，想要滚动到当前页
-      self.$on('showThumbnail', function () {
+      self.$on('RcMaskThumbnail', function () {
         let container = self.$el.querySelector('.scroll-box1')
         let currentPage = container.querySelector('#t'+self.current)
         container.scrollTop = currentPage.offsetTop
@@ -145,6 +164,21 @@
           .then(jsonData => {
             self.doubtList = jsonData.data.doubt
           })
+      },
+      /**
+       * 点击 遥控器 按钮
+       * 一般是用于主动关闭缩略图蒙版
+       *
+       */
+      goHome () {
+        this.$emit('goHome')
+      },
+      /**
+       * 点击 课堂动态 按钮
+       *
+       */
+      showActivity () {
+        this.$emit('showActivity')
       },
     }
   }

@@ -23,14 +23,13 @@
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar 
         ref="Toolbar"
-        :class="['dontcallback']"
         :lessonid="lessonid"
         :presentationid="presentationid"
         :socket="socket"
         :newdoubt="newdoubt"
         :newtougao="newtougao"
+        :active-index="0"
         :is-socket-connected="isSocketConnected"
-        :is-toolbar-more-box-hidden.sync="isToolbarMoreBoxHidden"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -39,7 +38,7 @@
 
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
-    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback', {'yield-toolbar': isYieldToolbar, 'yield-toolbar-more': isYieldToolbar && !isToolbarMoreBoxHidden}]">
+    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback']">
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
@@ -62,7 +61,10 @@
           :newdoubt="newdoubt"
           :newtougao="newtougao"
           :is-rc-mask-activity-at-root.sync="isRcMaskActivityAtRoot"
+          :is-socket-connected="isSocketConnected"
           @goHome="goHome"
+          @showThumbnail="showThumbnail"
+          @showActivity="showActivity"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
@@ -193,7 +195,6 @@ export default {
       postingSubmissionid: -1,                // 正在投屏的投稿的id
       newdoubt: 0,                            //  未查看的不懂人次总数
       newtougao: 0,                           //  未查看的投稿人次总数
-      isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
     }
   },
@@ -385,8 +386,11 @@ export default {
         isInitiativeCtrlMaskHidden: false,
         initiativeCtrlMaskTpl: 'RcMaskThumbnail'
       })
+
+      self.$refs.Toolbar.$emit('hideToolbarMore')
+
       Vue.nextTick(function () {
-        self.$refs.InitiativeCtrlMask.$emit('showThumbnail')
+        self.$refs.InitiativeCtrlMask.$emit('RcMaskThumbnail')
       })
     },
     /**
@@ -400,6 +404,9 @@ export default {
         isInitiativeCtrlMaskHidden: false,
         initiativeCtrlMaskTpl: 'RcMaskActivity'
       })
+
+      self.$refs.Toolbar.$emit('hideToolbarMore')
+
       Vue.nextTick(function () {
         self.$refs.InitiativeCtrlMask.$emit('RcMaskActivity')
       })
@@ -418,15 +425,6 @@ export default {
       })
     },
     /**
-     * 高亮 遥控器 按钮
-     * 
-     */
-    hilightToolbarRemote () {
-      let self = this
-      
-      self.$refs.Toolbar.$emit('isSlideHome')
-    },
-    /**
      * 轮询获取缩略图页 不懂 等标志的信息
      *
      */
@@ -437,8 +435,6 @@ export default {
       clearInterval(pollingTougaoTimer)
 
       let url1 = API.presentation_tag
-
-      
 
       pollingPresentationTagTimer = setInterval(() => {
         if (process.env.NODE_ENV === 'production') {

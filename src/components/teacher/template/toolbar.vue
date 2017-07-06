@@ -1,11 +1,7 @@
 <!-- 教师遥控器工具栏 被父组件 remote.vue 引用 -->
 <template>
-	<div class="toolbar-root">
+	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
-		  <!-- <v-touch class="tool-item first-item" :class="isSocketConnected ? 'online' : 'offline'" v-on:tap="goHome">
-        <i class="iconfont icon-ykq_tab_active2 f16"></i>
-		    <div>遥控器</div>
-		  </v-touch> -->
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
         <i class="iconfont f24" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
         <div>遥控器</div>
@@ -50,18 +46,19 @@
 
   export default {
     name: 'Tollbar',
-    props: ['lessonid', 'presentationid', 'socket', 'newdoubt', 'newtougao', 'isToolbarMoreBoxHidden', 'isSocketConnected'],
+    props: ['lessonid', 'presentationid', 'socket', 'newdoubt', 'newtougao', 'isSocketConnected', 'activeIndex'],
     data () {
       return {
-        activeIndex: 0,   // 当前正在高亮的工具栏tab序号
+        // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
+        isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
       }
     },
     created () {
       let self = this
 
-      // 点击 缩略图 回到主页面后，也要把工具栏的遥控器高亮
-      self.$on('isSlideHome', function () {
-        self.activeIndex = 0
+      // 主屏幕点击 缩略图、课堂动态 后，隐藏更多
+      self.$on('hideToolbarMore', function () {
+        self.isToolbarMoreBoxHidden = true
       })
     },
     methods: {
@@ -71,7 +68,6 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
-        this.activeIndex = 1
       },
       /**
        * 点击 课堂动态 按钮
@@ -79,7 +75,6 @@
        */
       showActivity () {
         this.$emit('showActivity')
-        this.activeIndex = 2
       },
       /**
        * 点击 遥控器 按钮
@@ -88,7 +83,6 @@
        */
       goHome () {
         this.$emit('goHome')
-        this.activeIndex = 0
       },
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -98,7 +92,9 @@
       toggleToolbarMoreBox () {
         let self = this
 
-        self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
+        self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
+
+        // self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
       },
       /**
        * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
@@ -114,7 +110,8 @@
         })
 
         self.socket.send(str)
-        self.$emit('update:isToolbarMoreBoxHidden', true)
+        // self.$emit('update:isToolbarMoreBoxHidden', true)
+        self.isToolbarMoreBoxHidden = true
       },
       /**
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
@@ -129,7 +126,8 @@
         })
 
         self.socket.send(str)
-        self.$emit('update:isToolbarMoreBoxHidden', true)
+        // self.$emit('update:isToolbarMoreBoxHidden', true)
+        self.isToolbarMoreBoxHidden = true
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课
@@ -145,7 +143,8 @@
         })
 
         self.socket.send(str)
-        self.$emit('update:isToolbarMoreBoxHidden', true)
+        // self.$emit('update:isToolbarMoreBoxHidden', true)
+        self.isToolbarMoreBoxHidden = true
       },
     }
   }
