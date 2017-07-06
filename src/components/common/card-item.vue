@@ -35,9 +35,10 @@
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
             </div>
-            <div class="">
+            <i class="iconfont icon-shiti_shijuan f60">
+            <!-- <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
-            </div>
+            </div> -->
           </a>
         </div>
         <div class="item-footer">
@@ -57,7 +58,6 @@
               <p class="paper-name">{{ item.caption }}</p>
             </div>
             <div class="">
-              <!--  http://sfe.ykt.io/o_1bhhfttettbskmu8u61vd91plse.png -->
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
             </div>
         </div>
@@ -400,6 +400,10 @@
       display: block;
       width: 1.386667rem;
       min-height: 1.546667rem
+    }
+
+    .iconfont {
+      line-height: 1.546667rem
     }
   }
 
