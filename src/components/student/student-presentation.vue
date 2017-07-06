@@ -11,7 +11,7 @@
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
-        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-back f25"></i></p>
+        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
