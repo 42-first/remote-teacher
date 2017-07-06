@@ -11,7 +11,7 @@
     <div :class="['animated', opacity ? 'zoomIn': '']">
       <!-- 练习导航 -->
       <header class="student__header">
-        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-back f25"></i></p>
+        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <p class="student__header--back"></p>
       </header>
