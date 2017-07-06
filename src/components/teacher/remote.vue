@@ -408,20 +408,23 @@ export default {
      * 点击 遥控器 按钮
      * 一般是用于主动关闭缩略图蒙版
      *
-     * @param {object} opt {isSlideHome: boolean} 判断是不是从缩略图回来的，
-     * 是的话要主动通知工具栏切换高亮
      */
-    goHome (opt) {
+    goHome () {
       let self = this
       
       self.setData({
         isInitiativeCtrlMaskHidden: true,
         initiativeCtrlMaskTpl: ''
       })
+    },
+    /**
+     * 高亮 遥控器 按钮
+     * 
+     */
+    hilightToolbarRemote () {
+      let self = this
       
-      if (opt && opt.isSlideHome) {
-        self.$refs.Toolbar.$emit('isSlideHome')
-      }
+      self.$refs.Toolbar.$emit('isSlideHome')
     },
     /**
      * 轮询获取缩略图页 不懂 等标志的信息
