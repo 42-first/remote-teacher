@@ -18,7 +18,9 @@
 
       <!-- 定时时间 -->
       <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0">
-        <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-timing"></i></p>
+        <!-- <p :class="['exercise__timing--icon', timeOver ? 'over':'']"><i class="iconfont icon-timing"></i></p> -->
+        <img class="exercise__timing--icon" v-if="!timeOver" src="http://sfe.ykt.io/o_1bkbgjnktcp5182817bgn23rk9.png">
+        <img class="exercise__timing--icon over" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
         <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
       </section>
 
@@ -581,8 +583,8 @@
 
     .exercise__timing--icon {
       margin-right: 0.453333rem;
-      width: 1.4rem;
-      height: 1.4rem;
+      width: 1.293333rem;
+      height: 1.466667rem;
       background: #639EF4;
 
       border-radius: 50%;
