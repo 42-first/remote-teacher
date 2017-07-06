@@ -360,6 +360,7 @@
           }
           .bar {
             width: 0.013333rem;
+            min-width: 1px;
             height: 100%;
             background: #C8C8C8;
           }
