@@ -277,7 +277,7 @@
 	  .upper {
 	  	margin: 0 auto;
 	  	width: 8.8rem;
-	  	height: 3.466667rem;
+	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
 	  	border-bottom: 1px solid #cccccc;
 			
@@ -290,7 +290,7 @@
 				padding-top: 0.5rem;
 			}
 	  	.pt {
-	  		padding-top: 1.3rem;
+	  		padding-top: 1.6rem;
 	  	}
 	  }
 
@@ -299,7 +299,7 @@
 	  	margin: 0 auto;
 	  	padding-top: 1rem;
 	  	width: 8.8rem;
-	  	height: 6rem;
+	  	height: 5.6rem;
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
@@ -344,12 +344,11 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding-top: 1.866667rem;
+		  padding-top: 1.2rem;
 
 		  .btn-item {
-			  width: 1.6rem; 
+			  width: 1.75rem; 
 			  text-align: center;
-			  font-size: 30rpx;
 			  color: #fff;
 
 			  .iconbox {
