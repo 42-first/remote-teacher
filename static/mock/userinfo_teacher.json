@@ -3,12 +3,13 @@
   "msg": "",
   "data":{
     "user":{
-        "user_id": 501,
-        "avatar": "http://wx.qlogo.cn/mmopen/PiajxSqBRaEL4YfXJicDkMeCd6VvVx8XiahKibCdGxML7oFRxTJib2aAn7bHpOvFPgAaaEILW5epdYZiaVC09uEKPibLw/64",
-        "user_auth": "a9d9e342-9b9b-4e63-94db-f4737376a283"
+        "user_id": 265,
+        "avatar": 
+"http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
+        "user_auth": "fdd27264-3cbc-422b-9cd9-95de0178bfc0"
      },
      "lesson":{
-         "invite_code": "LIGUSI"
+         "invite_code": "WXNWL7"
      },
      "classroom":{
          "classroomid": 2409

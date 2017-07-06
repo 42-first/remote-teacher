@@ -161,6 +161,8 @@ function socketProcessMessage(msg){
     // 换页
     msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     self.showWhichPage(msg)
+    // 从缩略图翻页了，工具栏的高亮不能在缩略图，要回到遥控器上
+    self.goHome({isSlideHome: true})
 
     // 换页会退出投屏的
     self.postingDanmuid = -1

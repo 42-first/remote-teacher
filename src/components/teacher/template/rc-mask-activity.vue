@@ -2,13 +2,16 @@
 <template>
 	<div class="activity-box">
     <section class="head f20">
-      <div class="teacher ellipsis">
-        <img :src="avatar" alt="" style="display: inline-block;">
-        <span style="display: inline-block; padding-top: 0.1rem;">{{coursename}}</span>
+      <div class="teacher ellipsis clearfix">
+        <img :src="avatar" alt="">
+        <span class="coursename">{{coursename}}</span>
       </div>
       <v-touch class="student f17" v-on:tap="showParticipantList">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
-        <span>&nbsp;当前学生{{participantList.length}}位<i class="iconfont icon-dakai f15"></i></span>
+        <span class="dqxs">
+          当前学生{{participantList.length}}位
+          <i class="iconfont icon-dakai f15"></i>
+        </span>
       </v-touch>
     </section>
     <v-touch class="activity-item f18" v-on:tap="showPaper">
@@ -30,7 +33,7 @@
         弹幕
       </div>
       <div class="dakai-box">
-        <span style="color: #cccccc; margin-right: 0.1rem;">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
+        <span class="kg">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
@@ -42,7 +45,7 @@
         投稿
       </div>
       <div class="dakai-box">
-        <span style="margin-right: 0.1rem;" class="info f12" v-show="newtougao">{{newtougao}}</span>
+        <span class="info f12" v-show="newtougao">{{newtougao}}</span>
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
@@ -286,11 +289,18 @@
       .teacher {
         margin-bottom: 0.653333rem;
         img {
+          float: left;
           width: 1.0rem;
           height: 1.0rem;
           border: 2px solid $white;
           border-radius: 50%;
           vertical-align: middle;
+        }
+
+        .coursename {
+          float: left;
+          margin-top: 0.146667rem;
+          margin-left: 0.133333rem;
         }
       }
 
@@ -304,9 +314,10 @@
           margin-top: 0.133333rem;
           margin-right: -0.133333rem;
         }
-        span {
+        .dqxs {
           float: left;
-          margin-left: 0.266667rem;
+          margin-top: 0.04rem;
+          margin-left: 0.333333rem;
         }
       }
     }
@@ -339,11 +350,19 @@
         margin-top: 0.186667rem;
       }
 
+      .kg {
+        float: left;
+        margin-top: 0.053333rem;
+        margin-right: 0.1rem;
+        color: #cccccc;
+      }
+
       .info {
-        display: inline-block;
-        width: 0.666667rem;
-        height: 0.6rem;
-        line-height: 0.6rem;
+        float: left;
+        margin-top: 0.173333rem;
+        margin-right: 0.16rem;
+        min-width: 0.3rem;
+        padding: 0 0.1rem;
         text-align: center;
         background: #D0021B;
         border-radius: 0.25rem;

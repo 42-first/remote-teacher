@@ -4,11 +4,13 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 关闭按钮 -->
-	    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeProblemresult"></v-touch>
+	    <v-touch class="close-box"  v-on:tap="closeProblemresult">
+	    	<i class="iconfont icon-ykq-shiti-guanbi f24"></i>
+	    </v-touch>
 
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
-	    	<div class="f40" v-if="problemResultData.isBellset">
+	    	<div class="f50" v-if="problemResultData.isBellset">
 		      <!-- <i class="iconfont icon-timing f40"></i> -->
 		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{problemDurationLeft}}</span>
@@ -29,7 +31,7 @@
 	    </section>
 
 	    <!-- 下方按钮 -->
-	    <section class="group-btns">
+	    <section :class="['group-btns', {'istoupiao': problemResultData.type === 'Polling'}]">
 	      <v-touch class="btn-item" v-on:tap="postProblemresult">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -262,13 +264,14 @@
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
-
-	  .icon-shiti_guanbitouping {
-	  	position: absolute;
+		
+		.close-box {
+			position: absolute;
 	  	right: 0.386667rem;
 	  	top: 0.44rem;
-	  	vertical-align: middle;
-	  }
+	  	width: 1.066667rem;
+	  	height: 1.066667rem;
+		}
 		
 		/* 上部 */
 	  .upper {
@@ -279,6 +282,7 @@
 	  	border-bottom: 1px solid #cccccc;
 			
 			.jishi {
+				margin-top: -0.186667rem;
 				width: 0.9rem;
 				vertical-align: middle;
 			}
@@ -361,6 +365,9 @@
 			  	}
 			  }
 			}
+		}
+		.istoupiao {
+			width: 6.2rem;
 		}
 	}
 </style>

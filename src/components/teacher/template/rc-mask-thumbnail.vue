@@ -17,7 +17,7 @@
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
-        <div v-if="doubtList[index]" class="f15">不懂: {{doubtList[index]}}</div>
+        <div class="f15 bdsz">{{doubtList[index] ? '不懂: '+doubtList[index] : ''}}</div>
       </v-touch>
     </div>
 
@@ -178,15 +178,15 @@
 
         .info {
           position: absolute;
-          right: 0.133333rem;
+          left: 1.7rem;
           top: 0;
-          width: 0.666667rem;
-          height: 0.6rem;
-          line-height: 0.6rem;
+          min-width: 0.3rem;
+          padding: 0 0.1rem;
           text-align: center;
           background: $blue;
-          border-radius: 0.25rem;
+          border-radius: 0.32rem;
           color: $white;
+          line-height: 0.48rem;
         }
       }
       .bar {
@@ -211,7 +211,7 @@
         float: left;
         position: relative;
         width: 4.4rem;
-        overflow: hidden;
+        // overflow: hidden;
         margin-bottom: 0.4rem;
         color: $white;
         text-align: center;
@@ -228,6 +228,10 @@
           width: 100%;
         }
 
+        .bdsz {
+          min-height: 0.6rem;
+        }
+
         .gridlabel {
           position: absolute;
           right: 0;
@@ -242,8 +246,14 @@
         }
       }
       .item.active .gridimg {
+        box-sizing: content-box;
+        margin-top: -0.14rem;
         padding: 0.053333rem;
         border: 0.08rem solid $blue;
+      }
+      .item.active .gridlabel {
+        right: 0.08rem;
+        top: 0.08rem;
       }
     }
   }

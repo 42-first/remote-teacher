@@ -2,11 +2,13 @@
 <template>
 	<div class="quizresult-box">
     <!-- 关闭按钮 -->
-    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeQuizresult"></v-touch>
+    <v-touch class="close-box"  v-on:tap="closeQuizresult">
+      <i class="iconfont icon-ykq-shiti-guanbi f24"></i>
+    </v-touch>
 
     <!-- 上部时钟 -->
     <section class="upper">
-      <div class="f60">
+      <div class="f50">
         <!-- <i class="iconfont icon-timing f40"></i> -->
         <img class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
@@ -305,12 +307,13 @@
     background: #000000;
     color: $white;
     text-align: center;
-
-    .icon-shiti_guanbitouping {
+    
+    .close-box {
       position: absolute;
-      right: 0.4rem;
-      top: 0.4rem;
-      vertical-align: middle;
+      right: 0.386667rem;
+      top: 0.44rem;
+      width: 1.066667rem;
+      height: 1.066667rem;
     }
 
     /* 上部 */
@@ -321,6 +324,7 @@
       padding-top: 0.8rem;
 
       .jishi {
+        margin-top: -0.24rem;
         width: 1.2rem;
         vertical-align: middle;
       }

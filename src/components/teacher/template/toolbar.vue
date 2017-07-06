@@ -39,7 +39,7 @@
 		  </v-touch>
 
       <v-touch class="more-item" v-on:tap="setEndShow">
-        <i class="iconfont icon-tuichu f24"></i>
+        <i class="iconfont icon-ykq-tuichufangying f24"></i>
         <span style="margin-left: 32rpx;">退出放映</span>
       </v-touch>
 		</div>
@@ -57,7 +57,12 @@
       }
     },
     created () {
+      let self = this
 
+      // 点击 缩略图 回到主页面后，也要把工具栏的遥控器高亮
+      self.$on('isSlideHome', function () {
+        self.activeIndex = 0
+      })
     },
     methods: {
       /**
@@ -173,13 +178,10 @@
 
       .info {
         position: absolute;
-        right: 0.133333rem;
+        left: 1.5rem;
         top: 0;
-        // width: 0.666667rem;
-        // height: 0.6rem;
-        // line-height: 0.6rem;
-        min-width: 0.4rem;
-        padding: 0 0.04rem;
+        min-width: 0.3rem;
+        padding: 0 0.1rem;
         text-align: center;
         background: #D0021B;
         border-radius: 0.32rem;
