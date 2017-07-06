@@ -50,6 +50,20 @@
       </div>
     </v-touch>
 
+    <Toolbar 
+      ref="Toolbar"
+      class="activity-tollbar"
+      :lessonid="lessonid"
+      :presentationid="presentationid"
+      :socket="socket"
+      :newdoubt="newdoubt"
+      :newtougao="newtougao"
+      :active-index="2"
+      :is-socket-connected="isSocketConnected"
+      @goHome="goHome"
+      @showThumbnail="showThumbnail"
+    ></Toolbar>
+
     <RcMaskActivityParticipantlist
       v-show="!isParticipantlistHidden"
       :participant-list="participantList"
@@ -89,6 +103,9 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  // 工具栏
+  import Toolbar from '@/components/teacher/template/toolbar'
+
   // 全部人员名单
   import RcMaskActivityParticipantlist from '@/components/teacher/template/rc-mask-activity-participantlist'
   // 试卷列表
@@ -101,7 +118,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newtougao', 'isRcMaskActivityAtRoot'],
+    props: ['lessonid', 'presentationid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -113,6 +130,7 @@
       }
     },
     components: {
+      Toolbar,
       RcMaskActivityParticipantlist,
       RcMaskActivityPaper,
       RcMaskActivityDanmubox,
@@ -263,6 +281,21 @@
 
         self.$emit('update:isRcMaskActivityAtRoot', false)
       },
+      /**
+       * 点击 遥控器 按钮
+       * 一般是用于主动关闭缩略图蒙版
+       *
+       */
+      goHome () {
+        this.$emit('goHome')
+      },
+      /**
+       * 点击 缩略图 按钮
+       *
+       */
+      showThumbnail () {
+        this.$emit('showThumbnail')
+      },
     }
   }
 </script>
@@ -277,6 +310,13 @@
     bottom: 0;
     background: #EDF2F6;
     
+    .activity-tollbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      color: $white;
+    }
 
     .head {
       box-sizing: border-box;
