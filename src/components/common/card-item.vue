@@ -35,7 +35,7 @@
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
             </div>
-            <i class="iconfont icon-shiti_shijuan f60"></i>
+            <i class="iconfont icon-ykq_shiti f60"></i>
             <!-- <div class="">
               <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
             </div> -->
