@@ -363,12 +363,11 @@
       align-items: center;
       justify-content: space-between;
       width: 7.466667rem;
-      padding-top: 1.866667rem;
+      padding-top: 1.2rem;
 
       .btn-item {
-        width: 1.6rem; 
+        width: 1.75rem; 
         text-align: center;
-        font-size: 30rpx;
         color: #fff;
 
         .iconbox {

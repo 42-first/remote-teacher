@@ -37,7 +37,7 @@ switch (DPR) {
     RADIUS_INNER = 80
     TEXTCONFIG = {
       zhushixiayi: 20,     // 右侧标注向下的偏移
-      kuandu: 320,         // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
+      kuandu: 300,         // 圆点左侧距离右侧边界的距离，就是注释部分有多宽
       circle: 10,          // 圆点半径
       fanwei: 20,          // 分数范围距离圆点的距离 text1
       renshu: 170,         // 人数距离范围的距离 text2
