@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+var util = require('./util');
+var path = require('path');
+
+var projectDir = path.dirname(__dirname);
+var dockerFilePath = path.join(__dirname, 'lesson.dockerfile');
+
+var imageName = util.getImageName()
+
+// build docker image
+util.dummyAsyncCmd('docker', ['build', '-f', dockerFilePath, '-t', imageName, projectDir])
