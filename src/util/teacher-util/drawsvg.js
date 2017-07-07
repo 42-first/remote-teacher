@@ -179,7 +179,8 @@ function drawPieSolid (ele, range, arr1, config){
   for(var i = 0; i < arr1.length; i++) sum1 += arr1[i];
 
   // var color = ['#9fe0f6','#3fe3c3','#9defbf','#f4d4ad','#f5f185'];
-  var color = ['#346EB9', '#8BFFE5', '#51F3CF', '#3ACCD3', '#3AA4D3']
+  // var color = ['#346EB9', '#8BFFE5', '#51F3CF', '#3ACCD3', '#3AA4D3']
+  var color = ['#FF9051', '#FFF35F', '#34BACF', '#0670A6', '#E52C65']
   if(sum1 > 0){
     var aScale1=[];
     for(var i=0;i<arr1.length;i++)

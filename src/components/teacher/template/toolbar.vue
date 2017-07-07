@@ -17,7 +17,7 @@
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', 'last-item']" v-on:tap="toggleToolbarMoreBox">
-		    <i class="iconfont f24" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_avtive' "></i>
+		    <i class="iconfont f24" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
 		    更多
 		  </v-touch>
 		</div>
