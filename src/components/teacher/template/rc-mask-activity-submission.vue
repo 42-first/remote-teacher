@@ -1,12 +1,13 @@
 <!-- 投稿控制页面 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="submission-box allowscrollcallback">
+    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- 没有投稿 -->
-    <div v-show="!submissionList.length" class="no-paper-box">
+    <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
       <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f25"></i> 号中投稿吧！</div>
     </div>
-    <div v-show="submissionList.length">
+    <div v-show="!isFetching && submissionList.length">
       <div class="gap"></div>
       <section class="list">
 
@@ -69,6 +70,7 @@
         submissionList: [],           // 投稿列表
         isAskingItemStatus: false,    // 正在查询投稿状态
         isItemDeleted: false,         // 投稿已经被删除
+        isFetching: true,             // 正在获取数据
       }
     },
     created () {
@@ -99,6 +101,11 @@
         let self = this
         let url = API.submissionlist
 
+        // 如果已经有内容了就不要显示正在加载中了
+        if (!self.submissionList.length) {
+          self.isFetching = true
+        }
+
         // 单次刷新
         request.get(url, {
           'lesson_id': self.lessonid,
@@ -107,6 +114,7 @@
           'direction': 0
         }).then(jsonData => {
             // 设置试卷详情数据
+            self.isFetching = false
             self.submissionList = jsonData.data.tougao_list
           })
       },
@@ -206,7 +214,13 @@
     background: $white;
     color: #4A4A4A;
     overflow: auto;
-
+    
+    .isFetching {
+      position: relative;
+      z-index: 10;
+      padding-top: 7.0rem;
+      text-align: center;
+    }
     .no-paper-box {
       box-sizing: border-box;
       height: 100%;
