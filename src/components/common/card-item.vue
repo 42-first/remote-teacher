@@ -35,10 +35,7 @@
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
             </div>
-            <i class="iconfont icon-ykq_shiti f55"></i>
-            <!-- <div class="">
-              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe1sn1vhc1ltcu4o16pk344e.png">
-            </div> -->
+            <i class="iconfont icon-shiti_shijuan f55"></i>
           </a>
         </div>
         <div class="item-footer">
@@ -76,10 +73,7 @@
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
             </div>
-            <i class="iconfont icon-shiti_shijuan f55"></i>
-            <!--  <div class="">
-              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjoe5h81cp41vadqbl6aidb8j.png">
-            </div> -->
+            <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
