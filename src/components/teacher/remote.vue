@@ -449,6 +449,12 @@ export default {
             doubt.forEach(item => {
               doubtTotalSum += item
             })
+
+            // 学生能取消不懂的，有可能减成负数
+            if (doubtTotalSum < oldDoubt) {
+              oldDoubt = doubtTotalSum
+            }
+
             self.newdoubt = doubtTotalSum - oldDoubt
           })
       }, 10*1000)
