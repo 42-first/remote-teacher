@@ -375,6 +375,12 @@
 
       .paper-txt {
         text-align: left;
+        .paper-name {
+          width: 6.95rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
       }
     }
 
