@@ -1,6 +1,7 @@
 //noinspection JSUnresolvedFunction
 /**
  * Created by huangsuoyuan on 2016/11/17.
+ * update by chenzhou on 2017/07/07
  */
 
 var path = require('path');
@@ -9,7 +10,7 @@ var fs = require('fs');
 var colors = require('colors/safe');
 
 function getFullImageName(){
-  var imageName = "build.ykt.io/profession-vue:";
+  var imageName = "build.ykt.io/lesson-vue:";
   var projectDir = path.dirname(__dirname);
   var packagePath = path.join(projectDir, 'package.json');
   var obj = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
