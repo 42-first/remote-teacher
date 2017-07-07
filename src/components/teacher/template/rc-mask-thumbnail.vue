@@ -240,6 +240,7 @@
       padding: 0 0.453333rem;
       margin-bottom: 0.4rem;
       overflow: auto;
+      -webkit-overflow-scrolling: touch;
 
       .item {
         float: left;
