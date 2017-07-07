@@ -3,27 +3,28 @@
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
-        <i class="iconfont f24" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
-        <div>遥控器</div>
+        <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
+        <div class="icondesc">遥控器</div>
       </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
-		    <i class="iconfont f24" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
-		    缩略图
+		    <i class="iconfont f28" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
+		    <div class="icondesc">缩略图</div>
         <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
-		    <i class="iconfont f24" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
-		    课堂动态
+		    <i class="iconfont f28" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
+		    <div class="icondesc">课堂动态</div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', 'last-item']" v-on:tap="toggleToolbarMoreBox">
-		    <i class="iconfont f24" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
-		    更多
+		    <i class="iconfont f28" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
+		    <div class="icondesc">更多</div>
 		  </v-touch>
 		</div>
 
 		<!-- 更多的内容 -->
 		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
+      <i class="iconfont icon-sanjiaoxing f24"></i>
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
 		    <i class="iconfont icon-ykq_erweima f24"></i>
 		    <span>二维码</span>
@@ -174,6 +175,10 @@
         width: 100%;
         text-align: center;
       }
+      
+      .icondesc {
+        margin-top: -0.133333rem;
+      }
 
       .info {
         position: absolute;
@@ -216,6 +221,13 @@
     background: #333333;
     border-radius: 10px;
     color: #ffffff;
+
+    .icon-sanjiaoxing {
+      position: absolute;
+      left: 2.133333rem;
+      bottom: -0.506667rem;
+      color: #333333;
+    }
 
     .more-item {
       margin: 0 auto;
