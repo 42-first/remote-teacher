@@ -93,7 +93,7 @@
   </section>
 </template>
 <script>
-  import API from '@/util/Api'
+  import API from '@/util/api'
 
   export default {
     name: 'submission-list-page',

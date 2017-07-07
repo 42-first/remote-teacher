@@ -6,7 +6,7 @@
  *
  */
 
-import API from '@/util/Api'
+import API from '@/util/api'
 
 var exerciseMixin = {
   methods: {
