@@ -3,5 +3,5 @@ var util = require('./util');
 
 var imageName = util.getImageName()
 
-// todo: 这里假定了一个名为profession_vue的volume存在,需要在代码里加入检查
+// todo: 这里假定了一个名为lesson的volume存在,需要在代码里加入检查
 util.dummyAsyncCmd('docker', ['run', '-v', 'lesson:/lesson', '--rm', imageName])
