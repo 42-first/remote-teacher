@@ -229,9 +229,16 @@ var actionsMixin = {
         caption: caption
       })
 
-      // 是否含有重复数据
-      let hasEvent = this.cards.find((item)=>{
-        return item.type === 5 && item.redpacketID === data.redpacketID;
+      // 是否含有重复数据 红包重复需要更新数目
+      let hasEvent = false;
+      this.cards.forEach((item) => {
+        if(item.type === 5 && item.redpacketID === data.redpacketID) {
+          item = Object.assign(item, {
+            caption: caption
+          })
+
+          hasEvent = true;
+        }
       })
 
       !hasEvent && this.cards.push(data);
