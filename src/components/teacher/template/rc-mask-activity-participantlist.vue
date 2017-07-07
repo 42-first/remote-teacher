@@ -80,6 +80,7 @@
         justify-content: space-between;
         align-items: center;
         height: 1.693333rem;
+        border-bottom: 1px solid #C8C8C8;
 
         .name {
           width: 4.0rem;
