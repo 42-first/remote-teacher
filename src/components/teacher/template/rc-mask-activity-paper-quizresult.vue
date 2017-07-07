@@ -169,17 +169,7 @@
         // 单次刷新
         request.get(url)
           .then(jsonData => {
-            //没人做题就不画饼图
-            if(jsonData.total === 0){
-              self.isSVGHidden = true
-              return
-            }
-            // 设置试卷详情数据
-            console.log('quiz_results_statistics', jsonData)
-            self.isSVGHidden = false
-            self.stuCommited = jsonData.total
-            self.stuTotal = jsonData.members
-            
+            // 时间更新处理
             jsonData.time = Math.floor(jsonData.time)
             // quizTimeBellCount跟上真实计时
             if (Math.abs(quizTimeBellCount - jsonData.time) > 2) {
@@ -190,6 +180,17 @@
               self.paperTimePassed = self.sec2str(quizTimeBellCount)
             }
 
+            //没人做题就不画饼图
+            if(jsonData.total === 0){
+              self.isSVGHidden = true
+              return
+            }
+
+            // 设置试卷详情数据
+            self.isSVGHidden = false
+            self.stuCommited = jsonData.total
+            self.stuTotal = jsonData.members
+            
             var range = [];
             var arr1 = [];
 
