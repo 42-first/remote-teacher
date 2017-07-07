@@ -470,6 +470,11 @@ export default {
         }).then(jsonData => {
             tougaoTotalSum = jsonData.data.tougao_list.length
 
+            // 学生能删除投稿，有可能减成负数
+            if (tougaoTotalSum < oldTougao) {
+              oldTougao = tougaoTotalSum
+            }
+
             self.newtougao = tougaoTotalSum - oldTougao
           })
       }, 10*1000)
