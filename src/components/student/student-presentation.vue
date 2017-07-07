@@ -110,7 +110,7 @@
 </template>
 <script>
   import request from '@/util/request'
-  import API from '@/util/Api'
+  import API from '@/util/api'
   import { configWX } from '@/util/wx-util'
 
   import CardItemComponent from '@/components/common/card-item.vue'

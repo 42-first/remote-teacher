@@ -94,7 +94,7 @@
 
 </template>
 <script>
-  import API from '@/util/Api'
+  import API from '@/util/api'
   import timeago from 'timeago.js';
 
   // 在这里设置相对时间
