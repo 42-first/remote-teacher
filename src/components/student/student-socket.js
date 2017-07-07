@@ -238,6 +238,7 @@ var mixin = {
             leaveTime = msg['limit'] - leaveTime
 
             this.calcLeaveTime(leaveTime, probID);
+            hasMsg = false;
 
             break
 
