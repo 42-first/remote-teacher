@@ -29,8 +29,8 @@ const handleResponse = (res) => {
     }
 
     // 没有权限
-    if(res.data.status_code === 2) {
-      location.href = '/v/index/course/normalcourse/error/2';
+    if(res.data.status_code === 2 || res.data.status_code === 4) {
+      location.href = '/v/index/course/normalcourse/error/' + res.data.status_code;
     }
 
     // 没有填写信息 跳转个人信息完善页
