@@ -168,8 +168,12 @@ var actionsMixin = {
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation['Slides'];
-      let slideData = pptData[data.pageIndex-1];
+      let pptData = presentation && presentation['Slides'];
+      let slideData = pptData && pptData[data.pageIndex-1];
+
+      if(!slideData) {
+        return this;
+      }
 
       slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
 
