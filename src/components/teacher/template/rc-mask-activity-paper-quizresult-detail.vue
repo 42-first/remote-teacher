@@ -1,7 +1,7 @@
 <!-- 已发试卷详情页 被父组件 rc-mask-activity-paper-quizresult.vue 引用 -->
 <template>
 	<div class="quizresultdetail-box">
-    <div class="list f17" style="padding: 0 0.4rem;">
+    <div class="list-head f17">
       <div class="item f17" style="border-bottom: none;">
         <div class="name ellipsis">
         </div>
@@ -12,8 +12,8 @@
       </div>
     </div>
     <div class="gap"></div>
-    <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
-    <section class="list">
+    <section class="list allowscrollcallback">
+      <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
       <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
           <img :src="item.avatar" alt="">
@@ -94,6 +94,9 @@
     background: $white;
     color: #000000;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     
     .gap {
       height: 0.266667rem;
@@ -105,8 +108,7 @@
       color: $blue;
     }
 
-    .list {
-      padding: 0 0.4rem 1.466667rem;
+    .list, .list-head {
 
       .item {
         display: flex;
@@ -133,13 +135,20 @@
       }
     }
 
+    .list-head {
+      padding: 0 0.4rem;
+    }
+
+    .list {
+      height: 100%;
+      padding: 0 0.4rem;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .button-box {
       display: flex;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 1.466667rem;
+      height: 1.7rem;
       text-align: center;
 
       .btn {

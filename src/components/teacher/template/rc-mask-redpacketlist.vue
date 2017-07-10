@@ -1,6 +1,6 @@
 <!--试题课堂红包名单面板 被父组件 rc-mask-problemresult.vue 引用-->
 <template>
-	<div class="redpacketlist-box">
+	<div class="redpacketlist-box allowscrollcallback">
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>

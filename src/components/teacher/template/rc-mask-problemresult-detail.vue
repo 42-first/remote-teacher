@@ -1,6 +1,6 @@
 <!--试题作答详情面板 被父组件 rc-mask-problemresult.vue 引用-->
 <template>
-	<div class="problemresultdetail-box">
+	<div class="problemresultdetail-box allowscrollcallback">
 		<div v-if="problemResultDetailData">
 			<!-- 关闭按钮 -->
 			<v-touch class="close-box"  v-on:tap="closeProblemresultdetail">
