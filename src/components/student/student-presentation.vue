@@ -420,7 +420,7 @@
               }
 
               // set quiz map
-              if(self.quizList.length) {
+              if(self.quizList && self.quizList.length) {
                 self.quizList.forEach( function(quiz, index) {
                   self.quizMap.set(quiz.quizID, quiz);
                 });
