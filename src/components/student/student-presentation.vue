@@ -111,6 +111,7 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/api'
+  import '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import CardItemComponent from '@/components/common/card-item.vue'
@@ -642,12 +643,14 @@
        * @method 返回上一页
        *
        */
-      handleBack(){
+      handleBack() {
         if(this.backURL) {
           location.href = this.backURL;
-        } else {
+        } else if(this.classroom && this.classroom.courseId) {
           // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
           location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
+        } else {
+          this.$router.back();
         }
       }
     },

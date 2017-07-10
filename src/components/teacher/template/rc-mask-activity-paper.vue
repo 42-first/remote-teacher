@@ -249,6 +249,7 @@
     background: #EDF2F6;
     color: #000000;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     .no-paper-box {
       box-sizing: border-box;

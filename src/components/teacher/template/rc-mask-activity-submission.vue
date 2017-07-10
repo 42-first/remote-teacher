@@ -248,6 +248,8 @@
 
     .list {
       padding-bottom: 1.466667rem;
+      -webkit-overflow-scrolling: touch;
+      
       .item {
         padding: 0 0.4rem;
 

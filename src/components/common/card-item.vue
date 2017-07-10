@@ -174,9 +174,19 @@
         };
 
         // Initializes and opens PhotoSwipe
-        let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+        let gallery;
 
-        gallery.init();
+        if(PhotoSwipe) {
+          gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+          gallery.init();
+        } else {
+          setTimeout(()=>{
+            gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+          }, 1000)
+        }
+
       },
       /*
       * @method ppt不懂,收藏

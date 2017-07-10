@@ -244,6 +244,8 @@ export default {
           'menuItem:favorite', 'menuItem:share:QZone']
       });
     });
+
+    self.setSentry()
   },
   mounted () {
     let self = this
@@ -498,6 +500,22 @@ export default {
       oldTougao = tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
+    },
+    /*
+     * @method sentry ga 配置
+     */
+    setSentry() {
+      if(typeof Raven !== 'undefined') {
+        Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+        Raven.setUserContext({ userid: this.userid });
+      } else {
+        setTimeout(() => {
+          Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+          Raven.setUserContext({ userid: this.userid });
+        }, 1500)
+      }
+
+      typeof ga === 'function' && ga('set', 'userId', this.userid);
     },
   }
 }
