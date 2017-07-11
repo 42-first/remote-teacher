@@ -176,7 +176,7 @@
         // Initializes and opens PhotoSwipe
         let gallery;
 
-        if(PhotoSwipe) {
+        if(typeof PhotoSwipe !== 'undefined') {
           gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
           gallery.init();
