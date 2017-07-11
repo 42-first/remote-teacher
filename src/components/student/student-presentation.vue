@@ -149,6 +149,8 @@
         lessonID: 0,
         // pptID
         presentationID: 0,
+        // fetchTimeline send websocket msgid
+        msgid: 1,
 
         // 权限相关
         userID: 0,
