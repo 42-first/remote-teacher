@@ -145,6 +145,7 @@ var mixin = {
               setTimeout(()=>{
               }, 20000)
             } else {
+              this.cards = [];
               this.setTimeline(timeline)
             }
 
