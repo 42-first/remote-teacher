@@ -17,7 +17,7 @@ function socketProcessMessage(msg){
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
     // 没有在上课则直接跳走
     if (!msg.isAlive) {
-      // location.href = '/v/index'
+      location.href = '/v/index'
     }
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
