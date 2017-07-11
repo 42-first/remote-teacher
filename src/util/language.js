@@ -66,6 +66,7 @@ class Language {
     // 标准的静态文字
     let allEle = pageEl.querySelectorAll('[data-language-key]');
 
+    allEle = Array.prototype.slice.call(allEle);
     allEle && allEle.forEach((element) => {
       let key = element.dataset.languageKey;
       let aPath = key.split('.');
@@ -83,6 +84,7 @@ class Language {
     // 根据状态显示的动态文字 例如'已完成' '未完成'
     allEle = pageEl.querySelectorAll('[data-language-common]');
 
+    allEle = Array.prototype.slice.call(allEle);
     allEle && allEle.forEach((element) => {
       let obj = element.dataset.languageCommon;
       let key = element.innerText;
@@ -96,6 +98,7 @@ class Language {
     // key: page-tplname
     allEle = pageEl.querySelectorAll('[data-language-complex]');
 
+    allEle = Array.prototype.slice.call(allEle);
     allEle && allEle.forEach((element) => {
       let key = element.dataset.languageComplex;
       let value = element.innerText;
