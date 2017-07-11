@@ -49,8 +49,8 @@ var mixin = {
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
-          // 先尝试连接两次
-          if(self.reconnectcount > 1) {
+          // 先尝试连接三次
+          if(self.reconnectcount > 2) {
             if(!self.isResetSocket) {
               setTimeout(() => {
                 self.reconnect();
@@ -106,6 +106,7 @@ var mixin = {
         if(!this.countdown) {
           clearInterval(this.reconnectTimer)
           this.countdown = 10;
+          this.reconnectcount = 0;
           this.initws(true);
         }
       }, 1000)

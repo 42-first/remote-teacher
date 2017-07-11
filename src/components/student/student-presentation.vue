@@ -149,6 +149,8 @@
         lessonID: 0,
         // pptID
         presentationID: 0,
+        // fetchTimeline send websocket msgid
+        msgid: 1,
 
         // 权限相关
         userID: 0,
@@ -420,7 +422,7 @@
               }
 
               // set quiz map
-              if(self.quizList.length) {
+              if(self.quizList && self.quizList.length) {
                 self.quizList.forEach( function(quiz, index) {
                   self.quizMap.set(quiz.quizID, quiz);
                 });

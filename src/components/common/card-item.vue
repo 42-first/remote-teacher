@@ -113,7 +113,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 10000, language.options['lang'] === 'en' ? 'en': 'zh_CN');
+        return timeagoInstance.format(time - 5000, language.options['lang'] === 'en' ? 'en': 'zh_CN');
       }
     },
     methods: {
@@ -176,7 +176,7 @@
         // Initializes and opens PhotoSwipe
         let gallery;
 
-        if(PhotoSwipe) {
+        if(typeof PhotoSwipe !== 'undefined') {
           gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
           gallery.init();
