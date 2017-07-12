@@ -5,7 +5,7 @@
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
-      <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f25"></i> 号中投稿吧！</div>
+      <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f15"></i> 号中投稿吧！</div>
     </div>
     <div v-show="!isFetching && submissionList.length">
       <div class="gap"></div>
@@ -116,6 +116,8 @@
             // 设置试卷详情数据
             self.isFetching = false
             self.submissionList = jsonData.data.tougao_list
+            // 清零投稿未读数
+            self.$emit('refreshCheckTougao', self.submissionList.length)
           })
       },
       /**

@@ -496,10 +496,12 @@ export default {
     /**
      * 用户课堂动态点击了 投稿 按钮，清零投稿数
      *
+     * @param {number} num 总投稿数
      */
-    checkTougao () {
+    checkTougao (num) {
       let self = this
-      oldTougao = tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
+      // oldTougao = num || tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
+      oldTougao = num
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },
