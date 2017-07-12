@@ -525,18 +525,17 @@
       * @param
       */
       refeshLoad(id) {
-        setTimeout(()=>{
+        setTimeout(() => {
           this.$refs.loadmore.onTopLoaded();
 
-          if (this.socket.readyState === 1) {
-            console.log('readyState' + this.socket.readyState);
+          if (this.socket && this.socket.readyState === 1) {
+            // console.log('readyState' + this.socket.readyState);
+            this.socket.send(JSON.stringify({
+              'op': 'fetchtimeline',
+              'lessonid': this.lessonID,
+              'msgid': this.msgid++
+            }));
           }
-
-          this.socket.send(JSON.stringify({
-            'op': 'fetchtimeline',
-            'lessonid': this.lessonID,
-            'msgid': this.msgid++
-           }));
         }, 1500)
       },
 
