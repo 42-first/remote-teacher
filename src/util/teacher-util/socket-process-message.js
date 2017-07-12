@@ -5,13 +5,13 @@
  let isOldVersion = false               // 雨课堂软件是老版本
 
 function socketProcessMessage(msg){
+  let self = this
   // 没有在上课则直接跳走
   if (!msg.isAlive) {
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
   
-  let self = this
   let current = self.current - 1
 
   // 通杀，针对所有指令，并不只是hello
