@@ -236,7 +236,7 @@ export default {
     self.postingSubmissionid -= 0
 
     self.polyfillIncludes()
-    
+
     configWX()
     wx.ready(() => {
       wx.hideMenuItems({
@@ -525,7 +525,6 @@ export default {
     polyfillIncludes() {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
       if (!Array.prototype.includes) {
-        alert(124)
         Object.defineProperty(Array.prototype, 'includes', {
           value: function(searchElement, fromIndex) {
 
