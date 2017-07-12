@@ -5,6 +5,12 @@
  let isOldVersion = false               // 雨课堂软件是老版本
 
 function socketProcessMessage(msg){
+  // 没有在上课则直接跳走
+  if (!msg.isAlive) {
+    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+    return
+  }
+  
   let self = this
   let current = self.current - 1
 
@@ -15,11 +21,7 @@ function socketProcessMessage(msg){
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
-    // 没有在上课则直接跳走
-    if (!msg.isAlive) {
-      location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-      return
-    }
+    
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
       self.showPcErrorMask()
