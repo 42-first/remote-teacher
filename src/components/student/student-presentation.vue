@@ -528,6 +528,10 @@
         setTimeout(()=>{
           this.$refs.loadmore.onTopLoaded();
 
+          if (this.socket.readyState === 1) {
+            console.log('readyState' + this.socket.readyState);
+          }
+
           this.socket.send(JSON.stringify({
             'op': 'fetchtimeline',
             'lessonid': this.lessonID,

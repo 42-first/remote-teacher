@@ -184,7 +184,7 @@
           setTimeout(()=>{
             gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
             gallery.init();
-          }, 1000)
+          }, 1500)
         }
 
       },
