@@ -281,7 +281,7 @@
     margin: 0.4rem auto;
     display: inline-block;
     padding: 0 0.4rem;
-    max-width: 14rem;
+    max-width: 9.2rem;
     height: 0.8rem;
     line-height: 0.8rem;
 
@@ -290,6 +290,9 @@
     background: rgba(155, 155, 155, 0.75);
 
     border-radius: 0.4rem/50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
 
