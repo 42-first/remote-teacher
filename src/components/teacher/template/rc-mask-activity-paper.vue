@@ -1,12 +1,13 @@
 <!-- 试卷列表 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="paper-box allowscrollcallback">
+    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- 没有试卷 -->
-    <div v-show="!paperList.length" class="no-paper-box">
+    <div v-show="!isFetching && !paperList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
       <div class="hint f12">试试从雨课堂桌面端制作并上传试卷吧</div>
     </div>
-    <div v-show="paperList.length">
+    <div v-show="!isFetching && paperList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
         <div class="title f17">已发试卷</div>
@@ -82,6 +83,7 @@
         isPubmodalHidden: true,   // 发布模态框隐藏
         isQuizresultHidden: true, // 已发试卷饼图页隐藏
         finishedQuizList: {},     // 给已经收卷的试卷做标记
+        isFetching: true,             // 正在获取数据
       }
     },
     components: {
@@ -111,6 +113,11 @@
       fetchPaperData () {
         let self = this
 
+        // 如果已经有内容了就不要显示正在加载中了
+        if (!self.paperList.length) {
+          self.isFetching = true
+        }
+
         let url = API.lesson_quiz_list
 
         if (process.env.NODE_ENV === 'production') {
@@ -119,7 +126,7 @@
 
         request.get(url)
           .then(jsonData => {
-            console.log('lesson_quiz_list', jsonData)
+            self.isFetching = false
             self.paperList = jsonData.data.quiz_data.paper_list
             self.quizList = jsonData.data.quiz_data.quiz_list
 
@@ -250,6 +257,13 @@
     color: #000000;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+
+    .isFetching {
+      position: relative;
+      z-index: 10;
+      padding-top: 7.0rem;
+      text-align: center;
+    }
 
     .no-paper-box {
       box-sizing: border-box;

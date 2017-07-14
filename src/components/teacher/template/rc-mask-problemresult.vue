@@ -260,6 +260,9 @@
 	}
 	.problemresult-box {
 	  position: relative;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-between;
 	  height: 100%;
 	  text-align: center;
 	  color: $white;
@@ -299,7 +302,7 @@
 	  	margin: 0 auto;
 	  	padding-top: 1rem;
 	  	width: 8.8rem;
-	  	height: 5.6rem;
+	  	min-height: 4rem;
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
@@ -344,7 +347,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding-top: 1.2rem;
+		  padding: 1.2rem 0 0.5rem;
 
 		  .btn-item {
 			  width: 1.75rem; 

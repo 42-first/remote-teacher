@@ -2,10 +2,6 @@
 <template>
 	<div class="problemresultdetail-box allowscrollcallback">
 		<div v-if="problemResultDetailData">
-			<!-- 关闭按钮 -->
-			<v-touch class="close-box"  v-on:tap="closeProblemresultdetail">
-	    	<i class="iconfont icon-ykq-shiti-guanbi f24"></i>
-	    </v-touch>
 	    
 	    <div class="title f18">{{problemResultDetailData.problem_type === 3 ? '票数最多' : '本题正确选项为'}}</div>
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
@@ -28,11 +24,11 @@
 	      	</div>
 	      </div>
 	    </div>
-	    
-	    <v-touch class="btn refresh-btn f17"  v-on:tap="refreshProblemResultDetail">
-	    	<i class="iconfont icon-refresh f20"></i>
-	    	刷新
-	    </v-touch>
+
+	    <div class="button-box f18">
+	      <v-touch class="btn" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
+	      <v-touch class="btn f18" v-on:tap="closeProblemresultdetail">返回</v-touch>
+	    </div>
 		</div>
   </div>
 </template>
@@ -194,14 +190,6 @@
 	  color: #4A4A4A;
 	  text-align: center;
 	  overflow: auto;
-		
-		.close-box {
-			position: absolute;
-	  	right: 0.386667rem;
-	  	top: 0.44rem;
-	  	width: 1.066667rem;
-	  	height: 1.066667rem;
-		}
 
 	  .icon-wrong {
 	  	color: #D0011B;
@@ -239,6 +227,10 @@
 		.gap {
 			height: 0.333333rem;
 			background: #EDF2F6;
+		}
+
+		.choice-list {
+			padding-bottom: 1.466667rem;
 		}
 
 		.choice-item {
@@ -294,14 +286,21 @@
 			}
 		}
 
-		.refresh-btn {
-			position: fixed;
-			left: 50%;
-			bottom: 0.666667rem;
-			transform: translateX(-50%);
-			width: 4.093333rem;
-			height: 1.466667rem;
-			line-height: 1.466667rem;
-		}
+		.button-box {
+      display: flex;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1.466667rem;
+      text-align: center;
+
+      .btn {
+        flex: 1;
+        border-radius: 0;
+        height: 1.466667rem;
+        line-height: 1.466667rem;
+      }
+    }
 	}
 </style>

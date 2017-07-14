@@ -6,6 +6,12 @@
 
 function socketProcessMessage(msg){
   let self = this
+  // 没有在上课则直接跳走
+  if (msg.op === 'hello' && !msg.isAlive) {
+    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+    return
+  }
+  
   let current = self.current - 1
 
   // 通杀，针对所有指令，并不只是hello
@@ -15,11 +21,7 @@ function socketProcessMessage(msg){
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
-    // 没有在上课则直接跳走
-    if (!msg.isAlive) {
-      location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-      return
-    }
+    
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
       self.showPcErrorMask()
@@ -78,6 +80,10 @@ function socketProcessMessage(msg){
     }
 
     // 根据qrcode是否为0判断是否显示二维码控制页，不为0，则显示
+    if (msg.slideindex !== 0) { // 刚开始上课slideindex总为0，不管是不是从第一页开始放映
+      self.isBrandNewPpt = false
+    }
+    
     if(msg.qrcode !== 0){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.setData({
