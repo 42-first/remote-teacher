@@ -109,7 +109,7 @@
 
     <!-- 新手引导页 -->
     <Guide
-      v-show="!isGuideHidden"
+      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'RcMaskQrcode' && !isGuideHidden"
       @guideNext="guideNext"
     ></Guide>
     
