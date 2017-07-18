@@ -64,6 +64,7 @@
   let quizTimeBellTimer = null  // 试卷饼图正计时的定时器
   let refPaperTimer = null      // 刷新试卷饼图的定时器
   let quizTimeBellCount = 1     // 刷新试卷饼图的辅助数字
+  let isCollecting = false      // 当前正在收卷，此时频繁点击收卷按钮应无效
 
   import request from '@/util/request'
   import API from '@/config/api'
@@ -231,6 +232,11 @@
         let self = this
         let url = API.quiz_finish
 
+        if (isCollecting || self.isPaperCollected) {
+          return
+        }
+        isCollecting = true
+
         let postData = {
           'quizID': self.quizid
         }
@@ -239,6 +245,8 @@
           .then(jsonData => {
             console.log('quiz_finish', jsonData)
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
+
+            isCollecting = false
 
             let str = JSON.stringify({
               'op': 'quizfinished',

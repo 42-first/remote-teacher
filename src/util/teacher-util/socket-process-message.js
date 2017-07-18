@@ -6,6 +6,12 @@
 
 function socketProcessMessage(msg){
   let self = this
+  // 没有在上课则直接跳走
+  if (msg.op === 'hello' && !msg.isAlive) {
+    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+    return
+  }
+  
   let current = self.current - 1
 
   // 通杀，针对所有指令，并不只是hello
@@ -15,11 +21,7 @@ function socketProcessMessage(msg){
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
-    // 没有在上课则直接跳走
-    if (!msg.isAlive) {
-      location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-      return
-    }
+    
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
       self.showPcErrorMask()

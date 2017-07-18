@@ -95,6 +95,7 @@
       :socket="socket"
       :posting-submissionid="postingSubmissionid"
       @closeSubmissionbox="closeSubmissionbox"
+      @refreshCheckTougao="refreshCheckTougao"
     ></RcMaskActivitySubmission>
   </div>
 </template>
@@ -225,10 +226,16 @@
         self.isSubmissionHidden = false
 
         self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
-        // 清零投稿未读数
-        self.$emit('checkTougao')
-
         self.setAtRootFalse()
+      },
+      /**
+       * 投稿列表页面点击 刷新 按钮也应清零投稿未读数
+       *
+       * @param {number} num 总投稿数
+       */
+      refreshCheckTougao (num) {
+        let self = this
+        self.$emit('checkTougao', num)
       },
       /**
        * 点击 返回 按钮关闭试卷列表

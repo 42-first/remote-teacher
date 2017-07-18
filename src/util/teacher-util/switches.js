@@ -12,7 +12,8 @@ export default {
         // TODO 和夺权有潜在冲突
         isToastCtrlMaskHidden: true, // 针对夺权蒙版
         isInitiativeCtrlMaskHidden: true,
-        msgMaskTpl: '' // 断网重连蒙版需要遮住工具栏，就是用 isYieldToolbar 判断的，用到了 msgMaskTpl
+        msgMaskTpl: '', // 断网重连蒙版需要遮住工具栏，就是用 isYieldToolbar 判断的，用到了 msgMaskTpl
+        initiativeCtrlMaskTpl: ''
       })
     },
     /**

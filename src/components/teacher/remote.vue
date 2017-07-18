@@ -106,6 +106,13 @@
         ></component>
       </div>
     </div>
+
+    <!-- 新手引导页 -->
+    <Guide
+      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'RcMaskQrcode' && !isGuideHidden"
+      @guideNext="guideNext"
+    ></Guide>
+    
   </div>
 </template>
 
@@ -123,6 +130,8 @@ if (process.env.NODE_ENV !== 'production') {
 // 页面组件
 // 工具栏
 import Toolbar from '@/components/teacher/template/toolbar'
+// 新手引导蒙版
+import Guide from '@/components/teacher/template/guide'
 // 错误蒙版
 import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
 // 断网重连蒙版
@@ -161,6 +170,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
+      isGuideHidden: true,                    // 新手引导隐藏
       isEnterEnded: false,                    // 遥控器进入是否结束
       userid: -1,                             // 用户id
       avatar: '',                             // 用户头像
@@ -211,6 +221,7 @@ export default {
   },
   components: {
     Toolbar,
+    Guide,
     RcMaskErrormsg,
     RcMaskReconnect,
     RcMaskDeprive,
@@ -255,6 +266,11 @@ export default {
     self.pmos()
     self.fetchUserInfo().then(self.initws)
     self.pollingPresentationTag()
+
+    // 根据localStorage判断是否显示新手引导
+    if (localStorage.getItem('hasGuided') !== 'yes') {
+      self.isGuideHidden = false
+    }
   },
   mixins: [switches, socketService, problemRelated],
   methods: {
@@ -496,12 +512,35 @@ export default {
     /**
      * 用户课堂动态点击了 投稿 按钮，清零投稿数
      *
+     * @param {number} num 总投稿数
      */
-    checkTougao () {
+    checkTougao (num) {
       let self = this
-      oldTougao = tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
+      // oldTougao = num || tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
+      oldTougao = num
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
+    },
+    /**
+     * 用户在新手引导页点击了
+     *
+     * @param {number} step 当前处于什么引导步骤
+     */
+    guideNext (step) {
+      let self = this
+      switch (step) {
+        case 1:
+          self.showActivity()
+          break;
+        case 2:
+          self.goHome()
+          self.isGuideHidden = true
+          localStorage.setItem('hasGuided', 'yes')
+          break;
+        case 3:
+          self.isGuideHidden = true
+          localStorage.setItem('hasGuided', 'yes')
+      }
     },
     /*
      * @method sentry ga 配置

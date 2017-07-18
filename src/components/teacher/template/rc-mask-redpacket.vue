@@ -178,7 +178,7 @@
 		  position: relative;
 		  box-sizing: border-box;
 		  padding-top: 0.96rem;
-		  height: 4.08rem;
+		  height: 3.08rem;
 		  overflow: hidden;
 		  line-height: 0.8rem;
 		  color: #FFE595;

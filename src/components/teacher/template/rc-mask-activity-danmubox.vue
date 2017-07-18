@@ -30,7 +30,11 @@
       </div>
 
     </section>
-    <v-touch class="back-btn f18" v-on:tap="closeDanmubox">返回</v-touch>
+
+    <div class="button-box f18">
+      <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
+      <v-touch class="btn f18" v-on:tap="closeDanmubox">返回</v-touch>
+    </div>
   </div>
 </template>
 
@@ -254,16 +258,21 @@
       }
     }
 
-    .back-btn {
+    .button-box {
+      display: flex;
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
       height: 1.466667rem;
-      line-height: 1.466667rem;
       text-align: center;
-      background: $blue;
-      color: $white;
+
+      .btn {
+        flex: 1;
+        border-radius: 0;
+        height: 1.466667rem;
+        line-height: 1.466667rem;
+      }
     }
   }
 </style>
