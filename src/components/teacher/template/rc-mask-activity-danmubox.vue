@@ -57,7 +57,7 @@
   import Loadmore from 'mint-ui/lib/loadmore'
 
   let DANMU_ALL_LIST = []
-  let FENYE_COUNT = 20
+  let FENYE_COUNT = 30
 
   export default {
     name: 'RcMaskActivityDanmubox',
@@ -140,8 +140,22 @@
           .then(jsonData => {
             // 设置试卷详情数据
             DANMU_ALL_LIST = jsonData.data.sender_list
-            self.danmuList = DANMU_ALL_LIST.slice(0, FENYE_COUNT)
-            self.allLoaded = false
+
+            let newItemsCount = 0
+            if (DANMU_ALL_LIST[0] && self.danmuList[0]) {
+              newItemsCount = DANMU_ALL_LIST[0].danmu_id - self.danmuList[0].danmu_id
+            }
+            
+            if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
+              self.danmuList = DANMU_ALL_LIST.slice(0, FENYE_COUNT)
+              self.allLoaded = false
+            } else if (self.allLoaded) {
+              self.danmuList = DANMU_ALL_LIST
+            } else {
+              self.danmuList = DANMU_ALL_LIST.slice(0, newItemsCount).concat(self.danmuList)
+              self.allLoaded = false
+            }
+
             // 刷新的话回顶部
             self.$el.scrollTop = 0
           })

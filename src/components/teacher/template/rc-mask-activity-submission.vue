@@ -158,24 +158,40 @@
           self.isFetching = true
         }
 
-        self.allLoaded = false
-
         // 单次刷新
         request.get(url, {
           'lesson_id': self.lessonid,
           'start': BIG_NUMBER,
-          'count': FENYE_COUNT,
+          'count': BIG_NUMBER,
           'direction': 0
         }).then(jsonData => {
-            // 设置试卷详情数据
+            let newList = jsonData.data.tougao_list
+            
             self.isFetching = false
-            self.submissionList = jsonData.data.tougao_list
 
+            // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
+            // 否则如果已经全加载完的话，直接把所有数据赋值
+            // 否则只新塞最新的数据到前面
+            let newItemsCount = 0
+            if (newList[0] && self.submissionList[0]) {
+              newItemsCount = newList[0].id - self.submissionList[0].id
+            }
+            
+            if (!self.submissionList.length || newItemsCount > FENYE_COUNT) {
+              self.submissionList = newList.slice(0, FENYE_COUNT)
+              self.allLoaded = false
+            } else if (self.allLoaded) {
+              self.submissionList = newList
+            } else {
+              self.submissionList = newList.slice(0, newItemsCount).concat(self.submissionList)
+              self.allLoaded = false
+            }
+            
             // 刷新的话回顶部
             self.$el.scrollTop = 0
 
             // 清零投稿未读数
-            self.$emit('refreshCheckTougao', self.submissionList.length)
+            self.$emit('refreshCheckTougao', newList.length)
           })
       },
       /**
