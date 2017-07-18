@@ -16,6 +16,7 @@
          :bottom-all-loaded="allLoaded"
          :bottomPullText="'上拉加载更多'"
          :bottomDropText="'释放加载更多'"
+         :class="{'allLoaded': allLoaded}"
          >
         <section class="list">
 
@@ -410,11 +411,5 @@
         line-height: 1.466667rem;
       }
     }
-  }
-</style>
-
-<style>
-  .mint-loadmore-bottom {
-    text-align: center;
   }
 </style>
