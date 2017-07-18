@@ -16,6 +16,10 @@ import Submission from '@/components/student/submission'
 import SubmissionList from '@/components/student/submission-list'
 import Danmu from '@/components/student/danmu'
 
+// const Submission = resolve => require(['@/components/student/submission'], resolve)
+// const SubmissionList = resolve => require(['@/components/student/submission-list'], resolve)
+// const Danmu = resolve => require(['@/components/student/danmu'], resolve)
+
 
 // 国际化
 import language from '@/util/language'

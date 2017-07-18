@@ -194,6 +194,12 @@ var mixin = {
 
           // 关闭弹幕
           case 'turnoffdanmu':
+            item = msg['event'];
+
+            this.addMessage({ type: 1, message: item['title'] });
+            this.danmuStatus = false;
+            break
+
           // 幻灯片 结束放映
           case 'showfinished':
             item = msg['event'];
