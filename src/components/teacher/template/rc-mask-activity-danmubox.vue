@@ -209,6 +209,7 @@
     right: 0;
     top: 0;
     bottom: 0;
+    padding-top: 1.5rem;
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
@@ -234,6 +235,11 @@
     }
 
     .desc {
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      right: 0;
       padding: 0 0.4rem;
       height: 1.466667rem;
       line-height: 1.466667rem;
