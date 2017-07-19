@@ -122,6 +122,7 @@
         self.tab = tab
         if (tab === 2) {
           self.$emit('checkDoubt')
+          self.fetchPresentationTag()
         }
       },
       /**

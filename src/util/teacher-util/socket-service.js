@@ -115,9 +115,11 @@ let mixin = {
     * @method 发送心跳函数
     */
     sendXinTiao() {
+      let self = this
+      
       clearInterval(xintiaoTimer)
       setInterval(()=>{
-        this.socket.send(JSON.stringify({ op: 'xintiao', lessonid: this.lessonID }))
+        self.socket.send(JSON.stringify({ op: 'xintiao', lessonid: self.lessonid }))
       }, 30 * 1000)
     },
     /**
