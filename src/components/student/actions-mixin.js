@@ -91,11 +91,11 @@ var actionsMixin = {
       }
 
       if (slideData['Cover']=='rain://error/upload-error') {
-        if(!data.refresh) {
+        if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
       } else if(slideData['Cover']=='rain://error/export-error'){
-        if(!data.refresh) {
+        if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
       } else {
