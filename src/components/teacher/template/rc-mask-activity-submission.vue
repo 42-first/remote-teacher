@@ -9,42 +9,55 @@
     </div>
     <div v-show="!isFetching && submissionList.length">
       <div class="gap"></div>
-      <section class="list">
+      <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
+      <Loadmore
+         ref="Loadmore"
+         :bottom-method="loadBottom"
+         :bottom-all-loaded="allLoaded"
+         :bottomPullText="'上拉加载更多'"
+         :bottomDropText="'释放加载更多'"
+         :class="{'allLoaded': allLoaded}"
+         >
+        <section class="list">
 
-        <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
-          <div class="item">
-            <div class="detail">
-              <img :src="item.user_avatar" class="avatar" alt="">
-              <div class="cont f18">
-                <span class="author f15">{{item.user_name}}</span><br>
-                {{item.content}}<br>
-                <img :src="item.thumb" class="pic" alt="">
+          <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
+            <div class="item">
+              <div class="detail">
+                <img :src="item.user_avatar" class="avatar" alt="">
+                <div class="cont f18">
+                  <span class="author f15">{{item.user_name}}</span><br>
+                  {{item.content}}<br>
+                  <img :src="item.thumb" class="pic" alt="">
+                </div>
+              </div>
+              <div class="action-box">
+                <div class="time f15">{{item.create_time.substring(11)}}</div>
+                <div class="action f15">
+                  <v-touch class="coll gray" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
+                    <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
+                    已收藏
+                  </v-touch>
+                  <v-touch class="coll gray" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
+                  <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
+                    收藏
+                  </v-touch>
+
+                  <v-touch  class="gray" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                    <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                    投屏
+                  </v-touch>
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
+                </div>
               </div>
             </div>
-            <div class="action-box">
-              <div class="time f15">{{item.create_time.substring(11)}}</div>
-              <div class="action f15">
-                <v-touch class="coll gray" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
-                  <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
-                  已收藏
-                </v-touch>
-                <v-touch class="coll gray" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
-                <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
-                  收藏
-                </v-touch>
-
-                <v-touch  class="gray" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
-                  <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
-                  投屏
-                </v-touch>
-                <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
-              </div>
-            </div>
+            <div class="gap"></div>
           </div>
-          <div class="gap"></div>
-        </div>
 
-      </section>
+          <div v-show="allLoaded" class="nomore f15">没有更多了</div>
+
+        </section> 
+      </Loadmore>
+      
     </div>
     
     <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
@@ -62,6 +75,11 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  import Loadmore from 'mint-ui/lib/loadmore'
+
+  let BIG_NUMBER = 10000000000000000000
+  let FENYE_COUNT = 10
+
   export default {
     name: 'RcMaskActivitySubmission',
     props: ['lessonid', 'socket', 'postingSubmissionid'],
@@ -71,7 +89,11 @@
         isAskingItemStatus: false,    // 正在查询投稿状态
         isItemDeleted: false,         // 投稿已经被删除
         isFetching: true,             // 正在获取数据
+        allLoaded: false,             // 上拉加载更多到底了
       }
+    },
+    components: {
+      Loadmore
     },
     created () {
       let self = this
@@ -83,6 +105,36 @@
       })
     },
     methods: {
+      /**
+       * 上拉刷新回调
+       *
+       */
+      loadBottom () {
+        let self = this
+        console.log('上拉松手了')
+
+        this.$refs.Loadmore.onBottomLoaded()
+
+        let url = API.submissionlist
+
+        // 单次刷新
+        request.get(url, {
+          'lesson_id': self.lessonid,
+          'start': self.submissionList[self.submissionList.length-1].id,
+          'count': FENYE_COUNT,
+          'direction': 0
+        }).then(jsonData => {
+            // 清零投稿未读数
+            self.$emit('refreshCheckTougao', self.submissionList.length)
+            // 设置试卷详情数据
+            // response_num 当前请求返回的投稿数量
+            if (jsonData.data.response_num === 0) {
+              self.allLoaded = true
+              return
+            }
+            self.submissionList = self.submissionList.concat(jsonData.data.tougao_list)
+          })
+      },
       /**
        * 点击 返回 按钮 返回课堂动态
        *
@@ -109,15 +161,37 @@
         // 单次刷新
         request.get(url, {
           'lesson_id': self.lessonid,
-          'start': 10000000000000000000,
-          'count': 10000000000000000000,
+          'start': BIG_NUMBER,
+          'count': BIG_NUMBER,
           'direction': 0
         }).then(jsonData => {
-            // 设置试卷详情数据
+            let newList = jsonData.data.tougao_list
+            
             self.isFetching = false
-            self.submissionList = jsonData.data.tougao_list
+
+            // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
+            // 否则如果已经全加载完的话，直接把所有数据赋值
+            // 否则只新塞最新的数据到前面
+            let newItemsCount = 0
+            if (newList[0] && self.submissionList[0]) {
+              newItemsCount = newList[0].id - self.submissionList[0].id
+            }
+            
+            if (!self.submissionList.length || newItemsCount > FENYE_COUNT) {
+              self.submissionList = newList.slice(0, FENYE_COUNT)
+              self.allLoaded = false
+            } else if (self.allLoaded) {
+              self.submissionList = newList
+            } else {
+              self.submissionList = newList.slice(0, newItemsCount).concat(self.submissionList)
+              self.allLoaded = false
+            }
+            
+            // 刷新的话回顶部
+            self.$el.scrollTop = 0
+
             // 清零投稿未读数
-            self.$emit('refreshCheckTougao', self.submissionList.length)
+            self.$emit('refreshCheckTougao', newList.length)
           })
       },
       /**
@@ -253,7 +327,7 @@
     }
 
     .list {
-      padding-bottom: 1.466667rem;
+      padding-bottom: 1.8rem;
       -webkit-overflow-scrolling: touch;
       
       .item {
@@ -318,6 +392,9 @@
             color: $white;
           }
         }
+      }
+      .nomore {
+        text-align: center;
       }
     }
     

@@ -12,24 +12,36 @@
       <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
       <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="">
     </div>
-    <section v-show="danmuList.length" class="list">
+    <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
+    <Loadmore
+       ref="Loadmore"
+       :bottom-method="loadBottom"
+       :bottom-all-loaded="allLoaded"
+       :bottomPullText="'上拉加载更多'"
+       :bottomDropText="'释放加载更多'"
+       :class="{'allLoaded': allLoaded}"
+       >
+      <section v-show="danmuList.length" class="list">
 
-      <div class="item-with-gap" v-for="item in danmuList" :key="item.danmu_id">
-        <div class="item">
-          <div class="detail">
-            <img :src="item.avatar" alt="">
-            <div class="danmu f18">{{item.message}}</div>
+        <div class="item-with-gap" v-for="item in danmuList" :key="item.danmu_id">
+          <div class="item">
+            <div class="detail">
+              <img :src="item.avatar" alt="">
+              <div class="danmu f18">{{item.message}}</div>
+            </div>
+            <div class="action-box">
+              <div class="time f15">{{item.time.substring(11)}}</div>
+              <v-touch class="f15 gray" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
+              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
+            </div>
           </div>
-          <div class="action-box">
-            <div class="time f15">{{item.time.substring(11)}}</div>
-            <v-touch class="f15 gray" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
-          </div>
+          <div class="gap"></div>
         </div>
-        <div class="gap"></div>
-      </div>
 
-    </section>
+        <div v-show="allLoaded" class="nomore f15">没有更多了</div>
+
+      </section> 
+     </Loadmore>
 
     <div class="button-box f18">
       <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
@@ -42,17 +54,25 @@
   import request from '@/util/request'
   import API from '@/config/api'
 
+  import Loadmore from 'mint-ui/lib/loadmore'
+
+  let DANMU_ALL_LIST = []
+  let FENYE_COUNT = 30
+
   export default {
     name: 'RcMaskActivityDanmubox',
     props: ['lessonid', 'socket', 'isDanmuOpen', 'postingDanmuid'],
     data () {
       return {
         danmuList: [],    // 弹幕列表
+        allLoaded: false, // 上拉加载更多到底了
       }
+    },
+    components: {
+      Loadmore
     },
     created () {
       let self = this
-
 
       // 父组件点击 弹幕 按钮时发送事件给本子组件
       self.$on('showDanmubox', function (msg) {
@@ -60,6 +80,22 @@
       })
     },
     methods: {
+      /**
+       * 上拉刷新回调
+       *
+       */
+      loadBottom () {
+        let self = this
+        console.log('上拉松手了')
+
+        self.$refs.Loadmore.onBottomLoaded()
+
+        if (self.danmuList.length < DANMU_ALL_LIST.length) {
+          self.danmuList = DANMU_ALL_LIST.slice(0, self.danmuList.length+FENYE_COUNT)
+        } else {
+          self.allLoaded = true
+        }
+      },
       /**
        * 点击 返回 按钮 返回课堂动态
        *
@@ -103,7 +139,25 @@
         request.get(url, {lesson_id: self.lessonid})
           .then(jsonData => {
             // 设置试卷详情数据
-            self.danmuList = jsonData.data.sender_list
+            DANMU_ALL_LIST = jsonData.data.sender_list
+
+            let newItemsCount = 0
+            if (DANMU_ALL_LIST[0] && self.danmuList[0]) {
+              newItemsCount = DANMU_ALL_LIST[0].danmu_id - self.danmuList[0].danmu_id
+            }
+            
+            if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
+              self.danmuList = DANMU_ALL_LIST.slice(0, FENYE_COUNT)
+              self.allLoaded = false
+            } else if (self.allLoaded) {
+              self.danmuList = DANMU_ALL_LIST
+            } else {
+              self.danmuList = DANMU_ALL_LIST.slice(0, newItemsCount).concat(self.danmuList)
+              self.allLoaded = false
+            }
+
+            // 刷新的话回顶部
+            self.$el.scrollTop = 0
           })
       },
       /**
@@ -255,6 +309,10 @@
             color: $white;
           }
         }
+      }
+
+      .nomore {
+        text-align: center;
       }
     }
 

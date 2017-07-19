@@ -85,3 +85,11 @@
     color: $white;
   }
 }
+
+/* mint-ui 加载更多文案提示 */
+.mint-loadmore-bottom {
+  text-align: center;
+}
+.allLoaded .mint-loadmore-bottom {
+  display: none;
+}
