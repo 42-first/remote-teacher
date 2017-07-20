@@ -4,12 +4,12 @@
     <section class="tab-box f15">
       <v-touch :class="['item', {'active': tab === 1}]" v-on:tap="swichType(1)">PPT</v-touch>
       <div class="bar" v-show="tab === 3"></div>
-      <v-touch :class="['item', {'active': tab === 2}]" v-on:tap="swichType(2)">
+      <v-touch :class="['item', 'J_ga', {'active': tab === 2}]" v-on:tap="swichType(2)" data-category="2" data-label="缩略图页">
         不懂
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
       </v-touch>
       <div class="bar" v-show="tab === 1"></div>
-      <v-touch :class="['item', {'active': tab === 3}]" v-on:tap="swichType(3)">习题</v-touch>
+      <v-touch :class="['item', 'J_ga', {'active': tab === 3}]" v-on:tap="swichType(3)" data-category="3" data-label="缩略图页">习题</v-touch>
     </section>
 
     <!-- PPT 类型 -->
