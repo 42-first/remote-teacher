@@ -163,7 +163,7 @@
 
         request.get(url)
           .then(jsonData => {
-            self.participantList = jsonData.data.students.reverse()
+            self.participantList = jsonData.data.students
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
           })
