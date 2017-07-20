@@ -6,7 +6,7 @@
         <img :src="avatar" alt="">
         <span class="coursename">{{coursename}}</span>
       </div>
-      <v-touch class="student f17" v-on:tap="showParticipantList">
+      <v-touch class="student f17 J_ga" v-on:tap="showParticipantList" data-category="5" data-label="课堂动态页">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
         <span class="dqxs">
           当前学生{{participantList.length}}位
@@ -25,7 +25,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18" v-on:tap="showDanmubox">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="showDanmubox" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -37,7 +37,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18" v-on:tap="showSubmission">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="showSubmission" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -163,7 +163,7 @@
 
         request.get(url)
           .then(jsonData => {
-            self.participantList = jsonData.data.students.reverse()
+            self.participantList = jsonData.data.students
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
           })
@@ -172,12 +172,15 @@
        * 点击 学生头像列表 按钮展示全部人员名单
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      showParticipantList () {
+      showParticipantList (evt) {
         let self = this
         self.isParticipantlistHidden = false
 
         self.setAtRootFalse()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 返回 按钮关闭全部人员名单
@@ -207,26 +210,32 @@
        * 点击 弹幕 按钮展示弹幕控制
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      showDanmubox () {
+      showDanmubox (evt) {
         let self = this
         self.isDanmuboxHidden = false
 
         self.$refs.RcMaskActivityDanmubox.$emit('showDanmubox')
 
         self.setAtRootFalse()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 投稿 按钮展示投稿控制
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      showSubmission () {
+      showSubmission (evt) {
         let self = this
         self.isSubmissionHidden = false
 
         self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
         self.setAtRootFalse()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 投稿列表页面点击 刷新 按钮也应清零投稿未读数

@@ -6,17 +6,17 @@
         <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
         <div class="icondesc">遥控器</div>
       </v-touch>
-		  <v-touch :class="['tool-item', {'active': activeIndex === 1}]" v-on:tap="showThumbnail">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
 		    <div class="icondesc">缩略图</div>
         <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', {'active': activeIndex === 2}]" v-on:tap="showActivity">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:tap="showActivity" data-category="4" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
 		    <div class="icondesc">课堂动态</div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'last-item']" v-on:tap="toggleToolbarMoreBox">
+		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:tap="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
 		    <i class="iconfont f28" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
 		    <div class="icondesc">更多</div>
 		  </v-touch>
@@ -30,7 +30,7 @@
 		    <span>二维码</span>
 		  </v-touch>
 
-		  <v-touch class="more-item" v-on:tap="callWakeup">
+		  <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
 		    <i class="iconfont icon-suijidianming1 f24"></i>
 		    <span style="margin-left: 32rpx;">随机点名</span>
 		  </v-touch>
@@ -118,8 +118,9 @@
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
        *
        * @event tap
+       * @param {object} evt event对象
        */
-      callWakeup () {
+      callWakeup (evt) {
         let self = this
         let str = JSON.stringify({
           'op': 'callwakeup',
@@ -129,6 +130,8 @@
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
         self.isToolbarMoreBoxHidden = true
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课

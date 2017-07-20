@@ -1,6 +1,6 @@
 <!-- 教师遥控器根组件 -->
 <template>
-  <div class="root">
+  <div class="root J_page">
     <div id="rc-home" class="rc-home" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
@@ -259,6 +259,13 @@ export default {
     });
 
     self.setSentry()
+
+    setTimeout(()=>{
+        require(['@/util/ga'], function(gaue){
+          window.gaue = gaue;
+          gaue.default.registerEl();
+        })
+    }, 500)
   },
   mounted () {
     let self = this
