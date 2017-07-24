@@ -146,9 +146,21 @@
               newItemsCount = DANMU_ALL_LIST[0].danmu_id - self.danmuList[0].danmu_id
             }
             
+            // 如果还没有弹幕展示或新增的弹幕大于 FENYE_COUNT，就
+            // 展示新增的FENYE_COUNT之内的数据，并改状态为能上拉加载更多
+
+            // 否则如果之前状态为全部已经加载不能上拉，则则全部显示刚刚刷新的所有数据
+
+            // 否则把新增的不大于 FENYE_COUNT 数量的那些弹幕加到开头，并改状态为能上拉加载更多
             if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
+              // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
+              if (!self.danmuList.length && DANMU_ALL_LIST.length <= FENYE_COUNT) {
+                self.allLoaded = true
+              } else {
+                self.allLoaded = false
+              }
+
               self.danmuList = DANMU_ALL_LIST.slice(0, FENYE_COUNT)
-              self.allLoaded = false
             } else if (self.allLoaded) {
               self.danmuList = DANMU_ALL_LIST
             } else {

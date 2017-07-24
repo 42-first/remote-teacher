@@ -32,7 +32,7 @@
       <!-- 问题选项 -->
       <section class="" v-if="isShowOption">
         <ul class="exercise-options" v-if="summary">
-          <li :class="['options-item', 'f45', problemType]" v-for="(item, index) in options">
+          <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="(item, index) in options">
             <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label, $event)" :data-option="item.Label">{{ item.Label }}</p>
           </li>
         </ul>
@@ -344,10 +344,15 @@
             this.setOptions(option, true, false);
             this.optionsSet.clear();
             this.optionsSet.add(option);
-          } else if(this.problemType === 'Polling' && this.selectedPollingCount) {
+          } else if(this.problemType === 'Polling' && this.selectedPollingCount && this.pollingCount > 1) {
             this.selectedPollingCount--;
             this.setOptions(option, true, true);
             this.optionsSet.add(option);
+          } else if(this.problemType === 'Polling' && this.pollingCount === 1) {
+            this.setOptions(option, true, false);
+            this.optionsSet.clear();
+            this.optionsSet.add(option);
+            this.selectedPollingCount > 0 && this.selectedPollingCount--;
           }
         }
 

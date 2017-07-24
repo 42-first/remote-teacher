@@ -35,7 +35,8 @@ const handleResponse = (res) => {
 
     // 没有填写信息 跳转个人信息完善页
     if(res.data.status_code === 5) {
-      location.href = '/v/index/edituserinfo_simple?next_url=back';
+      let nextURL = location.href;
+      location.href = `/v/index/edituserinfo_simple?next_url=${nextURL}`;
     }
 
     return Promise.reject(res.data)
