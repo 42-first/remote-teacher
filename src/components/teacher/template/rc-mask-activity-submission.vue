@@ -351,7 +351,6 @@
         margin: 0 auto;
         max-width: 100%;
         max-height: 100%;
-        border: 1px solid #fff;
       }
       .w100 {
         width: 100%;
