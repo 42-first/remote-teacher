@@ -1,6 +1,9 @@
 <!-- 投稿控制页面 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="submission-box allowscrollcallback">
+    <v-touch v-show="isBigpicShown" class="bigpic-mask" v-on:tap="hideBigpic">
+      <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
+    </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
@@ -27,7 +30,7 @@
                 <div class="cont f18">
                   <span class="author f15">{{item.user_name}}</span><br>
                   {{item.content}}<br>
-                  <img :src="item.thumb" class="pic" alt="">
+                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="showBigpic(item.pic, item.id)"></v-touch>
                 </div>
               </div>
               <div class="action-box">
@@ -80,6 +83,8 @@
   let BIG_NUMBER = 10000000000000000000
   let FENYE_COUNT = 10
 
+  let WH = window.innerWidth/window.innerHeight
+
   export default {
     name: 'RcMaskActivitySubmission',
     props: ['lessonid', 'socket', 'postingSubmissionid'],
@@ -90,6 +95,9 @@
         isItemDeleted: false,         // 投稿已经被删除
         isFetching: true,             // 正在获取数据
         allLoaded: false,             // 上拉加载更多到底了
+        isBigpicShown: false,         // 当前正显示大图
+        bigpicUrl: '',                // 当前大图url
+        isWider: false,               // 投稿图片更扁
       }
     },
     components: {
@@ -97,7 +105,6 @@
     },
     created () {
       let self = this
-
 
       // 父组件点击 投稿 按钮时发送事件给本子组件
       self.$on('showSubmission', function (msg) {
@@ -284,6 +291,32 @@
             self.submissionList[index].is_collect = !!status
           })
       },
+      /**
+       * 显示大图
+       *
+       * @event bindtap
+       * @param {string} pic 大图url
+       */
+      showBigpic (pic, picid) {
+        let self = this
+        let dom = document.querySelector('#pic'+picid)
+        let picwh = dom.naturalWidth / dom.naturalHeight
+
+        self.isWider = picwh > WH
+        self.isBigpicShown = true
+        self.bigpicUrl = pic
+      },
+      /**
+       * 隐藏大图
+       *
+       * @event bindtap
+       */
+      hideBigpic () {
+        let self = this
+
+        self.isBigpicShown = false
+        self.bigpicUrl = ''
+      },
     }
   }
 </script>
@@ -300,6 +333,33 @@
     background: $white;
     color: #4A4A4A;
     overflow: auto;
+
+    .bigpic-mask {
+      display: flex;
+      align-items: center;
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      color: $white;
+
+      img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 100%;
+        border: 1px solid #fff;
+      }
+      .w100 {
+        width: 100%;
+      }
+      .h100 {
+        height: 100%;
+      }
+    }
     
     .isFetching {
       position: relative;
