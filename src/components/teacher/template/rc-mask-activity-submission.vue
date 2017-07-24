@@ -170,7 +170,7 @@
             self.isFetching = false
 
             // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
-            // 否则如果已经全加载完的话，直接把所有数据赋值
+            // 否则如果状态为已经全加载完的话，直接把所有刷新的数据赋值
             // 否则只新塞最新的数据到前面
             let newItemsCount = 0
             if (newList[0] && self.submissionList[0]) {
@@ -178,8 +178,14 @@
             }
             
             if (!self.submissionList.length || newItemsCount > FENYE_COUNT) {
+              // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
+              if (!self.submissionList.length && newList.length <= FENYE_COUNT) {
+                self.allLoaded = true
+              } else {
+                self.allLoaded = false
+              }
+
               self.submissionList = newList.slice(0, FENYE_COUNT)
-              self.allLoaded = false
             } else if (self.allLoaded) {
               self.submissionList = newList
             } else {
