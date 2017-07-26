@@ -45,7 +45,7 @@
 
     <div class="button-box f18">
       <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
-      <v-touch class="btn f18" v-on:tap="closeDanmubox">返回</v-touch>
+      <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页">返回</v-touch>
     </div>
   </div>
 </template>
@@ -100,10 +100,13 @@
        * 点击 返回 按钮 返回课堂动态
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      closeDanmubox () {
+      closeDanmubox (evt) {
         this.$emit('closeDanmubox')
         this.closeDanmumask()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击弹幕按钮，设置是否允许弹幕
