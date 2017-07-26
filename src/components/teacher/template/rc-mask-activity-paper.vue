@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <v-touch class="back-btn f18" v-on:tap="closePaper">返回</v-touch>
+    <v-touch class="back-btn f18 J_ga" v-on:tap="closePaper" data-category="13" data-label="试卷页">返回</v-touch>
 
     <RcMaskActivityPaperQuizresult
       ref="RcMaskActivityPaperQuizresult"
@@ -102,9 +102,12 @@
        * 点击 返回 按钮关闭试卷列表
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      closePaper () {
+      closePaper (evt) {
         this.$emit('closePaper')
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 获取试卷数据

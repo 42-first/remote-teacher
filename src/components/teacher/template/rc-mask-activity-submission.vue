@@ -69,7 +69,7 @@
     </div>
     <div class="button-box f18">
       <v-touch class="btn" v-on:tap="refreshSubmissionlist">刷新</v-touch>
-      <v-touch class="btn f18" v-on:tap="closeSubmissionbox">返回</v-touch>
+      <v-touch class="btn f18 J_ga" v-on:tap="closeSubmissionbox" data-category="15" data-label="投稿页">返回</v-touch>
     </div>
   </div>
 </template>
@@ -146,10 +146,13 @@
        * 点击 返回 按钮 返回课堂动态
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      closeSubmissionbox () {
+      closeSubmissionbox (evt) {
         this.$emit('closeSubmissionbox')
         this.closeSubmissionmask()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 更新试题详情的数据
