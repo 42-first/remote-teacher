@@ -84,11 +84,11 @@ function socketProcessMessage(msg){
       self.isBrandNewPpt = false
     }
     
-    if(msg.qrcode !== 0){
+    if(msg.mask && msg.mask.type === 'qrcode'){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.setData({
         isMsgMaskHidden: true,
-        qrcodeStatus: msg.qrcode
+        qrcodeStatus: msg.mask.qrcode
       })
       self.showQrcodeMask()
     }else if(!msg.shownow){
