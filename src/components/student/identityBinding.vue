@@ -1,8 +1,9 @@
 <template>
+
   <div class="supernatant">
     <div class="identy">
-      <div class="binding" v-if="type === 1 && is_can_audit === 'true'">
-        <img src="../../images/binding.png" class="banner"/>
+      <div class="binding" v-if="type == 1 && is_can == 'true'">
+        <img src="../../images/student/binding.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
@@ -16,11 +17,11 @@
           您也可以选择旁听身份进入<br/>
           未绑定身份时，您的课堂数据将无法被保留<br/>
           教师也无法获取您的课堂数据<br/>
-          <input type="button" class="blue-line-btn go-audit" value="以旁听身份进入" @click="this.showMasking = !0;"/>
+          <input type="button" class="blue-line-btn go-audit" value="以旁听身份进入" @click="showMasking = !0;"/>
         </div>
       </div>
-      <div class="binding" v-if="type === 1 && is_can_audit === 'false'">
-        <img src="../../images/binding.png" class="banner"/>
+      <div class="binding" v-if="type == 1 && is_can == 'false'">
+        <img src="../../images/student/binding.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
@@ -32,8 +33,8 @@
                  v-bind:style="{marginTop:'110px'}"/>
         </div>
       </div>
-      <div class="binding" v-if="type === 2">
-        <img src="../../images/binding.png" class="banner"/>
+      <div class="binding" v-if="type == 2">
+        <img src="../../images/student/binding.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             您已绑定教务系统账号<br/>
@@ -63,12 +64,13 @@
       </div>
     </div>
   </div>
+
 </template>
-<style lang="sass" scoped>
-  * {
-    box-sizing:border-box; }
+
+<style lang="scss" scoped>
     .supernatant{
-      position:fixed;
+
+        position:fixed;
         top:0;
         left:0;
         height: 100%;
@@ -85,30 +87,30 @@
         width: 80%;
         height: 80%;
       .font-all{
-        font-size: 16px;
+        font-size: .4rem;
         color:#333;
   }
     .font-grey{
-      font-size: 16px;
+      font-size: .4rem;
       color:#9B9B9B;
   }
     .font-blue{
     color: #639EF4; }
     .blue-btn{
       background-color:#639EF4;
-      height: 40px;
+      height: 1rem;
       border:none;
       outline:none;
       color:#fff;
-      border-radius: 4px;
+      border-radius: .1rem;
   }
     .blue-line-btn{
       background-color:#fff;
-      height: 40px;
+      height: 1rem;
       border:1px solid #639EF4;
       outline:none;
       color:#639EF4;
-      border-radius: 4px;
+      border-radius: .1rem;
   }
     .hide{
       display:none;
@@ -122,25 +124,25 @@
       width: 100%;
       height: 100%;
       .alert{
-        width: 300px;
-        height: 201px;
+        width: 7.5rem;
+        height: 5rem;
         background-color: #fff;
-        border-radius:4px;
+        border-radius:.1rem;
         display:inline-block;
-        margin-top: 120px;
+        margin-top: 3rem;
         box-sizing:border-box;
-        padding-top: 30px;
-        line-height: 30px;
+        padding-top: .75rem;
+        line-height: .75rem;
         .btn-con{
           width: 100%;
-          height: 40px;
-          margin-top: 40px;
+          height: 1rem;
+          margin-top: 1rem;
           border-top:1px solid #c8c8c8;
           display:flex;
           div {
             height: 100%;
             width: 50%;
-            line-height: 40px;
+            line-height: 1rem;
         }
           div:first-child{
             border-right: 1px solid #c8c8c8;
@@ -162,38 +164,45 @@
       background-color: #fff;
       overflow:hidden;
       text-align:center;
-      padding:4px;
-      padding-bottom: 30px;
+        box-sizing:border-box;
+      padding:.1rem;
+      padding-bottom: .75rem;
       .info{
-        height:50px;
+        height:1.25rem;
         text-align:center;
-        margin: 30px auto;
+        margin: .75rem auto;
   }
     .blue-btn{
-      width: 260px;
+      width: 6.5rem;
   }
     .title{
-      margin: 30px auto;
+      margin: .75rem auto;
   } }
     .audit{
-    text-align:center;
-    padding-top: 10px;
-    background-color: #F6F7F8; }
-    .go-audit{
-    width: 260px;
-    margin: 20px auto; } } } }
+      text-align:center;
+      box-sizing:border-box;
+      padding-top: 10px;
+      background-color: #F6F7F8; }
+      .go-audit{
+      width: 6.5rem;
+      margin: .5rem auto;
+      }
+    }
+    }
+    }
 </style>
 <script>
   import $ from 'jquery'
   export default {
     data () {
       return {
-        showMasking: !1
+        showMasking: !1,
+        is_can: 'false'
       }
     },
     props: ['type', 'is_can_audit', 'university_name', 'url'],
     created () {
-      this.is_can_audit = this.is_can_audit + ''
+      this.is_can = this.is_can_audit + ''
       this._init()
     },
     methods: {

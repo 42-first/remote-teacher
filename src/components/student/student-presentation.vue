@@ -105,8 +105,8 @@
     </section>
 
     <router-view></router-view>
+    <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
   </section>
-  <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
 </template>
 <script>
   import request from '@/util/request'
@@ -119,7 +119,7 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
-  import identity from './identityBinding.vue'
+  import identity from '@/components/student/identityBinding.vue'
 
   // 子组件不需要引用直接使用
   window.request = request;
