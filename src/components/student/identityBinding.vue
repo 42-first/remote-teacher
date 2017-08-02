@@ -77,6 +77,7 @@
         width: 100%;
         background-color: rgba(0, 0, 0, .6);
         z-index: 9999;
+      -webkit-appearance : none ;/*解决ios上按钮的圆角问题*/
       .identy{
         position:absolute;
         margin:auto;
@@ -103,6 +104,7 @@
       outline:none;
       color:#fff;
       border-radius: .1rem;
+      -webkit-appearance : none ;/*解决ios上按钮的圆角问题*/
   }
     .blue-line-btn{
       background-color:#fff;
@@ -111,6 +113,7 @@
       outline:none;
       color:#639EF4;
       border-radius: .1rem;
+      -webkit-appearance : none ;/*解决ios上按钮的圆角问题*/
   }
     .hide{
       display:none;
