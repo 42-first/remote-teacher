@@ -106,7 +106,7 @@
 
     <router-view></router-view>
   </section>
-
+  <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
 </template>
 <script>
   import request from '@/util/request'
@@ -119,6 +119,7 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
+  import identity from './identityBinding.vue'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -189,11 +190,13 @@
         // todo: 是否新版本 隐藏功能
         version: 0.9,
         commitDiffURL: '/lesson/lesson_submit_difficulties',
-        backURL: ''
+        backURL: '',
+        pro_perm_info: {}
       };
     },
     components: {
-      CardItemComponent
+      CardItemComponent,
+      identity
     },
     computed: {
     },
@@ -399,7 +402,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
-
+              self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
               self.avatar = data.avatar;
