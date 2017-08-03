@@ -56,7 +56,7 @@
             <div class="gap"></div>
           </div>
 
-          <div v-show="allLoaded" class="nomore f15">
+          <div v-show="allLoaded && contLonger" class="nomore f15">
             <div class="bgline"></div>
             <div class="wenan">end</div>
           </div>
@@ -101,6 +101,7 @@
         isBigpicShown: false,         // 当前正显示大图
         bigpicUrl: '',                // 当前大图url
         isWider: false,               // 投稿图片更扁
+        contLonger: false,            // 内容超过1屏
       }
     },
     components: {
@@ -113,6 +114,15 @@
       self.$on('showSubmission', function (msg) {
         self.refreshSubmissionlist()
       })
+    },
+    watch: {
+      submissionList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.submission-box .list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
+      }
     },
     methods: {
       /**
@@ -483,7 +493,7 @@
           position: absolute;
           top: 0.293333rem;
           width: 100%;
-          height: 0.013333rem;
+          height: 1px;
           background: #9B9B9B;
         }
       }

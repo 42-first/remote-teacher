@@ -38,7 +38,7 @@
           <div class="gap"></div>
         </div>
 
-        <div v-show="allLoaded" class="nomore f15">
+        <div v-show="allLoaded  && contLonger" class="nomore f15">
           <div class="bgline"></div>
           <div class="wenan">end</div>
         </div>
@@ -69,6 +69,7 @@
       return {
         danmuList: [],    // 弹幕列表
         allLoaded: false, // 上拉加载更多到底了
+        contLonger: false,            // 内容超过1屏
       }
     },
     components: {
@@ -81,6 +82,15 @@
       self.$on('showDanmubox', function (msg) {
         self.refreshDanmulist()
       })
+    },
+    watch: {
+      danmuList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.danmu-box .list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
+      }
     },
     methods: {
       /**
@@ -353,7 +363,7 @@
           position: absolute;
           top: 0.293333rem;
           width: 100%;
-          height: 0.013333rem;
+          height: 1px;
           background: #9B9B9B;
         }
       }
