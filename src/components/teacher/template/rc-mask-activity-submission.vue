@@ -56,7 +56,10 @@
             <div class="gap"></div>
           </div>
 
-          <div v-show="allLoaded" class="nomore f15">没有更多了</div>
+          <div v-show="allLoaded" class="nomore f15">
+            <div class="bgline"></div>
+            <div class="wenan">end</div>
+          </div>
 
         </section> 
       </Loadmore>
@@ -333,7 +336,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: $white;
+    background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
 
@@ -400,6 +403,7 @@
       
       .item {
         padding: 0 0.4rem;
+        background: $white;
 
         .detail {
           display: flex;
@@ -462,7 +466,26 @@
         }
       }
       .nomore {
+        position: relative;
+        height: 0.6rem;
+        margin: 0 0.6rem;
         text-align: center;
+        color: #9B9B9B;
+
+        .wenan {
+          position: relative;
+          margin: 0 auto;
+          width: 2.093333rem;
+          background: #EDF2F6;
+        }
+
+        .bgline {
+          position: absolute;
+          top: 0.293333rem;
+          width: 100%;
+          height: 0.013333rem;
+          background: #9B9B9B;
+        }
       }
     }
     
