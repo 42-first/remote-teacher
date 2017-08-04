@@ -6,6 +6,7 @@
       <v-touch  tag="i" :class="['iconfont', 'f45', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
+    <div v-show="isnNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
@@ -67,9 +68,10 @@
     props: ['lessonid', 'socket', 'isDanmuOpen', 'postingDanmuid'],
     data () {
       return {
-        danmuList: [],    // 弹幕列表
-        allLoaded: false, // 上拉加载更多到底了
-        contLonger: false,            // 内容超过1屏
+        danmuList: [],          // 弹幕列表
+        allLoaded: false,       // 上拉加载更多到底了
+        contLonger: false,      // 内容超过1屏
+        isnNoNewItem: false,    // 刷新后没有新的条目
       }
     },
     components: {
@@ -154,6 +156,13 @@
         // 单次刷新
         request.get(url, {lesson_id: self.lessonid})
           .then(jsonData => {
+            // 加入没有新条目的话，显示没有新条目的提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isnNoNewItem = DANMU_ALL_LIST.length === jsonData.data.sender_list.length
+            setTimeout(() => {
+              self.isnNoNewItem = false
+            }, 2000)
+            
             // 设置试卷详情数据
             DANMU_ALL_LIST = jsonData.data.sender_list
 
@@ -241,6 +250,21 @@
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+
+    .no-new-item {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.0rem;
+      height: 2.0rem;
+      border-radius: 0.1rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 2.0rem;
+      color: $white;
+    }
 
     .no-paper-box {
       box-sizing: border-box;

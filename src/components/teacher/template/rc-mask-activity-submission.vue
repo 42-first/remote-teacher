@@ -5,6 +5,7 @@
       <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
     </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+    <div v-show="isnNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
@@ -102,6 +103,7 @@
         bigpicUrl: '',                // 当前大图url
         isWider: false,               // 投稿图片更扁
         contLonger: false,            // 内容超过1屏
+        isnNoNewItem: true,          // 刷新后没有新的条目
       }
     },
     components: {
@@ -188,6 +190,14 @@
           'count': BIG_NUMBER,
           'direction': 0
         }).then(jsonData => {
+
+            // 加入没有新条目的话，显示没有新条目的提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isnNoNewItem = self.submissionList[0] && self.submissionList[0].id === jsonData.data.tougao_list[0].id
+            setTimeout(() => {
+              self.isnNoNewItem = false
+            }, 2000)
+
             let newList = jsonData.data.tougao_list
             
             self.isFetching = false
@@ -349,6 +359,21 @@
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+
+    .no-new-item {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.0rem;
+      height: 2.0rem;
+      border-radius: 0.1rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 2.0rem;
+      color: $white;
+    }
 
     .bigpic-mask {
       display: flex;
