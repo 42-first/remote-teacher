@@ -84,7 +84,7 @@
 
       // 父组件点击 弹幕 按钮时发送事件给本子组件
       self.$on('showDanmubox', function (msg) {
-        self.refreshDanmulist()
+        self.refreshDanmulist('isClickedin')
       })
 
       // socket通知有新的弹幕进来了
@@ -155,8 +155,9 @@
        * 更新试题详情的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
        *
+       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
-      refreshDanmulist(){
+      refreshDanmulist(isClickedin){
         let self = this
         let url = API.danmulist
 
@@ -167,8 +168,9 @@
             self.isShowNewHint = false
 
             // 加入没有新条目的话，显示没有新条目的提示
+            // 从课堂动态进来的话，不显示提示
             // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = DANMU_ALL_LIST.length === jsonData.data.sender_list.length
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && DANMU_ALL_LIST.length === jsonData.data.sender_list.length
             setTimeout(() => {
               self.isShowNoNewItem = false
             }, 2000)
