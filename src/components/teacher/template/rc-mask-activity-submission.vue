@@ -5,6 +5,8 @@
       <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
     </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+
+    <v-touch v-on:tap="refreshSubmissionlist" v-show="isShowNewHint" class="new-item-hint f15">你有新的投稿</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
@@ -88,6 +90,7 @@
   let FENYE_COUNT = 10
 
   let WH = window.innerWidth/window.innerHeight
+  let pollingTimer = null
 
   export default {
     name: 'RcMaskActivitySubmission',
@@ -103,7 +106,8 @@
         bigpicUrl: '',                // 当前大图url
         isWider: false,               // 投稿图片更扁
         contLonger: false,            // 内容超过1屏
-        isShowNoNewItem: true,          // 刷新后没有新的条目
+        isShowNoNewItem: false,       // 刷新后没有新的条目
+        isShowNewHint: false,         // 上方提示有新的条目进来
       }
     },
     components: {
@@ -115,7 +119,12 @@
       // 父组件点击 投稿 按钮时发送事件给本子组件
       self.$on('showSubmission', function (msg) {
         self.refreshSubmissionlist()
+
+        pollingTimer = setInterval(() => {
+          self.pollingNewSubmission()
+        }, 5000)
       })
+      
     },
     watch: {
       submissionList: function() {
@@ -164,6 +173,7 @@
        * @param {object} evt event对象
        */
       closeSubmissionbox (evt) {
+        clearInterval(pollingTimer)
         this.$emit('closeSubmissionbox')
         this.closeSubmissionmask()
 
@@ -190,6 +200,8 @@
           'count': BIG_NUMBER,
           'direction': 0
         }).then(jsonData => {
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 无论显示提示与否，2秒后不再显示提示
@@ -343,6 +355,30 @@
         self.isBigpicShown = false
         self.bigpicUrl = ''
       },
+      /**
+       * 轮询有没有新的投稿
+       *
+       */
+      pollingNewSubmission () {
+        let self = this
+        let url = API.submissionlist
+
+        // 获取数据
+        request.get(url, {
+          'lesson_id': self.lessonid,
+          'start': BIG_NUMBER,
+          'count': BIG_NUMBER,
+          'direction': 0
+        }).then(jsonData => {
+            let newList = jsonData.data.tougao_list
+            
+            if (newList[0] && self.submissionList[0]) {
+              self.isShowNewHint = newList[0].id > self.submissionList[0].id
+            } else if (newList[0]) {
+              self.isShowNewHint = true
+            }
+          })
+      },
     }
   }
 </script>
@@ -359,6 +395,21 @@
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+
+    .new-item-hint {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 0.266667rem;
+      transform: translate(-50%, 0);
+      width: 5.333333rem;
+      height: 0.8rem;
+      border-radius: 0.4rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 0.8rem;
+      color: $white;
+    }
 
     .no-new-item {
       position: fixed;
