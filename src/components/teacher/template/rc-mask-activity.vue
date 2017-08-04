@@ -144,6 +144,11 @@
       self.$on('RcMaskActivity', function () {
         self.fetchParticipantList()
       })
+
+      // socket通知有新的弹幕进来了
+      self.$on('newdanmu', function () {
+        self.$refs.RcMaskActivityDanmubox.$emit('newdanmu')
+      })
     },
     updated () {
     },

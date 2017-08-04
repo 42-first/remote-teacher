@@ -5,7 +5,7 @@
       <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
     </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
-    <div v-show="isnNoNewItem" class="no-new-item f18">没有新的投稿</div>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
@@ -103,7 +103,7 @@
         bigpicUrl: '',                // 当前大图url
         isWider: false,               // 投稿图片更扁
         contLonger: false,            // 内容超过1屏
-        isnNoNewItem: true,          // 刷新后没有新的条目
+        isShowNoNewItem: true,          // 刷新后没有新的条目
       }
     },
     components: {
@@ -193,9 +193,9 @@
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 无论显示提示与否，2秒后不再显示提示
-            self.isnNoNewItem = self.submissionList[0] && self.submissionList[0].id === jsonData.data.tougao_list[0].id
+            self.isShowNoNewItem = self.submissionList[0] && self.submissionList[0].id === jsonData.data.tougao_list[0].id
             setTimeout(() => {
-              self.isnNoNewItem = false
+              self.isShowNoNewItem = false
             }, 2000)
 
             let newList = jsonData.data.tougao_list
