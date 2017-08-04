@@ -6,6 +6,8 @@
       <v-touch  tag="i" :class="['iconfont', 'f45', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
+    <v-touch v-on:tap="refreshDanmulist" v-show="isShowNewHint" class="new-item-hint f15">你有新的弹幕</v-touch>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
@@ -38,7 +40,10 @@
           <div class="gap"></div>
         </div>
 
-        <div v-show="allLoaded" class="nomore f15">没有更多了</div>
+        <div v-show="allLoaded  && contLonger" class="nomore f15">
+          <div class="bgline"></div>
+          <div class="wenan">end</div>
+        </div>
 
       </section> 
      </Loadmore>
@@ -64,8 +69,11 @@
     props: ['lessonid', 'socket', 'isDanmuOpen', 'postingDanmuid'],
     data () {
       return {
-        danmuList: [],    // 弹幕列表
-        allLoaded: false, // 上拉加载更多到底了
+        danmuList: [],              // 弹幕列表
+        allLoaded: false,           // 上拉加载更多到底了
+        contLonger: false,          // 内容超过1屏
+        isShowNoNewItem: false,     // 刷新后没有新的条目
+        isShowNewHint: false,       // 上方提示有新的条目进来
       }
     },
     components: {
@@ -76,8 +84,22 @@
 
       // 父组件点击 弹幕 按钮时发送事件给本子组件
       self.$on('showDanmubox', function (msg) {
-        self.refreshDanmulist()
+        self.refreshDanmulist('isClickedin')
       })
+
+      // socket通知有新的弹幕进来了
+      self.$on('newdanmu', function () {
+        self.isShowNewHint = true
+      })
+    },
+    watch: {
+      danmuList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.danmu-box .list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
+      }
     },
     methods: {
       /**
@@ -133,14 +155,26 @@
        * 更新试题详情的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
        *
+       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
-      refreshDanmulist(){
+      refreshDanmulist(isClickedin){
         let self = this
         let url = API.danmulist
 
         // 单次刷新
         request.get(url, {lesson_id: self.lessonid})
           .then(jsonData => {
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
+
+            // 加入没有新条目的话，显示没有新条目的提示
+            // 从课堂动态进来的话，不显示提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && DANMU_ALL_LIST.length === jsonData.data.sender_list.length
+            setTimeout(() => {
+              self.isShowNoNewItem = false
+            }, 2000)
+
             // 设置试卷详情数据
             DANMU_ALL_LIST = jsonData.data.sender_list
 
@@ -228,6 +262,36 @@
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+
+    .new-item-hint {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 0.266667rem;
+      transform: translate(-50%, 0);
+      width: 5.333333rem;
+      height: 0.8rem;
+      border-radius: 0.4rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 0.8rem;
+      color: $white;
+    }
+
+    .no-new-item {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.0rem;
+      height: 2.0rem;
+      border-radius: 0.1rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 2.0rem;
+      color: $white;
+    }
 
     .no-paper-box {
       box-sizing: border-box;
@@ -333,7 +397,26 @@
       }
 
       .nomore {
+        position: relative;
+        height: 0.6rem;
+        margin: 0 0.6rem;
         text-align: center;
+        color: #9B9B9B;
+
+        .wenan {
+          position: relative;
+          margin: 0 auto;
+          width: 2.093333rem;
+          background: #EDF2F6;
+        }
+
+        .bgline {
+          position: absolute;
+          top: 0.293333rem;
+          width: 100%;
+          height: 1px;
+          background: #9B9B9B;
+        }
       }
     }
 

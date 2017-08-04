@@ -5,6 +5,9 @@
       <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
     </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+
+    <v-touch v-on:tap="refreshSubmissionlist" v-show="isShowNewHint" class="new-item-hint f15">你有新的投稿</v-touch>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
@@ -56,7 +59,10 @@
             <div class="gap"></div>
           </div>
 
-          <div v-show="allLoaded" class="nomore f15">没有更多了</div>
+          <div v-show="allLoaded && contLonger" class="nomore f15">
+            <div class="bgline"></div>
+            <div class="wenan">end</div>
+          </div>
 
         </section> 
       </Loadmore>
@@ -84,6 +90,7 @@
   let FENYE_COUNT = 10
 
   let WH = window.innerWidth/window.innerHeight
+  let pollingTimer = null
 
   export default {
     name: 'RcMaskActivitySubmission',
@@ -98,6 +105,9 @@
         isBigpicShown: false,         // 当前正显示大图
         bigpicUrl: '',                // 当前大图url
         isWider: false,               // 投稿图片更扁
+        contLonger: false,            // 内容超过1屏
+        isShowNoNewItem: false,       // 刷新后没有新的条目
+        isShowNewHint: false,         // 上方提示有新的条目进来
       }
     },
     components: {
@@ -108,8 +118,22 @@
 
       // 父组件点击 投稿 按钮时发送事件给本子组件
       self.$on('showSubmission', function (msg) {
-        self.refreshSubmissionlist()
+        self.refreshSubmissionlist('isClickedin')
+
+        pollingTimer = setInterval(() => {
+          self.pollingNewSubmission()
+        }, 5000)
       })
+      
+    },
+    watch: {
+      submissionList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.submission-box .list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
+      }
     },
     methods: {
       /**
@@ -149,6 +173,7 @@
        * @param {object} evt event对象
        */
       closeSubmissionbox (evt) {
+        clearInterval(pollingTimer)
         this.$emit('closeSubmissionbox')
         this.closeSubmissionmask()
 
@@ -158,8 +183,9 @@
        * 更新试题详情的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
        *
+      * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
-      refreshSubmissionlist(){
+      refreshSubmissionlist(isClickedin){
         let self = this
         let url = API.submissionlist
 
@@ -175,6 +201,17 @@
           'count': BIG_NUMBER,
           'direction': 0
         }).then(jsonData => {
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
+
+            // 加入没有新条目的话，显示没有新条目的提示
+            // 从课堂动态进来的话，不显示提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && self.submissionList[0] && self.submissionList[0].id === jsonData.data.tougao_list[0].id
+            setTimeout(() => {
+              self.isShowNoNewItem = false
+            }, 2000)
+
             let newList = jsonData.data.tougao_list
             
             self.isFetching = false
@@ -320,6 +357,30 @@
         self.isBigpicShown = false
         self.bigpicUrl = ''
       },
+      /**
+       * 轮询有没有新的投稿
+       *
+       */
+      pollingNewSubmission () {
+        let self = this
+        let url = API.submissionlist
+
+        // 获取数据
+        request.get(url, {
+          'lesson_id': self.lessonid,
+          'start': BIG_NUMBER,
+          'count': BIG_NUMBER,
+          'direction': 0
+        }).then(jsonData => {
+            let newList = jsonData.data.tougao_list
+            
+            if (newList[0] && self.submissionList[0]) {
+              self.isShowNewHint = newList[0].id > self.submissionList[0].id
+            } else if (newList[0]) {
+              self.isShowNewHint = true
+            }
+          })
+      },
     }
   }
 </script>
@@ -333,9 +394,39 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: $white;
+    background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+
+    .new-item-hint {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 0.266667rem;
+      transform: translate(-50%, 0);
+      width: 5.333333rem;
+      height: 0.8rem;
+      border-radius: 0.4rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 0.8rem;
+      color: $white;
+    }
+
+    .no-new-item {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.0rem;
+      height: 2.0rem;
+      border-radius: 0.1rem;
+      background: rgba(0,0,0,0.8);
+      text-align: center;
+      line-height: 2.0rem;
+      color: $white;
+    }
 
     .bigpic-mask {
       display: flex;
@@ -400,6 +491,7 @@
       
       .item {
         padding: 0 0.4rem;
+        background: $white;
 
         .detail {
           display: flex;
@@ -462,7 +554,26 @@
         }
       }
       .nomore {
+        position: relative;
+        height: 0.6rem;
+        margin: 0 0.6rem;
         text-align: center;
+        color: #9B9B9B;
+
+        .wenan {
+          position: relative;
+          margin: 0 auto;
+          width: 2.093333rem;
+          background: #EDF2F6;
+        }
+
+        .bgline {
+          position: absolute;
+          top: 0.293333rem;
+          width: 100%;
+          height: 1px;
+          background: #9B9B9B;
+        }
       }
     }
     

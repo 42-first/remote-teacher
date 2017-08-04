@@ -353,6 +353,12 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 有新的弹幕
+  if (msg.op == 'newdanmu') {
+    self.$refs.InitiativeCtrlMask.$emit('newdanmu', msg)
+    return
+  }
+
 }
 
 export default socketProcessMessage
