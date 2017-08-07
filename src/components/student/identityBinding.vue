@@ -7,7 +7,7 @@
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
-            绑定 <span class="font-blue">{{university_name}}</span> 教务系统账号后可<br/>
+            绑定 <span class="font-blue">{{university_name}}</span> 教务系统账号后可
             进入课堂
 
           </div>
