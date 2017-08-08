@@ -57,14 +57,6 @@
   left: 0;
   right: 0;
 }
-/* 当蒙版是缩略图时，底部的工具栏要露出来 */
-.yield-toolbar {
-  bottom: 1.706667rem;
-}
-/* 当蒙版是缩略图时，底部的工具栏要露出来，而且点击更多是，更多要露出来 */
-.yield-toolbar-more {
-  bottom: 6.5rem;
-}
 
 .rc-mask {
   position: absolute;
