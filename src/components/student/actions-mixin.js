@@ -181,12 +181,14 @@ var actionsMixin = {
         pageIndex: data.pageIndex,
         presentationid: data.presentationid,
         time: data.time,
+        problemType: slideData['Problem']['Type'],
         caption: slideData['Problem']['Type'] === 'Polling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
         status: slideData['Problem']['Result'] ? '已完成' : '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
-        cover: slideData['Cover']
+        cover: slideData['Cover'],
+        score: slideData['Score']
       })
 
       // 预加载习题图片

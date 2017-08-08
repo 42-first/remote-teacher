@@ -12,13 +12,15 @@ import MessageBox from 'mint-ui/lib/message-box';
 import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
 import Exercise from '@/components/student/exercise'
-import Submission from '@/components/student/submission'
-import SubmissionList from '@/components/student/submission-list'
-import Danmu from '@/components/student/danmu'
+// import Subjective from '@/components/student/subjective'
+// import Submission from '@/components/student/submission'
+// import SubmissionList from '@/components/student/submission-list'
+// import Danmu from '@/components/student/danmu'
 
-// const Submission = resolve => require(['@/components/student/submission'], resolve)
-// const SubmissionList = resolve => require(['@/components/student/submission-list'], resolve)
-// const Danmu = resolve => require(['@/components/student/danmu'], resolve)
+const Subjective = resolve => require(['@/components/student/subjective'], resolve)
+const Submission = resolve => require(['@/components/student/submission'], resolve)
+const SubmissionList = resolve => require(['@/components/student/submission-list'], resolve)
+const Danmu = resolve => require(['@/components/student/danmu'], resolve)
 
 
 // 国际化
@@ -62,6 +64,11 @@ const studentRouter = new Router({
           path: 'exercise/:index',
           name: 'student-exercise-page',
           component: Exercise
+        },
+        {
+          path: 'subjective/:index',
+          name: 'student-subjective-page',
+          component: Subjective
         },
         {
           path: 'submission',

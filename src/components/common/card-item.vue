@@ -55,9 +55,6 @@
               <p class="paper-name">{{ item.caption }}</p>
             </div>
             <i class="iconfont icon-shiti_hongbao f55"></i>
-            <!-- <div class="">
-              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
-            </div> -->
         </div>
         </router-link>
         <div class="item-footer">
@@ -68,7 +65,16 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index">
+        <!-- 主观题作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
+            <div class="paper-txt f18">
+              <p class="paper-name">{{ item.caption }}</p>
+              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+            </div>
+            <i class="iconfont icon-ykq_shiti f55"></i>
+        </router-link>
+        <!-- 客观题作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>

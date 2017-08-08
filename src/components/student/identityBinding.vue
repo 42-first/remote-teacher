@@ -195,7 +195,7 @@
     }
 </style>
 <script>
-  import $ from 'jquery'
+  // import $ from 'jquery'
   export default {
     data () {
       return {
@@ -206,13 +206,13 @@
     props: ['type', 'is_can_audit', 'university_name', 'url'],
     created () {
       this.is_can = this.is_can_audit + ''
-      this._init()
     },
     methods: {
-      _init: function () {
-      },
       goClassroom: function () {
-        $('.supernatant').remove()
+        let targetEl = this.$el.querySelector('.supernatant');
+        targetEl.parentNode.removeChild(targetEl);
+
+        // $('.supernatant').remove()
       },
       goUrl: function () {
         window.location.href = this.url
