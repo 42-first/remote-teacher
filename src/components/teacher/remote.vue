@@ -1,7 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root J_page">
-    <div id="rc-home" class="rc-home" v-show="isEnterEnded">
+    <div id="rc-home" :class="['rc-home',{'shuban': isShuban}]" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
@@ -170,6 +170,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
+      isShuban: false,                        // 是竖版ppt
       isGuideHidden: true,                    // 新手引导隐藏
       isEnterEnded: false,                    // 遥控器进入是否结束
       userid: -1,                             // 用户id
@@ -382,7 +383,28 @@ export default {
           })
 
           self.isEnterEnded = true
+          self.initCardHeight()
         })
+    },
+    /**
+     * 初始化主页面当前页高度，防止竖版课件导致 toolbar 无法显示
+     *
+     * 如果ppt是普通的 4:3 或 16:9 (扁) 的话，就正常地上半截正常显示，下半截截取一部分
+     * 如果ppt为竖版，则显示上面的ppt（两边留黑），第二页的显示一截，下面不要盖住 toolbar
+     *
+     */
+    initCardHeight () {
+      let self = this
+      let _src = self.pptData[0].Cover
+      let _img = new Image()
+
+      _img.onload = function () {
+        let _w = _img.width
+        let _h = _img.height
+        self.isShuban = _h > _w
+      }
+
+      _img.src = _src
     },
     /**
      * 将秒数转换成 MM:SS 格式
