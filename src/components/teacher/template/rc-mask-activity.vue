@@ -4,7 +4,7 @@
     <section class="head f20">
       <div class="teacher ellipsis clearfix">
         <img :src="avatar" alt="">
-        <span class="coursename">{{coursename}}</span>
+        <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <v-touch class="student f17 J_ga" v-on:tap="showParticipantList" data-category="5" data-label="课堂动态页">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
@@ -360,6 +360,7 @@
 
         .coursename {
           float: left;
+          width: 7.333333rem;
           margin-top: 0.146667rem;
           margin-left: 0.133333rem;
         }
