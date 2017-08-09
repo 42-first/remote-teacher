@@ -196,8 +196,6 @@
 </style>
 <script>
   import $ from 'jquery'
-  import Api from '../../util/api'
-  import request from '../../util/request'
   export default {
     data () {
       return {
@@ -214,9 +212,6 @@
       _init: function () {
       },
       goClassroom: function (e) {
-        /* if (e) {
-          request.get(Api.student.AUDIT_CLASSROOM)
-        } */
         $('.supernatant').remove()
       },
       goUrl: function () {
