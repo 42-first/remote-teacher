@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="binding" v-if="type == 2">
-        <img src="../../images/student/binding.png" class="banner"/>
+        <img src="../../images/student/binding.min.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             您已绑定教务系统账号<br/>
