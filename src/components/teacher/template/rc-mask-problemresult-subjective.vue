@@ -3,6 +3,10 @@
 	<div class="problem-root">
 		<!--试题-主观题面板-->
 		<div class="problemresult-box">
+			<!-- 关闭按钮 -->
+	    <v-touch class="close-box"  v-on:tap="closeProblemresult">
+	    	<i class="iconfont icon-ykq-shiti-guanbi f24"></i>
+	    </v-touch>
 
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
@@ -28,17 +32,56 @@
 <script>
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
-	  props: ['lessonid', 'pptData', 'current'],
+	  props: ['lessonid', 'pptData', 'current', 'socket', 'problemResultData', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    	isRedpacketListHidden: true,            // 试题的红包名单列表页面隐藏
 	    }
 	  },
 	  computed: {
+	    problemid: function () {
+	      return this.pptData[this.current - 1].Problem.ProblemID
+	    }
 	  },
 	  created(){
 	  },
 	  methods: {
+	  	/**
+	     * 模仿微信小程序的 setData 用法，简易设置data
+	     *
+	     * @param {object} newData
+	     */
+	    setData (newData) {
+	      let self = this
+	      Object.keys(newData).forEach(attr => {
+	        self[attr] = newData[attr]
+	      })
+	    },
+	  	/**
+	     * 关闭试题柱状图的按钮
+	     * 涉及设置父组件 data，所以传递事件给父组件
+	     *
+	     * @event bindtap
+	     */
+	    closeProblemresult () {
+	    	this.$emit('closeProblemresult')
+	    },
+	    /**
+	     * 试题柱状图页面中的 投屏 按钮
+	     *
+	     * @event bindtap
+	     */
+	    postProblemresult () {
+	      let self = this
+
+	      let str = JSON.stringify({
+	        'op': 'postproblemresult',
+	        'lessonid': self.lessonid,
+	        'problemid': self.problemid
+	      })
+
+	      self.socket.send(str)
+	    },
 	    
 	  }
 	}
