@@ -187,8 +187,7 @@ var actionsMixin = {
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
-        cover: slideData['Cover'],
-        score: slideData['Problem']['Score']
+        cover: slideData['Cover']
       })
 
       // 预加载习题图片
