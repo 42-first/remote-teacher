@@ -23,13 +23,14 @@
           <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
           <p class="header-item f15">{{ summary&&summary.score }}分</p>
         </header>
-        <div :style="{ height: (10 - 0.906667)/pptRate + 'rem' }">
+        <div class="cover__wrapper" :style="{ height: (10 - 0.906667)/pptRate + 'rem' }">
           <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
         </div>
       </section>
 
       <h3 class="subjective__answer--lable f17">作答区域<span class="tip f12">（内容限制140字可插入1张图片）</span></h3>
-      <div class="subjective-inner">
+      <!-- 编辑状态-->
+      <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
         <section class="submission__text">
           <div class="submission__textarea--wrapper f17">
@@ -47,11 +48,18 @@
             <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
           </div>
           <div class="pic-view" v-show="hasImage">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" src="" alt="" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" :src="imageThumbURL" alt="" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
           </div>
         </section>
+      </div>
+      <!-- 预览状态 -->
+      <div class="subjective__answer" v-if="ispreview">
+        <div class="answer__inner">
+          <p class="answer--text f17">{{ result.content }}</p>
+          <div class="answer--image" v-if="result.pics.length"><img class="J_preview_img" :src="result.pics[0].thumb" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
+        </div>
       </div>
 
     </div>
@@ -105,15 +113,16 @@
     name: 'submission-page',
     data() {
       return {
-        index: 0,
+        ispreview: false,
         opacity: 0,
         title: '主观题作答',
         leaveTime: 0,
         sLeaveTime: '00:00',
         timeOver: false,
+        // 作答结果
+        result: null,
         // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成 5课程已结束
         sendStatus: 0,
-        submitText: '确认发送',
         text: '',
         imageURL: '',
         imageThumbURL: '',
@@ -131,7 +140,7 @@
     },
     beforeRouteEnter (to, from, next) {
       if(from.name === 'student-presentation-page') {
-         next();
+        next();
       } else {
         next(vm => {
           vm.$router.back();
@@ -155,7 +164,8 @@
         this.text = value;
 
         if(this.count) {
-           this.sendStatus === 0 && (this.sendStatus = 2);
+          this.sendStatus === 0 && (this.sendStatus = 2);
+          this.cacheResult();
         } else {
           !this.hasImage && (this.sendStatus = 0);
         }
@@ -206,17 +216,27 @@
         // 是否完成
         if(data.isComplete) {
           this.sendStatus = 5;
+          this.ispreview = true;
 
-          let result = this.oProblem['Result'];
-          // this.sLeaveTime = '已完成';
+          this.result = this.oProblem['Result'];
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
 
           // 恢复作答结果
+          let sResult = localStorage.getItem('lessonsubjective'+problemID);
+          if(sResult) {
+            let result = JSON.parse(sResult);
+            this.text = result.content;
+            // 是否有图片
+            if(result.pics.length) {
+              this.hasImage = true;
+              this.imageURL = result.pics[0].pic;
+              this.imageThumbURL = result.pics[0].thumb;
+            }
+          }
 
           if (process.env.NODE_ENV !== 'production') {
-            // todo: test测试
             this.setTiming(data.limit)
           }
         }
@@ -258,6 +278,33 @@
       },
 
       /*
+       * @method 缓存作答结果
+       * @param
+       */
+      cacheResult() {
+        // 定时保存
+        clearTimeout(this.cacheTimer);
+        this.cacheTimer = setTimeout(() => {
+          // 缓存到本地
+          let key = 'lessonsubjective'+this.summary.problemID;
+          let result = {
+            'content': this.text,
+            'pics': []
+          };
+
+          if(this.imageURL) {
+            result.pics.push({
+              'pic': this.imageURL,
+              'thumb': this.imageThumbURL
+            });
+          }
+
+          localStorage.removeItem(key);
+          localStorage.setItem(key, JSON.stringify(result));
+        }, 3000)
+      },
+
+      /*
       * @method 发送主观题
       * @param
       */
@@ -267,7 +314,7 @@
         let URL = API.student.ANSWER_LESSON_PROBLEM;
         const content = this.text.replace(/^\s+|\s+$/g, '');
 
-         // 是否超时
+        // 是否超时
         if(this.timeOver) {
           this.$toast({
             message: '时间已过，不能再提交啦～',
@@ -396,7 +443,7 @@
 
         this.sendStatus = 1;
         return request.post(URL, params)
-          .then(function (res) {
+          .then( (res) => {
             if(res && res.data) {
               let data = res.data;
 
@@ -404,10 +451,17 @@
               self.imageThumbURL = data.thumb_url
               self.sendStatus = 2;
 
+              self.cacheResult();
+
               return self.imageURL;
             }
           });
       },
+
+      /*
+       * @method 选择拍照后触发事件
+       * @param
+       */
       handleChooseImageChange(evt) {
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
@@ -455,16 +509,24 @@
           }
         });
       },
+
+      /*
+       * @method 选择拍照后触发事件
+       * @param type 1 ppt图片 2 上传图片 3 完成后预览
+       */
       handlelaodImg(type, evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;
+        let rate = this.width/this.height;
 
         if(type === 1) {
-          this.pptRate = this.width/this.height;
+          this.pptRate = rate;
         } else if(type === 2) {
-          this.rate = this.width/this.height;
+          this.rate = rate;
+        } else if(type === 3) {
+          rate > 1 && (target.style.width = '100%');
         }
       },
       handleDeleteImg() {
@@ -480,6 +542,11 @@
           }
         });
       },
+
+      /*
+       * @method 图片放大
+       * @param
+       */
       handleScaleImage(type, evt) {
         let targetEl = evt.target;
         let pswpElement = this.$el.querySelector('.J_submission_pswp');
@@ -487,7 +554,7 @@
         let items = [];
         let src = this.imageURL;
 
-        if(type === 1) {
+        if(type === 1 || type === 3) {
           src = targetEl.src;
         }
 
@@ -620,6 +687,7 @@
     overflow: hidden;
 
     .content__header {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -634,6 +702,10 @@
         margin-left: 0.4rem;
         text-align: center;
       }
+    }
+
+    .cover__wrapper {
+      margin-top: -0.733333rem;
     }
 
     .cover {
@@ -787,6 +859,46 @@
     }
 
   }
+
+
+  /*------------------*\
+    $ 作答完成预览
+  \*------------------*/
+
+  .subjective__answer {
+    padding: 0.333333rem 0.293333rem;
+    color: #333;
+    background: #fff;
+
+    .answer__inner {
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #C8C8C8;
+    }
+
+    .answer--text {
+      text-align: left;
+    }
+
+    .answer--image {
+      img {
+        display: block;
+        width: 6.933333rem;
+        max-width: 100%;
+      }
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 </style>

@@ -188,7 +188,7 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
-        score: slideData['Score']
+        score: slideData['Problem']['Score']
       })
 
       // 预加载习题图片
