@@ -10,6 +10,8 @@ import API from '@/config/api'
 import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 // 试题柱状图页面
 import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+// 试题-主观题结果页面
+import RcMaskProblemresultSubjective from '@/components/teacher/template/rc-mask-problemresult-subjective'
 
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -29,6 +31,7 @@ export default {
   components: {
     RcMaskProblemtime,
     RcMaskProblemresult,
+    RcMaskProblemresultSubjective,
   },
   methods: {
     /**
@@ -173,11 +176,43 @@ export default {
       }
     },
     /**
-     * 发试题后显示柱状图倒计时页面
+     * 发试题后显示结果：主观题或柱状图倒计时页面
      *
      * @param {number} inPageProblemID 发送的试题的id
      */
     showProblemResult (inPageProblemID) {
+      let self = this
+      let isSubjective = self.problemType === 'ShortAnswer'
+      let fn = isSubjective ? self.showSubjective : self.showCollumResult
+
+      fn(inPageProblemID)
+    },
+    /**
+     * 发主观题题后显示主观题结果页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showSubjective (inPageProblemID) {
+      let self = this
+      self.data = self // hack 复用小程序代码
+
+      let current = self.data.current - 1
+      let slideData = self.data.pptData[current]
+      let problemData = slideData.Problem
+
+      self.setData({
+        isProblemPublished: true,
+        isInitiativeCtrlMaskHidden: false,
+        initiativeCtrlMaskTpl: 'RcMaskProblemresultSubjective'
+      })
+
+    },
+    /**
+     * 发试题后显示柱状图倒计时页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showCollumResult (inPageProblemID) {
       let self = this
       self.data = self // hack 复用小程序代码
 
