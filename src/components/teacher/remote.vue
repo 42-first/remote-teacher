@@ -70,6 +70,7 @@
           @checkDoubt="checkDoubt"
           @checkTougao="checkTougao"
 
+          :problem-type="problemType"
           :problem-result-data="problemResultData"
           :problem-duration-left="problemDurationLeft"
           @closeProblemresult="closeProblemresult"

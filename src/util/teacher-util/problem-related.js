@@ -21,6 +21,7 @@ export default {
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
+      problemType: '',                        // 当前页题目的类型 主观题： ShortAnswer; 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
     }
@@ -42,6 +43,8 @@ export default {
       let current = self.data.current - 1
       let pptData = self.data.pptData
       let inPageProblemID = pptData[current].Problem.ProblemID
+
+      self.problemType = pptData[current].Problem.Type
 
       if(self.data.isProblemPublished){
         // 查看答案
