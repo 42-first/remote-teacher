@@ -15,7 +15,7 @@
         </div>
         <div class="font-all audit">
           您也可以选择旁听身份进入<br/>
-          未绑定身份时，您的课堂数据将无法被保留<br/>
+          未绑定身份时，您的课堂数据将无法被保留
           教师也无法获取您的课堂数据<br/>
           <input type="button" class="blue-line-btn go-audit" value="以旁听身份进入" @click="showMasking = !0;"/>
         </div>
@@ -25,7 +25,7 @@
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
-            绑定 <span class="font-blue">{{university_name}}</span> 教务系统账号后可<br/>
+            绑定 <span class="font-blue">{{university_name}}</span> 教务系统账号后可
             进入课堂
 
           </div>
@@ -42,13 +42,13 @@
 
           </div>
           <div class="font-grey">
-            请您在选课系统中进行选课，选课信息将<br/>
+            请您在选课系统中进行选课，选课信息将
             自动导入。<br/>
-            如您已选此课，选课信息更新会有一定延<br/>
+            如您已选此课，选课信息更新会有一定延
             迟，请耐心等待。
 
           </div>
-          <input type="button" value="以旁听身份进入" class="font-all blue-btn" @click="goClassroom"
+          <input type="button" value="以旁听身份进入" class="font-all blue-btn" @click="goClassroom(1)"
                  v-bind:style="{marginTop:'40px'}"/>
         </div>
       </div>
@@ -58,7 +58,7 @@
 
           <div class="btn-con">
             <div @click="showMasking=!1">取消</div>
-            <div @click="goClassroom">确定</div>
+            <div @click="goClassroom(0)">确定</div>
           </div>
         </div>
       </div>
@@ -196,6 +196,8 @@
 </style>
 <script>
   import $ from 'jquery'
+  import Api from '../../util/api'
+  import request from '../../util/request'
   export default {
     data () {
       return {
@@ -211,7 +213,10 @@
     methods: {
       _init: function () {
       },
-      goClassroom: function () {
+      goClassroom: function (e) {
+        /* if (e) {
+          request.get(Api.student.AUDIT_CLASSROOM)
+        } */
         $('.supernatant').remove()
       },
       goUrl: function () {

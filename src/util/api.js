@@ -37,7 +37,8 @@ if (process.env.NODE_ENV === 'production') {
             // 删除投稿
             'DELETE_SUBMISSION': '/v/api/tougao/delete',
             // 上传图片
-            'UPLOAD_PIC': '/v/api/tougao/pic_upload'
+            'UPLOAD_PIC': '/v/api/tougao/pic_upload',
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         }
 
         /*------------------*\
@@ -77,7 +78,8 @@ if (process.env.NODE_ENV === 'production') {
             // 删除投稿
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
-            'UPLOAD_PIC': 'v/tougao/pic_uplaod'
+            'UPLOAD_PIC': 'v/tougao/pic_uplaod',
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         }
 
         /*------------------*\
