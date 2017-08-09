@@ -10,6 +10,8 @@ import API from '@/config/api'
 import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 // 试题柱状图页面
 import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+// 试题-主观题结果页面
+import RcMaskProblemresultSubjective from '@/components/teacher/template/rc-mask-problemresult-subjective'
 
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -21,6 +23,7 @@ export default {
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
+      problemType: '',                        // 当前页题目的类型 主观题： ShortAnswer; 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
     }
@@ -28,6 +31,7 @@ export default {
   components: {
     RcMaskProblemtime,
     RcMaskProblemresult,
+    RcMaskProblemresultSubjective,
   },
   methods: {
     /**
@@ -42,6 +46,8 @@ export default {
       let current = self.data.current - 1
       let pptData = self.data.pptData
       let inPageProblemID = pptData[current].Problem.ProblemID
+
+      self.problemType = pptData[current].Problem.Type
 
       if(self.data.isProblemPublished){
         // 查看答案
@@ -170,11 +176,43 @@ export default {
       }
     },
     /**
-     * 发试题后显示柱状图倒计时页面
+     * 发试题后显示结果：主观题或柱状图倒计时页面
      *
      * @param {number} inPageProblemID 发送的试题的id
      */
     showProblemResult (inPageProblemID) {
+      let self = this
+      let isSubjective = self.problemType === 'ShortAnswer'
+      let fn = isSubjective ? self.showSubjective : self.showCollumResult
+
+      fn(inPageProblemID)
+    },
+    /**
+     * 发主观题题后显示主观题结果页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showSubjective (inPageProblemID) {
+      let self = this
+      self.data = self // hack 复用小程序代码
+
+      let current = self.data.current - 1
+      let slideData = self.data.pptData[current]
+      let problemData = slideData.Problem
+
+      self.setData({
+        isProblemPublished: true,
+        isInitiativeCtrlMaskHidden: false,
+        initiativeCtrlMaskTpl: 'RcMaskProblemresultSubjective'
+      })
+
+    },
+    /**
+     * 发试题后显示柱状图倒计时页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showCollumResult (inPageProblemID) {
       let self = this
       self.data = self // hack 复用小程序代码
 
