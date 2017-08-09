@@ -3,7 +3,7 @@
   <div class="supernatant">
     <div class="identy">
       <div class="binding" v-if="type == 1 && is_can == 'true'">
-        <img src="../../images/student/binding.png" class="banner"/>
+        <img src="~images/student/binding.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="binding" v-if="type == 1 && is_can == 'false'">
-        <img src="../../images/student/binding.png" class="banner"/>
+        <img src="~images/student/binding.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             此课程由选课系统同步导入<br/>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="binding" v-if="type == 2">
-        <img src="../../images/student/binding.min.png" class="banner"/>
+        <img src="~images/student/binding.min.png" class="banner"/>
         <div class="info-con">
           <div class="font-all info">
             您已绑定教务系统账号<br/>
