@@ -112,7 +112,21 @@ export default {
 
       self.socket.send(str)
     },
+    /**
+     * 关闭试题-主观题答案的按钮
+     *
+     * @event bindtap
+     */
+    closeProblemSubjective () {
+      // TODO 是否要关闭投屏
+      let self = this
+      console.log('关闭主观题答案')
 
+      this.setData({
+        isInitiativeCtrlMaskHidden: true
+      })
+      
+    },
     /**
      * 发送题目
      *

@@ -180,10 +180,10 @@
         typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
-       * 更新试题详情的数据
+       * 更新投稿列表的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
        *
-      * @param {string} isClickedin 判断是不是从课堂动态点击进来的
+       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
       refreshSubmissionlist(isClickedin){
         let self = this

@@ -16,12 +16,12 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:            prefix + '/lesson/fetch_presentation_data',   // ppt数据
     lesson_quiz_list:                   prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
-    presentation_tag:                   prefix + '/v/lesson/presentation_tag',          // 获取缩略图页 不懂 等标志的信息
+    presentation_tag:                   prefix + '/v/lesson/presentation_tag',        // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   prefix + '/v/lesson/teaching_lesson_participant_list',  // 获取签到学生名单
-    publish_problem:                    prefix + '/v/lesson/publish_problem/',          // 发布试题
-    problem_statistics:                 prefix + '/v/lesson/problem_statistics',        // 试题柱状图数据
-    problem_result_detail:              prefix + '/v/lesson/problem_result_detail',     // 试题详情数据
-    publish_lesson_paper:               prefix + '/v/lesson/publish_lesson_paper',      // 发布试卷
+    publish_problem:                    prefix + '/v/lesson/publish_problem/',        // 发布试题
+    problem_statistics:                 prefix + '/v/lesson/problem_statistics',      // 试题柱状图数据
+    problem_result_detail:              prefix + '/v/lesson/problem_result_detail',   // 试题详情数据
+    publish_lesson_paper:               prefix + '/v/lesson/publish_lesson_paper',    // 发布试卷
     quiz_results_statistics:            prefix + '/api/quiz/quiz_results_statistics', // 获取试卷饼图数据
     quiz_results_detail:                prefix + '/api/quiz/quiz_results_detail',     // 获取试卷详情
     quiz_finish:                        prefix + '/api/quiz/quiz_finish',             // 收卷
@@ -36,6 +36,7 @@ if (process.env.NODE_ENV === 'production') {
     collectsubmission:                  prefix + '/v/api/tougao/collect',             // 收藏投稿
     collectsubmission_cancel:           prefix + '/v/api/tougao/collect_cancel',      // 取消收藏投稿
     end_lesson:                         prefix + '/v/lesson/end_lesson',              // 主动结束课程
+    subjective_problem_result_list:     prefix + '/v/lesson/subjective_problem_result_list',  // 主观题答案列表
   }
 } else {
   api = {
@@ -56,8 +57,8 @@ if (process.env.NODE_ENV === 'production') {
     quiz_finish:                        '/static/lesson/mock/quiz_finish.json',                // 收卷
     prepare_red_envelope:               '/static/lesson/mock/prepare_red_envelope.json',       // 查询班级人数、钱包余额等，为发红包做准备
     create_red_envelope:                '/static/lesson/mock/create_red_envelope.json',        // 向django后端发起红包支付
-    payquery:                           '/pay/query',                                   // 微信支付后向node后端确认支付金额已经进入小金库
-    orderpay:                           '/pay/mp/order/',                               // 向django下单要进行微信支付
+    payquery:                           '/pay/query',                                          // 微信支付后向node后端确认支付金额已经进入小金库
+    orderpay:                           '/pay/mp/order/',                                      // 向django下单要进行微信支付
     red_envelope_detail:                '/static/lesson/mock/red_envelope_detail.json',        // 获取某个红包的详情
     danmulist:                          '/static/lesson/mock/danmulist.json',                  // 弹幕列表
     submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
@@ -65,6 +66,7 @@ if (process.env.NODE_ENV === 'production') {
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
     collectsubmission_cancel:           '/static/lesson/mock/collectsubmission_cancel.json',   // 取消收藏投稿
     end_lesson:                         '/static/lesson/mock/end_lesson.json',                 // 主动结束课程
+    subjective_problem_result_list:     '/static/lesson/mock/subjective_problem_result_list.json',  // 主观题答案列表
   }
 }
 
