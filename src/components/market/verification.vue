@@ -1,54 +1,56 @@
 <template>
   <div class="back">
     <div class="banner">
-      <img src="../images/market/banner/banner_activate.png"/>
+      <img src="~images/market/banner/banner_activate.png"/>
     </div>
-    <div class="con-width verify-con" v-if="1">
+    <div class="con-width verify-con" v-if="goVeri">
       <div class="insert text-center">
         <div class="inline-block info">
           <span class="inline-block font20 color4a">请输入序列号</span>
-          <input type="text" class="font24 color63 text-center active"/>
+          <input type="text" class="font24 color63 text-center" v-model="code1" v-mouse-input @focus="toRight" v-bind:class="{error:error}" @paste="paste"/>
         </div>
         <span class="inline-block"></span>
-        <input type="text" class="font24 color63 text-center had"/>
+        <input type="text" class="font24 color63 text-center" v-model="code2" v-mouse-input @focus="toRight" v-bind:class="{error:error}" @paste="paste"/>
         <span class="inline-block"></span>
-        <input type="text" class="font24 color63 text-center"/>
+        <input type="text" class="font24 color63 text-center" v-model="code3" v-mouse-input @focus="toRight" v-bind:class="{error:error}" @paste="paste"/>
         <span class="inline-block"></span>
-        <input type="text" class="font24 color63 text-center error"/>
+        <input type="text" class="font24 color63 text-center" v-model="code4" v-mouse-input @focus="toRight" v-bind:class="{error:error}" @paste="paste"/>
       </div>
-      <div class="con-width">
-        <div class="font20 error-info">
+      <div class="con-width err-con">
+        <div class="font20 error-info" v-show="error">
           输入的序列号有误，请重新输入，或者联系客服
         </div>
       </div>
       <div class="con-width text-center">
-        <input type="button" value="确认激活" class="color63 font16 activate"/>
+        <input type="button" value="确认激活" class="color63 font16 activate" @click="goVerify"/>
       </div>
     </div>
-    <div class="con-width text-center relative verify-success" v-if="1">
+    <div class="con-width text-center relative verify-success" v-if="vSuccess">
       <div class="inline-block color63 font48">
         <i class="iconfont icon-dui"></i>
         <span class="inline-block">验证成功</span>
       </div>
-      <div class="con-width text-left font0 courseware-info">
-        <img src="~images/market/demo/img_courseware.png"/>
+      <div class="con-width text-left font0 courseware-info" v-for="i in vList">
+        <img :src="i.cover"/>
         <div class="over inline-block detail">
           <div class="font18 color0">
-            电路原理电路原理电路原理电路原理电路原理电路原理电路原理
+            {{i.title}}
           </div>
           <div class="font18 color9b">
-            清华大学 于歆杰
+            {{i.school}} {{i.author}}
           </div>
-          <div class="font16 color63 pointer download">
-            <i class="iconfont icon-xiazai"></i>
-            <span class="inline-block">
+          <a :href="'/v/rain_courseware/download/' + i.id">
+            <div class="font16 color63 pointer download">
+              <i class="iconfont icon-xiazai"></i>
+              <span class="inline-block">
               下载雨课件
             </span>
-          </div>
+            </div>
+          </a>
         </div>
       </div>
       <div class="con-width text-center">
-        <input type="button" value="继续验证" class="color63 font16 pointer continue"/>
+        <input type="button" value="继续验证" class="color63 font16 pointer continue" @click="continueVer"/>
       </div>
     </div>
     <div class="relative con-width">
@@ -58,40 +60,90 @@
 </template>
 
 <script>
-  import request from '../util/request'
-  import API from '../util/api'
-  import PubSub from 'pubsub-js'
+  import request from '@/util/request'
+  import API from '@/util/api'
+  import $ from 'jquery'
   export default {
-    name: 'List',
+    name: 'Verification',
     data () {
       return {
-        name: ''
+        goVeri: !0,
+        vSuccess: !1,
+        code: '',
+        code1: '',
+        code2: '',
+        code3: '',
+        code4: '',
+        error: !1,
+        vList: []
       }
     },
     created: function () {
-      this.$store.commit('increment', {
-        name: '溢价'
-      })
-      request.get(API.header).then(function (e) {
-        // let data = e.data.data
-      })
-    },
-    methods: {
-      change: function () {
-        this.$store.commit('increment', {
-          name: this.name
-        })
-        PubSub.publish('info', this.name)
+      if (process.env.NODE_ENV !== 'production') {
+        request.post = request.get
       }
     },
-    watch: {
+    methods: {
+      goVerify: function () {
+        let self = this
+        this.error = !0
+        self.code = this.code1 + this.code2 + this.code3 + this.code4
+        request.post(API.market.get_rain_courseware_list, {serial_number: self.code}).then(function (e) {
+          let data = e.data
+          self.vList = data.rain_courseware_list
+          self.vSuccess = !0
+          self.goVeri = !1
+        })
+      },
+      toRight: function () {
+        this.error = !1
+      },
+      continueVer: function () {
+        this.error = this.vSuccess = this.error = !1
+        this.code1 = this.code2 = this.code3 = this.code4 = this.code = ''
+        this.goVeri = !0
+      },
+      paste: function () {
+        let self = this
+        setTimeout(function () {
+          self.code = self.code1 + self.code2 + self.code3 + self.code4
+          console.log(self.code)
+        }, 1)
+      }
+    },
+    directives: {
+      paste: {
+        inserted: function (e) {
+          $(e).on('paste', function () {
+          })
+        }
+      },
+      mouseInput: {
+        inserted: function (e) {
+          $(e).on('focus', function () {
+            let $this = $(this)
+            // let $val = $this.val()
+            $this.addClass('active')
+          })
+          $(e).on('blur', function () {
+            let $this = $(this)
+            let $val = $this.val()
+            $this.removeClass('active')
+            if ($val) {
+              $this.addClass('had')
+            } else {
+              // $this.addClass('had')
+            }
+          })
+        }
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  @import "../style/common";
+  @import "~@/style/market/common";
 
   .back {
     min-width: 960px;
@@ -144,11 +196,14 @@
           border:1px solid #F84F41;
         }
       }
-      .error-info{
-        color: #F84F41;
-        width: 420px;
-        margin-left: 234px;
-        margin-top: 20px;
+      .err-con{
+        height: 30px;
+        .error-info{
+          color: #F84F41;
+          width: 420px;
+          margin-left: 234px;
+          margin-top: 20px;
+        }
       }
       .activate{
         width: 124px;
@@ -178,6 +233,7 @@
         background-color: #F8F8F8;
         padding: 30px 150px;
         width: 960px;
+        margin-top: 10px;
         img{
           width: 236px;
           height: 148px;

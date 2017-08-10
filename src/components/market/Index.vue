@@ -24,32 +24,28 @@
 
       </div>
       <ul class="con-width  text-center">
-        <li class="over inline-block">
+        <li class="over inline-block" v-for="i in list">
           <div class="img over">
-            <img src=""/>
+            <img :src="i.cover"/>
           </div>
           <div class="font18 color0 text-left over name">
-            电路原理电路原理电路原理电路原理电路咯最多两行字最多两行字最多两行字最
-            电路原理电路原理电路原理电路原理电路咯最多两行字最多两行字最多两行字最
-
+            {{i.title}}
           </div>
           <div class="font18 color9b text-left author">
-            清华大学 于歆杰
-
+            {{i.school}} {{i.author}}
           </div>
           <div class="color4a font20 describe">
-            普通版
-
+            {{i.introduce}}
           </div>
           <div class="font20 price">
-            ¥ 1000.0
+            ¥ {{i.price}}
           </div>
           <a href="" class="inline-block font16">立即购买</a>
         </li>
       </ul>
       <div class="con-width text-center">
         <div class="inline-block font20  activate">
-        如果您已购买，请直接激活 <!--<router-link :to="{name: 'Verification'}" class="inline-block btn">激活<i class="iconfont icon-jiantou"></i></router-link>-->
+        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn">激活<i class="iconfont icon-jiantou"></i></router-link>
         </div>
       </div>
     </div>
@@ -77,14 +73,21 @@
     name: 'market',
     data () {
       return {
-        name: ''
+        name: '',
+        list: []
       }
     },
     created: function () {
-      request
-      API
+      this.init()
     },
     methods: {
+      init: function () {
+        let self = this
+        request.get(API.market.get_rain_courseware_list, {}).then(function (e) {
+          let data = e.data
+          self.list = data.rain_courseware_list
+        })
+      },
       change: function () {
       }
     },
@@ -167,6 +170,7 @@
           background-color: #fff;
           border: 1px solid #c8c8c8;
           margin-bottom: 20px;
+          margin-right: 40px;
           .img {
             width: 100%;
             height: 236px;
@@ -212,6 +216,9 @@
             line-height: 38px;
             margin: 20px auto;
           }
+        }
+        li:nth-child(2){
+          margin-right: 0;
         }
       }
       .activate{

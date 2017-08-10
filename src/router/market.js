@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/market/Index'
+import Verification from '@/components/market/verification'
 
 Vue.use(Router)
 
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'market',
       component: Index
+    },
+    {
+      path: '/Verification',
+      name: 'Verification',
+      component: Verification
     }
   ]
 })

@@ -47,7 +47,9 @@ if (process.env.NODE_ENV === 'production') {
 
         /* 雨课件市场 start */
         market: {
-
+          'get_rain_courseware_list': '/v/rain_courseware/get_rain_courseware_list/',
+          'rain_courseware_list': '/v/rain_courseware/rain_courseware_list/',
+          'bind_serial_number': '/v/rain_courseware/bind_serial_number/'
         }
       /* 雨课件市场 end */
 
@@ -93,7 +95,9 @@ if (process.env.NODE_ENV === 'production') {
         \*------------------*/
       /* 雨课件市场 start */
       market: {
-
+        'get_rain_courseware_list': '/static/mock/market/get_rain_courseware_list.json',
+        'rain_courseware_list': '/static/mock/market/rain_courseware_list.json',
+        'bind_serial_number': '/static/mock/market/bind_serial_number.json'
       }
       /* 雨课件市场 end */
 
