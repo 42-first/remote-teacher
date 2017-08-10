@@ -44,10 +44,11 @@
                 </v-touch>
                 <div class="action f14">
 
-                  <v-touch  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
+                  <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
                     <span>投屏</span>
                   </v-touch>
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">退出投屏</v-touch>
                 </div>
               </div>
             </div>
@@ -154,7 +155,23 @@
 
 	      self.socket.send(str)
 	    },
-	    
+	    /**
+       * 退出主观题投屏蒙版
+       *
+       * @event bindtap
+       */
+      closeSubjectivemask () {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'closemask',
+          'lessonid': self.lessonid,
+          'type': 'subjective',
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+      },
 	  }
 	}
 </script>

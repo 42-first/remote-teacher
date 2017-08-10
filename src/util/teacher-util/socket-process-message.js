@@ -344,6 +344,14 @@ function socketProcessMessage(msg){
       localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
       return
     }
+
+    // 退出主观题投屏蒙版
+    if (msg.type == 'subjective') {
+      self.postingSubjectiveid = -1
+
+      localStorage.setItem('postingSubjectiveid'+self.lessonid, -1)
+      return
+    }
     
   }
 
