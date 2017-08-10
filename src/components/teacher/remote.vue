@@ -58,6 +58,7 @@
           :is-danmu-open="isDanmuOpen"
           :posting-danmuid="postingDanmuid"
           :posting-submissionid="postingSubmissionid"
+          :posting-subjectiveid="postingSubjectiveid"
           :newdoubt="newdoubt"
           :newtougao="newtougao"
           :is-rc-mask-activity-at-root.sync="isRcMaskActivityAtRoot"
@@ -205,8 +206,9 @@ export default {
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
       postingSubmissionid: -1,                // 正在投屏的投稿的id
-      newdoubt: 0,                            //  未查看的不懂人次总数
-      newtougao: 0,                           //  未查看的投稿人次总数
+      postingSubjectiveid: -1,                // 正在投屏的主观题的id
+      newdoubt: 0,                            // 未查看的不懂人次总数
+      newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
     }
   },
@@ -242,11 +244,13 @@ export default {
     oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
     oldTougao -= 0
 
-    // 保存本地正在投屏的弹幕、投稿id
+    // 保存本地正在投屏的弹幕、投稿id、主观题id
     self.postingDanmuid = localStorage.getItem('postingDanmuid'+self.lessonid) || -1
     self.postingDanmuid -= 0
     self.postingSubmissionid = localStorage.getItem('postingSubmissionid'+self.lessonid) || -1
     self.postingSubmissionid -= 0
+    self.postingSubjectiveid = localStorage.getItem('postingSubjectiveid'+self.lessonid) || -1
+    self.postingSubjectiveid -= 0
 
     self.polyfillIncludes()
 

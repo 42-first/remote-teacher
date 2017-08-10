@@ -1,6 +1,6 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
-	<div class="problem-root">
+	<div class="problem-root allowscrollcallback">
 		<!--试题-主观题面板-->
 		<div class="problemresult-box">
 			<!-- 关闭按钮 -->
@@ -38,13 +38,13 @@
               </div>
               <div class="action-box f14">
                 
-              	<v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
+              	<v-touch  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
                   <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                   打分
                 </v-touch>
                 <div class="action f14">
 
-                  <v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
+                  <v-touch  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
                     <span>投屏</span>
                   </v-touch>
@@ -75,7 +75,7 @@
 
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
-	  props: ['lessonid', 'pptData', 'current', 'socket', 'problemResultData', 'problemDurationLeft'],
+	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    	subjectiveList: [],            // 试题的红包名单列表页面隐藏
@@ -140,14 +140,16 @@
 	     * 试题主观题页面页面中的 投屏 按钮
 	     *
 	     * @event bindtap
+	     * @params {string} id 将要投屏的主观题的id
 	     */
-	    postProblemresult () {
+	    postSubjective (id) {
 	      let self = this
 
 	      let str = JSON.stringify({
-	        'op': 'postproblemresult',
+	        'op': 'showsproblem',
 	        'lessonid': self.lessonid,
-	        'problemid': self.problemid
+	        'spid': id,
+	        'msgid': 1234
 	      })
 
 	      self.socket.send(str)
@@ -161,6 +163,7 @@
 	@import "~@/style/_variables";
 	.problem-root {
 		height: 100%;
+		overflow: auto;
 	}
 	.problemresult-box {
 	  position: relative;
