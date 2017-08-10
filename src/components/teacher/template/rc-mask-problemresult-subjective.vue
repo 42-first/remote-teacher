@@ -39,15 +39,14 @@
               <div class="action-box f14">
                 
               	<v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
-                  <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4; margin-right: 0.05rem;"></i>
+                  <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                   打分
                 </v-touch>
                 <div class="action f14">
-                	
 
                   <v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
-                    <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.05rem;"></i>
-                    投屏
+                    <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
+                    <span>投屏</span>
                   </v-touch>
                 </div>
               </div>
@@ -58,6 +57,10 @@
 	    </section>
 	    
 	  </div>
+
+	  <div class="button-box f18">
+      <v-touch class="btn f18" v-on:tap="closeProblemSubjective" >返回</v-touch>
+    </div>
 		
 	</div>
 </template>
@@ -180,6 +183,7 @@
 	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
 	  	border-bottom: 1px solid #cccccc;
+	  	text-align: center;
 			
 			.jishi {
 				margin-top: -0.186667rem;
@@ -193,7 +197,6 @@
 
 	  .gap {
       height: 0.026667rem;
-      background: #2C2C2C;
     }
 		
 		/* 主观题内容区 */
@@ -203,7 +206,6 @@
       }
 
       .subjective-list {
-      	background: $white;
       	color: #4A4A4A;
 
       	padding-bottom: 1.8rem;
@@ -262,10 +264,6 @@
 	            display: flex;
 	            align-items: center;
 	            justify-content: space-between;
-
-	            .coll {
-	              margin-right: 0.666667rem;
-	            }
 	          }
 	          .cancel-post-btn {
 	            background: $blue;
@@ -280,6 +278,23 @@
 	      
       }
 	  }
-		
 	}
+
+	.button-box {
+    display: flex;
+    position: fixed;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1.466667rem;
+    text-align: center;
+
+    .btn {
+      flex: 1;
+      border-radius: 0;
+      height: 1.466667rem;
+      line-height: 1.466667rem;
+    }
+  }
 </style>
