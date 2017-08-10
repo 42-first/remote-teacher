@@ -8,23 +8,25 @@
 
 <template>
   <section class="page-subjective">
-    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <!-- 练习导航 -->
-      <header class="subjective__header">
-        <p class="heade-action f18" @click="handleBack">取消</p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">提交</p>
-      </header>
-
+    <!-- 练习导航 -->
+    <header class="subjective__header">
+      <p class="heade-action f18" @click="handleBack">取消</p>
+      <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
+      <h3 class="header-title f18" v-else>{{ title }}</h3>
+      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">提交</p>
+    </header>
+    <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 问题内容 cover -->
       <section class="subjective-content" >
-        <header class="content__header problem-tag">
-          <p class="header-item f18">主观题</p>
-          <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
-          <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
-        </header>
-        <div class="cover__wrapper" :style="{ height: (10 - 0.906667)/pptRate + 'rem' }">
-          <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
+        <div class="content_wrapper">
+          <header class="content__header problem-tag">
+            <p class="header-item f18">主观题</p>
+            <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
+            <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
+          </header>
+          <div class="cover__wrapper" :style="{ height: (10 - 0.906667)/pptRate + 'rem' }">
+            <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
+          </div>
         </div>
       </section>
 
@@ -145,6 +147,7 @@
         // 图片比例
         rate: 1,
         msgid: 0,
+        summary: null,
         // star count 获得星星的数量
         starCount: 0
       };
@@ -654,6 +657,13 @@
 
     background: #EDF2F6;
 
+    // overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .subjective-wrapper {
+    width: 100%;
+    height: 100%;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
@@ -697,10 +707,14 @@
   \*------------------*/
 
   .subjective-content {
-    position: relative;
-    margin: 1.6rem 0 0.266667rem;
-    background: #fff;
-    overflow: hidden;
+    // position: relative;
+    padding-top: 1.33rem;
+
+    .content_wrapper {
+      margin: 0.266667rem 0 0.266667rem;
+      background: #fff;
+      overflow: hidden;
+    }
 
     .content__header {
       position: relative;
