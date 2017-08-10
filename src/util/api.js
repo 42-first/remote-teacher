@@ -39,11 +39,17 @@ if (process.env.NODE_ENV === 'production') {
             // 上传图片
             'UPLOAD_PIC': '/v/api/tougao/pic_upload',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
-        }
+        },
 
         /*------------------*\
           $ 接收器 end
         \*------------------*/
+
+        /* 雨课件市场 start */
+        market: {
+
+        }
+      /* 雨课件市场 end */
 
     }
 }else {
@@ -80,11 +86,16 @@ if (process.env.NODE_ENV === 'production') {
             // 上传图片
             'UPLOAD_PIC': 'v/tougao/pic_uplaod',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
-        }
+        },
 
         /*------------------*\
            $ 接收器 end
         \*------------------*/
+      /* 雨课件市场 start */
+      market: {
+
+      }
+      /* 雨课件市场 end */
 
     }
 }

@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "msg": "",
+  "data": {
+    "rain_courseware_list": [
+      {
+        "id": 2356,
+        "title": "xxxxxxxxx",
+        "cover": "http://asdfg.com/adf.jpg",
+        "school": "xxxx",
+        "author": "yyyyy",
+        "introduce":"ggggggggggggggg",
+        "price":1000,
+        "discount_price":800
+      },
+      {
+        "id": 2357,
+        "title": "xxxxxxxxx",
+        "cover": "http://asdfg.com/adf.jpg",
+        "school": "xxxx",
+        "author": "yyyyy",
+        "introduce":"ggggggggggggggg",
+        "price":1000,
+        "discount_price":800
+      }
+    ]
+  }
+}
