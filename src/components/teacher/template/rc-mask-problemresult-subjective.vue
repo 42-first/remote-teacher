@@ -39,14 +39,14 @@
               <div class="action-box f14">
                 
               	<v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
-                  <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                  <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4; margin-right: 0.05rem;"></i>
                   打分
                 </v-touch>
                 <div class="action f14">
                 	
 
                   <v-touch  class="gray J_ga" data-category="10" data-label="投稿页"  v-on:tap="postSubjective(item.problem_result_id)">
-                    <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                    <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.05rem;"></i>
                     投屏
                   </v-touch>
                 </div>
