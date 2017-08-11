@@ -107,7 +107,7 @@
         self.code = this.code1 + this.code2 + this.code3 + this.code4
         request.post(API.market.bind_serial_number, {serial_number: self.code}).then(function (e) {
           let data = e.data
-          let status = e.status_code
+          let status = e.status
           switch (status) {
             case 0:
               data && (self.vData = data)
