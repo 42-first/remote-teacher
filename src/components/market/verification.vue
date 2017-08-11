@@ -107,10 +107,10 @@
         self.code = this.code1 + this.code2 + this.code3 + this.code4
         request.post(API.market.bind_serial_number, {serial_number: self.code}).then(function (e) {
           let data = e.data
-          let status = e.status
+          let status = e.status_code
           switch (status) {
             case 0:
-              self.vData = data
+              data && (self.vData = data)
               self.vSuccess = !0
               self.goVeri = !1
               break
@@ -177,6 +177,7 @@
         inserted: function (e) {
           $(e).on('focus', function () {
             let $this = $(this)
+            $this.removeClass('had').removeClass('error')
             $this.addClass('active')
           })
           $(e).on('blur', function () {

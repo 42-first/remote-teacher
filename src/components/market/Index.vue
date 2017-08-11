@@ -185,7 +185,7 @@
           margin-right: 40px;
           .img {
             width: 100%;
-            height: 236px;
+            height: 214px;
             img {
               width: 100%;
             }

@@ -1,12 +1,11 @@
 <template>
   <div class="back">
-    404
   </div>
 </template>
 
 <script>
   export default {
-    name: 'vue404',
+    name: 'courseware',
     data () {
       return {
         name: ''
@@ -21,6 +20,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+  @import "~@/style/market/common";
   .back{
     height: 500px;
     background-color: #fff;
