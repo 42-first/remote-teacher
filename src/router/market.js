@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/market/Index'
 import Verification from '@/components/market/verification'
-import courseware from '@/components/market/courseware'
 
 Vue.use(Router)
 
@@ -23,7 +22,7 @@ export default new Router({
     {
       path: '/courseware',
       name: 'courseware',
-      component: courseware
+      component: Index
     }
   ]
 })

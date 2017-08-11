@@ -3,6 +3,13 @@
     <div class="banner">
       <img src="~images/market/banner/banner_activate.png"/>
     </div>
+    <div class="con-width over user">
+      <img :src="user && user.avatar" />
+      <div class="inline-block">
+        <div class="color4a font20">{{user && user.name}}</div>
+        <div class="color9b font14">激活后仅授权当前用户使用</div>
+      </div>
+    </div>
     <div class="con-width verify-con" v-if="goVeri">
       <div class="insert text-center">
         <div class="inline-block info">
@@ -22,8 +29,21 @@
       </div>
       <div class="con-width err-con">
         <div class="font20 error-info" v-show="error">
-          输入的序列号有误，请重新输入，或者联系客服
-
+          <span v-show="status == 1">
+            您输入的序列号有误，请重新输入，或联系客服人员。
+          </span>
+          <span v-show="status == 2">
+            您输入的序列号有误，请重新输入，或联系客服人员。
+          </span>
+          <span v-if ="status == 3">
+            您已激活过该序列号，请直接<a class="color63" :href="link">下载</a>
+          </span>
+          <span v-show="status == 5">
+            您输入的序列号已被其他用户激活，请重新输入，或联系客服人员。
+          </span>
+          <span v-if="status == 4">
+            您已激活过《{{vData && vData.title}}》课件，无需再次激活，请直接<a class="color63" :href="link">下载</a>
+          </span>
         </div>
       </div>
       <div class="con-width text-center">
@@ -35,31 +55,7 @@
         <i class="iconfont icon-dui"></i>
         <span class="inline-block">验证成功</span>
       </div>
-      <div class="con-width text-left font0 courseware-info" v-if="vData">
-        <img :src="vData.cover"/>
-        <div class="over inline-block detail">
-          <div class="font18 color0">
-            {{vData.title}}
-
-
-
-          </div>
-          <div class="font18 color9b">
-            {{vData.school}} {{vData.author}}
-
-
-
-          </div>
-          <a :href="'/v/rain_courseware/download/' + vData.id">
-            <div class="font16 color63 pointer download">
-              <i class="iconfont icon-xiazai"></i>
-              <span class="inline-block">
-              下载雨课件
-            </span>
-            </div>
-          </a>
-        </div>
-      </div>
+      <courseware :item="vData"></courseware>
       <div class="con-width text-center">
         <input type="button" value="继续验证" class="color63 font16 pointer continue" @click="continueVer"/>
       </div>
@@ -80,6 +76,7 @@
   import request from '@/util/request'
   import API from '@/util/api'
   import $ from 'jquery'
+  import courseware from '@/components/market/common/courseware.vue'
   export default {
     name: 'Verification',
     data () {
@@ -93,13 +90,17 @@
         code4: '',
         error: !1,
         vData: null,
-        codeShow: !1
+        codeShow: !1,
+        status: 0,
+        user: null,
+        link: ''
       }
     },
     created: function () {
       if (process.env.NODE_ENV !== 'production') {
         request.post = request.get
       }
+      this.getUser()
     },
     methods: {
       goVerify: function () {
@@ -115,15 +116,22 @@
               self.goVeri = !1
               break
             case 1:
+              self.status = 1
               self.error = !0
               break
             case 2:
+              self.status = 2
               self.error = !0
               break
             case 3:
+              self.status = 3
               self.error = !0
+              self.link = '/v/rain_courseware/download/' + data.id
               break
             case 4:
+              self.status = 4
+              data && (self.vData = data)
+              self.link = '/v/rain_courseware/download/' + data.id
               self.error = !0
               break
           }
@@ -170,6 +178,16 @@
             })
           }
         }
+      },
+      getUser: function () {
+        let self = this
+        request.get(API.market.user_info).then(function (e) {
+          let data = e.data
+          self.user = {
+            name: data.user_profile.name,
+            avatar: data.user_profile.avatar_96
+          }
+        })
       }
     },
     directives: {
@@ -192,6 +210,9 @@
           })
         }
       }
+    },
+    components: {
+      courseware
     }
   }
 </script>
@@ -212,10 +233,25 @@
         width: 100%;
       }
     }
+    .user{
+      border-bottom: 1px solid #eee;
+      padding-left: 168px;
+      margin-top: 50px;
+      padding-bottom: 10px;
+      img,div{
+        vertical-align: bottom;
+      }
+      img{
+        width: 80px;
+        height: 80px;
+        border: 1px solid #979797;
+        margin-right: 20px;
+      }
+    }
     .verify-con {
       background-color: #fff;
       height: 576px;
-      padding-top: 80px;
+      padding-top: 90px;
       .insert {
         .info {
           width: 120px;
@@ -282,36 +318,6 @@
         }
         span {
           height: 100%;
-        }
-      }
-      .courseware-info {
-        background-color: #F8F8F8;
-        padding: 30px 150px;
-        width: 960px;
-        margin-top: 10px;
-        img {
-          width: 236px;
-          height: 148px;
-        }
-        .detail {
-          height: 148px;
-          width: 390px;
-          position: relative;
-          margin-left: 30px;
-          padding: 10px;
-        }
-        .download {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          height: 28px;
-          line-height: 28px;
-          i {
-            font-size: 28px;
-          }
-          span {
-            height: 100%;
-          }
         }
       }
     }

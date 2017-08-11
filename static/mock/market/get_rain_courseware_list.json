@@ -11,17 +11,8 @@
         "author": "yyyyy",
         "introduce":"ggggggggggggggg",
         "price":1000,
-        "discount_price":800
-      },
-      {
-        "id": 2357,
-        "title": "xxxxxxxxx",
-        "cover": "http://asdfg.com/adf.jpg",
-        "school": "xxxx",
-        "author": "yyyyy",
-        "introduce":"ggggggggggggggg",
-        "price":1000,
-        "discount_price":800
+        "discount_price":800,
+        "buy_link":"https://weidian.com/item.html?itemID=2145170600"
       }
     ]
   }
