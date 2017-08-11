@@ -1,6 +1,6 @@
 <!-- 教师遥控器根组件 -->
 <template>
-  <div class="root J_page">
+  <div class="root J_page J_tip">
     <div id="rc-home" :class="['rc-home',{'shuban': isShuban}]" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
