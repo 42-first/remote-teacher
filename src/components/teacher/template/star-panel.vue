@@ -20,6 +20,7 @@
 
         isStarPanelHidden: true, // 打星星面板隐藏
         fullstars: 3,            // 实心星星的数目
+        answerid: -1,            // 当前正在打分的 answer 的 id
       }
     },
     created () {
@@ -27,7 +28,7 @@
 
       // 父组件呼出本子组件
       self.$on('enter', function (answerid, oldFullStars) {
-        self.enter(oldFullStars)
+        self.enter(...arguments)
       })
 
       // 父组件交互成功后隐去本子组件
@@ -40,13 +41,14 @@
        * 父组件呼出面板
        *
        * @event bindtap
-       * @param {string} oldFullStars 之前的星级
+       * @params {number, number} answerid 将要打分的主观题答案的id, oldFullStars 当前星级
        */
-      enter (oldFullStars = 0) {
+      enter (answerid, oldFullStars = 0) {
         let self = this
 
         self.isSummoned = true
         self.isStarPanelHidden = false
+        self.answerid = answerid
         self.fullstars = +oldFullStars
       },
       /**
@@ -75,7 +77,7 @@
         let isScore = $(evt.target).hasClass('iconfont')
         let score = isScore ? $(evt.target).data('score') : -1
 
-        self.$emit('giveScore', score)
+        self.$emit('giveScore', self.answerid, score)
       },
     }
   }

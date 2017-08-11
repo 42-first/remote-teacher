@@ -44,12 +44,12 @@
                 </div>
               </div>
               <div class="action-box f14">
-                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id, item.fullStars)">
+                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id, item.fullStars, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
               	    <span>打分</span>
               	  </div>
-              	  <div class="stars" v-show="item.score !== -1">
+              	  <div class="stars" v-show="item.fullStars">
               	  	<i v-for="i in item.fullStars" class="iconfont icon-fill-star f16"></i>
               	  </div>
                 </v-touch>
@@ -91,16 +91,12 @@
 
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
-	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
+	  props: ['lessonid', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
-	    }
-	  },
-	  computed: {
-	    problemid: function () {
-	      return this.pptData[this.current - 1].Problem.ProblemID
+	    	scoringIndex: -1,							// 当前正在打分的item的序号
 	    }
 	  },
 	  components: {
@@ -168,24 +164,45 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {number, number} id 将要打分的主观题的id, oldFullStars 当前星级
+	     * @params {number, number, index} answerid 将要打分的主观题答案的id; oldFullStars 当前星级; index 当前的item的序号
 	     */
-	    initScore (answerid, oldFullStars) {
+	    initScore (answerid, oldFullStars, index) {
 	      let self = this
 
+	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event
-	     * @params {number} score 打的分
+	     * @params {number, number} answerid 将要打分的主观题答案的id score 打的分
 	     */
-	    giveScore (score) {
-	      let self = this
-	      console.log(`打过分啦${score}`)
+	    giveScore (answerid, score) {
+	    	let self = this
 
-	      self.$refs.StarPanel.$emit('leave')
+	    	if (score === -1) {
+	    		self.$refs.StarPanel.$emit('leave')
+	    		return;
+	    	}
+	      
+	      let url = API.subjective_problem_teacher_score
+	      let postData = {
+	        'lesson_id': self.lessonid,
+	        'problem_result_id': answerid,
+	        'star': score
+	      }
+
+	      request.post(url, postData)
+	        .then(jsonData => {
+	          // 不需要判断success，在request模块中判断如果success为false，会直接reject
+	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+
+	          // 关闭打分页面
+	          console.log(`打过分啦${score}`, self.scoringIndex)
+	          self.subjectiveList[self.scoringIndex].fullStars = score
+	          self.$refs.StarPanel.$emit('leave')
+	        })
 	    },
 	    /**
 	     * 试题主观题页面页面中的 投屏 按钮
