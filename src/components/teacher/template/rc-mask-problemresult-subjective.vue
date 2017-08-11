@@ -91,12 +91,17 @@
 
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
-	  props: ['lessonid', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
+	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
+	    }
+	  },
+	  computed: {
+	    problemid: function () {
+	      return this.pptData[this.current - 1].Problem.ProblemID
 	    }
 	  },
 	  components: {
@@ -144,7 +149,7 @@
         request.get(url, {
           'start': BIG_NUMBER,
           'count': BIG_NUMBER,
-          'problem_id': 123,
+          'problem_id': self.problemid,
           'lesson_id': self.lessonid,
           'direction': 0
         }).then(jsonData => {
@@ -296,6 +301,7 @@
 	  .subjective-box {
 	  	.hmy {
         margin-top: 2.893333rem;
+        text-align: center;
       }
 
       .subjective-list {
