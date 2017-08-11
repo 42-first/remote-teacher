@@ -37,11 +37,20 @@
                 </div>
               </div>
               <div class="action-box f14">
-                
-              	<v-touch  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
-                  <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-                  打分
+                <v-touch class="dafen-box" v-on:tap="giveScore(item.problem_result_id)">
+              		<div class="gray">
+              	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
+              	    <span>打分</span>
+              	  </div>
+              	  <div class="stars">
+              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
+              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
+              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
+              	  	<i class="iconfont icon-star f16" style="color: #F5A623;"></i>
+              	  	<i class="iconfont icon-star f16" style="color: #F5A623;"></i>
+              	  </div>
                 </v-touch>
+              	
                 <div class="action f14">
 
                   <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
@@ -137,6 +146,16 @@
             self.subjectiveList = jsonData.data.problem_results_list
           })
       },
+      /**
+	     * 点击打分部分
+	     *
+	     * @event bindtap
+	     * @params {string} id 将要打分的主观题的id
+	     */
+	    giveScore (id) {
+	      let self = this
+	      console.log(`打分啦${id}`)
+	    },
 	    /**
 	     * 试题主观题页面页面中的 投屏 按钮
 	     *
@@ -280,12 +299,22 @@
 	            color: #9B9B9B;
 	          }
 
-	          .action {
+	          .dafen-box, .action {
 	            display: flex;
 	            align-items: center;
 	            justify-content: space-between;
 	          }
+
+	          .stars {
+	          	width: 2.666667rem;
+	          	padding-top: 0.18rem;
+	          	.iconfont {
+	          		margin-right: -0.16rem;
+	          	}
+	          }
+
 	          .cancel-post-btn {
+	          	margin-right: -0.4rem;
 	            background: $blue;
 	            width: 2.733333rem;
 	            text-align: center;
