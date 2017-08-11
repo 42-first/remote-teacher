@@ -36,7 +36,8 @@ if (process.env.NODE_ENV === 'production') {
     collectsubmission:                  prefix + '/v/api/tougao/collect',             // 收藏投稿
     collectsubmission_cancel:           prefix + '/v/api/tougao/collect_cancel',      // 取消收藏投稿
     end_lesson:                         prefix + '/v/lesson/end_lesson',              // 主动结束课程
-    subjective_problem_result_list:     prefix + '/v/lesson/subjective_problem_result_list',  // 主观题答案列表
+    subjective_problem_result_list:     prefix + '/v/lesson/subjective_problem_result_list',    // 主观题答案列表
+    subjective_problem_teacher_score:   prefix + '/v/lesson/subjective_problem_teacher_score',  // 主观题老师给答案打分
   }
 } else {
   api = {
@@ -66,7 +67,8 @@ if (process.env.NODE_ENV === 'production') {
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
     collectsubmission_cancel:           '/static/lesson/mock/collectsubmission_cancel.json',   // 取消收藏投稿
     end_lesson:                         '/static/lesson/mock/end_lesson.json',                 // 主动结束课程
-    subjective_problem_result_list:     '/static/lesson/mock/subjective_problem_result_list.json',  // 主观题答案列表
+    subjective_problem_result_list:     '/static/lesson/mock/subjective_problem_result_list.json',     // 主观题答案列表
+    subjective_problem_teacher_score:   '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分
   }
 }
 

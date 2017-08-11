@@ -1,6 +1,12 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
 	<div class="problem-root allowscrollcallback">
+		<!-- 打星星 -->
+		<StarPanel
+			ref="StarPanel"
+			@giveScore="giveScore"
+		></StarPanel>
+
 		<!--试题-主观题面板-->
 		<div class="problemresult-box">
 			<!-- 关闭按钮 -->
@@ -37,7 +43,7 @@
                 </div>
               </div>
               <div class="action-box f14">
-                <v-touch class="dafen-box" v-on:tap="giveScore(item.problem_result_id)">
+                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
               	    <span>打分</span>
@@ -80,6 +86,8 @@
   import API from '@/config/api'
   import Moment from 'moment'
 
+  import StarPanel from '@/components/teacher/template/star-panel'
+
   let BIG_NUMBER = 10000000000000000000
   let FENYE_COUNT = 10
 
@@ -88,13 +96,16 @@
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
-	    	subjectiveList: [],            // 试题的红包名单列表页面隐藏
+	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    }
 	  },
 	  computed: {
 	    problemid: function () {
 	      return this.pptData[this.current - 1].Problem.ProblemID
 	    }
+	  },
+	  components: {
+	    StarPanel,
 	  },
 	  created(){
 	  	this.refreshSubjectivelist()
@@ -147,14 +158,27 @@
           })
       },
       /**
-	     * 点击打分部分
+	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
 	     * @params {string} id 将要打分的主观题的id
 	     */
-	    giveScore (id) {
+	    initScore (id) {
 	      let self = this
-	      console.log(`打分啦${id}`)
+
+	      self.$refs.StarPanel.$emit('enter', 4)
+	    },
+	    /**
+	     * 点击打分部分，呼出打分面板
+	     *
+	     * @event
+	     * @params {number} score 打的分
+	     */
+	    giveScore (score) {
+	      let self = this
+	      console.log(`打过分啦${score}`)
+
+	      self.$refs.StarPanel.$emit('leave')
 	    },
 	    /**
 	     * 试题主观题页面页面中的 投屏 按钮
@@ -198,6 +222,7 @@
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
 	.problem-root {
+		position: relative;
 		height: 100%;
 		overflow: auto;
 	}
