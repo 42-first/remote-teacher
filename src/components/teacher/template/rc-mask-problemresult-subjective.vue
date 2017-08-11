@@ -4,6 +4,7 @@
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
+			:star-total="starTotal"
 			@giveScore="giveScore"
 		></StarPanel>
 
@@ -43,17 +44,13 @@
                 </div>
               </div>
               <div class="action-box f14">
-                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id)">
+                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id, item.fullStars)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
               	    <span>打分</span>
               	  </div>
-              	  <div class="stars">
-              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
-              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
-              	  	<i class="iconfont icon-fill-star f16" style="color: #F5A623;"></i>
-              	  	<i class="iconfont icon-star f16" style="color: #F5A623;"></i>
-              	  	<i class="iconfont icon-star f16" style="color: #F5A623;"></i>
+              	  <div class="stars" v-show="item.score !== -1">
+              	  	<i v-for="i in item.fullStars" class="iconfont icon-fill-star f16"></i>
               	  </div>
                 </v-touch>
               	
@@ -88,8 +85,9 @@
 
   import StarPanel from '@/components/teacher/template/star-panel'
 
-  let BIG_NUMBER = 10000000000000000000
-  let FENYE_COUNT = 10
+  const STAR_TOTAL = 5  // 总星星数目
+  const BIG_NUMBER = 10000000000000000000
+  const FENYE_COUNT = 10
 
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
@@ -97,6 +95,7 @@
 	  data () {
 	    return {
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
+	    	starTotal: STAR_TOTAL,				// 总星星数目
 	    }
 	  },
 	  computed: {
@@ -154,19 +153,27 @@
           'direction': 0
         }).then(jsonData => {
             console.log('主观题列表', jsonData)
-            self.subjectiveList = jsonData.data.problem_results_list
+            let list = jsonData.data.problem_results_list
+
+            let newList = list.map(item => {
+            	item.fullStars = item.score === -1 ? 0 : item.score*5/item.source_score
+
+            	return item
+            })
+
+            self.subjectiveList = newList
           })
       },
       /**
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {string} id 将要打分的主观题的id
+	     * @params {number, number} id 将要打分的主观题的id, oldFullStars 当前星级
 	     */
-	    initScore (id) {
+	    initScore (answerid, oldFullStars) {
 	      let self = this
 
-	      self.$refs.StarPanel.$emit('enter', 4)
+	      self.$refs.StarPanel.$emit('enter', ...arguments)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
@@ -226,6 +233,11 @@
 		height: 100%;
 		overflow: auto;
 	}
+
+	.icon-fill-star, .icon-star {
+		color: #F5A623;
+	}
+
 	.problemresult-box {
 	  position: relative;
 	  height: 100%;
@@ -334,7 +346,7 @@
 	          	width: 2.666667rem;
 	          	padding-top: 0.18rem;
 	          	.iconfont {
-	          		margin-right: -0.16rem;
+	          		margin-right: -0.066667rem;
 	          	}
 	          }
 

@@ -1,29 +1,32 @@
 <!-- 打分的星星弹出层 目前被父组件主观题 rc-mask-problemresult-subjective.vue 引用 -->
 <template>
-  <v-touch class="star-panel dontcallback f18" :class="!isStarPanelHidden ? 'animateMobileTextIn' : 'animateMobileTextOut'" v-on:tap="decide">
+  <v-touch
+    class="star-panel dontcallback f18"
+    :class="{'animateMobileTextIn': !isStarPanelHidden, 'animateMobileTextOut': isStarPanelHidden, 'none': !isSummoned}" v-on:tap="decide"
+    >
     <i v-for="i in fullstars" :data-score="i" class="iconfont icon-fill-star f40"></i>
-    <i v-for="i in total - fullstars" :data-score="fullstars + i" class="iconfont icon-star f40"></i>
+    <i v-for="i in starTotal - fullstars" :data-score="fullstars + i" class="iconfont icon-star f40"></i>
   </v-touch>
 </template>
 
 <script>
-  const STAR_TOTAL = 5  // 总星星数目
-
   export default {
     name: 'StarPanel',
-    props: [],
+    props: ['starTotal'],
     data () {
       return {
-        isStarPanelHidden: true,      // 打星星面板隐藏
-        total: STAR_TOTAL,
-        fullstars: 3,                 // 实心星星的数目
+        isSummoned: false,       // 标记本组件是用户点击呼出的，
+                                 // hack 用户点开父组件时本组件自己淡出下
+
+        isStarPanelHidden: true, // 打星星面板隐藏
+        fullstars: 3,            // 实心星星的数目
       }
     },
     created () {
       let self = this
 
       // 父组件呼出本子组件
-      self.$on('enter', function (oldFullStars) {
+      self.$on('enter', function (answerid, oldFullStars) {
         self.enter(oldFullStars)
       })
 
@@ -42,6 +45,7 @@
       enter (oldFullStars = 0) {
         let self = this
 
+        self.isSummoned = true
         self.isStarPanelHidden = false
         self.fullstars = +oldFullStars
       },
@@ -55,6 +59,10 @@
         let self = this
         
         self.isStarPanelHidden = true
+
+        setTimeout(() => {
+          self.isSummoned = false
+        }, 500)
       },
       /**
        * 点击空白处或星星决定放弃或星级
@@ -93,6 +101,10 @@
     .iconfont {
       color: #F5A623;
     }
+  }
+
+  .none {
+    display: none;
   }
 
   //参考微信文字淡入http://weread.qq.com/
