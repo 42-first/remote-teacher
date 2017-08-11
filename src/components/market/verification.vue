@@ -54,7 +54,12 @@
       </div>
     </div>
     <div class="relative con-width">
-      <i class="iconfont icon-kefu color63 text-center pointer im"></i>
+      <i class="iconfont icon-kefu color63 text-center pointer im" @mouseover="codeShow = !0 "  @mouseleave="codeShow = !1 ">
+        <div class="img text-center" v-show="codeShow">
+          <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
+          <div class="font14 color0">雨课堂微信客服</div>
+        </div>
+      </i>
     </div>
   </div>
 </template>
@@ -75,7 +80,8 @@
         code3: '',
         code4: '',
         error: !1,
-        vList: []
+        vList: [],
+        codeShow: !1
       }
     },
     created: function () {
@@ -276,6 +282,18 @@
       font-size: 38px;
       width: 54px;
       border:1px solid #639EF4;
+      .img{
+        position: absolute;
+        width: 140px;
+        top: -180px;
+        left: -40px;
+        padding:10px;
+        background-color: #fff;
+        border:1px solid #c8c8c8;
+        img{
+          width: 100%;
+        }
+      }
     }
   }
 </style>

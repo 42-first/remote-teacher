@@ -6,22 +6,25 @@
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
       <a class="right header">
-        <img src="~images/market/demo/img_courseware.png"/>
-        <span>小宇同学</span>
+        <img :src="avatar"/>
+        <span>{{name}}</span>
       </a>
       <a  class="right">加入我们</a>
       <a  class="right">帮助中心</a>
-      <a  class="right">下载</a>
+      <a href="/download"  class="right">下载</a>
     </div>
   </nav>
 </template>
 
 <script>
+  import request from '@/util/request'
+  import API from '@/util/api'
   export default {
     name: 'header',
     data () {
       return {
-        name: ''
+        name: '',
+        avatar: ''
       }
     },
     created: function () {
@@ -30,6 +33,12 @@
     components: {},
     methods: {
       _init: function () {
+        let self = this
+        request.get(API.market.user_info).then(function (e) {
+          let data = e.data
+          self.name = data.user_profile.name
+          self.avatar = data.user_profile.avatar_96
+        })
       }
     }
   }

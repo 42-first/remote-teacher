@@ -60,7 +60,12 @@
         这里是雨课件的介绍和使用说明。<br/>
         雨课件是什么什么什么，你买了之后就可以拥有它的编辑权，可以上课、上传什么的，就可以变成你自己的课件了。就可以变成你自己的课件了。
       </div>
-      <i class="iconfont icon-kefu color63 text-center pointer im"></i>
+      <i class="iconfont icon-kefu color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !1 ">
+        <div class="img text-center" v-show="codeShow">
+          <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
+          <div class="font14 color0">雨课堂微信客服</div>
+        </div>
+      </i>
     </div>
   </div>
 </template>
@@ -74,16 +79,23 @@
     data () {
       return {
         name: '',
-        list: []
+        list: [],
+        codeShow: !1,
+        rc: ''
       }
     },
     created: function () {
+      let query = this.$route.query
+      let rc = query.rc
+      this.rc = rc
       this.init()
     },
     methods: {
       init: function () {
         let self = this
-        request.get(API.market.get_rain_courseware_list, {}).then(function (e) {
+        let params = {}
+        this.rc && (params = {rc: this.rc})
+        request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
           self.list = data.rain_courseware_list
         })
@@ -251,6 +263,18 @@
       font-size: 38px;
       width: 54px;
       border:1px solid #639EF4;
+      .img{
+        position: absolute;
+        width: 140px;
+        top: -180px;
+        left: -40px;
+        padding:10px;
+        background-color: #fff;
+        border:1px solid #c8c8c8;
+        img{
+          width: 100%;
+        }
+      }
     }
   }
 </style>
