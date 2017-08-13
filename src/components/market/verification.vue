@@ -11,21 +11,21 @@
       </div>
     </div>
     <div class="con-width verify-con" v-if="goVeri">
-      <div class="insert text-center">
+      <div class="insert text-center" v-up>
         <div class="inline-block info">
           <span class="inline-block font20 color4a">请输入序列号</span>
           <input type="text" class="font24 color63 text-center" v-model="code1" v-mouse-input @focus="toRight"
-                 v-bind:class="{error:error}" @paste="paste($event, 1)"/>
+                 v-bind:class="{error:error}" @paste="paste($event, 1)" data-index="0" maxlength="5"/>
         </div>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code2" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 2)"/>
+               v-bind:class="{error:error}" @paste="paste($event, 2)" data-index="1" maxlength="5"/>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code3" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 3)"/>
+               v-bind:class="{error:error}" @paste="paste($event, 3)" data-index="2" maxlength="5"/>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code4" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 4)"/>
+               v-bind:class="{error:error}" @paste="paste($event, 4)" data-index="3" maxlength="5"/>
       </div>
       <div class="con-width err-con">
         <div class="font20 error-info" v-show="error">
@@ -60,15 +60,6 @@
         <input type="button" value="继续验证" class="color63 font16 pointer continue" @click="continueVer"/>
       </div>
     </div>
-    <div class="relative con-width">
-      <i class="iconfont icon-kefu color63 text-center pointer im" @mouseover="codeShow = !0 "
-         @mouseleave="codeShow = !1 ">
-        <div class="img text-center" v-show="codeShow">
-          <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
-          <div class="font14 color0">雨课堂微信客服</div>
-        </div>
-      </i>
-    </div>
   </div>
 </template>
 
@@ -90,7 +81,6 @@
         code4: '',
         error: !1,
         vData: null,
-        codeShow: !1,
         status: 0,
         user: null,
         link: ''
@@ -132,6 +122,10 @@
               self.status = 4
               data && (self.vData = data)
               self.link = '/v/rain_courseware/download/' + data.id
+              self.error = !0
+              break
+            case 5:
+              self.status = 5
               self.error = !0
               break
           }
@@ -188,6 +182,9 @@
             avatar: data.user_profile.avatar_96
           }
         })
+      },
+      jump: function (i) {
+        console.log(i)
       }
     },
     directives: {
@@ -206,6 +203,20 @@
               $this.addClass('had')
             } else {
               // $this.addClass('had')
+            }
+          })
+        }
+      },
+      up: {
+        inserted: function (e) {
+          let $this = $(e)
+          let $inputs = $this.find('input')
+          $this.on('keyup', 'input', function (e) {
+            let $this = $(this)
+            let $index = $this.data('index')
+            let $val = $this.val()
+            if ($val.length >= 5) {
+              $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
             }
           })
         }
@@ -329,26 +340,6 @@
       line-height: 38px;
       margin: 40px 0;
       background-color: #fff;
-    }
-    .im {
-      position: absolute;
-      bottom: 60px;
-      right: -70px;
-      font-size: 38px;
-      width: 54px;
-      border: 1px solid #639EF4;
-      .img {
-        position: absolute;
-        width: 140px;
-        top: -180px;
-        left: -40px;
-        padding: 10px;
-        background-color: #fff;
-        border: 1px solid #c8c8c8;
-        img {
-          width: 100%;
-        }
-      }
     }
   }
 </style>

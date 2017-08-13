@@ -44,7 +44,7 @@
           <div class="font20 price">
             ¥ {{i.price}}
           </div>
-          <a :href="i.buy_link" class="inline-block font16 buy">立即购买</a>
+          <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
         </li>
         <li class="inline-block expect" v-if="ismarket">
           <div>
@@ -60,7 +60,7 @@
       </ul>
       <div class="con-width text-center">
         <div class="inline-block font20  activate">
-        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn">激活<i class="iconfont icon-jiantou"></i></router-link>
+        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn" target="_blank">激活<i class="iconfont icon-jiantou"></i></router-link>
         </div>
       </div>
     </div>
@@ -75,7 +75,7 @@
         我激活的雨课件
       </div>
       <div class="con-width">
-        <courseware v-for="i in downloadList" :item="i"></courseware>
+        <courseware v-for="i in downloadList" :item="i" key></courseware>
       </div>
     </div>
     <div class="text-center con-width relative rule" v-show="!ismarket">
@@ -99,12 +99,6 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请联系客服获取更多相关信息。客服邮箱：yuketang@xuetangx.com
         </p>
       </div>
-      <i class="iconfont icon-kefu color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !1 ">
-        <div class="img text-center" v-show="codeShow">
-          <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
-          <div class="font14 color0">雨课堂微信客服</div>
-        </div>
-      </i>
     </div>
   </div>
 </template>
@@ -120,7 +114,6 @@
       return {
         name: '',
         list: [],
-        codeShow: !1,
         rc: '',
         ismarket: !1,
         tab: 0,
@@ -362,26 +355,6 @@
           border-radius: 19px;
           background-color: #fff;
           margin: 20px 30px;
-        }
-      }
-    }
-    .im{
-      position: absolute;
-      bottom:180px;
-      right: -70px;
-      font-size: 38px;
-      width: 54px;
-      border:1px solid #639EF4;
-      .img{
-        position: absolute;
-        width: 140px;
-        top: -180px;
-        left: -40px;
-        padding:10px;
-        background-color: #fff;
-        border:1px solid #c8c8c8;
-        img{
-          width: 100%;
         }
       }
     }

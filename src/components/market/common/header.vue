@@ -39,9 +39,9 @@
           if (e.success) {
             self.name = data.user_profile.name
             self.avatar = data.user_profile.avatar_96
-          } else {
-            location.href = '/'
           }
+        }).catch(function (e) {
+          alert('尚未登录')
         })
       }
     }
