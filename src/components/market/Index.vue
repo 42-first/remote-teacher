@@ -1,8 +1,6 @@
 <template>
   <div class="back">
-    <div class="banner">
-      <img src="~images/market/banner/banner_search.png"/>
-    </div>
+    <banner :type="0" :text="ismarket ? '雨课件' : '雨课件购买'"></banner>
     <div class="con-width font20 color4a tab" v-if="ismarket">
       <div class="tab-con">
         <div class="inline-block text-center pointer" @click="tab = 0" v-bind:class="{active:!tab}">雨课件市场</div>
@@ -39,7 +37,7 @@
             {{i.school}} {{i.author}}
           </div>
           <div class="color4a font20 describe">
-            {{i.introduce}}
+            <!--{{i.introduce}}-->
           </div>
           <div class="font20 price">
             ¥ {{i.price}}
@@ -66,10 +64,10 @@
     </div>
     <div class="con-width download-list" v-show="tab">
       <div class="con-width text-center color63 btn-con">
-        <router-link :to="{name:'Verification'}">
-          <input type="button" value="已购买，去激活" class="font16 color63" />
+        <router-link :to="{name:'Verification'}" target="_blank">
+          <input type="button" value="已购买，去激活" class="font16 color63 pointer" />
         </router-link>
-        <input type="button" value="查看我的雨课件订单" class="font16 color63" @click="order" />
+        <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer" @click="order" target="_blank" />
       </div>
       <div class="font24 color3">
         我激活的雨课件
@@ -108,6 +106,7 @@
   import API from '@/util/api'
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
+  import banner from '@/components/market/common/banner.vue'
   export default {
     name: 'market',
     data () {
@@ -164,7 +163,8 @@
       }
     },
     components: {
-      courseware
+      courseware,
+      banner
     }
   }
 </script>
@@ -177,14 +177,6 @@
     min-width: 960px;
     background-color: #fff;
     margin-top: 66px;
-    .banner {
-      width: 100%;
-      margin: 0 auto;
-      font-size: 0px;
-      img {
-        width: 100%;
-      }
-    }
     .tab{
       margin: 20px auto;
       height: 50px;

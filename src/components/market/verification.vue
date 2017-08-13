@@ -1,8 +1,6 @@
 <template>
   <div class="back">
-    <div class="banner">
-      <img src="~images/market/banner/banner_activate.png"/>
-    </div>
+    <banner :type="1" text="雨课件激活"></banner>
     <div class="con-width over user">
       <img :src="user && user.avatar" />
       <div class="inline-block">
@@ -47,7 +45,7 @@
         </div>
       </div>
       <div class="con-width text-center">
-        <input type="button" value="确认激活" class="color63 font16 activate" @click="goVerify"/>
+        <input type="button" value="确认激活" class="color63 font16 pointer activate" @click="goVerify"/>
       </div>
     </div>
     <div class="con-width text-center relative verify-success" v-if="vSuccess">
@@ -57,7 +55,7 @@
       </div>
       <courseware :item="vData"></courseware>
       <div class="con-width text-center">
-        <input type="button" value="继续验证" class="color63 font16 pointer continue" @click="continueVer"/>
+        <input type="button" value="继续激活" class="color63 font16 pointer continue" @click="continueVer"/>
       </div>
     </div>
   </div>
@@ -68,6 +66,7 @@
   import API from '@/util/api'
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
+  import banner from '@/components/market/common/banner.vue'
   export default {
     name: 'Verification',
     data () {
@@ -223,7 +222,8 @@
       }
     },
     components: {
-      courseware
+      courseware,
+      banner
     }
   }
 </script>

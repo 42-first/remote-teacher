@@ -9,8 +9,8 @@
         <img :src="avatar"/>
         <span>{{name}}</span>
       </a>
-      <a class="right">加入我们</a>
-      <a class="right">帮助中心</a>
+      <a href="/join_us" class="right">加入我们</a>
+      <a href="/help" class="right">帮助中心</a>
       <a href="/download" class="right">下载</a>
     </div>
   </nav>
