@@ -41,7 +41,7 @@
             self.avatar = data.user_profile.avatar_96
           }
         }).catch(function (e) {
-          alert('尚未登录')
+          alert('请首先登录，再来购买')
         })
       }
     }
