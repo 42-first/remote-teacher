@@ -78,7 +78,7 @@
     </div>
     <div class="text-center con-width relative rule" v-show="!ismarket">
       <div class="font36 text-center title">
-        雨课堂介绍
+        雨课件介绍
       </div>
       <div class="con-width text-left font18">
         <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -86,7 +86,7 @@
         基于雨课堂“课前预习—实时课堂-课后作业”的智慧教学模式，为多个学科提供教学参考方案，助力教学水平提升，实现教学经验共建共享。
       雨课件作为教师知识产权的产物，在雨课堂的平台中，将以一种有偿的资源形式共享，教师购买并激活后，即拥有它的编辑权和使用权，方便用于雨课堂教学。</p>
         <div class="con-width text-center demo">
-          <div class="color9b text-center">课件事例</div>
+          <div class="color9b text-center">课件示例</div>
           <img src="~images/market/demo/course.png"/>
         </div>
         <p>
