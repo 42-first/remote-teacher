@@ -67,6 +67,7 @@
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
+  import Cookies from 'js-cookie'
   export default {
     name: 'Verification',
     data () {
@@ -93,6 +94,7 @@
     },
     methods: {
       goVerify: function () {
+        this.needLogin()
         let self = this
         self.code = this.code1 + this.code2 + this.code3 + this.code4
         request.post(API.market.bind_serial_number, {serial_number: self.code}).then(function (e) {
@@ -171,6 +173,9 @@
             })
           }
         }
+        setTimeout(function () {
+          $('input').blur()
+        }, 100)
       },
       getUser: function () {
         let self = this
@@ -184,6 +189,12 @@
       },
       jump: function (i) {
         console.log(i)
+      },
+      needLogin: function () {
+        let id = Cookies.get('sessionid')
+        if (!id) {
+          window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
+        }
       }
     },
     directives: {
@@ -211,11 +222,14 @@
           let $this = $(e)
           let $inputs = $this.find('input')
           $this.on('keyup', 'input', function (e) {
-            let $this = $(this)
-            let $index = $this.data('index')
-            let $val = $this.val()
-            if ($val.length >= 5) {
-              $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
+            let keyCode = e.keyCode
+            if (keyCode >= 65 && keyCode <= 90) {
+              let $this = $(this)
+              let $index = $this.data('index')
+              let $val = $this.val()
+              if ($val.length >= 5) {
+                $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
+              }
             }
           })
         }

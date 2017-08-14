@@ -4,7 +4,7 @@
     <div class="con-width font20 color4a tab" v-if="ismarket">
       <div class="tab-con">
         <div class="inline-block text-center pointer" @click="tab = 0" v-bind:class="{active:!tab}">雨课件市场</div>
-        <div class="inline-block text-center pointer" @click="tab = 1" v-bind:class="{active:tab}">我的雨课件</div>
+        <div class="inline-block text-center pointer" @click="tab = 1;needLogin()" v-bind:class="{active:tab}">我的雨课件</div>
       </div>
     </div>
     <div class="con-width font18 color3" v-show="ismarket && !tab">
@@ -116,6 +116,7 @@
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
+  import Cookies from 'js-cookie'
   export default {
     name: 'market',
     data () {
@@ -159,6 +160,12 @@
       },
       order: function () {
         window.open('https://i.weidian.com/order/list.php?type=0')
+      },
+      needLogin: function () {
+        let id = Cookies.get('sessionid')
+        if (!id) {
+          window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
+        }
       }
     },
     directives: {
@@ -278,7 +285,7 @@
           .name {
             width: 100%;
             text-overflow: ellipsis;
-            padding: 0 20px;
+            padding: 0 20px 10px;
             line-height: 22px;
             max-height: 55px;
             display: -webkit-box;
