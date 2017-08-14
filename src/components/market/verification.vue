@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="con-width text-center">
-        <input type="button" value="确认激活" class="color63 font16 pointer activate" @click="goVerify"/>
+        <input type="button" value="确认激活" class="color63 font16 pointer btn-blue activate" @click="goVerify"/>
       </div>
     </div>
     <div class="con-width text-center relative verify-success" v-if="vSuccess">
@@ -55,7 +55,7 @@
       </div>
       <courseware :item="vData"></courseware>
       <div class="con-width text-center">
-        <input type="button" value="继续激活" class="color63 font16 pointer continue" @click="continueVer"/>
+        <input type="button" value="继续激活" class="color63 font16 pointer btn-blue continue" @click="continueVer"/>
       </div>
     </div>
   </div>

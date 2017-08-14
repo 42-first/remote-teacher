@@ -61,16 +61,16 @@
       </ul>
       <div class="con-width text-center">
         <div class="inline-block font20  activate">
-        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn" target="_blank">激活<i class="iconfont icon-jiantou"></i></router-link>
+        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn-blue btn" target="_blank">激活<i class="iconfont icon-jiantou"></i></router-link>
         </div>
       </div>
     </div>
     <div class="con-width download-list" v-show="tab">
       <div class="con-width text-center color63 btn-con">
         <router-link :to="{name:'Verification'}" target="_blank">
-          <input type="button" value="已购买，去激活" class="font16 color63 pointer" />
+          <input type="button" value="已购买，去激活" class="font16 color63 pointer btn-blue" />
         </router-link>
-        <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer" @click="order" />
+        <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer btn-blue" @click="order" />
       </div>
       <div class="font24 color3">
         我激活的雨课件
@@ -79,7 +79,7 @@
         <courseware v-if="downloadList && downloadList.length" v-for="i in downloadList" :item="i" key></courseware>
         <div class="text-center over no-courseware" v-if="!downloadList || !downloadList.length">
           <div class="color0 font18 text">当前暂无雨课件，可先购买再激活使用</div>
-          <input type="button" class="color63 pointer font16 buy" value="去购买"/>
+          <input type="button" class="color63 pointer font16 btn-blue buy" @click="tab = 0" value="去购买"/>
         </div>
       </div>
     </div>
