@@ -40,10 +40,10 @@
             <!--{{i.introduce}}-->
           </div>
           <div class="font20 price">
-            ¥ {{i.price}}
+            ¥ {{i.discount_price}}
           </div>
           <div class="font14 old-price">
-            ¥ {{i.discount_price}}
+            ¥ {{i.price}}
           </div>
           <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
         </li>
@@ -154,7 +154,7 @@
         let self = this
         request.post(API.market.rain_courseware_list).then(function (e) {
           let data = e.data
-          // self.downloadList = data.rain_courseware_list
+          self.downloadList = data.rain_courseware_list
         })
       },
       order: function () {
