@@ -77,9 +77,9 @@
       </div>
       <div class="con-width">
         <courseware v-if="downloadList && downloadList.length" v-for="i in downloadList" :item="i" key></courseware>
-        <div class="text-center over no-courseware">
+        <div class="text-center over no-courseware" v-if="!downloadList || !downloadList.length">
           <div class="color0 font18 text">当前暂无雨课件，可先购买再激活使用</div>
-          <input type="button" class="color63 font16 buy" value="去购买"/>
+          <input type="button" class="color63 pointer font16 buy" value="去购买"/>
         </div>
       </div>
     </div>
@@ -152,7 +152,7 @@
         let self = this
         request.post(API.market.rain_courseware_list).then(function (e) {
           let data = e.data
-          self.downloadList = data.rain_courseware_list
+          // self.downloadList = data.rain_courseware_list
         })
       },
       order: function () {

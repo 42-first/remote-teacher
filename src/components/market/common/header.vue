@@ -12,6 +12,7 @@
       <a href="/join_us" class="right">加入我们</a>
       <a href="/help" class="right">帮助中心</a>
       <a href="/download" class="right">下载</a>
+      <a href="/web" class="right">雨课堂网页版<img class="beta" src="~images/market/icon/beta.png" alt="beta"></a>
     </div>
   </nav>
 </template>
