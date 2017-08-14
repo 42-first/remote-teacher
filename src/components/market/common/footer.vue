@@ -180,7 +180,7 @@
   }
 
   .link-us-qqgroup {
-    top: -188px;
+    top: -270px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
@@ -194,7 +194,7 @@
   }
 
   .linkus-email-number {
-    top: -129px;
+    top: -180px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
