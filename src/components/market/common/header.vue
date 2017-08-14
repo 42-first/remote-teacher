@@ -11,6 +11,7 @@
       </a>
       <a href="/join_us" class="right">加入我们</a>
       <a href="/help" class="right">帮助中心</a>
+      <a href="/lesson/market/courseware" class="right">雨课件</a>
       <a href="/download" class="right">下载</a>
       <a href="/web" class="right">雨课堂网页版<img class="beta" src="~images/market/icon/beta.png" alt="beta"></a>
     </div>
@@ -42,7 +43,7 @@
             self.avatar = data.user_profile.avatar_96
           }
         }).catch(function (e) {
-          alert('请首先登录，再来购买')
+          window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
         })
       }
     }
