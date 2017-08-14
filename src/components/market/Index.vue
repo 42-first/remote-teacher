@@ -76,7 +76,11 @@
         我激活的雨课件
       </div>
       <div class="con-width">
-        <courseware v-for="i in downloadList" :item="i" key></courseware>
+        <courseware v-if="downloadList && downloadList.length" v-for="i in downloadList" :item="i" key></courseware>
+        <div class="text-center over no-courseware">
+          <div class="color0 font18 text">当前暂无雨课件，可先购买再激活使用</div>
+          <input type="button" class="color63 font16 buy" value="去购买"/>
+        </div>
       </div>
     </div>
     <div class="text-center con-width relative rule" v-show="!ismarket">
@@ -149,6 +153,7 @@
         request.post(API.market.rain_courseware_list).then(function (e) {
           let data = e.data
           self.downloadList = data.rain_courseware_list
+          self.downloadList = []
         })
       },
       order: function () {
@@ -196,6 +201,20 @@
           border-bottom: 2px solid #639EF4;
           color: #639EF4;
         }
+      }
+    }
+    .no-courseware{
+      height: 208px;
+      background-color: #f8f8f8;
+      .text{
+        margin: 60px 0 30px;
+      }
+      .buy{
+        width: 106px;
+        height: 38px;
+        border:1px solid #639EF4;
+        border-radius: 19px;
+        background-color: rgba(255, 255, 255, 0);
       }
     }
     .flow {
