@@ -266,7 +266,7 @@
           .author {
             height: 40px;
             width: 360px;
-            border-bottom: 1px solid #979797;
+            border-bottom: 1px solid #c8c8c8;
             margin: 0 auto;
             padding: 0 10px;
             line-height: 40px;
