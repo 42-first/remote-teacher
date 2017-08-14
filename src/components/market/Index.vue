@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="con-width font18 color3" v-show="ismarket && !tab">
-      雨课件是由雨课堂出品的智慧教学全周期课程包，由高等教育学府高级教师编写，为多个学科提供教学参考方案，实现教学经验共建共享   <a class="color63" href="">详情>></a>
+      雨课件是由雨课堂出品的智慧教学全周期课程包，由高等教育学府高级教师编写，为多个学科提供教学参考方案，实现教学经验共建共享   <a class="color63" target="_blank" href="http://ykt.io/help?detail=59">详情>></a>
     </div>
     <div class="over flow" v-show="!tab">
       <div class="font24 color3 con-width">
