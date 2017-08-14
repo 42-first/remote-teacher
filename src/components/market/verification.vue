@@ -271,7 +271,7 @@
             position: absolute;
             width: 100%;
             left: 0;
-            top: -30px;
+            top: -34px;
             border: none;
             margin: 0;
             padding: 0;
@@ -302,8 +302,7 @@
         height: 30px;
         .error-info {
           color: #F84F41;
-          width: 420px;
-          margin-left: 234px;
+          margin-left: 164px;
           margin-top: 20px;
         }
       }

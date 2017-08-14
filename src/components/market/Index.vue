@@ -16,9 +16,9 @@
       </div>
       <div class="con-width text-center">
         <div class="inline-block back-image item item-1">购买雨课件</div>
-        <div class="inline-block font12 color9b narrate">短信发送</div>
+        <div class="inline-block font12 color9b narrate">接收短信</div>
         <div class="inline-block back-image item item-2">获得序列号</div>
-        <div class="inline-block font12 color9b narrate">验证地址</div>
+        <div class="inline-block font12 color9b narrate">进入激活页</div>
         <div class="inline-block back-image item item-3">输入序列号激活</div>
         <div class="inline-block font12 color9b narrate">打开雨课堂</div>
         <div class="inline-block back-image item item-4">正常使用</div>
@@ -40,6 +40,9 @@
             <!--{{i.introduce}}-->
           </div>
           <div class="font20 price">
+            ¥ {{i.price}}
+          </div>
+          <div class="font14 old-price">
             ¥ {{i.price}}
           </div>
           <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
@@ -67,7 +70,7 @@
         <router-link :to="{name:'Verification'}" target="_blank">
           <input type="button" value="已购买，去激活" class="font16 color63 pointer" />
         </router-link>
-        <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer" @click="order" target="_blank" />
+        <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer" @click="order" />
       </div>
       <div class="font24 color3">
         我激活的雨课件
@@ -149,7 +152,7 @@
         })
       },
       order: function () {
-        location.href = 'https://i.weidian.com/order/list.php?type=0'
+        window.open('https://i.weidian.com/order/list.php?type=0')
       }
     },
     directives: {
@@ -274,12 +277,18 @@
           .describe {
             height: 30px;
             line-height: 30px;
-            margin: 10px auto;
           }
           .price {
             height: 30px;
             line-height: 30px;
             color: #F5A623;
+          }
+          .old-price{
+            height: 20px;
+            line-height: 20px;
+            color: #9b9b9b;
+            text-decoration: line-through;
+            text-decoration-color: #979797;
           }
           a {
             background-color: #F5A623;
