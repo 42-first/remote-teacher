@@ -11,7 +11,7 @@
       雨课件是由雨课堂出品的智慧教学全周期课程包，由高等教育学府高级教师编写，为多个学科提供教学参考方案，实现教学经验共建共享   <a class="color63" target="_blank" href="http://ykt.io/help?detail=59">详情>></a>
     </div>
     <div class="over flow" v-show="!tab">
-      <div class="font24 color3 con-width">
+      <div class="font24 color3 con-width" v-show="ismarket">
         购买流程
       </div>
       <div class="con-width text-center">
@@ -43,13 +43,15 @@
             ¥ {{i.price}}
           </div>
           <div class="font14 old-price">
-            ¥ {{i.price}}
+            ¥ {{i.discount_price}}
           </div>
           <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
         </li>
         <li class="inline-block expect" v-if="ismarket">
           <div>
-            <img src="~images/market/icon/expect.png"/>
+            <div class="over img-con">
+              <img src="~images/market/icon/expect.png"/>
+            </div>
             <div class="font12 colora text-left text">
               <p>雨课堂非常希望熟练使用雨课堂，且在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。</p>
 
@@ -218,7 +220,7 @@
     }
     .flow {
       height: 226px;
-      padding-top: 40px;
+      padding-top: 28px;
       .font36 {
         margin-bottom: 30px;
       }
@@ -255,17 +257,17 @@
     }
     .detail {
       background-color: #F5F5F5;
-      padding: 30px 0;
+      padding-top: 30px;
       .title {
         margin: 36px auto;
       }
       ul {
         li {
           width: 380px;
-          height: 436px;
+          height: 424px;
           background-color: #fff;
           border: 1px solid #c8c8c8;
-          margin: 20px;
+          margin: 20px 20px 0 20px;
           .img {
             width: 100%;
             height: 214px;
@@ -276,7 +278,7 @@
           .name {
             width: 100%;
             text-overflow: ellipsis;
-            padding: 10px 20px;
+            padding: 0 20px;
             line-height: 22px;
             max-height: 55px;
             display: -webkit-box;
@@ -285,16 +287,16 @@
             overflow: hidden;
           }
           .author {
-            height: 40px;
+            height: 30px;
             width: 360px;
             border-bottom: 1px solid #c8c8c8;
             margin: 0 auto;
-            padding: 0 10px;
-            line-height: 40px;
+            padding: 0px 0px 38px 10px;
+            line-height: 30px;
           }
           .describe {
-            height: 30px;
-            line-height: 30px;
+            height: 20px;
+            line-height: 20px;
           }
           .price {
             height: 30px;
@@ -323,13 +325,18 @@
         }
         li.expect{
           background-color: #f8f8f8;
+          .img-con{
+            width: 100%;
+            height: 274px;
+            margin-bottom: 20px;
+          }
           .text{
             padding:0 20px;
           }
         }
       }
       .activate{
-        margin: 30px 0 50px 0;
+        margin: 25px 0 30px 0;
         .btn{
           height: 38px;
           width: 88px;
@@ -338,6 +345,7 @@
           border-radius: 19px;
           line-height: 38px;
           margin-left: 30px;
+          margin-top: -5px;
           i{
             margin-left: 10px;
           }
@@ -346,10 +354,12 @@
     }
     .rule{
       background-color: #fff;
-      padding: 20px 0 40px 0;
+      padding: 30px 0 40px 0;
       position: relative;
       .title{
-        height: 50px;
+        height: 36px;
+        line-height:36px;
+        margin-bottom: 20px;
       }
       .demo{
         margin: 10px auto;

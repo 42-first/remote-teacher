@@ -26,7 +26,7 @@
                v-bind:class="{error:error}" @paste="paste($event, 4)" data-index="3" maxlength="5"/>
       </div>
       <div class="con-width err-con">
-        <div class="font20 error-info" v-show="error">
+        <div class="font16 error-info" v-show="error">
           <span v-show="status == 1">
             您输入的序列号有误，请重新输入，或联系客服人员。
           </span>
@@ -271,7 +271,7 @@
             position: absolute;
             width: 100%;
             left: 0;
-            top: -34px;
+            top: -50px;
             border: none;
             margin: 0;
             padding: 0;
@@ -299,7 +299,7 @@
         }
       }
       .err-con {
-        height: 30px;
+        height: 14px;
         .error-info {
           color: #F84F41;
           margin-left: 164px;
