@@ -50,7 +50,7 @@
             <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
           </div>
           <div class="pic-view" v-show="hasImage">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" :src="imageThumbURL" alt="" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
           </div>
@@ -64,6 +64,7 @@
         </div>
         <!-- 打分显示 -->
         <div class="answer-score">
+          <i class="iconfont blue icon-ykq_dafen f18"></i>
           <span class="lable f15" >得分</span>
           <i :class="['iconfont', 'f18', starCount > 0 ? 'icon-fill-star' : 'icon-star']"></i>
           <i :class="['iconfont', 'f18', starCount > 1 ? 'icon-fill-star' : 'icon-star']"></i>
@@ -252,6 +253,9 @@
               this.hasImage = true;
               this.imageURL = result.pics[0].pic;
               this.imageThumbURL = result.pics[0].thumb;
+
+              let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+              imgEl.src = this.imageURL;
             }
           }
 
@@ -513,7 +517,7 @@
           compress: {
             width: 1600,
             height: 1600,
-            quality: .65
+            quality: .6
           }
         };
 
@@ -536,16 +540,23 @@
       handlelaodImg(type, evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
-        this.width = target.naturalWidth || target.width;
-        this.height = target.naturalHeight || target.width;
-        let rate = this.width/this.height;
+        let width = target.naturalWidth || target.width;
+        let height = target.naturalHeight || target.width;
+        let rate = width/height;
 
         if(type === 1) {
           this.pptRate = rate;
+          this.pptWidth = width;
+          this.pptHeight = height;
         } else if(type === 2) {
           this.rate = rate;
+
+          this.width = width;
+          this.height = height;
         } else if(type === 3) {
           rate > 1 && (target.style.width = '100%');
+          this.width = width;
+          this.height = height;
         }
       },
       handleDeleteImg() {
@@ -572,13 +583,20 @@
         let index = 0;
         let items = [];
         let src = this.imageURL;
+        let width = this.width;
+        let height = this.height;
 
         if(type === 1 || type === 3) {
           src = targetEl.src;
         }
 
+        if(type === 1) {
+          width = this.pptWidth;
+          height = this.pptHeight;
+        }
+
         // build items array
-        items.unshift({ src: src, w: this.width || 750, h: this.height || 520 });
+        items.unshift({ src: src, w: width || 750, h: height });
 
         let options = {
           index: 0,
@@ -655,7 +673,7 @@
     width: 100%;
     height: 100%;
 
-    background: #EDF2F6;
+    background: #f6f7f8;
 
     // overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -707,7 +725,6 @@
   \*------------------*/
 
   .subjective-content {
-    // position: relative;
     padding-top: 1.33rem;
 
     .content_wrapper {
@@ -735,7 +752,7 @@
     }
 
     .cover__wrapper {
-      margin-top: -0.733333rem;
+      margin-top: -0.55rem;
     }
 
     .cover {
@@ -930,6 +947,10 @@
 
       .iconfont {
         color: #F5A623;
+      }
+
+      .iconfont.blue {
+        color: #639EF4;
       }
     }
 
