@@ -168,7 +168,7 @@
         }
       },
       goTab: function (i) {
-        this.tab(i)
+        this.tab = i
         i && this.needLogin()
       }
     },
