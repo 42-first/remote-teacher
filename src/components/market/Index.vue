@@ -3,8 +3,8 @@
     <banner :type="0" :text="ismarket ? '雨课件' : '雨课件购买'"></banner>
     <div class="con-width font20 color4a tab" v-if="ismarket">
       <div class="tab-con">
-        <div class="inline-block text-center pointer" @click="tab = 0" v-bind:class="{active:!tab}">雨课件市场</div>
-        <div class="inline-block text-center pointer" @click="tab = 1;needLogin()" v-bind:class="{active:tab}">我的雨课件</div>
+        <div class="inline-block text-center pointer" @click="goTab(0)" v-bind:class="{active:!tab}">雨课件市场</div>
+        <div class="inline-block text-center pointer" @click="goTab(1)" v-bind:class="{active:tab}">我的雨课件</div>
       </div>
     </div>
     <div class="con-width font18 color3" v-show="ismarket && !tab">
@@ -166,6 +166,10 @@
         if (!id) {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
         }
+      },
+      goTab: function (i) {
+        this.tab(i)
+        i && this.needLogin()
       }
     },
     directives: {
