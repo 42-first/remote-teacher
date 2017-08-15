@@ -116,7 +116,6 @@
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
-  import Cookies from 'js-cookie'
   export default {
     name: 'market',
     data () {
@@ -162,10 +161,9 @@
         window.open('https://i.weidian.com/order/list.php?type=0')
       },
       needLogin: function () {
-        let id = Cookies.get('sessionid')
-        if (!id) {
+        request.get(API.market.user_info).catch(function () {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
-        }
+        })
       },
       goTab: function (i) {
         this.tab = i
@@ -176,7 +174,6 @@
       paste: {
         inserted: function (e, binding) {
           $(e).on('paste', function (e) {
-            console.log(e)
             return false
           })
         }

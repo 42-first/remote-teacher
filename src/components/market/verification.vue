@@ -191,10 +191,9 @@
         console.log(i)
       },
       needLogin: function () {
-        let id = Cookies.get('sessionid')
-        if (!id) {
+        request.get(API.market.user_info).catch(function () {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
-        }
+        })
       }
     },
     directives: {
