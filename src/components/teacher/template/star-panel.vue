@@ -74,8 +74,7 @@
        */
       decide (evt) {
         let self = this
-        let isScore = $(evt.target).hasClass('iconfont')
-        let score = isScore ? $(evt.target).data('score') : -1
+        let score = +(evt.target.dataset.score || -1) // 取数字
 
         self.$emit('giveScore', self.answerid, score)
       },
