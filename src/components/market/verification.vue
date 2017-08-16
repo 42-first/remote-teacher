@@ -67,7 +67,6 @@
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
-  import Cookies from 'js-cookie'
   export default {
     name: 'Verification',
     data () {
@@ -187,9 +186,6 @@
           }
         })
       },
-      jump: function (i) {
-        console.log(i)
-      },
       needLogin: function () {
         request.get(API.market.user_info).catch(function () {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
@@ -222,12 +218,21 @@
           let $inputs = $this.find('input')
           $this.on('keyup', 'input', function (e) {
             let keyCode = e.keyCode
-            if (keyCode >= 65 && keyCode <= 90) {
+            console.log(e.key, e.keyCode)
+            if (keyCode >= 65 && keyCode <= 90 || keyCode >= 96 && keyCode <= 105) {
               let $this = $(this)
               let $index = $this.data('index')
               let $val = $this.val()
               if ($val.length >= 5) {
                 $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
+              }
+            }
+            if (keyCode === 46) {
+              let $this = $(this)
+              let $index = $this.data('index')
+              let $val = $this.val()
+              if ($val.length === 0) {
+                $inputs.eq($index - 1).length && $inputs.eq($index - 1).focus()
               }
             }
           })
