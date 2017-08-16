@@ -182,6 +182,9 @@
 	    initScore (answerid, oldFullStars, index) {
 	      let self = this
 
+	      // 投屏时不可打分
+	      if (answerid === self.postingSubjectiveid) {return;}
+
 	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
 	    },
