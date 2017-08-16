@@ -279,7 +279,7 @@
           .name {
             width: 100%;
             text-overflow: ellipsis;
-            padding: 0 20px 10px;
+            padding-left: 20px;
             line-height: 22px;
             max-height: 55px;
             display: -webkit-box;

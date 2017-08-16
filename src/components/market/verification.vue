@@ -224,12 +224,12 @@
             let pos = $this[0].selectionStart
             let $index = $this.data('index')
             let $val = $this.val()
-            if (keyCode >= 65 && keyCode <= 90 || keyCode >= 96 && keyCode <= 105 || keyCode >= 48 && keyCode <= 57) {
+            if (keyCode >= 65 && keyCode <= 90 || keyCode >= 96 && keyCode <= 105 || keyCode >= 48 && keyCode <= 57 || keyCode === 39) {
               if ($val.length >= 5) {
                 $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
               }
             }
-            if (keyCode === 46 || keyCode === 8) {
+            if (keyCode === 46 || keyCode === 8 || keyCode === 37) {
               if (pos === 0) {
                 let i = $index - 1
                 i >= 0 && $inputs.eq(i).length && $inputs.eq($index - 1).focus()
