@@ -236,16 +236,16 @@
           padding-top: 100px;
         }
         .item-1 {
-          background-image: url("~images/market/icon/icon_1.png");
+          background-image: url("~images/market/icon/icon1.png");
         }
         .item-2 {
-          background-image: url("~images/market/icon/icon_2.png");
+          background-image: url("~images/market/icon/icon2.png");
         }
         .item-3 {
-          background-image: url("~images/market/icon/icon_3.png");
+          background-image: url("~images/market/icon/icon3.png");
         }
         .item-4 {
-          background-image: url("~images/market/icon/icon_4.png");
+          background-image: url("~images/market/icon/icon4.png");
         }
         .narrate {
           height: 20px;
