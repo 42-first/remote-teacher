@@ -13,17 +13,17 @@
         <div class="inline-block info">
           <span class="inline-block font20 color4a">请输入序列号</span>
           <input type="text" class="font24 color63 text-center" v-model="code1" v-mouse-input @focus="toRight"
-                 v-bind:class="{error:error}" @paste="paste($event, 1)" data-index="0" maxlength="5"/>
+                 v-bind:class="{error:error}" @paste="paste($event, 1)" data-index="0" maxlength="5" data-type="code1"/>
         </div>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code2" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 2)" data-index="1" maxlength="5"/>
+               v-bind:class="{error:error}" @paste="paste($event, 2)" data-index="1" maxlength="5" data-type="code2"/>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code3" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 3)" data-index="2" maxlength="5"/>
+               v-bind:class="{error:error}" @paste="paste($event, 3)" data-index="2" maxlength="5" data-type="code3"/>
         <span class="inline-block"></span>
         <input type="text" class="font24 color63 text-center" v-model="code4" v-mouse-input @focus="toRight"
-               v-bind:class="{error:error}" @paste="paste($event, 4)" data-index="3" maxlength="5"/>
+               v-bind:class="{error:error}" @paste="paste($event, 4)" data-index="3" maxlength="5" data-type="code4"/>
       </div>
       <div class="con-width err-con">
         <div class="font16 error-info" v-show="error">
@@ -86,6 +86,7 @@
       }
     },
     created: function () {
+      request.temp = this
       if (process.env.NODE_ENV !== 'production') {
         request.post = request.get
       }
@@ -213,28 +214,28 @@
         }
       },
       up: {
-        inserted: function (e) {
+        inserted: function (e, binding) {
           let $this = $(e)
           let $inputs = $this.find('input')
           $this.on('keyup', 'input', function (e) {
             let keyCode = e.keyCode
-            console.log(e.key, e.keyCode)
-            if (keyCode >= 65 && keyCode <= 90 || keyCode >= 96 && keyCode <= 105) {
-              let $this = $(this)
-              let $index = $this.data('index')
-              let $val = $this.val()
+            let $this = $(this)
+            let $type = $this.data('type')
+            let pos = $this[0].selectionStart
+            let $index = $this.data('index')
+            let $val = $this.val()
+            if (keyCode >= 65 && keyCode <= 90 || keyCode >= 96 && keyCode <= 105 || keyCode >= 48 && keyCode <= 57) {
               if ($val.length >= 5) {
                 $inputs.eq($index + 1).length && $inputs.eq($index + 1).focus()
               }
             }
-            if (keyCode === 46) {
-              let $this = $(this)
-              let $index = $this.data('index')
-              let $val = $this.val()
-              if ($val.length === 0) {
-                $inputs.eq($index - 1).length && $inputs.eq($index - 1).focus()
+            if (keyCode === 46 || keyCode === 8) {
+              if (pos === 0) {
+                let i = $index - 1
+                i >= 0 && $inputs.eq(i).length && $inputs.eq($index - 1).focus()
               }
             }
+            request.temp[$type] = request.temp[$type].toUpperCase()
           })
         }
       }
