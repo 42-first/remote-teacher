@@ -134,7 +134,6 @@
     color: #333;
     background: #fff;
     border: 1px solid #282C2F;
-
     visibility: hidden;
     opacity: 0;
     cursor: default;
@@ -180,7 +179,7 @@
   }
 
   .link-us-qqgroup {
-    top: -270px;
+    top: -190px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
@@ -194,7 +193,7 @@
   }
 
   .linkus-email-number {
-    top: -180px;
+    top: -130px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
