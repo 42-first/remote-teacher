@@ -63,13 +63,13 @@
       </ul>
       <div class="con-width text-center">
         <div class="inline-block font20  activate">
-        如果您已购买，请直接激活 <router-link :to="{name: 'Verification'}" class="inline-block btn-blue btn" target="_blank">激活<i class="iconfont icon-jiantou"></i></router-link>
+        如果您已购买，请直接激活 <router-link :to="{name: 'Verification',query: {date: timestamp()}}" class="inline-block btn-blue btn" target="_blank">激活<i class="iconfont icon-jiantou"></i></router-link>
         </div>
       </div>
     </div>
     <div class="con-width download-list" v-show="tab">
       <div class="con-width text-center color63 btn-con">
-        <router-link :to="{name:'Verification'}" target="_blank">
+        <router-link :to="{name:'Verification',query: {date: timestamp()}}" target="_blank">
           <input type="button" value="已购买，去激活" class="font16 color63 pointer btn-blue" />
         </router-link>
         <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer btn-blue" @click="order" />
@@ -113,7 +113,6 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/api'
-  import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
   export default {
@@ -168,6 +167,9 @@
       goTab: function (i) {
         this.tab = i
         i && this.needLogin()
+      },
+      timestamp: function () {
+        return new Date().getTime()
       }
     },
     directives: {
