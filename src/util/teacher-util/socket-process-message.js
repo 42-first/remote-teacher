@@ -188,7 +188,8 @@ function socketProcessMessage(msg){
     if (msg.limit == -1 || typeof msg.limit === 'undefined') {
 
         //3：刷新了遥控器且未设置时限
-        self.startBell(current, -1);
+        //如果是 -1 的话传入第三个参数 msgid ，标明是不是主观题 ShortAnswer,因为主观题有正计时，以及传入第4个参数，已经过去的时间
+        self.startBell(current, -1, msg.msgid, Math.floor((msg.now-msg.dt)/1000));
 
     } else if ((msg.now-msg.dt) >= msg.limit*1000) {
 
@@ -204,6 +205,7 @@ function socketProcessMessage(msg){
     }
 
     self.showProblemResult(msg.problemid);
+    return
   }
 
   // pc端发题，通知我

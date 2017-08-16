@@ -19,7 +19,7 @@
 	    <section class="upper">
 	    	<div class="f50" >
 		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
-		      <span class="time">00:45</span>
+		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
 		      已经有 <span>1</span> / <span>5</span> 位同学提交了答案
@@ -108,7 +108,15 @@
 	    StarPanel,
 	  },
 	  created(){
-	  	this.refreshSubjectivelist()
+	  	// this.refreshSubjectivelist()
+	  	// 召唤出来本页面后，倒计时更新在父组件进行，更新数据是在本页面处理
+	  	// 点击 随机点名 按钮 父组件收到node回执后发送事件给本子组件
+	  	let self = this
+
+      self.$on('refreshSubjectivelist', function (inPageProblemID) {
+        console.log(`父组件召唤子组件刷新主观题数据了${inPageProblemID}`)
+        self.refreshSubjectivelist()
+      })
 	  },
 	  filters: {
       formatTime(time) {
@@ -157,7 +165,7 @@
             let list = jsonData.data.problem_results_list
 
             let newList = list.map(item => {
-            	item.fullStars = item.score === -1 ? 0 : item.score*5/item.source_score
+            	item.fullStars = Math.round(item.score === -1 ? 0 : item.score*5/item.source_score)
 
             	return item
             })
