@@ -58,6 +58,13 @@
       <p class="">您有新的课堂动态</p>
     </section>
 
+    <!-- 习题试卷弹框 -->
+    <section class="student__msgbox">
+      <div class="" v-for="(item, index) in msgBoxs">
+        <Popup-Component :item="item" :index="index" :lessonid="lessonID" ></Popup-Component>
+      </div>
+    </section>
+
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -115,6 +122,7 @@
   import { configWX } from '@/util/wx-util'
 
   import CardItemComponent from '@/components/common/card-item.vue'
+  import PopupComponent from '@/components/common/popup-box.vue'
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
@@ -179,6 +187,10 @@
 
         // timeline列表
         cards: [],
+
+        // 消息box数据
+        msgBoxs: [],
+
         // 记录全部的事件
         allEvents: [],
         // 时间轴数据
@@ -196,6 +208,7 @@
     },
     components: {
       CardItemComponent,
+      PopupComponent,
       identity
     },
     computed: {
@@ -855,6 +868,19 @@
     color: #fff;
     background: rgba(155, 155, 155, 0.75);
     border-radius: .4rem/50%;
+  }
+
+
+  /*-------------------*\
+    $ 消息box 超过图片弹层
+  \*-------------------*/
+
+  .student__msgbox {
+    z-index: 1503;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    // width: 9.466667rem;
   }
 
 

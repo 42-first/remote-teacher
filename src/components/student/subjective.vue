@@ -267,6 +267,13 @@
         setTimeout(()=>{
           this.opacity = 1;
         }, 20)
+
+        // 处理弹出的消息
+        this.$parent.msgBoxs.forEach((item, index) => {
+          if(item.type === 3 && item.problemID && problemID) {
+            this.$parent.msgBoxs.splice(index, 1);
+          }
+        })
       },
 
       /*

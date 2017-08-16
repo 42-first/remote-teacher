@@ -163,7 +163,7 @@ var mixin = {
             item = msg['problem'];
 
             if(item) {
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item, isPopup: true });
               this.timeline['problem'][item['prob']] = item;
             }
 
@@ -173,7 +173,8 @@ var mixin = {
           case 'newquiz':
             item = msg['quiz'];
 
-            item && this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item });
+            item && this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true });
+
             break
 
           // 换一个PPT
@@ -181,7 +182,7 @@ var mixin = {
             this.presentationID = msg['presentation'];
             timeline = msg['timeline'];
 
-            this.setTimeline(timeline, true)
+            this.setTimeline(timeline, true);
             break
 
           // 开始弹幕
