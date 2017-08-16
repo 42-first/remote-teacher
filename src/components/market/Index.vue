@@ -280,6 +280,7 @@
             width: 100%;
             text-overflow: ellipsis;
             padding-left: 20px;
+            padding-top: 10px;
             line-height: 22px;
             max-height: 55px;
             display: -webkit-box;
