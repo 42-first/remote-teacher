@@ -74,7 +74,7 @@
 
   .nav .box {
     position: relative;
-    width: 900px;
+    width: 1100px;
     margin: 0 auto;
     height: 66px;
   }
