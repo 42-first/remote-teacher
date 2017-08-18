@@ -200,9 +200,6 @@
       }
     },
     filters: {
-      formatTime(time) {
-        return moment && moment(time).format('hh:mm:ss') || time;
-      }
     },
     mixins: [],
     methods: {
@@ -239,6 +236,8 @@
           this.ispreview = true;
 
           this.result = this.oProblem['Result'];
+
+          this.getScore(problemID);
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -305,6 +304,29 @@
           this.timeOver = true;
           this.sLeaveTime = '时间到';
         }
+      },
+
+      /*
+       * @method 获取主观题分数
+       * @param
+       */
+      getScore(problemID) {
+        let URL = API.student.PROBLEM_SCORE;
+        let param = {
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
+        };
+
+        return request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              this.starCount = data.score / data.source_score * 5;
+
+              return data;
+            }
+          });
       },
 
       /*
@@ -654,6 +676,8 @@
     },
     created() {
       this.index = +this.$route.params.index;
+      // this.lessonID = this.$parent.lessonID;
+      console.log(this.lessonID);
       let cards = this.$parent.cards;
       this.summary = cards[this.index];
 
