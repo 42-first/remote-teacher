@@ -9,7 +9,7 @@
 		></StarPanel>
 
 		<!--试题-主观题面板-->
-		<div class="problemresult-box">
+		<div id="subjective-wrapper" class="problemresult-box">
 			<!-- 关闭按钮 -->
 	    <v-touch class="close-box"  v-on:tap="closeProblemSubjective">
 	    	<i class="iconfont icon-ykq-shiti-guanbi f24"></i>
@@ -95,8 +95,17 @@
   const FENYE_COUNT = 10
 
   function handelScroll (posList = [0]) {
+  	let self = this
+  	let rootDom = document.querySelector('#subjective-wrapper')
+  	let totalHeight = Math.round(rootDom.offsetHeight)
+  	let windowHeight = Math.round(window.innerHeight)
+  	let maxScrollTop = totalHeight - windowHeight
+
   	// 大于0就表示手指网上搓了
-  	return posList[posList.length-1] - posList[0]
+  	let direction = posList[posList.length-1] - posList[0]
+
+  	// 往下搓或者搓到底都要显示返回按钮
+  	self.isShowBackBtn = direction <= 0 || (maxScrollTop - posList[posList.length-1]) < 20
   }
 
   let proxyHandleScroll = (function () {
@@ -110,11 +119,11 @@
   		if (timer) {return;}
 
   		timer = setTimeout(() => {
-  			self.isShowBackBtn = handelScroll(cachePos) <= 0
+  			handelScroll.call(self, cachePos)
   			clearTimeout(timer)
   			timer = null
   			cachePos.length = 0
-  		}, 800)
+  		}, 50)
   	}
   })();
 
@@ -168,13 +177,11 @@
 	    /**
 	     * 处理本蒙版上下搓动，处理返回按钮的显示隐藏
 	     *
-	     * @param {object} newData
+	     * @param {object, object} e event对象，position 当前对象滚动信息
 	     */
 	    onScroll (e, position) {
 	      let self = this
 	      
-	      console.log(90, position.scrollTop)
-
 	      proxyHandleScroll.call(self, position.scrollTop)
 	    },
 	  	/**
@@ -315,7 +322,6 @@
 
 	.problemresult-box {
 	  position: relative;
-	  height: 100%;
 	  color: $white;
 	  background: #000000;
 		
@@ -360,7 +366,7 @@
       .subjective-list {
       	color: #4A4A4A;
 
-      	// padding-bottom: 1.8rem;
+      	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
 	      
 	      .item {

@@ -190,7 +190,7 @@ export default {
           let newTime2 = timePassed + Math.round((NOW - START)/1000)
 
           bellArr[index].sec = isDaojishi ? newTime1 : newTime2
-          console.log(index, bellArr[index].sec)
+          // console.log(index, bellArr[index].sec)
 
           if(bellArr[index].sec <= 0){
             bellArr[index].sec = 0
@@ -346,7 +346,11 @@ export default {
           problemDurationLeft: self.sec2str(bellArr[current].sec)
         })
       }
-      self.getProblemResult(inPageProblemID)
+      
+      Vue.nextTick(function () {
+        self.getProblemResult(inPageProblemID)
+      })
+      
     },
     /**
      * 发试题后request获取主观题、柱状图倒计时页面的数据
