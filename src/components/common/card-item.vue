@@ -293,9 +293,9 @@
 
     text-align: center;
     color: #fff;
-    background: rgba(155, 155, 155, 0.75);
+    background: #C1C1C1;
 
-    border-radius: 0.4rem/50%;
+    border-radius: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

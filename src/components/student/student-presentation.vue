@@ -866,7 +866,7 @@
     line-height: .8rem;
     text-align: center;
     color: #fff;
-    background: rgba(155, 155, 155, 0.75);
+    background: rgba(51, 51, 51, 0.6);
     border-radius: .4rem/50%;
   }
 
