@@ -222,7 +222,7 @@
         let getScore = this.oProblem['getScore'];
 
         if(score && getScore > 0) {
-          starCount = getScore / score * 5;
+          this.starCount = getScore / score * 5;
         }
 
         // 是否观察者模式
@@ -676,8 +676,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      // this.lessonID = this.$parent.lessonID;
-      console.log(this.lessonID);
+      this.lessonID = this.$parent.lessonID;
       let cards = this.$parent.cards;
       this.summary = cards[this.index];
 
