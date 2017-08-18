@@ -1,0 +1,29 @@
+li {
+  list-style: none;
+}
+
+img {
+  border: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.clearfix:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+body, button, input, optgroup, select, textarea {
+  font: 12px/1.5 arial, Helvetica Neue, tahoma, "Hiragino Sans GB", Microsoft YaHei, \5b8b\4f53;
+}

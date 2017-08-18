@@ -38,6 +38,13 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['student'],
       inject: true
     }),
+    //
+    new HtmlWebpackPlugin({
+      filename: 'market.html',
+      template: './src/pages/market/market.html',
+      chunks: ['market'],
+      inject: true
+    }),
     new FriendlyErrorsPlugin()
   ]
 })

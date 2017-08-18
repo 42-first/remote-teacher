@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "msg": "",
+  "data": {
+    "rain_courseware_list": [
+      {
+        "id": 2356,
+        "title": "xxxxxxxxx",
+        "cover": "http://asdfg.com/adf.jpg",
+        "school": "xxxx",
+        "author": "yyyyy",
+        "introduce":"ggggggggggggggg",
+        "price":1000,
+        "discount_price":800,
+        "buy_link":"https://weidian.com/item.html?itemID=2145170600"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "msg": "0.0.1",
+  "data": {
+    "user_profile": {
+      "school": "清华",
+      "get_role_display": "校长",
+      "name": "梅贻琦",
+      "gender": 1,
+      "school_number": "",
+      "year_of_birth": "1900-01-01",
+      "role": 1,
+      "get_gender_display": "",
+      "nickname": "",
+      "email": "",
+      "avatar_96": "http://wx.qlogo.cn/mmopen/Q3auHgzwzM6n00C0Xmp2UwFhia1iaoiclNIFXQkvIqpHVnVHFYuZFoMGuTSRjibsDaV3sTyYnzwffnXdvKqNVAenvia06dHMdNHUFVxgFJJJfkO4/96"
+    }
+  },
+  "success": true
+}

@@ -5,7 +5,7 @@ import Remote from '@/components/teacher/remote'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/teacher' : '/',
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
   routes: [
@@ -26,3 +26,12 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // 订阅发布重置
+  let pubSub = window.parent && window.parent.PubSub || null;
+  pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
+  next()
+})
+
+export default router

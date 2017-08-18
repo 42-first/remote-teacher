@@ -39,12 +39,22 @@ if (process.env.NODE_ENV === 'production') {
             // 删除投稿
             'DELETE_SUBMISSION': '/v/api/tougao/delete',
             // 上传图片
-            'UPLOAD_PIC': '/v/api/tougao/pic_upload'
-        }
+            'UPLOAD_PIC': '/v/api/tougao/pic_upload',
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
+        },
 
         /*------------------*\
           $ 接收器 end
         \*------------------*/
+
+        /* 雨课件市场 start */
+        market: {
+          'user_info': '/v/course_meta/user_info',
+          'get_rain_courseware_list': '/v/rain_courseware/get_rain_courseware_list/',
+          'rain_courseware_list': '/v/rain_courseware/rain_courseware_list/',
+          'bind_serial_number': '/v/rain_courseware/bind_serial_number/'
+        }
+      /* 雨课件市场 end */
 
     }
 }else {
@@ -79,12 +89,21 @@ if (process.env.NODE_ENV === 'production') {
             // 删除投稿
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
-            'UPLOAD_PIC': 'v/tougao/pic_uplaod'
-        }
+            'UPLOAD_PIC': 'v/tougao/pic_uplaod',
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
+        },
 
         /*------------------*\
            $ 接收器 end
         \*------------------*/
+      /* 雨课件市场 start */
+      market: {
+        'user_info': '/static/mock/market/user_info.json',
+        'get_rain_courseware_list': '/static/mock/market/get_rain_courseware_list.json',
+        'rain_courseware_list': '/static/mock/market/rain_courseware_list.json',
+        'bind_serial_number': '/static/mock/market/bind_serial_number.json'
+      }
+      /* 雨课件市场 end */
 
     }
 }
