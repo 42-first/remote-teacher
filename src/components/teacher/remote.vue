@@ -1,7 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root J_page J_tip">
-    <div id="rc-home" class="rc-home" v-show="isEnterEnded">
+    <div id="rc-home" :class="['rc-home',{'shuban': isShuban}]" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
@@ -21,7 +21,7 @@
       </div>
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
-      <Toolbar 
+      <Toolbar
         ref="Toolbar"
         :lessonid="lessonid"
         :presentationid="presentationid"
@@ -115,7 +115,7 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'RcMaskQrcode' && !isGuideHidden"
       @guideNext="guideNext"
     ></Guide>
-    
+
   </div>
 </template>
 
@@ -173,6 +173,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
+      isShuban: false,                        // 是竖版ppt
       isGuideHidden: true,                    // 新手引导隐藏
       isEnterEnded: false,                    // 遥控器进入是否结束
       userid: -1,                             // 用户id
@@ -216,7 +217,7 @@ export default {
     // 判断在 InitiativeCtrlMask 蒙版时是否显示工具栏部分
     isYieldToolbar: function () {
       let self = this
-      
+
       // 当前蒙版是缩略图或课堂动态根组件时，显示工具栏（课堂动态子页面不显示工具栏）
       let status = (self.msgMaskTpl !== 'rc-mask-reconnect') && self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
 
@@ -304,7 +305,7 @@ export default {
      */
     pmos () {
       let self = this
-      
+
       // list中都是ID
       new PreventMoveOverScroll({
         list: ['rc-home', 'templates']
@@ -388,7 +389,28 @@ export default {
           })
 
           self.isEnterEnded = true
+          self.initCardHeight()
         })
+    },
+    /**
+     * 初始化主页面当前页高度，防止竖版课件导致 toolbar 无法显示
+     *
+     * 如果ppt是普通的 4:3 或 16:9 (扁) 的话，就正常地上半截正常显示，下半截截取一部分
+     * 如果ppt为竖版，则显示上面的ppt（两边留黑），第二页的显示一截，下面不要盖住 toolbar
+     *
+     */
+    initCardHeight () {
+      let self = this
+      let _src = self.pptData[0].Cover
+      let _img = new Image()
+
+      _img.onload = function () {
+        let _w = _img.width
+        let _h = _img.height
+        self.isShuban = _h > _w
+      }
+
+      _img.src = _src
     },
     /**
      * 将秒数转换成 MM:SS 格式
@@ -451,7 +473,7 @@ export default {
      */
     goHome () {
       let self = this
-      
+
       self.setData({
         isInitiativeCtrlMaskHidden: true,
         initiativeCtrlMaskTpl: ''
@@ -614,7 +636,7 @@ export default {
             while (k < len) {
               // a. Let elementK be the result of ? Get(O, ! ToString(k)).
               // b. If SameValueZero(searchElement, elementK) is true, return true.
-              // c. Increase k by 1. 
+              // c. Increase k by 1.
               if (sameValueZero(o[k], searchElement)) {
                 return true;
               }

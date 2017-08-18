@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "msg": "",
+  "status":4,
+  "data":{
+    "id": 2356,
+    "title": "xxxxxxxxx",
+    "cover": "http://asdfg.com/adf.jpg",
+    "school": "xxxx",
+    "author": "yyyyy",
+    "introduce":"ggggggggggggggg"
+  }
+}

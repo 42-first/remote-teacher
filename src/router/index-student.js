@@ -90,6 +90,13 @@ const studentRouter = new Router({
   ]
 })
 
+studentRouter.beforeEach((to, from, next) => {
+  // 订阅发布重置
+  let pubSub = window.parent && window.parent.PubSub || null;
+  pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
+  next()
+})
+
 studentRouter.afterEach(route=>{
   // google统计
   setTimeout(() => {

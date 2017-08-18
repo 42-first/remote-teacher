@@ -18,8 +18,8 @@
   font-size: 25px;
   /*卡片单元*/
   .card-box {
-    height: 6.853333rem;
-    overflow: hidden;
+    // height: 6.853333rem;
+    
 
     .detail {
       display: flex;
@@ -44,26 +44,30 @@
   }
   .downer {
     opacity: 0.8;
+    overflow: hidden;
   }
   .card {
     width: 100%;
-    max-height: 5.666667rem;
+    // max-height: 5.666667rem;
   }
 }
+// 竖版的覆盖样式
+.shuban {
+  .card-box {
+    text-align: center;
+  }
+  .card {
+    height: 10.666667rem;
+    width: auto;
+  }
+}
+
 .templates {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-}
-/* 当蒙版是缩略图时，底部的工具栏要露出来 */
-.yield-toolbar {
-  bottom: 1.706667rem;
-}
-/* 当蒙版是缩略图时，底部的工具栏要露出来，而且点击更多是，更多要露出来 */
-.yield-toolbar-more {
-  bottom: 6.5rem;
 }
 
 .rc-mask {

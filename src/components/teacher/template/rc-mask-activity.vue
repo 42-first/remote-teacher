@@ -4,7 +4,7 @@
     <section class="head f20">
       <div class="teacher ellipsis clearfix">
         <img :src="avatar" alt="">
-        <span class="coursename">{{coursename}}</span>
+        <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <v-touch class="student f17 J_ga" v-on:tap="showParticipantList" data-category="5" data-label="课堂动态页">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
@@ -14,7 +14,7 @@
         </span>
       </v-touch>
     </section>
-    <v-touch class="activity-item f18" v-on:tap="showPaper">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="showPaper" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -202,14 +202,17 @@
        * 点击 试卷 按钮展示试卷列表
        *
        * @event bindtap
+       * @param {object} evt event对象
        */
-      showPaper () {
+      showPaper (evt) {
         let self = this
         self.isPaperHidden = false
 
         self.$refs.RcMaskActivityPaper.$emit('showPaper')
 
         self.setAtRootFalse()
+
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 弹幕 按钮展示弹幕控制
@@ -360,6 +363,7 @@
 
         .coursename {
           float: left;
+          width: 7.333333rem;
           margin-top: 0.146667rem;
           margin-left: 0.133333rem;
         }

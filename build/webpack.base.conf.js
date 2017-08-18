@@ -11,7 +11,8 @@ function resolve (dir) {
 module.exports = {
   entry: {
     app: './src/main.js',
-    student: './src/pages/student/student.js'
+    student: './src/pages/student/student.js',
+    market: './src/pages/market/market.js'
   },
   output: {
     path: config.build.assetsRoot,
