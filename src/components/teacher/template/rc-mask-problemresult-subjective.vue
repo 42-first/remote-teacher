@@ -1,6 +1,6 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
-	<div class="problem-root allowscrollcallback">
+	<div class="problem-root allowscrollcallback" v-scroll="onScroll">
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
@@ -71,7 +71,7 @@
 	    
 	  </div>
 
-	  <div class="button-box f18">
+	  <div class="button-box f18" :class="isShowBackBtn ? 'btnfadein' : 'btnfadeout'">
       <v-touch class="btn f18" v-on:tap="closeProblemSubjective" >返回</v-touch>
     </div>
 		
@@ -79,15 +79,44 @@
 </template>
 
 <script>
+	import Vue from 'vue'
 	import request from '@/util/request'
   import API from '@/config/api'
   import Moment from 'moment'
 
   import StarPanel from '@/components/teacher/template/star-panel'
 
+  // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
+  let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
+  Vue.use(VueScroll)
+
   const STAR_TOTAL = 5  // 总星星数目
   const BIG_NUMBER = 10000000000000000000
   const FENYE_COUNT = 10
+
+  function handelScroll (posList = [0]) {
+  	// 大于0就表示手指网上搓了
+  	return posList[posList.length-1] - posList[0]
+  }
+
+  let proxyHandleScroll = (function () {
+  	let timer = null
+  	let cachePos = []
+
+  	return function (pos) {
+  		let self = this
+
+  		cachePos.push(pos)
+  		if (timer) {return;}
+
+  		timer = setTimeout(() => {
+  			self.isShowBackBtn = handelScroll(cachePos) <= 0
+  			clearTimeout(timer)
+  			timer = null
+  			cachePos.length = 0
+  		}, 800)
+  	}
+  })();
 
 	export default {
 	  name: 'RcMaskProblemresultSubjective',
@@ -97,6 +126,7 @@
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
+	    	isShowBackBtn: true,					// 显示底部返回按钮
 	    }
 	  },
 	  computed: {
@@ -134,6 +164,18 @@
 	      Object.keys(newData).forEach(attr => {
 	        self[attr] = newData[attr]
 	      })
+	    },
+	    /**
+	     * 处理本蒙版上下搓动，处理返回按钮的显示隐藏
+	     *
+	     * @param {object} newData
+	     */
+	    onScroll (e, position) {
+	      let self = this
+	      
+	      console.log(90, position.scrollTop)
+
+	      proxyHandleScroll.call(self, position.scrollTop)
 	    },
 	  	/**
 	     * 关闭试题主观题页面的按钮
@@ -318,7 +360,7 @@
       .subjective-list {
       	color: #4A4A4A;
 
-      	padding-bottom: 1.8rem;
+      	// padding-bottom: 1.8rem;
 	      -webkit-overflow-scrolling: touch;
 	      
 	      .item {
@@ -409,6 +451,7 @@
     bottom: 0;
     height: 1.466667rem;
     text-align: center;
+    transition: transform 0.5s ease;
 
     .btn {
       flex: 1;
@@ -416,5 +459,11 @@
       height: 1.466667rem;
       line-height: 1.466667rem;
     }
+  }
+  .btnfadein {
+  	transform: translateY(0);
+  }
+  .btnfadeout {
+  	transform: translateY(1.5rem);
   }
 </style>
