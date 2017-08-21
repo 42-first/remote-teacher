@@ -1,6 +1,6 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
-	<div class="problem-root allowscrollcallback" v-scroll="onScroll">
+	<div class="problem-root" :class="{'allowscrollcallback': !isScoring}" v-scroll="onScroll">
 		<v-touch v-on:tap="refreshSubjectivelist" v-show="isShowNewHint" class="new-item-hint f15">您有新的答案</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
@@ -145,6 +145,7 @@
 	    	isShowBackBtn: true,					// 显示底部返回按钮
 	    	isShowNewHint: false,       	// 上方提示有新的条目进来
 	    	isShow2TopBtn: false,					// 显示回到顶部按钮
+	    	isScoring: false,							// 正在打分
 	    }
 	  },
 	  computed: {
@@ -294,6 +295,7 @@
 
 	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
+	      self.isScoring = true
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
@@ -303,6 +305,8 @@
 	     */
 	    giveScore (answerid, score) {
 	    	let self = this
+
+	    	self.isScoring = false
 
 	    	if (score === -1) {
 	    		self.$refs.StarPanel.$emit('leave')
