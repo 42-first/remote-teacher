@@ -197,6 +197,7 @@
 	     * @event bindtap
 	     */
 	    closeProblemSubjective () {
+	    	this.closeSubjectivemask ()
 	    	this.$emit('closeProblemSubjective')
 	    },
 	    /**
