@@ -22,16 +22,16 @@
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
-		      已经有 <span>1</span> / <span>5</span> 位同学提交了答案
+		      已经有 <span>{{total_num}}</span> / <span>{{class_student_num}}</span> 位同学提交了答案
 		    </div>
 	    </section>
 
 	    <!-- 中间主观题页面 -->
 	    <section class="subjective-box f18">
-				<p v-show="!subjectiveList.length" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
+				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
 				<!-- 主观题部分 -->
-				<div class="subjective-list">
+				<div class="subjective-list" v-show="total_num">
 					<div class="item-with-gap" v-for="(item, index) in subjectiveList" :key="item.problem_result_id">
             <div class="item">
               <div class="detail">
@@ -132,6 +132,8 @@
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
+	    	class_student_num: '--',			// 班级学生数
+	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
@@ -220,6 +222,8 @@
             })
 
             self.subjectiveList = newList
+            self.total_num = jsonData.data.total_num
+            self.class_student_num = jsonData.data.class_student_num
           })
       },
       /**

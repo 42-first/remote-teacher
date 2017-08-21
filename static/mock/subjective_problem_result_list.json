@@ -2,6 +2,8 @@
   "msg": "",
   "data": {
     "direction": 1,
+    "class_student_num": 26,
+    "total_num": 5,
     "rest_num": 0,
     "response_num": 1,
     "problem_results_list": [
