@@ -3,11 +3,11 @@
 	<div class="paper-box allowscrollcallback">
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- 没有试卷 -->
-    <div v-show="!isFetching && !paperList.length" class="no-paper-box">
+    <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
       <div class="hint f12">试试从雨课堂桌面端制作并上传试卷吧</div>
     </div>
-    <div v-show="!isFetching && paperList.length">
+    <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
         <div class="title f17">已发试卷</div>
