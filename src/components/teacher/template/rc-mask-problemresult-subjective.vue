@@ -246,7 +246,7 @@
 
         self.fetchList().then(jsonData => {
         	let list = jsonData.data.problem_results_list
-        	let hasNew = list[0].problem_result_id > self.subjectiveList[0].problem_result_id
+        	let hasNew = list[0] && self.subjectiveList[0] && list[0].problem_result_id > self.subjectiveList[0].problem_result_id
 
         	self.total_num = jsonData.data.total_num
         	self.class_student_num = jsonData.data.class_student_num

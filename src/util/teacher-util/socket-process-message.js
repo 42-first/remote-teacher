@@ -211,7 +211,7 @@ function socketProcessMessage(msg){
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     let current = self.data.current - 1
-    self.startBell(current, msg.problem.limit)
+    self.startBell(current, msg.problem.limit, self.pptData[current].Problem.Type)
     self.isProblemPublished = true
     return
   }
