@@ -377,6 +377,12 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 发了新的试卷，单通了
+  if (msg.op == 'newquiz') {
+    self.$refs.InitiativeCtrlMask.$emit('newquiz', msg)
+    return
+  }
+
 }
 
 export default socketProcessMessage
