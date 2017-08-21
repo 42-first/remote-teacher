@@ -2,6 +2,10 @@
 <template>
 	<div class="problem-root allowscrollcallback" v-scroll="onScroll">
 		<v-touch v-on:tap="refreshSubjectivelist" v-show="isShowNewHint" class="new-item-hint f15">您有新的答案</v-touch>
+
+		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
+			<img class="jishi" src="~images/teacher/back-top.png" alt="">
+		</v-touch>
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
@@ -140,6 +144,7 @@
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
 	    	isShowBackBtn: true,					// 显示底部返回按钮
 	    	isShowNewHint: false,       	// 上方提示有新的条目进来
+	    	isShow2TopBtn: false,					// 显示回到顶部按钮
 	    }
 	  },
 	  computed: {
@@ -187,8 +192,22 @@
 	     */
 	    onScroll (e, position) {
 	      let self = this
+	      let windowHeight = Math.round(window.innerHeight)
+
+	      self.isShow2TopBtn = position.scrollTop > windowHeight
 	      
 	      proxyHandleScroll.call(self, position.scrollTop)
+	    },
+	    /**
+	     * 回到顶部
+	     *
+	     * @event bindtap
+	     */
+	    back2Top () {
+	      let self = this
+	      
+	      self.$el.scrollTop = 0
+	      self.isShow2TopBtn = false
 	    },
 	  	/**
 	     * 关闭试题主观题页面的按钮
@@ -367,6 +386,19 @@
 		  text-align: center;
 		  line-height: 0.8rem;
 		  color: $white;
+		}
+
+		.back-top-btn {
+			position: fixed;
+		  z-index: 10;
+		  right: 0.306667rem;
+		  bottom: 1.986667rem;
+		  width: 1.066667rem;
+		  height: 1.066667rem;
+
+		  img {
+		  	width: 100%;
+		  }
 		}
 	}
 
