@@ -348,7 +348,8 @@ export default {
       }
       
       Vue.nextTick(function () {
-        self.getProblemResult(inPageProblemID)
+        // 初次获取数据，加上第二个字符串参数
+        self.getProblemResult(inPageProblemID, true)
       })
       
     },
@@ -356,23 +357,25 @@ export default {
      * 发试题后request获取主观题、柱状图倒计时页面的数据
      *
      * @param {number} inPageProblemID 发送的试题的id
+     * @param {Boolean} isFirst 是点击显示后第一次获取数据
      */
-    getProblemResult (inPageProblemID) {
+    getProblemResult (inPageProblemID, isFirst) {
       let self = this
       let isSubjective = self.problemType === 'ShortAnswer'
       let fn = isSubjective ? self.getSubjective : self.getCollumResult
 
-      fn(inPageProblemID)
+      fn(inPageProblemID, isFirst)
     },
     /**
      * 发试题后request获取主观题页面的数据
      *
      * @param {number} inPageProblemID 发送的试题的id
+     * @param {Boolean} isFirst 是点击显示后第一次获取数据
      */
-    getSubjective(inPageProblemID){
+    getSubjective(inPageProblemID, isFirst){
       let self = this
 
-      self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('refreshSubjectivelist', inPageProblemID)
+      self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('refreshSubjectivelist', inPageProblemID, isFirst)
     },
     /**
      * 发试题后request获取柱状图倒计时页面的数据
