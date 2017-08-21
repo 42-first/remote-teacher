@@ -291,7 +291,7 @@
         self.quizList.unshift({
           "quiz_id": msg.quiz.quiz,
           "paper_id": msg.quiz.paperid,
-          "time": Moment(msg.quiz.time).format('YYYY-MM-DD hh:mm:ss'),
+          "time": Moment(msg.quiz.time).format('YYYY-MM-DD HH:mm:ss'),
           "quiz_end": false,
           "title": msg.quiz.title
         })
