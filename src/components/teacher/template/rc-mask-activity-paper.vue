@@ -12,7 +12,7 @@
       <section class="list upper" v-show="quizList.length">
         <div class="title f17">已发试卷</div>
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
-          <div class="desc f18">
+          <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
             <span class="f14"> {{quiz.time}}</span>
           </div>
@@ -25,7 +25,7 @@
         <div class="title f17">我的试卷库</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
-          <div class="desc f18">
+          <div class="desc f18 ellipsis">
             {{paper.title}} <br>
             <span class="f14">{{paper.time}}</span>
           </div>
