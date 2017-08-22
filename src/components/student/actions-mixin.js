@@ -159,7 +159,8 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      data.isPopup && this.msgBoxs.push(data);
+      // data.isPopup && this.msgBoxs.push(data);
+      data.isPopup && (this.msgBoxs = [data]);
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
@@ -196,7 +197,8 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      data.isPopup && this.msgBoxs.push(data);
+      // data.isPopup && this.msgBoxs.push(data);
+      data.isPopup && (this.msgBoxs = [data]);
 
       // 预加载习题图片
       let oImg = new Image();
