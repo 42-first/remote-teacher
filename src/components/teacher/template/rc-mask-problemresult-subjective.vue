@@ -172,7 +172,7 @@
 	  },
 	  filters: {
       formatTime(time) {
-        return Moment(time).format('hh:mm')
+        return Moment(time).format('HH:mm')
       }
     },
 	  methods: {
