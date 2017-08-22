@@ -14,7 +14,7 @@
       <p class="heade-action f18" @click="handleBack" v-else>取消</p>
       <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
       <h3 class="header-title f18" v-else>{{ title }}</h3>
-      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" v-show="!ispreview">提交</p>
+      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': '提交' }}</p>
     </header>
     <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 问题内容 cover -->
@@ -732,6 +732,7 @@
     box-shadow: 0 4px 6px rgba(0,0,0, 0.2);
 
     .heade-action {
+      min-width: 70px;
       color: #639EF4;
     }
 
