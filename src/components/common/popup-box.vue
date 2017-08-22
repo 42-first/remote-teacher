@@ -25,7 +25,7 @@
      <div class="popup__paper">
         <!-- 主观题作答链接 -->
         <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']"  v-if="item.problemType==='ShortAnswer'" @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/'+lessonid+'/subjective/'+item.index">
+          <router-link class="paper-txt f17" :to="'/'+lessonid+'/subjective/'+item.index" >
             <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
             <p class="paper-name">{{ item.caption }}</p>
            </router-link>
@@ -33,7 +33,7 @@
         </div>
         <!-- 客观题作答链接 -->
         <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" v-else @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/'+lessonid+'/exercise/'+item.index">
+          <router-link class="paper-txt f17" :to="'/'+lessonid+'/exercise/'+item.index" >
             <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
             <p class="paper-name">{{ item.caption }}</p>
           </router-link>
@@ -73,8 +73,11 @@
       },
       handlelink(index, evt) {
         this.$parent.msgBoxs.splice(index, 1);
+
         // 如果是图片预览退出图片预览
-        this.$parent.gallery && this.$parent.gallery.close();
+        this.$parent.gallery && setTimeout(()=>{
+          this.$parent.gallery.close();
+        }, 1500)
       }
     },
     created() {

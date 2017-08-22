@@ -960,6 +960,7 @@
 
     .answer--text {
       text-align: left;
+      word-wrap: break-word;
     }
 
     .answer--image {
