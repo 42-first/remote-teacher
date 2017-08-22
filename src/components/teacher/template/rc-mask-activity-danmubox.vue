@@ -6,7 +6,7 @@
       <v-touch  tag="i" :class="['iconfont', 'f45', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDanmulist" v-show="isShowNewHint" class="new-item-hint f15">你有新的弹幕</v-touch>
+    <v-touch v-on:tap="refreshDanmulist" v-show="isShowNewHint" class="new-item-hint f15">您有新的弹幕</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->

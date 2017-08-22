@@ -211,7 +211,7 @@ function socketProcessMessage(msg){
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     let current = self.data.current - 1
-    self.startBell(current, msg.problem.limit)
+    self.startBell(current, msg.problem.limit, self.pptData[current].Problem.Type)
     self.isProblemPublished = true
     return
   }
@@ -374,6 +374,12 @@ function socketProcessMessage(msg){
   // 有新的弹幕
   if (msg.op == 'newdanmu') {
     self.$refs.InitiativeCtrlMask.$emit('newdanmu', msg)
+    return
+  }
+
+  // 发了新的试卷，单通了
+  if (msg.op == 'newquiz') {
+    self.$refs.InitiativeCtrlMask.$emit('newquiz', msg)
     return
   }
 

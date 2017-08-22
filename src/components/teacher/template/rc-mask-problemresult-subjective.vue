@@ -1,6 +1,11 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
-	<div class="problem-root allowscrollcallback" v-scroll="onScroll">
+	<div class="problem-root" :class="{'allowscrollcallback': !isScoring}" v-scroll="onScroll">
+		<v-touch v-on:tap="refreshSubjectivelist" v-show="isShowNewHint" class="new-item-hint f15">您有新的答案</v-touch>
+
+		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
+			<img class="jishi" src="~images/teacher/back-top.png" alt="">
+		</v-touch>
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
@@ -22,7 +27,7 @@
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
-		      已经有 <span>{{total_num}}</span> / <span>{{class_student_num}}</span> 位同学提交了答案
+		      已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
 		    </div>
 	    </section>
 
@@ -105,7 +110,7 @@
   	let direction = posList[posList.length-1] - posList[0]
 
   	// 往下搓或者搓到底都要显示返回按钮
-  	self.isShowBackBtn = direction <= 0 || (maxScrollTop - posList[posList.length-1]) < 20
+  	self.isShowBackBtn = direction < 0 || (maxScrollTop - posList[posList.length-1]) < 10
   }
 
   let proxyHandleScroll = (function () {
@@ -132,12 +137,15 @@
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
-	    	class_student_num: '--',			// 班级学生数
+	    	class_participant_num: '--',			// 班级学生数
 	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
 	    	isShowBackBtn: true,					// 显示底部返回按钮
+	    	isShowNewHint: false,       	// 上方提示有新的条目进来
+	    	isShow2TopBtn: false,					// 显示回到顶部按钮
+	    	isScoring: false,							// 正在打分
 	    }
 	  },
 	  computed: {
@@ -154,9 +162,11 @@
 	  	// 点击 随机点名 按钮 父组件收到node回执后发送事件给本子组件
 	  	let self = this
 
-      self.$on('refreshSubjectivelist', function (inPageProblemID) {
-        console.log(`父组件召唤子组件刷新主观题数据了${inPageProblemID}`)
-        self.refreshSubjectivelist()
+      self.$on('refreshSubjectivelist', function (inPageProblemID, isFirst) {
+        // console.log(`父组件召唤子组件刷新主观题数据了${inPageProblemID}`)
+        let fn = isFirst ? self.refreshSubjectivelist : self.pollingNewItem
+
+        fn()
       })
 	  },
 	  filters: {
@@ -183,8 +193,22 @@
 	     */
 	    onScroll (e, position) {
 	      let self = this
+	      let windowHeight = Math.round(window.innerHeight)
+
+	      self.isShow2TopBtn = position.scrollTop > windowHeight
 	      
 	      proxyHandleScroll.call(self, position.scrollTop)
+	    },
+	    /**
+	     * 回到顶部
+	     *
+	     * @event bindtap
+	     */
+	    back2Top () {
+	      let self = this
+	      
+	      self.$el.scrollTop = 0
+	      self.isShow2TopBtn = false
 	    },
 	  	/**
 	     * 关闭试题主观题页面的按钮
@@ -193,8 +217,45 @@
 	     * @event bindtap
 	     */
 	    closeProblemSubjective () {
+	    	this.closeSubjectivemask ()
 	    	this.$emit('closeProblemSubjective')
 	    },
+	    /**
+       * 获取答案数据
+       *
+       */
+      fetchList(){
+        let self = this
+        let url = API.subjective_problem_result_list
+
+        // 单次刷新
+        return request.get(url, {
+          'start': BIG_NUMBER,
+          'count': BIG_NUMBER,
+          'problem_id': self.problemid,
+          'lesson_id': self.lessonid,
+          'direction': 0
+        })
+      },
+	    /**
+       * 查询有没有新的答案，根据id来判断
+       *
+       */
+      pollingNewItem(){
+        let self = this
+
+        self.fetchList().then(jsonData => {
+        	let list = jsonData.data.problem_results_list
+        	let hasNew = list[0] && self.subjectiveList[0] && list[0].problem_result_id > self.subjectiveList[0].problem_result_id
+
+        	self.total_num = jsonData.data.total_num
+        	self.class_participant_num = jsonData.data.class_participant_num
+
+        	if (hasNew) {
+        		self.isShowNewHint = true
+        	}
+        })
+      },
 	    /**
        * 更新试题详情的数据
        * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
@@ -202,29 +263,23 @@
        */
       refreshSubjectivelist(){
         let self = this
-        let url = API.subjective_problem_result_list
 
-        // 单次刷新
-        request.get(url, {
-          'start': BIG_NUMBER,
-          'count': BIG_NUMBER,
-          'problem_id': self.problemid,
-          'lesson_id': self.lessonid,
-          'direction': 0
-        }).then(jsonData => {
-            console.log('主观题列表', jsonData)
-            let list = jsonData.data.problem_results_list
+        self.fetchList().then(jsonData => {
+    			self.isShowNewHint = false
+    	    console.log('主观题列表', jsonData)
+    	    let list = jsonData.data.problem_results_list
 
-            let newList = list.map(item => {
-            	item.fullStars = Math.round(item.score === -1 ? 0 : item.score*5/item.source_score)
+    	    let newList = list.map(item => {
+    	    	item.fullStars = Math.round(item.score === -1 ? 0 : item.score*5/item.source_score)
 
-            	return item
-            })
+    	    	return item
+    	    })
 
-            self.subjectiveList = newList
-            self.total_num = jsonData.data.total_num
-            self.class_student_num = jsonData.data.class_student_num
-          })
+    	    self.subjectiveList = newList
+    	    self.total_num = jsonData.data.total_num
+        	self.class_participant_num = jsonData.data.class_participant_num
+    	    self.$el.scrollTop = 0
+        })
       },
       /**
 	     * 点击打分部分，呼出打分面板
@@ -240,6 +295,7 @@
 
 	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
+	      self.isScoring = true
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
@@ -249,6 +305,8 @@
 	     */
 	    giveScore (answerid, score) {
 	    	let self = this
+
+	    	self.isScoring = false
 
 	    	if (score === -1) {
 	    		self.$refs.StarPanel.$emit('leave')
@@ -318,6 +376,34 @@
 		position: relative;
 		height: 100%;
 		overflow: auto;
+
+		.new-item-hint {
+		  position: fixed;
+		  z-index: 10;
+		  left: 50%;
+		  top: 0.266667rem;
+		  transform: translate(-50%, 0);
+		  width: 5.333333rem;
+		  height: 0.8rem;
+		  border-radius: 0.4rem;
+		  background: rgba(0,0,0,0.8);
+		  text-align: center;
+		  line-height: 0.8rem;
+		  color: $white;
+		}
+
+		.back-top-btn {
+			position: fixed;
+		  z-index: 10;
+		  right: 0.306667rem;
+		  bottom: 1.986667rem;
+		  width: 1.066667rem;
+		  height: 1.066667rem;
+
+		  img {
+		  	width: 100%;
+		  }
+		}
 	}
 
 	.icon-fill-star, .icon-star {
