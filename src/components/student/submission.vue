@@ -398,6 +398,7 @@
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
         gallery.init();
+        this.$parent.gallery = gallery;
       },
       handleSend() {
         this.sendStatus === 2 && this.sendSubmission();

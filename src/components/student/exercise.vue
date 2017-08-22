@@ -129,19 +129,21 @@
         rate: 1
       };
     },
+    /*
     beforeRouteEnter (to, from, next) {
       // 在渲染该组件的对应路由被 confirm 前调用
       // 不！能！获取组件实例 `this`
       // 因为当钩子执行前，组件实例还没被创建
 
       if(from.name === 'student-presentation-page') {
-         next();
+        next();
       } else {
         next(vm => {
           vm.$router.back();
         })
       }
     },
+    */
     components: {
     },
     computed: {
@@ -523,6 +525,7 @@
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
         gallery.init();
+        this.$parent.gallery = gallery;
       },
 
       /*
@@ -548,6 +551,8 @@
 
       if(this.summary) {
         this.init(this.summary);
+      } else {
+        this.$router.back();
       }
     },
     mounted() {
