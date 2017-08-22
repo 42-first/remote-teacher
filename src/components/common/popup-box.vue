@@ -69,14 +69,12 @@
       * index
       */
       handledelMag(index, evt) {
-        console.log(index);
-
         this.$parent.msgBoxs.splice(index, 1);
       },
       handlelink(index, evt) {
-        console.log(index);
-
         this.$parent.msgBoxs.splice(index, 1);
+        // 如果是图片预览退出图片预览
+        this.$parent.gallery && this.$parent.gallery.close();
       }
     },
     created() {

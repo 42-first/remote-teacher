@@ -193,6 +193,7 @@
           }, 1500)
         }
 
+        this.$parent.$parent.gallery = gallery;
       },
       /*
       * @method ppt不懂,收藏

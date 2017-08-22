@@ -153,6 +153,7 @@
         starCount: 0
       };
     },
+    /*
     beforeRouteEnter (to, from, next) {
       if(from.name === 'student-presentation-page') {
         next();
@@ -162,6 +163,7 @@
         })
       }
     },
+    */
     components: {
     },
     computed: {
@@ -666,6 +668,7 @@
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
 
         gallery.init();
+        this.$parent.gallery = gallery;
       },
       handleSend() {
         this.sendStatus === 2 && this.sendSubjective();
@@ -682,6 +685,8 @@
 
       if(this.summary) {
         this.init(this.summary);
+      } else {
+        this.$router.back();
       }
 
       // 课程结束啦
