@@ -76,7 +76,7 @@
 	    
 	  </div>
 
-	  <div class="button-box f18" :class="isShowBackBtn ? 'btnfadein' : 'btnfadeout'">
+	  <div class="button-box f18" v-show="isShowBtnBox" :class="isShowBackBtn ? 'btnfadein' : 'btnfadeout'">
       <v-touch class="btn f18" v-on:tap="closeProblemSubjective" >返回</v-touch>
     </div>
 		
@@ -146,6 +146,7 @@
 	    	isShowNewHint: false,       	// 上方提示有新的条目进来
 	    	isShow2TopBtn: false,					// 显示回到顶部按钮
 	    	isScoring: false,							// 正在打分
+	    	isShowBtnBox: false,					// 显示底部返回按钮
 	    }
 	  },
 	  computed: {
@@ -246,7 +247,7 @@
 
         self.fetchList().then(jsonData => {
         	let list = jsonData.data.problem_results_list
-        	let hasNew = list[0] && self.subjectiveList[0] && list[0].problem_result_id > self.subjectiveList[0].problem_result_id
+        	let hasNew = (list[0] && !self.subjectiveList[0]) || (list[0] && self.subjectiveList[0] && list[0].problem_result_id > self.subjectiveList[0].problem_result_id)
 
         	self.total_num = jsonData.data.total_num
         	self.class_participant_num = jsonData.data.class_participant_num
@@ -275,6 +276,7 @@
     	    	return item
     	    })
 
+    	    self.isShowBtnBox = true
     	    self.subjectiveList = newList
     	    self.total_num = jsonData.data.total_num
         	self.class_participant_num = jsonData.data.class_participant_num
@@ -376,6 +378,7 @@
 		position: relative;
 		height: 100%;
 		overflow: auto;
+		background: #000000;
 
 		.new-item-hint {
 		  position: fixed;

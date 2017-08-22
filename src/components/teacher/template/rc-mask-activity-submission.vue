@@ -73,7 +73,7 @@
       <span v-show="isAskingItemStatus">正在投屏中...</span>
       <span v-show="isItemDeleted">学生已删除此投稿</span>
     </div>
-    <div class="button-box f18">
+    <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshSubmissionlist">刷新</v-touch>
       <v-touch class="btn f18 J_ga" v-on:tap="closeSubmissionbox" data-category="15" data-label="投稿页">返回</v-touch>
     </div>
@@ -108,6 +108,7 @@
         contLonger: false,            // 内容超过1屏
         isShowNoNewItem: false,       // 刷新后没有新的条目
         isShowNewHint: false,         // 上方提示有新的条目进来
+        isShowBtnBox: false,          // 显示底部返回按钮
       }
     },
     components: {
@@ -203,6 +204,7 @@
         }).then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
+            self.isShowBtnBox = true
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
