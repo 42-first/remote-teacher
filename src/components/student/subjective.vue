@@ -10,10 +10,11 @@
   <section class="page-subjective">
     <!-- 练习导航 -->
     <header class="subjective__header">
-      <p class="heade-action f18" @click="handleBack">取消</p>
+      <p class="heade-action f18" @click="handleBack" v-if="ispreview">返回</p>
+      <p class="heade-action f18" @click="handleBack" v-else>取消</p>
       <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
       <h3 class="header-title f18" v-else>{{ title }}</h3>
-      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">提交</p>
+      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" v-show="!ispreview">提交</p>
     </header>
     <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 问题内容 cover -->
@@ -60,7 +61,7 @@
       <div class="subjective__answer" v-if="ispreview">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics.length"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
+          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
         </div>
         <!-- 打分显示 -->
         <div class="answer-score">
@@ -153,17 +154,6 @@
         starCount: 0
       };
     },
-    /*
-    beforeRouteEnter (to, from, next) {
-      if(from.name === 'student-presentation-page') {
-        next();
-      } else {
-        next(vm => {
-          vm.$router.back();
-        })
-      }
-    },
-    */
     components: {
     },
     computed: {
