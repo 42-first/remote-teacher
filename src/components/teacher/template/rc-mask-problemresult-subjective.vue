@@ -27,7 +27,7 @@
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
-		      已经有 <span>{{total_num}}</span> / <span>{{class_student_num}}</span> 位同学提交了答案
+		      已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
 		    </div>
 	    </section>
 
@@ -137,7 +137,7 @@
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
-	    	class_student_num: '--',			// 班级学生数
+	    	class_participant_num: '--',			// 班级学生数
 	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
@@ -249,7 +249,7 @@
         	let hasNew = list[0] && self.subjectiveList[0] && list[0].problem_result_id > self.subjectiveList[0].problem_result_id
 
         	self.total_num = jsonData.data.total_num
-        	self.class_student_num = jsonData.data.class_student_num
+        	self.class_participant_num = jsonData.data.class_participant_num
 
         	if (hasNew) {
         		self.isShowNewHint = true
@@ -277,7 +277,7 @@
 
     	    self.subjectiveList = newList
     	    self.total_num = jsonData.data.total_num
-        	self.class_student_num = jsonData.data.class_student_num
+        	self.class_participant_num = jsonData.data.class_participant_num
     	    self.$el.scrollTop = 0
         })
       },
