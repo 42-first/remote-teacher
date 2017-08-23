@@ -10,7 +10,7 @@
   <section class="page-subjective">
     <!-- 练习导航 -->
     <header class="subjective__header">
-      <p class="heade-action f18" @click="handleBack" v-if="ispreview">返回</p>
+      <p class="heade-action f17" @click="handleBack" v-if="ispreview">返回</p>
       <p class="heade-action f18" @click="handleBack" v-else>取消</p>
       <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
       <h3 class="header-title f18" v-else>{{ title }}</h3>
