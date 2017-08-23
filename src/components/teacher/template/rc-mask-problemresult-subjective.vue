@@ -137,7 +137,7 @@
 	  props: ['lessonid', 'pptData', 'current', 'socket', 'postingSubjectiveid', 'problemDurationLeft'],
 	  data () {
 	    return {
-	    	class_participant_num: '--',			// 班级学生数
+	    	class_participant_num: '--',	// 班级学生数
 	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
 	    	starTotal: STAR_TOTAL,				// 总星星数目
@@ -451,6 +451,7 @@
 		
 		/* 主观题内容区 */
 	  .subjective-box {
+	  	margin-top: -1px;
 	  	.hmy {
         margin-top: 2.893333rem;
         text-align: center;
