@@ -40,6 +40,8 @@ if (process.env.NODE_ENV === 'production') {
             'DELETE_SUBMISSION': '/v/api/tougao/delete',
             // 上传图片
             'UPLOAD_PIC': '/v/api/tougao/pic_upload',
+            // 单个投稿信息
+            'GET_SUBMISSION': '/v/api/tougao/tougao_info',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         },
 

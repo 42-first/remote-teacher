@@ -268,6 +268,14 @@ var mixin = {
 
             break
 
+          // 投稿分享20170823
+          case 'sendpost':
+            item = msg['post'];
+
+            this.addSubmission({ type: 6, postid: item.postid, time: item.dt, event: item });
+
+            break
+
           default:
             hasMsg = false;
             break

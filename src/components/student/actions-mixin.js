@@ -49,6 +49,12 @@ var actionsMixin = {
 
               break;
 
+            // 投稿分享
+            case 'post':
+               this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -207,6 +213,25 @@ var actionsMixin = {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
         return item.type === 3 && item.problemID === data.event['prob'];
+      })
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 新增分享投稿20170823
+     * { type: 6, postid: 123, isFetch: false }
+     */
+    addSubmission(data) {
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 6 && item.postid === data.postid && data.isFetch;
+      })
+
+      data = Object.assign(data, {
+        status: '未读',
+        isComplete: false
       })
 
       !hasEvent && this.cards.push(data);

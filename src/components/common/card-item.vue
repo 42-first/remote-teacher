@@ -89,6 +89,23 @@
         </div>
       </div>
     </template>
+    <!-- 投稿分享 -->
+    <template v-else-if="item.type==6">
+      <div class="timeline__paper">
+        <router-link :class="['paper-info', 'submission', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/submission2/'+index">
+          <div class="paper-txt f18">
+            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
+          </div>
+          <i class="iconfont icon-ykq_tab_tougao f50"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <span class="status" data-language-common="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
 
   </section>
 
@@ -410,13 +427,18 @@
       background: rgba(99,158,244,0.7);
     }
 
+    .paper-info.submission {
+      background: rgba(245,166,35,0.7);
+    }
+
     .paper-info.hongbao {
       color: #FFE595;
       background: #e64340;
     }
 
     .paper-info.complete,
-    .paper-info.xt.complete {
+    .paper-info.xt.complete,
+    .paper-info.submission.complete {
       background: #C8C8C8;
     }
 

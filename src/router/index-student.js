@@ -21,6 +21,7 @@ const Subjective = resolve => require(['@/components/student/subjective'], resol
 const Submission = resolve => require(['@/components/student/submission'], resolve)
 const SubmissionList = resolve => require(['@/components/student/submission-list'], resolve)
 const Danmu = resolve => require(['@/components/student/danmu'], resolve)
+const SubmissionDetail = resolve => require(['@/components/student/submission-detail'], resolve)
 
 
 // 国际化
@@ -69,6 +70,11 @@ const studentRouter = new Router({
           path: 'subjective/:index',
           name: 'student-subjective-page',
           component: Subjective
+        },
+        {
+          path: 'submission2/:index',
+          name: 'student-submission-detail-page',
+          component: SubmissionDetail
         },
         {
           path: 'submission',
