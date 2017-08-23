@@ -77,7 +77,7 @@
         // 如果是图片预览退出图片预览
         this.$parent.gallery && setTimeout(()=>{
           this.$parent.gallery.close();
-        }, 1500)
+        }, 500)
       }
     },
     created() {
