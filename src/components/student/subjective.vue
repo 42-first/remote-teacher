@@ -10,7 +10,7 @@
   <section class="page-subjective">
     <!-- 练习导航 -->
     <header class="subjective__header">
-      <p class="heade-action f17" @click="handleBack" v-if="ispreview">返回</p>
+      <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
       <p class="heade-action f18" @click="handleBack" v-else>取消</p>
       <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
       <h3 class="header-title f18" v-else>{{ title }}</h3>
@@ -732,8 +732,13 @@
     box-shadow: 0 4px 6px rgba(0,0,0, 0.2);
 
     .heade-action {
-      min-width: 70px;
+      min-width: 0.666667rem;
       color: #639EF4;
+    }
+
+    .subjective--back {
+      margin-left: -0.25rem;
+      color: #4a4a4a;
     }
 
     .heade-action.disable {
