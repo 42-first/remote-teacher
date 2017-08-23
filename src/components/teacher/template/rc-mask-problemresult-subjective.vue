@@ -495,7 +495,7 @@
 
 	            .time {
 	            	float: right;
-		            color: #9B9B9B;
+		            color: $graybg;
 		          }
 
 	            .author {
@@ -520,7 +520,7 @@
 	          margin-left: 1.386667rem;
 	          
 	          .gray {
-	            color: #9B9B9B;
+	            color: $graybg;
 	          }
 
 	          .dafen-box, .action {

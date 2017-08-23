@@ -314,7 +314,7 @@
         left: 0;
         bottom: 2rem;
         width: 100%;
-        color: #9B9B9B;
+        color: $graybg;
       }
     }
 
@@ -339,7 +339,7 @@
         vertical-align: middle;
       }
       .icon-danmu-close {
-        color: #9B9B9B;
+        color: $graybg;
       }
       .icon-danmu-open {
         color: $blue;
@@ -385,10 +385,10 @@
           margin-left: 1.386667rem;
 
           .time {
-            color: #9B9B9B;
+            color: $graybg;
           }
           .gray {
-            color: #9B9B9B;
+            color: $graybg;
           }
           .cancel-post-btn {
             background: $blue;
@@ -406,7 +406,7 @@
         height: 0.6rem;
         margin: 0 0.6rem;
         text-align: center;
-        color: #9B9B9B;
+        color: $graybg;
 
         .wenan {
           position: relative;
@@ -420,7 +420,7 @@
           top: 0.293333rem;
           width: 100%;
           height: 1px;
-          background: #9B9B9B;
+          background: $graybg;
         }
       }
     }

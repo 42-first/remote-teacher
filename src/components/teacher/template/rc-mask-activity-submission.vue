@@ -509,7 +509,7 @@
         left: 0;
         bottom: 2rem;
         width: 100%;
-        color: #9B9B9B;
+        color: $graybg;
       }
     }
 
@@ -560,11 +560,11 @@
           margin-left: 1.386667rem;
           
           .gray {
-            color: #9B9B9B;
+            color: $graybg;
           }
 
           .time {
-            color: #9B9B9B;
+            color: $graybg;
           }
 
           .action {
@@ -603,7 +603,7 @@
         height: 0.6rem;
         margin: 0 0.6rem;
         text-align: center;
-        color: #9B9B9B;
+        color: $graybg;
 
         .wenan {
           position: relative;
@@ -617,7 +617,7 @@
           top: 0.293333rem;
           width: 100%;
           height: 1px;
-          background: #9B9B9B;
+          background: $graybg;
         }
       }
     }
