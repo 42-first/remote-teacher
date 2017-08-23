@@ -167,7 +167,10 @@
           .then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
-            self.isShowBtnBox = true
+            
+            setTimeout(() => {
+              self.isShowBtnBox = true
+            },200)
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示

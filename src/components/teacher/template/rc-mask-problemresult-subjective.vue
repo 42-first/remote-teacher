@@ -276,11 +276,14 @@
     	    	return item
     	    })
 
-    	    self.isShowBtnBox = true
     	    self.subjectiveList = newList
     	    self.total_num = jsonData.data.total_num
         	self.class_participant_num = jsonData.data.class_participant_num
     	    self.$el.scrollTop = 0
+
+    	    setTimeout(() => {
+    	    	self.isShowBtnBox = true
+    	    },200)
         })
       },
       /**
@@ -375,8 +378,11 @@
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
 	.problem-root {
-		position: relative;
-		height: 100%;
+		position: absolute;
+		left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 		overflow: auto;
 		background: #000000;
 
@@ -414,7 +420,12 @@
 	}
 
 	.problemresult-box {
-	  position: relative;
+	  position: absolute;
+    z-index: 20; /* 遮盖toolbar */
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 	  color: $white;
 	  background: #000000;
 		
