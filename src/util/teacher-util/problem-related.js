@@ -165,6 +165,7 @@ export default {
      * @param {Number} timePassed 如果是主观题直接发送，传入已经过去的时间（默认值取1，以免触发 '时间到' 文案）
      */
     startBell (index, initTime, problemType = 'notShortAnswer', timePassed = 1) {
+      if (bellArr[index]) {return;}
       let self = this
       let isShortAnswer = problemType === 'ShortAnswer'
       let isDaojishi = initTime != -1
