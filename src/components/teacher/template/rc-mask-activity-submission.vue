@@ -39,6 +39,7 @@
               <div class="action-box">
                 <div class="time f15">{{item.create_time.substring(11)}}</div>
                 <div class="action f15">
+                  <!-- 投屏的时候不显示收藏状态 -->
                   <v-touch class="coll gray" v-show="item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 0)">
                     <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
                     已收藏

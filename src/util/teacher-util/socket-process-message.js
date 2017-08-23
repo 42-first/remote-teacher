@@ -234,12 +234,23 @@ function socketProcessMessage(msg){
     return
   }
 
-  // 投稿投屏
+  // 投稿投屏，用户重新投屏（投之前投屏过的，这是需要在这里获取是否已经发送全班的状态）
   if (msg.op == 'postshown') {
     self.postingSubmissionid = msg.postid
-    self.postingSubmissionSent = msg.sent
 
     localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
+
+    self.postingSubmissionSent = msg.sent
+
+    localStorage.setItem('postingSubmissionSent'+self.lessonid, msg.sent)
+    return
+  }
+
+  // 投稿已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
+  if (msg.op == 'sendpost') {
+    self.postingSubmissionSent = true
+
+    localStorage.setItem('postingSubmissionSent'+self.lessonid, true)
     return
   }
 

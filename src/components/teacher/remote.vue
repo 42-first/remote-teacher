@@ -250,8 +250,14 @@ export default {
     // 保存本地正在投屏的弹幕、投稿id、主观题id
     self.postingDanmuid = localStorage.getItem('postingDanmuid'+self.lessonid) || -1
     self.postingDanmuid -= 0
+
     self.postingSubmissionid = localStorage.getItem('postingSubmissionid'+self.lessonid) || -1
     self.postingSubmissionid -= 0
+
+    let tempSentStatus = localStorage.getItem('postingSubmissionSent'+self.lessonid)
+    self.postingSubmissionSent = tempSentStatus === 'true'
+
+
     self.postingSubjectiveid = localStorage.getItem('postingSubjectiveid'+self.lessonid) || -1
     self.postingSubjectiveid -= 0
 
