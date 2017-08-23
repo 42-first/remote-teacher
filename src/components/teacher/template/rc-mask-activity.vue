@@ -94,6 +94,7 @@
       :lessonid="lessonid"
       :socket="socket"
       :posting-submissionid="postingSubmissionid"
+      :posting-submission-sent="postingSubmissionSent"
       @closeSubmissionbox="closeSubmissionbox"
       @refreshCheckTougao="refreshCheckTougao"
     ></RcMaskActivitySubmission>
@@ -119,7 +120,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'presentationid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['lessonid', 'presentationid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
