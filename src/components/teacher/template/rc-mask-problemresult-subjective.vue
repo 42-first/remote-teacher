@@ -388,7 +388,7 @@
 
 		.new-item-hint {
 		  position: fixed;
-		  z-index: 10;
+		  z-index: 30;
 		  left: 50%;
 		  top: 0.266667rem;
 		  transform: translate(-50%, 0);
