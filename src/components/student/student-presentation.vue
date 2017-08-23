@@ -876,11 +876,10 @@
   \*-------------------*/
 
   .student__msgbox {
-    z-index: 1503;
+    z-index: 3;
     position: fixed;
     top: 0;
     width: 100%;
-    // width: 9.466667rem;
   }
 
 

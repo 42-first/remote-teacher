@@ -162,7 +162,7 @@
 
           tapToClose: true,
           // 解决消息点击问题
-          history: false,
+          // history: false,
 
           getThumbBoundsFn: function(index) {
             // find thumbnail element

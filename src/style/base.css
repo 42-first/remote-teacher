@@ -86,7 +86,7 @@ textarea { outline: none; resize: none; }
   font-size: 17px;
 }
 [data-dpr="2"] .f17 {
-    font-size: 37px;
+    font-size: 34px;
 }
 [data-dpr="3"] .f17 {
   font-size: 51px;
