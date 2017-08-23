@@ -39,12 +39,12 @@
               <div class="action-box">
                 <div class="time f15">{{item.create_time.substring(11)}}</div>
                 <div class="action f15">
-                  <v-touch class="coll gray" v-show="item.is_collect" v-on:tap="collectSubmission(item.id, index, 0)">
+                  <v-touch class="coll gray" v-show="item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 0)">
                     <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
                     已收藏
                   </v-touch>
-                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.is_collect" v-on:tap="collectSubmission(item.id, index, 1)">
-                  <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
+                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 1)">
+                    <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
                     收藏
                   </v-touch>
 
@@ -52,7 +52,16 @@
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     投屏
                   </v-touch>
-                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">退出投屏</v-touch>
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">取消投屏</v-touch>
+
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
+                    <span class="fsqb-innerline"></span>
+                    发送全班
+                  </v-touch>
+                  <div class="cancel-post-btn yfqb f17" v-show="postingSubmissionid === item.id && postingSubmissionSent">
+                    <span class="fsqb-innerline"></span>
+                    已发全班
+                  </div>
                 </div>
               </div>
             </div>
@@ -94,7 +103,7 @@
 
   export default {
     name: 'RcMaskActivitySubmission',
-    props: ['lessonid', 'socket', 'postingSubmissionid'],
+    props: ['lessonid', 'socket', 'postingSubmissionid', 'postingSubmissionSent'],
     data () {
       return {
         submissionList: [],           // 投稿列表
@@ -311,6 +320,24 @@
           'op': 'closemask',
           'lessonid': self.lessonid,
           'type': 'post',
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+      },
+      /**
+       * 发送全班按钮
+       *
+       * @event bindtap
+       * @param {number} submissionid;
+       */
+      fsqbHander (submissionid) {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'sendpost',
+          'lessonid': self.lessonid,
+          'postid': submissionid,
           'msgid': 1234
         })
 
@@ -550,11 +577,23 @@
           }
           .cancel-post-btn {
             background: $blue;
-            width: 2.733333rem;
+            width: 2.346667rem;
             text-align: center;
             height: 0.826667rem;
             line-height: 0.826667rem;
             color: $white;
+          }
+
+          .yfqb {
+            background: $graybg;
+          }
+
+          .fsqb-innerline {
+            float: left;
+            margin-top: 0.2rem;
+            width: 0.026667rem;
+            height: 0.4rem;
+            background: $white;
           }
         }
       }

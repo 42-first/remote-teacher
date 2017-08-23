@@ -58,6 +58,7 @@
           :is-danmu-open="isDanmuOpen"
           :posting-danmuid="postingDanmuid"
           :posting-submissionid="postingSubmissionid"
+          :posting-submission-sent="postingSubmissionSent"
           :posting-subjectiveid="postingSubjectiveid"
           :newdoubt="newdoubt"
           :newtougao="newtougao"
@@ -207,6 +208,7 @@ export default {
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
       postingSubmissionid: -1,                // 正在投屏的投稿的id
+      postingSubmissionSent: false,           // 正在投屏的投稿已经发送全班
       postingSubjectiveid: -1,                // 正在投屏的主观题的id
       newdoubt: 0,                            // 未查看的不懂人次总数
       newtougao: 0,                           // 未查看的投稿人次总数

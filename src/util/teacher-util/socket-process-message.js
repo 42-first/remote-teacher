@@ -237,6 +237,7 @@ function socketProcessMessage(msg){
   // 投稿投屏
   if (msg.op == 'postshown') {
     self.postingSubmissionid = msg.postid
+    self.postingSubmissionSent = msg.sent
 
     localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
     return
