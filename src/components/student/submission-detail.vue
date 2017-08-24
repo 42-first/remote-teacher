@@ -99,7 +99,7 @@
         let oImg = new Image();
         oImg.onload = (e) => {
           this.width = oImg.naturalWidth || oImg.width;
-          this.width = oImg.naturalHeight || oImg.height;
+          this.height = oImg.naturalHeight || oImg.height;
         };
         oImg.src = src;
       },
