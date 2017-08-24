@@ -9,13 +9,6 @@
 <template>
   <section class="submission__detail">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <!-- 导航 -->
-      <header class="student__header">
-        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="student__header--back"></p>
-      </header>
-
 
       <div class="submission__item" v-if="result">
         <!-- 投稿时间 -->
@@ -34,44 +27,6 @@
       </div>
 
     </div>
-
-    <!-- 图片放大结构 -->
-    <section class="pswp J_submission_pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-      <div class="pswp__bg"></div>
-
-      <div class="pswp__scroll-wrap">
-
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
-
-        <div class="pswp__ui pswp__ui--hidden">
-
-          <div class="pswp__top-bar">
-
-            <div class="pswp__counter"></div>
-
-              <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                      <div class="pswp__preloader__cut">
-                        <div class="pswp__preloader__donut"></div>
-                      </div>
-                    </div>
-              </div>
-            </div>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-      </div>
-
-    </section>
   </section>
 </template>
 <script>
@@ -133,19 +88,26 @@
 
       handlelaodImg(evt) {
         let target = evt.target;
+        let src = target.dataset.src || target.src;
 
         this.width = target.naturalWidth || target.width;
         this.height = target.naturalHeight || target.width;
 
         this.rate = this.width/this.height;
-
         this.rate > 1 && (target.style.width = '100%');
+
+        let oImg = new Image();
+        oImg.onload = (e) => {
+          this.width = oImg.naturalWidth || oImg.width;
+          this.width = oImg.naturalHeight || oImg.height;
+        };
+        oImg.src = src;
       },
 
       handleScaleImage() {
         let targetEl = event.target;
         let src = targetEl.dataset.src || targetEl.src;
-        let pswpElement = this.$el.querySelector('.J_submission_pswp');
+        let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
 
