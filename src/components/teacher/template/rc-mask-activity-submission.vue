@@ -53,13 +53,13 @@
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     投屏
                   </v-touch>
-                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">取消投屏</v-touch>
+                  <v-touch class="cancel-post-btn f14" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">取消投屏</v-touch>
 
-                  <v-touch class="cancel-post-btn f17" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
+                  <v-touch class="cancel-post-btn f14 qb" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
                     <span class="fsqb-innerline"></span>
                     发送全班
                   </v-touch>
-                  <div class="cancel-post-btn yfqb f17" v-show="postingSubmissionid === item.id && postingSubmissionSent">
+                  <div class="cancel-post-btn qb yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
                     <span class="fsqb-innerline"></span>
                     已发全班
                   </div>
@@ -501,8 +501,8 @@
       
       img {
         display: inline-block;
-        width: 6.213333rem;
-        transform: translateY(50%);
+        width: 5.5rem;
+        transform: translateY(100%);
       }
       .hint {
         position: absolute;
@@ -586,6 +586,10 @@
             color: $white;
           }
 
+          .qb {
+            margin-right: -0.4rem;
+          }
+
           .yfqb {
             background: $graybg;
           }
@@ -618,7 +622,7 @@
           top: 0.293333rem;
           width: 100%;
           height: 1px;
-          background: $graybg;
+          background: #c8c8c8;
         }
       }
     }
@@ -654,9 +658,9 @@
       }
       .innerline {
         float: left;
-        margin-top: 0.233333rem;
+        margin-top: 0.333333rem;
         width: 0.026667rem;
-        height: 1.0rem;
+        height: 0.8rem;
         background: $white;
       }
     }
