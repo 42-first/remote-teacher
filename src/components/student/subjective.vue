@@ -31,7 +31,7 @@
         </div>
       </section>
 
-      <h3 class="subjective__answer--lable f17">作答区域<span class="tip f12">（内容限制140字可插入1张图片）</span></h3>
+      <h3 class="subjective__answer--lable f17" v-if="!ispreview">作答区域<span class="tip f12">（内容限制140字可插入1张图片）</span></h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
@@ -76,44 +76,6 @@
       </div>
 
     </div>
-
-    <!-- 图片放大结构 -->
-    <section class="pswp J_submission_pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-      <div class="pswp__bg"></div>
-
-      <div class="pswp__scroll-wrap">
-
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
-
-        <div class="pswp__ui pswp__ui--hidden">
-
-          <div class="pswp__top-bar">
-
-            <div class="pswp__counter"></div>
-
-              <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                      <div class="pswp__preloader__cut">
-                        <div class="pswp__preloader__donut"></div>
-                      </div>
-                    </div>
-              </div>
-            </div>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-      </div>
-
-    </section>
 
   </section>
 </template>
@@ -542,6 +504,11 @@
           }
         };
 
+        this.$toast({
+          message: '图片上传中',
+          duration: 2000
+        });
+
         // 压缩 浏览器旋转 微信崩溃等问题
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
@@ -600,7 +567,8 @@
        */
       handleScaleImage(type, evt) {
         let targetEl = evt.target;
-        let pswpElement = this.$el.querySelector('.J_submission_pswp');
+        // let pswpElement = this.$el.querySelector('.J_submission_pswp');
+        let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
         let src = this.imageURL;
