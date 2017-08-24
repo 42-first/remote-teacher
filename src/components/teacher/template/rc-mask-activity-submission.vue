@@ -85,7 +85,7 @@
     </div>
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshSubmissionlist">刷新</v-touch>
-      <v-touch class="btn f18 J_ga" v-on:tap="closeSubmissionbox" data-category="15" data-label="投稿页">返回</v-touch>
+      <v-touch class="btn f18 J_ga" v-on:tap="closeSubmissionbox" data-category="15" data-label="投稿页"><span class="innerline"></span>返回</v-touch>
     </div>
   </div>
 </template>
@@ -217,7 +217,7 @@
             
             setTimeout(() => {
               self.isShowBtnBox = true
-            },200)
+            },500)
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
@@ -440,7 +440,7 @@
       width: 5.333333rem;
       height: 0.8rem;
       border-radius: 0.4rem;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       text-align: center;
       line-height: 0.8rem;
       color: $white;
@@ -455,7 +455,7 @@
       width: 4.0rem;
       height: 2.0rem;
       border-radius: 0.1rem;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       text-align: center;
       line-height: 2.0rem;
       color: $white;
@@ -501,7 +501,7 @@
       
       img {
         display: inline-block;
-        width: 7.213333rem;
+        width: 6.213333rem;
         transform: translateY(50%);
       }
       .hint {
@@ -519,7 +519,7 @@
     }
 
     .list {
-      padding-bottom: 1.8rem;
+      padding-bottom: 2.1rem;
       -webkit-overflow-scrolling: touch;
       
       .item {
@@ -574,6 +574,7 @@
 
             .coll {
               margin-right: 0.666667rem;
+              width: 2.133333rem;
             }
           }
           .cancel-post-btn {
@@ -649,6 +650,14 @@
         border-radius: 0;
         height: 1.466667rem;
         line-height: 1.466667rem;
+        box-shadow: none;
+      }
+      .innerline {
+        float: left;
+        margin-top: 0.233333rem;
+        width: 0.026667rem;
+        height: 1.0rem;
+        background: $white;
       }
     }
   }

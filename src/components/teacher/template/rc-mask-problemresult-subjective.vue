@@ -286,7 +286,7 @@
 
     	    setTimeout(() => {
     	    	self.isShowBtnBox = true
-    	    },200)
+    	    },500)
         })
       },
       /**

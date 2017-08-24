@@ -3,15 +3,15 @@
 	<div class="danmu-box allowscrollcallback">
     <div class="desc f20">
       <span>弹幕</span>
-      <v-touch  tag="i" :class="['iconfont', 'f45', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
+      <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDanmulist" v-show="isShowNewHint" class="new-item-hint f15">您有新的弹幕</v-touch>
+    <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
-      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
+      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed2.png" alt="">
       <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="">
     </div>
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
@@ -50,7 +50,7 @@
 
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
-      <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页">返回</v-touch>
+      <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>返回</v-touch>
     </div>
   </div>
 </template>
@@ -170,7 +170,7 @@
             
             setTimeout(() => {
               self.isShowBtnBox = true
-            },200)
+            },500)
 
             // 加入没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
@@ -277,10 +277,18 @@
       width: 5.333333rem;
       height: 0.8rem;
       border-radius: 0.4rem;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       text-align: center;
       line-height: 0.8rem;
       color: $white;
+      transition: transform 0.5s ease;
+    }
+
+    .hintfadein {
+      transform: translate(-50%, 0) scale(1);
+    }
+    .hintfadeout {
+      transform: translate(-50%, -1.5rem) scale(0.8);
     }
 
     .no-new-item {
@@ -292,7 +300,7 @@
       width: 4.0rem;
       height: 2.0rem;
       border-radius: 0.1rem;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.7);
       text-align: center;
       line-height: 2.0rem;
       color: $white;
@@ -306,8 +314,8 @@
       
       img {
         display: inline-block;
-        width: 5.88rem;
-        transform: translateY(50%);
+        width: 8.0rem;
+        transform: translateY(10%);
       }
       .hint {
         position: absolute;
@@ -352,7 +360,7 @@
     }
 
     .list {
-      padding-bottom: 1.466667rem;
+      padding-bottom: 2.1rem;
       -webkit-overflow-scrolling: touch;
       
       .item {
@@ -439,6 +447,14 @@
         border-radius: 0;
         height: 1.466667rem;
         line-height: 1.466667rem;
+        box-shadow: none;
+      }
+      .innerline {
+        float: left;
+        margin-top: 0.233333rem;
+        width: 0.026667rem;
+        height: 1.0rem;
+        background: $white;
       }
     }
   }
