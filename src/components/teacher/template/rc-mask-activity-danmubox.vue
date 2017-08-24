@@ -49,7 +49,7 @@
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDanmulist2">刷新</v-touch>
       <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>返回</v-touch>
     </div>
   </div>
@@ -62,6 +62,7 @@
   import Loadmore from 'mint-ui/lib/loadmore'
 
   let DANMU_ALL_LIST = []
+  let BIG_NUMBER = 10000000000000000000
   let FENYE_COUNT = 30
 
   export default {
@@ -151,6 +152,26 @@
         })
 
         self.socket.send(str)
+      },
+      /**
+       * 更新试题详情的数据
+       * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
+       *
+       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
+       */
+      refreshDanmulist2(isClickedin){
+        let self = this
+        let url = API.danmulist2
+
+        // 单次刷新
+        request.post(url, {
+          'lesson_id': self.lessonid,
+          'start': BIG_NUMBER,
+          'count': BIG_NUMBER,
+          'direction': 0
+        }).then(jsonData => {
+            console.log(988, jsonData)
+          })
       },
       /**
        * 更新试题详情的数据
