@@ -11,8 +11,8 @@
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
-      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed2.png" alt="">
-      <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="">
+      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
+      <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="" style="transform: translateY(50%); width: 6.5rem;">
     </div>
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
     <Loadmore
@@ -335,8 +335,8 @@
       
       img {
         display: inline-block;
-        width: 8.0rem;
-        transform: translateY(10%);
+        width: 7.0rem;
+        transform: translateY(20%);
       }
       .hint {
         position: absolute;
@@ -449,7 +449,7 @@
           top: 0.293333rem;
           width: 100%;
           height: 1px;
-          background: $graybg;
+          background: #c8c8c8;
         }
       }
     }
@@ -472,9 +472,9 @@
       }
       .innerline {
         float: left;
-        margin-top: 0.233333rem;
+        margin-top: 0.333333rem;
         width: 0.026667rem;
-        height: 1.0rem;
+        height: 0.8rem;
         background: $white;
       }
     }

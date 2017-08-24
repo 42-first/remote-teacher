@@ -1,7 +1,7 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
 	<div class="problem-root" :class="{'allowscrollcallback': !isScoring}" v-scroll="onScroll">
-		<v-touch v-on:tap="refreshSubjectivelist" v-show="isShowNewHint" class="new-item-hint f15">您有新的答案</v-touch>
+		<v-touch v-on:tap="refreshSubjectivelist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
 			<img class="jishi" src="~images/teacher/back-top.png" alt="">
@@ -398,11 +398,19 @@
 		  width: 5.333333rem;
 		  height: 0.8rem;
 		  border-radius: 0.4rem;
-		  background: rgba(0,0,0,0.8);
+		  background: #FCF9DC;
 		  text-align: center;
 		  line-height: 0.8rem;
-		  color: $white;
+		  color: #666666;
+		  transition: transform 0.5s ease;
 		}
+
+		.hintfadein {
+      transform: translate(-50%, 0) scale(1);
+    }
+    .hintfadeout {
+      transform: translate(-50%, -1.5rem) scale(0.8);
+    }
 
 		.back-top-btn {
 			position: fixed;
