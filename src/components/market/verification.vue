@@ -90,6 +90,7 @@
       if (process.env.NODE_ENV !== 'production') {
         request.post = request.get
       }
+      this.needLogin()
       this.getUser()
     },
     methods: {

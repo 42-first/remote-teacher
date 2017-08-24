@@ -30,12 +30,12 @@
       }
     },
     created: function () {
-      this._init()
+      // this._init()
     },
     components: {},
     methods: {
       _init: function () {
-        let self = this
+        /* let self = this
         request.get(API.market.user_info).then(function (e) {
           let data = e.data
           if (e.success) {
@@ -44,7 +44,7 @@
           }
         }).catch(function (e) {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
-        })
+        }) */
       }
     }
   }
