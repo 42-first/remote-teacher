@@ -171,15 +171,13 @@ export default {
       let isDaojishi = initTime != -1
 
       bellArr[index] = {}
+      bellArr[index].hasLimit = isDaojishi
+      // 把当前题目有没有计时存到一个任何地方都能找到的 pptData 中
+      self.pptData[self.current - 1].Problem.hasLimit = isDaojishi
 
-      // 利用隐式类型转换
-      if(!isDaojishi && !isShortAnswer){
-        //未设置时限并且不是主观题
-        bellArr[index].hasLimit = false
-      }else{
-        // 设置时限 或 未设置时限但是是主观题
+      // 是倒计时或者主观题，则设置定时器
+      if(isDaojishi || isShortAnswer){
         //设置时限
-        bellArr[index].hasLimit = true
         bellArr[index].sec = isDaojishi ? initTime : timePassed
 
         let START = +new Date()
@@ -191,7 +189,6 @@ export default {
           let newTime2 = timePassed + Math.round((NOW - START)/1000)
 
           bellArr[index].sec = isDaojishi ? newTime1 : newTime2
-          // console.log(index, bellArr[index].sec)
 
           if(bellArr[index].sec <= 0){
             bellArr[index].sec = 0
@@ -231,7 +228,7 @@ export default {
         initiativeCtrlMaskTpl: 'RcMaskProblemresultSubjective'
       })
 
-      self.refreshProblemResult(inPageProblemID)
+      self.refreshProblemResult(inPageProblemID, 'shortAnswer')
     },
     /**
      * 发试题后显示柱状图倒计时页面
@@ -307,8 +304,9 @@ export default {
      * 发试题后设置刷新主观题、柱状图倒计时页面的定时器
      *
      * @param {number} inPageProblemID 发送的试题的id
+     * @param {String} problemType 试题类型，主要用于判断主观题 shortAnswer 也没有限时也显示计时
      */
-    refreshProblemResult(inPageProblemID){
+    refreshProblemResult(inPageProblemID, problemType = ''){
       let self = this
       self.data = self // hack 复用小程序代码
 
@@ -327,7 +325,7 @@ export default {
 
         //更新闹钟时间
         //有可能该题没有设置闹钟
-        if(hasLimit){
+        if(hasLimit || problemType === 'shortAnswer'){
           let sec = bellArr[current].sec
           self.setData({
             problemDurationLeft: self.sec2str(sec)
@@ -342,7 +340,7 @@ export default {
 
       //更新闹钟时间
       //有可能该题没有设置闹钟
-      if(hasLimit){
+      if(hasLimit || problemType === 'shortAnswer'){
         self.setData({
           problemDurationLeft: self.sec2str(bellArr[current].sec)
         })

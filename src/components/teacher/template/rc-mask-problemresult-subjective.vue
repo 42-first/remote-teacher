@@ -23,7 +23,8 @@
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
 	    	<div class="f50" >
-		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+	    		<img v-show="!hasLimit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
+		      <img v-show="hasLimit" class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
@@ -147,6 +148,7 @@
 	    	isShow2TopBtn: false,					// 显示回到顶部按钮
 	    	isScoring: false,							// 正在打分
 	    	isShowBtnBox: false,					// 显示底部返回按钮
+	    	hasLimit: false,							// 当前题目计时了
 	    }
 	  },
 	  computed: {
@@ -166,6 +168,7 @@
       self.$on('refreshSubjectivelist', function (inPageProblemID, isFirst) {
         // console.log(`父组件召唤子组件刷新主观题数据了${inPageProblemID}`)
         let fn = isFirst ? self.refreshSubjectivelist : self.pollingNewItem
+        self.hasLimit = self.pptData[self.current - 1].Problem.hasLimit
 
         fn()
       })
