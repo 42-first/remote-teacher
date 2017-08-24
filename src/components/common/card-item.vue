@@ -92,7 +92,7 @@
     <!-- 投稿分享 -->
     <template v-else-if="item.type==6">
       <div class="timeline__paper">
-        <router-link :class="['paper-info', 'submission', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/submission2/'+index">
+        <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
           <div class="paper-txt f18">
             <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
           </div>
@@ -101,7 +101,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <span class="status" data-language-common="status">{{ item.status }}</span>
+            <!-- <span class="status" data-language-common="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>

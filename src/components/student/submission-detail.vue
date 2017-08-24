@@ -9,6 +9,12 @@
 <template>
   <section class="submission__detail">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
+      <!-- 导航 -->
+      <header class="student__header">
+        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
+        <h3 class="header-title f18">{{ title }}</h3>
+        <p class="student__header--back"></p>
+      </header>
 
       <div class="submission__item" v-if="result">
         <!-- 投稿时间 -->
@@ -25,7 +31,6 @@
         </div>
 
       </div>
-
     </div>
   </section>
 </template>
@@ -76,10 +81,10 @@
 
               this.result = data;
 
-              this.summary = Object.assign(this.summary, {
-                status: '已读',
-                isComplete: true
-              })
+              // this.summary = Object.assign(this.summary, {
+              //   status: '已读',
+              //   isComplete: true
+              // })
 
               return data;
             }
@@ -169,7 +174,7 @@
       }, 20)
 
       if(this.summary) {
-        this.title = this.$parent.courseName;
+        this.title = this.$parent.title;
         this.getSubmission(this.summary.postid);
       } else {
         this.$router.back();
