@@ -13,7 +13,7 @@
         <img class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
-      <div class="f18" v-show="!isSVGHidden">
+      <div class="f18" v-show="!isSVGHidden || isAllPoll">
         已有 <span>{{stuCommited}}</span> / <span>{{stuTotal}}</span> 位同学提交了试卷
       </div>
     </section>
@@ -182,6 +182,9 @@
             if (self.isPaperCollected) {
               self.paperTimePassed = self.sec2str(quizTimeBellCount)
             }
+            
+            self.stuCommited = jsonData.total
+            self.stuTotal = jsonData.members
 
             //没人做题就不画饼图
             if(jsonData.total === 0){
@@ -198,8 +201,6 @@
 
             // 设置试卷详情数据
             self.isSVGHidden = false
-            self.stuCommited = jsonData.total
-            self.stuTotal = jsonData.members
             
             var range = [];
             var arr1 = [];
