@@ -209,7 +209,7 @@
             // 假如没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
             // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = typeof isClickedin !== 'string' && self.danmuList[0] && self.danmuList[0].id === jsonData.data.danmu_list[0].id
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && !jsonData.data.response_num
             setTimeout(() => {
               self.isShowNoNewItem = false
             }, 2000)
@@ -224,7 +224,7 @@
             if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
               // 刚加载展示或新条目数大于于 FENYE_COUNT，
               // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
-              self.danmuList = newList.slice(0, FENYE_COUNT)
+              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)
 
               // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
               self.allLoaded = !self.danmuList.length && newItemsCount <= FENYE_COUNT              
