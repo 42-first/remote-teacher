@@ -173,6 +173,7 @@
         })
       },
       goTab: function (i) {
+        this.tab = i
         i && this.needLogin(i)
       },
       timestamp: function () {
