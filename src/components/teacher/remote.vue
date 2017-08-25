@@ -246,6 +246,8 @@ export default {
     oldDoubt -= 0
     oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
     oldTougao -= 0
+    // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
+    tougaoTotalSum = oldTougao
 
     // 保存本地正在投屏的弹幕、投稿id、主观题id
     self.postingDanmuid = localStorage.getItem('postingDanmuid'+self.lessonid) || -1
@@ -531,7 +533,7 @@ export default {
           'count': 10000000000000000000,
           'direction': 0
         }).then(jsonData => {
-            tougaoTotalSum = jsonData.data.tougao_list.length
+            tougaoTotalSum = jsonData.data.response_num
 
             // 学生能删除投稿，有可能减成负数
             if (tougaoTotalSum < oldTougao) {
@@ -555,12 +557,11 @@ export default {
     /**
      * 用户课堂动态点击了 投稿 按钮，清零投稿数
      *
-     * @param {number} num 总投稿数
      */
-    checkTougao (num) {
+    checkTougao () {
       let self = this
       // oldTougao = num || tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
-      oldTougao = num
+      oldTougao = tougaoTotalSum
       localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
       self.newtougao = 0
     },

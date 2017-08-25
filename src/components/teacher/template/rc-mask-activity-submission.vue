@@ -279,7 +279,7 @@
             self.$el.scrollTop = 0
 
             // 清零投稿未读数
-            self.$emit('refreshCheckTougao', newList.length)
+            self.$emit('refreshCheckTougao')
           })
       },
       /**
