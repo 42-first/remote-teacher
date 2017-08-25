@@ -144,6 +144,10 @@
         let self = this
         let params = {}
         this.rc && (params = {rc: this.rc})
+        if (localStorage.getItem('coursewareIndex')) {
+          localStorage.removeItem('coursewareIndex')
+          self.tab = 1
+        }
         request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
           self.list = data.rain_courseware_list
@@ -159,14 +163,16 @@
       order: function () {
         window.open('https://i.weidian.com/order/list.php?type=0')
       },
-      needLogin: function () {
-        request.get(API.market.user_info).catch(function () {
+      needLogin: function (i) {
+        request.get(API.market.user_info).then(function () {
+        }).catch(function () {
+          typeof i === 'number' && localStorage.setItem('coursewareIndex', 1)
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
         })
       },
       goTab: function (i) {
         this.tab = i
-        i && this.needLogin()
+        i && this.needLogin(i)
       },
       timestamp: function () {
         return new Date().getTime()
