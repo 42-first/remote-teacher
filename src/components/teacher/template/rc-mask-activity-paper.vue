@@ -278,10 +278,6 @@
        */
       handleSocketNewquiz (msg) {
         let self = this
-        console.log(988, msg)
-        // if (self.paperChosen.id === msg.quiz.quiz) {
-        //   return
-        // }
 
         let index = self.paperList.findIndex(item => {
           return item.paper_id === msg.quiz.paperid
