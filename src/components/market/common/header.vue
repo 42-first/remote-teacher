@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  /* import request from '@/util/request'
-  import API from '@/util/api' */
+  import request from '@/util/request'
+  import API from '@/util/api'
   export default {
     name: 'header',
     data () {
@@ -35,7 +35,7 @@
     components: {},
     methods: {
       _init: function () {
-        /* let self = this
+        let self = this
         request.get(API.market.user_info).then(function (e) {
           let data = e.data
           if (e.success) {
@@ -43,8 +43,8 @@
             self.avatar = data.user_profile.avatar_96
           }
         }).catch(function (e) {
-          window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
-        }) */
+          // window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
+        })
       }
     }
   }
