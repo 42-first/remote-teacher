@@ -105,7 +105,7 @@
       .title {
         height: 1.973333rem;
         line-height: 1.973333rem;
-        color: #9B9B9B;
+        color: $graybg;
       }
 
       .paper-title {
@@ -126,7 +126,7 @@
           flex: 1;
         }
         .cancel {
-          color: #9B9B9B;
+          color: $graybg;
         }
         .confirm {
           color: #F40;

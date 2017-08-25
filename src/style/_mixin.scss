@@ -19,5 +19,15 @@
 	[data-dpr="3"] .btn {
 		font-size: 48px;
 	}
+
+	.f18 .btn {
+		font-size: 18px;
+	}
+	[data-dpr="2"] .f18 .btn {
+		font-size: 36px;
+	}
+	[data-dpr="3"] .f18 .btn {
+		font-size: 54px;
+	}
 }
 	

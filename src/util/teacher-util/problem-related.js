@@ -10,6 +10,8 @@ import API from '@/config/api'
 import RcMaskProblemtime from '@/components/teacher/template/rc-mask-problemtime'
 // 试题柱状图页面
 import RcMaskProblemresult from '@/components/teacher/template/rc-mask-problemresult'
+// 试题-主观题结果页面
+import RcMaskProblemresultSubjective from '@/components/teacher/template/rc-mask-problemresult-subjective'
 
 let bellArr = []              // 倒计时命名空间
 let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -21,6 +23,7 @@ export default {
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
       isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
+      problemType: '',                        // 当前页题目的类型 主观题： ShortAnswer; 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
       problemDurationLeft: '--:--',           // 题目的倒计时剩余时间
       problemResultData: null,                // 试题柱状图页数据
     }
@@ -28,6 +31,7 @@ export default {
   components: {
     RcMaskProblemtime,
     RcMaskProblemresult,
+    RcMaskProblemresultSubjective,
   },
   methods: {
     /**
@@ -43,6 +47,8 @@ export default {
       let pptData = self.data.pptData
       let inPageProblemID = pptData[current].Problem.ProblemID
 
+      self.problemType = pptData[current].Problem.Type
+
       if(self.data.isProblemPublished){
         // 查看答案
         //为了防止退出遥控器以后再进入得不到倒计时信息，需要从node服务器获取信息
@@ -55,7 +61,8 @@ export default {
           let str = JSON.stringify({
             'op': 'probleminfo',
             'lessonid': self.data.lessonid,
-            'problemid': inPageProblemID
+            'problemid': inPageProblemID,
+            'msgid': self.problemType // 使用 problemType 判断是不是主观题，因为主观题有正计时
           })
 
           self.socket.send(str)
@@ -106,9 +113,23 @@ export default {
 
       self.socket.send(str)
     },
-
     /**
-     * 发送题目
+     * 关闭试题-主观题答案的按钮
+     *
+     * @event bindtap
+     */
+    closeProblemSubjective () {
+      // TODO 是否要关闭投屏
+      let self = this
+      console.log('关闭主观题答案')
+
+      this.setData({
+        isInitiativeCtrlMaskHidden: true
+      })
+      
+    },
+    /**
+     * 发送题目，在 rc-mask-problemtime.vue 中点击选择了时间后的处理函数
      *
      * @param {number} duration 设定时限的时间，以秒计算
      */
@@ -131,36 +152,43 @@ export default {
       request.post(API.publish_problem, postData)
         .then(jsonData => {
           // 打开柱状图页面，倒计时
-          self.startBell(current, duration)
+          self.startBell(current, duration, self.problemType)
           self.showProblemResult(inPageProblemID)
         })
     },
     /**
      * 柱状图倒计时功能函数
      *
-     * @param {number} index 下标，从0开始，0代表第一页
-     * @param {string} initTime 倒计时初始时间，因为有可能刷新遥控器，这个时间不一定是发送题目时设置的时间
+     * @param {Number} index 下标，从0开始，0代表第一页
+     * @param {String} initTime 倒计时初始时间，因为有可能刷新遥控器，这个时间不一定是发送题目时设置的时间
+     * @param {String} problemType 如果 initTime 是 -1 的话传入本第三个参数，标明是不是主观题 'ShortAnswer' ,因为主观题有正计时
+     * @param {Number} timePassed 如果是主观题直接发送，传入已经过去的时间（默认值取1，以免触发 '时间到' 文案）
      */
-    startBell (index, initTime) {
+    startBell (index, initTime, problemType = 'notShortAnswer', timePassed = 1) {
+      if (bellArr[index]) {return;}
       let self = this
-      bellArr[index] = {}
+      let isShortAnswer = problemType === 'ShortAnswer'
+      let isDaojishi = initTime != -1
 
-      // 利用隐式类型转换
-      if(initTime == -1){
-        //未设置时限
-        bellArr[index].hasLimit = false
-      }else{
+      bellArr[index] = {}
+      bellArr[index].hasLimit = isDaojishi
+      // 把当前题目有没有计时存到一个任何地方都能找到的 pptData 中
+      self.pptData[self.current - 1].Problem.hasLimit = isDaojishi
+
+      // 是倒计时或者主观题，则设置定时器
+      if(isDaojishi || isShortAnswer){
         //设置时限
-        bellArr[index].hasLimit = true
-        bellArr[index].sec = initTime
+        bellArr[index].sec = isDaojishi ? initTime : timePassed
 
         let START = +new Date()
 
         //某个习题独有的计时器
         bellArr[index].timer = setInterval(function(){
           let NOW = +new Date()
-          bellArr[index].sec = initTime - Math.round((NOW - START)/1000)
-          console.log(index, bellArr[index].sec)
+          let newTime1 = initTime - Math.round((NOW - START)/1000)
+          let newTime2 = timePassed + Math.round((NOW - START)/1000)
+
+          bellArr[index].sec = isDaojishi ? newTime1 : newTime2
 
           if(bellArr[index].sec <= 0){
             bellArr[index].sec = 0
@@ -170,11 +198,44 @@ export default {
       }
     },
     /**
-     * 发试题后显示柱状图倒计时页面
+     * 发试题后显示结果：主观题或柱状图倒计时页面
      *
      * @param {number} inPageProblemID 发送的试题的id
      */
     showProblemResult (inPageProblemID) {
+      let self = this
+      let isSubjective = self.problemType === 'ShortAnswer'
+      let fn = isSubjective ? self.showSubjective : self.showCollumResult
+
+      fn(inPageProblemID)
+    },
+    /**
+     * 发主观题题后显示主观题结果页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showSubjective (inPageProblemID) {
+      let self = this
+      self.data = self // hack 复用小程序代码
+
+      let current = self.data.current - 1
+      let slideData = self.data.pptData[current]
+      let problemData = slideData.Problem
+
+      self.setData({
+        isProblemPublished: true,
+        isInitiativeCtrlMaskHidden: false,
+        initiativeCtrlMaskTpl: 'RcMaskProblemresultSubjective'
+      })
+
+      self.refreshProblemResult(inPageProblemID, 'shortAnswer')
+    },
+    /**
+     * 发试题后显示柱状图倒计时页面
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     */
+    showCollumResult (inPageProblemID) {
       let self = this
       self.data = self // hack 复用小程序代码
 
@@ -240,11 +301,12 @@ export default {
       self.pptData[current].Problem.RedEnvelopeID = RedEnvelopeID
     },
     /**
-     * 发试题后设置刷新柱状图倒计时页面的定时器
+     * 发试题后设置刷新主观题、柱状图倒计时页面的定时器
      *
      * @param {number} inPageProblemID 发送的试题的id
+     * @param {String} problemType 试题类型，主要用于判断主观题 shortAnswer 也没有限时也显示计时
      */
-    refreshProblemResult(inPageProblemID){
+    refreshProblemResult(inPageProblemID, problemType = ''){
       let self = this
       self.data = self // hack 复用小程序代码
 
@@ -263,7 +325,7 @@ export default {
 
         //更新闹钟时间
         //有可能该题没有设置闹钟
-        if(hasLimit){
+        if(hasLimit || problemType === 'shortAnswer'){
           let sec = bellArr[current].sec
           self.setData({
             problemDurationLeft: self.sec2str(sec)
@@ -278,19 +340,48 @@ export default {
 
       //更新闹钟时间
       //有可能该题没有设置闹钟
-      if(hasLimit){
+      if(hasLimit || problemType === 'shortAnswer'){
         self.setData({
           problemDurationLeft: self.sec2str(bellArr[current].sec)
         })
       }
-      self.getProblemResult(inPageProblemID)
+      
+      Vue.nextTick(function () {
+        // 初次获取数据，加上第二个字符串参数
+        self.getProblemResult(inPageProblemID, true)
+      })
+      
+    },
+    /**
+     * 发试题后request获取主观题、柱状图倒计时页面的数据
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     * @param {Boolean} isFirst 是点击显示后第一次获取数据
+     */
+    getProblemResult (inPageProblemID, isFirst) {
+      let self = this
+      let isSubjective = self.problemType === 'ShortAnswer'
+      let fn = isSubjective ? self.getSubjective : self.getCollumResult
+
+      fn(inPageProblemID, isFirst)
+    },
+    /**
+     * 发试题后request获取主观题页面的数据
+     *
+     * @param {number} inPageProblemID 发送的试题的id
+     * @param {Boolean} isFirst 是点击显示后第一次获取数据
+     */
+    getSubjective(inPageProblemID, isFirst){
+      let self = this
+
+      self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('refreshSubjectivelist', inPageProblemID, isFirst)
     },
     /**
      * 发试题后request获取柱状图倒计时页面的数据
      *
      * @param {number} inPageProblemID 发送的试题的id
      */
-    getProblemResult(inPageProblemID){
+    getCollumResult(inPageProblemID){
       let self = this
       self.data = self // hack 复用小程序代码
 

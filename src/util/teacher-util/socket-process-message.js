@@ -188,7 +188,8 @@ function socketProcessMessage(msg){
     if (msg.limit == -1 || typeof msg.limit === 'undefined') {
 
         //3：刷新了遥控器且未设置时限
-        self.startBell(current, -1);
+        //如果是 -1 的话传入第三个参数 msgid ，标明是不是主观题 ShortAnswer,因为主观题有正计时，以及传入第4个参数，已经过去的时间
+        self.startBell(current, -1, msg.msgid, Math.floor((msg.now-msg.dt)/1000));
 
     } else if ((msg.now-msg.dt) >= msg.limit*1000) {
 
@@ -204,12 +205,13 @@ function socketProcessMessage(msg){
     }
 
     self.showProblemResult(msg.problemid);
+    return
   }
 
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     let current = self.data.current - 1
-    self.startBell(current, msg.problem.limit)
+    self.startBell(current, msg.problem.limit, self.pptData[current].Problem.Type)
     self.isProblemPublished = true
     return
   }
@@ -232,11 +234,31 @@ function socketProcessMessage(msg){
     return
   }
 
-  // 投稿投屏
+  // 投稿投屏，用户重新投屏（投之前投屏过的，这是需要在这里获取是否已经发送全班的状态）
   if (msg.op == 'postshown') {
     self.postingSubmissionid = msg.postid
 
     localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
+
+    self.postingSubmissionSent = msg.sent
+
+    localStorage.setItem('postingSubmissionSent'+self.lessonid, msg.sent)
+    return
+  }
+
+  // 投稿已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
+  if (msg.op == 'sendpost') {
+    self.postingSubmissionSent = true
+
+    localStorage.setItem('postingSubmissionSent'+self.lessonid, true)
+    return
+  }
+
+  // 主观题投屏
+  if (msg.op == 'sproblemshown') {
+    self.postingSubjectiveid = msg.spid
+
+    localStorage.setItem('postingSubjectiveid'+self.lessonid, msg.spid)
     return
   }
 
@@ -336,6 +358,14 @@ function socketProcessMessage(msg){
       localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
       return
     }
+
+    // 退出主观题投屏蒙版
+    if (msg.type == 'subjective') {
+      self.postingSubjectiveid = -1
+
+      localStorage.setItem('postingSubjectiveid'+self.lessonid, -1)
+      return
+    }
     
   }
 
@@ -356,6 +386,12 @@ function socketProcessMessage(msg){
   // 有新的弹幕
   if (msg.op == 'newdanmu') {
     self.$refs.InitiativeCtrlMask.$emit('newdanmu', msg)
+    return
+  }
+
+  // 发了新的试卷，单通了
+  if (msg.op == 'newquiz') {
+    self.$refs.InitiativeCtrlMask.$emit('newquiz', msg)
     return
   }
 

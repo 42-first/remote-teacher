@@ -177,7 +177,7 @@
 				}
 				.right {
 					text-align: right;
-					color: #9B9B9B;
+					color: $graybg;
 				}
 			}
 
@@ -212,7 +212,7 @@
 
 		.hint {
 			text-align: center;
-			color: #9B9B9B;
+			color: $graybg;
 			margin-bottom: 1.6rem;
 		}
 

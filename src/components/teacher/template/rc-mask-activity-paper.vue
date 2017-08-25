@@ -3,16 +3,16 @@
 	<div class="paper-box allowscrollcallback">
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- 没有试卷 -->
-    <div v-show="!isFetching && !paperList.length" class="no-paper-box">
+    <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
       <div class="hint f12">试试从雨课堂桌面端制作并上传试卷吧</div>
     </div>
-    <div v-show="!isFetching && paperList.length">
+    <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
         <div class="title f17">已发试卷</div>
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
-          <div class="desc f18">
+          <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
             <span class="f14"> {{quiz.time}}</span>
           </div>
@@ -25,7 +25,7 @@
         <div class="title f17">我的试卷库</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
-          <div class="desc f18">
+          <div class="desc f18 ellipsis">
             {{paper.title}} <br>
             <span class="f14">{{paper.time}}</span>
           </div>
@@ -61,7 +61,19 @@
 </template>
 
 <script>
+  // 将arr2中有arr1元素特征的元素去除，并返回arr2
+  function removeSame (arr1, arr2) {
+    arr1.forEach(item1 => {
+      let index = arr2.findIndex(item2 => {
+        return item2.paper_id === item1.paper_id
+      })
+
+      arr2.splice(index, 1)
+    })
+  }
+
   import request from '@/util/request'
+  import Moment from 'moment'
   import API from '@/config/api'
 
   // 已发试卷饼图页
@@ -95,6 +107,11 @@
       // 点击 试卷 按钮 父组件发送事件给本子组件，获取已发、未发试卷
       self.$on('showPaper', function () {
         self.fetchPaperData()
+      })
+
+      // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+      self.$on('newquiz', function (msg) {
+        self.handleSocketNewquiz(msg)
       })
     },
     methods: {
@@ -130,8 +147,13 @@
         request.get(url)
           .then(jsonData => {
             self.isFetching = false
-            self.paperList = jsonData.data.quiz_data.paper_list
-            self.quizList = jsonData.data.quiz_data.quiz_list
+            let paper_list = jsonData.data.quiz_data.paper_list
+            let quiz_list = jsonData.data.quiz_data.quiz_list
+
+            removeSame(quiz_list, paper_list)
+
+            self.paperList = paper_list
+            self.quizList = quiz_list
 
             let quizList =self.quizList
 
@@ -166,12 +188,14 @@
         let self = this
 
         self.isPubmodalHidden = true
-        self.paperChosen = {
-          index: -1,
-          id: -1,
-          title: '',
-          total: -1
-        }
+        self.paperChosen.index = -1
+
+        // self.paperChosen = {
+        //   index: -1,
+        //   id: -1,
+        //   title: '',
+        //   total: -1
+        // }
       },
       /**
        * 试卷列表选择好某条试卷后点击“确认发布”
@@ -190,27 +214,31 @@
           'paperID': self.paperChosen.id
         }
 
+        self.isPubmodalHidden = true
+
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
             //维护试题列表的发布记录
-            let thePaper = self.paperList[self.paperChosen.index]
+            // console.log(33, self.paperChosen)
+            // let thePaper = self.paperList[self.paperChosen.index]
 
-            thePaper.quiz_id = jsonData.quizID;
-            self.quizList.unshift(thePaper);
+            // thePaper.quiz_id = jsonData.quizID;
+            // self.quizList.unshift(thePaper);
+            // self.paperList.splice(self.paperChosen.index, 1)
 
             // 显示饼图页
             self.showQuizResult(jsonData.quizID);
 
-            let str = JSON.stringify({
-              'op': 'newquiz',
-              'lessonid': self.lessonid,
-              'quizid': jsonData.quizID,
-              'title': self.paperChosen.title,
-              'total': self.paperChosen.total
-            })
+            // let str = JSON.stringify({
+            //   'op': 'newquiz',
+            //   'lessonid': self.lessonid,
+            //   'quizid': jsonData.quizID,
+            //   'title': self.paperChosen.title,
+            //   'total': self.paperChosen.total
+            // })
 
-            self.socket.send(str)
+            // self.socket.send(str)
             self.closePubmodal()
           })
       },
@@ -242,6 +270,31 @@
       collectQuiz (quizid) {
         let self = this
         self.finishedQuizList['id'+quizid] = true
+      },
+      /**
+       * 处理socket发过来的 newquiz 通知，如果是自己发的则不作处理，如果是pc发的就处理下？
+       *
+       * @param {object} msg websocket 信息
+       */
+      handleSocketNewquiz (msg) {
+        let self = this
+        console.log(988, msg)
+        // if (self.paperChosen.id === msg.quiz.quiz) {
+        //   return
+        // }
+
+        let index = self.paperList.findIndex(item => {
+          return item.paper_id === msg.quiz.paperid
+        })
+
+        self.paperList.splice(index, 1)
+        self.quizList.unshift({
+          "quiz_id": msg.quiz.quiz,
+          "paper_id": msg.quiz.paperid,
+          "time": Moment(msg.quiz.time).format('YYYY-MM-DD HH:mm:ss'),
+          "quiz_end": false,
+          "title": msg.quiz.title
+        })
       },
     }
   }
@@ -284,7 +337,7 @@
         left: 0;
         bottom: 2rem;
         width: 100%;
-        color: #9B9B9B;
+        color: $graybg;
       }
     }
 
@@ -307,7 +360,7 @@
 
         .desc {
           span {
-            color: #9B9B9B;
+            color: $graybg;
           }
         }
       }
@@ -350,7 +403,7 @@
         .title {
           height: 1.973333rem;
           line-height: 1.973333rem;
-          color: #9B9B9B;
+          color: $graybg;
         }
 
         .paper-title {
@@ -371,7 +424,7 @@
             flex: 1;
           }
           .cancel {
-            color: #9B9B9B;
+            color: $graybg;
           }
           .confirm {
             color: $blue;

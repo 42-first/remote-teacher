@@ -13,7 +13,7 @@
         <img class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
         <span class="time">{{paperTimePassed}}</span>
       </div>
-      <div class="f18" v-show="!isSVGHidden">
+      <div class="f18" v-show="!isSVGHidden || isAllPoll">
         已有 <span>{{stuCommited}}</span> / <span>{{stuTotal}}</span> 位同学提交了试卷
       </div>
     </section>
@@ -21,7 +21,8 @@
     <!-- 中间饼图 -->
     <section class="chart-box">
       <div class="fsfb f18">分数分布</div>
-      <div v-show="isSVGHidden" class="hmy f18">还没有学生提交</div>
+      <div v-show="isSVGHidden && !isAllPoll" class="hmy f18">还没有学生提交</div>
+      <div v-show="isAllPoll" class="hmy f18">此试卷全部为投票题~</div>
       <div id="pieSolid" class="pie-solid">
         <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem" xml:space="preserve"></svg>
     </div>
@@ -85,6 +86,7 @@
         stuCommited: '--',                // 已经交卷学生个数
         stuTotal: '--',                   // 总学生数目
         isSVGHidden: true,                // 饼图svg隐藏
+        isAllPoll: false,                 // 全部为投票题
       }
     },
     components: {
@@ -180,6 +182,9 @@
             if (self.isPaperCollected) {
               self.paperTimePassed = self.sec2str(quizTimeBellCount)
             }
+            
+            self.stuCommited = jsonData.total
+            self.stuTotal = jsonData.members
 
             //没人做题就不画饼图
             if(jsonData.total === 0){
@@ -187,10 +192,15 @@
               return
             }
 
+            //全部为投票题就不画饼图
+            if(jsonData.total_score === 0){
+              self.isAllPoll = true
+              self.isSVGHidden = true
+              return
+            }
+
             // 设置试卷详情数据
             self.isSVGHidden = false
-            self.stuCommited = jsonData.total
-            self.stuTotal = jsonData.members
             
             var range = [];
             var arr1 = [];

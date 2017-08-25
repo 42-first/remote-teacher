@@ -1,0 +1,25 @@
+{
+    "data": {
+        "response_num": 2,
+        "direction": 0,
+        "rest_num": 0,
+        "danmu_list": [
+            {
+                "message": "ç¬¬äºŒæ¡å¼¹å¹•",
+                "user_id": 585,
+                "id": 1044,
+                "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq8rLAOvY5RGeuy84UcjbNjibJKE1rygM7OrGCPB0RLSpwczuxuuJkrWpAXkZRsD6fQgzxBNBGR0nC/46",
+                "time": "2017-08-24 16:10"
+            },
+            {
+                "message": "ç¬¬ä¸€æ¡å¼¹å¹•",
+                "user_id": 585,
+                "id": 1043,
+                "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq8rLAOvY5RGeuy84UcjbNjibJKE1rygM7OrGCPB0RLSpwczuxuuJkrWpAXkZRsD6fQgzxBNBGR0nC/46",
+                "time": "2017-08-24 16:09"
+            }
+        ],
+        "lesson_id": 4751
+    },
+    "success": true
+}

@@ -21,7 +21,7 @@
       </div>
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
-      <Toolbar 
+      <Toolbar
         ref="Toolbar"
         :lessonid="lessonid"
         :presentationid="presentationid"
@@ -58,6 +58,8 @@
           :is-danmu-open="isDanmuOpen"
           :posting-danmuid="postingDanmuid"
           :posting-submissionid="postingSubmissionid"
+          :posting-submission-sent="postingSubmissionSent"
+          :posting-subjectiveid="postingSubjectiveid"
           :newdoubt="newdoubt"
           :newtougao="newtougao"
           :is-rc-mask-activity-at-root.sync="isRcMaskActivityAtRoot"
@@ -70,9 +72,11 @@
           @checkDoubt="checkDoubt"
           @checkTougao="checkTougao"
 
+          :problem-type="problemType"
           :problem-result-data="problemResultData"
           :problem-duration-left="problemDurationLeft"
           @closeProblemresult="closeProblemresult"
+          @closeProblemSubjective="closeProblemSubjective"
           @connectLittleBankSuccess="connectLittleBankSuccess"
         ></component>
       </div>
@@ -112,7 +116,7 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'RcMaskQrcode' && !isGuideHidden"
       @guideNext="guideNext"
     ></Guide>
-    
+
   </div>
 </template>
 
@@ -204,8 +208,10 @@ export default {
       isDanmuOpen: false,                     // 弹幕是否处于打开状态
       postingDanmuid: -1,                     // 正在投屏的弹幕的id
       postingSubmissionid: -1,                // 正在投屏的投稿的id
-      newdoubt: 0,                            //  未查看的不懂人次总数
-      newtougao: 0,                           //  未查看的投稿人次总数
+      postingSubmissionSent: false,           // 正在投屏的投稿已经发送全班
+      postingSubjectiveid: -1,                // 正在投屏的主观题的id
+      newdoubt: 0,                            // 未查看的不懂人次总数
+      newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
     }
   },
@@ -213,7 +219,7 @@ export default {
     // 判断在 InitiativeCtrlMask 蒙版时是否显示工具栏部分
     isYieldToolbar: function () {
       let self = this
-      
+
       // 当前蒙版是缩略图或课堂动态根组件时，显示工具栏（课堂动态子页面不显示工具栏）
       let status = (self.msgMaskTpl !== 'rc-mask-reconnect') && self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
 
@@ -241,11 +247,19 @@ export default {
     oldTougao = localStorage.getItem('oldTougao'+self.lessonid) || 0
     oldTougao -= 0
 
-    // 保存本地正在投屏的弹幕、投稿id
+    // 保存本地正在投屏的弹幕、投稿id、主观题id
     self.postingDanmuid = localStorage.getItem('postingDanmuid'+self.lessonid) || -1
     self.postingDanmuid -= 0
+
     self.postingSubmissionid = localStorage.getItem('postingSubmissionid'+self.lessonid) || -1
     self.postingSubmissionid -= 0
+
+    let tempSentStatus = localStorage.getItem('postingSubmissionSent'+self.lessonid)
+    self.postingSubmissionSent = tempSentStatus === 'true'
+
+
+    self.postingSubjectiveid = localStorage.getItem('postingSubjectiveid'+self.lessonid) || -1
+    self.postingSubjectiveid -= 0
 
     self.polyfillIncludes()
 
@@ -299,7 +313,7 @@ export default {
      */
     pmos () {
       let self = this
-      
+
       // list中都是ID
       new PreventMoveOverScroll({
         list: ['rc-home', 'templates']
@@ -467,7 +481,7 @@ export default {
      */
     goHome () {
       let self = this
-      
+
       self.setData({
         isInitiativeCtrlMaskHidden: true,
         initiativeCtrlMaskTpl: ''
@@ -630,7 +644,7 @@ export default {
             while (k < len) {
               // a. Let elementK be the result of ? Get(O, ! ToString(k)).
               // b. If SameValueZero(searchElement, elementK) is true, return true.
-              // c. Increase k by 1. 
+              // c. Increase k by 1.
               if (sameValueZero(o[k], searchElement)) {
                 return true;
               }

@@ -258,7 +258,7 @@
 			.more, .back {
 				text-align: right;
 			  width: 1.8rem;
-			  color: #9B9B9B;
+			  color: $graybg;
 			}
 
 			.total {
@@ -286,7 +286,7 @@
 			.giveup {
 			  background-color: #fff;
 			  border: 0;
-			  color: #9B9B9B;
+			  color: $graybg;
 			}
 		}
 
@@ -317,7 +317,7 @@
 			  	position: absolute;
 			  	right: 0.506667rem;
 			  	top: 0.506667rem;
-			  	color: #9B9B9B;
+			  	color: $graybg;
 			  }
 			  .title {
 				  height: 1.68rem;
@@ -353,7 +353,7 @@
 			  background-image: url(http://sfe.ykt.io/wxlogo.png);
 			}
 			.gray {
-			  color: #9B9B9B;
+			  color: $graybg;
 			}
 
 			.confirm-btn {
@@ -377,7 +377,7 @@
 				  color: #E64340;
 			  }
 			  .warn {
-			  	color: #9B9B9B;
+			  	color: $graybg;
 			  }
 			}
 		}
