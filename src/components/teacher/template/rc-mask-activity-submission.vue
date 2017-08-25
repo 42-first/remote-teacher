@@ -97,7 +97,7 @@
   import Loadmore from 'mint-ui/lib/loadmore'
 
   let BIG_NUMBER = 10000000000000000000
-  let FENYE_COUNT = 2
+  let FENYE_COUNT = 10
 
   let WH = window.innerWidth/window.innerHeight
   let pollingTimer = null
@@ -140,6 +140,14 @@
     mounted () {
       let self = this
       let wh = window.innerHeight
+
+      // 如果搓到底了，不要到底，防止ios上搓露底
+      let boxDom = document.querySelector('.submission-box')
+      boxDom.addEventListener('scroll', e => {
+        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+          boxDom.scrollTop = boxDom.scrollTop -2
+        }
+      })
 
       // 数据不多时，让用户能搓动空白处加载更多
       document.querySelector('.submission-box .mint-loadmore').style.minHeight = wh + 'px'

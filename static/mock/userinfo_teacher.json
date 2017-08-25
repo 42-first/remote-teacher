@@ -3,20 +3,20 @@
   "msg": "",
   "data":{
     "user":{
-        "user_id": 265,
+        "user_id": 504,
         "avatar": "http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
-        "user_auth": "0e5bd4ff-ee49-497b-951c-e192185e4953"
+        "user_auth": "c55350ea-2e59-4a77-a578-620f627ee3b5"
      },
      "lesson":{
-        "invite_code": "BNCGB",
+        "invite_code": "29NQP",
         "user_auth": "4f11a490-63b5-4d81-bc6e-52f78cb660e4"
      },
      "classroom":{
-         "classroomid": 2409
+         "classroomid": 2947
      },
      "course":{
          "coursename": "八三六九等发拉斯加对方拉束带结发",
-         "courseid": 161
+         "courseid": 514
      }
   }
 }

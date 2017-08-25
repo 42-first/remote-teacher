@@ -63,7 +63,7 @@
 
   let DANMU_ALL_LIST = []
   let BIG_NUMBER = 10000000000000000000
-  let FENYE_COUNT = 2
+  let FENYE_COUNT = 20
 
   export default {
     name: 'RcMaskActivityDanmubox',
@@ -99,8 +99,18 @@
       let self = this
       let wh = window.innerHeight
 
+      // 如果搓到底了，不要到底，防止ios上搓露底
+      let boxDom = document.querySelector('.danmu-box')
+      boxDom.addEventListener('scroll', e => {
+        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+          boxDom.scrollTop = boxDom.scrollTop -2
+        }
+      })
+
       // 数据不多时，让用户能搓动空白处加载更多
-      document.querySelector('.danmu-box .mint-loadmore').style.minHeight = wh + 'px'
+      let loadmoreDom = document.querySelector('.danmu-box .mint-loadmore')
+      loadmoreDom.style.minHeight = wh + 'px'
+
     },
     watch: {
       danmuList: function() {
@@ -207,7 +217,7 @@
         }).then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
-            
+
             setTimeout(() => {
               self.isShowBtnBox = true
             },500)
@@ -239,8 +249,8 @@
             // 如果新条目数大于 FENYE_COUNT， 则肯定改状态为 可以加载更多
             // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
             // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
-            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.submissionList.length)
-            
+            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.danmuList.length);
+
             // 刷新的话回顶部
             self.$el.scrollTop = 0
           })
