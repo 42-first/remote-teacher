@@ -24,6 +24,8 @@ if (process.env.NODE_ENV === 'production') {
             'ANSWER_LESSON_PROBLEM': '/v/lesson/answer_lesson_problem',
             // 习题自动提交
             'RETRY_ANSWER_LESSON_PROBLEM': '/v/lesson/retry_answer_lesson_problem',
+            // 主观题分数获取
+            'PROBLEM_SCORE': '/v/lesson/subjective_problem_student_info',
             // 更新PPT数据
             'FETCH_PRESENTATION_DATA': '/lesson/fetch_presentation_data/',
             // ppt收藏 不懂
@@ -38,6 +40,8 @@ if (process.env.NODE_ENV === 'production') {
             'DELETE_SUBMISSION': '/v/api/tougao/delete',
             // 上传图片
             'UPLOAD_PIC': '/v/api/tougao/pic_upload',
+            // 单个投稿信息
+            'GET_SUBMISSION': '/v/api/tougao/tougao_info',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         },
 

@@ -94,6 +94,7 @@
       :lessonid="lessonid"
       :socket="socket"
       :posting-submissionid="postingSubmissionid"
+      :posting-submission-sent="postingSubmissionSent"
       @closeSubmissionbox="closeSubmissionbox"
       @refreshCheckTougao="refreshCheckTougao"
     ></RcMaskActivitySubmission>
@@ -119,7 +120,7 @@
 
   export default {
     name: 'RcMaskActivity',
-    props: ['lessonid', 'presentationid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['lessonid', 'presentationid', 'coursename', 'avatar', 'socket', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -148,6 +149,11 @@
       // socket通知有新的弹幕进来了
       self.$on('newdanmu', function () {
         self.$refs.RcMaskActivityDanmubox.$emit('newdanmu')
+      })
+
+      // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+      self.$on('newquiz', function (msg) {
+        self.$refs.RcMaskActivityPaper.$emit('newquiz', msg)
       })
     },
     updated () {

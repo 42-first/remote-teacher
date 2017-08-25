@@ -4,13 +4,22 @@
     <section class="mask-content problemtime-box">
       <div class="block" style="margin-bottom: 0.133333rem;">
       	<div class="title f16">限时发送</div>
-      	<div class="btn-box">
+      	<div class="btn-box" v-show="problemType !== 'ShortAnswer'">
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30秒</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1分钟</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2分钟</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3分钟</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(240)">4分钟</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5分钟</v-touch>
+      	</div>
+
+      	<div class="btn-box" v-show="problemType === 'ShortAnswer'">
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(600)">10分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(900)">15分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(1200)">20分钟</v-touch>
       	</div>
       </div>
 
@@ -26,7 +35,7 @@
 <script>
 	export default {
 	  name: 'RcMaskProblemtime',
-	  props: [],
+	  props: ['problemType'],
 	  data () {
 	    return {
 	    }

@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -163,7 +163,7 @@ var mixin = {
             item = msg['problem'];
 
             if(item) {
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item, isPopup: true });
               this.timeline['problem'][item['prob']] = item;
             }
 
@@ -173,7 +173,8 @@ var mixin = {
           case 'newquiz':
             item = msg['quiz'];
 
-            item && this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item });
+            item && this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true });
+
             break
 
           // 换一个PPT
@@ -181,7 +182,7 @@ var mixin = {
             this.presentationID = msg['presentation'];
             timeline = msg['timeline'];
 
-            this.setTimeline(timeline, true)
+            this.setTimeline(timeline, true);
             break
 
           // 开始弹幕
@@ -264,6 +265,14 @@ var mixin = {
             item = msg['event'];
 
             this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
+
+            break
+
+          // 投稿分享20170823
+          case 'sendpost':
+            item = msg['post'];
+
+            this.addSubmission({ type: 6, postid: item.postid, time: item.dt, event: item });
 
             break
 
