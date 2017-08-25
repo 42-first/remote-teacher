@@ -55,9 +55,6 @@
               <p class="paper-name">{{ item.caption }}</p>
             </div>
             <i class="iconfont icon-shiti_hongbao f55"></i>
-            <!-- <div class="">
-              <img class="paper-icon" src="http://sfe.ykt.io/o_1bhjob08v13oh1qu29uh1hlc1d8l9.png">
-            </div> -->
         </div>
         </router-link>
         <div class="item-footer">
@@ -68,7 +65,16 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index">
+        <!-- 主观题作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
+            <div class="paper-txt f18">
+              <p class="paper-name">{{ item.caption }}</p>
+              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+            </div>
+            <i class="iconfont icon-ykq_shiti f55"></i>
+        </router-link>
+        <!-- 客观题作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
@@ -79,6 +85,23 @@
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
             <span class="status" data-language-common="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- 投稿分享 -->
+    <template v-else-if="item.type==6">
+      <div class="timeline__paper">
+        <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
+          <div class="paper-txt f18">
+            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
+          </div>
+          <i class="iconfont icon-ykq_tab_tougao f50"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <!-- <span class="status" data-language-common="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>
@@ -155,6 +178,8 @@
           preloaderEl: false,
 
           tapToClose: true,
+          // 解决消息点击问题
+          // history: false,
 
           getThumbBoundsFn: function(index) {
             // find thumbnail element
@@ -187,6 +212,7 @@
           }, 1500)
         }
 
+        this.$parent.$parent.gallery = gallery;
       },
       /*
       * @method ppt不懂,收藏
@@ -287,9 +313,9 @@
 
     text-align: center;
     color: #fff;
-    background: rgba(155, 155, 155, 0.75);
+    background: #C1C1C1;
 
-    border-radius: 0.4rem/50%;
+    border-radius: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -401,13 +427,18 @@
       background: rgba(99,158,244,0.7);
     }
 
+    .paper-info.submission {
+      background: rgba(245,166,35,0.7);
+    }
+
     .paper-info.hongbao {
       color: #FFE595;
       background: #e64340;
     }
 
     .paper-info.complete,
-    .paper-info.xt.complete {
+    .paper-info.xt.complete,
+    .paper-info.submission.complete {
       background: #C8C8C8;
     }
 

@@ -5,6 +5,16 @@
  http://yuanzm.github.io/preventoverscrolljs/
  */
 
+ /**
+  * @author: liujunyang
+  * 添加了 dontcallback allowscrollcallback 两种 class 的判断
+  * 1. allowscrollcallback 的元素及子元素允许搓动
+  * 2. dontcallback  的元素及子元素不允许搓动（主要是用在 allowscrollcallback 内不允许搓动的元素）
+  *
+  * 注：hack 的部分 有 hack xuetangx ljy 等关键词标志
+  *
+  */
+
  /* eslint-disable */
 (function(win, doc) {
     'use strict';

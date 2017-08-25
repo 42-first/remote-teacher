@@ -49,6 +49,12 @@ var actionsMixin = {
 
               break;
 
+            // 投稿分享
+            case 'post':
+               this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -158,6 +164,10 @@ var actionsMixin = {
         isComplete: oQuiz && oQuiz.answered || false
       })
 
+      // 消息box弹框
+      // data.isPopup && this.msgBoxs.push(data);
+      data.isPopup && (this.msgBoxs = [data]);
+
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     },
@@ -170,6 +180,7 @@ var actionsMixin = {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
       let slideData = pptData && pptData[data.pageIndex-1];
+      let index = this.cards.length;
 
       if(!slideData) {
         return this;
@@ -181,13 +192,19 @@ var actionsMixin = {
         pageIndex: data.pageIndex,
         presentationid: data.presentationid,
         time: data.time,
+        problemType: slideData['Problem']['Type'],
         caption: slideData['Problem']['Type'] === 'Polling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
         status: slideData['Problem']['Result'] ? '已完成' : '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
-        cover: slideData['Cover']
+        cover: slideData['Cover'],
+        index: index
       })
+
+      // 消息box弹框
+      // data.isPopup && this.msgBoxs.push(data);
+      data.isPopup && (this.msgBoxs = [data]);
 
       // 预加载习题图片
       let oImg = new Image();
@@ -195,7 +212,26 @@ var actionsMixin = {
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
-        return item.type === 3 && item.pageIndex === data.pageIndex && item.presentationid && data.presentationid;
+        return item.type === 3 && item.problemID === data.event['prob'];
+      })
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 新增分享投稿20170823
+     * { type: 6, postid: 123, isFetch: false }
+     */
+    addSubmission(data) {
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 6 && item.postid === data.postid && data.isFetch;
+      })
+
+      data = Object.assign(data, {
+        status: '未读',
+        isComplete: false
       })
 
       !hasEvent && this.cards.push(data);
@@ -213,8 +249,10 @@ var actionsMixin = {
         oProblem.leaveTime = leaveTime
 
         // 习题组件实例中的定时方法
-        this.$children[1] && this.$children[1].setTiming && this.$children[1].setTiming(leaveTime);
+        // this.$children[1] && this.$children[1].setTiming && this.$children[1].setTiming(leaveTime);
         this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
+        this.$children[3] && this.$children[3].setTiming && this.$children[3].setTiming(leaveTime);
+        this.$children[4] && this.$children[4].setTiming && this.$children[4].setTiming(leaveTime);
       }
     },
 

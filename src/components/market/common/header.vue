@@ -5,13 +5,13 @@
       <a href="/">
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
-      <a class="right header">
+      <a class="right header" v-if="name">
         <img :src="avatar"/>
         <span>{{name}}</span>
       </a>
       <a href="/join_us" class="right">加入我们</a>
       <a href="/help" class="right">帮助中心</a>
-      <a href="/lesson/market/courseware" class="right">雨课件</a>
+      <a href="/lesson/market/courseware" class="right color_curr">雨课件</a>
       <a href="/download" class="right">下载</a>
       <a href="/web" class="right">雨课堂网页版<img class="beta" src="~images/market/icon/beta.png" alt="beta"></a>
     </div>
@@ -43,7 +43,7 @@
             self.avatar = data.user_profile.avatar_96
           }
         }).catch(function (e) {
-          window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
+          // window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
         })
       }
     }
@@ -74,7 +74,7 @@
 
   .nav .box {
     position: relative;
-    width: 900px;
+    width: 1100px;
     margin: 0 auto;
     height: 66px;
   }
@@ -101,7 +101,9 @@
   .nav .box a {
     color: #fff;
   }
-
+  .color_curr{
+    color: #639EF4;
+  }
   .nav .box .header {
     display: inline-block;
     height: 100%;
