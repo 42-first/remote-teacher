@@ -30,7 +30,7 @@
       }
     },
     created: function () {
-      // this._init()
+      this._init()
     },
     components: {},
     methods: {
