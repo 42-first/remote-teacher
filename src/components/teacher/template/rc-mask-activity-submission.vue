@@ -137,6 +137,13 @@
       })
       
     },
+    mounted () {
+      let self = this
+      let wh = window.innerHeight
+
+      // 数据不多时，让用户能搓动空白处加载更多
+      document.querySelector('.submission-box .mint-loadmore').style.minHeight = wh + 'px'
+    },
     watch: {
       submissionList: function() {
         setTimeout(() => {
