@@ -6,7 +6,7 @@
       <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
+    <v-touch v-on:tap="refreshDanmulist2" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->
@@ -25,16 +25,16 @@
        >
       <section v-show="danmuList.length" class="list">
 
-        <div class="item-with-gap" v-for="item in danmuList" :key="item.danmu_id">
+        <div class="item-with-gap" v-for="item in danmuList" :key="item.id">
           <div class="item">
             <div class="detail">
-              <img :src="item.avatar" alt="">
+              <img :src="item.user_avatar_46" alt="">
               <div class="danmu f18">{{item.message}}</div>
             </div>
             <div class="action-box">
               <div class="time f15">{{item.time.substring(11)}}</div>
-              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.danmu_id" v-on:tap="postDanmu(item.danmu_id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
-              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.danmu_id" v-on:tap="closeDanmumask">退出投屏</v-touch>
+              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
+              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">退出投屏</v-touch>
             </div>
           </div>
           <div class="gap"></div>
@@ -49,7 +49,7 @@
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDanmulist2">刷新</v-touch>
       <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>返回</v-touch>
     </div>
   </div>
@@ -62,7 +62,8 @@
   import Loadmore from 'mint-ui/lib/loadmore'
 
   let DANMU_ALL_LIST = []
-  let FENYE_COUNT = 30
+  let BIG_NUMBER = 10000000000000000000
+  let FENYE_COUNT = 2
 
   export default {
     name: 'RcMaskActivityDanmubox',
@@ -71,6 +72,7 @@
       return {
         danmuList: [],              // 弹幕列表
         allLoaded: false,           // 上拉加载更多到底了
+        isFetching: true,           // 正在获取数据
         contLonger: false,          // 内容超过1屏
         isShowNoNewItem: false,     // 刷新后没有新的条目
         isShowNewHint: false,       // 上方提示有新的条目进来
@@ -85,7 +87,7 @@
 
       // 父组件点击 弹幕 按钮时发送事件给本子组件
       self.$on('showDanmubox', function (msg) {
-        self.refreshDanmulist('isClickedin')
+        self.refreshDanmulist2('isClickedin')
       })
 
       // socket通知有新的弹幕进来了
@@ -113,11 +115,23 @@
 
         self.$refs.Loadmore.onBottomLoaded()
 
-        if (self.danmuList.length < DANMU_ALL_LIST.length) {
-          self.danmuList = DANMU_ALL_LIST.slice(0, self.danmuList.length+FENYE_COUNT)
-        } else {
-          self.allLoaded = true
-        }
+        let url = API.danmulist2
+        // 有可能还一条都没哟呢
+        let start = self.danmuList[0] ? self.danmuList[self.danmuList.length-1].id : 0
+
+        // 单次刷新
+        request.post(url, {
+          'lesson_id': self.lessonid,
+          'start': start,
+          'count': FENYE_COUNT,
+          'direction': 0 // 加载更多要倒序查找
+        }).then(jsonData => {
+            if (jsonData.data.response_num === 0) {
+              self.allLoaded = true
+              return
+            }
+            self.danmuList = self.danmuList.concat(jsonData.data.danmu_list)
+          })
       },
       /**
        * 点击 返回 按钮 返回课堂动态
@@ -158,6 +172,78 @@
        *
        * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
+      refreshDanmulist2(isClickedin){
+        let self = this
+        let url = API.danmulist2
+        // 有可能还一条都没哟呢
+        let start = self.danmuList[0] ? self.danmuList[0].id : 0
+
+        // 如果已经有内容了就不要显示正在加载中了
+        if (!self.danmuList.length) {
+          self.isFetching = true
+        }
+
+        // 分页逻辑：
+        // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
+        // 否则如果状态为已经全加载完的话，直接把所有刷新的数据赋值
+        // 否则只新塞最新的数据到前面
+
+        // 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
+        // 的方法来判断新增了多少条条目，而是可以通过用 start count 的请求查看从 start 的地方
+        // 新增的条目是不是比分页的多，或者把 count 设置成极大值
+        // 来查看到底从 start 处新增了多少条
+        request.post(url, {
+          'lesson_id': self.lessonid,
+          'start': start,             // 开始的id，返回时不包含本id内容
+          'count': BIG_NUMBER,        // 如果新条目数很多，要直接取最新分页个数的条目的
+          'direction': 1              // 刷新要正序查找
+        }).then(jsonData => {
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
+            
+            setTimeout(() => {
+              self.isShowBtnBox = true
+            },500)
+
+            // 假如没有新条目的话，显示没有新条目的提示
+            // 从课堂动态进来的话，不显示提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && !jsonData.data.response_num
+            setTimeout(() => {
+              self.isShowNoNewItem = false
+            }, 2000)
+
+            let newList = jsonData.data.danmu_list
+            
+            self.isFetching = false
+
+            // 新增的条目的个数
+            let newItemsCount = jsonData.data.response_num
+            
+            if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
+              // 刚加载展示或新条目数大于于 FENYE_COUNT，
+              // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
+              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)            
+            } else {
+              // 不是刚展示，新条目数也小于 FENYE_COUNT
+              self.danmuList = newList.reverse().concat(self.danmuList)
+            }
+
+            // 如果新条目数大于 FENYE_COUNT， 则肯定改状态为 可以加载更多
+            // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
+            // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
+            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.submissionList.length)
+            
+            // 刷新的话回顶部
+            self.$el.scrollTop = 0
+          })
+      },
+      /**
+       * 更新试题详情的数据
+       * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
+       *
+       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
+       */
       refreshDanmulist(isClickedin){
         let self = this
         let url = API.danmulist
@@ -185,7 +271,7 @@
 
             let newItemsCount = 0
             if (DANMU_ALL_LIST[0] && self.danmuList[0]) {
-              newItemsCount = DANMU_ALL_LIST[0].danmu_id - self.danmuList[0].danmu_id
+              newItemsCount = DANMU_ALL_LIST[0].id - self.danmuList[0].id
             }
             
             // 如果还没有弹幕展示或新增的弹幕大于 FENYE_COUNT，就

@@ -97,7 +97,7 @@
   import Loadmore from 'mint-ui/lib/loadmore'
 
   let BIG_NUMBER = 10000000000000000000
-  let FENYE_COUNT = 10
+  let FENYE_COUNT = 2
 
   let WH = window.innerWidth/window.innerHeight
   let pollingTimer = null
@@ -158,11 +158,13 @@
         this.$refs.Loadmore.onBottomLoaded()
 
         let url = API.submissionlist
+        // 有可能还一条都没哟呢
+        let start = self.submissionList[0] ? self.submissionList[self.submissionList.length-1].id : 0
 
         // 单次刷新
         request.get(url, {
           'lesson_id': self.lessonid,
-          'start': self.submissionList[self.submissionList.length-1].id,
+          'start': start,
           'count': FENYE_COUNT,
           'direction': 0
         }).then(jsonData => {
@@ -199,18 +201,28 @@
       refreshSubmissionlist(isClickedin){
         let self = this
         let url = API.submissionlist
+        // 有可能还一条都没哟呢
+        let start = self.submissionList[0] ? self.submissionList[0].id : 0
 
         // 如果已经有内容了就不要显示正在加载中了
         if (!self.submissionList.length) {
           self.isFetching = true
         }
 
-        // 单次刷新
+        // 分页逻辑：
+        // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
+        // 否则如果状态为已经全加载完的话，直接把所有刷新的数据赋值
+        // 否则只新塞最新的数据到前面
+
+        // 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
+        // 的方法来判断新增了多少条条目，而是可以通过用 start count 的请求查看从 start 的地方
+        // 新增的条目是不是比分页的多，或者把 count 设置成极大值
+        // 来查看到底从 start 处新增了多少条
         request.get(url, {
           'lesson_id': self.lessonid,
-          'start': BIG_NUMBER,
-          'count': BIG_NUMBER,
-          'direction': 0
+          'start': start,             // 开始的id，返回时不包含本id内容
+          'count': BIG_NUMBER,        // 如果新条目数很多，要直接取最新分页个数的条目的
+          'direction': 1              // 刷新要正序查找
         }).then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
@@ -222,7 +234,7 @@
             // 加入没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
             // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = typeof isClickedin !== 'string' && self.submissionList[0] && self.submissionList[0].id === jsonData.data.tougao_list[0].id
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && !jsonData.data.response_num
             setTimeout(() => {
               self.isShowNoNewItem = false
             }, 2000)
@@ -231,29 +243,22 @@
             
             self.isFetching = false
 
-            // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
-            // 否则如果状态为已经全加载完的话，直接把所有刷新的数据赋值
-            // 否则只新塞最新的数据到前面
-            let newItemsCount = 0
-            if (newList[0] && self.submissionList[0]) {
-              newItemsCount = newList[0].id - self.submissionList[0].id
-            }
+            // 新增的条目的个数
+            let newItemsCount = jsonData.data.response_num
             
             if (!self.submissionList.length || newItemsCount > FENYE_COUNT) {
-              // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
-              if (!self.submissionList.length && newList.length <= FENYE_COUNT) {
-                self.allLoaded = true
-              } else {
-                self.allLoaded = false
-              }
-
-              self.submissionList = newList.slice(0, FENYE_COUNT)
-            } else if (self.allLoaded) {
-              self.submissionList = newList
+              // 刚加载展示或新条目数大于 FENYE_COUNT，
+              // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
+              self.submissionList = newList.reverse().slice(0, FENYE_COUNT)      
             } else {
-              self.submissionList = newList.slice(0, newItemsCount).concat(self.submissionList)
-              self.allLoaded = false
+              // 不是刚展示，新条目数也小于 FENYE_COUNT
+              self.submissionList = newList.reverse().concat(self.submissionList)
             }
+
+            // 如果新条目数大于 FENYE_COUNT， 则肯定改状态为 可以加载更多
+            // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
+            // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
+            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.submissionList.length)
             
             // 刷新的话回顶部
             self.$el.scrollTop = 0
