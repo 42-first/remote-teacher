@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  import request from '@/util/request'
-  import API from '@/util/api'
+  /* import request from '@/util/request'
+  import API from '@/util/api' */
   export default {
     name: 'header',
     data () {
