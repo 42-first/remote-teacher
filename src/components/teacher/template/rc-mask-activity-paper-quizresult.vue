@@ -100,6 +100,14 @@
         self.quizid = quizid
         self.showQuizResult()
       })
+
+      // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+      self.$on('quizfinished', function (msg) {
+        if (self.quizid === msg.quizid) {
+          self.isPaperCollected = true
+          self.endTimers()
+        }
+      })
     },
     methods: {
       /**
@@ -258,20 +266,20 @@
 
             isCollecting = false
 
-            let str = JSON.stringify({
-              'op': 'quizfinished',
-              'lessonid': self.lessonid,
-              'quizid': self.quizid,
-              'title': jsonData.title
-            })
+            // let str = JSON.stringify({
+            //   'op': 'quizfinished',
+            //   'lessonid': self.lessonid,
+            //   'quizid': self.quizid,
+            //   'title': jsonData.title
+            // })
 
-            self.socket.send(str)
+            // self.socket.send(str)
 
             // TODO
-            self.endTimers()
+            // self.endTimers()
             self.isPaperCollected = true
             // 记录已经收卷的quizID
-            self.$emit('collectQuiz', self.quizid)
+            // self.$emit('collectQuiz', self.quizid)
           })
       },
       /**
