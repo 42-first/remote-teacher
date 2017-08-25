@@ -6,7 +6,7 @@
     </v-touch>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
 
-    <v-touch v-on:tap="refreshSubmissionlist" v-show="isShowNewHint" class="new-item-hint f15">你有新的投稿</v-touch>
+    <v-touch v-on:tap="refreshSubmissionlist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
@@ -402,21 +402,17 @@
       pollingNewSubmission () {
         let self = this
         let url = API.submissionlist
+        // 有可能还一条都没哟呢
+        let start = self.submissionList[0] ? self.submissionList[0].id : 0
 
         // 获取数据
         request.get(url, {
           'lesson_id': self.lessonid,
-          'start': BIG_NUMBER,
-          'count': BIG_NUMBER,
-          'direction': 0
+          'start': start,             // 开始的id，返回时不包含本id内容
+          'count': FENYE_COUNT,
+          'direction': 1              // 刷新要正序查找
         }).then(jsonData => {
-            let newList = jsonData.data.tougao_list
-            
-            if (newList[0] && self.submissionList[0]) {
-              self.isShowNewHint = newList[0].id > self.submissionList[0].id
-            } else if (newList[0]) {
-              self.isShowNewHint = true
-            }
+            self.isShowNewHint = jsonData.data.response_num
           })
       },
     }
@@ -449,6 +445,14 @@
       text-align: center;
       line-height: 0.8rem;
       color: $white;
+      transition: transform 0.5s ease;
+    }
+
+    .hintfadein {
+      transform: translate(-50%, 0) scale(1);
+    }
+    .hintfadeout {
+      transform: translate(-50%, -1.5rem) scale(0.8);
     }
 
     .no-new-item {
