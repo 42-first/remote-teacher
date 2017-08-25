@@ -395,6 +395,12 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 收卷了
+  if (msg.op == 'quizfinished') {
+    self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('quizfinished', msg)
+    return
+  }
+
 }
 
 export default socketProcessMessage
