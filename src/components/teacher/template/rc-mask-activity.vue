@@ -155,6 +155,11 @@
       self.$on('newquiz', function (msg) {
         self.$refs.RcMaskActivityPaper.$emit('newquiz', msg)
       })
+
+      // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+      self.$on('quizfinished', function (msg) {
+        self.$refs.RcMaskActivityPaper.$emit('quizfinished', msg)
+      })
     },
     updated () {
     },
