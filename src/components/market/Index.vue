@@ -145,8 +145,7 @@
         let params = {}
         this.rc && (params = {rc: this.rc})
         if (localStorage.getItem('coursewareIndex')) {
-          localStorage.removeItem('coursewareIndex')
-          self.tab = 1
+          this.needLogin(1)
         }
         request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
@@ -166,6 +165,7 @@
       needLogin: function (i) {
         var self = this
         request.get(API.market.user_info).then(function () {
+          localStorage.removeItem('coursewareIndex')
           typeof i === 'number' && (self.tab = i)
         }).catch(function () {
           typeof i === 'number' && localStorage.setItem('coursewareIndex', 1)
