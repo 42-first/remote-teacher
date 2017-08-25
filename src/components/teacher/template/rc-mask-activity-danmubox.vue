@@ -122,11 +122,10 @@
         // 单次刷新
         request.post(url, {
           'lesson_id': self.lessonid,
-          'start': self.danmuList[self.danmuList.length-1].id,
+          'start': start,
           'count': FENYE_COUNT,
           'direction': 0 // 加载更多要倒序查找
         }).then(jsonData => {
-            console.log(988, jsonData)
             if (jsonData.data.response_num === 0) {
               self.allLoaded = true
               return
@@ -224,14 +223,16 @@
             if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
               // 刚加载展示或新条目数大于于 FENYE_COUNT，
               // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
-              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)
-
-              // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
-              self.allLoaded = !self.danmuList.length && newItemsCount <= FENYE_COUNT              
+              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)            
             } else {
               // 不是刚展示，新条目数也小于 FENYE_COUNT
               self.danmuList = newList.reverse().concat(self.danmuList)
             }
+
+            // 如果新条目数大于 FENYE_COUNT， 则肯定改状态为 可以加载更多
+            // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
+            // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
+            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.submissionList.length)
             
             // 刷新的话回顶部
             self.$el.scrollTop = 0
