@@ -5,10 +5,10 @@
       <a href="/">
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
-      <a class="right header">
+      <!--<a class="right header">
         <img :src="avatar"/>
         <span>{{name}}</span>
-      </a>
+      </a>-->
       <a href="/join_us" class="right">加入我们</a>
       <a href="/help" class="right">帮助中心</a>
       <a href="/lesson/market/courseware" class="right">雨课件</a>
