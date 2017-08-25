@@ -5,7 +5,7 @@
       <a href="/">
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
-      <a class="right header">
+      <a class="right header" v-if="name">
         <img :src="avatar"/>
         <span>{{name}}</span>
       </a>
