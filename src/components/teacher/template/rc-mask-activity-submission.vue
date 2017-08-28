@@ -53,16 +53,18 @@
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     投屏
                   </v-touch>
-                  <v-touch class="cancel-post-btn f14" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">取消投屏</v-touch>
-
-                  <v-touch class="cancel-post-btn f14 qb" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
-                    <span class="fsqb-innerline"></span>
+                  <v-touch class="cancel-post-btn f14" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
                     发送全班
                   </v-touch>
-                  <div class="cancel-post-btn qb yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
-                    <span class="fsqb-innerline"></span>
+                  <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
                     已发全班
                   </div>
+                  <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">
+                    <span class="fsqb-innerline"></span>
+                    取消投屏
+                  </v-touch>
+
+                  
                 </div>
               </div>
             </div>
@@ -610,7 +612,7 @@
             color: $white;
           }
 
-          .qb {
+          .qxtp {
             margin-right: -0.4rem;
           }
 
@@ -621,7 +623,7 @@
           .fsqb-innerline {
             float: left;
             margin-top: 0.2rem;
-            width: 0.026667rem;
+            width: 1px;
             height: 0.4rem;
             background: $white;
           }

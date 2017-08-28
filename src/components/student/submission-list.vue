@@ -130,7 +130,7 @@
         let self = this;
         let URL = API.student.GET_SUBMISSION_LIST;
         let params = {
-          'start': 1000,
+          'start': 99999999999999999,
           'count': 100,
           'lesson_id': this.lessonID,
           'direction': 0
