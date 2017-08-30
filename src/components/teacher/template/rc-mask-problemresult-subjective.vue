@@ -1,6 +1,9 @@
 <!--试题结果-主观题结果页面 被父组件 remote.vue 引用-->
 <template>
 	<div class="problem-root" :class="{'allowscrollcallback': !isScoring}" v-scroll="onScroll">
+		<v-touch v-show="isBigpicShown" class="bigpic-mask" v-on:tap="hideBigpic">
+      <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
+    </v-touch>
 		<v-touch v-on:tap="refreshSubjectivelist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
@@ -33,7 +36,7 @@
 	    </section>
 
 	    <!-- 中间主观题页面 -->
-	    <section class="subjective-box f18">
+	    <v-touch v-on:tap="hideStar" class="subjective-box f18">
 				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
 				<!-- 主观题部分 -->
@@ -46,11 +49,12 @@
                		<div class="time f15">{{item.end_time | formatTime}}</div>
                   <span class="author f15">{{item.user_name}}</span><br>
                   {{item.subj_result.content}}<br>
-                  <v-touch :id="'pic' + item.problem_result_id" tag="img" :src="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="showBigpic(item.subj_result.pics[0].pic, item.problem_result_id)"></v-touch>
+                  <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="showBigpic(item.subj_result.pics[0].pic, item.problem_result_id)"></v-touch>
                 </div>
               </div>
               <div class="action-box f14">
-                <v-touch class="dafen-box" v-on:tap="initScore(item.problem_result_id, item.fullStars, index)">
+              	<!-- 投屏时不能打分 -->
+                <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.fullStars, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
               	    <span>打分</span>
@@ -59,6 +63,7 @@
               	  	<i v-for="i in item.fullStars" class="iconfont icon-fill-star f16"></i>
               	  </div>
                 </v-touch>
+                <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
               	
                 <div class="action f14">
 
@@ -73,7 +78,7 @@
             <div class="gap"></div>
           </div>
 				</div>
-	    </section>
+	    </v-touch>
 	    
 	  </div>
 
@@ -96,9 +101,13 @@
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
   Vue.use(VueScroll)
 
+  import { Lazyload } from 'mint-ui';
+  Vue.use(Lazyload);
+
   const STAR_TOTAL = 5  // 总星星数目
   const BIG_NUMBER = 10000000000000000000
   const FENYE_COUNT = 10
+  const WH = window.innerWidth/window.innerHeight
 
   function handelScroll (posList = [0]) {
   	let self = this
@@ -149,6 +158,9 @@
 	    	isScoring: false,							// 正在打分
 	    	isShowBtnBox: false,					// 显示底部返回按钮
 	    	hasLimit: false,							// 当前题目计时了
+	    	isBigpicShown: false,         // 当前正显示大图
+	    	isWider: false,               // 投稿图片更扁
+	    	bigpicUrl: '',                // 当前大图url
 	    }
 	  },
 	  computed: {
@@ -340,6 +352,48 @@
 	        })
 	    },
 	    /**
+	     * 点击空白处隐藏打分面板
+	     *
+	     * @event bindtap
+	     * @params {Object} evt event 对象
+	     */
+	    hideStar (evt) {
+	    	let self = this
+	    	let isScoreDom = $(evt.target).closest('.dafen-box').length
+
+
+	    	if (isScoreDom) {return;}
+
+	    	self.isScoring = false
+	    	self.$refs.StarPanel.$emit('leave')
+	    },
+	    /**
+       * 显示大图
+       *
+       * @event bindtap
+       * @param {string} pic 大图url
+       */
+      showBigpic (pic, picid) {
+        let self = this
+        let dom = document.querySelector('#pic'+picid)
+        let picwh = dom.naturalWidth / dom.naturalHeight
+
+        self.isWider = picwh > WH
+        self.isBigpicShown = true
+        self.bigpicUrl = pic
+      },
+      /**
+       * 隐藏大图
+       *
+       * @event bindtap
+       */
+      hideBigpic () {
+        let self = this
+
+        self.isBigpicShown = false
+        self.bigpicUrl = ''
+      },
+	    /**
 	     * 试题主观题页面页面中的 投屏 按钮
 	     *
 	     * @event bindtap
@@ -410,6 +464,32 @@
     }
     .hintfadeout {
       transform: translate(-50%, -1.5rem) scale(0.8);
+    }
+
+    .bigpic-mask {
+      display: flex;
+      align-items: center;
+      position: fixed;
+      z-index: 40;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      color: $white;
+
+      img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .w100 {
+        width: 100%;
+      }
+      .h100 {
+        height: 100%;
+      }
     }
 
 		.back-top-btn {
@@ -519,6 +599,12 @@
 	            	margin-top: 0.266667rem;
 	              max-width: 7.573333rem;
 	              max-height: 7.04rem;
+	            }
+	            img[lazy=loading] {
+	              width: 5.333333rem;
+	              height: 4.0rem;
+	              background: url(~~images/teacher/img-holder.png) center center no-repeat;
+								background-size: cover;
 	            }
 	          }
 	        }
