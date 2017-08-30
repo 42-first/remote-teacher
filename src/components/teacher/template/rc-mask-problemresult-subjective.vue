@@ -601,8 +601,8 @@
 	              max-height: 7.04rem;
 	            }
 	            img[lazy=loading] {
-	              width: 5.333333rem;
-	              height: 4.0rem;
+	              width: 4.666667rem;
+	              height: 4.666667rem;
 	              background: url(~~images/teacher/img-holder.png) center center no-repeat;
 								background-size: cover;
 	            }
