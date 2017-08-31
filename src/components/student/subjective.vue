@@ -32,6 +32,7 @@
       </section>
 
       <h3 class="subjective__answer--lable f17" v-if="!ispreview">作答区域<span class="tip f12">（内容限制140字可插入1张图片）</span></h3>
+      <h3 class="subjective__answer--lable f17" v-else >我的回答</h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
@@ -46,14 +47,15 @@
 
         <!-- 图片 -->
         <section class="submission__pic">
-          <div v-if="!hasImage">
+          <div v-if="!hasImage&&!loading">
             <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
             <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
           </div>
-          <div class="pic-view" v-show="hasImage">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
+          <div class="pic-view" v-show="hasImage||loading">
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
+            <img class="J_loading_img" alt="" v-show="loading" />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
-            <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
+            <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
           </div>
         </section>
       </div>
@@ -85,7 +87,7 @@
   import {compress} from '@/util/image'
 
   export default {
-    name: 'submission-page',
+    name: 'subjective-page',
     data() {
       return {
         ispreview: false,
@@ -102,6 +104,8 @@
         imageURL: '',
         imageThumbURL: '',
         hasImage: false,
+        // 图片加载中
+        loading: false,
         count: 0,
         imageData: null,
         width: 0,
@@ -207,8 +211,10 @@
               this.imageURL = result.pics[0].pic;
               this.imageThumbURL = result.pics[0].thumb;
 
-              let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
-              imgEl.src = this.imageURL;
+              setTimeout(()=>{
+                let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+                imgEl.src = this.imageURL;
+              }, 300)
             }
           }
 
@@ -227,6 +233,10 @@
             this.$parent.msgBoxs.splice(index, 1);
           }
         })
+
+        // 预加载图片
+        let oImg = new Image();
+        oImg.src = '/vue_images/images/loading-3.gif';
       },
 
       /*
@@ -504,14 +514,19 @@
           }
         };
 
-        this.$toast({
-          message: '图片上传中',
-          duration: 2000
-        });
+        // this.$toast({
+        //   message: '图片上传中',
+        //   duration: 2000
+        // });
 
         // 压缩 浏览器旋转 微信崩溃等问题
+        this.loading = true;
+        let loadingEl = this.$el.querySelector('.J_loading_img');
+        loadingEl.src = '/vue_images/images/loading-3.gif';
+
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
+            self.loading = false;
             imgEl.src = dataUrl;
 
             // 上传图片
@@ -878,6 +893,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+      }
+
+      .pic--loading {
+        width: 75%;
       }
 
       .higher {
