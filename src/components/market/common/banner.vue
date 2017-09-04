@@ -1,8 +1,9 @@
 <template>
   <div class="banner">
-    <img src="~images/market/banner/courseware.png" v-if="type == 0"/>
+    <div class="courseware" v-if="type == 0">
+    </div>
     <img src="~images/market/banner/activate.png" v-if="type == 1"/>
-    <div class="text-center font48 colorf text">
+    <div class="text-center font48 colorf text" v-if="type !== 0">
       <div>{{text}}</div>
     </div>
   </div>
@@ -25,6 +26,7 @@
     margin: 0 auto;
     font-size: 0px;
     position: relative;
+    overflow: hidden;
     img {
       width: 100%;
     }
@@ -42,6 +44,15 @@
         top:50%;
         margin-top: -24px;
       }
+    }
+    .courseware{
+      background-color: #fff;
+      width: 100%;
+      height: 300px;
+      background-image: url("~images/market/banner/courseware-big.png");
+      background-position: center center;
+      background-size: auto 100%;
+      background-repeat: no-repeat;
     }
   }
 </style>

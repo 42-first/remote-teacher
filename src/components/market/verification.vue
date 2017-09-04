@@ -68,7 +68,7 @@
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
   export default {
-    name: 'Verification',
+    name: 'verification',
     data () {
       return {
         goVeri: !0,
