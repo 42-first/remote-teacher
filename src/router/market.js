@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/market/Index'
 import Verification from '@/components/market/verification'
+import mobileMarket from '@/components/market/mobile_market'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/courseware',
       name: 'courseware',
       component: Index
+    },
+    {
+      path: '/mobile_market',
+      name: 'mobile_market',
+      component: mobileMarket
     }
   ]
 })

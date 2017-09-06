@@ -100,10 +100,10 @@ if (process.env.NODE_ENV === 'production') {
         \*------------------*/
       /* 雨课件市场 start */
       market: {
-        'user_info': '/static/mock/market/user_info.json',
-        'get_rain_courseware_list': '/static/mock/market/get_rain_courseware_list.json',
-        'rain_courseware_list': '/static/mock/market/rain_courseware_list.json',
-        'bind_serial_number': '/static/mock/market/bind_serial_number.json'
+        'user_info': '/static/lesson/mock/market/user_info.json',
+        'get_rain_courseware_list': '/static/lesson/mock/market/get_rain_courseware_list.json',
+        'rain_courseware_list': '/static/lesson/mock/market/rain_courseware_list.json',
+        'bind_serial_number': '/static/lesson/mock/market/bind_serial_number.json'
       }
       /* 雨课件市场 end */
 
