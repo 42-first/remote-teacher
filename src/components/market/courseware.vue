@@ -35,14 +35,17 @@
         </li>
         <li class="inline-block expect">
           <div>
-            <div class="over img-con">
-              <img src="~images/market/icon/expect.png"/>
+            <div class="over text-center img-con">
+              <i class="iconfont icon-logo-book"></i>
+              <div class="font22">
+                更多雨课件，敬请期待……
+              </div>
             </div>
             <div class="font12 colora text-left text">
               <p>雨课堂非常希望熟练使用雨课堂、在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。</p>
               <p>&nbsp;</p>
               <p>请联系客服获取更多相关信息。</p>
-              <p>客服邮箱：yuketang@xuetangx.com</p>
+              <p >客服邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
             </div>
           </div>
         </li>
@@ -232,6 +235,23 @@
             width: 100%;
             height: 274px;
             margin-bottom: 20px;
+            background-color: #B1CEF9;
+            line-height: 274px;
+            position: relative;
+            i.icon-logo-book{
+              font-size: 140px;
+              color: rgba(255,255,255,.3);
+              position: relative;
+            }
+            div{
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              color: #fff;
+              z-index: 5;
+              top:0;
+              left:0;
+            }
           }
           .text{
             padding:0 20px;

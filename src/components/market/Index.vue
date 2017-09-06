@@ -123,7 +123,7 @@
           border: 1px solid #639ef4;
           border-radius: 19px;
           background-color: #fff;
-          margin: 20px 30px;
+          margin: 20px 0 20px 30px;
         }
       }
     }
