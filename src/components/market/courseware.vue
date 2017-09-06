@@ -1,6 +1,6 @@
 <template>
   <div class="back">
-    <banner :type="0"></banner>
+    <banner :type="2"></banner>
     <div class="detail over">
       <div class="con-width over market-title">
         <div class="font36 title">

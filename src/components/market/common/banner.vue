@@ -1,9 +1,10 @@
 <template>
   <div class="banner">
-    <div class="courseware" v-if="type == 0">
+    <img src="~images/market/banner/courseware.png" v-if="type === 0"/>
+    <img src="~images/market/banner/activate.png" v-if="type === 1"/>
+    <div class="courseware" v-if="type == 2">
     </div>
-    <img src="~images/market/banner/activate.png" v-if="type == 1"/>
-    <div class="text-center font48 colorf text" v-if="type !== 0">
+    <div class="text-center font48 colorf text" v-if="type !== 2">
       <div>{{text}}</div>
     </div>
   </div>
