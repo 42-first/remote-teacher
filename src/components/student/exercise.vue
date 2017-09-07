@@ -637,6 +637,7 @@
 
     border-top: 1px solid #C8C8C8;
     border-bottom: 1px solid #C8C8C8;
+    overflow: hidden;
     .page-no {
       position: absolute;
       top: 0;
