@@ -84,6 +84,9 @@
       }
     },
     created: function () {
+      setTimeout(function () {
+        document.body.scrollTop = 0
+      }, 2)
       request.temp = this
       if (process.env.NODE_ENV !== 'production') {
         request.post = request.get

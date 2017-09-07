@@ -2,7 +2,8 @@
   <div class="banner">
     <img src="~images/market/banner/courseware.png" v-if="type === 0"/>
     <img src="~images/market/banner/activate.png" v-if="type === 1"/>
-    <div class="courseware" v-if="type == 2">
+    <div class="text-center courseware" v-if="type == 2">
+      <img src="~images/market/banner/courseware-big-new.png"/>
     </div>
     <div class="text-center font48 colorf text" v-if="type !== 2">
       <div>{{text}}</div>
@@ -49,11 +50,11 @@
     .courseware{
       background-color: #fff;
       width: 100%;
-      height: 300px;
-      background-image: url("~images/market/banner/courseware-big.png");
-      background-position: center center;
-      background-size: 600px auto;
-      background-repeat: no-repeat;
+      height: 407px;
+      img{
+        height: 100%;
+        width: auto;
+      }
     }
   }
 </style>

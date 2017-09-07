@@ -3,12 +3,12 @@
     <banner :type="2"></banner>
     <div class="detail over">
       <div class="con-width over market-title">
-        <div class="font36 title">
+        <div class="font26 title">
           雨课件市场
         </div>
         <div class="text-right btn-con">
-          <router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn" target="_blank">激活</router-link>
-          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine" target="_blank">我的雨课件</router-link>
+          <router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
+          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>
         </div>
       </div>
       <ul class="con-width">
@@ -70,6 +70,9 @@
       }
     },
     created: function () {
+      setTimeout(function () {
+        document.body.scrollTop = 0
+      }, 2)
       let query = this.$route.query
       let rc = query.rc
       this.rc = rc
@@ -77,7 +80,6 @@
         request.post = request.get
       }
       this.init()
-      this.getList()
     },
     methods: {
       init: function () {
@@ -87,13 +89,6 @@
         request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
           self.list = data.rain_courseware_list
-        })
-      },
-      getList: function () {
-        let self = this
-        request.post(API.market.rain_courseware_list).then(function (e) {
-          let data = e.data
-          self.downloadList = data.rain_courseware_list
         })
       },
       order: function () {
@@ -139,6 +134,7 @@
         padding-bottom: 10px;
         .title{
           width: 300px;
+          padding-top: 10px;
         }
         .btn-con{
           width: 100%;
