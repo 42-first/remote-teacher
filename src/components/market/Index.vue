@@ -5,7 +5,7 @@
       <div class="con-width color63 btn-con">
         <user-info :info="userInfo"></user-info>
         <div class="text-right btn-coat">
-          <router-link :to="{name:'verification',query: {date: timestamp()}}" target="_blank">
+          <router-link :to="{name:'verification',query: {date: timestamp()}}">
             <input type="button" value="已购买，去激活" class="font16 color63 pointer btn-blue" />
           </router-link>
           <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer btn-blue" @click="order" />
