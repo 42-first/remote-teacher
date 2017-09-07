@@ -3,7 +3,7 @@
     <banner :type="2"></banner>
     <div class="detail over">
       <div class="con-width over market-title">
-        <div class="font36 title">
+        <div class="font24 title">
           雨课件市场
         </div>
         <div class="text-right btn-con">
@@ -131,6 +131,7 @@
         padding-bottom: 10px;
         .title{
           width: 300px;
+          padding-top: 10px;
         }
         .btn-con{
           width: 100%;

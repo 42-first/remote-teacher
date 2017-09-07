@@ -9,10 +9,11 @@
         <img :src="avatar"/>
         <span>{{name}}</span>
       </a>-->
-      <a href="/join_us" class="right">加入我们</a>
+      <!--<a href="/join_us" class="right">加入我们</a>-->
       <a href="/help" class="right">帮助中心</a>
-      <a href="/lesson/market/courseware" class="right color_curr">雨课件</a>
       <a href="/download" class="right">下载</a>
+      <a href="/lesson/market/courseware" class="right color_curr">雨课件</a>
+      <a href="/flippen" class="right">翻页笔</a>
       <a href="/web" class="right">雨课堂网页版</a>
     </div>
   </nav>
