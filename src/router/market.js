@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/market/Index'
-import Verification from '@/components/market/verification'
+import verification from '@/components/market/verification'
 import mobileMarket from '@/components/market/mobile_market'
+import courseware from '@/components/market/courseware'
 
 Vue.use(Router)
 
@@ -16,14 +17,14 @@ export default new Router({
       component: Index
     },
     {
-      path: '/Verification',
-      name: 'Verification',
-      component: Verification
+      path: '/verification',
+      name: 'verification',
+      component: verification
     },
     {
       path: '/courseware',
       name: 'courseware',
-      component: Index
+      component: courseware
     },
     {
       path: '/mobile_market',

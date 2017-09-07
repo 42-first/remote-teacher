@@ -1,12 +1,8 @@
 <template>
   <div class="back">
     <banner :type="1" text="雨课件激活"></banner>
-    <div class="con-width over user">
-      <img :src="user && user.avatar" />
-      <div class="inline-block">
-        <div class="color4a font20">{{user && user.name}}</div>
-        <div class="color9b font14">激活后仅授权当前用户使用</div>
-      </div>
+    <div class="con-width user-con">
+      <user-info :info="userInfo" :activate="!0"></user-info>
     </div>
     <div class="con-width verify-con" v-if="goVeri">
       <div class="insert text-center" v-up>
@@ -67,8 +63,9 @@
   import $ from 'jquery'
   import courseware from '@/components/market/common/courseware.vue'
   import banner from '@/components/market/common/banner.vue'
+  import userInfo from '@/components/market/common/userInfo.vue'
   export default {
-    name: 'Verification',
+    name: 'verification',
     data () {
       return {
         goVeri: !0,
@@ -82,7 +79,8 @@
         vData: null,
         status: 0,
         user: null,
-        link: ''
+        link: '',
+        userInfo: {}
       }
     },
     created: function () {
@@ -189,7 +187,11 @@
         })
       },
       needLogin: function () {
-        request.get(API.market.user_info).catch(function () {
+        let self = this
+        request.get(API.market.user_info).then(function (e) {
+          let data = e.data
+          self.userInfo = data.user_profile
+        }).catch(function () {
           window.location.href = location.origin + '/web?next=' + location.pathname + '&type=1'
         })
       }
@@ -252,7 +254,8 @@
     },
     components: {
       courseware,
-      banner
+      banner,
+      userInfo
     }
   }
 </script>
@@ -265,28 +268,10 @@
     min-width: 960px;
     background-color: #fff;
     margin-top: 66px;
-    .banner {
-      width: 100%;
-      margin: 0 auto;
-      font-size: 0px;
-      img {
-        width: 100%;
-      }
-    }
-    .user{
-      border-bottom: 1px solid #eee;
-      padding-left: 168px;
-      margin-top: 50px;
-      padding-bottom: 10px;
-      img,div{
-        vertical-align: bottom;
-      }
-      img{
-        width: 80px;
-        height: 80px;
-        border: 1px solid #979797;
-        margin-right: 20px;
-      }
+    .user-con{
+      margin-top: 30px;
+      padding-bottom: 20px;
+      border-bottom:1px solid #d8d8d8;
     }
     .verify-con {
       background-color: #fff;

@@ -49,6 +49,9 @@ a{
 .text-left{
   text-align: left;
 }
+.text-right{
+  text-align: right;
+}
 .inline-block{
   display: inline-block;
   vertical-align: top;
@@ -68,11 +71,17 @@ a{
 .color4a{
   color:#4a4a4a;
 }
+.color6{
+  color: #666;
+}
 .colora{
   color: #aaa;
 }
 .color63{
   color: #639EF4;
+}
+.color-e4{
+  color: #e43828;
 }
 .font0{
   font-size: 0px;
@@ -91,6 +100,9 @@ a{
 }
 .font20{
   font-size: 20px;
+}
+.font22{
+  font-size: 22px;
 }
 .font24{
   font-size: 24px;
