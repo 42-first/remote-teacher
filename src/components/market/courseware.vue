@@ -77,7 +77,6 @@
         request.post = request.get
       }
       this.init()
-      this.getList()
     },
     methods: {
       init: function () {
@@ -87,13 +86,6 @@
         request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
           self.list = data.rain_courseware_list
-        })
-      },
-      getList: function () {
-        let self = this
-        request.post(API.market.rain_courseware_list).then(function (e) {
-          let data = e.data
-          self.downloadList = data.rain_courseware_list
         })
       },
       order: function () {
