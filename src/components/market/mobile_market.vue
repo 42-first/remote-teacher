@@ -148,7 +148,6 @@
       font-size: .32rem;
       height: .8rem;
       line-height: .8rem;
-      margin-top: .2rem;
     }
     ul {
       font-size: 0;
@@ -222,9 +221,9 @@
         div.container{
           .img-con{
             width: 100%;
-            height: 2rem;
+            height: 3.1rem;
             margin-bottom: .2rem;
-            line-height: 2rem;
+            line-height: 3.1rem;
             background-color: #B1CEF9;
             i{
               font-size: 1.8rem;
@@ -238,6 +237,9 @@
       }
       li:nth-child(even){
         padding: 0;
+      }
+      li:nth-child(1),li:nth-child(2){
+        margin-top: 0;
       }
     }
   }
