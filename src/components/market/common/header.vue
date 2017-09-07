@@ -31,7 +31,6 @@
       }
     },
     created: function () {
-      console.log(this.$route.name)
       this._init()
     },
     components: {},

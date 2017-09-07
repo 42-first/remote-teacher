@@ -3,7 +3,7 @@
     <img src="~images/market/banner/courseware.png" v-if="type === 0"/>
     <img src="~images/market/banner/activate.png" v-if="type === 1"/>
     <div class="text-center courseware" v-if="type == 2">
-      <img src="~images/market/banner/courseware-big.png"/>
+      <img src="~images/market/banner/courseware-big-new.png"/>
     </div>
     <div class="text-center font48 colorf text" v-if="type !== 2">
       <div>{{text}}</div>

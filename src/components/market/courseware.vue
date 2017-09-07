@@ -70,6 +70,9 @@
       }
     },
     created: function () {
+      setTimeout(function () {
+        document.body.scrollTop = 0
+      }, 2)
       let query = this.$route.query
       let rc = query.rc
       this.rc = rc

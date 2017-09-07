@@ -42,6 +42,9 @@
       }
     },
     created: function () {
+      setTimeout(function () {
+        document.body.scrollTop = 0
+      }, 2)
       if (process.env.NODE_ENV !== 'production') {
         request.post = request.get
       }
