@@ -3,7 +3,7 @@
     <banner :type="2"></banner>
     <div class="detail over">
       <div class="con-width over market-title">
-        <div class="font24 title">
+        <div class="font26 title">
           雨课件市场
         </div>
         <div class="text-right btn-con">
