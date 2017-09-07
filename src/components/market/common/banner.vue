@@ -52,7 +52,7 @@
       height: 300px;
       background-image: url("~images/market/banner/courseware-big.png");
       background-position: center center;
-      background-size: auto 100%;
+      background-size: 600px auto;
       background-repeat: no-repeat;
     }
   }

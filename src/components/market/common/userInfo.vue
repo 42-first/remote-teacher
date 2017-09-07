@@ -1,10 +1,11 @@
 <template>
-    <div class="color4a pointer user">
-      <div @click="up = !up">
+    <div class="color4a pointer user" @mouseover="up = !0;" @mouseleave="up = !1;"><!--@mouseover="up = !0;" @mouseleave="up = !1;"-->
+      <div class="username-con">
         <img :src="info.avatar_96" class="inline-block" />
         <div class="inline-block font18">{{info.name}}</div>
         <i class="iconfont fonnt14 icon-unfold" v-show="!up"></i>
         <i class="iconfont fonnt14 icon-fold" v-show="up"></i>
+        <div class="font12 color9b inline-block text" v-if="activate">激活后仅授权当前用户使用</div>
       </div>
       <div class="font18 text-center color4a list" v-show="up">
         <div class="item">
@@ -27,7 +28,7 @@
         up: !1
       }
     },
-    props: ['info'],
+    props: ['info', 'activate'],
     methods: {
       logout: function () {
         request.get(Api.market.logout).then(response => {
@@ -42,7 +43,7 @@
 <style lang="scss" scoped>
   @import "~@/style/market/common";
   .user{
-    width: 200px;
+    width: 210px;
     position: relative;
     text-align: left;
     height: 64px;
@@ -50,6 +51,15 @@
     z-index: 3;
     background-color: #fff;
     padding-bottom: 10px;
+    .username-con{
+      height: 94px;
+      .text{
+        height: 14px;
+        line-height: 14px;
+        margin-top: -14px;
+        margin-left: 60px;
+      }
+    }
     img{
       border-radius: 50%;
       width: 64px;

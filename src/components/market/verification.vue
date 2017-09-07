@@ -2,7 +2,7 @@
   <div class="back">
     <banner :type="1" text="雨课件激活"></banner>
     <div class="con-width user-con">
-      <user-info :info="userInfo"></user-info>
+      <user-info :info="userInfo" :activate="!0"></user-info>
     </div>
     <div class="con-width verify-con" v-if="goVeri">
       <div class="insert text-center" v-up>

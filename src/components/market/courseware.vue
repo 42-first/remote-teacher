@@ -11,8 +11,8 @@
           <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine" target="_blank">我的雨课件</router-link>
         </div>
       </div>
-      <ul class="con-width  text-center">
-        <li class="over inline-block" v-for="i in list">
+      <ul class="con-width">
+        <li class="over text-center inline-block" v-for="i in list">
           <div class="img over">
             <img :src="i.cover"/>
           </div>
