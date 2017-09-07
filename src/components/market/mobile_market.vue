@@ -84,7 +84,6 @@
           img {
             width: 100%;
           }
-          background-color: #ffae00;
         }
         .text-con{
           width: 100%;
