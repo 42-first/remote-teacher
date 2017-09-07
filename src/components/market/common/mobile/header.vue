@@ -5,9 +5,10 @@
       <a href="/">
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
-      <a href="/join_us" class="right">加入我们</a>
       <a href="/help" class="right">帮助中心</a>
       <a href="/download" class="right">下载</a>
+      <a href="" class="right">雨课件</a>
+      <a href="" class="right">翻页笔</a>
     </div>
   </nav>
 </template>
