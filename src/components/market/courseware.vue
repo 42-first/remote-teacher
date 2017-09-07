@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="font12 colora text-left text">
-              <p>雨课堂非常希望熟练使用雨课堂、在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。</p>
+              <p>雨课堂盼望熟练使用雨课堂，在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。请联系客服获取更多相关信息。</p>
               <p>&nbsp;</p>
               <p>请联系客服获取更多相关信息。</p>
               <p >客服邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
@@ -135,14 +135,18 @@
   .back {
     background-color: #fff;
     margin-top: 66px;
+    .con-width{
+      width: 840px;
+    }
     .detail {
       background-color: #F5F5F5;
       padding: 20px 0 50px 0;
       .market-title{
         margin: 0 auto;
         border-bottom:1px solid #d8d8d8;
-        padding-left: 6px;
+        padding-left: 4px;
         display: flex;
+        padding-bottom: 10px;
         .title{
           width: 300px;
         }
@@ -172,7 +176,7 @@
           height: 424px;
           background-color: #fff;
           border: 1px solid #c8c8c8;
-          margin: 20px 20px 0 20px;
+          margin: 20px 36px 0 0;
           .img {
             width: 100%;
             height: 204px;
@@ -226,7 +230,8 @@
             margin: 10px auto;
           }
         }
-        li:nth-child(2){
+        li:nth-child(even){
+          margin-left: 36px;
           margin-right: 0;
         }
         li.expect{
