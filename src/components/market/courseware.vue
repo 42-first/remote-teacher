@@ -7,8 +7,8 @@
           雨课件市场
         </div>
         <div class="text-right btn-con">
-          <router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn" target="_blank">激活</router-link>
-          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine" target="_blank">我的雨课件</router-link>
+          <router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
+          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>
         </div>
       </div>
       <ul class="con-width">

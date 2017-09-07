@@ -30,6 +30,7 @@
       }
     },
     created: function () {
+      console.log(this.$route.name)
       this._init()
     },
     components: {},
@@ -58,7 +59,7 @@
     width: 100%;
     left: 0;
     top: 0;
-    color: #fff;
+    color: #9b9b9b;
     background-color: #282C2F;
   }
 
@@ -99,10 +100,10 @@
   }
 
   .nav .box a {
-    color: #fff;
+    color: #9b9b9b;
   }
-  .color_curr{
-    color: #639EF4;
+  .nav .box a.color_curr{
+    color: #fff;
   }
   .nav .box .header {
     display: inline-block;
