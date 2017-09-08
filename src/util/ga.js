@@ -26,7 +26,8 @@ var category = {
     '13': '课堂动态--试卷--返回',
     '14': '课堂动态--弹幕--返回',
     '15': '课堂动态--投稿--返回',
-    '16': '课堂动态--试卷'
+    '16': '课堂动态--试卷',
+    '17': '投稿列表--发送全班'
 };
 var handler = function(evt) {
     var $el = $(evt.currentTarget);
@@ -58,8 +59,11 @@ var gaue = {
     },
     // 有些按钮无法触发click事件
     fixTrigger: function(evt){
-        evt.currentTarget = $(evt.target).closest('.J_ga')
-        handler(evt)
+        try {
+            evt.currentTarget = $(evt.target).closest('.J_ga')
+            handler(evt)
+        }catch(e){}
+        
     }
 }
 
