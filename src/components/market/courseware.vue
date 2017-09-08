@@ -169,7 +169,7 @@
           height: 424px;
           background-color: #fff;
           border: 1px solid #c8c8c8;
-          margin: 20px 36px 0 0;
+          margin: 20px 34px 0 0;
           .img {
             width: 100%;
             height: 204px;
@@ -224,7 +224,7 @@
           }
         }
         li:nth-child(even){
-          margin-left: 36px;
+          margin-left: 34px;
           margin-right: 0;
         }
         li.expect{
