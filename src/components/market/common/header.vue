@@ -60,7 +60,7 @@
     left: 0;
     top: 0;
     color: #9b9b9b;
-    background-color: #282C2F;
+    background-color: #333;
   }
 
   .nav .bg {
@@ -69,7 +69,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #282C2F;
+    background-color: #333;
     display: none;
   }
 
