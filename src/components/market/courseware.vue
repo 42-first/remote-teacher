@@ -9,8 +9,8 @@
         <div class="text-right btn-con">
           <!--<router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
           <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>-->
-          <a @click="goLogin('verification')" class="inline-block btn-blue font16 text-center btn">激活</a>
-          <a @click="goLogin('market')" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</a>
+          <a @click="goLogin('verification')" class="inline-block btn-blue font16 text-center pointer btn">激活</a>
+          <a @click="goLogin('market')" class="inline-block btn-blue font16 text-center btn pointer mine">我的雨课件</a>
         </div>
       </div>
       <ul class="con-width">
@@ -98,7 +98,9 @@
       },
       goLogin: function (i) {
         let self = this
-        this.needLogin(self.$router.push({name: i, query: {date: self.timestamp()}}))
+        this.needLogin(function () {
+          self.$router.push({name: i, query: {date: self.timestamp()}})
+        })
       },
       needLogin: function (fn) {
         request.get(API.market.user_info).then(function () {

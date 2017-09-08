@@ -36,9 +36,9 @@
                 <i class="iconfont icon-logo-book"></i>
               </div>
               <div class="font12 colora text-left text">
-                <p>雨课堂盼望熟练使用雨课堂，在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。</p>
-                <p>请联系客服获取更多相关信息。</p>
-                <p>客服邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
+                <p>雨课堂盼望在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享完善的教学方案体系。</p>
+                <p>请联系客服获取更多信息。</p>
+                <p>邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
               </div>
             </div>
           </li>
