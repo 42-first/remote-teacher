@@ -5,10 +5,10 @@
       <a href="/">
         <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
       </a>
-      <a href="/help" class="right">帮助中心</a>
+      <a href="/help" class="right">帮助</a>
       <a href="/download" class="right">下载</a>
-      <a href="" class="right">雨课件</a>
-      <a href="" class="right">翻页笔</a>
+      <a href="/lesson/market/mobile_market" class="right active">雨课件</a>
+      <a href="/flippen" class="right">翻页笔</a>
     </div>
   </nav>
 </template>
@@ -37,5 +37,8 @@
   .nav .box {position: relative; margin: 0 auto; height: .9rem;}
   .nav .box .logo {float: left; width: 2rem; margin-left: .2rem; margin-top: .2rem;}
   .nav .box .right {float: right; margin-right: .3rem; line-height: .9rem; font-size: .3rem;}
-  .nav .box a {color: #fff;}
+  .nav .box a {color: #c8c8c8;}
+  .nav .box a.active{
+    color: #fff;
+  }
 </style>
