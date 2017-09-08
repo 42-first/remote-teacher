@@ -154,7 +154,7 @@
       padding-bottom: .4rem;
       li {
         width: 50%;
-        height: 4.8rem;
+        height: 5.2rem;
         background-color: #fff;
         padding-right: .2rem;
         box-sizing: border-box;
@@ -195,6 +195,7 @@
             .price {
               height: .4rem;
               color: #F5A623;
+              margin-top:.2rem;
             }
             .old-price{
               font-size: .3rem;
@@ -211,7 +212,7 @@
               border-radius: .4rem;
               line-height: .5rem;
               font-size: .28rem;
-              margin: .1rem auto;
+              margin: .2rem auto;
             }
           }
         }
