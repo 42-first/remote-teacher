@@ -3,7 +3,7 @@
     <div id="navbg" class="bg"></div>
     <div class="box clearfix">
       <a href="/">
-        <img class="logo" src="http://ykt.io/static/images/home/logo.png?dt=20160914" alt="logo">
+        <img class="logo" src="~images/market/icon/logo.png" alt="logo">
       </a>
       <!--<a class="right header" v-if="name">
         <img :src="avatar"/>
