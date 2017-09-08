@@ -32,7 +32,7 @@
 </script>
 <style lang="scss" scoped>
   @import "~@/style/market/insert.css";
-  .nav {position: fixed; z-index: 50; width: 100%; left: 0; top: 0; color: #fff;background-color: #282C2F;height: .9rem;line-height: .9rem; max-width: 12rem;}
+  .nav {position: fixed; z-index: 50; width: 100%; left: 0; top: 0; color: #fff;background-color: #282C2F;height: .9rem;line-height: .9rem;}
   .nav .bg {position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: #282C2F; display: none;}
   .nav .box {position: relative; margin: 0 auto; height: .9rem;line-height: .9rem;}
   .nav .box .logo {float: left; width: 1.6rem; margin-left: .2rem; vertical-align: middle;margin-top: .24rem;}
