@@ -94,7 +94,7 @@
   .back {
     min-width: 960px;
     background-color: #fff;
-    margin-top: 66px;
+    margin-top: 60px;
     .no-courseware{
       height: 208px;
       background-color: #f8f8f8;

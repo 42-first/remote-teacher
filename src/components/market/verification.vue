@@ -270,7 +270,7 @@
   .back {
     min-width: 960px;
     background-color: #fff;
-    margin-top: 66px;
+    margin-top: 60px;
     .user-con{
       margin-top: 30px;
       padding-bottom: 20px;

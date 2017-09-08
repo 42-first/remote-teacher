@@ -119,7 +119,7 @@
 
   .back {
     background-color: #fff;
-    margin-top: 66px;
+    margin-top: 60px;
     .con-width{
       width: 840px;
     }

@@ -14,7 +14,7 @@
       <a href="/download" class="right">下载</a>
       <a href="/lesson/market/courseware" class="right color_curr">雨课件</a>
       <a href="/flippen" class="right">翻页笔</a>
-      <a href="/web" class="right">雨课堂网页版</a>
+      <a href="/web" class="right" target="_blank">雨课堂网页版</a>
     </div>
   </nav>
 </template>
@@ -75,14 +75,14 @@
 
   .nav .box {
     position: relative;
-    width: 1100px;
+    width: 1080px;
     margin: 0 auto;
-    height: 66px;
+    height: 60px;
   }
 
   .nav .box .logo {
     float: left;
-    width: 120px;
+    width: 94px;
     margin-left: 25px;
     margin-top: 15px;
   }
@@ -90,8 +90,10 @@
   .nav .box .right {
     float: right;
     margin-right: 20px;
-    line-height: 66px;
-    font-size: 16px;
+    line-height: 60px;
+    font-size: 15px;
+    padding-top: 1px;
+    box-sizing: border-box;
   }
 
   .nav .box .beta {
@@ -108,7 +110,7 @@
   .nav .box .header {
     display: inline-block;
     height: 100%;
-    line-height: 66px;
+    line-height: 60px;
     margin-left: 40px;
     img {
       width: 42px;
