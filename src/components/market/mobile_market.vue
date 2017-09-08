@@ -73,8 +73,9 @@
 </script>
 <style lang="scss" scoped>
   .app{
-    margin-top: .9rem;
+    margin: .9rem auto;
     background-color: #f5f5f5;
+    max-width: 12rem;
     .banner{
       width: 100%;
       font-size: 0;

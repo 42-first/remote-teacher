@@ -22,7 +22,7 @@
 </script>
 <style lang="scss" scoped>
   @import "~@/style/market/insert.css";
-  footer {position: absolute; width: 100%; background: #282C2F;}
+  footer {position: absolute; width: 100%; background: #282C2F;max-width: 12rem;}
   footer .cont {}
   footer .left {text-align: center; font-size: 12px; line-height: 20px; padding-top: 10px; color: #9B9B9B;}
 </style>
