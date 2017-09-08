@@ -53,7 +53,7 @@
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     投屏
                   </v-touch>
-                  <v-touch class="cancel-post-btn f14" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
+                  <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
                     发送全班
                   </v-touch>
                   <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
@@ -365,6 +365,7 @@
         })
 
         self.socket.send(str)
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 收藏投稿
