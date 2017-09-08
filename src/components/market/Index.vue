@@ -11,7 +11,7 @@
           <input type="button" value="查看我的雨课件订单" class="font16 color63 pointer btn-blue" @click="order" />
         </div>
       </div>
-      <div class="font24 color3">
+      <div class="font24 color3 my-courseware">
         我激活的雨课件
       </div>
       <div class="con-width">
@@ -128,6 +128,9 @@
           background-color: #fff;
           margin: 20px 0 20px 30px;
         }
+      }
+      .my-courseware{
+        margin-bottom: 20px;
       }
     }
   }
