@@ -164,6 +164,7 @@
         }
       }
       ul {
+        font-size: 0px;
         li {
           width: 380px;
           height: 424px;
