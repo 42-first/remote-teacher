@@ -61,6 +61,7 @@
     top: 0;
     color: #9b9b9b;
     background-color: #333;
+    font: 12px/1.5 "PingFangSC-Regular",arial,Helvetica Neue,tahoma,"Hiragino Sans GB",Microsoft YaHei,\5b8b\4f53;
   }
 
   .nav .bg {
