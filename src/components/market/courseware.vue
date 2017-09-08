@@ -7,10 +7,10 @@
           雨课件市场
         </div>
         <div class="text-right btn-con">
-          <router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
-          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>
-          <!--<a @click="verification" class="inline-block btn-blue font16 text-center btn">激活</a>
-          <a @click="market" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</a>-->
+          <!--<router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
+          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>-->
+          <a @click="goLogin('verification')" class="inline-block btn-blue font16 text-center btn">激活</a>
+          <a @click="goLogin('market')" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</a>
         </div>
       </div>
       <ul class="con-width">
@@ -93,18 +93,12 @@
           self.list = data.rain_courseware_list
         })
       },
-      verification: function () {
-        this.needLogin(function () {
-          this.$router.push({name: 'verification', query: {date: this.timestamp()}})
-        })
-      },
-      market: function () {
-        this.needLogin(function () {
-          this.$router.push({name: 'market', query: {date: this.timestamp()}})
-        })
-      },
       order: function () {
         window.open('https://i.weidian.com/order/list.php?type=0')
+      },
+      goLogin: function (i) {
+        let self = this
+        this.needLogin(self.$router.push({name: i, query: {date: self.timestamp()}}))
       },
       needLogin: function (fn) {
         request.get(API.market.user_info).then(function () {

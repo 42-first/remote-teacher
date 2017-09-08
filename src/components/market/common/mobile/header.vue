@@ -6,7 +6,7 @@
         <img class="logo" src="~images/market/icon/logo.png" alt="logo">
       </a>
       <a href="/help" class="right">帮助</a>
-      <a href="/download" class="right">下载</a>
+      <a class="right" onclick="javascript:alert('请在电脑上打开 \n ykt.io \n下载雨课堂软件');">下载</a>
       <a href="/lesson/market/mobile_market" class="right active">雨课件</a>
       <a href="/flippen" class="right">翻页笔</a>
     </div>
