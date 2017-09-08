@@ -99,13 +99,13 @@
         li {
           width: 50%;
           height: 5.2rem;
-          background-color: #fff;
           padding-right: .2rem;
           box-sizing: border-box;
           margin-top: .2rem;
           div.container{
             height: 100%;
             border: .02rem solid #c8c8c8;
+            background-color: #fff;
             .img {
               width: 100%;
               height: 2rem;
