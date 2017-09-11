@@ -38,7 +38,8 @@
               <div class="font12 colora text-left text">
                 <p>雨课堂盼望在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享完善的教学方案体系。</p>
                 <p>请联系客服获取更多信息。</p>
-                <p>邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
+                <p>邮箱：</p>
+                <p class="color6">yuketang@xuetangx.com</p>
               </div>
             </div>
           </li>
@@ -76,6 +77,8 @@
     margin: .8rem auto;
     background-color: #f5f5f5;
     max-width: 12rem;
+    word-wrap: break-word;
+    word-break: normal;
     .banner{
       width: 100%;
       font-size: 0;
@@ -85,7 +88,7 @@
     }
     .product{
       width: 100%;
-      padding: 0 .2rem;
+      padding: 0 .16rem;
       .con-width{
         width: auto;
       }
@@ -99,8 +102,8 @@
         padding-bottom: .4rem;
         li {
           width: 50%;
-          height: 5.2rem;
-          padding-right: .2rem;
+          height: 5.8rem;
+          padding-right: .1rem;
           box-sizing: border-box;
           margin-top: .2rem;
           div.container{
@@ -123,18 +126,17 @@
                 width: 100%;
                 text-overflow: ellipsis;
                 padding-left: .1rem;
-                height: .5rem;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
+                line-height: .4rem;
                 overflow: hidden;
               }
               .author {
-                height: .28rem;
                 width: 100%;
                 border-bottom: .02rem solid #c8c8c8;
                 margin: 0 auto;
-                padding: 0px 0px .5rem .1rem;
+                padding: 0px 0px .2rem .1rem;
                 line-height: .28rem;
               }
               .price {
@@ -148,6 +150,7 @@
                 color: #9b9b9b;
                 text-decoration: line-through;
                 text-decoration-color: #979797;
+                margin-top: .16rem;
               }
               a {
                 background-color: #F5A623;
@@ -157,7 +160,7 @@
                 border-radius: .4rem;
                 line-height: .5rem;
                 font-size: .28rem;
-                margin: .2rem auto;
+                margin: .12rem auto;
               }
             }
           }
@@ -182,7 +185,8 @@
           }
         }
         li:nth-child(even){
-          padding: 0;
+          padding-right: 0;
+          padding-left: .1rem;
         }
         li:nth-child(1),li:nth-child(2){
           margin-top: 0;
