@@ -10,7 +10,7 @@
         <span>{{name}}</span>
       </a>-->
       <!--<a href="/join_us" class="right">加入我们</a>-->
-      <a href="/help" class="right">帮助中心</a>
+      <a href="/help" class="right right0">帮助中心</a>
       <a href="/download" class="right">下载</a>
       <a href="/lesson/market/courseware" class="right color_curr">雨课件</a>
       <a href="/flippen" class="right">翻页笔</a>
@@ -85,7 +85,6 @@
   .nav .box .logo {
     float: left;
     width: 94px;
-    margin-left: 25px;
     margin-top: 15px;
   }
 
@@ -97,7 +96,9 @@
     padding-top: 1px;
     box-sizing: border-box;
   }
-
+  .nav .box .right0{
+    margin-right: 0;
+  }
   .nav .box .beta {
     width: 29px;
     vertical-align: super;
