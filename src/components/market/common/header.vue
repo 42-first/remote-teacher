@@ -60,7 +60,7 @@
     left: 0;
     top: 0;
     color: #9b9b9b;
-    background-color: #333;
+    background-color: #282C2F;
     font: 12px/1.5 "PingFangSC-Regular",arial,Helvetica Neue,tahoma,"Hiragino Sans GB",Microsoft YaHei,\5b8b\4f53;
     -webkit-font-smoothing: subpixel-antialiased;
   }
@@ -71,7 +71,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #333;
+    background-color: #282C2F;
     display: none;
   }
 

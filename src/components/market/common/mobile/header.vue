@@ -38,7 +38,7 @@
     left: 0;
     top: 0;
     color: #fff;
-    background-color: #333;
+    background-color: #282C2F;
     height: .8rem;
     line-height: .8rem;
     font-size: 0;
