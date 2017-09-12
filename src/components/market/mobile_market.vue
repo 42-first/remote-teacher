@@ -115,7 +115,7 @@
       },
       setWX: function () {
         var wxdata = {
-          title: '⎡雨课堂⎦雨课件',
+          title: '「雨课堂」雨课件',
           desc: '名师教学资源，经验共筑共享',
           lineLink: location.href,
           imgUrl: 'http://sfe.ykt.io/o_1bppvh39sj5josf15s8m431itf9.png'
