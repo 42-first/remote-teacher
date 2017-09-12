@@ -44,8 +44,9 @@
     font-size: 0;
     -webkit-font-smoothing: subpixel-antialiased;
   }
-  .nav .bg {position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: #333; display: none;}
-  .nav .box {position: relative; margin: 0 auto; height: .8rem;}
+  .nav .box {position: relative; margin: 0 auto;display:box;
+    box-pack:center;
+    box-align:center;}
   .nav .box .logo { width: 1.3rem; margin-left: .3rem;line-height: .8rem;vertical-align: middle;}
   .nav .box .right {float: right; margin-right: .2rem;font-size: .24rem;}
   .nav .box a {color: #c8c8c8;display: inline-block;height: 100%;vertical-align:bottom;}
