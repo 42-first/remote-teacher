@@ -1,18 +1,20 @@
 <template>
+  <!-- footer-->
   <div class="footer">
     <div class="footer-wrapper clearfix">
-      <div class="footer-cr fl">
-        <p>©2017 清华大学&学堂在线</p>
-        <p>京ICP证140571号</p>
-        <p>京公网安备 11010802017721</p>
-      </div>
-      <div class="fr">
+      <div class="fl">
         <p class="footer-links">
-          <a href="/join_us" class="right">加入我们</a>|
-            <a href="/download" class="right">下载中心</a>|
-            <a href="/help" class="right">帮助中心</a>
+          <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
         </p>
-        <p class="">联系我们：010-82152560 (工作日9:30-18:30)</p>
+        <div class="footer-cr">
+          <p>©2017 清华大学&学堂在线</p>
+          <p>京ICP证140571号 | 京公网安备 11010802017721</p>
+        </div>
+        <!-- <p>京公网安备 11010802017721</p> -->
+      </div>
+      <div class="footer-right fr">
+        <img class="link-time" src="http://sfe.ykt.io/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
+        <p class="link-tel">010-82152560</p>
         <!-- 联系方式 -->
         <div class="link-us clearfix">
           <div class="link-us-email fr">
@@ -20,7 +22,7 @@
               <p><a href="mailto:yuketang@xuetangx.com">yuketang@xuetangx.com</a></p>
               <p class="remark">邮箱</p>
             </div>
-            <img src="http://sfe.ykt.io/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件"/>
+            <img class="link-img" src="http://sfe.ykt.io/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件" />
           </div>
           <div class="link-us-qq fr">
             <div class="link-us-qqgroup">
@@ -29,12 +31,11 @@
               <p>QQ:314940327（已满）</p>
               <p class="remark">雨课堂官方QQ群</p>
             </div>
-            <img src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq"/>
+            <img class="link-img" src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
           </div>
           <div class="link-us-wechat fr">
-            <div class="link-us-qcode"><img src="http://sfe.ykt.io/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服">
-            </div>
-            <img src="http://sfe.ykt.io/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信"/>
+            <div class="link-us-qcode"><img src="http://sfe.ykt.io/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服"></div>
+            <img class="link-img" src="http://sfe.ykt.io/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信" />
           </div>
         </div>
       </div>
@@ -77,36 +78,49 @@
 <style lang="scss" scoped>
   @import "~@/style/market/insert.css";
   @import "~@/style/market/common";
-  .footer {
-    z-index: 1;
-    position: relative;
-    width: 100%;
-    background: #282C2F;
-  }
+  /*-------------------------*\
+      $footer common
+    \*-------------------------*/
 
+
+  .footer { z-index: 1; position: relative; width: 100%; background: #282C2F; }
   .footer-wrapper {
     box-sizing: border-box;
     margin: 0 auto;
-    width: 1100px;
-    height: 250px;
+    width: 1080px;
+    height: 180px;
     color: #9B9B9B;
-    font: 16px/1.5 'PingFang SC', arial, Helvetica Neue, tahoma, "Hiragino Sans GB", Microsoft YaHei, \5b8b\4f53;
+    font: 14px/1.5 'PingFang SC',arial,Helvetica Neue,tahoma,"Hiragino Sans GB",Microsoft YaHei,\5b8b\4f53;
   }
-
   .footer-cr {
-    padding-top: 116px;
-    line-height: 30px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #666666;
   }
 
   .footer-links {
     padding-top: 48px;
-    padding-bottom: 42px;
-    text-align: right;
+    padding-bottom: 30px;
   }
 
   .footer-links a {
-    padding: 0 20px;
+    padding: 0 15px;
     color: #9B9B9B;
+    font-size: 14px;
+  }
+
+  .footer-right {
+    padding-top: 48px;
+    font-size: 20px;
+  }
+
+  .link-tel {
+    padding-top: 8px;
+    color: #9B9B9B;
+  }
+  .link-time {
+    display: block;
+    width: 137px;
   }
 
   .link-us {
@@ -117,9 +131,15 @@
   .link-us .link-us-qq,
   .link-us .link-us-email {
     position: relative;
-    margin-right: 40px;
+    margin-left: 15px;
     text-align: center;
     cursor: pointer;
+    font-size: 16px;
+  }
+
+  .link-img {
+    width: 26px;
+    height: 26px;
   }
 
   .link-us-qcode,
@@ -131,9 +151,11 @@
     margin-left: -100px;
     padding: 20px;
     text-align: center;
+    font-size: 16px;
     color: #333;
     background: #fff;
     border: 1px solid #282C2F;
+
     visibility: hidden;
     opacity: 0;
     cursor: default;
@@ -171,33 +193,27 @@
     background: transparent;
   }
 
-  .link-us-qcode img {
-    display: block;
-    margin: auto;
-    width: 160px;
-    height: 160px;
-  }
+  .link-us-qcode img{ display: block; margin: auto; width: 160px; height: 160px; }
 
   .link-us-qqgroup {
-    top: -190px;
+    top: -188px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
     margin-left: -105px;
     line-height: 30px;
   }
-
   .link-us-qqgroup .remark,
   .linkus-email-number .remark {
     padding-top: 15px;
   }
 
   .linkus-email-number {
-    top: -130px;
-    width: 213px;
+    top: -129px;
+    width: 200px;
     box-sizing: border-box;
     padding: 20px 10px;
-    margin-left: -105px;
+    margin-left: -98px;
     line-height: 30px;
   }
 
@@ -212,7 +228,6 @@
     opacity: 1;
     visibility: visible;
   }
-
   /* 客服 */
   .im{
     position: fixed;
