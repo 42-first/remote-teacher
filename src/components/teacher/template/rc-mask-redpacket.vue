@@ -75,7 +75,7 @@
     <div class="paying-wrapper" v-show="!isRedpacketPayingWrapperHidden">
       <div class="paying-content confirm-box" v-show="payingStep === -1">
 	      <!-- 关闭按钮 -->
-		    <v-touch tag="i" class="iconfont icon-close f24" v-on:tap="closeRedpacketPayingWrapper"></v-touch>
+		    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closeRedpacketPayingWrapper"></v-touch>
         <div class="title f18">请确认支付</div>
         <div class="kthb f16">课堂红包</div>
         <div class="total f40">￥{{redPacketDataNS.bonusTotal}}</div>
@@ -313,10 +313,10 @@
 			  color: #000000;
 			}
 			.confirm-box {
-				.icon-close {
+				.icon-shiti_guanbitouping {
 			  	position: absolute;
 			  	right: 0.506667rem;
-			  	top: 0.506667rem;
+			  	top: 0.3rem;
 			  	color: $graybg;
 			  }
 			  .title {
