@@ -499,6 +499,13 @@
               // set title
               presentation.Title && (self.title = presentation.Title);
 
+              // 更新ppt刷新timeline
+              self.socket.send(JSON.stringify({
+                'op': 'fetchtimeline',
+                'lessonid': self.lessonID,
+                'msgid': self.msgid++
+              }));
+
               return presentation;
             }
           });
