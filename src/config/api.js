@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === 'production') {
     danmulist:                          prefix + '/v/api/danmu/list_danmu_v2',        // 弹幕列表
     danmulist2:                         prefix + '/v/api/danmu/danmu_list',           // 弹幕列表 2.0版（分页）
     submissionlist:                     prefix + '/v/api/tougao/teacher/list',        // 投稿列表
+    submission_unread_num:              prefix + '/v/api/tougao/teacher/unread_num',  // 未读的新增投稿的数目
     tougaostatus:                       prefix + '/v/api/tougao/status',              // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  prefix + '/v/api/tougao/collect',             // 收藏投稿
     collectsubmission_cancel:           prefix + '/v/api/tougao/collect_cancel',      // 取消收藏投稿
@@ -65,6 +66,7 @@ if (process.env.NODE_ENV === 'production') {
     danmulist:                          '/static/lesson/mock/danmulist.json',                  // 弹幕列表
     danmulist2:                         '/static/lesson/mock/danmulist2.json',                 // 弹幕列表 2.0版（分页）
     submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
+    submission_unread_num:              '/static/lesson/mock/submission_unread_num.json',      // 未读的新增投稿的数目
     tougaostatus:                       '/static/lesson/mock/tougaostatus.json',               // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
     collectsubmission_cancel:           '/static/lesson/mock/collectsubmission_cancel.json',   // 取消收藏投稿
