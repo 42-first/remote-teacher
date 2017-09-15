@@ -259,11 +259,10 @@
       /**
        * 投稿列表页面点击 刷新 按钮也应清零投稿未读数
        *
-       * @param {number} num 总投稿数
        */
-      refreshCheckTougao (num) {
+      refreshCheckTougao () {
         let self = this
-        self.$emit('checkTougao', num)
+        self.$emit('checkTougao')
       },
       /**
        * 点击 返回 按钮关闭试卷列表

@@ -499,50 +499,50 @@ export default {
       clearInterval(pollingPresentationTagTimer)
       clearInterval(pollingTougaoTimer)
 
-      let url1 = API.presentation_tag
+      pollingPresentationTagTimer = setInterval(self.fetchPresentationTag, 10*1000)
+      pollingTougaoTimer = setInterval(self.fetchTougaoUnreadnum, 10*1000)
+    },
+    /**
+     * 获取缩略图页 不懂 的信息
+     *
+     */
+    fetchPresentationTag () {
+      let self = this
 
-      pollingPresentationTagTimer = setInterval(() => {
-        if (process.env.NODE_ENV === 'production') {
-          url1 = API.presentation_tag + '/' + self.presentationid + '/'
-        }
+      let url = API.presentation_tag
+      if (process.env.NODE_ENV === 'production') {
+        url = API.presentation_tag + '/' + self.presentationid + '/'
+      }
 
-        request.get(url1)
-          .then(jsonData => {
-            let doubt = jsonData.data.doubt
-            doubtTotalSum = 0
+      request.get(url)
+        .then(jsonData => {
+          let doubt = jsonData.data.doubt
+          doubtTotalSum = 0
 
-            doubt.forEach(item => {
-              doubtTotalSum += item
-            })
-
-            // 学生能取消不懂的，有可能减成负数
-            if (doubtTotalSum < oldDoubt) {
-              oldDoubt = doubtTotalSum
-            }
-
-            self.newdoubt = doubtTotalSum - oldDoubt
+          doubt.forEach(item => {
+            doubtTotalSum += item
           })
-      }, 10*1000)
 
-      let url2 = API.submissionlist
+          // 学生能取消不懂的，有可能减成负数
+          if (doubtTotalSum < oldDoubt) {
+            oldDoubt = doubtTotalSum
+          }
 
-      pollingTougaoTimer = setInterval(() => {
-        request.get(url2, {
-          'lesson_id': self.lessonid,
-          'start': 10000000000000000000,
-          'count': 10000000000000000000,
-          'direction': 0
-        }).then(jsonData => {
-            tougaoTotalSum = jsonData.data.response_num
+          self.newdoubt = doubtTotalSum - oldDoubt
+        })
+    },
+    /**
+     * 获取投稿未读数 的信息
+     *
+     */
+    fetchTougaoUnreadnum () {
+      let self = this
+      // let url = API.submissionlist
+      let url = API.submission_unread_num + '?lesson_id=' + self.lessonid
 
-            // 学生能删除投稿，有可能减成负数
-            if (tougaoTotalSum < oldTougao) {
-              oldTougao = tougaoTotalSum
-            }
-
-            self.newtougao = tougaoTotalSum - oldTougao
-          })
-      }, 10*1000)
+      request.get(url).then(jsonData => {
+          self.newtougao = jsonData.data.unread_num
+        })
     },
     /**
      * 用户缩略图点击了 不懂 按钮，清零不懂数
@@ -560,9 +560,7 @@ export default {
      */
     checkTougao () {
       let self = this
-      // oldTougao = num || tougaoTotalSum || oldTougao // 有可能刚进页面还不到10秒就点击了查看投稿，这时 tougaoTotalSum 为0，而 oldTougao 从storage取出来并不是0
-      oldTougao = tougaoTotalSum
-      localStorage.setItem('oldTougao'+self.lessonid, oldTougao)
+      
       self.newtougao = 0
     },
     /**
