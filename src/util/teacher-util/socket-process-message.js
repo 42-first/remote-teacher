@@ -58,7 +58,8 @@ function socketProcessMessage(msg){
     
     // TODO 初次联通，node有时会丢失msg.presentation
     self.setData({
-      presentationid: msg.presentation
+      presentationid: msg.presentation,
+      isToastCtrlMaskHidden: true // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     })
 
     // 翻到初始页面（不一定是第一页），当前页有没有发试题按钮及状态在fetchPPTData的回调中处理
