@@ -253,7 +253,7 @@
             let response_num = jsonData.data.response_num
             // 有可能还一条都没有呢
             let headNow = self.submissionList[0] ? self.submissionList[0].id : 0
-            let headIndex = newList.findIndex(item => {item.id === headNow})
+            let headIndex = newList.findIndex(item => item.id === headNow)
 
             // 假如没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
