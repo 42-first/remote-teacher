@@ -2,7 +2,7 @@
 <template>
   <div class="mask-content f20">
   	<div v-html="errMsgList[errType]"></div>
-  	<v-touch v-if="errType === 2" class="btn finish-btn" v-on:tap="openModal">结束本次授课</v-touch>
+  	<v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">结束本次授课</v-touch>
   	<div class="rc-mask close-modal" v-show="!isModalHidden">
   		<div class="pub-inner">
         <div class="title f20">您即将结束本次授课</div>

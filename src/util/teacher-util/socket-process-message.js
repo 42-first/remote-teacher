@@ -117,7 +117,7 @@ function socketProcessMessage(msg){
       self.showPcErrorMask()
     }else{
       // self.showQrcodeMask()
-      // self.killMask()
+      self.killMask()
     }
     return
   }
