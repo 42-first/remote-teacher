@@ -1,7 +1,7 @@
 <template>
   <div class="over app">
     <div class="banner">
-      <img src="~images/market/banner/mobile-banner.jpg"/>
+      <img src="http://sfe.ykt.io/o_1bq1tobqeap3ov9slt1tof1q1lf.jpg"/>
     </div>
     <div class="product">
       <div class="color3 list-name">

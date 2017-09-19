@@ -185,8 +185,6 @@
           'count': FENYE_COUNT,
           'direction': 0
         }).then(jsonData => {
-            // 清零投稿未读数
-            self.$emit('refreshCheckTougao', self.submissionList.length)
             // 设置试卷详情数据
             // response_num 当前请求返回的投稿数量
             if (jsonData.data.response_num === 0) {
@@ -218,28 +216,29 @@
       refreshSubmissionlist(isClickedin){
         let self = this
         let url = API.submissionlist
-        // 有可能还一条都没哟呢
-        let start = self.submissionList[0] ? self.submissionList[0].id : 0
 
         // 如果已经有内容了就不要显示正在加载中了
         if (!self.submissionList.length) {
           self.isFetching = true
         }
 
-        // 分页逻辑：
-        // 如果新增的超过了FENYE_COUNT或目前投稿列表为空，则只显示最新的FENYE_COUNT个
-        // 否则如果状态为已经全加载完的话，直接把所有刷新的数据赋值
-        // 否则只新塞最新的数据到前面
-
-        // 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
-        // 的方法来判断新增了多少条条目，而是可以通过用 start count 的请求查看从 start 的地方
-        // 新增的条目是不是比分页的多，或者把 count 设置成极大值
-        // 来查看到底从 start 处新增了多少条
+        /* 分页逻辑：
+         * 1.如果一条数据都没有，就是一直都是0，直接赋值，设置为已经加载完了
+         * 2.如果之前为空，新获取数据直接赋值，设置为可以加载更多
+         * 3.如果当前展示的第一条的id出现在最新的获取的条目里，
+         * 就说明新增的数目不超过 FENYE_COUNT，这时直接往前连接即可，不用管能不能加载更多
+         * 4.否则直接展示新获取的数据，并且设置为可以加载更多
+         *
+         * 注：
+         * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
+         * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
+         */
         request.get(url, {
           'lesson_id': self.lessonid,
-          'start': start,             // 开始的id，返回时不包含本id内容
-          'count': BIG_NUMBER,        // 如果新条目数很多，要直接取最新分页个数的条目的
-          'direction': 1              // 刷新要正序查找
+          'start': -1,                // -1表示极大值
+          'count': FENYE_COUNT,       // 获取最新分页个数的条目
+          'direction': 0,             // 刷新要从最顶部倒序查找
+          'is_recount': 1             // 凡是彻底刷新就清理未读记录
         }).then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
@@ -248,39 +247,42 @@
               self.isShowBtnBox = true
             },500)
 
-            // 加入没有新条目的话，显示没有新条目的提示
+            
+            let newList = jsonData.data.tougao_list
+            // 返回的条目的个数
+            let response_num = jsonData.data.response_num
+            // 有可能还一条都没有呢
+            let headNow = self.submissionList[0] ? self.submissionList[0].id : 0
+            let headIndex = newList.findIndex(item => item.id === headNow)
+
+            // 假如没有新条目的话，显示没有新条目的提示
             // 从课堂动态进来的话，不显示提示
             // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = typeof isClickedin !== 'string' && !jsonData.data.response_num
+            self.isShowNoNewItem = typeof isClickedin !== 'string' && newList[0].id === headNow
+            
             setTimeout(() => {
               self.isShowNoNewItem = false
             }, 2000)
 
-            let newList = jsonData.data.tougao_list
-            
             self.isFetching = false
 
-            // 新增的条目的个数
-            let newItemsCount = jsonData.data.response_num
-            
-            if (!self.submissionList.length || newItemsCount > FENYE_COUNT) {
-              // 刚加载展示或新条目数大于 FENYE_COUNT，
-              // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
-              self.submissionList = newList.reverse().slice(0, FENYE_COUNT)      
+            if (response_num === 0) {
+              self.allLoaded = true
+            } else if (headNow === 0) {
+              self.submissionList = newList
+              self.allLoaded = newList.length < FENYE_COUNT
+            } else if (~headIndex) {
+              // 包含
+              self.submissionList = newList.slice(0, headIndex).concat(self.submissionList)
             } else {
-              // 不是刚展示，新条目数也小于 FENYE_COUNT
-              self.submissionList = newList.reverse().concat(self.submissionList)
+              self.submissionList = newList
+              self.allLoaded = false
             }
 
-            // 如果新条目数大于 FENYE_COUNT， 则肯定改状态为 可以加载更多
-            // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
-            // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
-            self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.submissionList.length)
-            
             // 刷新的话回顶部
             self.$el.scrollTop = 0
 
-            // 清零投稿未读数
+            // 清零投稿未读数，让外部轮询重新开始
             self.$emit('refreshCheckTougao')
           })
       },
@@ -292,15 +294,6 @@
        */
       postSubmission (submissionid) {
         let self = this
-
-        // let str = JSON.stringify({
-        //   'op': 'showpost',
-        //   'lessonid': self.lessonid,
-        //   'postid': submissionid,
-        //   'msgid': 1234
-        // })
-
-        // self.socket.send(str)
 
         // 因为学生能够删除投稿，修改投屏方式为ajax
         // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691

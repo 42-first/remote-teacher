@@ -6,7 +6,7 @@
       <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDanmulist2" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
+    <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
 
     <!-- 没有试卷 -->
@@ -49,7 +49,7 @@
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDanmulist2">刷新</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
       <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>返回</v-touch>
     </div>
   </div>
@@ -87,7 +87,7 @@
 
       // 父组件点击 弹幕 按钮时发送事件给本子组件
       self.$on('showDanmubox', function (msg) {
-        self.refreshDanmulist2('isClickedin')
+        self.refreshDanmulist('isClickedin')
       })
 
       // socket通知有新的弹幕进来了
@@ -189,7 +189,7 @@
        *
        * @param {string} isClickedin 判断是不是从课堂动态点击进来的
        */
-      refreshDanmulist2(isClickedin){
+      refreshDanmulist(isClickedin){
         let self = this
         let url = API.danmulist2
         // 有可能还一条都没哟呢
@@ -250,68 +250,6 @@
             // 如果新条目数少，那么如果之前是已经加载完了，就依然保持已经加载完了
             // 如果新条目少，并且之前是根本没有，那么也是更新状态为已经加载完了
             self.allLoaded =  newItemsCount <= FENYE_COUNT && (self.allLoaded || !self.danmuList.length);
-
-            // 刷新的话回顶部
-            self.$el.scrollTop = 0
-          })
-      },
-      /**
-       * 更新试题详情的数据
-       * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
-       *
-       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
-       */
-      refreshDanmulist(isClickedin){
-        let self = this
-        let url = API.danmulist
-
-        // 单次刷新
-        request.get(url, {lesson_id: self.lessonid})
-          .then(jsonData => {
-            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
-            self.isShowNewHint = false
-            
-            setTimeout(() => {
-              self.isShowBtnBox = true
-            },500)
-
-            // 加入没有新条目的话，显示没有新条目的提示
-            // 从课堂动态进来的话，不显示提示
-            // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = typeof isClickedin !== 'string' && DANMU_ALL_LIST.length === jsonData.data.sender_list.length
-            setTimeout(() => {
-              self.isShowNoNewItem = false
-            }, 2000)
-
-            // 设置试卷详情数据
-            DANMU_ALL_LIST = jsonData.data.sender_list
-
-            let newItemsCount = 0
-            if (DANMU_ALL_LIST[0] && self.danmuList[0]) {
-              newItemsCount = DANMU_ALL_LIST[0].id - self.danmuList[0].id
-            }
-            
-            // 如果还没有弹幕展示或新增的弹幕大于 FENYE_COUNT，就
-            // 展示新增的FENYE_COUNT之内的数据，并改状态为能上拉加载更多
-
-            // 否则如果之前状态为全部已经加载不能上拉，则则全部显示刚刚刷新的所有数据
-
-            // 否则把新增的不大于 FENYE_COUNT 数量的那些弹幕加到开头，并改状态为能上拉加载更多
-            if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
-              // 如果是刚加载展示，并且总数量小于 FENYE_COUNT，则改状态为没有更多了
-              if (!self.danmuList.length && DANMU_ALL_LIST.length <= FENYE_COUNT) {
-                self.allLoaded = true
-              } else {
-                self.allLoaded = false
-              }
-
-              self.danmuList = DANMU_ALL_LIST.slice(0, FENYE_COUNT)
-            } else if (self.allLoaded) {
-              self.danmuList = DANMU_ALL_LIST
-            } else {
-              self.danmuList = DANMU_ALL_LIST.slice(0, newItemsCount).concat(self.danmuList)
-              self.allLoaded = false
-            }
 
             // 刷新的话回顶部
             self.$el.scrollTop = 0
