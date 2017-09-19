@@ -68,7 +68,7 @@
         return item2.paper_id === item1.paper_id
       })
 
-      arr2.splice(index, 1)
+      ~index && arr2.splice(index, 1)
     })
   }
 
