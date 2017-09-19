@@ -40,12 +40,12 @@
         </div>
       </div>
     </div>
-    <i class="iconfont icon-kefu color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !1" v-bind:class="{imShow: !imShow}">
+    <div class="color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !0" v-bind:class="{imShow: !imShow}">
       <div class="img text-center" v-show="codeShow">
         <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
-        <div class="font14 color0">雨课堂微信客服</div>
+        <div class="font14 color0 name">雨课堂微信客服</div>
       </div>
-    </i>
+    </div>
   </div>
 </template>
 
@@ -55,7 +55,7 @@
     name: 'header',
     data: function () {
       return {
-        codeShow: !1,
+        codeShow: !0,
         imShow: !0
       }
     },
@@ -231,26 +231,31 @@
   /* 客服 */
   .im{
     position: fixed;
-    bottom:330px;
+    bottom:160px;
     left: 50%;
-    transform: translate(500px, 0);
+    transform: translate(540px, 0);
     font-size: 38px;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    border:1px solid #639EF4;
-    background-color: rgba(74, 144, 226, .1);
+    width: 45px;
+    height: 43px;
+    background-image: url("~images/market/icon/kefu.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
     border-radius: 4px;
     .img{
       position: absolute;
-      width: 140px;
-      top: -200px;
-      left: -56px;
+      bottom:50px;
+      right: 0px;
       padding:10px;
       background-color: #fff;
       border:1px solid #c8c8c8;
       img{
-        width: 100%;
+        width: 100px;
+        height: 100px;
+      }
+      .name{
+        padding-top: 7px;
+        line-height: 14px;
       }
     }
   }
