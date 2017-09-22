@@ -10,8 +10,10 @@
 .rc-home  {
   position: relative;
   display: flex;
+  display: -webkit-flex;
   height: 100%;
   flex-direction: column;
+  -webkit-flex-direction: column;
   justify-content: space-between;
   background: #000000;
   color: $white;
@@ -19,7 +21,7 @@
   /*卡片单元*/
   .card-box {
     // height: 6.853333rem;
-    
+
 
     .detail {
       display: flex;
@@ -37,7 +39,7 @@
         width: 2.4rem;
       }
     }
-    
+
   }
   .upper {
     padding-top: 0.266667rem;
