@@ -4,7 +4,7 @@
         <img :src="info.avatar_96" class="inline-block" />
         <div class="inline-block">
           <div>
-            <div class="inline-block font18">{{info.name}}</div>
+            <div class="inline-block font18 text-ellipsis name">{{info.name}}</div>
             <i class="iconfont fonnt14 icon-unfold" v-show="!up"></i>
             <i class="iconfont fonnt14 icon-fold" v-show="up"></i>
           </div>
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="font18 text-center color4a list" v-show="up">
-        <div class="item">
+        <div class="text-ellipsis item">
           你好，{{info.name}}
         </div>
         <div class="color-e4 item" @click="logout">
@@ -58,6 +58,9 @@
     .username-con{
       height: 94px;
       font-size: 0px;
+      .name{
+        width: 100%;
+      }
       .text{
         height: 14px;
         line-height: 14px;
