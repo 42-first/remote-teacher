@@ -268,7 +268,7 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-          self.initws();
+          // self.initws();
 
           if (process.env.NODE_ENV !== 'production') {
             // self.testTimeline();
@@ -449,6 +449,11 @@
               presentationData.Title && (self.title = presentationData.Title);
               // 课程title
               document.title = self.courseName = data.classroom && data.classroom.courseName;
+
+              // 初始化websocket
+              setTimeout(() => {
+                self.initws();
+              }, 20)
 
               return presentationData;
             }
