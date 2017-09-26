@@ -47,7 +47,7 @@
 <style lang="scss" scoped>
   @import "~@/style/market/common";
   .user{
-    width: 230px;
+    width: 260px;
     position: relative;
     text-align: left;
     height: 64px;
