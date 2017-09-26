@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !0" v-bind:class="{imShow: !imShow}">
+    <div class="color63 text-center pointer im" @mouseover="codeShow = !0 " @mouseleave="codeShow = !1" v-bind:class="{imShow: !imShow}">
       <div class="img text-center" v-show="codeShow">
         <img src="~images/market/icon/289ba82d3d4581a99b3f70f164cfca6d.png"/>
         <div class="font14 color0 name">雨课堂微信客服</div>
@@ -55,7 +55,7 @@
     name: 'header',
     data: function () {
       return {
-        codeShow: !0,
+        codeShow: !1,
         imShow: !0
       }
     },
@@ -233,7 +233,7 @@
     position: fixed;
     bottom:160px;
     left: 50%;
-    transform: translate(540px, 0);
+    transform: translate(520px, 0);
     font-size: 38px;
     width: 45px;
     height: 43px;
