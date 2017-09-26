@@ -239,6 +239,9 @@ function socketProcessMessage(msg){
   if (msg.op == 'postshown') {
     self.postingSubmissionid = msg.postid
 
+    // 投稿投屏成功再隐藏投屏中提示
+    self.$refs.InitiativeCtrlMask.$emit('postshown', msg)
+
     localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
 
     self.postingSubmissionSent = msg.sent
