@@ -160,6 +160,11 @@
       self.$on('quizfinished', function (msg) {
         self.$refs.RcMaskActivityPaper.$emit('quizfinished', msg)
       })
+
+      // socket通知投稿投屏了，要隐藏投屏中的提示
+      self.$on('postshown', function (msg) {
+        self.$refs.RcMaskActivitySubmission.$emit('postshown')
+      })
     },
     updated () {
     },

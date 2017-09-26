@@ -103,6 +103,7 @@
 
   let WH = window.innerWidth/window.innerHeight
   let pollingTimer = null
+  let postingTimer = null
 
   export default {
     name: 'RcMaskActivitySubmission',
@@ -136,6 +137,12 @@
         pollingTimer = setInterval(() => {
           self.pollingNewSubmission()
         }, 5000)
+      })
+
+      // socket通知投稿投屏了，要隐藏投屏中的提示
+      self.$on('postshown', function (msg) {
+        clearTimeout(postingTimer)
+        self.isAskingItemStatus = false
       })
       
     },
@@ -297,7 +304,7 @@
 
         // 因为学生能够删除投稿，修改投屏方式为ajax
         // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691
-        let timer = setTimeout(() => {
+        postingTimer = setTimeout(() => {
           self.isAskingItemStatus = true
         },800)
         
@@ -311,8 +318,8 @@
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            clearTimeout(timer)
-            self.isAskingItemStatus = false
+            // clearTimeout(postingTimer)
+            // self.isAskingItemStatus = false
             if (jsonData.data.is_deleted) {
               self.isItemDeleted = true
               setTimeout(() => {
