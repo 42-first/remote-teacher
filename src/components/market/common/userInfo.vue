@@ -59,7 +59,7 @@
       height: 94px;
       font-size: 0px;
       .name{
-        width: 100%;
+        max-width: 100px;
       }
       .text{
         height: 14px;
