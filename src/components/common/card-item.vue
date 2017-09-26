@@ -223,6 +223,11 @@
         let URL = API.student.SET_LEESON_SILDE_TAG;
         let cards = this.$parent.$parent.cards;
 
+        // fix 回放没有显示之前的操作问题
+        let presentation = this.$parent.$parent.presentationMap.get(presentationid);
+        let pptData = presentation && presentation['Slides'];
+        let slideData = pptData && pptData[this.item.pageIndex-1];
+
         let ppts = cards.filter((card, index)=>{
           return card.slideID === slideID && card.presentationid === presentationid
         })
@@ -251,6 +256,9 @@
                 tag === 1 && (element.hasQuestion = !element.hasQuestion);
                 tag === 2 && (element.hasStore = !element.hasStore);
               });
+
+              tag === 1 && (slideData['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0);
+              tag === 2 && (slideData['store'] = ppts.length && ppts[0].hasStore ? 1 : 0);
 
               return res;
             }
