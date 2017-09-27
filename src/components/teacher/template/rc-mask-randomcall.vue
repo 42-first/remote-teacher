@@ -1,7 +1,9 @@
 <!-- 随机点名面板 被父组件 remote.vue 引用 -->
 <template>
 	<div class="random-roll-box">
-    <v-touch class="close f18" v-on:tap="giveupRoll">继续上课&gt;</v-touch>
+    <v-touch class="close f18" v-on:tap="giveupRoll">
+      <i class="iconfont icon-ykq-shiti-guanbi f32" style="color: #FFFFFF;"></i>
+    </v-touch>
 
     <div class="upper">
       <div class="desc f24" v-show="step === 0">
