@@ -30,6 +30,11 @@ export default new Router({
       path: '/mobile_market',
       name: 'mobile_market',
       component: mobileMarket
+    },
+    {
+      path: '/mobile/courseware',
+      name: 'mobile_courseware',
+      component: mobileMarket
     }
   ]
 })
