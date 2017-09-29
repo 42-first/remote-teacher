@@ -14,6 +14,11 @@ export default new Router({
     {
       path: '/',
       name: 'market',
+      component: courseware
+    },
+    {
+      path: '/index',
+      name: 'index',
       component: Index
     },
     {

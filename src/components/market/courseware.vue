@@ -10,7 +10,7 @@
           <!--<router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
           <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>-->
           <a @click="goLogin('verification')" class="inline-block btn-blue font16 text-center pointer btn">激活</a>
-          <a @click="goLogin('market')" class="inline-block btn-blue font16 text-center btn pointer mine">我的雨课件</a>
+          <a @click="goLogin('index')" class="inline-block btn-blue font16 text-center btn pointer mine">我的雨课件</a>
         </div>
       </div>
       <ul class="con-width">
