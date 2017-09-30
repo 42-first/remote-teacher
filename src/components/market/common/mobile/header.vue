@@ -37,6 +37,7 @@
     color: #9B9B9B;
     background: #282C2F;
     -webkit-font-smoothing: subpixel-antialiased;
+    line-height: 40px;
   }
 
   .nav .logo-wrapper {
