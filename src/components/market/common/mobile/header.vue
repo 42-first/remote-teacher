@@ -2,7 +2,7 @@
   <!-- 导航模块 -->
   <div class="nav">
     <a class="logo-wrapper" href="/"><img class="logo" src="http://sfe.ykt.io/o_1bpfrptlcaflochlas11h1s1c9.png" alt="logo"></a>
-    <div class="nav-menus">
+    <div class="nav-menus" v-bind:class="{ios: isIos}">
       <a class="join-us" href="/presenter">翻页笔</a>
       <a class="join-us curr" href="/lesson/market/mobile_market">雨课件</a>
       <a class="download" onclick="javascript:alert('请在电脑上打开 \n ykt.io \n下载雨课堂软件');">下载</a>
@@ -16,6 +16,7 @@
     name: 'header',
     data () {
       return {
+        isIos: !1
       }
     },
     created: function () {
@@ -24,6 +25,24 @@
     components: {},
     methods: {
       _init: function () {
+        var browser = {
+          versions: (function () {
+            var u = navigator.userAgent
+            return {
+              trident: u.indexOf('Trident') > -1,
+              presto: u.indexOf('Presto') > -1,
+              webKit: u.indexOf('AppleWebKit') > -1,
+              gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') === -1,
+              mobile: !!u.match(/AppleWebKit.*Mobile.*/),
+              ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
+              android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,
+              iPhone: u.indexOf('iPhone') > -1,
+              iPad: u.indexOf('iPad') > -1,
+              webApp: u.indexOf('Safari') === -1
+            }
+          })()
+        }
+        this.isIos = browser.versions.ios
       }
     }
   }
@@ -38,6 +57,10 @@
     background: #282C2F;
     -webkit-font-smoothing: subpixel-antialiased;
     line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+    clear: both;
+    box-sizing: border-box;
   }
 
   .nav .logo-wrapper {
@@ -59,6 +82,9 @@
     font-size: 12px;
     color: #C8C8C8;
     vertical-align: bottom;
+  }
+  .nav-menus.ios{
+    margin-top: 2px;
   }
   .nav  a.curr { color: #fff; }
 </style>
