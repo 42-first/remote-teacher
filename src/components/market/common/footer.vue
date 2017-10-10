@@ -1,41 +1,43 @@
 <template>
   <!-- footer-->
-  <div class="footer">
-    <div class="footer-wrapper clearfix">
-      <div class="fl">
-        <p class="footer-links">
-          <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
-        </p>
-        <div class="footer-cr">
-          <p>©2017 清华大学&学堂在线</p>
-          <p>京ICP证140571号 | 京公网安备 11010802017721</p>
+  <div>
+    <div class="footer">
+      <div class="footer-wrapper clearfix">
+        <div class="fl">
+          <p class="footer-links">
+            <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
+          </p>
+          <div class="footer-cr">
+            <p>©2017 清华大学&学堂在线</p>
+            <p>京ICP证140571号 | 京公网安备 11010802017721</p>
+          </div>
+          <!-- <p>京公网安备 11010802017721</p> -->
         </div>
-        <!-- <p>京公网安备 11010802017721</p> -->
-      </div>
-      <div class="footer-right fr">
-        <img class="link-time" src="http://sfe.ykt.io/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
-        <p class="link-tel">010-82152560</p>
-        <!-- 联系方式 -->
-        <div class="link-us clearfix">
-          <div class="link-us-email fr">
-            <div class="linkus-email-number">
-              <p><a href="mailto:yuketang@xuetangx.com">yuketang@xuetangx.com</a></p>
-              <p class="remark">邮箱</p>
+        <div class="footer-right fr">
+          <img class="link-time" src="http://sfe.ykt.io/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
+          <p class="link-tel">010-82152560</p>
+          <!-- 联系方式 -->
+          <div class="link-us clearfix">
+            <div class="link-us-email fr">
+              <div class="linkus-email-number">
+                <p><a href="mailto:yuketang@xuetangx.com">yuketang@xuetangx.com</a></p>
+                <p class="remark">邮箱</p>
+              </div>
+              <img class="link-img" src="http://sfe.ykt.io/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件" />
             </div>
-            <img class="link-img" src="http://sfe.ykt.io/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件" />
-          </div>
-          <div class="link-us-qq fr">
-            <div class="link-us-qqgroup">
-              <p>QQ:487470016（推荐）</p>
-              <p>QQ:470686527（已满）</p>
-              <p>QQ:314940327（已满）</p>
-              <p class="remark">雨课堂官方QQ群</p>
+            <div class="link-us-qq fr">
+              <div class="link-us-qqgroup">
+                <p>QQ:487470016（推荐）</p>
+                <p>QQ:470686527（已满）</p>
+                <p>QQ:314940327（已满）</p>
+                <p class="remark">雨课堂官方QQ群</p>
+              </div>
+              <img class="link-img" src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
             </div>
-            <img class="link-img" src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
-          </div>
-          <div class="link-us-wechat fr">
-            <div class="link-us-qcode"><img src="http://sfe.ykt.io/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服"></div>
-            <img class="link-img" src="http://sfe.ykt.io/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信" />
+            <div class="link-us-wechat fr">
+              <div class="link-us-qcode"><img src="http://sfe.ykt.io/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服"></div>
+              <img class="link-img" src="http://sfe.ykt.io/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信" />
+            </div>
           </div>
         </div>
       </div>
@@ -83,7 +85,7 @@
     \*-------------------------*/
 
 
-  .footer { z-index: 1; position: relative; width: 100%; background: #282C2F; }
+  .footer { z-index: 2; position: relative; width: 100%; background: #282C2F; }
   .footer-wrapper {
     box-sizing: border-box;
     margin: 0 auto;
@@ -242,6 +244,7 @@
     background-position: center center;
     background-size: 100% 100%;
     border-radius: 4px;
+    z-index: 0;
     .img{
       position: absolute;
       bottom:50px;
