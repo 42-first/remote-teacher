@@ -233,7 +233,7 @@
   /* 客服 */
   .im{
     position: fixed;
-    bottom:160px;
+    bottom:180px;
     left: 50%;
     transform: translate(520px, 0);
     font-size: 38px;
