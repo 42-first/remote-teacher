@@ -29,6 +29,8 @@ if (process.env.NODE_ENV === 'production') {
     create_red_envelope:                prefix + '/api/red/create_red_envelope',      // 向django后端发起红包支付
     payquery:                           prefix + '/pay/query',                        // 微信支付后向node后端确认支付金额已经进入小金库
     orderpay:                           prefix + '/pay/mp/order/',                    // 向django下单要进行微信支付
+    payquery_proxy:                     prefix + '/api/pay/node_proxy',               // 微信支付后向node后端确认支付金额已经进入小金库-python代理
+    orderpay_proxy:                     prefix + '/api/pay/node_proxy',               // 向django下单要进行微信支付-python代理
     red_envelope_detail:                prefix + '/api/red/red_envelope_detail',      // 获取某个红包的详情
     danmulist:                          prefix + '/v/api/danmu/list_danmu_v2',        // 弹幕列表
     danmulist2:                         prefix + '/v/api/danmu/danmu_list',           // 弹幕列表 2.0版（分页）
