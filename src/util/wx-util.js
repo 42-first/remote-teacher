@@ -35,10 +35,20 @@ function configWX () {
 
 function wxpay (money, payCB) {
 	//money是0，负数，小数都会报错{"status":50000,"message":"invalid total_fee"}
-	let url = '/pay/mp/order/'
+	// let url = '/pay/mp/order/'
+  
+  // let postData = {
+  // 	'money': money,
+  // 	'user_id': USERID 	// 在页面初始化时把 USERID 已经设置为全局变量
+  // }
+
+  let url = '/api/pay/node_proxy'
   let postData = {
-  	'money': money,
-  	'user_id': USERID 	// 在页面初始化时把 USERID 已经设置为全局变量
+    op: 'order',
+    request_key: Date.now(),
+    data: {
+      "money": money
+    }
   }
 
   return request.post(url, postData)
