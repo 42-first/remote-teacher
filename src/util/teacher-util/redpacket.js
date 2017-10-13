@@ -329,12 +329,23 @@ export default {
 	   */
 	  wxpayCallback (out_trade_no) {
 	    let self = this
+
+	    // let url = API.payquery
+	    // let postData = {
+	    // 	'out_trade_no': out_trade_no
+	    // }
+
+	    let url = API.payquery_proxy
 	    let postData = {
-	    	'out_trade_no': out_trade_no
+	    	op: 'query',
+	      request_key: Date.now(),
+	      data: {
+	        "out_trade_no": out_trade_no
+	      }
 	    }
 
-	    request.post(API.payquery, postData)
-        .then(jsonData => {
+	    request.post(url, postData)
+	    	.then(jsonData => {
         	// 不需要判断success，在request模块中判断如果success为false，会直接reject
 	        if(jsonData.status === 0 && jsonData.data.trade_state === 'SUCCESS'){
 	          self.connectLittleBank()
