@@ -71,7 +71,7 @@
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
                     <span>投屏</span>
                   </v-touch>
-                  <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">退出投屏</v-touch>
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
                 </div>
               </div>
             </div>
