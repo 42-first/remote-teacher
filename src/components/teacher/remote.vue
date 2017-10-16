@@ -12,11 +12,13 @@
             {{isProblemPublished ? '查看答案' : '发送此题'}}
           </v-touch>
         </div>
+        <img v-if="isUpImgError" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
         <div class="detail f14">下一张幻灯片</div>
+        <img v-if="isDownImgError" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
@@ -224,6 +226,20 @@ export default {
       let status = (self.msgMaskTpl !== 'rc-mask-reconnect') && self.initiativeCtrlMaskTpl === 'RcMaskThumbnail' || (self.initiativeCtrlMaskTpl === 'RcMaskActivity' && self.isRcMaskActivityAtRoot)
 
       return status
+    },
+    isUpImgError () {
+      let self = this
+      let pptData = self.pptData
+      let current = self.current
+
+      return pptData[current - 1] && (pptData[current - 1].Cover == 'rain://error/upload-error' || pptData[current - 1].Cover == 'rain://error/export-error')
+    },
+    isDownImgError () {
+      let self = this
+      let pptData = self.pptData
+      let current = self.current
+
+      return pptData[current] && (pptData[current].Cover == 'rain://error/upload-error' || pptData[current].Cover == 'rain://error/export-error')
     }
   },
   components: {
