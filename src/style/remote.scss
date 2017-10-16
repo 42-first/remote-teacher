@@ -52,6 +52,14 @@
     width: 100%;
     // max-height: 5.666667rem;
   }
+  .img-error {
+    display: block;
+    margin: 1.5rem auto 0;
+    width: 2.0rem;
+  }
+  .downer .img-error {
+    margin-top: 0.5rem;
+  }
 }
 // 竖版的覆盖样式
 .shuban {
