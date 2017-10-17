@@ -127,7 +127,7 @@
   @import "~@/style/market/common";
 
   .back {
-    background-color: #fff;
+    background-color: #F5F5F5;
     margin-top: 60px;
     .con-width{
       width: 840px;

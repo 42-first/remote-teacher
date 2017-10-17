@@ -74,6 +74,14 @@
           self.imShow = !1
         }
       })
+
+      setTimeout(function () {
+        var bodyHeight = document.body.clientHeight
+        var windowHeight = window.innerHeight
+        if (bodyHeight < windowHeight) {
+          $('.back').css({'minHeight': (windowHeight - 180)})
+        }
+      }, 1)
     }
   }
 </script>
@@ -85,7 +93,7 @@
     \*-------------------------*/
 
 
-  .footer { z-index: 2; position: relative; width: 100%; background: #282C2F; }
+  .footer { z-index: 2; position: relative;bottom: 0; width: 100%; background: #282C2F; }
   .footer-wrapper {
     box-sizing: border-box;
     margin: 0 auto;
