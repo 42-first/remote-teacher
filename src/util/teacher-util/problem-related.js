@@ -262,7 +262,8 @@ export default {
         "members":0,
         "graph":{
           "type":"Histogram",
-          "data":optionData
+          "data":optionData,
+          "ma_right_count": {}
         },
         'isBellset': bellArr[current].hasLimit
       }
@@ -406,6 +407,7 @@ export default {
           _problemResultData.total = total
           _problemResultData.members = members
           _problemResultData.graph.data = _graphData
+          _problemResultData.graph.ma_right_count = jsonData.graph.ma_right_count
 
           self.setData({
             // 设置柱状图数据

@@ -1,30 +1,36 @@
 {
-  "success": true,
   "status": 200,
-  "answer": "B",
-  "members": 7,
-  "problemID": "8336",
-  "msg": "\u8bd5\u5377\u7ed3\u679c\u540c\u6b65\u6210\u529f",
+  "msg": "ok",
+  "members": 10,
+  "total": 10,
+  "problem_type": 2,
+  "RedEnvelopeID": null,
+  "success": true,
   "graph": {
     "data": [
       {
-        "value": 1,
+        "value": 0,
         "label": "A"
       },
       {
-        "value": 0,
+        "value": 1,
         "label": "B"
       },
       {
-        "value": 0,
+        "value": 1,
         "label": "C"
       },
       {
         "value": 0,
         "label": "D"
       }
-    ]
+    ],
+    "ma_right_count": {
+      "value": 5,
+      "label": "AB"
+    }
   },
-  "total": 1,
-  "problem_type": 1
+  "limit": -1,
+  "problemID": "24989",
+  "answer": "AB"
 }
