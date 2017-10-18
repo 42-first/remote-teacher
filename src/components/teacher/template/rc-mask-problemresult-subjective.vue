@@ -77,6 +77,11 @@
             </div>
             <div class="gap"></div>
           </div>
+
+          <div class="nomore f15">
+            <div class="bgline"></div>
+            <div class="wenan">end</div>
+          </div>
 				</div>
 	    </v-touch>
 	    
@@ -561,6 +566,7 @@
 
       .subjective-list {
       	color: #4A4A4A;
+      	background: #EDF2F6;
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
@@ -643,6 +649,29 @@
 	            line-height: 0.826667rem;
 	            color: $white;
 	          }
+	        }
+	      }
+
+	      .nomore {
+	        position: relative;
+	        height: 0.6rem;
+	        margin: 0 0.6rem;
+	        text-align: center;
+	        color: $graybg;
+
+	        .wenan {
+	          position: relative;
+	          margin: 0 auto;
+	          width: 2.093333rem;
+	          background: #EDF2F6;
+	        }
+
+	        .bgline {
+	          position: absolute;
+	          top: 0.293333rem;
+	          width: 100%;
+	          height: 1px;
+	          background: #c8c8c8;
 	        }
 	      }
 	      
