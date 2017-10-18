@@ -78,7 +78,7 @@
             <div class="gap"></div>
           </div>
 
-          <div class="nomore f15">
+          <div v-show="contLonger" class="nomore f15">
             <div class="bgline"></div>
             <div class="wenan">end</div>
           </div>
@@ -166,6 +166,7 @@
 	    	isBigpicShown: false,         // 当前正显示大图
 	    	isWider: false,               // 投稿图片更扁
 	    	bigpicUrl: '',                // 当前大图url
+	    	contLonger: false,            // 内容超过1屏
 	    }
 	  },
 	  computed: {
@@ -193,6 +194,15 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
+      }
+    },
+    watch: {
+      subjectiveList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.subjective-box .subjective-list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
       }
     },
 	  methods: {
