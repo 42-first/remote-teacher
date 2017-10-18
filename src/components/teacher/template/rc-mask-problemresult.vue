@@ -21,14 +21,40 @@
 	    </section>
 
 	    <!-- 中间柱状图 -->
-	    <section class="histogram-box">
-				<div class="histogram-item" v-for="item in problemResultData.graph.data">
-	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/problemResultData.total*100+'%'}">
-	          <span class="value f18">{{item.value}}</span>
-	          <span class="label f18">{{item.label}}</span>
-	        </div>
-	      </div>
+	    <section class="histogram-with-mahint">
+	    	<section class="mahint" v-if="problemResultData.type === 'MultipleChoiceMA'">
+	    		<div class="mahint-item f12">
+	    			<i style="background: #F5A623;"></i>
+	    			本题答案
+	    		</div>
+
+	    		<div class="mahint-item f12">
+	    			<i style="background: #639EF4;"></i>
+	    			正确选项
+	    		</div>
+
+	    		<div class="mahint-item f12">
+	    			<i style="background: #C8C8C8;"></i>
+	    			错误选项
+	    		</div>
+	    	</section>
+
+  	    <section class="histogram-box">
+  	    	<div class="histogram-item" v-if="problemResultData.type === 'MultipleChoiceMA'">
+  	        <div class="bar maright" :style="{height: problemResultData.graph.ma_right_count.value/problemResultData.total*100+'%'}">
+  	          <span class="value f18">{{problemResultData.graph.ma_right_count.value}}</span>
+  	          <span class="label f18">{{problemResultData.graph.ma_right_count.label}}</span>
+  	        </div>
+  	      </div>
+  				<div class="histogram-item" v-for="item in problemResultData.graph.data">
+  	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/problemResultData.total*100+'%'}">
+  	          <span class="value f18">{{item.value}}</span>
+  	          <span class="label f18">{{item.label}}</span>
+  	        </div>
+  	      </div>
+  	    </section>
 	    </section>
+	    
 
 	    <!-- 下方按钮 -->
 	    <section :class="['group-btns', {'istoupiao': problemResultData.type === 'Polling'}]">
@@ -282,7 +308,7 @@
 	  	width: 8.8rem;
 	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
-	  	border-bottom: 1px solid #cccccc;
+	  	// border-bottom: 1px solid #cccccc;
 			
 			.jishi {
 				margin-top: -0.186667rem;
@@ -296,8 +322,30 @@
 	  		padding-top: 1.6rem;
 	  	}
 	  }
-
+		
 	  /* 中间柱状图 */
+	  .histogram-with-mahint {
+	  	margin: 0 auto;
+	  	width: 8.8rem;
+	  	border-top: 1px solid #cccccc;
+	  }
+	  .mahint {	 
+	  	display: flex;
+	  	align-items: center;
+	  	padding-left: 0.266667rem; 	
+	  	height: 0.693333rem;
+	  	background: linear-gradient(rgba(255,255,255,0.12) 10%, rgba(255,255,255,0.03));
+
+	  	.mahint-item {
+	  		margin-right: 0.666667rem;
+
+	  		i {
+	  			display: inline-block;
+	  			width: 0.266667rem;
+	  			height: 0.266667rem;
+	  		}
+	  	}
+	  }
 	  .histogram-box {
 	  	margin: 0 auto;
 	  	padding-top: 1rem;
@@ -315,10 +363,10 @@
 			  .bar {
 				  position: absolute;
 				  left: 50%;
-				  bottom: 0;
+				  bottom: 0.173333rem;
 				  transform: translateX(-50%);
 				  width: 0.8rem;
-				  background-color: #fff;
+				  background-color: #C8C8C8;
 
 					span {
 					  position: absolute;
@@ -331,11 +379,17 @@
 					  top: -0.746667rem;
 					}
 					.label {
-					  bottom: -0.8rem;
+					  bottom: -1.0rem;
 					}
 				}
 				.right {
 				  background-color: $blue;
+				}
+				.maright {
+				  background-color: #F5A623;
+				  span {
+				  	color: #F5A623;
+				  }
 				}
 			}
 		}
@@ -350,7 +404,7 @@
 		  padding: 1.2rem 0 0.5rem;
 
 		  .btn-item {
-			  width: 1.75rem; 
+			  width: 1.8rem; 
 			  text-align: center;
 			  color: #fff;
 
