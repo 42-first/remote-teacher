@@ -12,7 +12,6 @@
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
-			:star-total="starTotal"
 			@giveScore="giveScore"
 		></StarPanel>
 
@@ -54,13 +53,13 @@
               </div>
               <div class="action-box f14">
               	<!-- 投屏时不能打分 -->
-                <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.fullStars, index)">
+                <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-              	    <span>打分</span>
+              	    <span>{{item.score === -1 ? '打分' : '得分'}}</span>
               	  </div>
-              	  <div class="stars" v-show="item.fullStars">
-              	  	<i v-for="i in item.fullStars" class="iconfont icon-fill-star f16"></i>
+              	  <div class="stars gray" v-show="item.score !== -1">
+              	  	{{item.score | formatScore}}
               	  </div>
                 </v-touch>
                 <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -100,7 +99,8 @@
   import API from '@/config/api'
   import Moment from 'moment'
 
-  import StarPanel from '@/components/teacher/template/star-panel'
+  // import StarPanel from '@/components/teacher/template/star-panel'
+  import StarPanel from '@/components/teacher/template/score-panel'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -155,7 +155,7 @@
 	    	class_participant_num: '--',	// 班级学生数
 	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
-	    	starTotal: STAR_TOTAL,				// 总星星数目
+	    	// starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
 	    	isShowBackBtn: true,					// 显示底部返回按钮
 	    	isShowNewHint: false,       	// 上方提示有新的条目进来
@@ -194,6 +194,13 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
+      },
+      formatScore(score) {
+        if (score == parseInt(score)) {
+	    		score += '.0'
+	    	}
+
+	    	return score
       }
     },
     watch: {
@@ -320,9 +327,9 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {number, number, index} answerid 将要打分的主观题答案的id; oldFullStars 当前星级; index 当前的item的序号
+	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
 	     */
-	    initScore (answerid, oldFullStars, index) {
+	    initScore (answerid, studentScore, scoreTotal, index) {
 	      let self = this
 
 	      // 投屏时不可打分
@@ -348,11 +355,13 @@
 	    		return;
 	    	}
 	      
-	      let url = API.subjective_problem_teacher_score
+	      // let url = API.subjective_problem_teacher_score
+	      let url = API.subjective_problem_teacher_scorev2
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'star': score
+	        // 'star': score,
+	        'score': score
 	      }
 
 	      request.post(url, postData)
@@ -362,7 +371,8 @@
 
 	          // 关闭打分页面
 	          console.log(`打过分啦${score}`, self.scoringIndex)
-	          self.subjectiveList[self.scoringIndex].fullStars = score
+	          // self.subjectiveList[self.scoringIndex].fullStars = score
+	          self.subjectiveList[self.scoringIndex].score = score
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -645,6 +655,7 @@
 	          .stars {
 	          	width: 2.666667rem;
 	          	padding-top: 0.18rem;
+	          	padding-left: 0.133333rem;
 	          	.iconfont {
 	          		margin-right: -0.066667rem;
 	          	}
