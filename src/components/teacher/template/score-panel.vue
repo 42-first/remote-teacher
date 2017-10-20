@@ -21,9 +21,9 @@
 <script>
 
   const errorList = [
-    '分数超过最大本题分值，请重新输入',
+    '分数超过本题最大分值，请重新输入',
     '分数最多保留一位小数，请重新输入',
-    '所输分数必须为数字，请重新输入'
+    '所输分数错误，请重新输入'
   ]
   export default {
     name: 'ScorePanel',
@@ -93,7 +93,7 @@
         let self = this
         let num = Number(self.studentScore)
 
-        if (self.studentScore !== "" && ( num || num === 0)) {
+        if (self.studentScore !== "" && ( num >= 0)) {
             if (num > self.scoreTotal) {
               self.errorInfo = errorList[0]
               return false;

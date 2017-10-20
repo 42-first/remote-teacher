@@ -39,7 +39,7 @@
 				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
 				<!-- 主观题部分 -->
-				<div class="subjective-list" v-show="total_num">
+				<div class="subjective-list" v-show="subjectiveList.length">
 					<div class="item-with-gap" v-for="(item, index) in subjectiveList" :key="item.problem_result_id">
             <div class="item">
               <div class="detail">
@@ -57,9 +57,7 @@
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
               	    <span>{{item.score === -1 ? '打分' : '得分'}}</span>
-              	  </div>
-              	  <div class="stars gray" v-show="item.score !== -1">
-              	  	{{item.score | formatScore}}
+              	    <span v-show="item.score !== -1">{{item.score}}分</span>
               	  </div>
                 </v-touch>
                 <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -194,13 +192,6 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
-      },
-      formatScore(score) {
-        if (score == parseInt(score)) {
-	    		score += '.0'
-	    	}
-
-	    	return score
       }
     },
     watch: {
@@ -372,7 +363,7 @@
 	          // 关闭打分页面
 	          console.log(`打过分啦${score}`, self.scoringIndex)
 	          // self.subjectiveList[self.scoringIndex].fullStars = score
-	          self.subjectiveList[self.scoringIndex].score = score
+	          self.subjectiveList[self.scoringIndex].score = +score
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -650,15 +641,6 @@
 	            display: flex;
 	            align-items: center;
 	            justify-content: space-between;
-	          }
-
-	          .stars {
-	          	width: 2.666667rem;
-	          	padding-top: 0.18rem;
-	          	padding-left: 0.133333rem;
-	          	.iconfont {
-	          		margin-right: -0.066667rem;
-	          	}
 	          }
 
 	          .cancel-post-btn {
