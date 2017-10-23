@@ -74,6 +74,7 @@
         let self = this
         
         self.isPanelHidden = true
+        self.$emit('cancelScore')
       },
       /**
        * 点击空白处或星星决定放弃或星级
