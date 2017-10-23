@@ -13,6 +13,7 @@
 		<StarPanel
 			ref="StarPanel"
 			@giveScore="giveScore"
+			@cancelScore="cancelScore"
 		></StarPanel>
 
 		<!--试题-主观题面板-->
@@ -35,7 +36,7 @@
 	    </section>
 
 	    <!-- 中间主观题页面 -->
-	    <v-touch v-on:tap="hideStar" class="subjective-box f18">
+	    <v-touch class="subjective-box f18">
 				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
 				<!-- 主观题部分 -->
@@ -329,6 +330,17 @@
 	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
 	      self.isScoring = true
+	    },
+	    /**
+	     * 点击打分部分，呼出打分面板
+	     *
+	     * @event bindtap
+	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
+	     */
+	    cancelScore () {
+	      let self = this
+
+	      self.isScoring = false
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
