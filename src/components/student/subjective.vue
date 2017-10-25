@@ -66,14 +66,14 @@
           <div class="answer--image" v-if="result.pics.length && result.pics[0].pic"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
         </div>
         <!-- 打分显示 -->
-        <div class="answer-score">
+        <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
-          <span class="lable f15" >得分</span>
-          <i :class="['iconfont', 'f18', starCount > 0 ? 'icon-fill-star' : 'icon-star']"></i>
+          <span class="lable f15" >得分: {{getScore}}分</span>
+          <!-- <i :class="['iconfont', 'f18', starCount > 0 ? 'icon-fill-star' : 'icon-star']"></i>
           <i :class="['iconfont', 'f18', starCount > 1 ? 'icon-fill-star' : 'icon-star']"></i>
           <i :class="['iconfont', 'f18', starCount > 2 ? 'icon-fill-star' : 'icon-star']"></i>
           <i :class="['iconfont', 'f18', starCount > 3 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 4 ? 'icon-fill-star' : 'icon-star']"></i>
+          <i :class="['iconfont', 'f18', starCount > 4 ? 'icon-fill-star' : 'icon-star']"></i> -->
         </div>
       </div>
 
@@ -117,7 +117,8 @@
         msgid: 0,
         summary: null,
         // star count 获得星星的数量
-        starCount: 0
+        starCount: 0,
+        getScore: -1
       };
     },
     components: {
@@ -181,6 +182,7 @@
 
         if(score && getScore > 0) {
           this.starCount = getScore / score * 5;
+          this.getScore = getScore;
         }
 
         // 是否观察者模式

@@ -12,8 +12,8 @@
 		<!-- 打星星 -->
 		<StarPanel
 			ref="StarPanel"
-			:star-total="starTotal"
 			@giveScore="giveScore"
+			@cancelScore="cancelScore"
 		></StarPanel>
 
 		<!--试题-主观题面板-->
@@ -36,11 +36,11 @@
 	    </section>
 
 	    <!-- 中间主观题页面 -->
-	    <v-touch v-on:tap="hideStar" class="subjective-box f18">
+	    <v-touch class="subjective-box f18">
 				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
 				<!-- 主观题部分 -->
-				<div class="subjective-list" v-show="total_num">
+				<div class="subjective-list" v-show="subjectiveList.length">
 					<div class="item-with-gap" v-for="(item, index) in subjectiveList" :key="item.problem_result_id">
             <div class="item">
               <div class="detail">
@@ -54,13 +54,11 @@
               </div>
               <div class="action-box f14">
               	<!-- 投屏时不能打分 -->
-                <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.fullStars, index)">
+                <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-              	    <span>打分</span>
-              	  </div>
-              	  <div class="stars" v-show="item.fullStars">
-              	  	<i v-for="i in item.fullStars" class="iconfont icon-fill-star f16"></i>
+              	    <span>{{item.score === -1 ? '打分' : '得分'}}</span>
+              	    <span v-show="item.score !== -1">{{item.score}}分</span>
               	  </div>
                 </v-touch>
                 <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -76,6 +74,11 @@
               </div>
             </div>
             <div class="gap"></div>
+          </div>
+
+          <div v-show="contLonger" class="nomore f15">
+            <div class="bgline"></div>
+            <div class="wenan">end</div>
           </div>
 				</div>
 	    </v-touch>
@@ -95,7 +98,8 @@
   import API from '@/config/api'
   import Moment from 'moment'
 
-  import StarPanel from '@/components/teacher/template/star-panel'
+  // import StarPanel from '@/components/teacher/template/star-panel'
+  import StarPanel from '@/components/teacher/template/score-panel'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -150,7 +154,7 @@
 	    	class_participant_num: '--',	// 班级学生数
 	    	total_num: '--',							// 总的回答人数
 	    	subjectiveList: [],           // 试题的红包名单列表页面隐藏
-	    	starTotal: STAR_TOTAL,				// 总星星数目
+	    	// starTotal: STAR_TOTAL,				// 总星星数目
 	    	scoringIndex: -1,							// 当前正在打分的item的序号
 	    	isShowBackBtn: true,					// 显示底部返回按钮
 	    	isShowNewHint: false,       	// 上方提示有新的条目进来
@@ -161,6 +165,7 @@
 	    	isBigpicShown: false,         // 当前正显示大图
 	    	isWider: false,               // 投稿图片更扁
 	    	bigpicUrl: '',                // 当前大图url
+	    	contLonger: false,            // 内容超过1屏
 	    }
 	  },
 	  computed: {
@@ -188,6 +193,15 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
+      }
+    },
+    watch: {
+      subjectiveList: function() {
+        setTimeout(() => {
+          let sbh = document.querySelector('.subjective-box .subjective-list').offsetHeight
+          let wh = window.innerHeight
+          this.contLonger = sbh >= wh
+        }, 100)
       }
     },
 	  methods: {
@@ -305,9 +319,9 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {number, number, index} answerid 将要打分的主观题答案的id; oldFullStars 当前星级; index 当前的item的序号
+	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
 	     */
-	    initScore (answerid, oldFullStars, index) {
+	    initScore (answerid, studentScore, scoreTotal, index) {
 	      let self = this
 
 	      // 投屏时不可打分
@@ -316,6 +330,17 @@
 	      self.scoringIndex = index
 	      self.$refs.StarPanel.$emit('enter', ...arguments)
 	      self.isScoring = true
+	    },
+	    /**
+	     * 点击打分部分，呼出打分面板
+	     *
+	     * @event bindtap
+	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
+	     */
+	    cancelScore () {
+	      let self = this
+
+	      self.isScoring = false
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
@@ -333,11 +358,13 @@
 	    		return;
 	    	}
 	      
-	      let url = API.subjective_problem_teacher_score
+	      // let url = API.subjective_problem_teacher_score
+	      let url = API.subjective_problem_teacher_scorev2
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'star': score
+	        // 'star': score,
+	        'score': score
 	      }
 
 	      request.post(url, postData)
@@ -347,7 +374,8 @@
 
 	          // 关闭打分页面
 	          console.log(`打过分啦${score}`, self.scoringIndex)
-	          self.subjectiveList[self.scoringIndex].fullStars = score
+	          // self.subjectiveList[self.scoringIndex].fullStars = score
+	          self.subjectiveList[self.scoringIndex].score = +score
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -561,6 +589,7 @@
 
       .subjective-list {
       	color: #4A4A4A;
+      	background: #EDF2F6;
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
@@ -626,14 +655,6 @@
 	            justify-content: space-between;
 	          }
 
-	          .stars {
-	          	width: 2.666667rem;
-	          	padding-top: 0.18rem;
-	          	.iconfont {
-	          		margin-right: -0.066667rem;
-	          	}
-	          }
-
 	          .cancel-post-btn {
 	          	margin-right: -0.4rem;
 	            background: $blue;
@@ -643,6 +664,29 @@
 	            line-height: 0.826667rem;
 	            color: $white;
 	          }
+	        }
+	      }
+
+	      .nomore {
+	        position: relative;
+	        height: 0.6rem;
+	        margin: 0 0.6rem;
+	        text-align: center;
+	        color: $graybg;
+
+	        .wenan {
+	          position: relative;
+	          margin: 0 auto;
+	          width: 2.093333rem;
+	          background: #EDF2F6;
+	        }
+
+	        .bgline {
+	          position: absolute;
+	          top: 0.293333rem;
+	          width: 100%;
+	          height: 1px;
+	          background: #c8c8c8;
 	        }
 	      }
 	      
