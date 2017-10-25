@@ -74,14 +74,6 @@
           self.imShow = !1
         }
       })
-
-      setTimeout(function () {
-        var bodyHeight = document.body.clientHeight
-        var windowHeight = window.innerHeight
-        if (bodyHeight < windowHeight) {
-          $('.back').css({'minHeight': (windowHeight - 180)})
-        }
-      }, 1)
     }
   }
 </script>

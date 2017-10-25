@@ -91,6 +91,7 @@
         request.get(API.market.get_rain_courseware_list, params).then(function (e) {
           let data = e.data
           self.list = data.rain_courseware_list
+          self.support()
         })
       },
       order: function () {
@@ -111,6 +112,13 @@
       },
       timestamp: function () {
         return new Date().getTime()
+      },
+      support: function () {
+        var bodyHeight = document.body.clientHeight
+        var windowHeight = window.innerHeight
+        if (bodyHeight < windowHeight) {
+          document.querySelector('.detail').style.minHeight = ((windowHeight - 600) + 'px')
+        }
       }
     },
     directives: {
