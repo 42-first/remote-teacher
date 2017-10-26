@@ -107,7 +107,7 @@ function socketProcessMessage(msg){
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
-    self.openDeprive('notRobber')
+    self.openDeprive('notRobber', msg.byself)
     return
   }
 
