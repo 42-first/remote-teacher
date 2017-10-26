@@ -13,10 +13,10 @@
         </div>
         <div class="wayin">
           <span class="time">{{item.time}}</span>
-          <span v-show="item.source === 1">扫二维码</span>
-          <span v-show="item.source === 2">课堂暗号</span>
-          <span v-show="item.source === 3">微信公众号</span>
-          <span v-show="item.source === 4">微信小程序</span>
+          <span class="ganbei" v-show="item.source === 1">扫二维码</span>
+          <span class="ganbei" v-show="item.source === 2">课堂暗号</span>
+          <span class="ganbei" v-show="item.source === 3">微信公众号</span>
+          <span class="ganbei" v-show="item.source === 4">微信小程序</span>
         </div>
       </div>
     </section>
@@ -96,6 +96,11 @@
 
         .wayin .time {
           margin-right: 0.76rem;
+        }
+        .wayin .ganbei {
+          display: inline-block;
+          text-align: center;
+          width: 2.4rem;
         }
         .hide {
           display: none;
