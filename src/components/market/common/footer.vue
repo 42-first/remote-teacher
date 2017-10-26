@@ -85,7 +85,7 @@
     \*-------------------------*/
 
 
-  .footer { z-index: 2; position: relative; width: 100%; background: #282C2F; }
+  .footer { z-index: 2; position: relative;bottom: 0; width: 100%; background: #282C2F; }
   .footer-wrapper {
     box-sizing: border-box;
     margin: 0 auto;

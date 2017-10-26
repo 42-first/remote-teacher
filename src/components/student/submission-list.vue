@@ -407,6 +407,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       display: block;
+      max-width: 80%;
     }
 
     .page-empty-btn {

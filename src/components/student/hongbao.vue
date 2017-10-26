@@ -30,7 +30,7 @@
       </section>
 
       <!-- 红包列表 -->
-      <section class="hongbao__list-wrapper">
+      <section class="hongbao__list-wrapper" v-if="hongbaoList&&summary">
         <div class="hongbao--count f18">已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包</div>
         <ul class="">
 

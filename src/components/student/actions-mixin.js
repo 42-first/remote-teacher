@@ -85,14 +85,15 @@ var actionsMixin = {
       let pptData = presentation && presentation['Slides'];
       let slideData = pptData && pptData[data.pageIndex-1];
       let index = -1;
+      let cover = slideData && slideData['Cover'] || '';
 
       // 是否含有重复数据
       let hasPPT = this.cards.find((item)=>{
         return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
       })
 
-      // 如果是习题图片，则不添加
-      if (!slideData || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
+      // 如果是习题图片，则不添加 ppt图片加载
+      if (!slideData || !cover || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
