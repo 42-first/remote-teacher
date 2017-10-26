@@ -219,11 +219,13 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'turnondanmu') {
     self.openDanmuBtn()
+    self.$refs.InitiativeCtrlMask.$emit('turnondanmu')
     return
   }
 
   if (msg.op == 'turnoffdanmu') {
     self.closeDanmuBtn()
+    self.$refs.InitiativeCtrlMask.$emit('turnoffdanmu')
     return
   }
 

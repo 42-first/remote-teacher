@@ -151,6 +151,16 @@
         self.$refs.RcMaskActivityDanmubox.$emit('newdanmu')
       })
 
+      // socket通知有开启了弹幕
+      self.$on('turnondanmu', function () {
+        self.$refs.RcMaskActivityDanmubox.$emit('turnondanmu')
+      })
+
+      // socket通知关闭了弹幕
+      self.$on('turnoffdanmu', function () {
+        self.$refs.RcMaskActivityDanmubox.$emit('turnoffdanmu')
+      })
+
       // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
       self.$on('newquiz', function (msg) {
         self.$refs.RcMaskActivityPaper.$emit('newquiz', msg)
