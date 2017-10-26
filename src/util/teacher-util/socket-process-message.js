@@ -107,7 +107,7 @@ function socketProcessMessage(msg){
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
-    self.openDeprive('notRobber')
+    self.openDeprive('notRobber', msg.byself)
     return
   }
 
@@ -219,11 +219,13 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'turnondanmu') {
     self.openDanmuBtn()
+    self.$refs.InitiativeCtrlMask.$emit('turnondanmu')
     return
   }
 
   if (msg.op == 'turnoffdanmu') {
     self.closeDanmuBtn()
+    self.$refs.InitiativeCtrlMask.$emit('turnoffdanmu')
     return
   }
 
