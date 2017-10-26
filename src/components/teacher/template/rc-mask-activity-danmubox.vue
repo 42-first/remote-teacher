@@ -100,16 +100,19 @@
         self.isShowNewHint = true
       })
 
+      let toastTimer = null
       // socket通知有开启了弹幕
       self.$on('turnondanmu', function () {
         self.isToastSwitch = true
-        setTimeout(() => {self.isToastSwitch = false}, 2000)
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
       })
 
       // socket通知关闭了弹幕
       self.$on('turnoffdanmu', function () {
         self.isToastSwitch = true
-        setTimeout(() => {self.isToastSwitch = false}, 2000)
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
       })
     },
     mounted () {
