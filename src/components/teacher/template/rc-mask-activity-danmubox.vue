@@ -21,6 +21,7 @@
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
     <Loadmore
        ref="Loadmore"
+       v-show="danmuList.length"
        :bottom-method="loadBottom"
        :bottom-all-loaded="allLoaded"
        :bottomPullText="'上拉加载更多'"
