@@ -53,7 +53,7 @@
           </div>
         </section>
 
-        <!--  <div slot="top" class="mint-loadmore-top">
+        <!-- <div slot="top" class="mint-loadmore-top">
           <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
           <span v-show="topStatus === 'loading'">Loading...</span>
         </div> -->

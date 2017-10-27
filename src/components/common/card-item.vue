@@ -14,7 +14,7 @@
     <template v-else-if="item.type==2">
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
         <span class="ppt--pageno f14" data-language-complex="student-pageIndex" :data-page-index="item.pageIndex">第{{ item.pageIndex }}页</span>
-        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
+        <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
         </div>
         <div class="ppt-footer">

@@ -198,6 +198,7 @@
           this.result = this.oProblem['Result'];
 
           this.getScore(problemID);
+          this.sLeaveTime = '已完成';
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
