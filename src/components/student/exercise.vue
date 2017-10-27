@@ -24,7 +24,7 @@
       </section>
 
       <!-- 问题内容 -->
-      <section class="exercise-content" :style="{ height: (10 - 0.906667)/rate + 'rem' }">
+      <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
         <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>

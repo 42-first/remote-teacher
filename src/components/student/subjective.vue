@@ -25,7 +25,7 @@
             <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
             <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
           </header>
-          <div class="cover__wrapper" :style="{ height: (10 - 0.906667)/pptRate + 'rem' }">
+          <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
             <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
           </div>
         </div>
