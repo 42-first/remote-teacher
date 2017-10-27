@@ -3,11 +3,15 @@
 	<div class="danmu-box allowscrollcallback">
     <div class="desc f20">
       <span>弹幕</span>
-      <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch>
+      <!-- <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch> -->
+      <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
+        {{isDanmuOpen ? '关闭' : '开启'}}
+      </v-touch>
     </div>
     <div class="gap"></div>
     <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
+    <div v-show="isToastSwitch" class="no-new-item f18">弹幕已{{isDanmuOpen ? '开启' : '关闭'}}</div>
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
@@ -17,6 +21,7 @@
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
     <Loadmore
        ref="Loadmore"
+       v-show="danmuList.length"
        :bottom-method="loadBottom"
        :bottom-all-loaded="allLoaded"
        :bottomPullText="'上拉加载更多'"
@@ -77,6 +82,7 @@
         isShowNoNewItem: false,     // 刷新后没有新的条目
         isShowNewHint: false,       // 上方提示有新的条目进来
         isShowBtnBox: false,        // 显示底部返回按钮
+        isToastSwitch: false,       // 显示弹幕开启关闭提示
       }
     },
     components: {
@@ -93,6 +99,21 @@
       // socket通知有新的弹幕进来了
       self.$on('newdanmu', function () {
         self.isShowNewHint = true
+      })
+
+      let toastTimer = null
+      // socket通知有开启了弹幕
+      self.$on('turnondanmu', function () {
+        self.isToastSwitch = true
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
+      })
+
+      // socket通知关闭了弹幕
+      self.$on('turnoffdanmu', function () {
+        self.isToastSwitch = true
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
       })
     },
     mounted () {
@@ -380,6 +401,27 @@
       
       span {
         color: $blue;
+      }
+
+      .set-btn {
+        float: right;
+        margin-top: 0.28rem;
+        text-align: center;
+        width: 1.706667rem;
+        height: 0.906667rem;
+        line-height: 0.906667rem;
+        border-radius: 0.053333rem;
+      }
+
+      .is-open {
+        background: $blue;
+        color: $white;
+      }
+
+      .is-closed {
+        background: $white;
+        color: $blue;
+        border: 1px solid $blue;
       }
 
       .iconfont {

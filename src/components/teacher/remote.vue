@@ -94,6 +94,7 @@
           :socket="socket"
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
+          :byself="byself"
         ></component>
       </div>
 
@@ -199,6 +200,7 @@ export default {
       pptData: [],                            // ppt数据
       isRobber: false,                        // 是夺权者
       isRobbing: false,                       // 正在夺权
+      byself: false,                          // 是自己夺权
       startPoint: [0, 0],
       msgMaskTpl: 'RcMaskErrormsg',
       toastCtrlMaskTpl: '',

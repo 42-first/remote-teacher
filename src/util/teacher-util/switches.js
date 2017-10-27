@@ -36,13 +36,15 @@ export default {
      * 打开夺权面板
      *
      * @param {string} str isRobber notRobber
+     * @param {Boolean} byself 自己夺自己的权
      */
-    openDeprive: function (str) {
+    openDeprive: function (str, byself = false) {
       this.setData({
         isToastCtrlMaskHidden: false,
         isRobber: str === 'isRobber',
         toastCtrlMaskTpl: 'rc-mask-deprive',
         initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
+        byself,
       })
     },
     /**
