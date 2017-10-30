@@ -221,6 +221,7 @@ export default {
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
       isPPTVersionAboveOne: false,            // ppt插件的版本大于等于1
       isUploadSlideCrash: false,              // 过了2秒
+      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
     }
   },
   computed: {
@@ -423,6 +424,24 @@ export default {
           self.isEnterEnded = true
           self.initCardHeight()
         })
+    },
+    /**
+     * 处理slideid 和 slideindex 的对应关系
+     *
+     * @param {Object} pptData
+     */
+    filterSlideid (pptData) {
+      let self = this
+
+      let idIndexMap = {}
+      
+      pptData.forEach(item => {
+        idIndexMap[item.lessonSlideID] = item.Index
+      })
+
+      self.setData({
+        idIndexMap
+      })
     },
     /**
      * 初始化主页面当前页高度，防止竖版课件导致 toolbar 无法显示
