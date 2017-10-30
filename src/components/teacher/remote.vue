@@ -12,13 +12,15 @@
             {{isProblemPublished ? '查看答案' : '发送此题'}}
           </v-touch>
         </div>
-        <img v-if="isUpImgError" class="img-error" src="~images/teacher/img-error.png" />
+        <img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
+        <img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
         <div class="detail f14">下一张幻灯片</div>
-        <img v-if="isDownImgError" class="img-error" src="~images/teacher/img-error.png" />
+        <img v-if="isDownImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
+        <img v-if="isDownImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
@@ -217,6 +219,8 @@ export default {
       newdoubt: 0,                            // 未查看的不懂人次总数
       newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
+      isPPTVersionAboveOne: false,            // ppt插件的版本大于等于1
+      isUploadSlideCrash: false,              // 过了2秒
     }
   },
   computed: {

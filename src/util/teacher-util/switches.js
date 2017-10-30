@@ -1,6 +1,9 @@
 /**
  * @module 教师遥控器的开关
  */
+
+let uploadslideCrashTimer = null
+
 export default {
   methods: {
     /**
@@ -100,6 +103,63 @@ export default {
         isProblemPublished: isProblemPublished,
         unlockedproblem: msg.unlockedproblem
       })
+
+      self.handleUploadSlide(msg)
+    },
+    /**
+     * 跳转后，判断是否是坏图，是否需要重传
+     *
+     * @param {Object} msg WebSocket指令
+     */
+    handleUploadSlide: function (msg) {
+      let self = this
+      self.data = self // hack 复用小程序代码
+      console.log(99, msg)
+      // 到下一页重新让能够显示2秒的加载中并清除之前的定时器，否则可能不到2秒就 crash 了
+      clearTimeout(uploadslideCrashTimer)
+      self.setData({
+        isUploadSlideCrash: false
+      })
+
+
+      // if (self.data.isUpImgError) {
+      if (true) {
+        let str = JSON.stringify({
+          'op': 'uploadslide',
+          'lessonid': self.lessonid,
+          'presentation': self.presentationid,
+          'slideindex': msg.slideindex,
+          'slideid': msg.slideid
+        })
+
+        self.socket.send(str)
+      }
+
+      uploadslideCrashTimer = setTimeout(() => {
+        self.setData({
+          isUploadSlideCrash: true
+        })
+      }, 1500)
+      return
+
+      if (self.data.isDownImgError) {
+        let str = JSON.stringify({
+          'op': 'uploadslide',
+          'lessonid': self.lessonid,
+          'presentation': self.presentationid,
+          'slideindex': msg.slideindex+1,
+          'slideid': self.data.pptData[current].slideid
+        })
+
+        self.socket.send(str)
+      }
+
+      uploadslideCrashTimer = setTimeout(() => {
+        self.setData({
+          isUploadSlideCrash: true
+        })
+      }, 1500)
+
     },
     /**
      * 打开二维码控制面板
