@@ -454,8 +454,20 @@
               }
 
               // set title
-              let presentationData = self.presentationMap.get(self.presentationID);
-              presentationData.Title && (self.title = presentationData.Title);
+              let presentationData = null;
+
+              if(self.presentationID) {
+                presentationData = self.presentationMap.get(self.presentationID);
+                presentationData && presentationData.Title && (self.title = presentationData.Title);
+              } else {
+                // presentation没有数据 重新初始化
+                setTimeout(() => {
+                  self.getPresentationList();
+                }, 1000)
+
+                return presentationData;
+              }
+
               // 课程title
               document.title = self.courseName = data.classroom && data.classroom.courseName;
 
