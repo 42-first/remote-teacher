@@ -526,6 +526,7 @@ export default {
      */
     fetchPresentationTag () {
       let self = this
+      if (self.presentationid <= 0) {return;}
 
       let url = API.presentation_tag
       if (process.env.NODE_ENV === 'production') {
@@ -555,6 +556,7 @@ export default {
      */
     fetchTougaoUnreadnum () {
       let self = this
+      if (self.lessonid <= 0) {return;}
       // let url = API.submissionlist
       let url = API.submission_unread_num + '?lesson_id=' + self.lessonid
 
