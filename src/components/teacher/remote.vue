@@ -217,6 +217,7 @@ export default {
       newdoubt: 0,                            // 未查看的不懂人次总数
       newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
+      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
     }
   },
   computed: {
@@ -419,6 +420,24 @@ export default {
           self.isEnterEnded = true
           self.initCardHeight()
         })
+    },
+    /**
+     * 处理slideid 和 slideindex 的对应关系
+     *
+     * @param {Object} pptData
+     */
+    filterSlideid (pptData) {
+      let self = this
+
+      let idIndexMap = {}
+      
+      pptData.forEach(item => {
+        idIndexMap[item.lessonSlideID] = item.Index
+      })
+
+      self.setData({
+        idIndexMap
+      })
     },
     /**
      * 初始化主页面当前页高度，防止竖版课件导致 toolbar 无法显示
