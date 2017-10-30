@@ -39,14 +39,14 @@
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->
-          <!--  <div class="timeline-wrapper" v-if="classroom && classroom.isPro">
+           <div class="timeline-wrapper" v-if="classroom && classroom.isPro">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15">雨课堂小程序上线啦<br>长按识别图中小程序码开始体验</p>
                 <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
               </div>
             </section>
-          </div> -->
+          </div>
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
