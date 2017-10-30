@@ -39,7 +39,7 @@
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->
-           <div class="timeline-wrapper" v-if="classroom && classroom.isPro">
+           <div class="timeline-wrapper" v-if="classroom && !classroom.isPro">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15">雨课堂小程序上线啦<br>长按识别图中小程序码开始体验</p>
