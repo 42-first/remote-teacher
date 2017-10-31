@@ -52,7 +52,8 @@
         <router-link :to="'/'+lessonid+'/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
-              <p class="paper-name">{{ item.caption }}</p>
+              <p class="paper-name" data-language-complex="gainbonus" :data-number="item.length" v-if="item.length">{{ item.caption }}</p>
+              <p class="paper-name" data-language-key="recvbonus" v-else >{{ item.caption }}</p>
             </div>
             <i class="iconfont icon-shiti_hongbao f55"></i>
         </div>
