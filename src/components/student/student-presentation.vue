@@ -16,19 +16,24 @@
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-ykq_tab_danmu f25"></i>发送弹幕</p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8"><i class="iconfont icon-ykq_tab_tougao f25"></i>发送投稿</router-link>
+            <p class="action f17 line" @click="handleOpenDanmu">
+              <i class="iconfont icon-ykq_tab_danmu f25"></i>
+              <span data-language-key="newbullet">发送弹幕</span>
+            </p>
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
+              <i class="iconfont icon-ykq_tab_tougao f25"></i>
+              <span data-language-key="newpost">发送投稿</span>
+            </router-link>
           </div>
         </div>
       </header>
 
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
-        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="student.nav.all">全部</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="student.nav.ppt">PPT</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="student.nav.problem">习题</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="student.nav.quiz">试卷</li>
-        <!-- <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5" data-language-key="student.nav.hongbao">红包</li> -->
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="total">全部</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="slide">PPT</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="prob">习题</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="quiz">试卷</li>
       </ul>
     </section>
 
@@ -53,18 +58,13 @@
           </div>
         </section>
 
-        <!-- <div slot="top" class="mint-loadmore-top">
-          <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
-          <span v-show="topStatus === 'loading'">Loading...</span>
-        </div> -->
-
       </loadmore>
     </section>
 
 
     <!-- 接收器 新消息提醒 -->
     <section class="student__msg f16" v-show="hasMsg" @click="handleScrollToTop">
-      <p class="">您有新的课堂动态</p>
+      <p class="" data-language-key="newfeed">您有新的课堂动态</p>
     </section>
 
     <!-- 习题试卷弹框 -->
@@ -115,8 +115,8 @@
     <!-- 网络不好 重新连接弹层 -->
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
-        <p class=" f16">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
-        <p class="connect-btn f18" @click="handleReconnect">立即重连</p>
+        <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
+        <p class="connect-btn f18" @click="handleReconnect" data-language-key="connnow">立即重连</p>
       </div>
     </section>
 
@@ -136,7 +136,7 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
-  // import identity from '@/components/student/identityBinding.vue'
+
 
   // 子组件不需要引用直接使用
   window.request = request;

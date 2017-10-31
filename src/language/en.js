@@ -7,30 +7,39 @@
  */
 
 let pages = {
-  // 根据状态显示的动态文字 例如'已完成' '未完成'
-  'status': {
-    '未完成': 'uncomplete',
-    '已完成': 'complete'
-  },
   // 学生遥控器
-  'student': {
-    'complex': {
-      'pageIndex': 'the $pageIndex$ page',
-      'quizCount': 'A total of two $quizCount$ questions',
-      'problemIndex': 'the $problemIndex$ questions'
-    },
-    'nav': {
-      'all' : 'all',
-      'ppt' : 'PPT',
-      'problem' : 'problem',
-      'quiz' : 'quiz',
-      'hongbao' : 'hongbao'
-    },
-    'ppt': {
-      'unknow' : 'unknow',
-      'store' : 'store'
-    }
-  }
+  "ykt": "ykt",
+  "undone": "undone",
+  "done": "done",
+
+  "pno": "di$number$ye",
+  "totalprob": "toatal$number$prob",
+
+  "total": "total",
+  "slide": "PPT",
+  "prob": "prob",
+  "quiz": "quiz",
+  "bonus": "bonus",
+
+  "unknown": "unknown",
+  "star": "star",
+
+  "newfeed": "newfeed",
+  "connerr": "连接异常，$second$秒后尝试重连",
+  "connnow": "立即重连",
+
+  "newpost": "发送投稿",
+  "newbullet": "发送弹幕",
+  "bulletban": "老师暂时还未开放弹幕，等等吧～",
+  "tips": "提示",
+
+  "newprob": "你有新的课堂习题",
+  "newvote": "你有新的投票",
+  "recvbonus": "Hi，本题有课堂红包发送",
+  "gainbonus": "$number$位同学已赢得课堂红包",
+
+  "submitansw": "提交答案",
+  "cannotsubmit": "提交有困难"
 };
 
 

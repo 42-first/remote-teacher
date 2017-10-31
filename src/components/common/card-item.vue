@@ -13,15 +13,15 @@
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
-        <span class="ppt--pageno f14" data-language-complex="student-pageIndex" :data-page-index="item.pageIndex">第{{ item.pageIndex }}页</span>
+        <span class="ppt--pageno f14" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</span>
         <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="student.ppt.unknow">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="unknown">不懂</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="star">收藏</p>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
           <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.papername }}</p>
-              <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
+              <p class="paper-count" data-language-complex="totalprob" :data-number="item.count">共{{ item.count }}题</p>
             </div>
             <i class="iconfont icon-shiti_shijuan f55"></i>
           </a>
@@ -41,7 +41,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" data-language-common="status">{{ item.status }}</span>
+            <span class="status" :data-language-key="item.isComplete ? 'done' : 'undone'">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
@@ -77,14 +77,14 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" data-language-common="status">{{ item.status }}</span>
+            <span class="status" :data-language-key="item.isComplete ? 'done' : 'undone'">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
+            <p class="paper-name" data-language-key="">Hi, 老师正在分享课堂投稿</p>
           </div>
           <i class="iconfont icon-ykq_tab_tougao f50"></i>
         </router-link>
