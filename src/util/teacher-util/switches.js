@@ -4,6 +4,20 @@
 
 let uploadslideCrashTimer = null
 
+function sendUploadSocket (slideindex, slideid) {
+  let self = this
+
+  let str = JSON.stringify({
+    'op': 'uploadslide',
+    'lessonid': self.lessonid,
+    'presentation': self.presentationid,
+    'slideindex': slideindex,
+    'slideid': slideid
+  })
+
+  self.socket.send(str)
+}
+
 export default {
   methods: {
     /**
@@ -104,7 +118,9 @@ export default {
         unlockedproblem: msg.unlockedproblem
       })
 
-      self.handleUploadSlide(msg)
+      setTimeout(() => {
+        self.handleUploadSlide(msg)
+      }, 500)
     },
     /**
      * 跳转后，判断是否是坏图，是否需要重传
@@ -114,7 +130,8 @@ export default {
     handleUploadSlide: function (msg) {
       let self = this
       self.data = self // hack 复用小程序代码
-      console.log(99, msg)
+      let current = msg.slideindex || 1
+      console.log(83, self.data.isUpImgError, self.data.isDownImgError, msg)
       // 到下一页重新让能够显示2秒的加载中并清除之前的定时器，否则可能不到2秒就 crash 了
       clearTimeout(uploadslideCrashTimer)
       self.setData({
@@ -122,43 +139,25 @@ export default {
       })
 
 
-      // if (self.data.isUpImgError) {
-      if (true) {
-        let str = JSON.stringify({
-          'op': 'uploadslide',
-          'lessonid': self.lessonid,
-          'presentation': self.presentationid,
-          'slideindex': msg.slideindex,
-          'slideid': msg.slideid
-        })
+      if (self.data.isUpImgError) {
+        let si = msg.slideindex
+        let sid = msg.slideid
 
-        self.socket.send(str)
+        sendUploadSocket.call(self, si, sid)
       }
-
-      uploadslideCrashTimer = setTimeout(() => {
-        self.setData({
-          isUploadSlideCrash: true
-        })
-      }, 1500)
-      return
 
       if (self.data.isDownImgError) {
-        let str = JSON.stringify({
-          'op': 'uploadslide',
-          'lessonid': self.lessonid,
-          'presentation': self.presentationid,
-          'slideindex': msg.slideindex+1,
-          'slideid': self.data.pptData[current].slideid
-        })
+        let si = msg.slideindex + 1
+        let sid = self.data.pptData[current].slideid
 
-        self.socket.send(str)
+        sendUploadSocket.call(self, si, sid)
       }
 
-      uploadslideCrashTimer = setTimeout(() => {
+      self.data.isUpImgError || self.data.isDownImgError && (uploadslideCrashTimer = setTimeout(() => {
         self.setData({
           isUploadSlideCrash: true
         })
-      }, 1500)
+      }, 1500))
 
     },
     /**

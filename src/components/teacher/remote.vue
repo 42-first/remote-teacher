@@ -219,7 +219,7 @@ export default {
       newdoubt: 0,                            // 未查看的不懂人次总数
       newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
-      isPPTVersionAboveOne: false,            // ppt插件的版本大于等于1
+      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
       isUploadSlideCrash: false,              // 过了2秒
       idIndexMap: {},                         // slideid 和 slideindex 的对应关系
     }
