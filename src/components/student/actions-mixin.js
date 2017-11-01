@@ -128,29 +128,26 @@ var actionsMixin = {
           isRepeat: hasPPT ? true : false
         };
 
-        // data = Object.assign(data, {
-        //   src: slideData['Thumbnail'],
-        //   rate: presentation.Width / presentation.Height,
-        //   hasQuestion: slideData['question'] == 1 ? true : false,
-        //   hasStore: slideData['store'] == 1 ? true : false,
-        //   Width: presentation.Width,
-        //   Height: presentation.Height,
-        //   slideID: slideData['lessonSlideID'],
-        //   isRepeat: hasPPT ? true : false
-        // })
-
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && data.event.total > 1) {
           // step === 0 开始动画 正常插入
           if(data.event.step === 0) {
-            data = Object.assign(data, cardItem, { animation: 1 })
-            this.cards.push(data);
+            // 之前没有播放过这个ppt
+            if(!hasPPT) {
+              data = Object.assign(data, cardItem, { animation: 1 })
+              this.cards.push(data);
+            }
           } else if(data.event.step === -1) {
-            // step === -1 total > 1 动画结束 替换原来的数据
-            // 取到原来的ppt位置 修改内容替换
-            // data = Object.assign(data, cardItem, { animation: 2 })
-            data = Object.assign(hasPPT, { animation: 2 })
-            // this.cards.splice(start: int, 1, data);
+            // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
+            if(hasPPT) {
+              // 需要替换的index
+              let targetIndex = this.cards.findIndex((item, i) => {
+                return item.type === 2 && item.sid === data.sid && item.animation === 1;
+              })
+
+              data = Object.assign(data, cardItem, { animation: 2 })
+              targetIndex && this.cards.splice(targetIndex, 1, data);
+            }
           }
         } else {
           // 没有动画

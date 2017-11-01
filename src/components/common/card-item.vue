@@ -409,7 +409,7 @@
       left: 0;
       right: 0;
 
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.95);
       box-shadow: 0 0 0.053333rem rgba(0,0,0,0.2);
 
       .modal__center {
