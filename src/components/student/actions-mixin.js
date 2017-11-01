@@ -19,7 +19,7 @@ var actionsMixin = {
           switch(item['type']) {
             // ppt
             case 'slide':
-              this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], isFetch: isFetch });
+              this.addPPT({ type: 2, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item, isFetch: isFetch, isTimeline: true });
 
               break;
 
@@ -77,7 +77,7 @@ var actionsMixin = {
 
     /*
     * @method 新增PPT
-    * data: { type: 2, pageIndex: 2, presentationid: 100, time: '' }
+    * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
     addPPT(data) {
       let self = this;
@@ -88,7 +88,7 @@ var actionsMixin = {
       let cover = slideData && slideData['Cover'] || '';
 
       // 是否含有重复数据
-      let hasPPT = this.cards.find((item)=>{
+      let hasPPT = this.cards.find((item, cardsIndex)=>{
         return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
       })
 
@@ -117,11 +117,7 @@ var actionsMixin = {
 
         oImg.src = slideData['Cover'];
 
-        // 缓存中
-        // if(oImg.complete || oImg.width) {
-        // }
-
-        data = Object.assign(data, {
+        let cardItem = {
           src: slideData['Thumbnail'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
@@ -130,15 +126,39 @@ var actionsMixin = {
           Height: presentation.Height,
           slideID: slideData['lessonSlideID'],
           isRepeat: hasPPT ? true : false
-        })
+        };
 
-        this.cards.push(data);
-        index = this.cards.length;
+        // data = Object.assign(data, {
+        //   src: slideData['Thumbnail'],
+        //   rate: presentation.Width / presentation.Height,
+        //   hasQuestion: slideData['question'] == 1 ? true : false,
+        //   hasStore: slideData['store'] == 1 ? true : false,
+        //   Width: presentation.Width,
+        //   Height: presentation.Height,
+        //   slideID: slideData['lessonSlideID'],
+        //   isRepeat: hasPPT ? true : false
+        // })
 
-        // tab是全部或者ppt 滚动到视线位置
-        if( this.currTabIndex === 1 || this.currTabIndex === 2 ) {
-          // this.$el.querySelector('').scrollIntoView(true);
+        // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
+        if(data.event && data.event.total > 1) {
+          // step === 0 开始动画 正常插入
+          if(data.event.step === 0) {
+            data = Object.assign(data, cardItem, { animation: 1 })
+            this.cards.push(data);
+          } else if(data.event.step === -1) {
+            // step === -1 total > 1 动画结束 替换原来的数据
+            // 取到原来的ppt位置 修改内容替换
+            // data = Object.assign(data, cardItem, { animation: 2 })
+            data = Object.assign(hasPPT, { animation: 2 })
+            // this.cards.splice(start: int, 1, data);
+          }
+        } else {
+          // 没有动画
+          data = Object.assign(data, cardItem, { animation: 0 })
+          this.cards.push(data);
         }
+
+        index = this.cards.length;
       }
 
       this.allEvents.push(data);

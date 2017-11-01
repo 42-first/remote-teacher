@@ -156,7 +156,7 @@ var mixin = {
           case 'slidenav':
             item = msg['slide'];
 
-            item && this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item });
+            item && this.addPPT({ type: 2, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item, isTimeline: false });
             break
 
           // 解锁问题
