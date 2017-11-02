@@ -164,7 +164,7 @@ var mixin = {
             item = msg['problem'];
 
             if(item) {
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item, isPopup: true });
+              this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item, isPopup: true });
               this.timeline['problem'][item['prob']] = item;
             }
 

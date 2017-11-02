@@ -25,7 +25,7 @@ var actionsMixin = {
 
             // 幻灯片换页通知
             case 'problem':
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+              this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
 
               this.timeline['problem'][item['prob']] = item;
               break;
@@ -76,6 +76,26 @@ var actionsMixin = {
     },
 
     /*
+     * @method 取slideData 新版本1.1 指纹需求
+     * param: slides, si, sid
+     */
+    getSlideData(slides, si, sid) {
+      let slideData = slides && slides[si-1];
+
+      // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
+      if(this.version == '1.1' && typeof sid !== 'undefined' && sid > 0) {
+        if(slideData && slideData.lessonSlideID !== sid) {
+          // ppt不一致 通过sid取slideData
+          slideData = slides.find((slide)=>{
+            return slide.lessonSlideID === sid;
+          })
+        }
+      }
+
+      return slideData;
+    },
+
+    /*
     * @method 新增PPT
     * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
@@ -83,13 +103,14 @@ var actionsMixin = {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      let slideData = pptData && pptData[data.pageIndex-1];
+      // let slideData = pptData && pptData[data.pageIndex-1];
+      let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = -1;
       let cover = slideData && slideData['Cover'] || '';
 
       // 是否含有重复数据
-      let hasPPT = this.cards.find((item, cardsIndex)=>{
-        return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
+      let hasPPT = this.cards.find((item)=>{
+        return item.type === 2 && item.slideID === slideData.lessonSlideID && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
@@ -142,7 +163,7 @@ var actionsMixin = {
             if(hasPPT) {
               // 需要替换的index
               let targetIndex = this.cards.findIndex((item, i) => {
-                return item.type === 2 && item.sid === data.sid && item.animation === 1;
+                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
               })
 
               data = Object.assign(data, cardItem, { animation: 2 })
@@ -192,12 +213,13 @@ var actionsMixin = {
 
     /*
     * @method 新增习题
-    * { type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
+    * { type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      let slideData = pptData && pptData[data.pageIndex-1];
+      // let slideData = pptData && pptData[data.pageIndex-1];
+      let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
       if(!slideData) {
