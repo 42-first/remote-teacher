@@ -409,6 +409,8 @@
       left: 0;
       right: 0;
 
+      text-align: center;
+
       background: rgba(0,0,0,0.95);
       box-shadow: 0 0 0.053333rem rgba(0,0,0,0.2);
 
@@ -416,6 +418,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        width: 8rem;
         transform: translate(-50%, -50%);
         color: #fff;
       }
