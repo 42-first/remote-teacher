@@ -88,7 +88,7 @@ var actionsMixin = {
           // ppt不一致 通过sid取slideData
           slideData = slides.find((slide)=>{
             return slide.lessonSlideID === sid;
-          })
+          }) || slideData;
         }
       }
 

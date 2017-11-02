@@ -183,7 +183,8 @@ var mixin = {
             this.presentationID = msg['presentation'];
             timeline = msg['timeline'];
 
-            this.setTimeline(timeline, true);
+            // this.setTimeline(timeline, true);
+            this.setTimeline(timeline);
             break
 
           // 开始弹幕
