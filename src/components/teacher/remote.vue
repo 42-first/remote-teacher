@@ -426,6 +426,7 @@ export default {
 
           self.isEnterEnded = true
           self.initCardHeight()
+          self.filterSlideid(pptData)
         })
     },
     /**

@@ -131,7 +131,7 @@ export default {
       let self = this
       self.data = self // hack 复用小程序代码
       let current = msg.slideindex || 1
-      console.log(83, self.data.isUpImgError, self.data.isDownImgError, msg)
+
       // 到下一页重新让能够显示2秒的加载中并清除之前的定时器，否则可能不到2秒就 crash 了
       clearTimeout(uploadslideCrashTimer)
       self.setData({
@@ -153,11 +153,13 @@ export default {
         sendUploadSocket.call(self, si, sid)
       }
 
-      self.data.isUpImgError || self.data.isDownImgError && (uploadslideCrashTimer = setTimeout(() => {
-        self.setData({
-          isUploadSlideCrash: true
-        })
-      }, 1500))
+      if (self.data.isUpImgError || self.data.isDownImgError) {
+        uploadslideCrashTimer = setTimeout(() => {
+          self.setData({
+            isUploadSlideCrash: true
+          })
+        }, 1500)
+      }
 
     },
     /**

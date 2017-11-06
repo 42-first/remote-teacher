@@ -27,7 +27,7 @@ function socketProcessMessage(msg){
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
 
-    self.isPPTVersionAboveOne = msg.addinversion > 2
+    self.isPPTVersionAboveOne = msg.addinversion > 1
     
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
