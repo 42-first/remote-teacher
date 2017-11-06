@@ -137,8 +137,6 @@ export default {
       self.setData({
         isUploadSlideCrash: false
       })
-      console.log(94, msg)
-
 
       if (self.data.isUpImgError) {
         let si = msg.slideindex
