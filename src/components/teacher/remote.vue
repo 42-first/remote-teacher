@@ -14,14 +14,16 @@
         </div>
         <img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         <img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
+        <img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
+        <img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
         <div class="detail f14">下一张幻灯片</div>
         <img v-if="isDownImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         <img v-if="isDownImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
+        <img v-if="pptData.length && !pptData[current].Cover" class="img-error" :src="imgUploadingPath" />
+        <img v-if="pptData.length && pptData[current].Cover" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
@@ -179,6 +181,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
+      imgUploadingPath: require('../../images/teacher/img-uploading.png'),
       isShuban: false,                        // 是竖版ppt
       isGuideHidden: true,                    // 新手引导隐藏
       isEnterEnded: false,                    // 遥控器进入是否结束
