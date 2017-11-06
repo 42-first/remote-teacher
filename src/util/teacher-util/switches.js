@@ -137,6 +137,7 @@ export default {
       self.setData({
         isUploadSlideCrash: false
       })
+      console.log(94, msg)
 
 
       if (self.data.isUpImgError) {
@@ -148,7 +149,7 @@ export default {
 
       if (self.data.isDownImgError) {
         let si = msg.slideindex + 1
-        let sid = self.data.pptData[current].slideid
+        let sid = self.data.pptData[current].lessonSlideID
 
         sendUploadSocket.call(self, si, sid)
       }
