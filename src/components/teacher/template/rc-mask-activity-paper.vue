@@ -1,7 +1,7 @@
 <!-- 试卷列表 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="paper-box allowscrollcallback">
-    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+    <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <v-touch class="back-btn f18 J_ga" v-on:tap="closePaper" data-category="13" data-label="试卷页">返回</v-touch>
+    <v-touch class="back-btn f18 J_ga" v-on:tap="closePaper" data-category="13" data-label="试卷页">{{ $t('back') }}</v-touch>
 
     <RcMaskActivityPaperQuizresult
       ref="RcMaskActivityPaperQuizresult"

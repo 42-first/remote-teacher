@@ -127,7 +127,7 @@ let pages = {
   "back": "back",
   "refresh": "刷新",
   "posttips": "试试让学生在手机端 + 号中投稿吧",
-  "loading": "正在加载中...",
+  "loading": "loading",
   "recvpost": "你有新的投稿",
   "nonewpost": "没有新的投稿",
   "favorites": "收藏...",
