@@ -3,6 +3,14 @@ import Router from 'vue-router'
 import RemoteList from '@/components/teacher/remote-list'
 import Remote from '@/components/teacher/remote'
 
+// 国际化
+import language from '@/util/language'
+window.language = language;
+setTimeout(() => {
+  language.requireRes('en');
+  // language.requireRes('zh_CN');
+}, 0)
+
 Vue.use(Router)
 
 const router = new Router({
