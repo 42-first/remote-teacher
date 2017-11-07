@@ -9,7 +9,8 @@
             {{ $t('curslide') }}<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
-            {{isProblemPublished ? '查看答案' : '发送此题'}}
+            <!-- {{isProblemPublished ? '查看答案' : '发送此题'}} -->
+            {{ $tc('sendprob', !isProblemPublished) }}
           </v-touch>
         </div>
         <img v-if="isUpImgError" class="img-error" src="~images/teacher/img-error.png" />

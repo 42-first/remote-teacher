@@ -27,17 +27,17 @@
       <i class="iconfont icon-sanjiaoxing f24"></i>
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
 		    <i class="iconfont icon-ykq_erweima f24"></i>
-		    <span>二维码</span>
+		    <span>{{ $t('qrcode') }}</span>
 		  </v-touch>
 
 		  <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
 		    <i class="iconfont icon-suijidianming1 f24"></i>
-		    <span style="margin-left: 32rpx;">随机点名</span>
+		    <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
 		  </v-touch>
 
       <v-touch class="more-item" v-on:tap="setEndShow">
         <i class="iconfont icon-ykq-tuichufangying f24"></i>
-        <span style="margin-left: 32rpx;">退出放映</span>
+        <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
       </v-touch>
 		</div>
 	</div>

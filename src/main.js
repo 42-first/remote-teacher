@@ -13,12 +13,15 @@ import VueI18n from 'vue-i18n'
 // 通过插件的形式挂载
 Vue.use(VueI18n)
 
+import EnLanguage from '@/language/en'
+import ChLanguage from '@/language/zh_CN'
+
 const i18n = new VueI18n({
   // 语言标识
   locale: 'en',
   messages: {
-    'zh_CN': resolve => require(['@/language/zh_CN'], resolve),
-    'en': resolve => require(['@/language/en'], resolve)
+    'zh_CN': ChLanguage,
+    'en': EnLanguage
   }
 })
 
