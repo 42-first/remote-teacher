@@ -12,7 +12,7 @@
       <!-- 文字编辑 -->
       <section class="danmu__text">
         <div class="danmu__textarea--wrapper f17">
-          <textarea class="danmu-textarea J_feed_content" placeholder="说点啥好~" v-model="text"></textarea>
+          <textarea class="danmu-textarea J_feed_content" :placeholder="$t('bulletdflt')" v-model="text"></textarea>
           <div class="danmu-footer">
             <p class="">(<span class="">{{ count }}</span>/50)</p>
           </div>
@@ -20,9 +20,7 @@
       </section>
 
       <!-- 图片 -->
-      <section class="danmu__tip f14">
-        温馨提示：发送前请自行审查用词
-      </section>
+      <section class="danmu__tip f14">{{ $t('wordrvwtip') }}</section>
 
       <section :class="['danmu__submit', 'f17', sendStatus === 0 || sendStatus >= 3 ? 'disable': '']" @click="handelSend">{{ submitText }}</section>
 

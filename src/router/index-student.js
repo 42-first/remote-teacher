@@ -24,8 +24,7 @@ const SubmissionDetail = resolve => require(['@/components/student/submission-de
 import language from '@/util/language'
 window.language = language;
 setTimeout(() => {
-  language.requireRes('en');
-  // language.requireRes('zh_CN');
+  language.requireRes('zh_CN');
 }, 0)
 
 Vue.use(Router)
