@@ -5,11 +5,11 @@
       <v-touch :class="['item', {'active': tab === 1}]" v-on:tap="swichType(1)">PPT</v-touch>
       <div class="bar" v-show="tab === 3"></div>
       <v-touch :class="['item', 'J_ga', {'active': tab === 2}]" v-on:tap="swichType(2)" data-category="2" data-label="缩略图页">
-        不懂
+        {{ $t('unknown') }}
         <span class="info f12" v-show="newdoubt">{{newdoubt}}</span>
       </v-touch>
       <div class="bar" v-show="tab === 1"></div>
-      <v-touch :class="['item', 'J_ga', {'active': tab === 3}]" v-on:tap="swichType(3)" data-category="3" data-label="缩略图页">习题</v-touch>
+      <v-touch :class="['item', 'J_ga', {'active': tab === 3}]" v-on:tap="swichType(3)" data-category="3" data-label="缩略图页">{{ $t('prob') }}</v-touch>
     </section>
 
     <!-- PPT 类型 -->
@@ -17,7 +17,8 @@
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <img :src="item.Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
-        <div class="f15 bdsz">{{doubtList[index] ? '不懂: '+doubtList[index] : ''}}</div>
+        <div class="f15 bdsz" v-if="doubtList[index]">{{ $t('unknown') }}: {{doubtList[index]}}</div>
+        <div class="f15 bdsz" v-else></div>
       </v-touch>
     </div>
 
@@ -26,7 +27,7 @@
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
         <img :src="pptData[item.index].Thumbnail" alt="" class="gridimg">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
-        <div class="f15">不懂: {{item.val}}</div>
+        <div class="f15">{{ $t('unknown') }}: {{item.val}}</div>
       </v-touch>
     </div>
 
