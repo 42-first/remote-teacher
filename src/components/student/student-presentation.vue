@@ -18,11 +18,11 @@
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu">
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
-              <span data-language-key="newbullet">{{ $t('newbullet') }}</span>
+              <span>{{ $t('newbullet') }}</span>
             </p>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
-              <span data-language-key="newpost">{{ $t('newpost') }}</span>
+              <span>{{ $t('newpost') }}</span>
             </router-link>
           </div>
         </div>
@@ -30,10 +30,10 @@
 
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
-        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="total">{{ $t('total') }}</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="slide">{{ $t('slide') }}</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="prob">{{ $t('prob') }}</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="quiz">{{ $t('quiz') }}</li>
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">{{ $t('total') }}</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">{{ $t('slide') }}</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob') }}</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz') }}</li>
       </ul>
     </section>
 
@@ -115,8 +115,9 @@
     <!-- 网络不好 重新连接弹层 -->
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
-        <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
-        <p class="connect-btn f18" @click="handleReconnect" data-language-key="connnow">{{ $t('connnow') }}</p>
+        <!-- <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p> -->
+         <p class=" f16" >{{ $t('connerr', { second: countdown }) }}</p>
+        <p class="connect-btn f18" @click="handleReconnect">{{ $t('connnow') }}</p>
       </div>
     </section>
 
@@ -712,10 +713,9 @@
       this.init();
     },
     mounted() {
-      // window.language && window.language.translate(this.$el);
     },
     updated() {
-      // window.language && window.language.translate(this.$el);
+      window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();

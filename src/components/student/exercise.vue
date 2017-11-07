@@ -25,7 +25,7 @@
 
       <!-- 问题内容 -->
       <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
+        <p class="page-no f18"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
@@ -37,19 +37,19 @@
           </li>
         </ul>
         <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="problemType==='Polling' && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && problemType==='Polling' && selectedPollingCount === pollingCount">您还未投票</p>
+        <p class="polling-count f20" v-if="problemType==='Polling' && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
+        <p class="polling-count f20" v-if="summary && !summary.isComplete && problemType==='Polling' && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
         <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
 
       </section>
 
       <!-- 观看者提示文字 返回 -->
       <section v-if="observerMode">
-        <p class="f18">当前为观看模式，无法答题</p>
-        <p class="submit-btn can f18" @click="handleBack">返回</p>
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
+      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div>
 
     </div>
 

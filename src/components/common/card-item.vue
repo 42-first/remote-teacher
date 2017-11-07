@@ -20,7 +20,7 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="unknown">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
             <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('star') }}</p>
           </div>
         </div>
@@ -33,7 +33,7 @@
           <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.papername }}</p>
-              <p class="paper-count" data-language-complex="totalprob" :data-number="item.count">共{{ item.count }}题</p>
+              <p class="paper-count">{{ $t('totalprob', { number: item.count }) }}</p>
             </div>
             <i class="iconfont icon-shiti_shijuan f55"></i>
           </a>
@@ -52,8 +52,8 @@
         <router-link :to="'/'+lessonid+'/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
-              <p class="paper-name" data-language-complex="gainbonus" :data-number="item.length" v-if="item.length">{{ item.caption }}</p>
-              <p class="paper-name" data-language-key="recvbonus" v-else >{{ item.caption }}</p>
+              <p class="paper-name" data-language-complex="gainbonus" :data-number="item.length" v-if="item.length">{{ $t('gainbonus', { number: item.length }) }}</p>
+              <p class="paper-name" data-language-key="recvbonus" v-else >{{ $t('recvbonus') }}</p>
             </div>
             <i class="iconfont icon-shiti_hongbao f55"></i>
         </div>
@@ -70,7 +70,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
@@ -78,7 +78,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
@@ -95,14 +95,13 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name" data-language-key="">Hi, 老师正在分享课堂投稿</p>
+            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
           </div>
           <i class="iconfont icon-ykq_tab_tougao f50"></i>
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <!-- <span class="status" data-language-common="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>
@@ -115,9 +114,13 @@
   import API from '@/util/api'
   import timeago from 'timeago.js';
 
+  let locale = 'zh_CN';
   // 在这里设置相对时间
-  // var timeagoInstance = timeago(null, new Date());
-  var timeagoInstance = timeago();
+  var timeagoInstance = timeago(null, locale);
+
+  if (locale != 'en' && locale != 'zh_CN') {
+    timeago.register(locale, require('timeago.js/locales/' + locale));
+  }
 
   export default {
     name: 'card-item',

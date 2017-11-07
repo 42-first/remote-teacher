@@ -69,11 +69,6 @@
         <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
           <span class="lable f15" >得分: {{getScore}}分</span>
-          <!-- <i :class="['iconfont', 'f18', starCount > 0 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 1 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 2 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 3 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 4 ? 'icon-fill-star' : 'icon-star']"></i> -->
         </div>
       </div>
 
