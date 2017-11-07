@@ -13,7 +13,7 @@
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
-        <span class="ppt--pageno f14" data-language-complex="pno" :data-number="item.pageIndex">第{{ item.pageIndex }}页</span>
+        <span class="ppt--pageno f14" >{{ $t('pno', { number: item.pageIndex }) }}</span>
         <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
         </div>
@@ -21,7 +21,7 @@
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
             <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="unknown">{{ $t('unknown') }}</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="star">{{ $t('star') }}</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('star') }}</p>
           </div>
         </div>
       </div>

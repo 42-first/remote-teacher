@@ -6,6 +6,9 @@ import VueI18n from 'vue-i18n'
 import App from '@/pages/student/student.vue'
 import router from '@/router/index-student'
 
+import EnLanguage from '@/language/en'
+import ChLanguage from '@/language/zh_CN'
+
 // 通过插件的形式挂载
 Vue.use(VueI18n)
 
@@ -13,8 +16,8 @@ const i18n = new VueI18n({
   // 语言标识
   locale: 'en',
   messages: {
-    'zh_CN': resolve => require(['@/language/zh_CN'], resolve),
-    'en': resolve => require(['@/language/en'], resolve)
+    'zh_CN': ChLanguage,
+    'en': EnLanguage
   }
 })
 

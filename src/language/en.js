@@ -12,17 +12,17 @@ let pages = {
   "undone": "undone",
   "done": "done",
 
-  "pno2": "di$number$ye",
+  "pno": "di{number}ye",
   "totalprob": "toatal$number$prob",
 
-  "total": "total",
-  "slide": "PPT",
-  "prob": "prob",
-  "quiz": "quiz",
+  "total": "total1",
+  "slide": "PPT2",
+  "prob": "prob3",
+  "quiz": "quiz4",
   "bonus": "bonus",
 
-  "unknown": "unknown",
-  "star": "star",
+  "unknown": "unknown1",
+  "star": "star1",
 
   "newfeed": "newfeed",
   "connerr": "连接异常，$second$秒后尝试重连",
@@ -49,6 +49,8 @@ if (typeof define === 'function' && define.amd){
     define(['exports'], function(){
         return pages;
     });
+} else if (typeof exports === 'object' && typeof module === 'object') {
+  module.exports = pages; // nodejs support
 }
 
 export default pages;

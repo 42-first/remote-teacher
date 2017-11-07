@@ -12,7 +12,7 @@ let pages = {
   "undone": "未完成",
   "done": "已完成",
 
-  "pno1": "第$number$页",
+  "pno": "第{number}页",
   "totalprob": "共$number$题",
 
   "total": "全部",
@@ -50,6 +50,8 @@ if (typeof define === 'function' && define.amd){
     define(['exports'], function(){
       return pages;
     });
+} else if (typeof exports === 'object' && typeof module === 'object') {
+  module.exports = pages; // nodejs support
 }
 
 export default pages;
