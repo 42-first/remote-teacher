@@ -5,7 +5,7 @@
  * @desc 国际化 命名空间格式 page-module-lable
  *
  */
-
+// import language from '@/language/en'
 
 class Language {
   constructor() {

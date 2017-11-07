@@ -12,10 +12,6 @@ import MessageBox from 'mint-ui/lib/message-box';
 import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
 import Exercise from '@/components/student/exercise'
-// import Subjective from '@/components/student/subjective'
-// import Submission from '@/components/student/submission'
-// import SubmissionList from '@/components/student/submission-list'
-// import Danmu from '@/components/student/danmu'
 
 const Subjective = resolve => require(['@/components/student/subjective'], resolve)
 const Submission = resolve => require(['@/components/student/submission'], resolve)
@@ -28,8 +24,8 @@ const SubmissionDetail = resolve => require(['@/components/student/submission-de
 import language from '@/util/language'
 window.language = language;
 setTimeout(() => {
-  // language.requireRes('en');
-  language.requireRes('zh_CN');
+  language.requireRes('en');
+  // language.requireRes('zh_CN');
 }, 0)
 
 Vue.use(Router)

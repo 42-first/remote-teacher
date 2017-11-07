@@ -12,7 +12,7 @@ let pages = {
   "undone": "未完成",
   "done": "已完成",
 
-  "pno": "第$number$页",
+  "pno1": "第$number$页",
   "totalprob": "共$number$题",
 
   "total": "全部",

@@ -20,8 +20,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="unknown">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="star">收藏</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="unknown">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="star">{{ $t('star') }}</p>
           </div>
         </div>
       </div>

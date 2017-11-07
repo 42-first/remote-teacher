@@ -12,7 +12,7 @@ let pages = {
   "undone": "undone",
   "done": "done",
 
-  "pno": "di$number$ye",
+  "pno2": "di$number$ye",
   "totalprob": "toatal$number$prob",
 
   "total": "total",
