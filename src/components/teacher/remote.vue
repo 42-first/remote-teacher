@@ -6,7 +6,7 @@
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
           <div>
-            当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
+            {{ $t('curslide') }}<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
             {{isProblemPublished ? '查看答案' : '发送此题'}}
@@ -17,7 +17,7 @@
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
-        <div class="detail f14">下一张幻灯片</div>
+        <div class="detail f14">{{ $t('nextslide') }}</div>
         <img v-if="isDownImgError" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
       </div>
