@@ -39,11 +39,9 @@ let pages = {
   "gainbonus": "$number$位同学已赢得课堂红包",
 
   "submitansw": "提交答案",
-  "cannotsubmit": "提交有困难"
+  "cannotsubmit": "提交有困难",
 
-};
-
-let remoteTeacher = {
+  // 遥控器
   "classsignal": "课堂暗号",
   "zoomin": "点击放大",
   "zoomout": "点击缩小",
@@ -132,8 +130,6 @@ let remoteTeacher = {
   "studentrole": "以学生身份进入",
   "loginagain": "我要夺回主权",
 };
-
-pages.remoteTeacher = remoteTeacher;
 
 if (typeof define === 'function' && define.amd){
     // AMD. Register as an anonymous module.
