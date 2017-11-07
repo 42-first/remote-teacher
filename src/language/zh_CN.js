@@ -139,7 +139,7 @@ let pages = {
   "attendingno": "当前共有$number$位学生进入课堂",
   "toberolling": "即将开始随机点名",
   "rolling": "开始滚动",
-  "norolling": "当前班级没有学生，不能点名",
+  "norolling": "no student no rolling",
   "radomrolling": "正在随机筛选...",
   "keeprolling": "继续滚动",
   "selhim": "就是Ta了",
