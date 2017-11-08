@@ -22,7 +22,7 @@
       
       <!-- 试卷库 -->
       <section class="list downer">
-        <div class="title f17">我的试卷库</div>
+        <div class="title f17">{{ $t('myquiz') }}</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
           <div class="desc f18 ellipsis">
@@ -36,7 +36,7 @@
     
     <div class="rc-mask pub-modal" v-show="!isPubmodalHidden">
       <div class="pub-inner">
-        <div class="title f20">发布试卷</div>
+        <div class="title f20">{{ $t('publishquiz') }}</div>
         <div class="paper-title f18">{{paperChosen.title}}</div>
         <div class="pub-btns f18">
           <v-touch class="cancel" v-on:tap="closePubmodal">取消</v-touch>
