@@ -2,10 +2,10 @@
 <template>
 	<div class="danmu-box allowscrollcallback">
     <div class="desc f20">
-      <span>弹幕</span>
+      <span>{{ $t('bullet') }}</span>
       <!-- <v-touch  tag="i" :class="['iconfont', 'f50', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus"></v-touch> -->
       <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
-        {{isDanmuOpen ? '关闭' : '开启'}}
+        {{ $tc('turnonoff', !isDanmuOpen) }}
       </v-touch>
     </div>
     <div class="gap"></div>
@@ -24,7 +24,7 @@
        v-show="danmuList.length"
        :bottom-method="loadBottom"
        :bottom-all-loaded="allLoaded"
-       :bottomPullText="'上拉加载更多'"
+       :bottomPullText="$t('release')"
        :bottomDropText="'释放加载更多'"
        :class="{'allLoaded': allLoaded}"
        >
@@ -38,8 +38,8 @@
             </div>
             <div class="action-box">
               <div class="time f15">{{item.time.substring(11)}}</div>
-              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
-              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">退出投屏</v-touch>
+              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
+              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
             </div>
           </div>
           <div class="gap"></div>
@@ -54,8 +54,8 @@
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDanmulist">刷新</v-touch>
-      <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>返回</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDanmulist">{{ $t('refresh') }}</v-touch>
+      <v-touch class="btn f18 J_ga" v-on:tap="closeDanmubox" data-category="14" data-label="弹幕页"><span class="innerline"></span>{{ $t('back') }}</v-touch>
     </div>
   </div>
 </template>

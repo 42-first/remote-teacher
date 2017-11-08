@@ -2,18 +2,18 @@
 <template>
 	<div class="mask-content qrcode-box">
     <div class="anhao">
-      <div class="f16"> {{ $t('classsignal') }}</div>
+      <div class="f16">{{ $t('classsignal') }}</div>
       <div class="anhao-code f32">{{inviteCode}}</div>
     </div>
 
     <v-touch v-show="qrcodeStatus === 1" class="scale-box" v-on:tap="setQrcodeStatus">
       <img src="~images/teacher/saoma-da.png" alt="">
-      <div class="bb f16"> {{ $t('zoomin') }}</div>
+      <div class="bb f16">{{ $t('zoomin') }}</div>
     </v-touch>
 
     <v-touch v-show="qrcodeStatus === 2" class="scale-box" v-on:tap="setQrcodeStatus">
       <img src="~images/teacher/saoma-xiao.png" alt="">
-      <div class="bb f16"> {{ $t('zoomout') }}</div>
+      <div class="bb f16">{{ $t('zoomout') }}</div>
     </v-touch>
     
     <v-touch class="btn _btn" v-on:tap="tryShowPresentation">{{ $tc('startclass', isBrandNewPpt) }}</v-touch>

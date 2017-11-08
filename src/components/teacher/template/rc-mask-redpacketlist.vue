@@ -4,7 +4,7 @@
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
-      <div class="desc f20" >课堂红包</div>
+      <div class="desc f20" >{{ $t('classbonus') }}</div>
     </div>
 
     <div class="rplist-wrapper">
@@ -29,8 +29,8 @@
     <div class="hint f14">未领取的红包将于24小时后返还至您的雨课堂钱包</div>
 
     <div class="button-box f18">
-      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">刷新</v-touch>
-      <v-touch class="btn" v-on:tap="closeRedpacketList">返回</v-touch>
+      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">{{ $t('refresh') }}</v-touch>
+      <v-touch class="btn" v-on:tap="closeRedpacketList">{{ $t('back') }}</v-touch>
     </div>
    
   </div>

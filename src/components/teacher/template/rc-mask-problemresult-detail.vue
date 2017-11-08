@@ -26,8 +26,8 @@
 	    </div>
 
 	    <div class="button-box f18">
-	      <v-touch class="btn" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
-	      <v-touch class="btn f18" v-on:tap="closeProblemresultdetail">返回</v-touch>
+	      <v-touch class="btn" v-on:tap="refreshProblemResultDetail">{{ $t('refresh') }}</v-touch>
+	      <v-touch class="btn f18" v-on:tap="closeProblemresultdetail">{{ $t('back') }}</v-touch>
 	    </div>
 		</div>
   </div>

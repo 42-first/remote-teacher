@@ -3,32 +3,32 @@
 	<div class="rc-mask">
     <section class="mask-content problemtime-box">
       <div class="block" style="margin-bottom: 0.133333rem;">
-      	<div class="title f16">限时发送</div>
+      	<div class="title f16">{{ $t('timelimit') }}</div>
       	<div class="btn-box" v-show="problemType !== 'ShortAnswer'">
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30秒</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(240)">4分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30{{ $t('sec') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(240)">4{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
       	</div>
 
       	<div class="btn-box" v-show="problemType === 'ShortAnswer'">
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(600)">10分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(900)">15分钟</v-touch>
-      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(1200)">20分钟</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(600)">10{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(900)">15{{ $t('min') }}</v-touch>
+      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(1200)">20{{ $t('min') }}</v-touch>
       	</div>
       </div>
 
       <div class="block">
       	<div class="title f16">不限时发送</div>
-      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">直接发送</v-touch>
+      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">{{ $t('senddirectly') }}</v-touch>
       </div>
     </section>
-    <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem">取消</v-touch>
+    <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem">{{ $t('cancel') }}</v-touch>
   </div>
 </template>
 

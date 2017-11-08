@@ -10,7 +10,7 @@
     <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
-        <div class="title f17">已发试卷</div>
+        <div class="title f17">{{ $t('publishedquiz') }}</div>
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
           <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
@@ -39,9 +39,9 @@
         <div class="title f20">{{ $t('publishquiz') }}</div>
         <div class="paper-title f18">{{paperChosen.title}}</div>
         <div class="pub-btns f18">
-          <v-touch class="cancel" v-on:tap="closePubmodal">取消</v-touch>
+          <v-touch class="cancel" v-on:tap="closePubmodal">{{ $t('Cancel') }}</v-touch>
           <div class="bar"></div>
-          <v-touch class="confirm" v-on:tap="publishPaper">发布</v-touch>
+          <v-touch class="confirm" v-on:tap="publishPaper">{{ $t('Publish') }}</v-touch>
         </div>
       </div>
     </div>
