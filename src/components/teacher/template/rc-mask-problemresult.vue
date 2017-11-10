@@ -25,17 +25,17 @@
 	    	<section class="mahint" v-if="problemResultData.type === 'MultipleChoiceMA'">
 	    		<div class="mahint-item f12">
 	    			<i style="background: #F5A623;"></i>
-	    			{{ $t('viewdetails') }}本题答案
+	    			{{ $t('standardans') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #639EF4;"></i>
-	    			{{ $t('viewdetails') }}正确选项
+	    			{{ $t('correctopt') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #C8C8C8;"></i>
-	    			{{ $t('viewdetails') }}错误选项
+	    			{{ $t('wrongopt') }}
 	    		</div>
 	    	</section>
 
@@ -76,7 +76,7 @@
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">{{problemResultData.RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
+	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist', problemResultData.RedEnvelopeID) }}</div>
 	      </v-touch>
 	    </section>
 	  </div>

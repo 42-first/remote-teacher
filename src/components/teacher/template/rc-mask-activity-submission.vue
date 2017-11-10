@@ -21,7 +21,7 @@
          :bottom-method="loadBottom"
          :bottom-all-loaded="allLoaded"
          :bottomPullText="$t('release')"
-         :bottomDropText="'释放加载更多'"
+         :bottomDropText="$t('shifang')"
          :class="{'allLoaded': allLoaded}"
          >
         <section class="list">
@@ -82,8 +82,8 @@
     </div>
     
     <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
-      <span v-show="isAskingItemStatus">正在投屏中...</span>
-      <span v-show="isItemDeleted">学生已删除此投稿</span>
+      <span v-show="isAskingItemStatus">{{ $t('onscreenmode') }}...</span>
+      <span v-show="isItemDeleted">{{ $t('postdeleted') }}</span>
     </div>
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshSubmissionlist">{{ $t('refresh') }}</v-touch>

@@ -3,7 +3,7 @@
 	<div class="problemresultdetail-box allowscrollcallback">
 		<div v-if="problemResultDetailData">
 	    
-	    <div class="title f18">{{problemResultDetailData.problem_type === 3 ? '票数最多' : '本题正确选项为'}}</div>
+	    <div class="title f18">{{problemResultDetailData.problem_type === 3 ? $t('standardopt') : $t('votemost')}}</div>
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
 	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
 	    </div>
@@ -13,7 +13,7 @@
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
 	      		<i v-show="problemResultDetailData.problem_type !== 3" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
 	      		<span class="f18 asw">{{choiceItem.label}}</span>
-	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}人</span>
+	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
 	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
 	      	</v-touch>
 	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]">

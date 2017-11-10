@@ -3,10 +3,10 @@
   <div class="mask dontcallback" v-show="!isPanelHidden">
     <div class="pop">
       <div class="con-mask">
-        <div class="score-show f14">{{ $t('mark') }} （本题{{scoreTotal}}分）</div>
+        <div class="score-show f14">{{ $tc('givestuscore', true) }} {{ $t('totalscore', {num: scoreTotal}) }}</div>
         <div class="score-input f18">
           <input type="number" v-model="studentScore" @focus="errorInfo = ''"/>
-          <label>分</label>
+          <label>{{ $t('stutestscore') }}</label>
         </div>
         <div class="error f12">{{errorInfo}}</div>
       </div>

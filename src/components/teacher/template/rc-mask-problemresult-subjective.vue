@@ -57,8 +57,8 @@
                 <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-              	    <span>{{item.score === -1 ? '打分' : '得分'}}</span>
-              	    <span v-show="item.score !== -1">{{item.score}}分</span>
+              	    <span>{{ $tc('givestuscore', item.score === -1) }}</span>
+              	    <span v-show="item.score !== -1">{{item.score}}{{ $t('stutestscore') }}</span>
               	  </div>
                 </v-touch>
                 <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>

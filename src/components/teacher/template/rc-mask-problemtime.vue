@@ -24,7 +24,7 @@
       </div>
 
       <div class="block">
-      	<div class="title f16">不限时发送</div>
+      	<div class="title f16">{{ $t('notimelimit') }}</div>
       	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">{{ $t('senddirectly') }}</v-touch>
       </div>
     </section>

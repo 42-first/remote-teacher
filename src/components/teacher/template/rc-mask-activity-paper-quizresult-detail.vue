@@ -6,21 +6,21 @@
         <div class="name ellipsis">
         </div>
         <div class="detail">
-          <span class="score" style="margin-right: 1.3rem;">得分</span>
-          <span>交卷时间</span>
+          <span class="score" style="margin-right: 1.3rem;">{{ $t('stuscore') }}</span>
+          <span>{{ $t('submission') }}</span>
         </div>
       </div>
     </div>
     <div class="gap"></div>
     <section class="list allowscrollcallback">
-      <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
+      <div v-show="!quizResultDetailData.length" class="hmy f18">{{ $t('nosubmit') }}</div>
       <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
           <img :src="item.avatar" alt="">
           <span>{{item.name}}</span>
         </div>
         <div class="detail">
-          <span class="score">{{item.score}}分</span>
+          <span class="score">{{item.score}}{{ $t('stutestscore') }}</span>
           <span>{{item.time}}</span>
         </div>
       </div>

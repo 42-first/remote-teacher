@@ -9,9 +9,9 @@
       </v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
-    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
-    <div v-show="isToastSwitch" class="no-new-item f18">弹幕已{{isDanmuOpen ? '开启' : '关闭'}}</div>
+    <v-touch v-on:tap="refreshDanmulist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newbullet') }}</v-touch>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">{{ $t('nonewbullet') }}</div>
+    <div v-show="isToastSwitch" class="no-new-item f18">{{ $tc('bulletonoff', isDanmuOpen) }}</div>
 
     <!-- 没有试卷 -->
     <div v-show="!danmuList.length" class="no-paper-box">
@@ -25,7 +25,7 @@
        :bottom-method="loadBottom"
        :bottom-all-loaded="allLoaded"
        :bottomPullText="$t('release')"
-       :bottomDropText="'释放加载更多'"
+       :bottomDropText="$t('shifang')"
        :class="{'allLoaded': allLoaded}"
        >
       <section v-show="danmuList.length" class="list">

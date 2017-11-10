@@ -75,29 +75,29 @@
         <div class="title f18">{{ $t('plsconfpay') }}</div>
         <div class="kthb f16">{{ $t('classbonus') }}</div>
         <div class="total f40">￥{{redPacketDataNS.bonusTotal}}</div>
-        <div :class="['wallet', 'f16', {'nbt': redPacketDataNS.wxToPay > 0}]">{{ $t('yktwallet') }}<span class="gray f14">（余额￥<span>{{redPacketDataNS.bankLeft !== -1 ? redPacketDataNS.bankLeft : '加载中...'}}</span>）</span></div>
+        <div :class="['wallet', 'f16', {'nbt': redPacketDataNS.wxToPay > 0}]">{{ $t('yktwallet') }}<span class="gray f14">（{{ $t('balance') }}￥<span>{{redPacketDataNS.bankLeft !== -1 ? redPacketDataNS.bankLeft : $t('loading')+'...'}}</span>）</span></div>
         <div class="needmoremoney f16" v-show="redPacketDataNS.wxToPay > 0">
           {{ $t('wxwallet') }}
-          <span class="gray f14">（支付￥{{redPacketDataNS.wxToPay}}）</span>
+          <span class="gray f14">（{{ $t('pay') }}￥{{redPacketDataNS.wxToPay}}）</span>
         </div>
         <v-touch class="confirm-btn btn f18" v-bind:enabled="redPacketDataNS.bankLeft !== -1" v-on:tap="confirmPay">
           {{ $t('cfmpay') }}
         </v-touch>
       </div>
       <div class="paying-content paying f24" v-show="payingStep === 0">
-        支付中...
+        {{ $t('loading') }}...
       </div>
       <div class="paying-content pay-success" v-show="payingStep === 1">
         <div class="cg f28">{{ $t('paysuccess') }}!</div>
         <div class="wallet f16">
           {{ $t('yktwallet') }}
-          <span class="gray f14">（余额￥{{redPacketDataNS.bankLeft}}）</span>
+          <span class="gray f14">（{{ $t('balance') }}￥{{redPacketDataNS.bankLeft}}）</span>
         </div>
         <v-touch class="confirm-btn btn" v-on:tap="confirmPaySuccess">{{ $t('confirm') }}</v-touch>
       </div>
       <div class="paying-content pay-fail" v-show="payingStep === 2">
         <div class="cg f28">{{ $t('payfailed') }}!</div>
-        <div class="warn f18">零钱已退还至雨课堂钱包</div>
+        <div class="warn f18">{{ $t('reject') }}</div>
         <v-touch class="confirm-btn btn" v-on:tap="confirmPayFail">{{ $t('back') }}</v-touch>
       </div>
     </div>
