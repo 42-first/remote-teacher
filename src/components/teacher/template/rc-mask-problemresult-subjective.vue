@@ -49,7 +49,8 @@
                		<div class="time f15">{{item.end_time | formatTime}}</div>
                   <span class="author f15">{{item.user_name}}</span><br>
                   {{item.subj_result.content}}<br>
-                  <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="showBigpic(item.subj_result.pics[0].pic, item.problem_result_id)"></v-touch>
+                  <!-- <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="showBigpic(item.subj_result.pics[0].pic, item.problem_result_id)"></v-touch> -->
+                  <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                 </div>
               </div>
               <div class="action-box f14">
@@ -420,6 +421,54 @@
 
         self.isBigpicShown = false
         self.bigpicUrl = ''
+      },
+      /**
+       * 显示大图，使用 PhotoSwipe
+       *
+       * @event bindtap
+       * @param {string} pic 大图url
+       */
+      scaleImage(src, evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
+        let pswpElement = document.querySelector('.J_pswp');
+        let index = 0;
+        let items = [{ src: src, w: 750, h: targetEl.height*750/targetEl.width }];
+
+        let options = {
+          index: index,
+          maxSpreadZoom: 5,
+          showAnimationDuration: 300,
+          hideAnimationDuration: 300,
+          showHideOpacity: true,
+
+          closeEl: false,
+          captionEl: false,
+          fullscreenEl: false,
+          zoomEl: false,
+          shareEl: false,
+          counterEl: false,
+          arrowEl: false,
+          preloaderEl: false,
+
+          tapToClose: true,
+          // 解决消息点击问题
+          // history: false,       
+        };
+
+        // Initializes and opens PhotoSwipe
+        let gallery;
+
+        if(typeof PhotoSwipe !== 'undefined') {
+          gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+          gallery.init();
+        } else {
+          setTimeout(()=>{
+            gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+          }, 1500)
+        }
+
       },
 	    /**
 	     * 试题主观题页面页面中的 投屏 按钮
