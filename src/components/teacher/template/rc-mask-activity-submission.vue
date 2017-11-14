@@ -33,7 +33,8 @@
                 <div class="cont f18">
                   <span class="author f15">{{item.user_name}}</span><br>
                   {{item.content}}<br>
-                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="showBigpic(item.pic, item.id)"></v-touch>
+                  <!-- <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="showBigpic(item.pic, item.id)"></v-touch> -->
+                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
               </div>
               <div class="action-box">
@@ -401,6 +402,54 @@
         self.isWider = picwh > WH
         self.isBigpicShown = true
         self.bigpicUrl = pic
+      },
+      /**
+       * 显示大图，使用 PhotoSwipe
+       *
+       * @event bindtap
+       * @param {string} pic 大图url
+       */
+      scaleImage(src, evt) {
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
+        let pswpElement = document.querySelector('.J_pswp');
+        let index = 0;
+        let items = [{ src: src, w: targetEl.width, h: targetEl.height }];
+
+        let options = {
+          index: index,
+          maxSpreadZoom: 5,
+          showAnimationDuration: 300,
+          hideAnimationDuration: 300,
+          showHideOpacity: true,
+
+          closeEl: false,
+          captionEl: false,
+          fullscreenEl: false,
+          zoomEl: false,
+          shareEl: false,
+          counterEl: false,
+          arrowEl: false,
+          preloaderEl: false,
+
+          tapToClose: true,
+          // 解决消息点击问题
+          // history: false,       
+        };
+
+        // Initializes and opens PhotoSwipe
+        let gallery;
+
+        if(typeof PhotoSwipe !== 'undefined') {
+          gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+          gallery.init();
+        } else {
+          setTimeout(()=>{
+            gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+          }, 1500)
+        }
+
       },
       /**
        * 隐藏大图
