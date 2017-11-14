@@ -413,7 +413,7 @@
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
-        let items = [{ src: src, w: targetEl.width, h: targetEl.height }];
+        let items = [{ src: src, w: 750, h: targetEl.height*750/targetEl.width }];
 
         let options = {
           index: index,
