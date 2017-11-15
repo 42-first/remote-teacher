@@ -83,7 +83,7 @@ let mixin = {
         // 接收socket信息
         this.socket.onopen = function(event) {
           self.isSocketConnected = true
-          self.sendXinTiao()
+          // self.sendXinTiao()
 
           // 归零 WebSocket 重连
           retryCount = 0;
