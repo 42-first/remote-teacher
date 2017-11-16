@@ -413,8 +413,9 @@
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
-        let items = [{ src: src, w: 750, h: targetEl.height*750/targetEl.width }];
-
+        let WIDTH = window.innerWidth
+        let items = [{ src: src, w: WIDTH, h: targetEl.height*WIDTH/targetEl.width }];
+        
         let options = {
           index: index,
           maxSpreadZoom: 5,
