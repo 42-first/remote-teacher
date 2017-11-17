@@ -1,4 +1,4 @@
-<!-- 缩略图面板 被父组件 remote.vue 引用 -->
+<!-- 缩略图面板 被父组件 home.vue 引用 -->
 <template>
 	<div class="thumbnail-box">
     <section class="tab-box f15">

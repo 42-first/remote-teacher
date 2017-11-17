@@ -108,7 +108,7 @@
 
     <!-- 新手引导页 -->
     <Guide
-      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'RcMaskQrcode' && !isGuideHidden"
+      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && !isGuideHidden"
       @guideNext="guideNext"
     ></Guide>
 
@@ -178,7 +178,7 @@
 	// 夺权面板
 	import RcMaskDeprive from '@/components/teacher/template/rc-mask-deprive'
 	// 二维码控制蒙版
-	import RcMaskQrcode from '@/components/teacher/template/rc-mask-qrcode'
+	import Qrcode from '@/components/teacher-restructure/common/qrcode'
 	// 随机点名面板
 	import RcMaskRandomcall from '@/components/teacher/template/rc-mask-randomcall'
 	// 缩略图面板
@@ -191,7 +191,7 @@
 
 	// js功能模块，放到 mixins 中
 	// 一些开关
-	import switches from '@/util/teacher-util/switches'
+	import switches from './util/switches'
 	// Websocket 服务
 	import socketService from './util/socket-service'
 	// 课堂试题相关
@@ -278,7 +278,7 @@
 	    RcMaskErrormsg,
 	    RcMaskReconnect,
 	    RcMaskDeprive,
-	    RcMaskQrcode,
+	    Qrcode,
 	    RcMaskRandomcall,
 	    Thumbnail,
 	    Activity

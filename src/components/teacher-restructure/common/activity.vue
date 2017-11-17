@@ -1,4 +1,4 @@
-<!-- 课堂动态面板 被父组件 remote.vue 引用 -->
+<!-- 课堂动态面板 被父组件 home.vue 引用 -->
 <template>
 	<div class="activity-box">
     <section class="head f20">
