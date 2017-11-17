@@ -80,7 +80,6 @@
         <component
           ref="ToastCtrlMask"
           :is="toastCtrlMaskTpl"
-          :lessonid="lessonid"
           :courseid="courseid"
           :classroomid="classroomid"
           :socket="socket"
@@ -176,7 +175,7 @@
 	// 断网重连蒙版
 	import RcMaskReconnect from '@/components/teacher/template/rc-mask-reconnect'
 	// 夺权面板
-	import RcMaskDeprive from '@/components/teacher/template/rc-mask-deprive'
+	import Deprive from '@/components/teacher-restructure/common/deprive'
 	// 二维码控制蒙版
 	import Qrcode from '@/components/teacher-restructure/common/qrcode'
 	// 随机点名面板
@@ -277,7 +276,7 @@
 	    Guide,
 	    RcMaskErrormsg,
 	    RcMaskReconnect,
-	    RcMaskDeprive,
+	    Deprive,
 	    Qrcode,
 	    RcMaskRandomcall,
 	    Thumbnail,

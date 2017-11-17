@@ -59,7 +59,7 @@ export default {
       this.setData({
         isToastCtrlMaskHidden: false,
         isRobber: str === 'isRobber',
-        toastCtrlMaskTpl: 'rc-mask-deprive',
+        toastCtrlMaskTpl: 'Deprive',
         initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         byself,
       })
