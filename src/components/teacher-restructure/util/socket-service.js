@@ -75,7 +75,7 @@ let mixin = {
               isMsgMaskHidden: false,
               connectCountDown: 10,
               isConnectingHidden: true,
-              msgMaskTpl: 'rc-mask-reconnect'
+              msgMaskTpl: 'Reconnect'
             })
             self.countDown()
           }

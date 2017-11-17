@@ -159,7 +159,7 @@
 	// 错误蒙版
 	import Errormsg from '@/components/teacher-restructure/common/errormsg'
 	// 断网重连蒙版
-	import RcMaskReconnect from '@/components/teacher/template/rc-mask-reconnect'
+	import Reconnect from '@/components/teacher-restructure/common/reconnect'
 	// 夺权面板
 	import Deprive from '@/components/teacher-restructure/common/deprive'
 	// 二维码控制蒙版
@@ -259,7 +259,7 @@
 	    Toolbar,
 	    Guide,
 	    Errormsg,
-	    RcMaskReconnect,
+	    Reconnect,
 	    Deprive,
 	    Qrcode,
 	    RcMaskRandomcall,
