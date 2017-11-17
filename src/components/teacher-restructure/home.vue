@@ -41,14 +41,11 @@
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
     <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback']">
-      <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，试题柱状图，试题详情，第三优先级 -->
+      <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，课堂动态，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
-          :avatar="avatar"
-          :total="total"
-          :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :is-danmu-open="isDanmuOpen"
           :newtougao="newtougao"
@@ -204,7 +201,6 @@
 	      isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
 	      isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
 	      isSocketConnected: false,               // WebSocket 已连接
-	      total: '',                              // 总页数
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
@@ -242,13 +238,13 @@
 	    	'userid',
 	    	'avatar', 
 	    	'auth',   
-	    	'inviteCode',
 	    	'courseid',
 	    	'classroomid',
 	    	'coursename',
         'lessonid',
         'presentationid',
         'current',
+        'total',
         'pptData',
         // 'newtougao',
         // 'isPPTVersionAboveOne',
@@ -396,10 +392,9 @@
 	          // fetchPPTData的主要目的是获取pptData total
 	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
 	          self.$store.commit('set_pptData', pptData)
+	          self.$store.commit('set_total', pptData.length)
 
 	          self.setData({
-	            // pptData: pptData,
-	            total: pptData.length,
 	            isPubCheckProblemBtnHidden: !isProblem,
 	            isProblemPublished: isProblemPublished
 	          })

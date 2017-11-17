@@ -25,7 +25,7 @@
 
 	export default {
 	  name: 'RcMaskErrormsg',
-	  props: ['courseid', 'classroomid', 'errType'],
+	  props: ['errType'],
 	  data () {
 	    return {
 	      errMsgList: config.errMsgList,
@@ -34,6 +34,8 @@
 	  },
     computed: {
       ...mapGetters([
+        'courseid',
+        'classroomid',
         'lessonid',
       ])
     },

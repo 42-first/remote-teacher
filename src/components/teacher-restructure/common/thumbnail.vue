@@ -63,7 +63,7 @@
 
   export default {
     name: 'Thumbnail',
-    props: ['total', 'newdoubt', 'newtougao', 'isSocketConnected'],
+    props: ['newdoubt', 'newtougao', 'isSocketConnected'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -92,6 +92,7 @@
         'presentationid',
         'pptData',
         'current',
+        'total',
         'socket',
       ])
     },

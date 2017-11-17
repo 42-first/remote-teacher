@@ -26,13 +26,14 @@
 
 	export default {
 	  name: 'Qrcode',
-	  props: ['inviteCode', 'isBrandNewPpt'],
+	  props: ['isBrandNewPpt'],
 	  data () {
 	    return {
 	    }
 	  },
 	  computed: {
       ...mapGetters([
+      	'inviteCode',
         'lessonid',
         'socket',
         'qrcodeStatus',
