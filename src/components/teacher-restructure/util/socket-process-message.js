@@ -309,7 +309,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'callwokeup') {
     self.setData({
       isInitiativeCtrlMaskHidden: false,
-      initiativeCtrlMaskTpl: 'RcMaskRandomcall'
+      initiativeCtrlMaskTpl: 'Randomcall'
     })
 
     Vue.nextTick(function () {
@@ -383,7 +383,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'calledlist') {
     self.setData({
       isInitiativeCtrlMaskHidden: false,
-      initiativeCtrlMaskTpl: 'RcMaskRandomcall'
+      initiativeCtrlMaskTpl: 'Randomcall'
     })
 
     Vue.nextTick(function () {
