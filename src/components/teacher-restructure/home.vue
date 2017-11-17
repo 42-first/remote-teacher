@@ -29,7 +29,6 @@
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar
         ref="Toolbar"
-        :socket="socket"
         :newtougao="newtougao"
         :active-index="0"
         :is-socket-connected="isSocketConnected"
@@ -49,9 +48,7 @@
           :is="initiativeCtrlMaskTpl"
           :avatar="avatar"
           :coursename="coursename"
-          :current="current"
           :total="total"
-          :socket="socket"
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
           :qrcode-status="qrcodeStatus"
@@ -77,7 +74,6 @@
           :is="toastCtrlMaskTpl"
           :courseid="courseid"
           :classroomid="classroomid"
-          :socket="socket"
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
           :byself="byself"
@@ -212,6 +208,8 @@
 	      courseid: '',                           // 课程id 以 八>了 班为例，是 八 的id
 	      classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
 	      coursename: '',                         // 课程名称 以 八>了 班为例，是 八
+	      // 根页面不用store，每次进入后自己夺自己的权，简单粗暴，
+	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
 	      isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
 	      isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
@@ -219,7 +217,7 @@
 	      isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
 	      isSocketConnected: false,               // WebSocket 已连接
 	      total: '',                              // 总页数
-	      current: 1,                             // 当前页码，从1开始
+	      // current: 1,                             // 当前页码，从1开始
 	      // pptData: [],                            // ppt数据
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
@@ -259,7 +257,7 @@
 	    	// 'userid',
         'lessonid',
         'presentationid',
-        // 'current',
+        'current',
         'pptData',
         // 'newtougao',
         // 'isPPTVersionAboveOne',

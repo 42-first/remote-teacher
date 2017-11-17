@@ -111,8 +111,10 @@ export default {
       let isProblem = self.data.pptData.length && typeof self.data.pptData[current - 1].Problem !== 'undefined'
       let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
 
+      self.$store.commit('set_current', current)
+
       self.setData({
-        current: current,
+        // current: current,
         isPubCheckProblemBtnHidden: !isProblem,
         isProblemPublished: isProblemPublished,
         unlockedproblem: msg.unlockedproblem

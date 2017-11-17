@@ -94,9 +94,10 @@ function socketProcessMessage(msg){
     
     if(msg.mask && msg.mask.type === 'qrcode'){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
+      self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
       self.setData({
         isMsgMaskHidden: true,
-        qrcodeStatus: msg.mask.qrcode
+        // qrcodeStatus: msg.mask.qrcode
       })
       self.showQrcodeMask()
     }else if(!msg.shownow){
@@ -284,28 +285,20 @@ function socketProcessMessage(msg){
   if (msg.op == 'qrcodezoomed') {
     if(msg.qrcode == 1){
       //已经缩小
-      self.setData({
-        qrcodeStatus: 1
-      })
+      self.$store.commit('set_qrcodeStatus', 1)
     }else if(msg.qrcode == 2){
       //已经放大
-      self.setData({
-        qrcodeStatus: 2
-      })
+      self.$store.commit('set_qrcodeStatus', 2)
     }else if(msg.qrcode == 99){
       self.showQrcodeMask()
     }else if(msg.qrcode == 101){
       self.fetchPPTData()
-      self.setData({
-        qrcodeStatus: 1
-      })
+      self.$store.commit('set_qrcodeStatus', 1)
       self.killMask()
       self.showQrcodeMask()
     }else if(msg.qrcode == 102){
       self.fetchPPTData()
-      self.setData({
-        qrcodeStatus: 2
-      })
+      self.$store.commit('set_qrcodeStatus', 2)
       self.killMask()
       self.showQrcodeMask()
     }

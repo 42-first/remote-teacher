@@ -43,6 +43,12 @@ const store = new Vuex.Store({
     set_socket: (state, socket) => {
       state.socket = socket
     },
+    set_current: (state, current) => {
+      state.current = current
+    },
+    set_qrcodeStatus: (state, qrcodeStatus) => {
+      state.qrcodeStatus = qrcodeStatus
+    },
   },
 
   actions: {

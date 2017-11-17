@@ -7,6 +7,7 @@ const getters = {
   newtougao: state => state.newtougao,
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
   socket: state => state.socket,
+  qrcodeStatus: state => state.qrcodeStatus,
   idIndexMap: state => state.idIndexMap,
 };
 export default getters

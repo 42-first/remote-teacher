@@ -162,7 +162,6 @@
 
 	      request.get(url)
 	      	.then(jsonData => {
-	      		console.log(99, jsonData)
 
 	      		let _answer = jsonData.answer
 	      		let _graph = jsonData.graph.data
