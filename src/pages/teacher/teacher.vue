@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -22,7 +20,7 @@
   }
 
   #app {
-    width: 100%;
+    // width: 100%;
     /*min-height: 100%;*/
   }
 </style>

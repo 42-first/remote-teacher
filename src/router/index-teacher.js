@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import RemoteList from '@/components/teacher/remote-list'
-import Remote from '@/components/teacher/remote'
+import RemoteList from '@/components/teacher-restructure/remote-list'
+import Home from '@/components/teacher-restructure/home'
 
 Vue.use(Router)
 
@@ -16,8 +16,8 @@ const router = new Router({
     },
     {
       path: '/:lessonid',
-      name: 'remote',
-      component: Remote
+      name: 'home',
+      component: Home
     },
     {
       path: '*',

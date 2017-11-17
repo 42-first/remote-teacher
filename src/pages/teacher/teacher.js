@@ -5,6 +5,7 @@
 import Vue from 'vue'
 import App from '@/pages/teacher/teacher.vue'
 import router from '@/router/index-teacher'
+import store from '@/pages/teacher/store';
 
 let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
@@ -16,6 +17,7 @@ window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })
