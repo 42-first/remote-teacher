@@ -70,7 +70,7 @@ export default {
     showOldHelloMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'RcMaskErrormsg',
+        msgMaskTpl: 'Errormsg',
         errType: 1
       })
     },
@@ -80,7 +80,7 @@ export default {
     showEscMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'RcMaskErrormsg',
+        msgMaskTpl: 'Errormsg',
         initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         errType: 2
       })
@@ -91,7 +91,7 @@ export default {
     showPcErrorMask: function () {
       this.setData({
         isMsgMaskHidden: false,
-        msgMaskTpl: 'RcMaskErrormsg',
+        msgMaskTpl: 'Errormsg',
         initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         errType: 3
       })

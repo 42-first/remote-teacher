@@ -47,11 +47,9 @@
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
           :avatar="avatar"
-          :coursename="coursename"
           :total="total"
           :invite-code="inviteCode"
           :is-brand-new-ppt="isBrandNewPpt"
-          :qrcode-status="qrcodeStatus"
           :is-danmu-open="isDanmuOpen"
           :newtougao="newtougao"
           :is-socket-connected="isSocketConnected"
@@ -72,8 +70,6 @@
         <component
           ref="ToastCtrlMask"
           :is="toastCtrlMaskTpl"
-          :courseid="courseid"
-          :classroomid="classroomid"
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
           :byself="byself"
@@ -85,7 +81,6 @@
         <component
           ref="MsgMask"
           :is="msgMaskTpl"
-          :lessonid="lessonid"
           :courseid="courseid"
           :classroomid="classroomid"
           :err-type="errType"
@@ -162,7 +157,7 @@
 	// 新手引导蒙版
 	import Guide from '@/components/teacher/template/guide'
 	// 错误蒙版
-	import RcMaskErrormsg from '@/components/teacher/template/rc-mask-errormsg'
+	import Errormsg from '@/components/teacher-restructure/common/errormsg'
 	// 断网重连蒙版
 	import RcMaskReconnect from '@/components/teacher/template/rc-mask-reconnect'
 	// 夺权面板
@@ -201,13 +196,6 @@
 	      isShuban: false,                        // 是竖版ppt
 	      isGuideHidden: true,                    // 新手引导隐藏
 	      isEnterEnded: false,                    // 遥控器进入是否结束
-	      userid: -1,                             // 用户id
-	      avatar: '',                             // 用户头像
-	      auth: '',                               // 用户身份
-	      inviteCode: '',                         // 课堂暗号
-	      courseid: '',                           // 课程id 以 八>了 班为例，是 八 的id
-	      classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
-	      coursename: '',                         // 课程名称 以 八>了 班为例，是 八
 	      // 根页面不用store，每次进入后自己夺自己的权，简单粗暴，
 	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
@@ -217,19 +205,16 @@
 	      isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
 	      isSocketConnected: false,               // WebSocket 已连接
 	      total: '',                              // 总页数
-	      // current: 1,                             // 当前页码，从1开始
-	      // pptData: [],                            // ppt数据
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
 	      startPoint: [0, 0],
-	      msgMaskTpl: 'RcMaskErrormsg',
+	      msgMaskTpl: 'Errormsg',
 	      toastCtrlMaskTpl: '',
 	      initiativeCtrlMaskTpl: '',
 	      errType: 5,
 	      connectCountDown: 10,
 	      isConnectingHidden: true,               // 连接中隐藏
-	      qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
 	      isDanmuOpen: false,                     // 弹幕是否处于打开状态
 	      
 	      newtougao: 0,                           // 未查看的投稿人次总数
@@ -254,7 +239,13 @@
 	      return pptData[current] && (pptData[current].Cover == 'rain://error/upload-error' || pptData[current].Cover == 'rain://error/export-error')
 	    },
 	    ...mapGetters([
-	    	// 'userid',
+	    	'userid',
+	    	'avatar', 
+	    	'auth',   
+	    	'inviteCode',
+	    	'courseid',
+	    	'classroomid',
+	    	'coursename',
         'lessonid',
         'presentationid',
         'current',
@@ -267,7 +258,7 @@
 	  components: {
 	    Toolbar,
 	    Guide,
-	    RcMaskErrormsg,
+	    Errormsg,
 	    RcMaskReconnect,
 	    Deprive,
 	    Qrcode,
@@ -378,15 +369,7 @@
 
 	      return request.get(url,{'lesson_id': self.lessonid})
 	        .then(jsonData => {
-	          self.setData({
-	            userid: jsonData.data.user.user_id,
-	            avatar: jsonData.data.user.avatar,
-	            auth: jsonData.data.user.user_auth,
-	            inviteCode: jsonData.data.lesson.invite_code,
-	            courseid: jsonData.data.course.courseid,
-	            coursename: jsonData.data.course.coursename,
-	            classroomid: jsonData.data.classroom.classroomid
-	          })
+	        	self.$store.dispatch('saveUserInfo', jsonData.data)
 
 	          window.USERID = jsonData.data.user.user_id
 	        })

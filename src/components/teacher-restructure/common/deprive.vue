@@ -27,13 +27,15 @@
 
 	export default {
 	  name: 'Deprive',
-	  props: ['courseid', 'classroomid', 'isRobber', 'isRobbing', 'byself'],
+	  props: ['isRobber', 'isRobbing', 'byself'],
 	  data () {
 	    return {
 	    }
 	  },
 	  computed: {
       ...mapGetters([
+      	'courseid',
+      	'classroomid',
         'lessonid',
         'socket',
       ])

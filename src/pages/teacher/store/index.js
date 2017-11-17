@@ -31,28 +31,58 @@ const store = new Vuex.Store({
   },
 
   mutations: {
+  	set_userid (state, id) {
+      state.userid = id
+    },
+    set_avatar (state, avatar) {
+      state.avatar = avatar
+    },
+    set_auth (state, auth) {
+      state.auth = auth
+    },
+    set_inviteCode (state, inviteCode) {
+      state.inviteCode = inviteCode
+    },
+  	set_courseid (state, id) {
+      state.courseid = id
+    },
+    set_classroomid (state, id) {
+      state.classroomid = id
+    },
+    set_coursename (state, coursename) {
+      state.coursename = coursename
+    },
+    set_socket: (state, socket) => {
+      state.socket = socket
+    },
     set_lessonid (state, id) {
       state.lessonid = id
     },
     set_presentationid: (state, id) => {
       state.presentationid = id
     },
-    set_pptData: (state, pptData) => {
-      state.pptData = pptData
-    },
-    set_socket: (state, socket) => {
-      state.socket = socket
-    },
     set_current: (state, current) => {
       state.current = current
+    },
+    set_pptData: (state, pptData) => {
+      state.pptData = pptData
     },
     set_qrcodeStatus: (state, qrcodeStatus) => {
       state.qrcodeStatus = qrcodeStatus
     },
+    
   },
 
   actions: {
-    
+    saveUserInfo: ({commit}, payload) => {
+      commit('set_userid', payload.user.user_id)
+      commit('set_avatar', payload.user.avatar)
+      commit('set_auth', payload.user.user_auth)
+      commit('set_inviteCode', payload.lesson.invite_code)
+      commit('set_courseid', payload.course.courseid)
+      commit('set_classroomid', payload.classroom.classroomid)
+      commit('set_coursename', payload.course.coursename)
+    },
   },
   getters
 })

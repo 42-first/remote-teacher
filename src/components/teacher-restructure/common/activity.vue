@@ -76,7 +76,7 @@
 
   export default {
     name: 'Activity',
-    props: ['coursename', 'avatar', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['avatar', 'isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -89,6 +89,7 @@
     },
     computed: {
       ...mapGetters([
+        'coursename',
         'lessonid',
         'presentationid',
         'socket',
