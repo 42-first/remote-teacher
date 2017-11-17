@@ -40,6 +40,9 @@ const store = new Vuex.Store({
     set_pptData: (state, pptData) => {
       state.pptData = pptData
     },
+    set_socket: (state, socket) => {
+      state.socket = socket
+    },
   },
 
   actions: {

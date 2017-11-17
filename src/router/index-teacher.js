@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import RemoteList from '@/components/teacher-restructure/remote-list'
 import Home from '@/components/teacher-restructure/home'
+import Collumresult from '@/components/teacher-restructure/collumresult'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ const router = new Router({
       path: '/:lessonid',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/collumresult/:problemid',
+      name: 'collumresult',
+      component: Collumresult
     },
     {
       path: '*',

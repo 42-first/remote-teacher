@@ -54,6 +54,7 @@ let mixin = {
         // 雷上已经全部使用https了，本地调试也使用https
         let wsProtocol = location.protocol === 'https:' || location.host.indexOf('192.168') !== -1 ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
+        self.$store.commit('set_socket', socket)
 
         // 关闭
         this.socket.onclose = function(event) {

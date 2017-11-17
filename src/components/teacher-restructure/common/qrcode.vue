@@ -25,7 +25,7 @@
 	import config from '@/pages/teacher/config/config'
 
 	export default {
-	  name: 'RcMaskQrcode',
+	  name: 'Qrcode',
 	  props: ['socket', 'inviteCode', 'isBrandNewPpt', 'qrcodeStatus'],
 	  data () {
 	    return {

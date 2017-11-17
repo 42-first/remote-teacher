@@ -26,7 +26,7 @@
   import API from '@/pages/teacher/config/api'
 
 	export default {
-	  name: 'RcMaskDeprive',
+	  name: 'Deprive',
 	  props: ['courseid', 'classroomid', 'socket', 'isRobber', 'isRobbing', 'byself'],
 	  data () {
 	    return {

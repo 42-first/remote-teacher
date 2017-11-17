@@ -67,11 +67,6 @@
           @checkTougao="checkTougao"
 
           :problem-type="problemType"
-          :problem-result-data="problemResultData"
-          :problem-duration-left="problemDurationLeft"
-          @closeProblemresult="closeProblemresult"
-          @closeProblemSubjective="closeProblemSubjective"
-          @connectLittleBankSuccess="connectLittleBankSuccess"
         ></component>
       </div>
 
@@ -194,7 +189,7 @@
 	// Websocket 服务
 	import socketService from './util/socket-service'
 	// 课堂试题相关
-	import problemRelated from '@/util/teacher-util/problem-related'
+	import problemRelated from './util/problem-related'
 
 	let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
 	let pollingTougaoTimer = null          // 轮询获取投稿数的信息

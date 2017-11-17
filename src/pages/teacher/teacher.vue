@@ -18,9 +18,7 @@
     -webkit-touch-callout: none;
     -webkit-user-select: none;
   }
-
-  #app {
-    // width: 100%;
-    /*min-height: 100%;*/
+  html,body {
+    min-height: 100%;
   }
 </style>
