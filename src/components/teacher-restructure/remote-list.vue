@@ -12,7 +12,7 @@
 
 <script>
 import request from '@/util/request'
-import API from '@/config/api'
+import API from '@/pages/teacher/config/api'
 
 export default {
   name: 'remote-list',

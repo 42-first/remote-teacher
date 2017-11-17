@@ -22,7 +22,7 @@
 
 <script>
 	import {mapGetters} from 'vuex'
-	import config from '@/config/config'
+	import config from '@/pages/teacher/config/config'
 
 	export default {
 	  name: 'RcMaskQrcode',

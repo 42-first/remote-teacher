@@ -6,7 +6,7 @@
         <img :src="avatar" alt="">
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
-      <v-touch class="student f17 J_ga" v-on:tap="showParticipantList" data-category="5" data-label="课堂动态页">
+      <v-touch class="student f17 J_ga" v-on:tap="" data-category="5" data-label="课堂动态页">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
         <span class="dqxs">
           当前学生{{participantList.length}}位
@@ -14,7 +14,7 @@
         </span>
       </v-touch>
     </section>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="showPaper" data-category="16" data-label="课堂动态页">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -25,7 +25,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="showDanmubox" data-category="6" data-label="课堂动态页">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -37,7 +37,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="showSubmission" data-category="8" data-label="课堂动态页">
+    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -69,7 +69,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import request from '@/util/request'
-  import API from '@/config/api'
+  import API from '@/pages/teacher/config/api'
 
   // 工具栏
   import Toolbar from './toolbar'

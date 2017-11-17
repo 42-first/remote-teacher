@@ -159,7 +159,7 @@
 
 	import request from '@/util/request'
 	import {configWX} from '@/util/wx-util'
-	import API from '@/config/api'
+	import API from '@/pages/teacher/config/api'
 
 	if (process.env.NODE_ENV !== 'production') {
 	  request.post = request.get
