@@ -29,8 +29,6 @@
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar
         ref="Toolbar"
-        :lessonid="lessonid"
-        :presentationid="presentationid"
         :socket="socket"
         :newtougao="newtougao"
         :active-index="0"
@@ -161,6 +159,8 @@
 <script>
 	/* eslint-disable no-undef, no-new */
 
+	import {mapGetters} from 'vuex'
+
 	import request from '@/util/request'
 	import {configWX} from '@/util/wx-util'
 	import API from '@/config/api'
@@ -171,7 +171,7 @@
 
 	// 页面组件
 	// 工具栏
-	import Toolbar from '@/components/teacher/template/toolbar'
+	import Toolbar from '@/components/teacher-restructure/common/toolbar'
 	// 新手引导蒙版
 	import Guide from '@/components/teacher/template/guide'
 	// 错误蒙版
@@ -196,7 +196,7 @@
 	// 一些开关
 	import switches from '@/util/teacher-util/switches'
 	// Websocket 服务
-	import socketService from '@/util/teacher-util/socket-service'
+	import socketService from './util/socket-service'
 	// 课堂试题相关
 	import problemRelated from '@/util/teacher-util/problem-related'
 
@@ -222,8 +222,6 @@
 	      classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
 	      coursename: '',                         // 课程名称 以 八>了 班为例，是 八
 	      socket: null,                           // 全局 Websocket 实例对象
-	      lessonid: 0,
-	      presentationid: 0,
 	      isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
 	      isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
 	      isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
@@ -265,7 +263,17 @@
 	      let current = self.current
 
 	      return pptData[current] && (pptData[current].Cover == 'rain://error/upload-error' || pptData[current].Cover == 'rain://error/export-error')
-	    }
+	    },
+	    ...mapGetters([
+	    	// 'userid',
+        'lessonid',
+        'presentationid',
+        // 'current',
+        // 'pptData',
+        // 'newtougao',
+        // 'isPPTVersionAboveOne',
+        // 'idIndexMap'
+      ])
 	  },
 	  components: {
 	    Toolbar,
@@ -281,7 +289,9 @@
 	  created () {
 	    let self = this
 
-	    self.lessonid = self.$route.params.lessonid
+	    let lessonid = +self.$route.params.lessonid
+
+	    self.$store.commit('set_lessonid', lessonid)
 
 	    self.polyfillIncludes()
 
