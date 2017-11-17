@@ -56,7 +56,6 @@
       }
     },
     computed: {
-      
       ...mapGetters([
         'lessonid',
         'presentationid',

@@ -47,11 +47,8 @@
         <component
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
-          :lessonid="lessonid"
           :avatar="avatar"
           :coursename="coursename"
-          :presentationid="presentationid"
-          :ppt-data="pptData"
           :current="current"
           :total="total"
           :socket="socket"
@@ -185,9 +182,9 @@
 	// 随机点名面板
 	import RcMaskRandomcall from '@/components/teacher/template/rc-mask-randomcall'
 	// 缩略图面板
-	import RcMaskThumbnail from '@/components/teacher/template/rc-mask-thumbnail'
+	import Thumbnail from '@/components/teacher-restructure/common/thumbnail'
 	// 课堂动态面板
-	import RcMaskActivity from '@/components/teacher/template/rc-mask-activity'
+	import Activity from '@/components/teacher-restructure/common/activity'
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 	import '@/util/teacher-util/preventoverscroll'
@@ -229,7 +226,7 @@
 	      isSocketConnected: false,               // WebSocket 已连接
 	      total: '',                              // 总页数
 	      current: 1,                             // 当前页码，从1开始
-	      pptData: [],                            // ppt数据
+	      // pptData: [],                            // ppt数据
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
@@ -269,7 +266,7 @@
         'lessonid',
         'presentationid',
         // 'current',
-        // 'pptData',
+        'pptData',
         // 'newtougao',
         // 'isPPTVersionAboveOne',
         // 'idIndexMap'
@@ -283,8 +280,8 @@
 	    RcMaskDeprive,
 	    RcMaskQrcode,
 	    RcMaskRandomcall,
-	    RcMaskThumbnail,
-	    RcMaskActivity
+	    Thumbnail,
+	    Activity
 	  },
 	  created () {
 	    let self = this
@@ -423,8 +420,10 @@
 
 	          // fetchPPTData的主要目的是获取pptData total
 	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
+	          self.$store.commit('set_pptData', pptData)
+
 	          self.setData({
-	            pptData: pptData,
+	            // pptData: pptData,
 	            total: pptData.length,
 	            isPubCheckProblemBtnHidden: !isProblem,
 	            isProblemPublished: isProblemPublished
@@ -500,13 +499,13 @@
 
 	      self.setData({
 	        isInitiativeCtrlMaskHidden: false,
-	        initiativeCtrlMaskTpl: 'RcMaskThumbnail'
+	        initiativeCtrlMaskTpl: 'Thumbnail'
 	      })
 
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
 
 	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('RcMaskThumbnail')
+	        self.$refs.InitiativeCtrlMask.$emit('Thumbnail')
 	      })
 	    },
 	    /**
@@ -518,13 +517,13 @@
 
 	      self.setData({
 	        isInitiativeCtrlMaskHidden: false,
-	        initiativeCtrlMaskTpl: 'RcMaskActivity'
+	        initiativeCtrlMaskTpl: 'Activity'
 	      })
 
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
 
 	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('RcMaskActivity')
+	        self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
 	    },
 	    /**

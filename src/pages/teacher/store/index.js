@@ -37,6 +37,9 @@ const store = new Vuex.Store({
     set_presentationid: (state, id) => {
       state.presentationid = id
     },
+    set_pptData: (state, pptData) => {
+      state.pptData = pptData
+    },
   },
 
   actions: {

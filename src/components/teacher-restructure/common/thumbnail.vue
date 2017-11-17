@@ -54,6 +54,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/config/api'
 
@@ -62,7 +63,7 @@
 
   export default {
     name: 'RcMaskThumbnail',
-    props: ['lessonid', 'presentationid', 'pptData', 'current', 'total', 'socket', 'newdoubt', 'newtougao', 'isSocketConnected'],
+    props: ['current', 'total', 'socket', 'newdoubt', 'newtougao', 'isSocketConnected'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -85,7 +86,12 @@
 
         arr.sort((a, b) => b.val - a.val)
         return arr
-      }
+      },
+      ...mapGetters([
+        'lessonid',
+        'presentationid',
+        'pptData',
+      ])
     },
     components: {
       Toolbar,
