@@ -78,8 +78,6 @@
         <component
           ref="MsgMask"
           :is="msgMaskTpl"
-          :courseid="courseid"
-          :classroomid="classroomid"
           :err-type="errType"
           :connect-count-down="connectCountDown"
           :is-connecting-hidden="isConnectingHidden"
@@ -152,7 +150,7 @@
 	// 工具栏
 	import Toolbar from '@/components/teacher-restructure/common/toolbar'
 	// 新手引导蒙版
-	import Guide from '@/components/teacher/template/guide'
+	import Guide from '@/components/teacher-restructure/common/guide'
 	// 错误蒙版
 	import Errormsg from '@/components/teacher-restructure/common/errormsg'
 	// 断网重连蒙版
