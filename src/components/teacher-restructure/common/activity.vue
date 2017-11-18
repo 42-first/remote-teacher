@@ -37,7 +37,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="8" data-label="课堂动态页">
+    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -48,7 +48,7 @@
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
+    </router-link>
 
     <Toolbar 
       ref="Toolbar"

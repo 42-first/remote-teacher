@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import RemoteList from '@/components/teacher-restructure/remote-list'
 import Home from '@/components/teacher-restructure/home'
-import Collumresult from '@/components/teacher-restructure/collumresult'
+
+const Collumresult = () => import('@/components/teacher-restructure/collumresult')
+const Submission = () => import('@/components/teacher-restructure/submission')
+const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 
 Vue.use(Router)
 
@@ -24,6 +26,11 @@ const router = new Router({
       path: '/collumresult/:problemid',
       name: 'collumresult',
       component: Collumresult
+    },
+    {
+      path: '/submission',
+      name: 'submission',
+      component: Submission
     },
     {
       path: '*',
