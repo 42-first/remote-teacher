@@ -48,7 +48,7 @@
 
   export default {
     name: 'Tollbar',
-    props: ['newtougao', 'isSocketConnected', 'activeIndex'],
+    props: ['isSocketConnected', 'activeIndex'],
     data () {
       return {
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
@@ -61,6 +61,7 @@
         'presentationid',
         'socket',
         'newdoubt',
+        'newtougao',
       ])
     },
     created () {

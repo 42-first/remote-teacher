@@ -40,7 +40,6 @@
 
     <Toolbar 
       ref="Toolbar"
-      :newtougao="newtougao"
       :active-index="1"
       :is-socket-connected="isSocketConnected"
       @goHome="goHome"
@@ -59,7 +58,7 @@
 
   export default {
     name: 'Thumbnail',
-    props: ['newtougao', 'isSocketConnected'],
+    props: ['isSocketConnected'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab

@@ -53,7 +53,6 @@
     <Toolbar 
       ref="Toolbar"
       class="activity-tollbar"
-      :newtougao="newtougao"
       :active-index="2"
       :is-socket-connected="isSocketConnected"
       @goHome="goHome"
@@ -74,7 +73,7 @@
 
   export default {
     name: 'Activity',
-    props: ['isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'newdoubt', 'newtougao', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -92,6 +91,7 @@
         'lessonid',
         'presentationid',
         'socket',
+        'newtougao',
       ])
     },
     components: {
@@ -127,48 +127,6 @@
             // 下面又翻转过来只是为了hack float  left样式
             self.avatarList = self.participantList.slice(0, 10).reverse()
           })
-      },
-      /**
-       * 点击 学生头像列表 按钮展示全部人员名单
-       *
-       * @event bindtap
-       * @param {object} evt event对象
-       */
-      showParticipantList (evt) {
-        let self = this
-        self.isParticipantlistHidden = false
-
-        self.setAtRootFalse()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
-      },
-      
-      /**
-       * 投稿列表页面点击 刷新 按钮也应清零投稿未读数
-       *
-       */
-      refreshCheckTougao () {
-        let self = this
-        self.$emit('checkTougao')
-      },
-      
-      /**
-       * 确认当前在课堂动态根部页面
-       *
-       */
-      setAtRootTrue () {
-        let self = this
-
-        self.$emit('update:isRcMaskActivityAtRoot', true)
-      },
-      /**
-       * 确认当前在课堂动态页面的子页面
-       *
-       */
-      setAtRootFalse () {
-        let self = this
-
-        self.$emit('update:isRcMaskActivityAtRoot', false)
       },
       /**
        * 点击 遥控器 按钮

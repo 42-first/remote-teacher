@@ -29,7 +29,6 @@
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar
         ref="Toolbar"
-        :newtougao="newtougao"
         :active-index="0"
         :is-socket-connected="isSocketConnected"
         @showThumbnail="showThumbnail"
@@ -48,7 +47,6 @@
           :is="initiativeCtrlMaskTpl"
           :is-brand-new-ppt="isBrandNewPpt"
           :is-danmu-open="isDanmuOpen"
-          :newtougao="newtougao"
           :is-socket-connected="isSocketConnected"
           @goHome="goHome"
           @showThumbnail="showThumbnail"
@@ -56,7 +54,6 @@
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
-          @checkTougao="checkTougao"
 
           :problem-type="problemType"
         ></component>
@@ -211,7 +208,6 @@
 	      isConnectingHidden: true,               // 连接中隐藏
 	      isDanmuOpen: false,                     // 弹幕是否处于打开状态
 	      
-	      newtougao: 0,                           // 未查看的投稿人次总数
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
@@ -543,12 +539,12 @@
 	    fetchTougaoUnreadnum () {
 	      let self = this
 	      if (self.lessonid <= 0) {return;}
-	      // let url = API.submissionlist
+
 	      let url = API.submission_unread_num + '?lesson_id=' + self.lessonid
 
 	      request.get(url).then(jsonData => {
-	          self.newtougao = jsonData.data.unread_num
-	        })
+          self.$store.commit('set_newtougao', jsonData.data.unread_num)
+        })
 	    },
 	    /**
 	     * 用户缩略图点击了 不懂 按钮，清零不懂数
@@ -559,15 +555,6 @@
 	      oldDoubt = doubtTotalSum || oldDoubt // 有可能刚进页面还不到10秒就点击了查看缩略图，这时 doubtTotalSum 为0，而 oldDoubt 从storage取出来并不是0
 	      localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
 	      self.$store.commit('set_newdoubt', 0)
-	    },
-	    /**
-	     * 用户课堂动态点击了 投稿 按钮，清零投稿数
-	     *
-	     */
-	    checkTougao () {
-	      let self = this
-	      
-	      self.newtougao = 0
 	    },
 	    /**
 	     * 加载图片放大库代码
