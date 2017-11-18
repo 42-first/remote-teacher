@@ -53,8 +53,6 @@
     <Toolbar 
       ref="Toolbar"
       class="activity-tollbar"
-      :socket="socket"
-      :newdoubt="newdoubt"
       :newtougao="newtougao"
       :active-index="2"
       :is-socket-connected="isSocketConnected"

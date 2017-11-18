@@ -16,8 +16,8 @@ const getters = {
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
   
   qrcodeStatus: state => state.qrcodeStatus,
-  courseid: state => state.courseid,
-  classroomid: state => state.classroomid,
+  newdoubt: state => state.newdoubt,
+  newtougao: state => state.newtougao,
   idIndexMap: state => state.idIndexMap,
 };
 export default getters

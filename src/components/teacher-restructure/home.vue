@@ -244,6 +244,7 @@
         'current',
         'total',
         'pptData',
+        'newdoubt',
         // 'newtougao',
         // 'isPPTVersionAboveOne',
         // 'idIndexMap'
@@ -266,8 +267,10 @@
 	    let lessonid = +self.$route.params.lessonid
 
 	    self.$store.commit('set_lessonid', lessonid)
-
 	    self.polyfillIncludes()
+
+	    // 获取本地不懂、投稿已读数
+	    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
 
 	    configWX()
 	    wx.ready(() => {
@@ -281,26 +284,24 @@
 
 	    self.setSentry()
 
-	    setTimeout(()=>{
-	        import('@/util/ga').then(gaue => {
-	        	window.gaue = gaue;
-	          gaue.default.registerEl();
-	        })
-	    }, 500)
+	    import('@/util/ga').then(gaue => {
+	    	window.gaue = gaue;
+	      gaue.default.registerEl();
+	    })
 	  },
 	  mounted () {
 	    let self = this
 
 	    self.pmos()
-	    self.fetchUserInfo().then(self.initws)
-	    self.pollingPresentationTag()
+	    self.fetchUserInfo()
+	    		.then(self.initws)
 
 	    // 根据localStorage判断是否显示新手引导
 	    if (localStorage.getItem('hasGuided') !== 'yes') {
 	      self.isGuideHidden = false
 	    }
 
-	    self.requirePhotoswipe()
+	    self.importPhotoswipe()
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
@@ -364,8 +365,9 @@
 	      return request.get(url,{'lesson_id': self.lessonid})
 	        .then(jsonData => {
 	        	self.$store.dispatch('saveUserInfo', jsonData.data)
-
-	          window.USERID = jsonData.data.user.user_id
+	        })
+	        .catch(() => {
+	        	console.error('获取用户信息失败')
 	        })
 	    },
 	    /**
@@ -441,24 +443,6 @@
 	      _img.src = _src
 	    },
 	    /**
-	     * 将秒数转换成 MM:SS 格式
-	     *
-	     * @param {number} sec 秒数
-	     */
-	    sec2str (sec) {
-	      if(sec == 0){
-	          return '时间到';
-	      }
-
-	      var str = '';
-	      var fen = Math.floor(sec/60);
-	      var miao = sec%60;//
-	      miao = (miao<10) ? ('0'+miao) : miao;
-
-	      str += fen + ':' + miao;
-	      return str;
-	    },
-	    /**
 	     * 点开缩略图按钮
 	     *
 	     */
@@ -509,6 +493,7 @@
 	    },
 	    /**
 	     * 轮询获取缩略图页 不懂 等标志的信息
+	     * 在 WebSocket 收到 hello 指令得到 presentationid 后再开始轮询
 	     *
 	     */
 	    pollingPresentationTag () {
@@ -547,7 +532,8 @@
 	            oldDoubt = doubtTotalSum
 	          }
 
-	          self.newdoubt = doubtTotalSum - oldDoubt
+	          self.$store.commit('set_newdoubt', doubtTotalSum - oldDoubt)
+	          // 和小程序不同， doubtSorted doubtList 在 thumbnail.vue中
 	        })
 	    },
 	    /**
@@ -572,7 +558,7 @@
 	      let self = this
 	      oldDoubt = doubtTotalSum || oldDoubt // 有可能刚进页面还不到10秒就点击了查看缩略图，这时 doubtTotalSum 为0，而 oldDoubt 从storage取出来并不是0
 	      localStorage.setItem('oldDoubt'+self.lessonid, oldDoubt)
-	      self.newdoubt = 0
+	      self.$store.commit('set_newdoubt', 0)
 	    },
 	    /**
 	     * 用户课堂动态点击了 投稿 按钮，清零投稿数
@@ -587,7 +573,7 @@
 	     * 加载图片放大库代码
 	     *
 	     */
-	    requirePhotoswipe () {
+	    importPhotoswipe () {
 	      let self = this
 
 	      Promise.all([

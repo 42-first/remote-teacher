@@ -25,7 +25,7 @@ const store = new Vuex.Store({
     
     qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
     isDanmuOpen: false,                     // 弹幕是否处于打开状态
-    
+    newdoubt: 0,														// 未看的不懂人数
     newtougao: 0,                           // 未查看的投稿人次总数
     isPPTVersionAboveOne: false,            // ppt插件的版本大于1
     idIndexMap: {},                         // slideid 和 slideindex 的对应关系
@@ -74,6 +74,12 @@ const store = new Vuex.Store({
     set_qrcodeStatus: (state, qrcodeStatus) => {
       state.qrcodeStatus = qrcodeStatus
     },
+    set_newdoubt: (state, newdoubt) => {
+      state.newdoubt = newdoubt
+    },
+    set_newtougao: (state, newtougao) => {
+      state.newtougao = newtougao
+    },
     
   },
 
@@ -86,6 +92,8 @@ const store = new Vuex.Store({
       commit('set_courseid', payload.course.courseid)
       commit('set_classroomid', payload.classroom.classroomid)
       commit('set_coursename', payload.course.coursename)
+
+      window.USERID = payload.user.user_id
     },
   },
   getters

@@ -40,10 +40,6 @@
 
     <Toolbar 
       ref="Toolbar"
-      :lessonid="lessonid"
-      :presentationid="presentationid"
-      :socket="socket"
-      :newdoubt="newdoubt"
       :newtougao="newtougao"
       :active-index="1"
       :is-socket-connected="isSocketConnected"
@@ -59,11 +55,11 @@
   import API from '@/pages/teacher/config/api'
 
   // 工具栏
-  import Toolbar from '@/components/teacher/template/toolbar'
+  import Toolbar from './toolbar'
 
   export default {
     name: 'Thumbnail',
-    props: ['newdoubt', 'newtougao', 'isSocketConnected'],
+    props: ['newtougao', 'isSocketConnected'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -94,6 +90,7 @@
         'current',
         'total',
         'socket',
+        'newdoubt'
       ])
     },
     components: {
