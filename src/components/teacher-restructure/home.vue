@@ -282,8 +282,8 @@
 	    self.setSentry()
 
 	    setTimeout(()=>{
-	        require(['@/util/ga'], function(gaue){
-	          window.gaue = gaue;
+	        import('@/util/ga').then(gaue => {
+	        	window.gaue = gaue;
 	          gaue.default.registerEl();
 	        })
 	    }, 500)
@@ -589,13 +589,15 @@
 	     */
 	    requirePhotoswipe () {
 	      let self = this
-	      
-	      setTimeout(()=>{
-	        require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
-	          window.PhotoSwipe = PhotoSwipe;
-	          window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
-	        })
-	      }, 1500)
+
+	      Promise.all([
+	      	import('photoswipe'),
+	      	import('photoswipe/dist/photoswipe-ui-default'),
+	      	import('photoswipe/dist/photoswipe.css')
+	      ]).then(([PhotoSwipe, PhotoSwipeUI_Default]) => {
+	      	window.PhotoSwipe = PhotoSwipe;
+	      	window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
+	      })
 	    },
 	    /**
 	     * 用户在新手引导页点击了
