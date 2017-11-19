@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
 
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
+const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
 const Submission = () => import('@/components/teacher-restructure/submission')
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 
@@ -26,6 +27,11 @@ const router = new Router({
       path: '/collumresult/:problemid',
       name: 'collumresult',
       component: Collumresult
+    },
+    {
+      path: '/subjectiveresult/:problemid',
+      name: 'subjectiveresult',
+      component: Subjectiveresult
     },
     {
       path: '/submission',

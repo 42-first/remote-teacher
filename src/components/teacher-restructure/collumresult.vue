@@ -118,6 +118,9 @@
 	  	let self = this
 
 	    self.problemid = +self.$route.params.problemid
+	    self.problemType = self.$route.query.pt
+	    self.limit = +self.$route.query.lm
+
 	    initTime = +self.$route.query.tl
 	    START = +new Date()
 	    newTime = initTime

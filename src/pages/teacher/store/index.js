@@ -88,6 +88,9 @@ const store = new Vuex.Store({
     set_postingSubmissionid: (state, postingSubmissionid) => {
       state.postingSubmissionid = postingSubmissionid
     },
+    set_postingSubjectiveid: (state, postingSubjectiveid) => {
+      state.postingSubjectiveid = postingSubjectiveid
+    },
     
   },
 

@@ -276,7 +276,7 @@ function socketProcessMessage(msg){
 
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
-    self.postingSubjectiveid = msg.spid
+    self.$store.commit('set_postingSubjectiveid', +msg.spid)
 
     localStorage.setItem('postingSubjectiveid'+self.lessonid, msg.spid)
     return
@@ -373,7 +373,7 @@ function socketProcessMessage(msg){
 
     // 退出主观题投屏蒙版
     if (msg.type == 'subjective') {
-      self.postingSubjectiveid = -1
+      self.$store.commit('set_postingSubjectiveid', -1)
 
       localStorage.setItem('postingSubjectiveid'+self.lessonid, -1)
       return
