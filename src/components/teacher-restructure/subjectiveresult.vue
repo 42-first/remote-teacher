@@ -93,8 +93,8 @@
   import Moment from 'moment'
 
   // import StarPanel from '@/components/teacher/template/star-panel'
-  import StarPanel from '@/components/teacher-restructure/common/score-panel'
-  import Scale from '@/components/teacher-restructure/common/scale'
+  import StarPanel from './common/score-panel'
+  import Scale from './common/scale'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -259,7 +259,7 @@
        * @param {Number} start 起始位置id，返回值不包括起始位置的值， 默认 -1， 即从最新无限大处开始
        * @param {Number} direction 默认0 倒序，即向老的方向找去
        */
-      fetchList(fn, start = -1, direction = 0){
+      fetchList(start = -1, direction = 0){
         let self = this
         let url = API.subjective_problem_result_list
 
@@ -284,7 +284,6 @@
         let headNow = self.dataList[0] ? self.dataList[0].problem_result_id : 0
 
         self.fetchList(headNow, 1).then(jsonData => {
-
           self.setData({
             isShowNewHint: jsonData.data.response_num,
             total_num: jsonData.data.total_num,
@@ -353,7 +352,7 @@
           // self.calcPageHeight()
 
           // 刷新的话回顶部
-          self.$el.scrollTop = 0
+          self.back2Top()
         })
       },
       /**

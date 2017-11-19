@@ -85,6 +85,9 @@ const store = new Vuex.Store({
     set_newtougao: (state, newtougao) => {
       state.newtougao = newtougao
     },
+    set_postingDanmuid: (state, postingDanmuid) => {
+      state.postingDanmuid = postingDanmuid
+    },
     set_postingSubmissionid: (state, postingSubmissionid) => {
       state.postingSubmissionid = postingSubmissionid
     },

@@ -19,6 +19,9 @@ const getters = {
   newdoubt: state => state.newdoubt,
   newtougao: state => state.newtougao,
   idIndexMap: state => state.idIndexMap,
+  postingDanmuid: state => state.postingDanmuid,
+  postingSubmissionid: state => state.postingSubmissionid,
+  postingSubmissionSent: state => state.postingSubmissionSent,
   postingSubjectiveid: state => state.postingSubjectiveid,
 };
 export default getters

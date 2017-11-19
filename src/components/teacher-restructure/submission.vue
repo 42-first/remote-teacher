@@ -3,34 +3,34 @@
 	<div class="submission-box">
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
 
-    <v-touch v-on:tap="refreshSubmissionlist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>
+    <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
     <!-- 没有投稿 -->
-    <div v-show="!isFetching && !submissionList.length" class="no-paper-box">
+    <div v-show="!isFetching && !dataList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
       <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f15"></i> 号中投稿吧！</div>
     </div>
-    <div v-show="!isFetching && submissionList.length">
+    <div v-show="!isFetching && dataList.length">
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
          ref="Loadmore"
          :bottom-method="loadBottom"
-         :bottom-all-loaded="allLoaded"
+         :bottom-all-loaded="isAllLoaded"
          :bottomPullText="'上拉加载更多'"
          :bottomDropText="'释放加载更多'"
-         :class="{'allLoaded': allLoaded}"
+         :class="{'allLoaded': isAllLoaded}"
          >
         <section class="list">
 
-          <div class="item-with-gap" v-for="(item, index) in submissionList" :key="item.id">
+          <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.id">
             <div class="item">
               <div class="detail">
                 <img :src="item.user_avatar" class="avatar" alt="">
                 <div class="cont f18">
                   <span class="author f15">{{item.user_name}}</span><br>
                   {{item.content}}<br>
-                  <!-- <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="showBigpic(item.pic, item.id)"></v-touch> -->
+
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
               </div>
@@ -69,7 +69,7 @@
             <div class="gap"></div>
           </div>
 
-          <div v-show="allLoaded && contLonger" class="nomore f15">
+          <div v-show="isAllLoaded && isContLonger" class="nomore f15">
             <div class="bgline"></div>
             <div class="wenan">end</div>
           </div>
@@ -84,8 +84,9 @@
       <span v-show="isItemDeleted">学生已删除此投稿</span>
     </div>
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshSubmissionlist">刷新</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDataList">刷新</v-touch>
     </div>
+    <Scale></Scale>
   </div>
 </template>
 
@@ -95,6 +96,7 @@
   import API from '@/pages/teacher/config/api'
 
   import Loadmore from 'mint-ui/lib/loadmore'
+  import Scale from './common/scale'
 
   let FENYE_COUNT = 10
 
@@ -103,16 +105,15 @@
   let postingTimer = null
 
   export default {
-    name: 'RcMaskActivitySubmission',
-    props: ['postingSubmissionSent'],
+    name: 'Submission',
     data () {
       return {
-        submissionList: [],           // 投稿列表
+        dataList: [],                 // 投稿列表
         isAskingItemStatus: false,    // 正在查询投稿状态
         isItemDeleted: false,         // 投稿已经被删除
         isFetching: true,             // 正在获取数据
-        allLoaded: false,             // 上拉加载更多到底了
-        contLonger: false,            // 内容超过1屏
+        isAllLoaded: false,           // 上拉加载更多到底了
+        isContLonger: false,          // 内容超过1屏
         isShowNoNewItem: false,       // 刷新后没有新的条目
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
@@ -122,21 +123,23 @@
       ...mapGetters([
         'lessonid',
         'socket',
-        'postingSubmissionid'
+        'postingSubmissionid',
+        'postingSubmissionSent'
       ])
     },
     components: {
-      Loadmore
+      Loadmore,
+      Scale
     },
     created () {
       let self = this
 
-      self.refreshSubmissionlist('isClickedin')
-
+      //首次加载页面投稿列表
+      self.refreshDataList(true);
+      // 轮询投稿列表
       pollingTimer = setInterval(() => {
-        self.pollingNewSubmission()
+        self.pollingNewItem()
       }, 5000)
-
 
       // socket通知投稿投屏了，要隐藏投屏中的提示
       self.$on('postshown', function (msg) {
@@ -164,15 +167,26 @@
       clearInterval(pollingTimer)
     },
     watch: {
-      submissionList: function() {
+      dataList: function() {
         setTimeout(() => {
           let sbh = document.querySelector('.submission-box .list').offsetHeight
           let wh = window.innerHeight
-          this.contLonger = sbh >= wh
+          this.isContLonger = sbh >= wh
         }, 100)
       }
     },
     methods: {
+      /**
+       * 模仿微信小程序的 setData 用法，简易设置data
+       *
+       * @param {object} newData
+       */
+      setData (newData) {
+        let self = this
+        Object.keys(newData).forEach(attr => {
+          self[attr] = newData[attr]
+        })
+      },
       /**
        * 上拉刷新回调
        *
@@ -181,40 +195,67 @@
         let self = this
         console.log('上拉松手了')
 
-        // this.$refs.Loadmore.onBottomLoaded()
+        let tailNow = self.dataList[0] ? self.dataList[self.dataList.length-1].id : 0
 
-        let url = API.submissionlist
-        // 有可能还一条都没哟呢
-        let start = self.submissionList[0] ? self.submissionList[self.submissionList.length-1].id : 0
+        self.fetchList(tailNow).then(jsonData => {
+          // 设置试卷详情数据
+          // response_num 当前请求返回的投稿数量
+          if (jsonData.data.response_num === 0) {
+            self.isAllLoaded = true
+            return
+          }
+          self.dataList = self.dataList.concat(jsonData.data.tougao_list)
 
-        // 单次刷新
-        request.get(url, {
-          'lesson_id': self.lessonid,
-          'start': start,
-          'count': FENYE_COUNT,
-          'direction': 0
-        }).then(jsonData => {
-            // 设置试卷详情数据
-            // response_num 当前请求返回的投稿数量
-            if (jsonData.data.response_num === 0) {
-              self.allLoaded = true
-              return
-            }
-            self.submissionList = self.submissionList.concat(jsonData.data.tougao_list)
-          })
+          this.$refs.Loadmore.onBottomLoaded()
+        })
       },
       /**
-       * 更新投稿列表的数据
-       * 点击打开详情时要主动更新一下数据，所以把本方法放在本父组件中
+       * 获取答案数据
        *
-       * @param {string} isClickedin 判断是不是从课堂动态点击进来的
+       * @param {Number} start 起始位置id，返回值不包括起始位置的值， 默认 -1， 即从最新无限大处开始
+       * @param {Number} direction 默认0 倒序，即向老的方向找去
+       * @param {Number} is_recount 默认0 不清理未读记录，1的话是清除未读记录
        */
-      refreshSubmissionlist(isClickedin){
+      fetchList(start = -1, direction = 0, is_recount = 0){
         let self = this
         let url = API.submissionlist
 
+        let data = {
+          start,
+          direction,
+          is_recount,
+          count: FENYE_COUNT,
+          lesson_id: self.lessonid,
+        }
+
+        // 单次刷新
+        return request.get(url, data)
+      },
+      /**
+       * 轮询有没有新的投稿, 根据 response_num 来判断
+       *
+       */
+      pollingNewItem () {
+        let self = this
+
+        let headNow = self.dataList[0] ? self.dataList[0].id : 0
+
+        self.fetchList(headNow, 1).then(jsonData => {
+          self.setData({
+            isShowNewHint: jsonData.data.response_num,
+          })
+        })
+      },
+      /**
+       * 更新投稿列表的数据
+       *
+       * @param {Boolean} isInit 判断是不是从课堂动态点击进来的
+       */
+      refreshDataList(isInit){
+        let self = this
+
         // 如果已经有内容了就不要显示正在加载中了
-        if (!self.submissionList.length) {
+        if (!self.dataList.length) {
           self.isFetching = true
         }
 
@@ -229,58 +270,62 @@
          * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
          * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
          */
-        request.get(url, {
-          'lesson_id': self.lessonid,
-          'start': -1,                // -1表示极大值
-          'count': FENYE_COUNT,       // 获取最新分页个数的条目
-          'direction': 0,             // 刷新要从最顶部倒序查找
-          'is_recount': 1             // 凡是彻底刷新就清理未读记录
-        }).then(jsonData => {
-            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
-            self.isShowNewHint = false
-            
-            setTimeout(() => {
-              self.isShowBtnBox = true
-            },500)
+        self.fetchList(-1, 0, 1).then(jsonData => {
+          // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+          self.isShowNewHint = false
+          
+          setTimeout(() => {
+            self.isShowBtnBox = true
+          },500)
 
-            
-            let newList = jsonData.data.tougao_list
-            // 返回的条目的个数
-            let response_num = jsonData.data.response_num
-            // 有可能还一条都没有呢
-            let headNow = self.submissionList[0] ? self.submissionList[0].id : 0
-            let headIndex = newList.findIndex(item => item.id === headNow)
+          let newList = jsonData.data.tougao_list
+          // 返回的条目的个数
+          let response_num = jsonData.data.response_num
+          // 有可能还一条都没有呢
+          let headNow = self.dataList[0] ? self.dataList[0].id : 0
+          let headIndex = newList.findIndex(item => item.id === headNow)
 
-            // 假如没有新条目的话，显示没有新条目的提示
-            // 从课堂动态进来的话，不显示提示
-            // 无论显示提示与否，2秒后不再显示提示
-            self.isShowNoNewItem = typeof isClickedin !== 'string' && newList[0].id === headNow
-            
-            setTimeout(() => {
-              self.isShowNoNewItem = false
-            }, 2000)
+          // 假如没有新条目的话，显示没有新条目的提示
+          // 无论显示提示与否，2秒后不再显示提示
+          self.isShowNoNewItem = isInit && newList[0].id === headNow
+          
+          setTimeout(() => {
+            self.isShowNoNewItem = false
+          }, 2000)
 
-            self.isFetching = false
+          self.isFetching = false
 
-            if (response_num === 0) {
-              self.allLoaded = true
-            } else if (headNow === 0) {
-              self.submissionList = newList
-              self.allLoaded = newList.length < FENYE_COUNT
-            } else if (~headIndex) {
-              // 包含
-              self.submissionList = newList.slice(0, headIndex).concat(self.submissionList)
-            } else {
-              self.submissionList = newList
-              self.allLoaded = false
-            }
 
-            // 刷新的话回顶部
-            self.$el.scrollTop = 0
+          let isAllLoaded = self.isAllLoaded
+          if (response_num === 0) {
+            isAllLoaded = true
+          } else if (headNow === 0) {
+            self.setData({
+              dataList: newList
+            })
 
-            // 清零投稿未读数
-            self.$store.commit('set_newtougao', 0)
+            isAllLoaded = newList.length < FENYE_COUNT
+          } else if (~headIndex) {
+            // 包含
+            let _list = newList.slice(0, headIndex).concat(self.dataList)
+            self.setData({
+              dataList: _list
+            })
+          } else {
+            self.setData({
+              dataList: newList
+            })
+            isAllLoaded = false
+          }
+
+          self.setData({
+            isAllLoaded
           })
+
+          // 刷新的话回顶部
+          self.$el.scrollTop = 0
+        })
+
       },
       /**
        * 投屏
@@ -294,7 +339,8 @@
         // 因为学生能够删除投稿，修改投屏方式为ajax
         // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691
         postingTimer = setTimeout(() => {
-          self.isAskingItemStatus = true
+          // TODO 订阅投稿投屏咨询状态
+          // self.isAskingItemStatus = true
         },800)
         
         let url = API.tougaostatus
@@ -373,7 +419,7 @@
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            self.submissionList[index].is_collect = !!status
+            self.dataList[index].is_collect = !!status
           })
       },
       /**
@@ -425,26 +471,7 @@
         }
 
       },
-      /**
-       * 轮询有没有新的投稿
-       *
-       */
-      pollingNewSubmission () {
-        let self = this
-        let url = API.submissionlist
-        // 有可能还一条都没哟呢
-        let start = self.submissionList[0] ? self.submissionList[0].id : 0
-
-        // 获取数据
-        request.get(url, {
-          'lesson_id': self.lessonid,
-          'start': start,             // 开始的id，返回时不包含本id内容
-          'count': FENYE_COUNT,
-          'direction': 1              // 刷新要正序查找
-        }).then(jsonData => {
-            self.isShowNewHint = jsonData.data.response_num
-          })
-      },
+      
     }
   }
 </script>

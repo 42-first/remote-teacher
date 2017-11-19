@@ -357,7 +357,7 @@ function socketProcessMessage(msg){
 
     // 退出弹幕投屏蒙版
     if (msg.type == 'danmu') {
-      self.postingDanmuid = -1
+      self.$store.commit('set_postingDanmuid', -1)
 
       localStorage.setItem('postingDanmuid'+self.lessonid, -1)
       return
@@ -365,7 +365,7 @@ function socketProcessMessage(msg){
 
     // 退出投稿投屏蒙版
     if (msg.type == 'post') {
-      self.postingSubmissionid = -1
+      self.$store.commit('set_postingSubmissionid', -1)
 
       localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
       return

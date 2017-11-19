@@ -73,7 +73,7 @@
 
   export default {
     name: 'Activity',
-    props: ['isDanmuOpen', 'postingDanmuid', 'postingSubmissionid', 'postingSubmissionSent', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['isDanmuOpen', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
