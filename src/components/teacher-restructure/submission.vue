@@ -322,8 +322,9 @@
             isAllLoaded
           })
 
-          // 刷新的话回顶部
+          // 刷新的话回顶部，清零投稿未读数
           self.$el.scrollTop = 0
+          self.$store.commit('set_newtougao', 0)
         })
 
       },
