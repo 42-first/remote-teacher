@@ -96,7 +96,6 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
 
-  let BIG_NUMBER = 10000000000000000000
   let FENYE_COUNT = 10
 
   let WH = window.innerWidth/window.innerHeight
@@ -105,7 +104,7 @@
 
   export default {
     name: 'RcMaskActivitySubmission',
-    props: ['postingSubmissionid', 'postingSubmissionSent'],
+    props: ['postingSubmissionSent'],
     data () {
       return {
         submissionList: [],           // 投稿列表
@@ -113,7 +112,6 @@
         isItemDeleted: false,         // 投稿已经被删除
         isFetching: true,             // 正在获取数据
         allLoaded: false,             // 上拉加载更多到底了
-        bigpicUrl: '',                // 当前大图url
         contLonger: false,            // 内容超过1屏
         isShowNoNewItem: false,       // 刷新后没有新的条目
         isShowNewHint: false,         // 上方提示有新的条目进来
@@ -124,6 +122,7 @@
       ...mapGetters([
         'lessonid',
         'socket',
+        'postingSubmissionid'
       ])
     },
     components: {

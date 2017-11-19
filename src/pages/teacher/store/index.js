@@ -29,6 +29,11 @@ const store = new Vuex.Store({
     newtougao: 0,                           // 未查看的投稿人次总数
     isPPTVersionAboveOne: false,            // ppt插件的版本大于1
     idIndexMap: {},                         // slideid 和 slideindex 的对应关系
+    postingDanmuid: -1,                     // 正在投屏的弹幕的id
+    postingSubmissionid: -1,                // 正在投屏的投稿的id
+    postingSubmissionSent: false,           // 正在投屏的投稿已经发送全班
+    postingSubjectiveid: -1,                // 正在投屏的主观题的id
+
   },
 
   mutations: {
@@ -79,6 +84,9 @@ const store = new Vuex.Store({
     },
     set_newtougao: (state, newtougao) => {
       state.newtougao = newtougao
+    },
+    set_postingSubmissionid: (state, postingSubmissionid) => {
+      state.postingSubmissionid = postingSubmissionid
     },
     
   },
