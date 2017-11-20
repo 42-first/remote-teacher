@@ -9,6 +9,7 @@ const Paper = () => import('@/components/teacher-restructure/paper')
 const Danmu = () => import('@/components/teacher-restructure/danmu')
 const Submission = () => import('@/components/teacher-restructure/submission')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
+const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
 
 
 Vue.use(Router)
@@ -56,6 +57,11 @@ const router = new Router({
       path: '/quizresult/:quizid',
       name: 'quizresult',
       component: Quizresult
+    },
+    {
+      path: '/quizresultdetail/:quizid',
+      name: 'quizresultdetail',
+      component: Quizresultdetail
     },
     {
       path: '*',

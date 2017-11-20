@@ -39,12 +39,12 @@
         <div class="btn-desc f14">投屏</div>
       </v-touch>
 
-      <v-touch class="btn-item" v-on:tap="showQuizresultDetail">
+      <router-link class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>
         <div class="btn-desc f14">查看详情</div>
-      </v-touch>
+      </router-link>
     </section>
 
   </div>
@@ -262,17 +262,6 @@
 
         self.socket.send(str)
       },
-      /**
-       * 显示试题详情的按钮：查看详情
-       *
-       * @event bindtap
-       */
-      showQuizresultDetail () {
-        let self = this
-
-        self.isQuizresultDetailHidden = false
-      },
-      
     }
   }
 </script>
