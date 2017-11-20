@@ -52,11 +52,23 @@
 	    }
 	  },
 	  created(){
-	  	let self = this
-	  	self.redid = +self.$route.params.redid
-	  	self.refreshRedPacketDetail()
+	  	this.init()
+	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
 	  },
 	  methods: {
+	  	/**
+	     * 复用页面，需要watch route
+	     *
+	     */
+	    init () {
+		  	let self = this
+		  	self.redid = +self.$route.params.redid
+		  	self.refreshRedPacketDetail()
+	    },
 		  /**
 		   * 在已经发送红包的试题的柱状图页面中点击“红包名单”按钮显示红包名单列表页面
 		   *

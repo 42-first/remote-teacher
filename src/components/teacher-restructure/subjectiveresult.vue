@@ -172,29 +172,7 @@
       Scale
 	  },
 	  created(){
-	  	let self = this
-      let params = self.$route.params
-      let query = self.$route.query
-
-      self.problemid = +params.problemid
-      self.limit = +query.lm
-
-      initTime = +query.tl <= 0 ? 0 : +query.tl
-      START = +new Date()
-      newTime = initTime
-
-      if (self.limit === -1 && newTime === 0) {
-        newTime = 1
-      }
-
-      if (self.limit === -1 && initTime === 0) {
-        initTime = 1
-      }
-
-      self.refreshDataList()
-      pollingTimer = setInterval(self.pollingNewItem, 5000)
-
-      self.handleDuration()
+	  	this.init()
 	  },
     beforeDestroy(){
       this.endTimers()
@@ -212,9 +190,41 @@
           let wh = window.innerHeight
           this.isContLonger = sbh >= wh
         }, 100)
+      },
+      '$route' () {
+        this.init()
       }
     },
 	  methods: {
+      /**
+       * 复用页面，需要watch route
+       *
+       */
+      init () {
+        let self = this
+        let params = self.$route.params
+        let query = self.$route.query
+
+        self.problemid = +params.problemid
+        self.limit = +query.lm
+
+        initTime = +query.tl <= 0 ? 0 : +query.tl
+        START = +new Date()
+        newTime = initTime
+
+        if (self.limit === -1 && newTime === 0) {
+          newTime = 1
+        }
+
+        if (self.limit === -1 && initTime === 0) {
+          initTime = 1
+        }
+
+        self.refreshDataList()
+        pollingTimer = setInterval(self.pollingNewItem, 5000)
+
+        self.handleDuration()
+      },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
 	     *

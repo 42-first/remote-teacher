@@ -134,13 +134,25 @@
 	    }
 	  },
 	  created(){
-	  	let self = this
-
-	  	self.problemid = +self.$route.params.problemid
-	  	self.fetchStuBank()
+	  	this.init()
+	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
 	  },
 	  mixins: [redpacket],
 	  methods: {
+	  	/**
+	     * 复用页面，需要watch route
+	     *
+	     */
+	    init () {
+		  	let self = this
+
+		  	self.problemid = +self.$route.params.problemid
+		  	self.fetchStuBank()
+	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
 	     *

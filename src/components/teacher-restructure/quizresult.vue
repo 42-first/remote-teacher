@@ -86,20 +86,32 @@
     components: {
     },
     created () {
-      let self = this
-
-      self.quizid = +self.$route.params.quizid
-      self.showQuizResult()
-
-      // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
-      self.$on('quizfinished', function (msg) {
-        if (self.quizid === msg.quizid) {
-          self.isPaperCollected = true
-          self.endTimers()
-        }
-      })
+      this.init()
+    },
+    watch: {
+      '$route' () {
+        this.init()
+      }
     },
     methods: {
+      /**
+       * 复用页面，需要watch route
+       *
+       */
+      init () {
+        let self = this
+
+        self.quizid = +self.$route.params.quizid
+        self.showQuizResult()
+
+        // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+        self.$on('quizfinished', function (msg) {
+          if (self.quizid === msg.quizid) {
+            self.isPaperCollected = true
+            self.endTimers()
+          }
+        })
+      },
       /**
        * 归零、结束定时器等
        *

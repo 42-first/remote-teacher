@@ -45,11 +45,23 @@
       }
     },
     created () {
-      let self = this
-
-      self.refreshQuizResultDetail()
+      this.init()
+    },
+    watch: {
+      '$route' () {
+        this.init()
+      }
     },
     methods: {
+      /**
+       * 复用页面，需要watch route
+       *
+       */
+      init () {
+        let self = this
+
+        self.refreshQuizResultDetail()
+      },
       /**
        * 刷新试卷详情
        *
