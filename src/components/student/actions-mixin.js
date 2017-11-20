@@ -230,13 +230,15 @@ var actionsMixin = {
       }
 
       slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+      // 问题类型
+      let problemType = slideData['Problem']['Type'];
 
       data = Object.assign(data, {
         pageIndex: data.pageIndex,
         presentationid: data.presentationid,
         time: data.time,
-        problemType: slideData['Problem']['Type'],
-        caption: slideData['Problem']['Type'] === 'Polling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
+        problemType: problemType,
+        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
         status: slideData['Problem']['Result'] ? '已完成' : '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],

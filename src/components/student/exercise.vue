@@ -39,7 +39,7 @@
         <!-- 投票选择提示 -->
         <p class="polling-count f20" v-if="problemType==='Polling' && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
         <p class="polling-count f20" v-if="summary && !summary.isComplete && problemType==='Polling' && selectedPollingCount === pollingCount">您还未投票</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 1 || canSubmit === 2)) ? '(匿名)': ''}}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? '(匿名)': ''}}</p>
 
       </section>
 
@@ -219,7 +219,7 @@
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
 
           // 投票类型
-          if(this.problemType === 'Polling') {
+          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
             this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
           }
 
@@ -341,10 +341,10 @@
           this.setOptions(option, false);
           this.optionsSet.delete(option);
 
-          if(this.problemType === 'Polling') {
+          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
             this.selectedPollingCount++;
           }
-        } else {
+        } else if(this.problemType) {
           // 是否多选
           if(this.problemType === 'MultipleChoiceMA') {
             this.setOptions(option, true, true);
@@ -353,11 +353,11 @@
             this.setOptions(option, true, false);
             this.optionsSet.clear();
             this.optionsSet.add(option);
-          } else if(this.problemType === 'Polling' && this.selectedPollingCount && this.pollingCount > 1) {
+          } else if(this.problemType.indexOf('Polling') > -1 && this.selectedPollingCount && this.pollingCount > 1) {
             this.selectedPollingCount--;
             this.setOptions(option, true, true);
             this.optionsSet.add(option);
-          } else if(this.problemType === 'Polling' && this.pollingCount === 1) {
+          } else if(this.problemType.indexOf('Polling') > -1 && this.pollingCount === 1) {
             this.setOptions(option, true, false);
             this.optionsSet.clear();
             this.optionsSet.add(option);
