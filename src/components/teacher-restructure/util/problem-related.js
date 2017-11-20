@@ -13,8 +13,6 @@ export default {
   data () {
     return {
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
-      isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
-      isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
       problemType: '',                        // 当前页题目的类型 主观题： ShortAnswer; 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
     }
   },
@@ -50,10 +48,8 @@ export default {
         self.socket.send(str)
       }else{
         // 发送题目
-        self.setData({
-          isInitiativeCtrlMaskHidden: false,
-          initiativeCtrlMaskTpl: 'RcMaskProblemtime'
-        })
+        self.$store.commit('set_initiativeCtrlMaskTpl', 'RcMaskProblemtime')
+        self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
       }
     },
     /**
@@ -62,9 +58,7 @@ export default {
      * @event bindtap
      */
     cancelPublishProblem () {
-      this.setData({
-        isInitiativeCtrlMaskHidden: true
-      })
+      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
     },
     
     /**

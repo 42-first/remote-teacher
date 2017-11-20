@@ -44,7 +44,7 @@ function socketProcessMessage(msg){
 
     // 这个情况是用户进入后发现遥控器正被使用，需要显示我要夺权
     if(msg.op === 'hello' && msg.state === 'occupied'){
-      self.isMsgMaskHidden = true
+      self.$store.commit('set_isMsgMaskHidden', true)
       self.openDeprive('isRobber')
       return
     }
@@ -65,9 +65,8 @@ function socketProcessMessage(msg){
     
     // TODO 初次联通，node有时会丢失msg.presentation
     self.$store.commit('set_presentationid', msg.presentation)
-    self.setData({
-      isToastCtrlMaskHidden: true // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
-    })
+    // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
+    self.$store.commit('set_isToastCtrlMaskHidden', true)
 
     // 翻到初始页面（不一定是第一页），当前页有没有发试题按钮及状态在fetchPPTData的回调中处理
     self.showWhichPage(msg)
@@ -97,16 +96,12 @@ function socketProcessMessage(msg){
     if(msg.mask && msg.mask.type === 'qrcode'){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
-      self.setData({
-        isMsgMaskHidden: true,
-        // qrcodeStatus: msg.mask.qrcode
-      })
+      self.$store.commit('set_isMsgMaskHidden', true)
+
       self.showQrcodeMask()
     }else if(!msg.shownow){
       // qrcode为0时，有可能是第一次打开页面，此时并未播放，要在手机上点击开始上课，也显示二维码控制页
-      self.setData({
-        isMsgMaskHidden: true
-      })
+      self.$store.commit('set_isMsgMaskHidden', true)
       self.showQrcodeMask()
     }
     
@@ -307,10 +302,8 @@ function socketProcessMessage(msg){
 
   // 唤起随机点名
   if (msg.op == 'callwokeup') {
-    self.setData({
-      isInitiativeCtrlMaskHidden: false,
-      initiativeCtrlMaskTpl: 'Randomcall'
-    })
+    self.$store.commit('set_initiativeCtrlMaskTpl', 'Randomcall')
+    self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
     Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('callwokeup', msg)
@@ -344,9 +337,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'closedmask') {
     // 点击随机点名继续上课的回执
     if (msg.type == 'call') {
-      self.setData({
-        isInitiativeCtrlMaskHidden: true
-      })
+      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
 
       // 通知第一层蒙版（即当前的随机点名）点击继续上课 回执成功
       self.$refs.InitiativeCtrlMask.$emit('closedmask', msg)
@@ -381,10 +372,8 @@ function socketProcessMessage(msg){
 
   // 获取随机点名名单列表
   if (msg.op == 'calledlist') {
-    self.setData({
-      isInitiativeCtrlMaskHidden: false,
-      initiativeCtrlMaskTpl: 'Randomcall'
-    })
+    self.$store.commit('set_initiativeCtrlMaskTpl', 'Randomcall')
+    self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
     Vue.nextTick(function () {
       self.$refs.InitiativeCtrlMask.$emit('calledlist', msg)

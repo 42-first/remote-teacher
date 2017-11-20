@@ -12,6 +12,7 @@ const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : 
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
+let isReconnect = false
 
 /*
  * 在连网状态下断网，立即重连3次，还连不上的话之后隔3秒再连第四次，如果还连不上则显示10秒
@@ -36,6 +37,9 @@ let mixin = {
         socket.onopen = null
         socket.onmessage = null
 
+        self.$store.commit('set_socket', null)
+        self.socket = null
+
         return this
       } catch(e) {
       }
@@ -45,6 +49,11 @@ let mixin = {
     */
     initws() {
       let self = this
+      if (!isReconnect && self.$store.state.socket) {
+        // TODO 处理断网重连的socket怎么处理
+        self.socket = self.$store.state.socket
+        return;
+      }
 
       try {
         if(this.socket) {
@@ -62,6 +71,7 @@ let mixin = {
           self.closews()
           self.isSocketConnected = false
           // self.$refs.MsgMask.$emit('socketClosed')
+          isReconnect = true
 
           retryCount++;
           if (retryCount < 3){
@@ -72,17 +82,18 @@ let mixin = {
             }, 3000);
           }else if(retryCount >= 4){
             self.setData({
-              isMsgMaskHidden: false,
               connectCountDown: 10,
               isConnectingHidden: true,
-              msgMaskTpl: 'Reconnect'
             })
+            self.$store.commit('set_msgMaskTpl', 'Reconnect')
+            self.$store.commit('set_isMsgMaskHidden', false)
             self.countDown()
           }
         }
 
         // 接收socket信息
         this.socket.onopen = function(event) {
+          isReconnect = false
           self.isSocketConnected = true
           // self.sendXinTiao()
 

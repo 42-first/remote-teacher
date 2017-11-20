@@ -57,12 +57,25 @@
 	    }
 	  },
 	  created(){
-	  	let self = this
-
-	  	self.problemid = +self.$route.params.problemid
-	  	self.refreshProblemResultDetail()
+	  	this.init()
+	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
 	  },
 	  methods: {
+	  	/**
+	     * 复用页面，需要watch route
+	     *
+	     */
+	    init () {
+	    	console.log(87)
+		  	let self = this
+
+		  	self.problemid = +self.$route.params.problemid
+		  	self.refreshProblemResultDetail()
+	    },
 	    /**
 	     * 展示隐藏答案选项人名单
 	     *

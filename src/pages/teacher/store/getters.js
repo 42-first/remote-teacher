@@ -9,6 +9,7 @@ const getters = {
   socket: state => state.socket,
   lessonid: state => state.lessonid,
   presentationid: state => state.presentationid,
+  isBrandNewPpt: state => state.isBrandNewPpt,
   current: state => state.current,
   total: state => state.total,
   pptData: state => state.pptData,
@@ -24,5 +25,16 @@ const getters = {
   postingSubmissionid: state => state.postingSubmissionid,
   postingSubmissionSent: state => state.postingSubmissionSent,
   postingSubjectiveid: state => state.postingSubjectiveid,
+
+  isMsgMaskHidden: state => state.isMsgMaskHidden,
+  isToastCtrlMaskHidden: state => state.isToastCtrlMaskHidden,
+  isInitiativeCtrlMaskHidden: state => state.isInitiativeCtrlMaskHidden,
+  isEnterEnded: state => state.isEnterEnded,
+  isPubCheckProblemBtnHidden: state => state.isPubCheckProblemBtnHidden,
+  isProblemPublished: state => state.isProblemPublished,
+
+  msgMaskTpl: state => state.msgMaskTpl,
+  toastCtrlMaskTpl: state => state.toastCtrlMaskTpl,
+  initiativeCtrlMaskTpl: state => state.initiativeCtrlMaskTpl,
 };
 export default getters

@@ -121,24 +121,35 @@
       ])
 	  },
 	  created(){
-	  	let self = this
-
-	    self.problemid = +self.$route.params.problemid
-	    self.problemType = self.$route.query.pt
-	    self.limit = +self.$route.query.lm
-
-	    initTime = +self.$route.query.tl
-	    START = +new Date()
-	    newTime = initTime
-
-	    isFirstFetch = true
-    	self.getProblemResult()
-
+	  	this.init()
 	  },
 	  beforeDestroy(){
 	    this.shutDown()
 	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
+	  },
 	  methods: {
+	  	/**
+	     * 复用页面，需要watch route
+	     *
+	     */
+	    init () {
+		  	let self = this
+
+		    self.problemid = +self.$route.params.problemid
+		    self.problemType = self.$route.query.pt
+		    self.limit = +self.$route.query.lm
+
+		    initTime = +self.$route.query.tl
+		    START = +new Date()
+		    newTime = initTime
+
+		    isFirstFetch = true
+	    	self.getProblemResult()
+	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
 	     *

@@ -34,6 +34,17 @@ const store = new Vuex.Store({
     postingSubmissionSent: false,           // 正在投屏的投稿已经发送全班
     postingSubjectiveid: -1,                // 正在投屏的主观题的id
 
+    isEnterEnded: false,                    // 遥控器进入是否结束
+    isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
+    isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
+    isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
+    isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
+    isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
+
+    msgMaskTpl: 'Errormsg',
+    toastCtrlMaskTpl: '',
+    initiativeCtrlMaskTpl: '',
+
   },
 
   mutations: {
@@ -67,6 +78,9 @@ const store = new Vuex.Store({
     set_presentationid: (state, id) => {
       state.presentationid = id
     },
+    set_isBrandNewPpt: (state, isBrandNewPpt) => {
+      state.isBrandNewPpt = isBrandNewPpt
+    },
     set_current: (state, current) => {
       state.current = current
     },
@@ -96,6 +110,35 @@ const store = new Vuex.Store({
     },
     set_postingSubjectiveid: (state, postingSubjectiveid) => {
       state.postingSubjectiveid = postingSubjectiveid
+    },
+
+    set_isEnterEnded: (state, isEnterEnded) => {
+      state.isEnterEnded = isEnterEnded
+    },
+    set_isMsgMaskHidden: (state, isMsgMaskHidden) => {
+      state.isMsgMaskHidden = isMsgMaskHidden
+    },
+    set_isToastCtrlMaskHidden: (state, isToastCtrlMaskHidden) => {
+      state.isToastCtrlMaskHidden = isToastCtrlMaskHidden
+    },
+    set_isInitiativeCtrlMaskHidden: (state, isInitiativeCtrlMaskHidden) => {
+      state.isInitiativeCtrlMaskHidden = isInitiativeCtrlMaskHidden
+    },
+    set_isPubCheckProblemBtnHidden: (state, isPubCheckProblemBtnHidden) => {
+      state.isPubCheckProblemBtnHidden = isPubCheckProblemBtnHidden
+    },
+    set_isProblemPublished: (state, isProblemPublished) => {
+      state.isProblemPublished = isProblemPublished
+    },
+
+    set_msgMaskTpl: (state, msgMaskTpl) => {
+      state.msgMaskTpl = msgMaskTpl
+    },
+    set_toastCtrlMaskTpl: (state, toastCtrlMaskTpl) => {
+      state.toastCtrlMaskTpl = toastCtrlMaskTpl
+    },
+    set_initiativeCtrlMaskTpl: (state, initiativeCtrlMaskTpl) => {
+      state.initiativeCtrlMaskTpl = initiativeCtrlMaskTpl
     },
     
   },

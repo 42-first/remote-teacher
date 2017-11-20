@@ -26,7 +26,6 @@
 
 	export default {
 	  name: 'Qrcode',
-	  props: ['isBrandNewPpt'],
 	  data () {
 	    return {
 	    }
@@ -34,8 +33,9 @@
 	  computed: {
       ...mapGetters([
       	'inviteCode',
-        'lessonid',
         'socket',
+        'lessonid',
+        'isBrandNewPpt',
         'qrcodeStatus',
       ])
     },

@@ -24,14 +24,16 @@ export default {
      * 关闭蒙版
      */
     killMask: function () {
-      this.setData({
-        isMsgMaskHidden: true,      // 针对初始蒙版
-        // TODO 和夺权有潜在冲突
-        isToastCtrlMaskHidden: true, // 针对夺权蒙版
-        isInitiativeCtrlMaskHidden: true,
-        msgMaskTpl: '', // 断网重连蒙版需要遮住工具栏，就是用 isYieldToolbar 判断的，用到了 msgMaskTpl
-        initiativeCtrlMaskTpl: ''
-      })
+      let self = this
+
+      // 针对初始蒙版
+      self.$store.commit('set_isMsgMaskHidden', true)
+      // 针对夺权蒙版
+      self.$store.commit('set_isToastCtrlMaskHidden', true)
+      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
+      // 断网重连蒙版需要遮住工具栏，就是用 isYieldToolbar 判断的，用到了 msgMaskTpl
+      self.$store.commit('set_msgMaskTpl', '')
+      self.$store.commit('set_initiativeCtrlMaskTpl', '')
     },
     /**
      * 点亮弹幕按钮
@@ -52,45 +54,54 @@ export default {
      * @param {Boolean} byself 自己夺自己的权
      */
     openDeprive: function (str, byself = false) {
+      let self = this
+
       this.setData({
-        isToastCtrlMaskHidden: false,
         isRobber: str === 'isRobber',
-        toastCtrlMaskTpl: 'Deprive',
-        initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         byself,
       })
+      self.$store.commit('set_toastCtrlMaskTpl', 'Deprive')
+      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
+      self.$store.commit('set_initiativeCtrlMaskTpl', '')
+      self.$store.commit('set_isToastCtrlMaskHidden', false)
     },
     /**
      * 老版本雨课堂软件，没有二维码控制，显示 '已连接成功\n请在电脑上播放幻灯片'
      */
     showOldHelloMask: function () {
       this.setData({
-        isMsgMaskHidden: false,
-        msgMaskTpl: 'Errormsg',
         errType: 1
       })
+      self.$store.commit('set_msgMaskTpl', 'Errormsg')
+      self.$store.commit('set_isMsgMaskHidden', false)
     },
     /**
      * 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
      */
     showEscMask: function () {
+      let self = this
+
       this.setData({
-        isMsgMaskHidden: false,
-        msgMaskTpl: 'Errormsg',
-        initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         errType: 2
       })
+      self.$store.commit('set_msgMaskTpl', 'Errormsg')
+      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
+      self.$store.commit('set_initiativeCtrlMaskTpl', '')
+      self.$store.commit('set_isMsgMaskHidden', false)
     },
     /**
      * 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
      */
     showPcErrorMask: function () {
+      let self = this
+
       this.setData({
-        isMsgMaskHidden: false,
-        msgMaskTpl: 'Errormsg',
-        initiativeCtrlMaskTpl: '', // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
         errType: 3
       })
+      self.$store.commit('set_msgMaskTpl', 'Errormsg')
+      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
+      self.$store.commit('set_initiativeCtrlMaskTpl', '')
+      self.$store.commit('set_isMsgMaskHidden', false)
     },
     /**
      * 跳转到某页，无论是正常翻页、缩略图、还是初次打开遥控器
@@ -108,11 +119,10 @@ export default {
       let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
 
       self.$store.commit('set_current', current)
+      self.$store.commit('set_isPubCheckProblemBtnHidden', !isProblem)
+      self.$store.commit('set_isProblemPublished', isProblemPublished)
 
       self.setData({
-        // current: current,
-        isPubCheckProblemBtnHidden: !isProblem,
-        isProblemPublished: isProblemPublished,
         unlockedproblem: msg.unlockedproblem
       })
 
@@ -166,10 +176,8 @@ export default {
     showQrcodeMask: function () {
       let self = this
 
-      self.setData({
-        isInitiativeCtrlMaskHidden: false,
-        initiativeCtrlMaskTpl: 'Qrcode'
-      })
+      self.$store.commit('set_initiativeCtrlMaskTpl', 'Qrcode')
+      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
     },
   }
 }

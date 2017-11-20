@@ -45,7 +45,6 @@
         <component
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
-          :is-brand-new-ppt="isBrandNewPpt"
           :is-socket-connected="isSocketConnected"
           @goHome="goHome"
           @showThumbnail="showThumbnail"
@@ -148,22 +147,15 @@
 	      imgUploadingPath: require('../../images/teacher/img-uploading.png'),
 	      isShuban: false,                        // 是竖版ppt
 	      isGuideHidden: true,                    // 新手引导隐藏
-	      isEnterEnded: false,                    // 遥控器进入是否结束
 	      // 根页面不用store，每次进入后自己夺自己的权，简单粗暴，
 	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
-	      isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
-	      isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
-	      isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
-	      isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
+	      
 	      isSocketConnected: false,               // WebSocket 已连接
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
 	      startPoint: [0, 0],
-	      msgMaskTpl: 'Errormsg',
-	      toastCtrlMaskTpl: '',
-	      initiativeCtrlMaskTpl: '',
 	      errType: 5,
 	      connectCountDown: 10,
 	      isConnectingHidden: true,               // 连接中隐藏
@@ -203,7 +195,18 @@
         'newdoubt',
         // 'newtougao',
         // 'isPPTVersionAboveOne',
-        // 'idIndexMap'
+        // 'idIndexMap',
+        'isEnterEnded',
+        'isMsgMaskHidden',
+        'isToastCtrlMaskHidden',
+        'isInitiativeCtrlMaskHidden',
+        'isPubCheckProblemBtnHidden',
+        'isProblemPublished',
+
+
+        'msgMaskTpl',
+        'toastCtrlMaskTpl',
+        'initiativeCtrlMaskTpl'
       ])
 	  },
 	  components: {
@@ -227,6 +230,21 @@
 
 	    // 获取本地不懂、投稿已读数
 	    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
+
+	    // 保存本地正在投屏的弹幕、投稿id、主观题id
+	    let postingDanmuid = +(localStorage.getItem('postingDanmuid'+self.lessonid) || -1)
+
+	    let postingSubmissionid = +(localStorage.getItem('postingSubmissionid'+self.lessonid) || -1)
+
+	    let tempSentStatus = localStorage.getItem('postingSubmissionSent'+self.lessonid)
+	    self.postingSubmissionSent = tempSentStatus === 'true'
+
+	    let postingSubjectiveid = +(localStorage.getItem('postingSubjectiveid'+self.lessonid) || -1)
+
+	    self.$store.commit('set_postingDanmuid', postingDanmuid)
+	    self.$store.commit('set_postingSubmissionid', postingSubmissionid)
+	    self.$store.commit('set_postingSubjectiveid', postingSubjectiveid)
+
 
 	    configWX()
 	    wx.ready(() => {
@@ -349,13 +367,10 @@
 	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
 	          self.$store.commit('set_pptData', pptData)
 	          self.$store.commit('set_total', pptData.length)
+	          self.$store.commit('set_isPubCheckProblemBtnHidden', !isProblem)
+	          self.$store.commit('set_isProblemPublished', isProblemPublished)
 
-	          self.setData({
-	            isPubCheckProblemBtnHidden: !isProblem,
-	            isProblemPublished: isProblemPublished
-	          })
-
-	          self.isEnterEnded = true
+	          self.$store.commit('set_isEnterEnded', true)
 	          self.initCardHeight()
 	          self.filterSlideid(pptData)
 	        })
@@ -405,10 +420,8 @@
 	    showThumbnail () {
 	      let self = this
 
-	      self.setData({
-	        isInitiativeCtrlMaskHidden: false,
-	        initiativeCtrlMaskTpl: 'Thumbnail'
-	      })
+	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Thumbnail')
+	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
 
@@ -423,10 +436,8 @@
 	    showActivity () {
 	      let self = this
 
-	      self.setData({
-	        isInitiativeCtrlMaskHidden: false,
-	        initiativeCtrlMaskTpl: 'Activity'
-	      })
+	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
+	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
 
@@ -442,10 +453,8 @@
 	    goHome () {
 	      let self = this
 
-	      self.setData({
-	        isInitiativeCtrlMaskHidden: true,
-	        initiativeCtrlMaskTpl: ''
-	      })
+	      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
+	      self.$store.commit('set_initiativeCtrlMaskTpl', '')
 	    },
 	    /**
 	     * 轮询获取缩略图页 不懂 等标志的信息
