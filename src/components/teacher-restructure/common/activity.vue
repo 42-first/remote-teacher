@@ -6,13 +6,13 @@
         <img :src="avatar" alt="">
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
-      <v-touch class="student f17 J_ga" v-on:tap="" data-category="5" data-label="课堂动态页">
+      <router-link :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
         <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
         <span class="dqxs">
           当前学生{{participantList.length}}位
           <i class="iconfont icon-dakai f15"></i>
         </span>
-      </v-touch>
+      </router-link>
     </section>
     <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
