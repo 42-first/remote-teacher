@@ -58,22 +58,23 @@ const router = new Router({
       component: Subjectiveresult
     },
     {
-      path: '/member',
+      // 随便加个后缀，避免刷新页面时“/member”匹配到 /:lessonid
+      path: '/member/xxx',
       name: 'member',
       component: Member
     },
     {
-      path: '/paper',
+      path: '/paper/xxx',
       name: 'paper',
       component: Paper
     },
     {
-      path: '/danmu',
+      path: '/danmu/xxx',
       name: 'danmu',
       component: Danmu
     },
     {
-      path: '/submission',
+      path: '/submission/xxx',
       name: 'submission',
       component: Submission
     },
