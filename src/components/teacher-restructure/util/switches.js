@@ -37,17 +37,13 @@ export default {
      * 点亮弹幕按钮
      */
     openDanmuBtn: function () {
-      this.setData({
-        isDanmuOpen: true
-      })
+      this.$store.commit('set_isDanmuOpen', true)
     },
     /**
      * 熄灭弹幕按钮
      */
     closeDanmuBtn: function () {
-      this.setData({
-        isDanmuOpen: false
-      })
+      this.$store.commit('set_isDanmuOpen', false)
     },
     /**
      * 打开夺权面板

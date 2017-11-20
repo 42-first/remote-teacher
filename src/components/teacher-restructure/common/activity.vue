@@ -25,7 +25,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </v-touch>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="6" data-label="课堂动态页">
+    <router-link :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -36,7 +36,7 @@
         <span class="kg">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
+    </router-link>
     <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
@@ -73,7 +73,7 @@
 
   export default {
     name: 'Activity',
-    props: ['isDanmuOpen', 'isRcMaskActivityAtRoot', 'isSocketConnected'],
+    props: ['isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
         participantList: [],            // 当前学生名单
@@ -91,6 +91,7 @@
         'lessonid',
         'presentationid',
         'socket',
+        'isDanmuOpen',
         'newtougao',
       ])
     },

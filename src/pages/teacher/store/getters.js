@@ -16,6 +16,7 @@ const getters = {
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
   
   qrcodeStatus: state => state.qrcodeStatus,
+  isDanmuOpen: state => state.isDanmuOpen,
   newdoubt: state => state.newdoubt,
   newtougao: state => state.newtougao,
   idIndexMap: state => state.idIndexMap,

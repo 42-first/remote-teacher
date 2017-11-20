@@ -480,15 +480,11 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .submission-box {
-    position: absolute;
-    z-index: 20; /* 遮盖toolbar */
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    position: relative;
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     .new-item-hint {
       position: fixed;

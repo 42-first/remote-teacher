@@ -46,7 +46,6 @@
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
           :is-brand-new-ppt="isBrandNewPpt"
-          :is-danmu-open="isDanmuOpen"
           :is-socket-connected="isSocketConnected"
           @goHome="goHome"
           @showThumbnail="showThumbnail"
@@ -168,7 +167,6 @@
 	      errType: 5,
 	      connectCountDown: 10,
 	      isConnectingHidden: true,               // 连接中隐藏
-	      isDanmuOpen: false,                     // 弹幕是否处于打开状态
 	      
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒

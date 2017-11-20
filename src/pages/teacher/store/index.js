@@ -76,6 +76,9 @@ const store = new Vuex.Store({
     set_pptData: (state, pptData) => {
       state.pptData = pptData
     },
+    set_isDanmuOpen: (state, isDanmuOpen) => {
+      state.isDanmuOpen = isDanmuOpen
+    },
     set_qrcodeStatus: (state, qrcodeStatus) => {
       state.qrcodeStatus = qrcodeStatus
     },

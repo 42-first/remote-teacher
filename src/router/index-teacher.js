@@ -5,6 +5,7 @@ import Home from '@/components/teacher-restructure/home'
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
 const Submission = () => import('@/components/teacher-restructure/submission')
+const Danmu = () => import('@/components/teacher-restructure/danmu')
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 
 Vue.use(Router)
@@ -32,6 +33,11 @@ const router = new Router({
       path: '/subjectiveresult/:problemid',
       name: 'subjectiveresult',
       component: Subjectiveresult
+    },
+    {
+      path: '/danmu',
+      name: 'danmu',
+      component: Danmu
     },
     {
       path: '/submission',
