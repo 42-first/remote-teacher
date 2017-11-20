@@ -60,12 +60,12 @@
 	        <div class="btn-desc f14">投屏</div>
 	      </v-touch>
 
-	      <v-touch class="btn-item" v-on:tap="">
+	      <router-link :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
 	        <div class="btn-desc f14">查看详情</div>
-	      </v-touch>
+	      </router-link>
 
 	      <v-touch v-show="~problemType.indexOf('Polling')" class="btn-item" v-on:tap="">
 	        <div class="iconbox" style="background: #E64340;">
@@ -94,7 +94,6 @@
 
 	export default {
 	  name: 'Collumresult',
-	  props: [],
 	  data () {
 	    return {
 	    	problemid: -1,
