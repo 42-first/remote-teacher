@@ -100,6 +100,12 @@ router.beforeEach((to, from, next) => {
   // 订阅发布重置
   let pubSub = window.parent && window.parent.PubSub || null;
   pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
+
+  // socket 无法使用的话，功能不正常，回根页面
+  if (!STORE.state.socket.send && to.name !== 'home') {
+    next({name: 'home', params: {lessonid: STORE.state.lessonid}})
+    return;
+  }
   next()
 })
 

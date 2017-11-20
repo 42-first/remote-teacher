@@ -12,6 +12,7 @@ Vue.use(VueTouch, {name: 'v-touch'})
 
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
+window.STORE = store // 在 router 中判断是否刷新页面倒是 socket 无效
 
 /* eslint-disable no-new */
 new Vue({

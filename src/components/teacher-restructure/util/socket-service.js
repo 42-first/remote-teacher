@@ -49,8 +49,10 @@ let mixin = {
     */
     initws() {
       let self = this
-      if (!isReconnect && self.$store.state.socket) {
+      // 持久化了，所以总是有socket对象
+      if (!isReconnect && self.$store.state.socket && self.$store.state.socket.send) {
         // TODO 处理断网重连的socket怎么处理
+        // 不用重连了：不是断网重连，并且有连接能力（刷新可能导致只是一个对象而已）
         self.socket = self.$store.state.socket
         return;
       }

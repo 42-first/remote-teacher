@@ -68,7 +68,7 @@
   let FENYE_COUNT = 20
 
   export default {
-    name: 'RcMaskActivityDanmubox',
+    name: 'Danmu',
     data () {
       return {
         dataList: [],               // 弹幕列表
