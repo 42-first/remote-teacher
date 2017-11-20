@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
 
+const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
 const Paper = () => import('@/components/teacher-restructure/paper')
 const Danmu = () => import('@/components/teacher-restructure/danmu')
 const Submission = () => import('@/components/teacher-restructure/submission')
-const RemoteList = () => import('@/components/teacher-restructure/remote-list')
+const Quizresult = () => import('@/components/teacher-restructure/quizresult')
+
 
 Vue.use(Router)
 
@@ -49,6 +51,11 @@ const router = new Router({
       path: '/submission',
       name: 'submission',
       component: Submission
+    },
+    {
+      path: '/quizresult/:quizid',
+      name: 'quizresult',
+      component: Quizresult
     },
     {
       path: '*',
