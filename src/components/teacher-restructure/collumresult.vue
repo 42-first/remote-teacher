@@ -67,12 +67,12 @@
 	        <div class="btn-desc f14">查看详情</div>
 	      </router-link>
 
-	      <v-touch v-show="~problemType.indexOf('Polling')" class="btn-item" v-on:tap="">
+	      <router-link :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling')" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
-	      </v-touch>
+	      </router-link>
 	    </section>
 	  </div>
 		

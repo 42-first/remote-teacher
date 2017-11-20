@@ -58,9 +58,9 @@
 
   import {mapGetters} from 'vuex'
   import {sec2str} from './util/util'
+  import {drawRingSolid} from './util/drawsvg'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
-  import {drawRingSolid} from '@/util/teacher-util/drawsvg'
 
   export default {
     name: 'Quizresult',

@@ -5,6 +5,7 @@ import Home from '@/components/teacher-restructure/home'
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const CollumresultDetail = () => import('@/components/teacher-restructure/collumresult-detail')
+const Redpacket = () => import('@/components/teacher-restructure/redpacket')
 const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
 const Member = () => import('@/components/teacher-restructure/member')
 const Paper = () => import('@/components/teacher-restructure/paper')
@@ -39,6 +40,11 @@ const router = new Router({
       path: '/collumresult-detail/:problemid',
       name: 'collumresult-detail',
       component: CollumresultDetail
+    },
+    {
+      path: '/redpacket/:problemid',
+      name: 'redpacket',
+      component: Redpacket
     },
     {
       path: '/subjectiveresult/:problemid',
