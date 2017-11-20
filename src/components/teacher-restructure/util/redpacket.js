@@ -234,9 +234,12 @@ export default {
 	   * @event bindtap
 	   */
 	  giveupBonus () {
-	    self.NUM_INPUT_VALUE = ''
+	  	let self = this
 
-	    this.$emit('giveupBonus')
+	  	self.isPayingWrapperHidden = true
+	  	self.payingStep = -1
+	    self.NUM_INPUT_VALUE = ''
+	    self.$router.go(-1)
 	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “打赏” 按钮，之后弹出确认金额页面
@@ -332,11 +335,6 @@ export default {
 	  wxpayCallback (out_trade_no) {
 	    let self = this
 
-	    // let url = API.payquery
-	    // let postData = {
-	    // 	'out_trade_no': out_trade_no
-	    // }
-
 	    let url = API.payquery_proxy
 	    let postData = {
 	    	op: 'query',
@@ -388,16 +386,14 @@ export default {
 	   */
 	  connectLittleBankSuccess (jsonData) {
 	    let self = this
+	    // 红包id： data.data.id
+    	// 在柱状图页获取数据会获取 红包id，不用在这里传数据
 
 	    self.payingStep = 1
 	    console.log('支付成了')
 
 	    // 重置钱包余额
 	    self.fetchStuBank()
-	    // 告诉父组件红包发送成功
-	    console.log('红包页emit红包id', jsonData.data.id)
-	    // rc-mask-redpacket.vue -> rc-mask-problemresult.vue -> remote.vue
-	    self.$emit('connectLittleBankSuccess', jsonData.data.id)
 	  },
 	  /**
 	   * 在试题的红包页面，最终确认后，成功，点击“确认”按钮
@@ -406,10 +402,7 @@ export default {
 	   */
 	  confirmPaySuccess () {
 	    let self = this
-	    this.setData({
-	      isPayingWrapperHidden: true,
-	      payingStep: -1
-	    })
+	    
 	    // 关闭红包页面
 	    self.giveupBonus()
 	  },
@@ -420,10 +413,7 @@ export default {
 	   */
 	  confirmPayFail () {
 	    let self = this
-	    this.setData({
-	      isPayingWrapperHidden: true,
-	      payingStep: -1
-	    })
+	    
 	    // 关闭红包页面
 	    self.giveupBonus()
 	  },
