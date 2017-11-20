@@ -260,6 +260,11 @@ var actionsMixin = {
         return item.type === 3 && item.problemID === data.event['prob'];
       })
 
+      // fixed cover为空
+      if(hasEvent && !hasEvent.cover) {
+        hasEvent.cover = slideData && slideData['Cover'];
+      }
+
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
     },
