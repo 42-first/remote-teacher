@@ -14,7 +14,7 @@
         </span>
       </v-touch>
     </section>
-    <v-touch class="activity-item f18 J_ga" v-on:tap="" data-category="16" data-label="课堂动态页">
+    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -24,7 +24,7 @@
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
+    </router-link>
     <router-link :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">

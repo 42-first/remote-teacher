@@ -95,10 +95,7 @@
     created () {
       let self = this
 
-      // 点击 试卷 按钮 父组件发送事件给本子组件，获取已发、未发试卷
-      self.$on('showPaper', function () {
-        self.fetchPaperData()
-      })
+      self.fetchPaperData()
 
       // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
       self.$on('newquiz', function (msg) {
@@ -115,17 +112,6 @@
       })
     },
     methods: {
-      /**
-       * 点击 返回 按钮关闭试卷列表
-       *
-       * @event bindtap
-       * @param {object} evt event对象
-       */
-      closePaper (evt) {
-        this.$emit('closePaper')
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
-      },
       /**
        * 获取试卷数据
        *
@@ -189,13 +175,6 @@
 
         self.isPubmodalHidden = true
         self.paperChosen.index = -1
-
-        // self.paperChosen = {
-        //   index: -1,
-        //   id: -1,
-        //   title: '',
-        //   total: -1
-        // }
       },
       /**
        * 试卷列表选择好某条试卷后点击“确认发布”
@@ -219,26 +198,9 @@
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            //维护试题列表的发布记录
-            // console.log(33, self.paperChosen)
-            // let thePaper = self.paperList[self.paperChosen.index]
-
-            // thePaper.quiz_id = jsonData.quizID;
-            // self.quizList.unshift(thePaper);
-            // self.paperList.splice(self.paperChosen.index, 1)
 
             // 显示饼图页
             self.showQuizResult(jsonData.quizID);
-
-            // let str = JSON.stringify({
-            //   'op': 'newquiz',
-            //   'lessonid': self.lessonid,
-            //   'quizid': jsonData.quizID,
-            //   'title': self.paperChosen.title,
-            //   'total': self.paperChosen.total
-            // })
-
-            // self.socket.send(str)
             self.closePubmodal()
           })
       },
@@ -250,26 +212,14 @@
       showQuizResult(quizid){
         let self = this
 
-        self.isQuizresultHidden = false
-        self.$refs.RcMaskActivityPaperQuizresult.$emit('showQuizResult', quizid)
-      },
-      /**
-       * 点击关闭试卷结果饼图页的按钮
-       *
-       */
-      closeQuizresult () {
-        let self = this
+        let to = {
+          name: 'quizresult',
+          params: {
+            quizid,
+          }
+        }
 
-        self.isQuizresultHidden = true
-      },
-      /**
-       * 记录已经收卷的quizID
-       *
-       * @param {number} quizid 收卷试卷的id
-       */
-      collectQuiz (quizid) {
-        let self = this
-        self.finishedQuizList['id'+quizid] = true
+        self.$router.push(to)
       },
       /**
        * 处理socket发过来的 newquiz 通知，如果是自己发的则不作处理，如果是pc发的就处理下？
@@ -299,13 +249,9 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .paper-box {
-    position: absolute;
-    z-index: 20; /* 遮盖toolbar */
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    position: relative;
     background: #EDF2F6;
+    min-height: 100%;
     color: #000000;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
