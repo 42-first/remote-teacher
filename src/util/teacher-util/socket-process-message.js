@@ -11,6 +11,11 @@ function socketProcessMessage(msg){
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
+
+  // 1.1版本及以上采用了 ppt指纹机制
+  if (self.isPPTVersionAboveOne) {
+    msg.slideindex = self.idIndexMap[msg.slideid]
+  }
   
   let current = self.current - 1
 
@@ -21,6 +26,8 @@ function socketProcessMessage(msg){
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
+
+    self.isPPTVersionAboveOne = msg.addinversion > 1
     
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
@@ -171,7 +178,12 @@ function socketProcessMessage(msg){
     }
 
     // 换页
-    msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
+    if (self.isPPTVersionAboveOne) {
+      msg.slideindex = self.idIndexMap[msg.slide.sid] // 为了公用函数，补充一下数据
+    }else {
+      msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
+    }
+    
     self.showWhichPage(msg)
 
     // 换页会退出投屏的

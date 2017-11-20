@@ -12,14 +12,18 @@
             {{isProblemPublished ? '查看答案' : '发送此题'}}
           </v-touch>
         </div>
-        <img v-if="isUpImgError" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length" class="card" :src="pptData[current - 1].Cover" />
+        <img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
+        <img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
+        <img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
+        <img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
         <div class="detail f14">下一张幻灯片</div>
-        <img v-if="isDownImgError" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length" class="card" :src="pptData[current].Cover" />
+        <img v-if="isDownImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
+        <img v-if="isDownImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
+        <img v-if="pptData.length && !pptData[current].Cover" class="img-error" :src="imgUploadingPath" />
+        <img v-if="pptData.length && pptData[current].Cover" class="card" :src="pptData[current].Cover" />
       </div>
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
@@ -120,6 +124,44 @@
       @guideNext="guideNext"
     ></Guide>
 
+    <!-- 图片放大结构 -->
+    <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+      <div class="pswp__bg"></div>
+
+      <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+
+          <div class="pswp__top-bar">
+
+            <div class="pswp__counter"></div>
+
+              <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </div>
 </template>
 
@@ -177,6 +219,7 @@ export default {
   // 找不到的data在 mixins 中
   data () {
     return {
+      imgUploadingPath: require('../../images/teacher/img-uploading.png'),
       isShuban: false,                        // 是竖版ppt
       isGuideHidden: true,                    // 新手引导隐藏
       isEnterEnded: false,                    // 遥控器进入是否结束
@@ -217,6 +260,9 @@ export default {
       newdoubt: 0,                            // 未查看的不懂人次总数
       newtougao: 0,                           // 未查看的投稿人次总数
       isRcMaskActivityAtRoot: true,           // 课堂动态页是否在根部
+      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
+      isUploadSlideCrash: false,              // 过了2秒
+      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
     }
   },
   computed: {
@@ -313,6 +359,8 @@ export default {
     if (localStorage.getItem('hasGuided') !== 'yes') {
       self.isGuideHidden = false
     }
+
+    self.requirePhotoswipe()
   },
   mixins: [switches, socketService, problemRelated],
   methods: {
@@ -418,7 +466,26 @@ export default {
 
           self.isEnterEnded = true
           self.initCardHeight()
+          self.filterSlideid(pptData)
         })
+    },
+    /**
+     * 处理slideid 和 slideindex 的对应关系
+     *
+     * @param {Object} pptData
+     */
+    filterSlideid (pptData) {
+      let self = this
+
+      let idIndexMap = {}
+      
+      pptData.forEach(item => {
+        idIndexMap[item.lessonSlideID] = item.Index
+      })
+
+      self.setData({
+        idIndexMap
+      })
     },
     /**
      * 初始化主页面当前页高度，防止竖版课件导致 toolbar 无法显示
@@ -526,6 +593,7 @@ export default {
      */
     fetchPresentationTag () {
       let self = this
+      if (self.presentationid <= 0) {return;}
 
       let url = API.presentation_tag
       if (process.env.NODE_ENV === 'production') {
@@ -555,6 +623,7 @@ export default {
      */
     fetchTougaoUnreadnum () {
       let self = this
+      if (self.lessonid <= 0) {return;}
       // let url = API.submissionlist
       let url = API.submission_unread_num + '?lesson_id=' + self.lessonid
 
@@ -580,6 +649,20 @@ export default {
       let self = this
       
       self.newtougao = 0
+    },
+    /**
+     * 加载图片放大库代码
+     *
+     */
+    requirePhotoswipe () {
+      let self = this
+      
+      setTimeout(()=>{
+        require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
+          window.PhotoSwipe = PhotoSwipe;
+          window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
+        })
+      }, 1500)
     },
     /**
      * 用户在新手引导页点击了

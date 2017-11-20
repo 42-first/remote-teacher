@@ -150,7 +150,7 @@ var actionsMixin = {
         };
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
-        if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 1) {
+        if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
           // step === 0 开始动画 正常插入
           if(data.event.step === 0) {
             // 之前没有播放过这个ppt
