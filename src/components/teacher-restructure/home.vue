@@ -125,7 +125,7 @@
 	import Activity from '@/components/teacher-restructure/common/activity'
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
-	import '@/util/teacher-util/preventoverscroll'
+	import './util/preventoverscroll'
 
 	// js功能模块，放到 mixins 中
 	// 一些开关
