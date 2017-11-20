@@ -67,11 +67,18 @@
 	        <div class="btn-desc f14">查看详情</div>
 	      </router-link>
 
-	      <router-link :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling')" class="btn-item">
+	      <router-link :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">{{RedEnvelopeID ? '红包名单' : '课堂红包'}}</div>
+	        <div class="btn-desc f14">课堂红包</div>
+	      </router-link>
+
+	      <router-link :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
+	        <div class="iconbox" style="background: #E64340;">
+	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
+	      	</div>
+	        <div class="btn-desc f14">红包名单</div>
 	      </router-link>
 	    </section>
 	  </div>
@@ -178,7 +185,7 @@
 	      		    members: jsonData.members,
 	      		    graph: _graph,
 	      		    ma_right_count: jsonData.graph.ma_right_count,
-	      		    RedEnvelopeID: jsonData.RedEnvelopeID
+	      		    RedEnvelopeID: jsonData.RedEnvelopeID || -1
 	      		  })
 
 	      		  if (isFirstFetch) {
