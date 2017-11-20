@@ -2,7 +2,7 @@
 <template>
 	<div class="problemresultdetail-box allowscrollcallback">
 		<div v-if="problemResultDetailData">
-	    
+
 	    <div class="title f18">{{(problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8) ? '票数最多' : '本题正确选项为'}}</div>
 	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
 	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
@@ -12,7 +12,7 @@
 	    <div class="choice-list">
 	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
-	      		<i v-show="problemResultDetailData.problem_type !== 3" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
+	      		<i v-show="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
 	      		<span class="f18 asw">{{choiceItem.label}}</span>
 	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}人</span>
 	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
@@ -89,7 +89,7 @@
 	      } else {
 	      	this.showingIndex = index
 	      }
-	      
+
 	    },
 	    /**
 	     * 更新试题详情的数据
@@ -117,7 +117,7 @@
 	          }
 
 	          // 投票类型每回要算投票数最多的
-	          if (jsonData.problem_type === 3) {
+	          if (jsonData.problem_type === 3 || jsonData.problem_type === 8) {
 	          	self.findBigPoll()
 	          }
 	        })
