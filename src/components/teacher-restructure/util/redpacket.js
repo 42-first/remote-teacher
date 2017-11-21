@@ -119,6 +119,7 @@ export default {
 	   */
 	  numInputHandler (e) {
 	    let self = this
+	    if (self.stuNumer === '--') {return;}
 	    let _val = e.target.value
 	    let stuNumer = self.stuNumer
 
@@ -154,6 +155,7 @@ export default {
 	   */
 	  priceInputHandler (e) {
 	    let self = this
+	    if (self.stuNumer === '--') {return;}
 	    let _val = e.target.value
 
 	    //是数字的话
@@ -216,14 +218,18 @@ export default {
       // 单次刷新
       request.get(url)
         .then(jsonData => {
-        	let stuNumer = jsonData.data.classroom_students_count
-          let bankLeft = jsonData.data.balance/100
+        	if (jsonData.success) {
+        		let stuNumer = jsonData.data.classroom_students_count
+	          let bankLeft = jsonData.data.balance/100
 
-          bankLeft = bankLeft.toFixed(2)
-          self.stuNumer = stuNumer
-          self.bankLeft = bankLeft
+	          bankLeft = bankLeft.toFixed(2)
+	          self.stuNumer = stuNumer
+	          self.bankLeft = bankLeft
 
-          fn && fn()
+	          fn && fn()
+        	}else{
+        		throw new Error('获取学生人数、钱包余额失败')
+        	}
         }).catch(error => {
         	console.error(error)
         })
