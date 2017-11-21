@@ -417,6 +417,8 @@
 
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
+
+	      self.$refs.InitiativeCtrlMask.$emit('Activity')
 	    },
 	    /**
 	     * 点击 遥控器 按钮
