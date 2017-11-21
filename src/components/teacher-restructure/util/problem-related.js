@@ -58,6 +58,8 @@ export default {
      * @event bindtap
      */
     cancelPublishProblem () {
+      let self = this
+      
       self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
     },
     
