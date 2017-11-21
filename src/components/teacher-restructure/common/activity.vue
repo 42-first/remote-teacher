@@ -7,7 +7,7 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <router-link :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
-        <img v-for="item in avatarList" :src="item.profile.avatar_96" alt="">
+        <img v-for="item in participantList.slice(0, 10).reverse()" :src="item.profile.avatar_96" alt="">
         <span class="dqxs">
           当前学生{{participantList.length}}位
           <i class="iconfont icon-dakai f15"></i>
@@ -76,8 +76,6 @@
     props: ['isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
-        participantList: [],            // 当前学生名单
-        avatarList: [],                 // 头像列表，最多取10个
         isParticipantlistHidden: true,  // 全部人员名单隐藏
         isPaperHidden: true,            // 试卷列表隐藏
         isDanmuboxHidden: true,         // 弹幕控制页面隐藏
@@ -91,6 +89,7 @@
         'lessonid',
         'presentationid',
         'socket',
+        'participantList',
         'isDanmuOpen',
         'newtougao',
       ])
@@ -124,9 +123,7 @@
 
         request.get(url)
           .then(jsonData => {
-            self.participantList = jsonData.data.students
-            // 下面又翻转过来只是为了hack float  left样式
-            self.avatarList = self.participantList.slice(0, 10).reverse()
+            self.$store.commit('set_participantList', jsonData.data.students)
           })
       },
       /**
@@ -207,6 +204,7 @@
           float: left;
           margin-top: 0.04rem;
           margin-left: 0.333333rem;
+          color: $white;
         }
       }
     }
