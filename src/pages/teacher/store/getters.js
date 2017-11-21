@@ -14,6 +14,7 @@ const getters = {
   total: state => state.total,
   pptData: state => state.pptData,
   finishedQuizList: state => state.finishedQuizList,
+  participantList: state => state.participantList,
   newtougao: state => state.newtougao,
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
   

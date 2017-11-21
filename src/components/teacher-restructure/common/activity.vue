@@ -74,7 +74,6 @@
     name: 'Activity',
     data () {
       return {
-        participantList: []
       }
     },
     computed: {
@@ -84,6 +83,7 @@
         'lessonid',
         'presentationid',
         'socket',
+        'participantList',
         'isDanmuOpen',
         'newtougao',
       ])
@@ -117,7 +117,7 @@
 
         request.get(url)
           .then(jsonData => {
-            self.participantList = jsonData.data.students
+            self.$store.commit('set_participantList', jsonData.data.students)
           })
       },
       /**

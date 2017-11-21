@@ -2,11 +2,11 @@
 <template>
 	<div class="member-box">
     <div class="desc f18">
-      当前班级人数：<span class="f24">{{dataList.length}}</span> 人
+      当前班级人数：<span class="f24">{{participantList.length}}</span> 人
     </div>
     <div class="gap"></div>
     <section class="list">
-      <div class="item f17" v-for="item in dataList" :key="item.id">
+      <div class="item f17" v-for="item in participantList" :key="item.id">
         <div class="name ellipsis">
           <img :src="item.profile.avatar_96" alt="">
           <span>{{item.profile.name}}</span>
@@ -33,12 +33,12 @@
     name: 'Member',
     data () {
       return {
-        dataList: [],   // 当前学生名单
       }
     },
     computed: {
       ...mapGetters([
         'lessonid',
+        'participantList'
       ])
     },
     created () {
@@ -60,7 +60,7 @@
 
         request.get(url)
           .then(jsonData => {
-            self.dataList = jsonData.data.students
+            self.$store.commit('set_participantList', jsonData.data.students)
           })
       },
     }
