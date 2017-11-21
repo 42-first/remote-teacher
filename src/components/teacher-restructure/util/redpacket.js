@@ -194,7 +194,7 @@ export default {
 	        temptotal = temptotal.toFixed(2)
 	    }
 
-	    if(temptotal == 0 || bonusPrice > 100){
+	    if(temptotal == 0 || bonusPrice > 100 || self.stuNumer === '--'){
 	      self.isRedpacketDisabled = true
 	    }else{
 	      self.isRedpacketDisabled = false
