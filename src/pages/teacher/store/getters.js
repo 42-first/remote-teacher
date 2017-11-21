@@ -13,6 +13,7 @@ const getters = {
   current: state => state.current,
   total: state => state.total,
   pptData: state => state.pptData,
+  finishedQuizList: state => state.finishedQuizList,
   newtougao: state => state.newtougao,
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
   

@@ -94,7 +94,7 @@ function socketProcessMessage(msg){
 
     // 根据qrcode是否为0判断是否显示二维码控制页，不为0，则显示
     if (msg.slideindex !== 0) { // 刚开始上课slideindex总为0，不管是不是从第一页开始放映
-      self.isBrandNewPpt = false
+      self.$store.commit('set_isBrandNewPpt', false)
     }
     
     if(msg.mask && msg.mask.type === 'qrcode'){
@@ -125,7 +125,6 @@ function socketProcessMessage(msg){
     if(msg.addinversion === -1){
       self.showPcErrorMask()
     }else{
-      // self.showQrcodeMask()
       self.killMask()
     }
     return
@@ -149,9 +148,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'showpresentation') {
     // 一旦开始上课，二维码控制蒙版的上课按钮即为“继续上课”
-    self.setData({
-      isBrandNewPpt: false
-    })
+    self.$store.commit('set_isBrandNewPpt', false)
     self.showWhichPage(msg)
     self.killMask()
     return
@@ -185,97 +182,67 @@ function socketProcessMessage(msg){
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
     
-    self.showWhichPage(msg)
-
-    // 换页会退出投屏的
-    self.postingDanmuid = -1
-    localStorage.setItem('postingDanmuid'+self.lessonid, -1)
-    self.postingSubmissionid = -1
-    localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
-      
+    self.showWhichPage(msg) 
     return
   }
   
   //刷新了遥控器页面，且点击的是查看答案按钮
   if (msg.op == 'probleminfo') {
-
-    if (msg.limit == -1 || typeof msg.limit === 'undefined') {
-
-        //3：刷新了遥控器且未设置时限
-        //如果是 -1 的话传入第三个参数 msgid ，标明是不是主观题 ShortAnswer,因为主观题有正计时，以及传入第4个参数，已经过去的时间
-        self.startBell(current, -1, msg.msgid, Math.floor((msg.now-msg.dt)/1000));
-
-    } else if ((msg.now-msg.dt) >= msg.limit*1000) {
-
-        //4：刷新了遥控器且设置了时限但是倒计时已经终止
-        self.startBell(current, 0);
-
-    } else {
-
-        //5：刷新了遥控器且正在倒计时
-        var bellTimeLeft = msg.limit - Math.floor((msg.now-msg.dt)/1000);
-        self.startBell(current, bellTimeLeft);
-
-    }
-
-    self.showProblemResult(msg.problemid);
+    let timePassed = Math.floor((msg.now-msg.dt)/1000)
+    // 是倒计时则取剩下时间，没有限时则取已经过去的时间
+    let timeLeft = ~msg.limit ? msg.limit - timePassed : timePassed
+    self.showProblemResult(msg.problemid, msg.limit, timeLeft)
     return
   }
 
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
-    let current = self.data.current - 1
-    self.startBell(current, msg.problem.limit, self.pptData[current].Problem.Type)
-    self.isProblemPublished = true
+    self.$store.commit('set_isProblemPublished', true)
+    return
+  }
+
+  // 有新的弹幕
+  if (msg.op == 'newdanmu') {
+    T_PUBSUB.publish('danmu-msg.newdanmu', msg)
     return
   }
 
   if (msg.op == 'turnondanmu') {
     self.openDanmuBtn()
+    T_PUBSUB.publish('danmu-msg.turnondanmu', msg)
     return
   }
 
   if (msg.op == 'turnoffdanmu') {
     self.closeDanmuBtn()
+    T_PUBSUB.publish('danmu-msg.turnoffdanmu', msg)
     return
   }
 
   // 弹幕投屏
   if (msg.op == 'danmushown') {
-    self.postingDanmuid = msg.danmuid
-
-    localStorage.setItem('postingDanmuid'+self.lessonid, msg.danmuid)
-    return
-  }
-
-  // 投稿投屏，用户重新投屏（投之前投屏过的，这是需要在这里获取是否已经发送全班的状态）
-  if (msg.op == 'postshown') {
-    self.postingSubmissionid = msg.postid
-
-    // 投稿投屏成功再隐藏投屏中提示
-    self.$refs.InitiativeCtrlMask.$emit('postshown', msg)
-
-    localStorage.setItem('postingSubmissionid'+self.lessonid, msg.postid)
-
-    self.postingSubmissionSent = msg.sent
-
-    localStorage.setItem('postingSubmissionSent'+self.lessonid, msg.sent)
-    return
-  }
-
-  // 投稿已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
-  if (msg.op == 'sendpost') {
-    self.postingSubmissionSent = true
-
-    localStorage.setItem('postingSubmissionSent'+self.lessonid, true)
+    self.$store.commit('set_postingDanmuid', +msg.danmuid)
     return
   }
 
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', +msg.spid)
+    return
+  }
 
-    localStorage.setItem('postingSubjectiveid'+self.lessonid, msg.spid)
+  // 投稿投屏，用户重新投屏（投之前投屏过的，这是需要在这里获取是否已经发送全班的状态）
+  if (msg.op == 'postshown') {
+    T_PUBSUB.publish('submission-msg.postshown', msg)
+
+    self.$store.commit('set_postingSubmissionid', +msg.postid)
+    self.$store.commit('set_postingSubmissionSent', msg.sent)
+    return
+  }
+
+  // 投稿已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
+  if (msg.op == 'sendpost') {
+    self.$store.commit('set_postingSubmissionSent', true)
     return
   }
 
@@ -351,24 +318,18 @@ function socketProcessMessage(msg){
     // 退出弹幕投屏蒙版
     if (msg.type == 'danmu') {
       self.$store.commit('set_postingDanmuid', -1)
-
-      localStorage.setItem('postingDanmuid'+self.lessonid, -1)
       return
     }
 
     // 退出投稿投屏蒙版
     if (msg.type == 'post') {
       self.$store.commit('set_postingSubmissionid', -1)
-
-      localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
       return
     }
 
     // 退出主观题投屏蒙版
     if (msg.type == 'subjective') {
       self.$store.commit('set_postingSubjectiveid', -1)
-
-      localStorage.setItem('postingSubjectiveid'+self.lessonid, -1)
       return
     }
     
@@ -386,21 +347,15 @@ function socketProcessMessage(msg){
     return
   }
 
-  // 有新的弹幕
-  if (msg.op == 'newdanmu') {
-    self.$refs.InitiativeCtrlMask.$emit('newdanmu', msg)
-    return
-  }
-
   // 发了新的试卷，单通了
   if (msg.op == 'newquiz') {
-    self.$refs.InitiativeCtrlMask.$emit('newquiz', msg)
+    PubSub.publish('quiz-msg.newquiz', msg)
     return
   }
 
   // 收卷了
   if (msg.op == 'quizfinished') {
-    self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('quizfinished', msg)
+    PubSub.publish('quiz-msg.quizfinished', msg)
     return
   }
 

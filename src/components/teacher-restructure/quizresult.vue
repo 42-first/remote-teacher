@@ -64,7 +64,6 @@
 
   export default {
     name: 'Quizresult',
-    props: ['finishedQuizList'],
     data () {
       return {
         quizid: -1,                       // 已发试卷的id
@@ -81,6 +80,7 @@
       ...mapGetters([
         'lessonid',
         'socket',
+        'finishedQuizList',
       ])
     },
     components: {
@@ -103,13 +103,24 @@
 
         self.quizid = +self.$route.params.quizid
         self.showQuizResult()
+        self.handlePubSub()
+      },
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
 
-        // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
-        self.$on('quizfinished', function (msg) {
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('quiz-msg')
+
+        T_PUBSUB.subscribe('quiz-msg.quizfinished', (msg, data) => {
+          // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
           if (self.quizid === msg.quizid) {
             self.isPaperCollected = true
             self.endTimers()
-          }
+          } 
         })
       },
       /**
@@ -141,7 +152,8 @@
         self.paperTimePassed = '--:--'
         quizTimeBellCount = 1
 
-        // self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
+        // finishedQuizList 数据是在 paper.vue 中获取后 commit 给 store 的
+        self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
 
         if (!self.isPaperCollected) {
           refPaperTimer = setInterval(function () {
@@ -228,7 +240,6 @@
         })
 
         self.socket.send(str)
-        self.$emit('closeQuizresult')
         self.endTimers()
       },
       /**

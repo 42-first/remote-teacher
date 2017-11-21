@@ -97,26 +97,7 @@
 
       //首次加载页面
       self.refreshDataList(true);
-
-      // socket通知有新的弹幕进来了
-      self.$on('newdanmu', function () {
-        self.isShowNewHint = true
-      })
-
-      let toastTimer = null
-      // socket通知有开启了弹幕
-      self.$on('turnondanmu', function () {
-        self.isToastSwitch = true
-        clearTimeout(toastTimer)
-        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
-      })
-
-      // socket通知关闭了弹幕
-      self.$on('turnoffdanmu', function () {
-        self.isToastSwitch = true
-        clearTimeout(toastTimer)
-        toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
-      })
+      self.handlePubSub()
     },
     mounted () {
       let self = this
@@ -137,6 +118,7 @@
     },
     beforeDestroy(){
       this.closeDanmumask()
+      T_PUBSUB.unsubscribe('danmu-msg')
     },
     watch: {
       dataList: function() {
@@ -148,6 +130,33 @@
       }
     },
     methods: {
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+        let toastTimer = null
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('danmu-msg')
+
+        T_PUBSUB.subscribe('danmu-msg.newdanmu', (msg, data) => {
+          self.isShowNewHint = true
+        })
+
+        T_PUBSUB.subscribe('danmu-msg.turnondanmu', (msg, data) => {
+          self.isToastSwitch = true
+          clearTimeout(toastTimer)
+          toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
+        })
+
+        T_PUBSUB.subscribe('danmu-msg.turnoffdanmu', (msg, data) => {
+          self.isToastSwitch = true
+          clearTimeout(toastTimer)
+          toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
+        })
+      },
       /**
        * 模仿微信小程序的 setData 用法，简易设置data
        *

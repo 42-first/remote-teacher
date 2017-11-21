@@ -6,6 +6,9 @@ import Vue from 'vue'
 import App from '@/pages/teacher/teacher.vue'
 import router from '@/router/index-teacher'
 import store from '@/pages/teacher/store';
+import('pubsub-js').then(res => {
+	window.T_PUBSUB = res
+})
 
 let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
