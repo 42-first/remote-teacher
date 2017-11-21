@@ -80,7 +80,6 @@
         },
         isPubmodalHidden: true,   // 发布模态框隐藏
         isQuizresultHidden: true, // 已发试卷饼图页隐藏
-        finishedQuizList: {},     // 给已经收卷的试卷做标记
         isFetching: true,             // 正在获取数据
       }
     },
@@ -149,10 +148,13 @@
             let quizList =self.quizList
 
             // 有可能老师刷新了遥控器，而之前已经有已经收卷的试卷
+            let finishedQuizList = {}
             for (let i = 0; i < quizList.length; i++) {
               let tmpID = quizList[i].quiz_id;
-              self.finishedQuizList['id'+tmpID] = quizList[i].quiz_end;
+              finishedQuizList['id'+tmpID] = quizList[i].quiz_end;
             }
+
+            self.$store.commit('set_finishedQuizList', finishedQuizList)
           })
       },
       /**

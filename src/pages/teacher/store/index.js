@@ -24,6 +24,7 @@ const store = new Vuex.Store({
     current: 1,                             // 当前页码，从1开始
     total: '',                              // 总页数
     pptData: [],                            // ppt数据
+    finishedQuizList: {},                   // 给已经收卷的试卷做标记
     
     qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
     isDanmuOpen: false,                     // 弹幕是否处于打开状态
@@ -91,6 +92,9 @@ const store = new Vuex.Store({
     },
     set_pptData: (state, pptData) => {
       state.pptData = pptData
+    },
+    set_finishedQuizList: (state, finishedQuizList) => {
+      state.finishedQuizList = finishedQuizList
     },
     set_isDanmuOpen: (state, isDanmuOpen) => {
       state.isDanmuOpen = isDanmuOpen

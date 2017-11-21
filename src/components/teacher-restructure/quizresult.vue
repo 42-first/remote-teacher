@@ -64,7 +64,6 @@
 
   export default {
     name: 'Quizresult',
-    props: ['finishedQuizList'],
     data () {
       return {
         quizid: -1,                       // 已发试卷的id
@@ -81,6 +80,7 @@
       ...mapGetters([
         'lessonid',
         'socket',
+        'finishedQuizList',
       ])
     },
     components: {
@@ -152,7 +152,8 @@
         self.paperTimePassed = '--:--'
         quizTimeBellCount = 1
 
-        // self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
+        // finishedQuizList 数据是在 paper.vue 中获取后 commit 给 store 的
+        self.isPaperCollected = self.finishedQuizList['id'+self.quizid] || false
 
         if (!self.isPaperCollected) {
           refPaperTimer = setInterval(function () {
@@ -239,7 +240,6 @@
         })
 
         self.socket.send(str)
-        self.$emit('closeQuizresult')
         self.endTimers()
       },
       /**
