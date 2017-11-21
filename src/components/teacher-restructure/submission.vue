@@ -299,7 +299,7 @@
 
           // 假如没有新条目的话，显示没有新条目的提示
           // 无论显示提示与否，2秒后不再显示提示
-          self.isShowNoNewItem = isInit && newList[0].id === headNow
+          self.isShowNoNewItem = isInit && (!newList.length || newList[0].id === headNow)
           
           setTimeout(() => {
             self.isShowNoNewItem = false
@@ -493,6 +493,7 @@
   @import "~@/style/_variables";
   .submission-box {
     position: relative;
+    min-height: 100%;
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;

@@ -549,6 +549,9 @@
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
 	.problem-root {
+    position: relative;
+    min-height: 100%;
+    background: #000000;
 
 		.new-item-hint {
 		  position: fixed;
