@@ -228,21 +228,6 @@
 	    // 获取本地不懂、投稿已读数
 	    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
 
-	    // 保存本地正在投屏的弹幕、投稿id、主观题id
-	    let postingDanmuid = +(localStorage.getItem('postingDanmuid'+self.lessonid) || -1)
-
-	    let postingSubmissionid = +(localStorage.getItem('postingSubmissionid'+self.lessonid) || -1)
-
-	    let tempSentStatus = localStorage.getItem('postingSubmissionSent'+self.lessonid)
-	    self.postingSubmissionSent = tempSentStatus === 'true'
-
-	    let postingSubjectiveid = +(localStorage.getItem('postingSubjectiveid'+self.lessonid) || -1)
-
-	    self.$store.commit('set_postingDanmuid', postingDanmuid)
-	    self.$store.commit('set_postingSubmissionid', postingSubmissionid)
-	    self.$store.commit('set_postingSubjectiveid', postingSubjectiveid)
-
-
 	    configWX()
 	    wx.ready(() => {
 	      wx.hideMenuItems({
@@ -437,10 +422,6 @@
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
-
-	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('Activity')
-	      })
 	    },
 	    /**
 	     * 点击 遥控器 按钮

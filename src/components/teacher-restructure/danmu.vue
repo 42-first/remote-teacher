@@ -252,7 +252,7 @@
 
           // 假如没有新条目的话，显示没有新条目的提示
           // 无论显示提示与否，2秒后不再显示提示
-          self.isShowNoNewItem = isInit && (!newList.length || newList[0].id === headNow)
+          self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
           
           setTimeout(() => {
             self.isShowNoNewItem = false
@@ -402,7 +402,7 @@
     .no-paper-box {
       box-sizing: border-box;
       height: 100%;
-      background: $white;
+      // background: $white;
       text-align: center;
       
       img {
