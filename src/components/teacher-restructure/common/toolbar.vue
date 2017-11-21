@@ -48,7 +48,7 @@
 
   export default {
     name: 'Tollbar',
-    props: ['isSocketConnected', 'activeIndex'],
+    props: ['activeIndex'],
     data () {
       return {
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号

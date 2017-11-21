@@ -30,7 +30,6 @@
       <Toolbar
         ref="Toolbar"
         :active-index="0"
-        :is-socket-connected="isSocketConnected"
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
@@ -45,7 +44,6 @@
         <component
           ref="InitiativeCtrlMask"
           :is="initiativeCtrlMaskTpl"
-          :is-socket-connected="isSocketConnected"
           @goHome="goHome"
           @showThumbnail="showThumbnail"
           @showActivity="showActivity"
@@ -149,7 +147,6 @@
 	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
 	      
-	      isSocketConnected: false,               // WebSocket 已连接
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权

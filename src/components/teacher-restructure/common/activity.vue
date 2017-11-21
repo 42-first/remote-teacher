@@ -54,7 +54,6 @@
       ref="Toolbar"
       class="activity-tollbar"
       :active-index="2"
-      :is-socket-connected="isSocketConnected"
       @goHome="goHome"
       @showThumbnail="showThumbnail"
     ></Toolbar>
@@ -73,13 +72,8 @@
 
   export default {
     name: 'Activity',
-    props: ['isRcMaskActivityAtRoot', 'isSocketConnected'],
     data () {
       return {
-        isParticipantlistHidden: true,  // 全部人员名单隐藏
-        isPaperHidden: true,            // 试卷列表隐藏
-        isDanmuboxHidden: true,         // 弹幕控制页面隐藏
-        isSubmissionHidden: true,       // 投稿控制页面隐藏
       }
     },
     computed: {
