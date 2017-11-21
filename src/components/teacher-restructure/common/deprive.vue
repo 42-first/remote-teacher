@@ -1,4 +1,4 @@
-<!--夺权面板 被父组件 remote.vue 引用 -->
+<!--夺权面板 被父组件 home.vue 引用 -->
 <template>
   <div class="mask-content deprive-box f18">
 

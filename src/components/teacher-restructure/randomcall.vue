@@ -1,9 +1,6 @@
-<!-- 随机点名面板 被父组件 remote.vue 引用 -->
+<!-- 随机点名页 -->
 <template>
 	<div class="random-roll-box">
-    <v-touch class="close f18" v-on:tap="giveupRoll">
-      <i class="iconfont icon-ykq-shiti-guanbi f32" style="color: #FFFFFF;"></i>
-    </v-touch>
 
     <div class="upper">
       <div class="desc f24" v-show="step === 0">
@@ -44,8 +41,7 @@
 
   let rollBtnTimer = null // 记录socket延迟
   export default {
-    name: 'RcMaskRandomcall',
-    props: [],
+    name: 'Randomcall',
     data () {
       return {
         signInCount: '--',
@@ -80,47 +76,54 @@
     created () {
       let self = this
 
-      // 点击 随机点名 按钮 父组件收到node回执后发送事件给本子组件
-      self.$on('callwokeup', function (msg) {
-        clearTimeout(rollBtnTimer)
-        self.signInCount = msg.sc
+      // 设置班级人数
+      self.signInCount = +self.$route.query.sc
+
+      // 通过 node 获取点名列表
+      let str = JSON.stringify({
+        'op': 'calledlist',
+        'lessonid': self.lessonid,
+        'page': 0,
+        'size': 20
       })
 
-      // 点击 滚动 按钮 父组件收到node回执后发送事件给本子组件
-      self.$on('callstarted', function (msg) {
-        clearTimeout(rollBtnTimer)
-        // remoteNS.MSGID_BACK = msg.msgid
-        self.step = 1
-      })
-
-      // 点击 暂停 按钮 父组件收到node回执后发送事件给本子组件
-      self.$on('callpaused', function (msg) {
-        clearTimeout(rollBtnTimer)
-        // remoteNS.MSGID_BACK = msg.msgid
-        self.step = 2
-        self.nowchosen = {
-          name: msg.name,
-          sid: msg.sid
-        }
-      })
-
-      // 刷新遥控器得知正在点名 咨询 calledlist 父组件收到node回执后发送事件给本子组件
-      self.$on('calledlist', function (msg) {
-        self.step = 0
-        self.calledlist = msg.calledlist
-      })
-
-      // 点击 继续上课 按钮 父组件收到node回执后发送事件给本子组件
-      self.$on('closedmask', function (msg) {
-        clearTimeout(rollBtnTimer)
-        self.step = 0
-        self.isNostuhintHidden = true
-
-        // 清理当前人到列表中
-        self.moveChosen2List()
-      })
+      self.socket.send(str)
+      self.handlePubSub()
+    },
+    beforeDestroy(){
+      T_PUBSUB.unsubscribe('call-msg')
+      this.giveupRoll()
     },
     methods: {
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('call-msg')
+
+        T_PUBSUB.subscribe('call-msg.calledlist', (_name, msg) => {
+          self.step = 0
+          self.calledlist = msg.calledlist
+        })
+
+        T_PUBSUB.subscribe('call-msg.callstarted', (_name, msg) => {
+          clearTimeout(rollBtnTimer)
+          self.step = 1
+        })
+
+        T_PUBSUB.subscribe('call-msg.callpaused', (_name, msg) => {
+          clearTimeout(rollBtnTimer)
+          self.step = 2
+          self.nowchosen = {
+            name: msg.name,
+            sid: msg.sid
+          }
+        })
+      },
       /**
        * 继续上课 按钮
        *
@@ -193,20 +196,15 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .random-roll-box {
+    position: relative;
     display: flex;
-    height: 100%;
+    min-height: 100%;
     flex-direction: column;
     justify-content: space-between;
+    background: #000000;
     color: $white;
     text-align: center;
     overflow: hidden;
-
-    .close {
-      position: absolute;
-      right: 0.666667rem;
-      top: 0.666667rem;
-      color: $blue;
-    }
 
     .upper {
       .desc {

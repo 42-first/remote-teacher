@@ -1,4 +1,4 @@
-<!-- 教师遥控器工具栏 被父组件 home.vue 引用 -->
+<!-- 教师遥控器工具栏 被父组件 home.vue activity.vue 引用 -->
 <template>
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">

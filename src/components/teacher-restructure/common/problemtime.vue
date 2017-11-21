@@ -1,4 +1,4 @@
-<!--发题选择时间面板 被父组件 remote.vue 引用-->
+<!--发题选择时间面板 被父组件 home.vue 引用-->
 <template>
 	<div class="rc-mask">
     <section class="mask-content problemtime-box">

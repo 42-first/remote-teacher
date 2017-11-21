@@ -1,4 +1,4 @@
-<!-- 教师遥控器新手引导 被父组件 remote.vue 引用 -->
+<!-- 教师遥控器新手引导 被父组件 home.vue 引用 -->
 <template>
   <div class="guide-mask dontcallback">
     <v-touch tag="i" class="iconfont icon-ykq-shiti-guanbi f40" v-on:tap="next(3)"></v-touch>

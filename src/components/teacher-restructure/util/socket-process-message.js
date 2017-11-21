@@ -273,34 +273,26 @@ function socketProcessMessage(msg){
 
   // 唤起随机点名
   if (msg.op == 'callwokeup') {
-    self.$store.commit('set_initiativeCtrlMaskTpl', 'Randomcall')
-    self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
+    let to = {
+      name: 'randomcall',
+      query: {
+        sc: +msg.sc
+      }
+    }
 
-    Vue.nextTick(function () {
-      self.$refs.InitiativeCtrlMask.$emit('callwokeup', msg)
-    })
-
-    // 有可能是刷新了遥控器，并且之前点过名
-    let str = JSON.stringify({
-      'op': 'calledlist',
-      'lessonid': self.lessonid,
-      'page': 0,
-      'size': 20
-    })
-
-    self.socket.send(str)
+    self.$router.push(to)
     return
   }
 
   // 开始了随机点名
   if (msg.op == 'callstarted') {
-    self.$refs.InitiativeCtrlMask.$emit('callstarted', msg)
+    T_PUBSUB.publish('call-msg.callstarted', msg)
     return
   }
 
   // 暂停了随机点名
   if (msg.op == 'callpaused') {
-    self.$refs.InitiativeCtrlMask.$emit('callpaused', msg)
+    T_PUBSUB.publish('call-msg.callpaused', msg)
     return
   }
 
@@ -308,10 +300,8 @@ function socketProcessMessage(msg){
   if (msg.op == 'closedmask') {
     // 点击随机点名继续上课的回执
     if (msg.type == 'call') {
-      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
-
-      // 通知第一层蒙版（即当前的随机点名）点击继续上课 回执成功
-      self.$refs.InitiativeCtrlMask.$emit('closedmask', msg)
+      // 随机点名页面关闭时触发的，不需要响应
+      // T_PUBSUB.publish('call-msg.callpaused', msg)
       return
     }
 
@@ -337,13 +327,7 @@ function socketProcessMessage(msg){
 
   // 获取随机点名名单列表
   if (msg.op == 'calledlist') {
-    self.$store.commit('set_initiativeCtrlMaskTpl', 'Randomcall')
-    self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
-    Vue.nextTick(function () {
-      self.$refs.InitiativeCtrlMask.$emit('calledlist', msg)
-    })
-
+    T_PUBSUB.publish('call-msg.calledlist', msg)
     return
   }
 

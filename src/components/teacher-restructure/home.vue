@@ -116,8 +116,6 @@
 	import Deprive from '@/components/teacher-restructure/common/deprive'
 	// 二维码控制蒙版
 	import Qrcode from '@/components/teacher-restructure/common/qrcode'
-	// 随机点名面板
-	import Randomcall from '@/components/teacher-restructure/common/randomcall'
 	// 缩略图面板
 	import Thumbnail from '@/components/teacher-restructure/common/thumbnail'
 	// 课堂动态面板
@@ -216,7 +214,6 @@
 	    Reconnect,
 	    Deprive,
 	    Qrcode,
-	    Randomcall,
 	    Thumbnail,
 	    Activity
 	  },

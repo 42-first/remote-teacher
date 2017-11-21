@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
+const Randomcall = () => import('@/components/teacher-restructure/randomcall')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const CollumresultDetail = () => import('@/components/teacher-restructure/collumresult-detail')
 const Redpacket = () => import('@/components/teacher-restructure/redpacket')
@@ -62,6 +63,11 @@ const router = new Router({
       path: '/member/xxx',
       name: 'member',
       component: Member
+    },
+    {
+      path: '/randomcall/xxx',
+      name: 'randomcall',
+      component: Randomcall
     },
     {
       path: '/paper/xxx',

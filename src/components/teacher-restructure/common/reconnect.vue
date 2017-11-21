@@ -1,4 +1,4 @@
-<!--连接异常，倒计时重连、立即重连面板 被父组件 remote.vue 引用-->
+<!--连接异常，倒计时重连、立即重连面板 被父组件 home.vue 引用-->
 <template>
 	<div class="mask-content reconnect-box f18">
     <div v-show="isConnectingHidden">

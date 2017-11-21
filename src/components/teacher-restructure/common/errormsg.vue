@@ -1,4 +1,4 @@
-<!--组合错误信息面板 被父组件 remote.vue 引用 -->
+<!--组合错误信息面板 被父组件 home.vue 引用 -->
 <template>
   <div class="mask-content f20">
   	<div v-html="errMsgList[errType]"></div>
