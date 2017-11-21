@@ -59,6 +59,7 @@
        */
       init () {
         let self = this
+        self.quizid = +self.$route.params.quizid
 
         self.refreshQuizResultDetail()
       },

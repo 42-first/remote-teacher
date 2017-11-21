@@ -108,7 +108,7 @@ router.beforeEach((to, from, next) => {
   pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
 
   // socket 无法使用的话，功能不正常，回根页面
-  if (!STORE.state.socket.send && to.name !== 'home') {
+  if (to.name !== 'home' && !STORE.state.socket && !STORE.state.socket.send) {
     next({name: 'home', params: {lessonid: STORE.state.lessonid}})
     return;
   }

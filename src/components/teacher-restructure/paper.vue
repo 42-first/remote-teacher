@@ -111,7 +111,7 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('quiz-msg')
 
-        T_PUBSUB.subscribe('quiz-msg.newquiz', (msg, data) => {
+        T_PUBSUB.subscribe('quiz-msg.newquiz', (_name, msg) => {
           // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
           self.handleSocketNewquiz(msg)
         })

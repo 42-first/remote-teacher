@@ -88,6 +88,9 @@
     created () {
       this.init()
     },
+    beforeDestroy(){
+      this.closeQuizresult()
+    },
     watch: {
       '$route' () {
         this.init()
@@ -115,7 +118,7 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('quiz-msg')
 
-        T_PUBSUB.subscribe('quiz-msg.quizfinished', (msg, data) => {
+        T_PUBSUB.subscribe('quiz-msg.quizfinished', (_name, msg) => {
           // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
           if (self.quizid === msg.quizid) {
             self.isPaperCollected = true

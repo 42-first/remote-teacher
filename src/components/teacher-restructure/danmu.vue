@@ -141,17 +141,17 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('danmu-msg')
 
-        T_PUBSUB.subscribe('danmu-msg.newdanmu', (msg, data) => {
+        T_PUBSUB.subscribe('danmu-msg.newdanmu', (_name, msg) => {
           self.isShowNewHint = true
         })
 
-        T_PUBSUB.subscribe('danmu-msg.turnondanmu', (msg, data) => {
+        T_PUBSUB.subscribe('danmu-msg.turnondanmu', (_name, msg) => {
           self.isToastSwitch = true
           clearTimeout(toastTimer)
           toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
         })
 
-        T_PUBSUB.subscribe('danmu-msg.turnoffdanmu', (msg, data) => {
+        T_PUBSUB.subscribe('danmu-msg.turnoffdanmu', (_name, msg) => {
           self.isToastSwitch = true
           clearTimeout(toastTimer)
           toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)

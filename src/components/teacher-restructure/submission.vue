@@ -182,7 +182,7 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('submission-msg')
 
-        T_PUBSUB.subscribe('submission-msg.postshown', (msg, data) => {
+        T_PUBSUB.subscribe('submission-msg.postshown', (_name, msg) => {
           // socket通知投稿投屏了，要隐藏投屏中的提示
           clearTimeout(postingTimer)
           self.isAskingItemStatus = false
