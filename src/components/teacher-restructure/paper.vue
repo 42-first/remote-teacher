@@ -96,22 +96,27 @@
       let self = this
 
       self.fetchPaperData()
-
-      // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
-      self.$on('newquiz', function (msg) {
-        self.handleSocketNewquiz(msg)
-      })
-
-      // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
-      self.$on('quizfinished', function (msg) {
-        self.$refs.RcMaskActivityPaperQuizresult.$emit('quizfinished', msg)
-        
-        // 改单通后，执行 collectQuiz 不是是子组件上传的事件，
-        // 而是这次从外面socket传进来的指令通知的
-        self.collectQuiz(msg.quizid) 
-      })
+      self.handlePubSub()
+    },
+    beforeDestroy(){
+      T_PUBSUB.unsubscribe('quiz-msg')
     },
     methods: {
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('quiz-msg')
+
+        T_PUBSUB.subscribe('quiz-msg.newquiz', (msg, data) => {
+          // socket通知发新的试卷了，有可能是pc发的，也有可能是手机遥控器自己发的
+          self.handleSocketNewquiz(msg)
+        })
+      },
       /**
        * 获取试卷数据
        *

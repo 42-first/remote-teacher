@@ -228,8 +228,6 @@ function socketProcessMessage(msg){
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', +msg.spid)
-
-    localStorage.setItem('postingSubjectiveid'+self.lessonid, msg.spid)
     return
   }
 
@@ -349,17 +347,15 @@ function socketProcessMessage(msg){
     return
   }
 
-  
-
   // 发了新的试卷，单通了
   if (msg.op == 'newquiz') {
-    self.$refs.InitiativeCtrlMask.$emit('newquiz', msg)
+    PubSub.publish('quiz-msg.newquiz', msg)
     return
   }
 
   // 收卷了
   if (msg.op == 'quizfinished') {
-    self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('quizfinished', msg)
+    PubSub.publish('quiz-msg.quizfinished', msg)
     return
   }
 
