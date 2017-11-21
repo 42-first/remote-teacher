@@ -185,14 +185,7 @@ function socketProcessMessage(msg){
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
     
-    self.showWhichPage(msg)
-
-    // 换页会退出投屏的
-    self.postingDanmuid = -1
-    localStorage.setItem('postingDanmuid'+self.lessonid, -1)
-    self.postingSubmissionid = -1
-    localStorage.setItem('postingSubmissionid'+self.lessonid, -1)
-      
+    self.showWhichPage(msg) 
     return
   }
   
@@ -230,21 +223,27 @@ function socketProcessMessage(msg){
     return
   }
 
+  // 有新的弹幕
+  if (msg.op == 'newdanmu') {
+    T_PUBSUB.publish('danmu-msg.newdanmu', msg)
+    return
+  }
+
   if (msg.op == 'turnondanmu') {
     self.openDanmuBtn()
+    T_PUBSUB.publish('danmu-msg.turnondanmu', msg)
     return
   }
 
   if (msg.op == 'turnoffdanmu') {
     self.closeDanmuBtn()
+    T_PUBSUB.publish('danmu-msg.turnoffdanmu', msg)
     return
   }
 
   // 弹幕投屏
   if (msg.op == 'danmushown') {
-    self.postingDanmuid = msg.danmuid
-
-    localStorage.setItem('postingDanmuid'+self.lessonid, msg.danmuid)
+    self.$store.commit('set_postingDanmuid', msg.danmuid)
     return
   }
 
@@ -351,8 +350,6 @@ function socketProcessMessage(msg){
     // 退出弹幕投屏蒙版
     if (msg.type == 'danmu') {
       self.$store.commit('set_postingDanmuid', -1)
-
-      localStorage.setItem('postingDanmuid'+self.lessonid, -1)
       return
     }
 
@@ -386,11 +383,7 @@ function socketProcessMessage(msg){
     return
   }
 
-  // 有新的弹幕
-  if (msg.op == 'newdanmu') {
-    self.$refs.InitiativeCtrlMask.$emit('newdanmu', msg)
-    return
-  }
+  
 
   // 发了新的试卷，单通了
   if (msg.op == 'newquiz') {

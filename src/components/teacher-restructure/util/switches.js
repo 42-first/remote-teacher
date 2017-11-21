@@ -126,6 +126,11 @@ export default {
         unlockedproblem: msg.unlockedproblem
       })
 
+      // 换页会退出投屏的
+      self.$store.commit('set_postingDanmuid', -1)
+      self.$store.commit('set_postingSubmissionid', -1)
+      self.$store.commit('set_postingSubjectiveid', -1)
+
       setTimeout(() => {
         self.handleUploadSlide(msg)
       }, 500)
