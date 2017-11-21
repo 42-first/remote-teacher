@@ -112,6 +112,7 @@
 	// js功能模块，放到 mixins 中
 	// 红包相关函数
 	import redpacket from './util/redpacket'
+	import {configWX} from '@/util/wx-util'
 
 	export default {
 	  name: 'Redpacket',
@@ -152,6 +153,16 @@
 
 		  	self.problemid = +self.$route.params.problemid
 		  	self.fetchStuBank()
+
+		  	configWX()
+		  	wx.ready(() => {
+		  	  wx.hideMenuItems({
+		  	    menuList: [
+		  	      'menuItem:share:appMessage', 'menuItem:share:timeline',
+		  	      'menuItem:share:qq', 'menuItem:share:weiboApp',
+		  	      'menuItem:favorite', 'menuItem:share:QZone']
+		  	  });
+		  	});
 	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
