@@ -31,9 +31,6 @@ export default {
       // 针对夺权蒙版
       self.$store.commit('set_isToastCtrlMaskHidden', true)
       self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
-      // 断网重连蒙版需要遮住工具栏，就是用 isYieldToolbar 判断的，用到了 msgMaskTpl
-      self.$store.commit('set_msgMaskTpl', '')
-      self.$store.commit('set_initiativeCtrlMaskTpl', '')
     },
     /**
      * 点亮弹幕按钮
@@ -61,8 +58,6 @@ export default {
         byself,
       })
       self.$store.commit('set_toastCtrlMaskTpl', 'Deprive')
-      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
-      self.$store.commit('set_initiativeCtrlMaskTpl', '')
       self.$store.commit('set_isToastCtrlMaskHidden', false)
     },
     /**
@@ -85,8 +80,6 @@ export default {
         errType: 2
       })
       self.$store.commit('set_msgMaskTpl', 'Errormsg')
-      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
-      self.$store.commit('set_initiativeCtrlMaskTpl', '')
       self.$store.commit('set_isMsgMaskHidden', false)
     },
     /**
