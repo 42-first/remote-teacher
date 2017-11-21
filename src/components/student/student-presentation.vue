@@ -18,11 +18,11 @@
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu">
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
-              <span>{{ $t('newbullet') }}</span>
+              <span>{{ $t('sendpost') }}</span>
             </p>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
-              <span>{{ $t('newpost') }}</span>
+              <span>{{ $t('sendbullet') }}</span>
             </router-link>
           </div>
         </div>
@@ -116,7 +116,7 @@
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
         <!-- <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p> -->
-         <p class=" f16" >{{ $t('connerr', { second: countdown }) }}</p>
+         <p class=" f16" v-html="$t('connerr', {second: countdown})"></p>
         <p class="connect-btn f18" @click="handleReconnect">{{ $t('connnow') }}</p>
       </div>
     </section>
@@ -162,7 +162,7 @@
         topStatus: '',
         topDistance: 120,
         //
-        title: '雨课堂',
+        title: this.$i18n.t('ykt') || '雨课堂',
         courseName: '',
         // 课程ID
         lessonID: 0,
@@ -658,7 +658,7 @@
         if(this.danmuStatus) {
           this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
         } else {
-          this.$messagebox('提示', '老师暂时还未开放弹幕，等等吧～');
+          this.$messagebox( this.$i18n.t('tips') || '提示', this.$i18n.t('bulletban') || '老师暂时还未开放弹幕，等等吧～');
         }
       },
 

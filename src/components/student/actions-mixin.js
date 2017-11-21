@@ -161,7 +161,7 @@ var actionsMixin = {
         href: '/quiz/quiz_info/' + data.quiz,
         count: data.total,
         time: data.time,
-        status: oQuiz && oQuiz.answered ? '已完成' : '未完成',
+        status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
         isComplete: oQuiz && oQuiz.answered || false
       })
 
@@ -194,8 +194,8 @@ var actionsMixin = {
         presentationid: data.presentationid,
         time: data.time,
         problemType: slideData['Problem']['Type'],
-        caption: slideData['Problem']['Type'] === 'Polling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
-        status: slideData['Problem']['Result'] ? '已完成' : '未完成',
+        caption: slideData['Problem']['Type'] === 'Polling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
+        status: slideData['Problem']['Result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
@@ -262,10 +262,10 @@ var actionsMixin = {
     * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
     */
     addHongbao(data) {
-      let caption = data.length + '位同学已赢得课堂红包';
+      let caption = this.$i18n.t('gainbonus', { number: data.length }) || data.length + '位同学已赢得课堂红包';
 
       if (data.length == 0) {
-        caption = 'Hi，本题有课堂红包发送';
+        caption = this.$i18n.t('recvbonus') || 'Hi，本题有课堂红包发送';
       }
 
       data = Object.assign(data, {

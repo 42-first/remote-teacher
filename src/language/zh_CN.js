@@ -25,16 +25,16 @@ let pages = {
   "star": "收藏",
 
   "newfeed": "您有新的课堂动态",
-  "connerr": "连接异常，{second}秒后尝试重连",
+  "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
   "connnow": "立即重连",
 
-  "newpost": "发送投稿",
-  "newbullet": "发送弹幕",
+  "sendpost": "发送投稿",
+  "sendbullet": "发送弹幕",
   "bulletban": "老师暂时还未开放弹幕，等等吧～",
   "tips": "提示",
 
-  "newprob": "你有新的课堂习题",
-  "newvote": "你有新的投票",
+  "newprob": "Hi,你有新的课堂习题",
+  "newvote": "Hi,你有新的投票",
   "recvbonus": "Hi，本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
 
@@ -159,7 +159,7 @@ let pages = {
   "nonewbullet": "没有新的弹幕",
   "bulletonoff": "弹幕已开启 | 弹幕已关闭",
   "bulletoff": "",
-  "onscreenmode": "正在投屏中", 
+  "onscreenmode": "正在投屏中",
   "postdeleted": "学生已删除此投稿",
   "notimelimit": "不限时发送",
 
