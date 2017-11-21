@@ -135,18 +135,13 @@
       let self = this
 
       //首次加载页面投稿列表
-      self.refreshDataList(true);
+      self.refreshDataList(true)
+      self.handlePubSub()
+
       // 轮询投稿列表
       pollingTimer = setInterval(() => {
         self.pollingNewItem()
       }, 5000)
-
-      // socket通知投稿投屏了，要隐藏投屏中的提示
-      self.$on('postshown', function (msg) {
-        clearTimeout(postingTimer)
-        self.isAskingItemStatus = false
-      })
-      
     },
     mounted () {
       let self = this
@@ -165,6 +160,7 @@
     },
     beforeDestroy(){
       clearInterval(pollingTimer)
+      T_PUBSUB.unsubscribe('submission-msg')
     },
     watch: {
       dataList: function() {
@@ -176,6 +172,22 @@
       }
     },
     methods: {
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('submission-msg')
+
+        T_PUBSUB.subscribe('submission-msg.postshown', (msg, data) => {
+          // socket通知投稿投屏了，要隐藏投屏中的提示
+          clearTimeout(postingTimer)
+          self.isAskingItemStatus = false
+        })
+      },
       /**
        * 模仿微信小程序的 setData 用法，简易设置data
        *
