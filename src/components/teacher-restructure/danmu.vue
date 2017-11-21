@@ -208,7 +208,7 @@
         }
 
         // 单次刷新
-        return request.get(url, data)
+        return request.post(url, data)
       },
       /**
        * 更新试题详情的数据
