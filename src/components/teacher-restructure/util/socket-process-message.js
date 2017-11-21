@@ -22,10 +22,14 @@ function socketProcessMessage(msg){
   // 通杀，针对所有指令，并不只是hello
   if(msg.shownow){
     // 处理刷新页面之前在课堂动态页进入的子路由的情况时，默认进入课堂动态页
-    let oldAtAcitvity = !self.isInitiativeCtrlMaskHidden && self.initiativeCtrlMaskTpl === 'Activity'
+    let _state = self.$store.state
+    // computed 数据有缓存，这里直接用store中的数据，而不是computed传过来的数据
+    // 这两个数据是基本型
+    let oldAtAcitvity = _state.isInitiativeCtrlMaskHidden && _state.initiativeCtrlMaskTpl === 'Activity'
     self.killMask()
     
     oldAtAcitvity && self.showActivity()
+    _state = null
   }
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令

@@ -420,8 +420,6 @@
 
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
-	      self.$refs.Toolbar.$emit('hideToolbarMore')
 	    },
 	    /**
 	     * 点击 遥控器 按钮
