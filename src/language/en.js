@@ -38,6 +38,7 @@ let pages = {
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
 
+  "submit": "Submit",
   "submitansw": "Submit Answer",
   "cannotsubmit": "Unable to submit",
 

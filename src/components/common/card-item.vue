@@ -41,7 +41,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" :data-language-key="item.isComplete ? 'done' : 'undone'">{{ item.status }}</span>
+            <span class="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" :data-language-key="item.isComplete ? 'done' : 'undone'">{{ item.status }}</span>
+            <span class="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@
   import API from '@/util/api'
   import timeago from 'timeago.js';
 
-  let locale = 'zh_CN';
+  let locale = window.i18n && window.i18n.locale || 'zh_CN';
   // 在这里设置相对时间
   var timeagoInstance = timeago(null, locale);
 
@@ -140,7 +140,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 5000, language.options['lang'] === 'en' ? 'en': 'zh_CN');
+        return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
       }
     },
     methods: {

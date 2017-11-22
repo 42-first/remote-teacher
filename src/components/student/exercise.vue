@@ -152,19 +152,19 @@
     },
     filters: {
       setSubmitText(submitStatus) {
-        let text = '提交答案';
+        let text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
 
         if(submitStatus) {
           switch (submitStatus) {
             case 0:
             case 1:
-              text = '提交答案';
+              text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
               break;
             case 2:
-              text = '提交中...';
+              text = typeof i18n !== 'undefined' && i18n.t('besending') || '提交中...';
               break;
             case 3:
-              text = '提交成功';
+              text = typeof i18n !== 'undefined' && i18n.t('sendsuccess') || '提交成功';
               break;
             default:
               break;
@@ -213,7 +213,7 @@
           });
 
           // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-          this.sLeaveTime = '已完成';
+          this.sLeaveTime = this.$i18n.t('done') || '已完成';
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -420,7 +420,7 @@
                 let data = res.data;
 
                 self.summary = Object.assign(self.summary, {
-                  status: '已完成',
+                  status: this.$i18n.t('done') || '已完成',
                   isComplete: true
                 })
 
@@ -431,10 +431,10 @@
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
-                this.sLeaveTime = '已完成';
+                this.sLeaveTime = this.$i18n.t('done') || '已完成';
 
                 this.$toast({
-                  message: '提交成功',
+                  message: this.$i18n.t('sendsuccess') || '提交成功',
                   duration: 2000
                 });
 

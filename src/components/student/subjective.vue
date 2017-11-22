@@ -11,10 +11,10 @@
     <!-- 练习导航 -->
     <header class="subjective__header">
       <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
-      <p class="heade-action f18" @click="handleBack" v-else>取消</p>
+      <p class="heade-action f18" @click="handleBack" v-else>{{ $t('cancel') }}</p>
       <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
       <h3 class="header-title f18" v-else>{{ title }}</h3>
-      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': '提交' }}</p>
+      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': $t('submit') }}</p>
     </header>
     <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 问题内容 cover -->
@@ -22,7 +22,7 @@
         <div class="content_wrapper">
           <header class="content__header problem-tag">
             <p class="header-item f18">主观题</p>
-            <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
+            <p class="header-item f15">{{ $t('pno', { number: summary&&summary.pageIndex }) }}</p>
             <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
           </header>
           <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
@@ -49,7 +49,7 @@
         <section class="submission__pic">
           <div v-if="!hasImage&&!loading">
             <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
-            <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
+            <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
             <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
@@ -68,7 +68,7 @@
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
-          <span class="lable f15" >得分: {{getScore}}分</span>
+          <span class="lable f15" >{{ $t('stuscore') }}: {{getScore}}分</span>
         </div>
       </div>
 
@@ -141,13 +141,13 @@
       },
       sendStatus(newValue, oldValue) {
         if(newValue === 3) {
-          this.submitText = '正在发送';
+          this.submitText = this.$i18n.t('besending') || '正在发送';
         } else if(newValue === 1) {
           this.submitText = '图片上传中';
         } else if(newValue === 2) {
-          this.submitText = '确认发送';
+          this.submitText = this.$i18n.t('sendcfm') || '确认发送';
         } else if(newValue === 4) {
-          this.submitText = '发送成功';
+          this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
           this.submitText = '课程已结束';
         }
@@ -193,7 +193,7 @@
           this.result = this.oProblem['Result'];
 
           this.getScore(problemID);
-          this.sLeaveTime = '已完成';
+          this.sLeaveTime = this.$i18n.t('done') || '已完成';
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -371,7 +371,7 @@
               self.sendStatus = 4;
 
               self.summary = Object.assign(self.summary, {
-                status: '已完成',
+                status: this.$i18n.t('done') || '已完成',
                 isComplete: true
               })
 
@@ -381,10 +381,10 @@
               self.$parent.problemMap.set(problemID, problem);
 
               clearInterval(self.timer);
-              this.sLeaveTime = '已完成';
+              this.sLeaveTime = this.$i18n.t('done') || '已完成';
 
               this.$toast({
-                message: '提交成功',
+                message: this.$i18n.t('sendsuccess') || '提交成功',
                 duration: 2000
               });
 

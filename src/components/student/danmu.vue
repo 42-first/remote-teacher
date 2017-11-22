@@ -40,8 +40,8 @@
 
         // 0 初始化状态 1可以发送 2发送中 3发送完成 4课程已结束
         sendStatus: 0,
-        submitText: '确认发送',
-        title: '弹幕',
+        submitText: this.$i18n.t('sendcfm') || '确认发送',
+        title: this.$i18n.t('bullet') || '弹幕',
         text: '',
         count: 0
       };
@@ -71,9 +71,9 @@
       },
       sendStatus(newValue, oldValue) {
         if(newValue === 2) {
-          this.submitText = '正在发送';
+          this.submitText = this.$i18n.t('besending') || '正在发送';
         } else if(newValue === 3) {
-          this.submitText = '发送成功';
+          this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 4) {
           this.submitText = '课程已结束';
         }
@@ -106,7 +106,7 @@
               self.sendStatus = 3;
 
               self.$toast({
-                message: '发送成功',
+                message: this.$i18n.t('sendsuccess') || '发送成功',
                 duration: 2000
               });
 
@@ -141,7 +141,7 @@
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
-      document.title = '弹幕';
+      document.title = this.$i18n.t('bullet') || '弹幕';
 
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 4);

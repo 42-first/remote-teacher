@@ -38,6 +38,7 @@ let pages = {
   "recvbonus": "Hi，本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
 
+  "submit": "提交",
   "submitansw": "提交答案",
   "cannotsubmit": "提交有困难",
 

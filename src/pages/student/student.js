@@ -21,6 +21,8 @@ const i18n = new VueI18n({
   }
 })
 
+window.i18n = i18n;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

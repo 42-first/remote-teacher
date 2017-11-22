@@ -18,11 +18,11 @@
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu">
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
-              <span>{{ $t('sendpost') }}</span>
+              <span>{{ $t('sendbullet') }}</span>
             </p>
             <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
-              <span>{{ $t('sendbullet') }}</span>
+              <span>{{ $t('sendpost') }}</span>
             </router-link>
           </div>
         </div>
@@ -715,7 +715,7 @@
     mounted() {
     },
     updated() {
-      window.language && window.language.translate(this.$el);
+      // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();
