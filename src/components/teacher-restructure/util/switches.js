@@ -61,24 +61,12 @@ export default {
       self.$store.commit('set_isToastCtrlMaskHidden', false)
     },
     /**
-     * 老版本雨课堂软件，没有二维码控制，显示 '已连接成功\n请在电脑上播放幻灯片'
-     */
-    showOldHelloMask: function () {
-      this.setData({
-        errType: 1
-      })
-      self.$store.commit('set_msgMaskTpl', 'Errormsg')
-      self.$store.commit('set_isMsgMaskHidden', false)
-    },
-    /**
      * 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
      */
     showEscMask: function () {
       let self = this
 
-      this.setData({
-        errType: 2
-      })
+      self.$store.commit('set_errType', 2)
       self.$store.commit('set_msgMaskTpl', 'Errormsg')
       self.$store.commit('set_isMsgMaskHidden', false)
     },
@@ -88,12 +76,8 @@ export default {
     showPcErrorMask: function () {
       let self = this
 
-      this.setData({
-        errType: 3
-      })
+      self.$store.commit('set_errType', 3)
       self.$store.commit('set_msgMaskTpl', 'Errormsg')
-      // 必须置空，防止 isYieldToolbar 为true，从而露出底部工具栏
-      self.$store.commit('set_initiativeCtrlMaskTpl', '')
       self.$store.commit('set_isMsgMaskHidden', false)
     },
     /**

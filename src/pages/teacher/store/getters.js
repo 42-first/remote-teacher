@@ -10,6 +10,8 @@ const getters = {
   lessonid: state => state.lessonid,
   presentationid: state => state.presentationid,
   isBrandNewPpt: state => state.isBrandNewPpt,
+  errType: state => state.errType,
+
   current: state => state.current,
   total: state => state.total,
   pptData: state => state.pptData,

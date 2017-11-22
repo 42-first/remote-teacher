@@ -71,7 +71,6 @@
         <component
           ref="MsgMask"
           :is="msgMaskTpl"
-          :err-type="errType"
           :connect-count-down="connectCountDown"
           :is-connecting-hidden="isConnectingHidden"
           @triggerReconnect="triggerReconnect"
@@ -151,7 +150,7 @@
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
 	      startPoint: [0, 0],
-	      errType: 5,
+	      
 	      connectCountDown: 10,
 	      isConnectingHidden: true,               // 连接中隐藏
 	      
@@ -184,6 +183,7 @@
 	    	'coursename',
         'lessonid',
         'presentationid',
+        'errType',
         'current',
         'total',
         'pptData',
