@@ -590,10 +590,6 @@
 		}
 	}
 
-	.icon-fill-star, .icon-star {
-		color: #F5A623;
-	}
-
 	.problemresult-box {
 	  position: relative;
     z-index: 20; /* 遮盖toolbar */

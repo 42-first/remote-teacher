@@ -26,9 +26,7 @@
       </div>
     </section>
 
-    <div class="button-box f18">
-      <v-touch class="btn" v-on:tap="refreshQuizResultDetail">刷新</v-touch>
-    </div>
+    <v-touch class="btn f18" v-on:tap="refreshQuizResultDetail">刷新</v-touch>
   </div>
 </template>
 
@@ -144,18 +142,11 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .button-box {
-      display: flex;
-      height: 1.7rem;
-      text-align: center;
-
-      .btn {
-        flex: 1;
-        border-radius: 0;
-        height: 1.466667rem;
-        line-height: 1.466667rem;
-        box-shadow: none;
-      }
+    .btn {
+      border-radius: 0;
+      height: 1.466667rem;
+      line-height: 1.466667rem;
+      box-shadow: none;
     }
   }
 </style>

@@ -26,9 +26,7 @@
 	      </div>
 	    </div>
 
-	    <div class="button-box f18">
-	      <v-touch class="btn" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
-	    </div>
+	    <v-touch class="btn f18" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
 		</div>
   </div>
 </template>
@@ -294,21 +292,15 @@
 			}
 		}
 
-		.button-box {
-      display: flex;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 1.466667rem;
-      text-align: center;
-
-      .btn {
-        flex: 1;
-        border-radius: 0;
-        height: 1.466667rem;
-        line-height: 1.466667rem;
-      }
-    }
+		.btn {
+		  position: fixed;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  border-radius: 0;
+		  height: 1.466667rem;
+		  line-height: 1.466667rem;
+		  box-shadow: none;
+		}
 	}
 </style>
