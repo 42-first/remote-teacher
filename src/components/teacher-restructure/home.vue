@@ -215,49 +215,63 @@
 	    Activity
 	  },
 	  created () {
-	    let self = this
-
-	    let lessonid = +self.$route.params.lessonid
-
-	    self.$store.commit('set_lessonid', lessonid)
-	    self.polyfillIncludes()
-
-	    // 获取本地不懂、投稿已读数
-	    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
-
-	    configWX()
-	    wx.ready(() => {
-	      wx.hideMenuItems({
-	        menuList: [
-	          'menuItem:share:appMessage', 'menuItem:share:timeline',
-	          'menuItem:share:qq', 'menuItem:share:weiboApp',
-	          'menuItem:favorite', 'menuItem:share:QZone']
-	      });
-	    });
-
-	    self.setSentry()
-
-	    import('@/util/ga').then(gaue => {
-	    	window.gaue = gaue;
-	      gaue.default.registerEl();
-	    })
+	    this.init()
 	  },
 	  mounted () {
 	    let self = this
 
 	    self.pmos()
-	    self.fetchUserInfo()
-	    		.then(self.initws)
 
 	    // 根据localStorage判断是否显示新手引导
 	    if (localStorage.getItem('hasGuided') !== 'yes') {
 	      self.isGuideHidden = false
 	    }
-
+	    self.polyfillIncludes()
 	    self.importPhotoswipe()
+	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
+	  	/**
+	     * 复用页面，需要watch route
+	     *
+	     */
+	    init () {
+		  	let self = this
+		  	self.$store.commit('set_newdoubt', 0)
+		  	self.$store.commit('set_newtougao', 0)
+
+		    let lessonid = +self.$route.params.lessonid
+
+		    self.$store.commit('set_lessonid', lessonid)
+
+		    // 获取本地不懂、投稿已读数
+		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
+
+		    self.fetchUserInfo()
+		    		.then(self.initws)
+
+		    configWX()
+		    wx.ready(() => {
+		      wx.hideMenuItems({
+		        menuList: [
+		          'menuItem:share:appMessage', 'menuItem:share:timeline',
+		          'menuItem:share:qq', 'menuItem:share:weiboApp',
+		          'menuItem:favorite', 'menuItem:share:QZone']
+		      });
+		    });
+
+		    self.setSentry()
+
+		    import('@/util/ga').then(gaue => {
+		    	window.gaue = gaue;
+		      gaue.default.registerEl();
+		    })
+	    },
 	    /**
 	     * 模仿微信小程序的 setData 用法，简易设置data
 	     *
@@ -418,7 +432,9 @@
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
-	      self.$refs.InitiativeCtrlMask.$emit('Activity')
+	      Vue.nextTick(function () {
+	        self.$refs.InitiativeCtrlMask.$emit('Activity')
+	      })
 	    },
 	    /**
 	     * 点击 遥控器 按钮
