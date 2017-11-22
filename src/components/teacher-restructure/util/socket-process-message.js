@@ -72,7 +72,11 @@ function socketProcessMessage(msg){
     msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
     
     // TODO 初次联通，node有时会丢失msg.presentation
-    self.$store.commit('set_presentationid', msg.presentation)
+    // 有可能中间换课件，这时不要显示老的课件
+    if (self.presentationid !== +msg.presentation) {
+      self.$store.commit('set_pptData', [])
+    }
+    self.$store.commit('set_presentationid', +msg.presentation)
     // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     self.$store.commit('set_isToastCtrlMaskHidden', true)
 

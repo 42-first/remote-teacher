@@ -247,6 +247,7 @@
 
 		    let lessonid = +self.$route.params.lessonid
 
+		    // 换课的话，要清掉持久化的旧 store
 		    if (lessonid !== self.lessonid) {
 		    	self.$store.dispatch('reset')
 		    }
