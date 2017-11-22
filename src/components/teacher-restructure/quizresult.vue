@@ -39,7 +39,7 @@
         <div class="btn-desc f14">投屏</div>
       </v-touch>
 
-      <router-link class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
+      <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>
