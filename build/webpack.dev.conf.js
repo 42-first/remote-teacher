@@ -45,6 +45,13 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['market'],
       inject: true
     }),
+    // 教师遥控器重构
+    new HtmlWebpackPlugin({
+      filename: 'teacher.html',
+      template: './src/pages/teacher/teacher.html',
+      chunks: ['teacher'],
+      inject: true
+    }),
     new FriendlyErrorsPlugin()
   ]
 })

@@ -12,7 +12,8 @@ module.exports = {
   entry: {
     app: './src/main.js',
     student: './src/pages/student/student.js',
-    market: './src/pages/market/market.js'
+    market: './src/pages/market/market.js',
+    teacher: './src/pages/teacher/teacher.js'
   },
   output: {
     path: config.build.assetsRoot,
