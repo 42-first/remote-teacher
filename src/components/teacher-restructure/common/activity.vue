@@ -6,7 +6,7 @@
         <img :src="avatar" alt="">
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
-      <router-link :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+      <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
         <img v-for="item in participantList.slice(0, 10).reverse()" :src="item.profile.avatar_96" alt="">
         <span class="dqxs">
           当前学生{{participantList.length}}位
@@ -14,7 +14,7 @@
         </span>
       </router-link>
     </section>
-    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <router-link tag="div" :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -25,7 +25,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
+    <router-link tag="div" :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -37,7 +37,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+    <router-link tag="div" :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>

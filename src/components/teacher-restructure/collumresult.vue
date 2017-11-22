@@ -60,21 +60,21 @@
 	        <div class="btn-desc f14">投屏</div>
 	      </v-touch>
 
-	      <router-link :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
 	        <div class="btn-desc f14">查看详情</div>
 	      </router-link>
 
-	      <router-link :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
+	      <router-link tag="div" :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f14">课堂红包</div>
 	      </router-link>
 
-	      <router-link :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
+	      <router-link tag="div" :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
