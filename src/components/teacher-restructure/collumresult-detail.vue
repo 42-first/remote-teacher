@@ -4,8 +4,8 @@
 		<div v-if="problemResultDetailData">
 	    
 	    <div class="title f18">{{(problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8) ? '票数最多' : '本题正确选项为'}}</div>
-	    <div :class="['answer-box', {'toomany': answers.length > 4}]">
-	    	<div v-for="item in answers" :class="['anser-item', answers.length > 4 ? 'f36' : 'f50']">{{item}}</div>
+	    <div :class="['answer-box', {'toomany': answerList.length > 4}]">
+	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
 	    </div>
 	    <div class="gap"></div>
 	    <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12">本题为匿名投票，不显示投票人</div>
@@ -41,19 +41,12 @@
 
 	export default {
 	  name: 'CollumresultDetail',
-	  props: ['problemResultData'],
 	  data () {
 	    return {
+	    	problemid: 0,
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    	showingIndex: -1,												// 正在展示的题目的序号
-	    	problemid: 0,
-	    }
-	  },
-	  computed: {
-	    answers: function () {
-	    	// 刚开始 problemResultDetailData 为 null
-	    	let result = this.problemResultDetailData ? this.problemResultDetailData.answer.split('') : []
-	      return result
+	    	answerList: []
 	    }
 	  },
 	  created(){
@@ -70,7 +63,6 @@
 	     *
 	     */
 	    init () {
-	    	console.log(87)
 		  	let self = this
 
 		  	self.problemid = +self.$route.params.problemid
@@ -117,7 +109,7 @@
 	          }
 
 	          // 投票类型每回要算投票数最多的
-	          if (jsonData.problem_type === 3) {
+	          if (jsonData.problem_type === 3 || jsonData.problem_type === 8) {
 	          	self.findBigPoll()
 	          }
 	        })
@@ -130,10 +122,8 @@
 	    openRightItem (jsonData) {
 	    	let self = this
 
-	      // self.showingIndex = jsonData.problem_type === 3 ? self.findBigPoll(jsonData) : self.findRightAnswer(jsonData)
-
 	      // 投票类型不打开默认选项
-	      if (jsonData.problem_type !== 3) {
+	      if (jsonData.problem_type !== 3 && jsonData.problem_type !== 8) {
 	      	self.showingIndex = self.findRightAnswer(jsonData)
 	      }
 	    },
@@ -157,23 +147,34 @@
 	     */
 	    findBigPoll () {
 	    	let self = this
-	    	let GD = self.problemResultData.graph.data // 柱状图的数据
-	    	let result = {
-	    		'label': '',
-	    		'value': -1
-	    	}
-	    	for (var i = 0; i < GD.length; i++) {
-	    		if (result.value  === GD[i].value) {
-			    	result.label += GD[i].label
-	    		} else if (result.value  < GD[i].value) {
-	    			result = {
-			    		'label': GD[i].label,
-			    		'value': GD[i].value
-			    	}
-	    		}
+	    	let url = API.problem_statistics
+
+	    	if (process.env.NODE_ENV === 'production') {
+	    	  url = API.problem_statistics + '/' + self.problemid + '/'
 	    	}
 
-	    	self.problemResultDetailData.answer = result.label
+	    	// 单次刷新
+	    	request.get(url)
+	    	  .then(jsonData => {
+	    	  	let GD = jsonData.graph.data // 柱状图的数据
+			    	let result = {
+			    		'label': '',
+			    		'value': -1
+			    	}
+			    	for (var i = 0; i < GD.length; i++) {
+			    		if (result.value  === GD[i].value) {
+					    	result.label += GD[i].label
+			    		} else if (result.value  < GD[i].value) {
+			    			result = {
+					    		'label': GD[i].label,
+					    		'value': GD[i].value
+					    	}
+			    		}
+			    	}
+
+			    	self.problemResultDetailData.answer = result.label
+			    	self.answerList = [...result.label]
+	    	  })
 	    },
 	  }
 	}
