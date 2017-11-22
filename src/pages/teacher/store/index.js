@@ -168,6 +168,16 @@ const store = new Vuex.Store({
 
       window.USERID = payload.user.user_id
     },
+    reset: ({commit}) => {
+      commit('set_pptData', [])
+      commit('set_avatar', '')
+      commit('set_auth', '')
+      commit('set_inviteCode', '')
+      commit('set_courseid', '')
+      commit('set_classroomid', '')
+      commit('set_coursename', '')
+
+    },
   },
   getters
 })

@@ -247,6 +247,10 @@
 
 		    let lessonid = +self.$route.params.lessonid
 
+		    if (lessonid !== self.lessonid) {
+		    	self.$store.dispatch('reset')
+		    }
+
 		    self.$store.commit('set_lessonid', lessonid)
 
 		    // 获取本地不懂、投稿已读数

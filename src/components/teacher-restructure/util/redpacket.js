@@ -119,7 +119,7 @@ export default {
 	   */
 	  numInputHandler (e) {
 	    let self = this
-	    // if (self.stuNumer === '--') {return;}
+	    if (self.stuNumer === '--') {return;}
 	    let _val = e.target.value
 	    let stuNumer = self.stuNumer
 
@@ -155,7 +155,7 @@ export default {
 	   */
 	  priceInputHandler (e) {
 	    let self = this
-	    // if (self.stuNumer === '--') {return;}
+	    if (self.stuNumer === '--') {return;}
 	    let _val = e.target.value
 
 	    //是数字的话

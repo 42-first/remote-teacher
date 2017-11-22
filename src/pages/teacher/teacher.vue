@@ -16,7 +16,7 @@
     box-sizing: border-box;
     text-size-adjust: 100%;
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
+    // -webkit-user-select: none;
   }
   html,body {
     min-height: 100%;
