@@ -120,7 +120,7 @@
   const FENYE_COUNT = 10
   let pollingTimer = null
 
-  let refProblemTimer = null    // 刷新试题柱状图的定时器
+  let durationTimer = null    // 刷新试题柱状图的定时器
   let initTime = 1              // 初始时间 秒
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
@@ -442,14 +442,14 @@
       handleDuration () {
         let self = this
 
-        clearInterval(refProblemTimer)
+        clearInterval(durationTimer)
         self.setData({
           durationLeft: self.sec2str(newTime)
         })
 
-        refProblemTimer = setInterval(function(){
+        durationTimer = setInterval(function(){
           if(self.limit !== -1 && newTime <= 0){
-            clearInterval(refProblemTimer)
+            clearInterval(durationTimer)
           }
 
           //更新闹钟时间
@@ -467,7 +467,7 @@
        */
       endTimers () {
         // 关闭刷新的定时器
-        clearInterval(refProblemTimer)
+        clearInterval(durationTimer)
         clearInterval(pollingTimer)
       },
       /**
