@@ -339,6 +339,7 @@
 			}
 			.yjy {
 				padding-top: 0.5rem;
+				color: #AAAAAA;
 			}
 	  }
 		
