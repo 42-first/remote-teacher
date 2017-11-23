@@ -9,7 +9,8 @@
 	    	<div class="xitixushi">
 	    		<!-- 延时相关 -->
 	    		<div class="time-rel f15">
-	    			<div class="tbtn green">延时</div>
+	    			<div v-if="!~limit" class="tbtn nobtn">不限时</div>
+	    			<v-touch v-else class="tbtn green" v-on:tap="yanshi">延时</v-touch>
 	    		</div>
 
 	    		<!-- 中间秒表 -->
@@ -21,7 +22,7 @@
 
 	    		<!-- 收题相关 -->
 	    		<div class="pro-rel f15">
-	    			<div class="tbtn red">收题</div>
+	    			<v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
 	    		</div>
 		    </div>
 		    <div class="f18 yjy">
@@ -331,6 +332,26 @@
           })
         }, 1000)
       },
+      /**
+	     * 延时
+	     *
+	     * @event bindtap
+	     */
+	    yanshi () {
+	      let self = this
+
+	      console.log('延时啦')
+	    },
+      /**
+	     * 收题
+	     *
+	     * @event bindtap
+	     */
+	    shouti () {
+	      let self = this
+
+	      console.log('收题啦')
+	    },
 	    /**
 	     * 试题柱状图页面中的 投屏 按钮
 	     *
@@ -426,6 +447,12 @@
 	  				line-height: 0.8rem;
 	  				border: 1px solid #CCCCCC;
 	  				border-radius: 0.4rem;
+	  			}
+	  			.nobtn {
+	  				border: none;
+	  				border-radius: 0.4rem;
+	  				background-color: #282828;
+	  				color: #08BC72;
 	  			}
 	  			.green {
 	  				border-color: #08BC72;
