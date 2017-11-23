@@ -25,9 +25,6 @@
         self.fire(msg)
       })
     },
-    beforeDestroy(){
-      T_PUBSUB.unsubscribe('ykt-msg-toast')
-    },
     methods: {
       /**
        * 触发弹出提示

@@ -1,6 +1,7 @@
 <!--试题柱状图页-->
 <template>
 	<div class="problem-root">
+		<slot name="ykt-msg"></slot>
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->

@@ -35,9 +35,6 @@
         self.fire(msg)
       })
     },
-    beforeDestroy(){
-      T_PUBSUB.unsubscribe('ykt-msg-modal')
-    },
     methods: {
       /**
        * 触发弹出提示

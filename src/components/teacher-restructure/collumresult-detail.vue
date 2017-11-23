@@ -1,6 +1,7 @@
 <!--试题作答详情面板 -->
 <template>
 	<div class="problemresultdetail-box">
+		<slot name="ykt-msg"></slot>
 		<div v-if="problemResultDetailData">
 	    
 	    <div class="title f18">{{(problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8) ? '票数最多' : '本题正确选项为'}}</div>

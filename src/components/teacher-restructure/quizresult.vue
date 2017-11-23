@@ -1,6 +1,7 @@
 <!-- 已发试卷饼图页 -->
 <template>
 	<div class="quizresult-box">
+    <slot name="ykt-msg"></slot>
     <!-- 上部时钟 -->
     <section class="upper">
       <div class="f50">
