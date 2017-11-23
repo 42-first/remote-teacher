@@ -1,6 +1,7 @@
 <!-- 全部人员名单 -->
 <template>
 	<div class="member-box">
+    <slot name="ykt-msg"></slot>
     <div class="desc f18">
       当前班级人数：<span class="f24">{{participantList.length}}</span> 人
     </div>

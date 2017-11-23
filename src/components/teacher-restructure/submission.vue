@@ -1,6 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="submission-box">
+    <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
 
     <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>

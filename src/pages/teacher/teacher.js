@@ -15,7 +15,10 @@ Vue.use(VueTouch, {name: 'v-touch'})
 
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
-window.STORE = store // 在 router 中判断是否刷新页面倒是 socket 无效
+window.STORE = store // 在 router 中判断是否刷新页面导致 socket 无效
+
+Vue.component('ykt-toast', () => import('@/components/teacher-restructure/common/toast'))
+Vue.component('ykt-modal', () => import('@/components/teacher-restructure/common/modal'))
 
 /* eslint-disable no-new */
 new Vue({

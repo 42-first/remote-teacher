@@ -1,6 +1,7 @@
 <!--试题结果-主观题结果页面-->
 <template>
 	<div class="problem-root" v-scroll="onScroll">
+    <slot name="ykt-msg"></slot>
 		<v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
