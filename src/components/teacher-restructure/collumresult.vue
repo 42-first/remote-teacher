@@ -112,6 +112,7 @@
 	let initTime = 1              // 初始时间 秒
 	let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
+	let routeStamp = 0 						// 首次进入本路由时时间戳
 
 	export default {
 	  name: 'Collumresult',
@@ -158,15 +159,22 @@
 
 		    self.problemid = +params.problemid
 		    self.problemType = query.pt
+
+		    routeStamp = query._t
 		    START = +new Date()
 
 		    // 如果有 storage 存储，说明之前进去过
 		    // 如果是倒计时， 之前显示的时间 - 计算时间差
 		    // 如果是正计时， 之前显示的时间 + 计算时间差
-		    // 被通知续时的话，如果在当前页直接处理，如果不在当前页，处理storage
+		    // 被通知续时的话，如果在当前页直接处理，如果不在当前页，处理 storage
+
+		    // 使用 storage 机制主要是为了处理当前在计时页，然后进入红包等子页面后又回退的情况
+		    // 发题进来，或查看答案进来， storage 中都不会有该题在当前时间戳的数据
 
 		    // localStorage-duration-info
-		    let stoDurInfo = localStorage.getItem('durInfo'+self.problemid)
+		    // 如果是从发送试题或者查看答案进入本页面的话，会带有最新的时间戳： routeStamp
+		    // 详见 showProblemResult 函数中的 query 参数: _t
+		    let stoDurInfo = localStorage.getItem('durInfo'+self.problemid+routeStamp)
 
 		    if (stoDurInfo) {
 		    	let arr = stoDurInfo.split('|')
@@ -193,7 +201,25 @@
         }
 
 	    	self.refreshProblemResult()
+	    	// 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
+	    	// 的 handleDuration 中又立即设置了 storage，
+	    	// 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
+	    	self.cleanDurInfoStorage()
 	    	self.handleDuration()
+	    },
+	    /**
+	     * 清理 storage 中旧的 durInfo
+	     *
+	     */
+	    cleanDurInfoStorage () {
+	    	let self = this
+	    	let re =  new RegExp('durInfo'+self.problemid)
+
+	      Object.keys(localStorage).forEach(key => {
+	        if (re.test(key)) {
+	        	localStorage.removeItem(key)
+	        }
+	      })
 	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -276,6 +302,10 @@
       handleDuration () {
         let self = this
 
+        // 应对页面进入其他路由后又返回的情况
+        let str = `${self.limit}|${+new Date()}|${newTime}`
+        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
         clearInterval(durationTimer)
         self.setData({
           durationLeft: self.sec2str(newTime)
@@ -293,8 +323,7 @@
 
           // 应对页面进入其他路由后又返回的情况
           let str = `${self.limit}|${+new Date()}|${newTime}`
-          localStorage.setItem('durInfo'+self.problemid, str)
-          console.log(99, newTime)
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
 
           self.setData({
             durationLeft: self.sec2str(newTime),

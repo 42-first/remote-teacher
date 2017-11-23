@@ -111,7 +111,8 @@ export default {
         query: {
           pt,
           lm: limit,
-          tl: timeLeft
+          tl: timeLeft,
+          _t: +new Date()
         }
       }
 
