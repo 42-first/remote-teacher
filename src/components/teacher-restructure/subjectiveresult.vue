@@ -120,7 +120,6 @@
   const FENYE_COUNT = 10
   let pollingTimer = null
 
-  let isFirstFetch = true       // 标记本 id 初次获取
   let refProblemTimer = null    // 刷新试题柱状图的定时器
   let initTime = 1              // 初始时间 秒
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
