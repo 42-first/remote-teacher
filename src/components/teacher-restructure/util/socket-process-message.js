@@ -3,6 +3,7 @@
  */
 
  let isOldVersion = false               // 雨课堂软件是老版本
+ import config from '@/pages/teacher/config/config'
 
 function socketProcessMessage(msg){
   let self = this
@@ -125,6 +126,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
+    T_PUBSUB.publish('ykt-msg-modal', config.pubsubmsg.modal[0])
     return
   }
 

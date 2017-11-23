@@ -14,7 +14,13 @@ const config = {
     '放映正在连接中'
   ],
   // 发题时间选择
-  problemTimePicker: ['30秒', '1分钟', '2分钟', '3分钟', '4分钟', '5分钟']
+  problemTimePicker: ['30秒', '1分钟', '2分钟', '3分钟', '4分钟', '5分钟'],
+  pubsubmsg: {
+    toast: [],
+    modal: [
+      '您已经被夺权，请刷新页面'
+    ]
+  }
 }
 
 export default config
