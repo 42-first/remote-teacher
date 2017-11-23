@@ -106,6 +106,7 @@
 	import {sec2str} from './util/util'
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
+  import config from '@/pages/teacher/config/config'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -207,7 +208,22 @@
 	    	// 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
 	    	self.cleanDurInfoStorage()
 	    	self.handleDuration()
+	    	self.handlePubSub()
 	    },
+	    /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('pro-msg')
+
+        T_PUBSUB.subscribe('pro-msg.shouti', (_name, msg) => {
+          self.problemid === +msg && self.shoutiConfirm()
+        })
+      },
 	    /**
 	     * 清理 storage 中旧的 durInfo
 	     *
@@ -350,7 +366,19 @@
 	    shouti () {
 	      let self = this
 
-	      console.log('收题啦')
+	      console.log('点击收题啦')
+	      T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
+	    },
+	    /**
+	     * 收题
+	     *
+	     * @event bindtap
+	     */
+	    shoutiConfirm () {
+	      let self = this
+
+	      console.log('真的收题啦')
+	      // TODO
 	    },
 	    /**
 	     * 试题柱状图页面中的 投屏 按钮
@@ -478,9 +506,9 @@
 		
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
-	  	flex: 1;
 	  	margin: 1.0rem auto;
 	  	width: 8.8rem;
+	  	height: 5.0rem;
 	  	border-top: 1px solid #cccccc;
 	  }
 	  .mahint {	 

@@ -126,7 +126,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
-    T_PUBSUB.publish('ykt-msg-modal', config.pubsubmsg.modal[0])
+    T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
     return
   }
 
