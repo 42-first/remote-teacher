@@ -6,12 +6,25 @@
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
-	    	<div class="f50">
-		      <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-		      <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
-		      <span class="time">{{durationLeft}}</span>
+	    	<div class="xitixushi">
+	    		<!-- 延时相关 -->
+	    		<div class="time-rel f15">
+	    			<div class="tbtn green">延时</div>
+	    		</div>
+
+	    		<!-- 中间秒表 -->
+	    		<div :class="['rolex', 'f36', {'warn': newTime <= 5 && ~limit}]">
+	    			<img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
+	    			<img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+	    			<span class="time">{{durationLeft}}</span>
+	    		</div>
+
+	    		<!-- 收题相关 -->
+	    		<div class="pro-rel f15">
+	    			<div class="tbtn red">收题</div>
+	    		</div>
 		    </div>
-		    <div :class="['f18', 'yjy']">
+		    <div class="f18 yjy">
 		      已经有 <span>{{total}}</span> / <span>{{members}}</span> 位同学提交了答案
 		    </div>
 	    </section>
@@ -113,6 +126,7 @@
 		    ma_right_count: {},            // 多选题答案及人数
 		    limit: '',                     // 设置的限时 -1 为未限时 单位 秒
 		    RedEnvelopeID: -1,             // 红包的id
+		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 	    }
 	  },
 	  computed: {
@@ -144,10 +158,30 @@
 
 		    self.problemid = +params.problemid
 		    self.problemType = query.pt
-		    self.limit = +query.lm
-
-		    initTime = +query.tl <= 0 ? 0 : +query.tl
 		    START = +new Date()
+
+		    // 如果有 storage 存储，说明之前进去过
+		    // 如果是倒计时， 之前显示的时间 - 计算时间差
+		    // 如果是正计时， 之前显示的时间 + 计算时间差
+		    // 被通知续时的话，如果在当前页直接处理，如果不在当前页，处理storage
+
+		    // localStorage-duration-info
+		    let stoDurInfo = localStorage.getItem('durInfo'+self.problemid)
+
+		    if (stoDurInfo) {
+		    	let arr = stoDurInfo.split('|')
+		    	let limit = +arr[0]
+		    	let timeStamp = +arr[1]
+		    	let newTime = +arr[2]
+		    	let diff = Math.round((+new Date() - +new Date(timeStamp))/1000)
+
+		    	self.limit = limit
+		    	initTime = ~limit ? (newTime - diff) : (newTime + diff)
+		    } else {
+		    	self.limit = +query.lm
+		    	initTime = +query.tl <= 0 ? 0 : +query.tl
+		    }
+
 		    newTime = initTime
 
 		    if (self.limit === -1 && newTime === 0) {
@@ -256,8 +290,15 @@
           NOW = +new Date()
           let diff = Math.round((NOW - START)/1000)
           newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${newTime}`
+          localStorage.setItem('durInfo'+self.problemid, str)
+          console.log(99, newTime)
+
           self.setData({
-            durationLeft: self.sec2str(newTime)
+            durationLeft: self.sec2str(newTime),
+            newTime
           })
         }, 1000)
       },
@@ -330,7 +371,43 @@
 	  	width: 8.8rem;
 	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
-	  	// border-bottom: 1px solid #cccccc;
+	  	
+	  	.xitixushi {
+	  		display: flex;
+	  		justify-content: space-between;
+	  		align-items: center;
+	  		height: 1.866667rem;
+	  		padding: 0 0.3rem;
+	  		background: #212121;
+
+	  		.rolex.warn {
+	  			color: #F84F41;
+	  			.iconfont {
+	  				color: #F84F41;
+	  			}
+	  		}
+
+	  		.time-rel, .pro-rel {
+	  			align-self: center;
+	  			color: $white;
+
+	  			.tbtn {
+	  				width: 1.733333rem;
+	  				height: 0.8rem;
+	  				line-height: 0.8rem;
+	  				border: 1px solid #CCCCCC;
+	  				border-radius: 0.4rem;
+	  			}
+	  			.green {
+	  				border-color: #08BC72;
+	  				background-color: rgba(8, 188, 114, 0.2)
+	  			}
+	  			.red {
+	  				border-color: #F84F41;
+	  				background-color: rgba(248, 79, 65, 0.2)
+	  			}
+	  		}
+	  	}
 			
 			.jishi {
 				margin-top: -0.186667rem;
