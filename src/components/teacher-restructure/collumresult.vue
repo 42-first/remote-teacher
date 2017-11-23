@@ -11,7 +11,7 @@
 		      <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{durationLeft}}</span>
 		    </div>
-		    <div :class="['f18', 'yjy', {pt: limit === -1}]">
+		    <div :class="['f18', 'yjy']">
 		      已经有 <span>{{total}}</span> / <span>{{members}}</span> 位同学提交了答案
 		    </div>
 	    </section>
@@ -324,14 +324,6 @@
 	  color: $white;
 	  background: #000000;
 		
-		.close-box {
-			position: absolute;
-	  	right: 0.386667rem;
-	  	top: 0.44rem;
-	  	width: 1.066667rem;
-	  	height: 1.066667rem;
-		}
-		
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
@@ -348,14 +340,12 @@
 			.yjy {
 				padding-top: 0.5rem;
 			}
-	  	.pt {
-	  		padding-top: 1.6rem;
-	  	}
 	  }
 		
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
-	  	margin: 0 auto;
+	  	flex: 1;
+	  	margin: 1.0rem auto;
 	  	width: 8.8rem;
 	  	border-top: 1px solid #cccccc;
 	  }
@@ -380,7 +370,7 @@
 	  	margin: 0 auto;
 	  	padding-top: 1rem;
 	  	width: 8.8rem;
-	  	min-height: 4rem;
+	  	height: 100%;
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
