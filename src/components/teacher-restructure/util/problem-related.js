@@ -7,7 +7,7 @@ import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
 // 发送试题
-import RcMaskProblemtime from '@/components/teacher-restructure/common/problemtime'
+import Problemtime from '@/components/teacher-restructure/common/problemtime'
 
 export default {
   data () {
@@ -17,7 +17,7 @@ export default {
     }
   },
   components: {
-    RcMaskProblemtime,
+    Problemtime,
   },
   methods: {
     /**
@@ -48,7 +48,7 @@ export default {
         self.socket.send(str)
       }else{
         // 发送题目
-        self.$store.commit('set_initiativeCtrlMaskTpl', 'RcMaskProblemtime')
+        self.$store.commit('set_initiativeCtrlMaskTpl', 'Problemtime')
         self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
       }
     },
@@ -76,7 +76,7 @@ export default {
       let pptData = self.data.pptData
       let problemid = pptData[current].Problem.ProblemID
       let limit = duration
-      
+
       // 如果是正计时，timeLeft 有可能为0或正数
       // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
       // 所以如果是正计时的话，如果 timeLeft 为0，将其设置为1

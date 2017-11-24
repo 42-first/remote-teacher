@@ -62,7 +62,7 @@
             location.reload();
             break;
           case config.pubsubmsg.modal[1]:
-            T_PUBSUB.publish('pro-msg.shoutih5', mark);
+            T_PUBSUB.publish('pro-msg.shoutih5', {problemid: +mark});
             self.isShown = false
             break;
         }

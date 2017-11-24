@@ -2,6 +2,7 @@
 <template>
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
+
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
@@ -9,8 +10,8 @@
 	    	<div class="xitixushi">
 	    		<!-- 延时相关 -->
 	    		<div class="time-rel f15">
-	    			<div v-if="!~limit" class="tbtn nobtn">不限时</div>
-	    			<v-touch v-else class="tbtn green" v-on:tap="yanshi">延时</v-touch>
+	    			<v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi">延时</v-touch>
+	    			<div v-else class="tbtn nobtn">不限时</div>
 	    		</div>
 
 	    		<div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
@@ -99,6 +100,14 @@
 	      </router-link>
 	    </section>
 	  </div>
+
+	  <!-- 发题选时间蒙版 -->
+		<Problemtime v-show="!isProblemtimeHidden"
+		  :problem-type="problemType"
+		  :isYanshi="true"
+		  @cancelPublishProblem="cancelPublishProblem"
+		  @chooseProblemDuration="yanshiProblem"
+		></Problemtime>
 		
 	</div>
 </template>
@@ -110,6 +119,9 @@
 	import API from '@/pages/teacher/config/api'
   import config from '@/pages/teacher/config/config'
 
+  // 发送试题
+	import Problemtime from '@/components/teacher-restructure/common/problemtime'
+
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
 	let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
@@ -118,6 +130,10 @@
 
 	let routeStamp = 0 						// 首次进入本路由时时间戳
 	const ISCOLLECTED = -200				// 用数字 -200 标记已经收题
+	const operationType = {
+		shouti: Symbol(),
+		yanshi: Symbol()
+	}
 
 	export default {
 	  name: 'Collumresult',
@@ -133,6 +149,7 @@
 		    limit: '',                     // 设置的限时 -1 为未限时 单位 秒
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
+		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 	    }
 	  },
 	  computed: {
@@ -140,6 +157,9 @@
         'lessonid',
         'socket',
       ])
+	  },
+	  components: {
+	    Problemtime,
 	  },
 	  created(){
 	  	this.init()
@@ -154,6 +174,41 @@
 	  	}
 	  },
 	  methods: {
+	  	/**
+	     * 取消延时
+	     *
+	     */
+	    cancelPublishProblem () {
+	      let self = this
+
+	      setTimeout(() => {
+	      	self.isProblemtimeHidden = true
+	      }, 100)
+	    },
+	    /**
+	     * 延时题目
+	     *
+	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟
+	     */
+	    yanshiProblem (duration) {
+	      let self = this
+
+	      setTimeout(() => {
+	      	self.isProblemtimeHidden = true
+	      }, 100)
+
+	      let postData = {
+	      	'op': 'extendtime',
+	      	'limit': duration,
+ 					'problemid': self.problemid
+	      }
+
+	      self.problemOperation(postData)
+	      	.then(() => {
+	      		console.log(908)
+	      		// TODO toast
+	      	})
+	    },
 	  	/**
 	     * 复用页面，需要watch route
 	     *
@@ -257,30 +312,63 @@
 			 * 所有状态下都能延时（除非不限时）
 			 * 限时后，能再改为不限时
 			 *
-			 * 应该重置当前的时间，
-			 * 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
-			 * 由于使用了 storage 机制，也需要立即处理 storage
-			 * 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
-			 * 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
-			 *
+			 * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
+			 * @param {Number} newLimit 延时的时间，收题不传，为 undefined, 延时为 -1（不限时）或 正整数
        */
-      resetTiming () {
+      resetTiming (optype, newLimit) {
         let self = this
 
-        // 收题
+        if (optype === operationType['shouti']) {
+        	// 收题回调
+				  // 应该重置当前的时间，
+				  // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+				  // 由于使用了 storage 机制，也需要立即处理 storage
+				  // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+				  // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+          // 立即清理 计时、轮询定时器，设置时间为 0
+        	self.endTimers()
+        	newTime = ISCOLLECTED
 
-        // 立即清理 计时、轮询定时器，设置时间为 0
-        self.endTimers()
-        newTime = 0
+        	self.setData({
+        	  durationLeft: self.sec2str(newTime),
+        	  newTime
+        	})
 
-        self.setData({
-          durationLeft: self.sec2str(newTime),
-          newTime
-        })
+        	// 应对页面进入其他路由后又返回的情况
+        	let str = `${self.limit}|${+new Date()}|${ISCOLLECTED}`
+        	localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
 
-        // 应对页面进入其他路由后又返回的情况
-        let str = `${self.limit}|${+new Date()}|${ISCOLLECTED}`
-        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+        } else if (optype === operationType['yanshi']) {
+        	// 重新设置限时回调
+				  // 应该重置当前的时间，
+				  // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+				  // 由于使用了 storage 机制，也需要立即处理 storage
+				  // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+				  // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+          // 立即清理 计时、轮询定时器，设置时间为 0
+
+          // 原来是倒计时，设置为不计时，时间从1开始
+          // 原来是倒计时，增加时间，直接增加剩余时间
+          // 从已经收题，变成不限时，时间从1开始
+          // 从已经收题，变成限时，开始新的倒计时
+          // 从时间到，设置为不计时，时间从1开始
+          // 从时间到，设置限时，开始新的倒计时
+
+        	let tempTime
+
+        	if (self.limit && newLimit === -1) {tempTime = 1}
+        	if (self.limit && newLimit !== -1) {tempTime = newTime + newLimit}
+        	if (newTime === ISCOLLECTED && newLimit === -1) {tempTime = 1}
+        	if (newTime === ISCOLLECTED && newLimit !== -1) {tempTime = newLimit}
+        	if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit === -1) {tempTime = 1}
+        	if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit !== -1) {tempTime = newLimit}
+
+        	// 重置后权当重新进入页面重启
+        	self.endTimers()
+        	let str = `${newLimit}|${+new Date()}|${tempTime}`
+        	localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+        	self.init()
+        }
       },
 	    /**
        * 处理发布订阅
@@ -292,12 +380,19 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('pro-msg')
 
+        // 从模态框组件传来，H5收题事件
         T_PUBSUB.subscribe('pro-msg.shoutih5', (_name, msg) => {
-          self.problemid === +msg && self.shoutiConfirm()
+          self.problemid === msg.problemid && self.shoutiConfirm()
         })
 
+        // 从 node 传来， pc收题事件
         T_PUBSUB.subscribe('pro-msg.shoutipc', (_name, msg) => {
-          self.problemid === +msg && self.resetTiming()
+          self.problemid === msg.problemid && self.resetTiming(operationType['shouti'])
+        })
+
+        // 从 node 传来，pc 延时事件
+        T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
+          self.problemid === msg.problemid && self.resetTiming(operationType['yanshi'], msg.duration)
         })
       },
 	    /**
@@ -397,7 +492,7 @@
 	    yanshi () {
 	      let self = this
 
-	      console.log('延时啦')
+	      self.isProblemtimeHidden = false
 	    },
       /**
 	     * 收题
@@ -407,7 +502,6 @@
 	    shouti () {
 	      let self = this
 
-	      console.log('点击收题啦')
 	      T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
 	    },
 	    /**
@@ -418,21 +512,31 @@
 	    shoutiConfirm () {
 	      let self = this
 
-	      console.log('真的收题啦')
-	      // TODO
-	      let url = API.delay_problem
-
 	      let postData = {
 	      	'op': 'problemfinished',
  					'problemid': self.problemid
 	      }
 
-	      request.post(url, postData)
+	      self.problemOperation(postData)
+	    },
+	    /**
+	     * 收题、延时等具体请求的执行
+	     *
+	     * @event bindtap
+	     * @param {Object} postData 请求数据
+	     */
+	    problemOperation (postData) {
+	      let self = this
+
+	      let url = API.delay_problem
+	      return request.post(url, postData)
 	      	.then(jsonData => {
 	      		if (jsonData.success) {
-	      			self.resetTiming()
+	      			let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
+	      			self.resetTiming(operationType[optype], postData.limit)
 	      		} else {
-	      			throw new Error(`收题失败${self.problemid}`)
+	      			let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
+	      			throw new Error(str)
 	      		}
 	      	}).catch(error => {
 	      		console.error('error', error)
@@ -671,4 +775,23 @@
 			width: 6.2rem;
 		}
 	}
+	.rc-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    overflow: auto;
+
+    .mask-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      color: $white;
+    }
+  }
 </style>

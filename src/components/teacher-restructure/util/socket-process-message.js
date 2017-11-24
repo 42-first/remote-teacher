@@ -215,7 +215,13 @@ function socketProcessMessage(msg){
 
   //收题了
   if (msg.op == 'problemfinished') {
-    T_PUBSUB.publish('pro-msg.shoutipc', +msg.prob);
+    T_PUBSUB.publish('pro-msg.shoutipc', {problemid: +msg.prob});
+    return
+  }
+
+  //试题延时了
+  if (msg.op == 'extendtime') {
+    T_PUBSUB.publish('pro-msg.yanshipc', {problemid: +msg.problem.prob, duration: +msg.problem.limit});
     return
   }
 
