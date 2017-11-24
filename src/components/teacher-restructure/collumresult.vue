@@ -13,15 +13,17 @@
 	    			<v-touch v-else class="tbtn green" v-on:tap="yanshi">延时</v-touch>
 	    		</div>
 
+	    		<div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
+
 	    		<!-- 中间秒表 -->
-	    		<div :class="['rolex', 'f36', {'warn': newTime <= 5 && ~limit}]">
+	    		<div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 5 && ~limit}]">
 	    			<img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
 	    			<img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 	    			<span class="time">{{durationLeft}}</span>
 	    		</div>
 
 	    		<!-- 收题相关 -->
-	    		<div class="pro-rel f15">
+	    		<div v-show="newTime > 0" class="pro-rel f15">
 	    			<v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
 	    		</div>
 		    </div>
@@ -115,6 +117,7 @@
 	let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
 	let routeStamp = 0 						// 首次进入本路由时时间戳
+	const ISCOLLECTED = -200				// 用数字 -200 标记已经收题
 
 	export default {
 	  name: 'Collumresult',
@@ -143,6 +146,7 @@
 	  },
 	  beforeDestroy(){
 	    this.shutDown()
+	    T_PUBSUB.unsubscribe('pro-msg')
 	  },
 	  watch: {
 	  	'$route' () {
@@ -186,21 +190,19 @@
 		    	let diff = Math.round((+new Date() - +new Date(timeStamp))/1000)
 
 		    	self.limit = limit
-		    	initTime = ~limit ? (newTime - diff) : (newTime + diff)
+		    	// 如果限时，就让 initTime 更小，这样 initTime 可能为负数或正数或0
+		    	// 不管限时不限时，只要已经收题，就拿 -200 - diff，这样 initTime 必然为负数
+		    	if (~limit || newTime === ISCOLLECTED) {
+		    		initTime = newTime - diff
+		    	} else {
+		    		initTime = newTime + diff
+		    	}
 		    } else {
 		    	self.limit = +query.lm
-		    	initTime = +query.tl <= 0 ? 0 : +query.tl
+		    	initTime = +query.tl
 		    }
 
 		    newTime = initTime
-
-		    if (self.limit === -1 && newTime === 0) {
-          newTime = 1
-        }
-
-        if (self.limit === -1 && initTime === 0) {
-          initTime = 1
-        }
 
 	    	self.refreshProblemResult()
 	    	// 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
@@ -211,6 +213,76 @@
 	    	self.handlePubSub()
 	    },
 	    /**
+       * 处理计时
+       *
+       */
+      handleDuration () {
+        let self = this
+
+        // 应对页面进入其他路由后又返回的情况
+        let str = `${self.limit}|${+new Date()}|${newTime}`
+        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+        clearInterval(durationTimer)
+        self.setData({
+          durationLeft: self.sec2str(newTime),
+          newTime
+        })
+
+        durationTimer = setInterval(function(){
+          if(newTime <= 0){
+            clearInterval(durationTimer)
+            return;
+          }
+
+          //更新闹钟时间
+          NOW = +new Date()
+          let diff = Math.round((NOW - START)/1000)
+          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${newTime}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+          self.setData({
+            durationLeft: self.sec2str(newTime),
+            newTime
+          })
+        }, 1000)
+      },
+      /**
+       * 收题、延时等操作导致的重置计时初始值
+       *
+       * 所有状态下都能收题（除非已经收题或时间已到）
+			 * 所有状态下都能延时（除非不限时）
+			 * 限时后，能再改为不限时
+			 *
+			 * 应该重置当前的时间，
+			 * 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+			 * 由于使用了 storage 机制，也需要立即处理 storage
+			 * 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+			 * 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+			 *
+       */
+      resetTiming () {
+        let self = this
+
+        // 收题
+
+        // 立即清理 计时、轮询定时器，设置时间为 0
+        self.endTimers()
+        newTime = 0
+
+        self.setData({
+          durationLeft: self.sec2str(newTime),
+          newTime
+        })
+
+        // 应对页面进入其他路由后又返回的情况
+        let str = `${self.limit}|${+new Date()}|${ISCOLLECTED}`
+        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+      },
+	    /**
        * 处理发布订阅
        *
        */
@@ -220,8 +292,12 @@
         // 订阅前清掉之前可能的订阅，避免多次触发回调
         T_PUBSUB.unsubscribe('pro-msg')
 
-        T_PUBSUB.subscribe('pro-msg.shouti', (_name, msg) => {
+        T_PUBSUB.subscribe('pro-msg.shoutih5', (_name, msg) => {
           self.problemid === +msg && self.shoutiConfirm()
+        })
+
+        T_PUBSUB.subscribe('pro-msg.shoutipc', (_name, msg) => {
+          self.problemid === +msg && self.resetTiming()
         })
       },
 	    /**
@@ -266,8 +342,9 @@
 
 		    clearInterval(refProblemTimer);
 		    refProblemTimer = setInterval(function(){
-		      if(self.limit !== -1 && newTime <= 0){
+		      if(newTime <= 0){
 		        self.endTimers()
+		        return;
 		      }
 
 		      refProblemTimerNum++;
@@ -312,42 +389,6 @@
 	      		console.error('error', error)
 	      	})
 		  },
-		  /**
-       * 处理计时
-       *
-       */
-      handleDuration () {
-        let self = this
-
-        // 应对页面进入其他路由后又返回的情况
-        let str = `${self.limit}|${+new Date()}|${newTime}`
-        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
-
-        clearInterval(durationTimer)
-        self.setData({
-          durationLeft: self.sec2str(newTime)
-        })
-
-        durationTimer = setInterval(function(){
-          if(self.limit !== -1 && newTime <= 0){
-            clearInterval(durationTimer)
-          }
-
-          //更新闹钟时间
-          NOW = +new Date()
-          let diff = Math.round((NOW - START)/1000)
-          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
-
-          // 应对页面进入其他路由后又返回的情况
-          let str = `${self.limit}|${+new Date()}|${newTime}`
-          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
-
-          self.setData({
-            durationLeft: self.sec2str(newTime),
-            newTime
-          })
-        }, 1000)
-      },
       /**
 	     * 延时
 	     *
@@ -379,6 +420,23 @@
 
 	      console.log('真的收题啦')
 	      // TODO
+	      let url = API.delay_problem
+
+	      let postData = {
+	      	'op': 'problemfinished',
+ 					'problemid': self.problemid
+	      }
+
+	      request.post(url, postData)
+	      	.then(jsonData => {
+	      		if (jsonData.success) {
+	      			self.resetTiming()
+	      		} else {
+	      			throw new Error(`收题失败${self.problemid}`)
+	      		}
+	      	}).catch(error => {
+	      		console.error('error', error)
+	      	})
 	    },
 	    /**
 	     * 试题柱状图页面中的 投屏 按钮
@@ -457,6 +515,11 @@
 	  		height: 1.866667rem;
 	  		padding: 0 0.3rem;
 	  		background: #212121;
+
+	  		.sjd {
+	  			padding-right: 1.333333rem;
+	  			color: #F84F41;
+	  		}
 
 	  		.rolex.warn {
 	  			color: #F84F41;

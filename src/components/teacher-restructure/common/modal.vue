@@ -16,7 +16,7 @@
 
 <script>
   import config from '@/pages/teacher/config/config'
-  let mark = ''
+  let mark = '' //标记传递的信息，比如试题收题的话，传递的是 problemid
 
   export default {
     name: 'ykt-modal',
@@ -62,7 +62,7 @@
             location.reload();
             break;
           case config.pubsubmsg.modal[1]:
-            T_PUBSUB.publish('pro-msg.shouti', mark);
+            T_PUBSUB.publish('pro-msg.shoutih5', mark);
             self.isShown = false
             break;
         }

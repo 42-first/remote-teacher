@@ -225,14 +225,6 @@
         START = +new Date()
         newTime = initTime
 
-        if (self.limit === -1 && newTime === 0) {
-          newTime = 1
-        }
-
-        if (self.limit === -1 && initTime === 0) {
-          initTime = 1
-        }
-
         self.refreshDataList()
         pollingTimer = setInterval(self.pollingNewItem, 5000)
 
