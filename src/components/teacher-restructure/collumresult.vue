@@ -134,6 +134,18 @@
 		shouti: Symbol(),
 		yanshi: Symbol()
 	}
+	const timeList = {
+		'30': '30秒',
+		'60': '1分钟',
+		'120': '2分钟',
+		'180': '3分钟',
+		'240': '4分钟',
+		'300': '5分钟',
+		'600': '10分钟',
+		'90': '15分钟',
+		'1200': '20分钟',
+		'-1': '不限时'
+	}
 
 	export default {
 	  name: 'Collumresult',
@@ -205,8 +217,8 @@
 
 	      self.problemOperation(postData)
 	      	.then(() => {
-	      		console.log(908)
-	      		// TODO toast
+	      		console.log(duration, timeList[duration])
+	      		T_PUBSUB.publish('ykt-msg-toast', `延时${timeList[duration]}成功`);
 	      	})
 	    },
 	  	/**
