@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     lessonid: 0,
     presentationid: 0,
     isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
+    errType: 5,                             // 错误信息类型
     
     current: 1,                             // 当前页码，从1开始
     total: '',                              // 总页数
@@ -85,6 +86,10 @@ const store = new Vuex.Store({
     set_isBrandNewPpt: (state, isBrandNewPpt) => {
       state.isBrandNewPpt = isBrandNewPpt
     },
+    set_errType: (state, errType) => {
+      state.errType = errType
+    },
+    
     set_current: (state, current) => {
       state.current = current
     },

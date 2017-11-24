@@ -1,6 +1,7 @@
 <!--试题作答详情面板 -->
 <template>
 	<div class="problemresultdetail-box">
+		<slot name="ykt-msg"></slot>
 		<div v-if="problemResultDetailData">
 	    
 	    <div class="title f18">{{(problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8) ? '票数最多' : '本题正确选项为'}}</div>
@@ -26,9 +27,7 @@
 	      </div>
 	    </div>
 
-	    <div class="button-box f18">
-	      <v-touch class="btn" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
-	    </div>
+	    <v-touch class="btn f18" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
 		</div>
   </div>
 </template>
@@ -36,8 +35,6 @@
 <script>
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
-
-	let isFirstEnter = true
 
 	export default {
 	  name: 'CollumresultDetail',
@@ -102,15 +99,13 @@
 	        	// 设置试卷详情数据
 	          self.problemResultDetailData = jsonData
 
-	          if (isFirstEnter) {
-	          	// 新打开的时候，默认展示正确的
-	          	self.openRightItem(jsonData)
-	          	isFirstEnter = false
-	          }
-
 	          // 投票类型每回要算投票数最多的
 	          if (jsonData.problem_type === 3 || jsonData.problem_type === 8) {
 	          	self.findBigPoll()
+	          } else {
+	          	// 投票类型不打开默认选项
+	          	self.openRightItem(jsonData)
+	          	self.answerList = [...jsonData.answer]
 	          }
 	        })
 	    },
@@ -122,10 +117,7 @@
 	    openRightItem (jsonData) {
 	    	let self = this
 
-	      // 投票类型不打开默认选项
-	      if (jsonData.problem_type !== 3 && jsonData.problem_type !== 8) {
-	      	self.showingIndex = self.findRightAnswer(jsonData)
-	      }
+	      self.showingIndex = self.findRightAnswer(jsonData)
 	    },
 	    /**
 	     * 找出正确选项的序号
@@ -294,21 +286,15 @@
 			}
 		}
 
-		.button-box {
-      display: flex;
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 1.466667rem;
-      text-align: center;
-
-      .btn {
-        flex: 1;
-        border-radius: 0;
-        height: 1.466667rem;
-        line-height: 1.466667rem;
-      }
-    }
+		.btn {
+		  position: fixed;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  border-radius: 0;
+		  height: 1.466667rem;
+		  line-height: 1.466667rem;
+		  box-shadow: none;
+		}
 	}
 </style>

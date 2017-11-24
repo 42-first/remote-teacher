@@ -1,16 +1,17 @@
 <!--试题柱状图页-->
 <template>
 	<div class="problem-root">
+		<slot name="ykt-msg"></slot>
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
 	    <section class="upper">
-	    	<div class="f50" v-if="~limit">
-		      <!-- <i class="iconfont icon-timing f40"></i> -->
-		      <img class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+	    	<div class="f50">
+		      <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
+		      <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
 		      <span class="time">{{durationLeft}}</span>
 		    </div>
-		    <div :class="['f18', 'yjy', {pt: limit === -1}]">
+		    <div :class="['f18', 'yjy']">
 		      已经有 <span>{{total}}</span> / <span>{{members}}</span> 位同学提交了答案
 		    </div>
 	    </section>
@@ -92,7 +93,7 @@
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
 
-	let isFirstFetch = true       // 标记本 id 初次获取
+	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
 	let refProblemTimerNum = 0    // 刷新试题柱状图的辅助数字
 	let initTime = 1              // 初始时间 秒
@@ -138,17 +139,27 @@
 	     */
 	    init () {
 		  	let self = this
+		  	let params = self.$route.params
+        let query = self.$route.query
 
-		    self.problemid = +self.$route.params.problemid
-		    self.problemType = self.$route.query.pt
-		    self.limit = +self.$route.query.lm
+		    self.problemid = +params.problemid
+		    self.problemType = query.pt
+		    self.limit = +query.lm
 
-		    initTime = +self.$route.query.tl
+		    initTime = +query.tl <= 0 ? 0 : +query.tl
 		    START = +new Date()
 		    newTime = initTime
 
-		    isFirstFetch = true
-	    	self.getProblemResult()
+		    if (self.limit === -1 && newTime === 0) {
+          newTime = 1
+        }
+
+        if (self.limit === -1 && initTime === 0) {
+          initTime = 1
+        }
+
+	    	self.refreshProblemResult()
+	    	self.handleDuration()
 	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -167,6 +178,27 @@
 		   * @param {number} sec 秒数
 		   */
 		  sec2str,
+		  /**
+		   * 发试题后设置刷新柱状图倒计时页面的定时器
+		   *
+		   */
+		  refreshProblemResult(){
+		    let self = this
+		    // 先立即获取一次数据
+		    self.getProblemResult()
+
+		    clearInterval(refProblemTimer);
+		    refProblemTimer = setInterval(function(){
+		      if(self.limit !== -1 && newTime <= 0){
+		        self.endTimers()
+		      }
+
+		      refProblemTimerNum++;
+		      if(refProblemTimerNum%3 == 0){
+		        self.getProblemResult()
+		      }
+		    }, 1000);
+		  },
 		  /**
 		   * 发试题后request获取柱状图倒计时页面的数据
 		   *
@@ -198,49 +230,37 @@
 	      		    ma_right_count: jsonData.graph.ma_right_count,
 	      		    RedEnvelopeID: jsonData.RedEnvelopeID || -1
 	      		  })
-
-	      		  if (isFirstFetch) {
-	      		    isFirstFetch = false
-	      		    self.setData({
-	      		      durationLeft: self.sec2str(newTime)
-	      		    })
-	      		    self.refreshProblemResult()
-	      		  }
 	      		}
 	      	}).catch(error => {
 	      		console.error('error', error)
 	      	})
-
-		    
 		  },
 		  /**
-		   * 发试题后设置刷新柱状图倒计时页面的定时器
-		   *
-		   */
-		  refreshProblemResult(){
-		    let self = this
-		    clearInterval(refProblemTimer);
+       * 处理计时
+       *
+       */
+      handleDuration () {
+        let self = this
 
-		    refProblemTimer = setInterval(function(){
-		      if(self.limit !== -1 && newTime <= 0){
-		        self.endTimers()
-		      }
+        clearInterval(durationTimer)
+        self.setData({
+          durationLeft: self.sec2str(newTime)
+        })
 
-		      refProblemTimerNum++;
-		      if(refProblemTimerNum%3 == 0){
-		        self.getProblemResult();
-		      }
+        durationTimer = setInterval(function(){
+          if(self.limit !== -1 && newTime <= 0){
+            clearInterval(durationTimer)
+          }
 
-		      //更新闹钟时间
-		      if(self.limit !== -1){
-		        NOW = +new Date()
-		        newTime = initTime - Math.round((NOW - START)/1000)
-		        self.setData({
-		          durationLeft: self.sec2str(newTime)
-		        })
-		      }
-		    }, 1000);
-		  },
+          //更新闹钟时间
+          NOW = +new Date()
+          let diff = Math.round((NOW - START)/1000)
+          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+          self.setData({
+            durationLeft: self.sec2str(newTime)
+          })
+        }, 1000)
+      },
 	    /**
 	     * 试题柱状图页面中的 投屏 按钮
 	     *
@@ -282,6 +302,7 @@
 	      // 关闭刷新柱状图的定时器
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
+	      clearInterval(durationTimer)
 	    },
 	  }
 	}
@@ -303,14 +324,6 @@
 	  color: $white;
 	  background: #000000;
 		
-		.close-box {
-			position: absolute;
-	  	right: 0.386667rem;
-	  	top: 0.44rem;
-	  	width: 1.066667rem;
-	  	height: 1.066667rem;
-		}
-		
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
@@ -326,15 +339,14 @@
 			}
 			.yjy {
 				padding-top: 0.5rem;
+				color: #AAAAAA;
 			}
-	  	.pt {
-	  		padding-top: 1.6rem;
-	  	}
 	  }
 		
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
-	  	margin: 0 auto;
+	  	flex: 1;
+	  	margin: 1.0rem auto;
 	  	width: 8.8rem;
 	  	border-top: 1px solid #cccccc;
 	  }
@@ -359,7 +371,7 @@
 	  	margin: 0 auto;
 	  	padding-top: 1rem;
 	  	width: 8.8rem;
-	  	min-height: 4rem;
+	  	height: 100%;
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;

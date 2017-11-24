@@ -1,6 +1,7 @@
 <!-- 弹幕控制页面 -->
 <template>
 	<div class="danmu-box">
+    <slot name="ykt-msg"></slot>
     <div class="desc f20">
       <span>弹幕</span>
       <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">

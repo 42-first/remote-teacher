@@ -3,6 +3,7 @@
  */
 
  let isOldVersion = false               // 雨课堂软件是老版本
+ import config from '@/pages/teacher/config/config'
 
 function socketProcessMessage(msg){
   let self = this
@@ -72,7 +73,11 @@ function socketProcessMessage(msg){
     msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
     
     // TODO 初次联通，node有时会丢失msg.presentation
-    self.$store.commit('set_presentationid', msg.presentation)
+    // 有可能中间换课件，这时不要显示老的课件
+    if (self.presentationid !== +msg.presentation) {
+      self.$store.commit('set_pptData', [])
+    }
+    self.$store.commit('set_presentationid', +msg.presentation)
     // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     self.$store.commit('set_isToastCtrlMaskHidden', true)
 
@@ -121,6 +126,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
+    T_PUBSUB.publish('ykt-msg-modal', config.pubsubmsg.modal[0])
     return
   }
 

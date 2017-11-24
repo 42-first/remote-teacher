@@ -1,6 +1,7 @@
 <!-- 随机点名页 -->
 <template>
 	<div class="random-roll-box">
+    <slot name="ykt-msg"></slot>
 
     <div class="upper">
       <div class="desc f24" v-show="step === 0">

@@ -1,6 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="submission-box">
+    <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
 
     <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>
@@ -83,9 +84,7 @@
       <span v-show="isAskingItemStatus">正在投屏中...</span>
       <span v-show="isItemDeleted">学生已删除此投稿</span>
     </div>
-    <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDataList">刷新</v-touch>
-    </div>
+    <v-touch class="btn f18" v-on:tap="refreshDataList">刷新</v-touch>
     <Scale></Scale>
   </div>
 </template>
@@ -716,29 +715,15 @@
       background: #333333;
       color: $white;
     }
-    .button-box {
-      display: flex;
+    .btn {
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
+      border-radius: 0;
       height: 1.466667rem;
-      text-align: center;
-
-      .btn {
-        flex: 1;
-        border-radius: 0;
-        height: 1.466667rem;
-        line-height: 1.466667rem;
-        box-shadow: none;
-      }
-      .innerline {
-        float: left;
-        margin-top: 0.333333rem;
-        width: 0.026667rem;
-        height: 0.8rem;
-        background: $white;
-      }
+      line-height: 1.466667rem;
+      box-shadow: none;
     }
   }
 </style>

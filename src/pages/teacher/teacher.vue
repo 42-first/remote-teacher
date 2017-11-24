@@ -1,5 +1,10 @@
 <template>
-  <router-view keep-alive></router-view>
+  <router-view keep-alive>
+    <template slot="ykt-msg">
+      <ykt-toast></ykt-toast>
+      <ykt-modal></ykt-modal>
+    </template>
+  </router-view>
 </template>
 
 <script>
@@ -20,5 +25,6 @@
   }
   html,body {
     min-height: 100%;
+    overflow: auto;
   }
 </style>
