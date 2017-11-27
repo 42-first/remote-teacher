@@ -20,7 +20,7 @@
 	      	</v-touch>
 	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
 	      		<div class="stu" v-for="stu in choiceItem.members">
-	      			<img :src="stu.avatar" alt="">
+	      			<img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
 	      			<div class="ellipsis">{{stu.name}}</div>
 	      		</div>
 	      	</div>
