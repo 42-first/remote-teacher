@@ -25,11 +25,12 @@
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
-        <div class="timing" v-if="limit>0">
+        <div class="timing" v-if="limit>0 && !hasNewExtendTime">
           <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
           <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
           <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
         </div>
+        <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
         <div class="timing f24" v-else>老师可能会随时结束答题</div>
       </section>
 
@@ -114,6 +115,9 @@
         opacity: 0,
         problemID: 0,
         title: '习题',
+        // 是否新的延时
+        hasNewExtendTime: false,
+        sExtendTimeMsg: '',
         limit: 0,
         leaveTime: 0,
         sLeaveTime: '00:00',
@@ -328,11 +332,19 @@
           // 续时 分钟 秒
           let minutes = parseInt(limit / 60, 10);
           let seconds = limit % 60;
+          let sMsg = minutes > 0 ? `延时 ${minutes}分钟 成功` : `延时 ${seconds}秒 成功`;
 
           // 同一个问题续时
           if(id === this.problemID) {
+            this.hasNewExtendTime = true;
+            this.sExtendTimeMsg = sMsg;
+
             this.limit = limit;
             this.setTiming(this.leaveTime + limit);
+
+            setTimeout(()=>{
+              this.hasNewExtendTime = false;
+            }, 3000)
           }
         }
       },
