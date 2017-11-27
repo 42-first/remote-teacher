@@ -17,10 +17,20 @@
       </header>
 
       <!-- 定时时间 -->
-      <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0&&sLeaveTime">
+      <!-- <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0&&sLeaveTime">
         <img class="exercise__timing--icon" v-if="!timeOver" src="http://sfe.ykt.io/o_1bkbgjnktcp5182817bgn23rk9.png">
-        <img class="exercise__timing--icon over" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
+        <img class="exercise__timing--icon" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
         <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
+      </section> -->
+
+      <!-- 定时 续时等 -->
+      <section class="exercise__tips" v-show="isShowOption">
+        <div class="timing" v-if="limit>0">
+          <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
+          <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
+          <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
+        </div>
+        <div class="timing f24" v-else>老师可能会随时结束答题</div>
       </section>
 
       <!-- 问题内容 -->
@@ -102,9 +112,12 @@
       return {
         index: 0,
         opacity: 0,
+        problemID: 0,
         title: '习题',
+        limit: 0,
         leaveTime: 0,
         sLeaveTime: '00:00',
+        warning: false,
         timeOver: false,
         summary: null,
         options: null,
@@ -129,21 +142,6 @@
         rate: 1
       };
     },
-    /*
-    beforeRouteEnter (to, from, next) {
-      // 在渲染该组件的对应路由被 confirm 前调用
-      // 不！能！获取组件实例 `this`
-      // 因为当钩子执行前，组件实例还没被创建
-
-      if(from.name === 'student-presentation-page') {
-        next();
-      } else {
-        next(vm => {
-          vm.$router.back();
-        })
-      }
-    },
-    */
     components: {
     },
     computed: {
@@ -188,6 +186,11 @@
           return ;
         }
 
+        this.problemID = problemID;
+
+        // event消息订阅
+        this.initPubSub();
+
         // 是否观察者模式
         this.observerMode = this.$parent.observerMode;
         this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
@@ -212,11 +215,11 @@
             this.setOptions(option, true, true);
           });
 
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.sLeaveTime = '已完成';
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.limit = data.limit;
 
           // 投票类型
           if(this.problemType && this.problemType.indexOf('Polling') > -1) {
@@ -255,6 +258,30 @@
       },
 
       /*
+       * @method 初始化订阅事件
+       * @param
+       */
+      initPubSub() {
+        // 取消练习的订阅
+        PubSub && PubSub.unsubscribe('exercise');
+
+        // 订阅定时消息
+        PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
+          this.setTiming(data && data.leaveTime);
+        });
+
+        // 订阅续时消息
+        PubSub && PubSub.subscribe( 'exercise.extendTime', ( topic, data ) => {
+          this.extendTime(data && data.problem);
+        });
+
+        // 订阅收题消息
+        PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
+          this.closedProblem(data && data.problemid);
+        });
+      },
+
+      /*
       * @method 设置计时器
       * @param
       */
@@ -272,16 +299,51 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = '时间到';
+              this.sLeaveTime = '作答时间结束';
               clearInterval(this.timer);
               this.timeOver = true;
+              this.warning = false;
+            }
+
+            if(this.leaveTime === 10) {
+              this.warning = true;
             }
 
           }, 1000)
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '时间到';
+          this.sLeaveTime = '作答时间结束';
+        }
+      },
+
+      /*
+       * @method 答题续时
+       * @params problem
+       */
+      extendTime(problem) {
+        if(problem) {
+          let id = problem.prob;
+          let limit = problem.limit;
+          // 续时 分钟 秒
+          let minutes = parseInt(limit / 60, 10);
+          let seconds = limit % 60;
+
+          // 同一个问题续时
+          if(id === this.problemID) {
+            this.limit = limit;
+            this.setTiming(this.leaveTime + limit);
+          }
+        }
+      },
+
+      /*
+       * @method 收题
+       * @params problemid
+       */
+      closedProblem(problemid) {
+        if(problemid === this.problemID) {
+          this.setTiming(0);
         }
       },
 
@@ -595,33 +657,51 @@
 
     padding: 0.2rem 0 0;
     height: 2.6rem;
-    /*min-height: 2.666667rem;*/
 
     .exercise__timing--icon {
       margin-right: 0.453333rem;
       width: 1.293333rem;
       height: 1.466667rem;
-
-      .iconfont {
-        font-size: 1.0rem;
-        line-height: 1.4rem;
-        color: #fff;
-      }
-
     }
 
     .exercise__timing--number {
       color: #639EF4;
     }
 
-    /*
-    .over.exercise__timing--icon {
-      background: #E64340;
-    }
-    */
-
     .over.exercise__timing--number {
-      color: #E64340;
+      /*color: #E64340;*/
+      color: #F84F41;
+    }
+  }
+
+
+  .exercise__tips {
+    margin: 0.133333rem auto 0.666667rem;
+    width: 8.8rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+
+    background: #212121;
+    color: #fff;
+    opacity: 0.8;
+
+    border-radius: 0.053333rem;
+    box-shadow: 0 0.066667rem 0.133333rem rgba(0,0,0,0.2);
+
+    .timing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .timing--icon {
+        margin-right: 0.453333rem;
+        width: 0.853333rem;
+        height: 0.933333rem;
+      }
+
+      .over.timing--number {
+        color: #F84F41;
+      }
     }
   }
 

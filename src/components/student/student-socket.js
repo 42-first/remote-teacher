@@ -253,6 +253,24 @@ var mixin = {
 
             break
 
+          // 延时
+          case 'extendtime':
+            let problem = msg['problem']
+            this.extendTime(problem);
+
+            hasMsg = false;
+
+            break
+
+          // 收题
+          case 'problemfinished':
+            let problemid = msg['prob']
+            this.closedProblem(problemid);
+
+            hasMsg = false;
+
+            break
+
           case 'fetchtimeline':
             timeline = msg['timeline'];
             let msgid = msg['msgid'];

@@ -299,10 +299,44 @@ var actionsMixin = {
         oProblem.leaveTime = leaveTime
 
         // 习题组件实例中的定时方法
-        // this.$children[1] && this.$children[1].setTiming && this.$children[1].setTiming(leaveTime);
-        this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
-        this.$children[3] && this.$children[3].setTiming && this.$children[3].setTiming(leaveTime);
-        this.$children[4] && this.$children[4].setTiming && this.$children[4].setTiming(leaveTime);
+        // this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
+        // this.$children[3] && this.$children[3].setTiming && this.$children[3].setTiming(leaveTime);
+        // this.$children[4] && this.$children[4].setTiming && this.$children[4].setTiming(leaveTime);
+
+        // 订阅发布定时
+        PubSub && PubSub.publish('exercise.setTiming', {
+          msg: 'exercise.setTiming',
+          leaveTime: leaveTime
+        });
+
+      }
+    },
+
+    /*
+    * @method 答题续时
+    * @params problem
+    */
+    extendTime(problem) {
+      if(problem) {
+        // 订阅发布答题续时
+        PubSub && PubSub.publish('exercise.extendTime', {
+          msg: 'exercise.extendTime',
+          problem: problem
+        });
+      }
+    },
+
+    /*
+    * @method 收题
+    * @params problemid
+    */
+    closedProblem(problemid) {
+      if(problemid) {
+        // 订阅发布收题
+        PubSub && PubSub.publish('exercise.closed', {
+          msg: 'exercise.closed',
+          problemid: problemid
+        });
       }
     },
 
