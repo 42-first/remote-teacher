@@ -9,6 +9,8 @@ import API from '@/pages/teacher/config/api'
 // 发送试题
 import RcMaskProblemtime from '@/components/teacher-restructure/common/problemtime'
 
+let problemType = ''
+
 export default {
   data () {
     return {
@@ -33,7 +35,8 @@ export default {
       let pptData = self.data.pptData
       let problemid = pptData[current].Problem.ProblemID
 
-      self.problemType = pptData[current].Problem.Type
+      problemType = pptData[current].Problem.Type
+      self.problemType = problemType
 
       if(self.data.isProblemPublished){
         // 查看答案
@@ -102,9 +105,10 @@ export default {
       let self = this
 
       // 主观题、普通题分别进入各自的页面
-      let pt = self.data.problemType
+      // TODO 找出这里的 self.problemType 总是 ShortAnswer 的原因
+      let pt = problemType
       let to = {
-        name: pt === 'ShortAnswer' ? 'subjectiveresult' : 'collumresult',
+        name: problemType === 'ShortAnswer' ? 'subjectiveresult' : 'collumresult',
         params: {
           problemid,
         },
