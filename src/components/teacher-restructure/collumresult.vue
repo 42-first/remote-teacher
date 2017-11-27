@@ -345,9 +345,9 @@
 		
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
-	  	flex: 1;
 	  	margin: 1.0rem auto;
 	  	width: 8.8rem;
+	  	height: 5.0rem;
 	  	border-top: 1px solid #cccccc;
 	  }
 	  .mahint {	 
