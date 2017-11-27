@@ -77,9 +77,9 @@ export default {
       let problemid = pptData[current].Problem.ProblemID
       let limit = duration
 
-      // 如果是正计时，timeLeft 有可能为0或正数
+      // 如果是正计时，timeLeft 可以为0或正数
       // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
-      // 所以如果是正计时的话，如果 timeLeft 为0，将其设置为1
+      // 所以如果是正计时的话，将初始 timeLeft 设置为1
       let timeLeft = ~limit ? duration : 1
 
       let postData = {

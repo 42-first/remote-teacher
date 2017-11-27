@@ -119,7 +119,7 @@
 	import API from '@/pages/teacher/config/api'
   import config from '@/pages/teacher/config/config'
 
-  // 发送试题
+  // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
 
 	let durationTimer = null 			// 处理计时的定时器
