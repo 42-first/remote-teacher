@@ -255,9 +255,16 @@
        */
       loadBottom () {
         let self = this
+        if (!self.dataList[0]) {
+          setTimeout(() => {
+            this.$refs.Loadmore.onBottomLoaded()
+          }, 100)
+          return;
+        }
+
         console.log('上拉松手了')
 
-        let tailNow = self.dataList[0] ? self.dataList[self.dataList.length-1].problem_result_id : 0
+        let tailNow = self.dataList[self.dataList.length-1].problem_result_id
 
         self.fetchList(tailNow).then(jsonData => {
           // 设置试卷详情数据
