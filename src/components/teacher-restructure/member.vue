@@ -9,7 +9,7 @@
     <section class="list">
       <div class="item f17" v-for="item in participantList" :key="item.id">
         <div class="name ellipsis">
-          <img :src="item.profile.avatar_96" alt="">
+          <img :src="item.profile.avatar_96 || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           <span>{{item.profile.name}}</span>
         </div>
         <div class="wayin">
