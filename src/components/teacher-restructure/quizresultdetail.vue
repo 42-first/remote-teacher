@@ -17,7 +17,7 @@
       <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
       <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
-          <img :src="item.avatar" alt="">
+          <img :src="item.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           <span>{{item.name}}</span>
         </div>
         <div class="detail">
