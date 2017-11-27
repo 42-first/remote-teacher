@@ -614,9 +614,11 @@
       color: #639EF4;
     }
 
-    // .over.exercise__timing--icon {
-    //   background: #E64340;
-    // }
+    /*
+    .over.exercise__timing--icon {
+      background: #E64340;
+    }
+    */
 
     .over.exercise__timing--number {
       color: #E64340;
