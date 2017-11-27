@@ -592,8 +592,10 @@
 	@import "~@/style/_variables";
 	.problem-root {
     position: relative;
-    min-height: 100%;
+    height: 100%;
     background: #000000;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
 		.new-item-hint {
 		  position: fixed;

@@ -100,23 +100,6 @@
       self.refreshDataList(true);
       self.handlePubSub()
     },
-    mounted () {
-      let self = this
-      let wh = window.innerHeight
-
-      // 如果搓到底了，不要到底，防止ios上搓露底
-      let boxDom = document.querySelector('.danmu-box')
-      boxDom.addEventListener('scroll', e => {
-        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
-          boxDom.scrollTop = boxDom.scrollTop -2
-        }
-      })
-
-      // 数据不多时，让用户能搓动空白处加载更多
-      let loadmoreDom = document.querySelector('.danmu-box .mint-loadmore')
-      loadmoreDom.style.minHeight = wh + 'px'
-
-    },
     beforeDestroy(){
       this.closeDanmumask()
       T_PUBSUB.unsubscribe('danmu-msg')
@@ -364,10 +347,12 @@
   @import "~@/style/_variables";
   .danmu-box {
     position: relative;
-    min-height: 100%;
+    height: 100%;
     padding-top: 1.5rem;
     background: #EDF2F6;
     color: #4A4A4A;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     .new-item-hint {
       position: fixed;

@@ -142,21 +142,6 @@
         self.pollingNewItem()
       }, 5000)
     },
-    mounted () {
-      let self = this
-      let wh = window.innerHeight
-
-      // 如果搓到底了，不要到底，防止ios上搓露底
-      let boxDom = document.querySelector('.submission-box')
-      boxDom.addEventListener('scroll', e => {
-        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
-          boxDom.scrollTop = boxDom.scrollTop -2
-        }
-      })
-
-      // 数据不多时，让用户能搓动空白处加载更多
-      document.querySelector('.submission-box .mint-loadmore').style.minHeight = wh + 'px'
-    },
     beforeDestroy(){
       clearInterval(pollingTimer)
       T_PUBSUB.unsubscribe('submission-msg')
@@ -498,7 +483,7 @@
   @import "~@/style/_variables";
   .submission-box {
     position: relative;
-    min-height: 100%;
+    height: 100%;
     background: #EDF2F6;
     color: #4A4A4A;
     overflow: auto;
