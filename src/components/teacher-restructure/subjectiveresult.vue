@@ -107,7 +107,13 @@
     </Loadmore>
 
 		
-
+    <!-- 发题选时间蒙版 -->
+    <Problemtime v-show="!isProblemtimeHidden"
+      :problem-type="'ShortAnswer'"
+      :isYanshi="true"
+      @cancelPublishProblem="cancelPublishProblem"
+      @chooseProblemDuration="yanshiProblem"
+    ></Problemtime>
     <Scale></Scale>
 		
 	</div>
@@ -120,6 +126,7 @@
 	import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
   import Moment from 'moment'
+  import config from '@/pages/teacher/config/config'
 
   // import StarPanel from '@/components/teacher/template/star-panel'
   import StarPanel from './common/score-panel'
@@ -231,6 +238,7 @@
     beforeDestroy(){
       this.endTimers()
       this.closeSubjectivemask()
+      T_PUBSUB.unsubscribe('pro-msg')
     },
 	  filters: {
       formatTime(time) {
@@ -293,19 +301,6 @@
         let self = this
         let params = self.$route.params
         let query = self.$route.query
-
-        // self.problemid = +params.problemid
-        // self.limit = +query.lm
-
-        // initTime = +query.tl <= 0 ? 0 : +query.tl
-        // START = +new Date()
-        // newTime = initTime
-
-        // self.refreshDataList()
-        // pollingTimer = setInterval(self.pollingNewItem, 5000)
-
-        // self.handleDuration()
-
 
         self.problemid = +params.problemid
         self.problemType = query.pt
@@ -1114,5 +1109,24 @@
   }
   .btnfadeout {
   	transform: translateY(1.5rem);
+  }
+  .rc-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    overflow: auto;
+
+    .mask-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      color: $white;
+    }
   }
 </style>
