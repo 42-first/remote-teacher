@@ -363,24 +363,101 @@
       handleDuration () {
         let self = this
 
+        // 应对页面进入其他路由后又返回的情况
+        let str = `${self.limit}|${+new Date()}|${newTime}`
+        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
         clearInterval(durationTimer)
         self.setData({
-          durationLeft: self.sec2str(newTime)
+          durationLeft: self.sec2str(newTime),
+          newTime
         })
 
         durationTimer = setInterval(function(){
-          if(self.limit !== -1 && newTime <= 0){
+          if(newTime <= 0){
             clearInterval(durationTimer)
+            return;
           }
 
           //更新闹钟时间
           NOW = +new Date()
           let diff = Math.round((NOW - START)/1000)
           newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${newTime}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
           self.setData({
-            durationLeft: self.sec2str(newTime)
+            durationLeft: self.sec2str(newTime),
+            newTime
           })
         }, 1000)
+      },
+      /**
+       * 收题、延时等操作导致的重置计时初始值
+       *
+       * 所有状态下都能收题（除非已经收题或时间已到）
+       * 所有状态下都能延时（除非不限时）
+       * 限时后，能再改为不限时
+       *
+       * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
+       * @param {Number} newLimit 延时的时间，收题不传，为 undefined, 延时为 -1（不限时）或 正整数
+       */
+      resetTiming (optype, newLimit) {
+        let self = this
+
+        if (optype === operationType['shouti']) {
+          // 收题回调
+          // 应该重置当前的时间，
+          // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+          // 由于使用了 storage 机制，也需要立即处理 storage
+          // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+          // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+          // 立即清理 计时、轮询定时器，设置时间为 0
+          self.endTimers()
+          newTime = ISCOLLECTED
+
+          self.setData({
+            durationLeft: self.sec2str(newTime),
+            newTime
+          })
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${ISCOLLECTED}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+        } else if (optype === operationType['yanshi']) {
+          // 重新设置限时回调
+          // 应该重置当前的时间，
+          // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+          // 由于使用了 storage 机制，也需要立即处理 storage
+          // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+          // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+          // 立即清理 计时、轮询定时器，设置时间为 0
+
+          // 原来是倒计时，设置为不计时，时间从1开始
+          // 原来是倒计时，增加时间，直接增加剩余时间
+          // 从已经收题，变成不限时，时间从1开始
+          // 从已经收题，变成限时，开始新的倒计时
+          // 从时间到，设置为不计时，时间从1开始
+          // 从时间到，设置限时，开始新的倒计时
+
+          let tempTime
+
+          if (self.limit && newLimit === -1) {tempTime = 1}
+          if (self.limit && newLimit !== -1) {tempTime = newTime + newLimit}
+          if (newTime === ISCOLLECTED && newLimit === -1) {tempTime = 1}
+          if (newTime === ISCOLLECTED && newLimit !== -1) {tempTime = newLimit}
+          if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit === -1) {tempTime = 1}
+          if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit !== -1) {tempTime = newLimit}
+
+          // 重置后权当重新进入页面重启
+          self.endTimers()
+          let str = `${newLimit}|${+new Date()}|${tempTime}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+          self.init()
+        }
       },
       /**
        * 处理发布订阅
