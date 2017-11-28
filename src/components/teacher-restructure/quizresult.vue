@@ -90,7 +90,8 @@
       this.init()
     },
     beforeDestroy(){
-      this.closeQuizresult()
+      // this.closeQuizresult()
+      this.endTimers()
     },
     watch: {
       '$route' () {
@@ -236,7 +237,6 @@
       closeQuizresult () {
         let self = this
 
-
         let str = JSON.stringify({
           'op': 'closequizresult',
           'lessonid': self.lessonid,
@@ -244,7 +244,6 @@
         })
 
         self.socket.send(str)
-        self.endTimers()
       },
       /**
        * 收卷

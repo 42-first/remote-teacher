@@ -125,7 +125,8 @@
 	  	this.init()
 	  },
 	  beforeDestroy(){
-	    this.shutDown()
+	    // this.shutDown()
+	    this.endTimers()
 	  },
 	  watch: {
 	  	'$route' () {
@@ -283,7 +284,6 @@
 	     */
 	    shutDown () {
 	      let self = this
-	      this.endTimers()
 
 	      // 关闭试题柱状图的投屏
 	      let str = JSON.stringify({
