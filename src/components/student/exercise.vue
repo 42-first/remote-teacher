@@ -31,7 +31,7 @@
           <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
         </div>
         <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-        <div class="timing f24" v-else>老师可能会随时结束答题</div>
+        <div class="timing f24" v-else-if="limit===0">老师可能会随时结束答题</div>
       </section>
 
       <!-- 问题内容 -->
@@ -290,7 +290,9 @@
       * @param
       */
       setTiming(leaveTime) {
-        this.leaveTime = leaveTime;
+        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
+
+        this.timer && clearInterval(this.timer)
 
         if (leaveTime > 0) {
           this.timer = setInterval(()=>{
@@ -302,7 +304,7 @@
 
             this.sLeaveTime = minutes + ':' + seconds;
 
-            if(this.leaveTime === 0) {
+            if(this.leaveTime <= 0) {
               this.sLeaveTime = '作答时间结束';
               clearInterval(this.timer);
               this.timeOver = true;
@@ -340,7 +342,11 @@
             this.sExtendTimeMsg = sMsg;
 
             this.limit = limit;
-            this.setTiming(this.leaveTime + limit);
+            let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
+            this.setTiming(leaveTime + limit);
+            //
+            this.timeOver === true && (this.timeOver = false);
+            this.warning === true && (this.warning = false);
 
             setTimeout(()=>{
               this.hasNewExtendTime = false;
