@@ -101,7 +101,6 @@ function socketProcessMessage(msg){
       // $('.random_roll_call_box').show()
     }
 
-    // 根据qrcode是否为0判断是否显示二维码控制页，不为0，则显示
     if (msg.slideindex !== 0) { // 刚开始上课slideindex总为0，不管是不是从第一页开始放映
       self.$store.commit('set_isBrandNewPpt', false)
     }

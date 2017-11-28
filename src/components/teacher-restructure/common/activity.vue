@@ -242,7 +242,7 @@
         float: left;
         margin-top: 0.173333rem;
         margin-right: 0.16rem;
-        min-width: 0.3rem;
+        min-width: 0.45rem;
         padding: 0 0.1rem;
         text-align: center;
         background: #D0021B;
