@@ -434,7 +434,7 @@
         let index = 0;
         let WIDTH = window.innerWidth
         let items = [{ src: src, w: WIDTH, h: targetEl.height*WIDTH/targetEl.width }];
-        
+
         let options = {
           index: index,
           maxSpreadZoom: 5,

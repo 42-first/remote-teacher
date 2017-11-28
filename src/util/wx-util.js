@@ -7,6 +7,10 @@ import request from '@/util/request'
 /**
  * 先进行微信配置，否则微信的任何api都不能使用
  *
+ * 注意！注意！注意！
+ * 下面使用的路由（location.href）如果需要【微信支付功能】的话，必须是 微信商户支付后台 配置的合法路径。
+ * 目前该后台由 @颜开 使用用户名密码维护。
+ * 
  * @param {object} newData
  */
 function configWX () {

@@ -24,6 +24,13 @@
             <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
           </div>
         </div>
+        <!-- 动画蒙版 -->
+        <div class="ppt__modal" v-show="item.animation === 1">
+          <div class="modal__center">
+            <p class="f24">当前页面有动画</p>
+            <p class="f32">请看大屏幕</p>
+          </div>
+        </div>
       </div>
     </template>
     <!-- 试卷模板 -->
@@ -355,6 +362,7 @@
     }
 
     .ppt--pageno {
+      z-index: 1;
       position: absolute;
       top: 0;
       right: 0;
@@ -391,6 +399,28 @@
           color: #fff;
           background: #639EF4;
         }
+      }
+    }
+
+    .ppt__modal {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      text-align: center;
+
+      background: rgba(0,0,0,0.95);
+      box-shadow: 0 0 0.053333rem rgba(0,0,0,0.2);
+
+      .modal__center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8rem;
+        transform: translate(-50%, -50%);
+        color: #fff;
       }
     }
 

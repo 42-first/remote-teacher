@@ -54,10 +54,10 @@
   	      </div>
   	    </section>
 	    </section>
-	    
+
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': problemResultData.type === 'Polling'}]">
+	    <section :class="['group-btns', {'istoupiao': problemResultData.type === 'Polling' || problemResultData.type === 'AnonymousPolling'}]">
 	      <v-touch class="btn-item" v-on:tap="postProblemresult">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -72,7 +72,7 @@
 	        <div class="btn-desc f14">查看详情</div>
 	      </v-touch>
 
-	      <v-touch v-show="problemResultData.type !== 'Polling'" class="btn-item" v-on:tap="tapRedpacketHandler">
+	      <v-touch v-show="problemResultData.type !== 'Polling' && problemResultData.type !== 'AnonymousPolling'" class="btn-item" v-on:tap="tapRedpacketHandler">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
@@ -80,7 +80,7 @@
 	      </v-touch>
 	    </section>
 	  </div>
-		
+
 		<!-- 试题作答详情面板 -->
 		<RcMaskProblemresultDetail
 			ref="RcMaskProblemresultDetail"
@@ -199,7 +199,7 @@
 	        isProblemResultDetailHidden: true
 	      })
 	    },
-	    
+
 	    /**
 		   * 在柱状图页面中点击按钮显示设置红包页面
 		   * 被 rc-mask-problemresult.vue 引用
@@ -293,7 +293,7 @@
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
-		
+
 		.close-box {
 			position: absolute;
 	  	right: 0.386667rem;
@@ -301,7 +301,7 @@
 	  	width: 1.066667rem;
 	  	height: 1.066667rem;
 		}
-		
+
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
@@ -309,7 +309,7 @@
 	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
 	  	// border-bottom: 1px solid #cccccc;
-			
+
 			.jishi {
 				margin-top: -0.186667rem;
 				width: 0.9rem;
@@ -322,17 +322,17 @@
 	  		padding-top: 1.6rem;
 	  	}
 	  }
-		
+
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
 	  	margin: 0 auto;
 	  	width: 8.8rem;
 	  	border-top: 1px solid #cccccc;
 	  }
-	  .mahint {	 
+	  .mahint {
 	  	display: flex;
 	  	align-items: center;
-	  	padding-left: 0.266667rem; 	
+	  	padding-left: 0.266667rem;
 	  	height: 0.693333rem;
 	  	background: linear-gradient(rgba(255,255,255,0.12) 10%, rgba(255,255,255,0.03));
 
@@ -354,7 +354,7 @@
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
-		  
+
 		  .histogram-item {
 			  flex: 1;
 			  position: relative;
@@ -393,7 +393,7 @@
 				}
 			}
 		}
-		
+
 		/* 下方按钮 */
 		.group-btns {
 			margin: 0 auto;
@@ -404,7 +404,7 @@
 		  padding: 1.2rem 0 0.5rem;
 
 		  .btn-item {
-			  width: 1.8rem; 
+			  width: 1.8rem;
 			  text-align: center;
 			  color: #fff;
 
