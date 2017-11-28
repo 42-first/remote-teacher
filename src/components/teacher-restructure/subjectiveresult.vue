@@ -124,6 +124,8 @@
   let initTime = 1              // 初始时间 秒
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
+  let scoreTapTimer = null
+
   // 页面滚动处理
   function handelScroll (posList = [0]) {
   	let self = this
@@ -489,8 +491,12 @@
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
 
-	      self.scoringIndex = index
-	      self.$refs.StarPanel.$emit('enter', ...arguments)
+        // 防止用户频繁点击
+        clearTimeout(scoreTapTimer)
+        scoreTapTimer = setTimeout(() => {
+          self.scoringIndex = index
+          self.$refs.StarPanel.$emit('enter', ...arguments)
+        }, 100)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
