@@ -197,7 +197,7 @@
         position: absolute;
         left: 1.5rem;
         top: 0;
-        min-width: 0.3rem;
+        min-width: 0.45rem;
         padding: 0 0.1rem;
         text-align: center;
         background: #D0021B;
