@@ -1,25 +1,67 @@
 {
-    "data": {
-        "response_num": 2,
-        "direction": 0,
-        "rest_num": 0,
-        "danmu_list": [
-            {
-                "message": "ç¬¬äºŒæ¡å¼¹å¹•",
-                "user_id": 585,
-                "id": 1044,
-                "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq8rLAOvY5RGeuy84UcjbNjibJKE1rygM7OrGCPB0RLSpwczuxuuJkrWpAXkZRsD6fQgzxBNBGR0nC/46",
-                "time": "2017-08-24 16:10"
-            },
-            {
-                "message": "ç¬¬ä¸€æ¡å¼¹å¹•",
-                "user_id": 585,
-                "id": 1043,
-                "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpZEPibMsz6tYq8rLAOvY5RGeuy84UcjbNjibJKE1rygM7OrGCPB0RLSpwczuxuuJkrWpAXkZRsD6fQgzxBNBGR0nC/46",
-                "time": "2017-08-24 16:09"
-            }
-        ],
-        "lesson_id": 4751
-    },
-    "success": true
+  "data": {
+    "response_num": 8,
+    "direction": 0,
+    "rest_num": 0,
+    "danmu_list": [
+      {
+        "message": "self.$el.querySelector('.mint-loadmore').scrollTop",
+        "user_id": 6042,
+        "id": 1656,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 19:01"
+      },
+      {
+        "message": "self.$el.querySelector('.mint-loadmore').scrollTop",
+        "user_id": 6042,
+        "id": 1655,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 19:01"
+      },
+      {
+        "message": "{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5\u00b9\u2022\",",
+        "user_id": 6042,
+        "id": 1648,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:14"
+      },
+      {
+        "message": "{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5\u00b9\u2022\",",
+        "user_id": 6042,
+        "id": 1647,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:13"
+      },
+      {
+        "message": "{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5\u00b9\u2022\",",
+        "user_id": 6042,
+        "id": 1646,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:13"
+      },
+      {
+        "message": "{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5\u00b9\u2022\",",
+        "user_id": 6042,
+        "id": 1645,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:12"
+      },
+      {
+        "message": "{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5\u00b9\u2022\",",
+        "user_id": 6042,
+        "id": 1644,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:12"
+      },
+      {
+        "message": "sdfasdf{ \"message\": \"\u00e7\u00ac\u00ac\u00e4\u00ba\u0152\u00e6\u009d\u00a1\u00e5\u00bc\u00b9\u00e5",
+        "user_id": 6042,
+        "id": 1643,
+        "user_avatar_46": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/46",
+        "time": "2017-11-27 17:12"
+      }
+    ],
+    "lesson_id": 6120
+  },
+  "success": true
 }

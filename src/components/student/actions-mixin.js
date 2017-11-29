@@ -19,13 +19,13 @@ var actionsMixin = {
           switch(item['type']) {
             // ppt
             case 'slide':
-              this.addPPT({ type: 2, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], isFetch: isFetch });
+              this.addPPT({ type: 2, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item, isFetch: isFetch, isTimeline: true });
 
               break;
 
             // 幻灯片换页通知
             case 'problem':
-              this.addProblem({ type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
+              this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
 
               this.timeline['problem'][item['prob']] = item;
               break;
@@ -76,20 +76,41 @@ var actionsMixin = {
     },
 
     /*
+     * @method 取slideData 新版本1.1 指纹需求
+     * param: slides, si, sid
+     */
+    getSlideData(slides, si, sid) {
+      let slideData = slides && slides[si-1];
+
+      // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
+      if(this.version == '1.1' && typeof sid !== 'undefined' && sid > 0) {
+        if(slideData && slideData.lessonSlideID !== sid) {
+          // ppt不一致 通过sid取slideData
+          slideData = slides.find((slide)=>{
+            return slide.lessonSlideID === sid;
+          }) || slideData;
+        }
+      }
+
+      return slideData;
+    },
+
+    /*
     * @method 新增PPT
-    * data: { type: 2, pageIndex: 2, presentationid: 100, time: '' }
+    * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
     addPPT(data) {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      let slideData = pptData && pptData[data.pageIndex-1];
+      // let slideData = pptData && pptData[data.pageIndex-1];
+      let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = -1;
       let cover = slideData && slideData['Cover'] || '';
 
       // 是否含有重复数据
       let hasPPT = this.cards.find((item)=>{
-        return item.type === 2 && item.pageIndex === data.pageIndex && item.presentationid === data.presentationid;
+        return item.type === 2 && item.slideID === slideData.lessonSlideID && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
@@ -117,11 +138,7 @@ var actionsMixin = {
 
         oImg.src = slideData['Cover'];
 
-        // 缓存中
-        // if(oImg.complete || oImg.width) {
-        // }
-
-        data = Object.assign(data, {
+        let cardItem = {
           src: slideData['Thumbnail'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
@@ -130,15 +147,39 @@ var actionsMixin = {
           Height: presentation.Height,
           slideID: slideData['lessonSlideID'],
           isRepeat: hasPPT ? true : false
-        })
+        };
 
-        this.cards.push(data);
-        index = this.cards.length;
+        // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
+        if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
+          // step === 0 开始动画 正常插入
+          if(data.event.step === 0) {
+            // 之前没有播放过这个ppt
+            if(!hasPPT) {
+              data = Object.assign(data, cardItem, { animation: 1 })
+            } else {
+              data = Object.assign(data, cardItem, { animation: 0 })
+            }
 
-        // tab是全部或者ppt 滚动到视线位置
-        if( this.currTabIndex === 1 || this.currTabIndex === 2 ) {
-          // this.$el.querySelector('').scrollIntoView(true);
+            this.cards.push(data);
+          } else if(data.event.step === -1) {
+            // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
+            if(hasPPT) {
+              // 需要替换的index
+              let targetIndex = this.cards.findIndex((item, i) => {
+                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
+              })
+
+              data = Object.assign(data, cardItem, { animation: 2 })
+              targetIndex && this.cards.splice(targetIndex, 1, data);
+            }
+          }
+        } else {
+          // 没有动画
+          data = Object.assign(data, cardItem, { animation: 0 })
+          this.cards.push(data);
         }
+
+        index = this.cards.length;
       }
 
       this.allEvents.push(data);
@@ -175,12 +216,13 @@ var actionsMixin = {
 
     /*
     * @method 新增习题
-    * { type: 3, pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
+    * { type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      let slideData = pptData && pptData[data.pageIndex-1];
+      // let slideData = pptData && pptData[data.pageIndex-1];
+      let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
       if(!slideData) {
@@ -188,13 +230,15 @@ var actionsMixin = {
       }
 
       slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+      // 问题类型
+      let problemType = slideData['Problem']['Type'];
 
       data = Object.assign(data, {
         pageIndex: data.pageIndex,
         presentationid: data.presentationid,
         time: data.time,
-        problemType: slideData['Problem']['Type'],
-        caption: slideData['Problem']['Type'] === 'Polling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
+        problemType: problemType,
+        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
         status: slideData['Problem']['Result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
@@ -215,6 +259,11 @@ var actionsMixin = {
       let hasEvent = this.cards.find((item)=>{
         return item.type === 3 && item.problemID === data.event['prob'];
       })
+
+      // fixed cover为空
+      if(hasEvent && !hasEvent.cover) {
+        hasEvent.cover = slideData && slideData['Cover'];
+      }
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);

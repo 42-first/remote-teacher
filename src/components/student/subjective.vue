@@ -192,7 +192,7 @@
 
           this.result = this.oProblem['Result'];
 
-          this.getScore(problemID);
+          this.getScoreFn(problemID);
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
         } else {
           // 开始启动定时
@@ -272,7 +272,7 @@
        * @method 获取主观题分数
        * @param
        */
-      getScore(problemID) {
+      getScoreFn(problemID) {
         let URL = API.student.PROBLEM_SCORE;
         let param = {
           'problem_id': problemID,
