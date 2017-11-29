@@ -57,7 +57,7 @@
                 </div>
                 <div class="action-box f14">
                   <!-- 投屏时不能打分 -->
-                  <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
+                  <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index, item.remark)">
                     <div class="gray">
                       <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                       <span>{{item.score === -1 ? '打分' : '得分'}}</span>
@@ -104,8 +104,7 @@
   import API from '@/pages/teacher/config/api'
   import Moment from 'moment'
 
-  // import StarPanel from '@/components/teacher/template/star-panel'
-  import StarPanel from './common/score-panel'
+  import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
 
@@ -483,9 +482,13 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
+       * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} studentScore 当前分值
+       * @params {Number} scoreTotal 总分
+	     * @params {Number} index 当前的item的序号
+       * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, studentScore, scoreTotal, index) {
+	    initScore (answerid, studentScore, scoreTotal, index, remark) {
 	      let self = this
 
 	      // 投屏时不可打分
@@ -512,9 +515,11 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event
-	     * @params {number, number} answerid 将要打分的主观题答案的id score 打的分
+	     * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} score 打的分
+       * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, score) {
+	    giveScore (answerid, score, remark) {
 	    	let self = this
 
 	    	if (score === -1) {
@@ -537,6 +542,7 @@
 	          // 关闭打分页面
 	          console.log(`打过分啦${score}`, self.scoringIndex)
 	          self.dataList[self.scoringIndex].score = +score
+            self.dataList[self.scoringIndex].remark = remark
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
