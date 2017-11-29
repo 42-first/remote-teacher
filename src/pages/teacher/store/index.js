@@ -182,6 +182,12 @@ const store = new Vuex.Store({
       commit('set_classroomid', '')
       commit('set_coursename', '')
 
+      // 在 socket-process-message.js 中第 104 行根据 msg.slideindex !== 0 再重新设置
+      commit('set_isBrandNewPpt', true)
+        
+      commit('set_newdoubt', 0)
+      commit('set_newtougao', 0)
+
     },
   },
   getters
