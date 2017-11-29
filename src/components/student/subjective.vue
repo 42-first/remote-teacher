@@ -90,6 +90,8 @@
         ispreview: false,
         opacity: 0,
         title: '主观题作答',
+        // 是否作答完成
+        isComplete: false,
         // 是否新的延时
         hasNewExtendTime: false,
         sExtendTimeMsg: '',
@@ -173,6 +175,8 @@
         if(!problemID) {
           return ;
         }
+
+        this.problemID = problemID;
 
         // event消息订阅
         this.initPubSub();
