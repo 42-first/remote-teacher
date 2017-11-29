@@ -242,11 +242,6 @@
 	     */
 	    init () {
 		  	let self = this
-		  	// 在 socket-process-message.js 中第 104 行根据 msg.slideindex !== 0 再重新设置
-		  	self.$store.commit('set_isBrandNewPpt', true)
-		  	
-		  	self.$store.commit('set_newdoubt', 0)
-		  	self.$store.commit('set_newtougao', 0)
 
 		    let lessonid = +self.$route.params.lessonid
 
