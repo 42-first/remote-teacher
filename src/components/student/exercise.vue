@@ -25,12 +25,13 @@
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
-        <div class="timing" v-if="limit>0 && !hasNewExtendTime">
+        <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
           <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
           <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
           <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
         </div>
         <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
+        <div class="timing f24" v-else-if="isComplete">已完成</div>
         <div class="timing f24" v-else>老师可能会随时结束答题</div>
       </section>
 
@@ -115,6 +116,8 @@
         opacity: 0,
         problemID: 0,
         title: '习题',
+        // 是否作答完成
+        isComplete: false,
         // 是否新的延时
         hasNewExtendTime: false,
         sExtendTimeMsg: '',
@@ -219,7 +222,7 @@
             this.setOptions(option, true, true);
           });
 
-          this.sLeaveTime = '已完成';
+          this.isComplete = true;
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -290,7 +293,9 @@
       * @param
       */
       setTiming(leaveTime) {
-        this.leaveTime = leaveTime;
+        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
+
+        this.timer && clearInterval(this.timer)
 
         if (leaveTime > 0) {
           this.timer = setInterval(()=>{
@@ -302,7 +307,7 @@
 
             this.sLeaveTime = minutes + ':' + seconds;
 
-            if(this.leaveTime === 0) {
+            if(this.leaveTime <= 0) {
               this.sLeaveTime = '作答时间结束';
               clearInterval(this.timer);
               this.timeOver = true;
@@ -340,7 +345,11 @@
             this.sExtendTimeMsg = sMsg;
 
             this.limit = limit;
-            this.setTiming(this.leaveTime + limit);
+            let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
+            this.setTiming(leaveTime + limit);
+            //
+            this.timeOver === true && (this.timeOver = false);
+            this.warning === true && (this.warning = false);
 
             setTimeout(()=>{
               this.hasNewExtendTime = false;
@@ -505,7 +514,8 @@
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
-                this.sLeaveTime = '已完成';
+
+                this.isComplete = true;
 
                 this.$toast({
                   message: '提交成功',

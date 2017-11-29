@@ -12,7 +12,9 @@
     <header class="subjective__header">
       <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
       <p class="heade-action f18" @click="handleBack" v-else>取消</p>
-      <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
+      <h3 class="header-title f18" v-if="limit>0 && !hasNewExtendTime">{{ sLeaveTime }}</h3>
+      <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
+      <!-- <div class="timing f24" v-else-if="limit===0">老师可能会随时结束答题</div> -->
       <h3 class="header-title f18" v-else>{{ title }}</h3>
       <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': '提交' }}</p>
     </header>
@@ -69,11 +71,6 @@
         <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
           <span class="lable f15" >得分: {{getScore}}分</span>
-          <!-- <i :class="['iconfont', 'f18', starCount > 0 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 1 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 2 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 3 ? 'icon-fill-star' : 'icon-star']"></i>
-          <i :class="['iconfont', 'f18', starCount > 4 ? 'icon-fill-star' : 'icon-star']"></i> -->
         </div>
       </div>
 
@@ -93,6 +90,12 @@
         ispreview: false,
         opacity: 0,
         title: '主观题作答',
+        // 是否作答完成
+        isComplete: false,
+        // 是否新的延时
+        hasNewExtendTime: false,
+        sExtendTimeMsg: '',
+        limit: 0,
         leaveTime: 0,
         sLeaveTime: '00:00',
         timeOver: false,
@@ -173,6 +176,11 @@
           return ;
         }
 
+        this.problemID = problemID;
+
+        // event消息订阅
+        this.initPubSub();
+
         // 是否观察者模式
         this.observerMode = this.$parent.observerMode;
         this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
@@ -202,6 +210,7 @@
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.limit = data.limit;
 
           // 恢复作答结果
           let sResult = localStorage.getItem('lessonsubjective'+problemID);
@@ -243,11 +252,37 @@
       },
 
       /*
+       * @method 初始化订阅事件
+       * @param
+       */
+      initPubSub() {
+        // 取消练习的订阅
+        PubSub && PubSub.unsubscribe('exercise');
+
+        // 订阅定时消息
+        PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
+          this.setTiming(data && data.leaveTime);
+        });
+
+        // 订阅续时消息
+        PubSub && PubSub.subscribe( 'exercise.extendTime', ( topic, data ) => {
+          this.extendTime(data && data.problem);
+        });
+
+        // 订阅收题消息
+        PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
+          this.closedProblem(data && data.problemid);
+        });
+      },
+
+      /*
       * @method 设置计时器
       * @param
       */
       setTiming(leaveTime) {
-        this.leaveTime = leaveTime;
+        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
+
+        this.timer && clearInterval(this.timer)
 
         if (leaveTime > 0) {
           this.timer = setInterval(()=>{
@@ -259,17 +294,64 @@
 
             this.sLeaveTime = minutes + ':' + seconds;
 
-            if(this.leaveTime === 0) {
-              this.sLeaveTime = '时间到';
+            if(this.leaveTime <= 0) {
+              this.sLeaveTime = '作答时间结束';
               clearInterval(this.timer);
               this.timeOver = true;
+              this.warning = false;
+            }
+
+            if(this.leaveTime === 10) {
+              this.warning = true;
             }
 
           }, 1000)
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '时间到';
+          this.sLeaveTime = '作答时间结束';
+        }
+      },
+
+      /*
+       * @method 答题续时
+       * @params problem
+       */
+      extendTime(problem) {
+        if(problem) {
+          let id = problem.prob;
+          let limit = problem.limit;
+          // 续时 分钟 秒
+          let minutes = parseInt(limit / 60, 10);
+          let seconds = limit % 60;
+          let sMsg = minutes > 0 ? `延时 ${minutes}分钟 成功` : `延时 ${seconds}秒 成功`;
+
+          // 同一个问题续时
+          if(id === this.problemID) {
+            this.hasNewExtendTime = true;
+            this.sExtendTimeMsg = sMsg;
+
+            this.limit = limit;
+            let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
+            this.setTiming(leaveTime + limit);
+            //
+            this.timeOver === true && (this.timeOver = false);
+            this.warning === true && (this.warning = false);
+
+            setTimeout(()=>{
+              this.hasNewExtendTime = false;
+            }, 3000)
+          }
+        }
+      },
+
+      /*
+       * @method 收题
+       * @params problemid
+       */
+      closedProblem(problemid) {
+        if(problemid === this.problemID) {
+          this.setTiming(0);
         }
       },
 
