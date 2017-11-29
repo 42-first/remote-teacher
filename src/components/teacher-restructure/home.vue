@@ -386,8 +386,9 @@
 
 	      let idIndexMap = {}
 	      
-	      pptData.forEach(item => {
-	        idIndexMap[item.lessonSlideID] = item.Index
+	      pptData.forEach((item, index) => {
+	        // idIndexMap[item.lessonSlideID] = item.Index
+	        idIndexMap[item.lessonSlideID] = index + 1
 	      })
 
 	      self.setData({
