@@ -1,7 +1,7 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
   <div class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
-    <div class="pop">
+    <div :class="['pop', {'pop-up': isTextFocused, 'not-editting': isScored && !isEditting}]">
       <header>
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
         <v-touch class="f16 blue" v-on:tap="toEdit" v-show="isScored && !isEditting">
@@ -18,7 +18,7 @@
       <section class="fen-box f16">
         <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
         <div class="score-input f18">
-          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="errorInfo = ''"/>
+          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="validate"/>
           <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
           <label>分</label>
           <div class="error f12">{{errorInfo}}</div>
@@ -28,7 +28,7 @@
       <!-- 评语部分 -->
       <section class="remark-box f16">
         <p class="hint">评语</p>
-        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语"></textarea>
+        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语" @focus="focusText" @blur="isTextFocused = false"></textarea>
         <span class="textarea-place b9" v-show="isScored && !isEditting">{{remark}}</span>
         <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)">写的不错</v-touch>
@@ -74,6 +74,7 @@
         remark: '',              // 教师评语
         isScored: false,         // 被评分过
         isEditting: false,       // 被评分过，并且点击了修改按钮
+        isTextFocused: false,    // 正在输入评语
       }
     },
     created () {
@@ -128,6 +129,26 @@
           self.isEditting = false
         }, 400)
         self.$emit('cancelScore')
+      },
+      /**
+       * 点击分数输入框
+       *
+       * @event bindtap
+       */
+      focusInput () {
+        let self = this
+        
+        self.errorInfo = ''
+      },
+      /**
+       * 点击评语输入框
+       *
+       * @event bindtap
+       */
+      focusText () {
+        let self = this
+        
+        self.isTextFocused = true
       },
       /**
        * 点击修改按钮
@@ -314,6 +335,14 @@
       .grey-btn {
         background-color: #9D9D9D;
       }
+    }
+
+    .pop-up {
+      top: 0;
+    }
+
+    .not-editting {
+      height: 10.0rem;
     }
   }
 
