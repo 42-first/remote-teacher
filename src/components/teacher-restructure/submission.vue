@@ -142,6 +142,18 @@
         self.pollingNewItem()
       }, 5000)
     },
+    mounted () {
+      let self = this
+      let wh = window.innerHeight
+
+      // 如果搓到底了，不要到底，防止ios上搓露底
+      let boxDom = document.querySelector('.submission-box')
+      boxDom.addEventListener('scroll', e => {
+        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+          boxDom.scrollTop = boxDom.scrollTop -2
+        }
+      })
+    },
     beforeDestroy(){
       this.closeSubmissionmask()
       clearInterval(pollingTimer)
