@@ -177,7 +177,7 @@
 	  	this.init()
 	  },
 	  beforeDestroy(){
-	    this.shutDown()
+	    this.endTimers()
 	    T_PUBSUB.unsubscribe('pro-msg')
 	  },
 	  watch: {
@@ -545,7 +545,8 @@
 	      	.then(jsonData => {
 	      		if (jsonData.success) {
 	      			let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
-	      			self.resetTiming(operationType[optype], postData.limit)
+	      			// 因为是单通，node会通知的，编码处理2遍，简单的解决是统一等node通知
+	      			// self.resetTiming(operationType[optype], postData.limit)
 	      		} else {
 	      			let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
 	      			throw new Error(str)
@@ -576,7 +577,6 @@
 	     */
 	    shutDown () {
 	      let self = this
-	      this.endTimers()
 
 	      // 关闭试题柱状图的投屏
 	      let str = JSON.stringify({

@@ -112,6 +112,27 @@ router.beforeEach((to, from, next) => {
     next({name: 'home', params: {lessonid: STORE.state.lessonid}})
     return;
   }
+  // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
+  if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
+    let str = JSON.stringify({
+      'op': 'closequizresult',
+      'lessonid': STORE.state.lessonid,
+      'quizid': from.params.quizid
+    })
+
+    STORE.state.socket.send(str)
+  }
+
+  // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
+  if (from.name === 'collumresult' && to.name !== 'collumresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist') {
+    let str = JSON.stringify({
+      'op': 'closeproblemresult',
+      'lessonid': STORE.state.lessonid,
+      'problemid': from.params.problemid
+    })
+
+    STORE.state.socket.send(str)
+  }
   next()
 })
 

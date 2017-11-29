@@ -168,6 +168,7 @@
     '1200': '20分钟',
     '-1': '不限时'
   }
+  let scoreTapTimer = null
 
   // 页面滚动处理
   function handelScroll (posList = [0]) {
@@ -711,7 +712,8 @@
           .then(jsonData => {
             if (jsonData.success) {
               let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
-              self.resetTiming(operationType[optype], postData.limit)
+              // 因为是单通，node会通知的，编码处理2遍，简单的解决是统一等node通知
+              // self.resetTiming(operationType[optype], postData.limit)
             } else {
               let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
               throw new Error(str)
@@ -776,8 +778,12 @@
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
 
-	      self.scoringIndex = index
-	      self.$refs.StarPanel.$emit('enter', ...arguments)
+        // 防止用户频繁点击
+        clearTimeout(scoreTapTimer)
+        scoreTapTimer = setTimeout(() => {
+          self.scoringIndex = index
+          self.$refs.StarPanel.$emit('enter', ...arguments)
+        }, 100)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板

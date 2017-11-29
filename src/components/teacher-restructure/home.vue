@@ -242,8 +242,6 @@
 	     */
 	    init () {
 		  	let self = this
-		  	self.$store.commit('set_newdoubt', 0)
-		  	self.$store.commit('set_newtougao', 0)
 
 		    let lessonid = +self.$route.params.lessonid
 
@@ -383,8 +381,9 @@
 
 	      let idIndexMap = {}
 	      
-	      pptData.forEach(item => {
-	        idIndexMap[item.lessonSlideID] = item.Index
+	      pptData.forEach((item, index) => {
+	        // idIndexMap[item.lessonSlideID] = item.Index
+	        idIndexMap[item.lessonSlideID] = index + 1
 	      })
 
 	      self.setData({
