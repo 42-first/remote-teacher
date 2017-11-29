@@ -672,31 +672,6 @@
     $ 习题定时
   \*------------------*/
 
-  .exercise__timing {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0.2rem 0 0;
-    height: 2.6rem;
-
-    .exercise__timing--icon {
-      margin-right: 0.453333rem;
-      width: 1.293333rem;
-      height: 1.466667rem;
-    }
-
-    .exercise__timing--number {
-      color: #639EF4;
-    }
-
-    .over.exercise__timing--number {
-      /*color: #E64340;*/
-      color: #F84F41;
-    }
-  }
-
-
   .exercise__tips {
     margin: 0.133333rem auto 0.666667rem;
     width: 8.8rem;

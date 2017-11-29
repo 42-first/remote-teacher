@@ -9,15 +9,27 @@
 <template>
   <section class="page-subjective">
     <!-- 练习导航 -->
-    <header class="subjective__header">
+    <!-- <header class="subjective__header">
       <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
       <p class="heade-action f18" @click="handleBack" v-else>取消</p>
       <h3 class="header-title f18" v-if="limit>0 && !hasNewExtendTime">{{ sLeaveTime }}</h3>
       <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-      <!-- <div class="timing f24" v-else-if="limit===0">老师可能会随时结束答题</div> -->
       <h3 class="header-title f18" v-else>{{ title }}</h3>
       <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': '提交' }}</p>
-    </header>
+    </header> -->
+
+    <!-- 定时 续时等 -->
+    <section class="exercise__tips">
+      <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
+        <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
+        <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
+        <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
+      </div>
+      <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
+      <div class="timing f24" v-else-if="isComplete">已完成</div>
+      <div class="timing f24" v-else>老师可能会随时结束答题</div>
+    </section>
+
     <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 问题内容 cover -->
       <section class="subjective-content" >
@@ -74,6 +86,9 @@
         </div>
       </div>
 
+      <!-- 提交按钮 -->
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" v-show="!ispreview" @click="handleSend" >提交答案</p>
+
     </div>
 
   </section>
@@ -98,6 +113,7 @@
         limit: 0,
         leaveTime: 0,
         sLeaveTime: '00:00',
+        warning: false,
         timeOver: false,
         // 作答结果
         result: null,
@@ -207,6 +223,7 @@
 
           this.getScoreFn(problemID);
           this.sLeaveTime = '已完成';
+          this.isComplete = true;
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -469,6 +486,7 @@
 
               clearInterval(self.timer);
               this.sLeaveTime = '已完成';
+              this.isComplete = true;
 
               this.$toast({
                 message: '提交成功',
@@ -817,13 +835,73 @@
     }
   }
 
+  /*------------------*\
+    $ 习题定时
+  \*------------------*/
+
+  .exercise__tips {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    margin: 0.133333rem auto;
+    width: 9.6rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+
+    background: #212121;
+    color: #fff;
+    opacity: 0.8;
+
+    border-radius: 0.053333rem;
+    box-shadow: 0 0.066667rem 0.133333rem rgba(0,0,0,0.2);
+
+    .timing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .timing--icon {
+        margin-right: 0.453333rem;
+        width: 0.853333rem;
+        height: 0.933333rem;
+      }
+
+      .over.timing--number {
+        color: #F84F41;
+      }
+    }
+  }
+
+
+  .submit-btn {
+    margin: 0.266667rem auto 0.4rem;
+    width: 7.733333rem;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
+    color: #fff;
+    background: #639EF4;
+    border-radius: 0.106667rem;
+  }
+
+  .submit-btn.disable {
+    background: #9B9B9B;
+  }
+
+  .submit-btn:active:not(.disable) {
+    background: rgba(99,158,244,0.7);
+  }
+
 
   /*------------------*\
     $ 习题内容
   \*------------------*/
 
   .subjective-content {
-    padding-top: 1.33rem;
+    padding-top: 1.6rem;
 
     .content_wrapper {
       margin: 0.266667rem 0 0.266667rem;
