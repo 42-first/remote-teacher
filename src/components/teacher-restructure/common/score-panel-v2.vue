@@ -4,13 +4,22 @@
     <div class="pop">
       <header>
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
+        <v-touch class="f16 blue" v-on:tap="toEdit" v-show="isScored && !isEditting">
+          <i class="iconfont icon-ykq_bianji f20"></i>
+          修改
+        </v-touch>
+        <div class="f16" v-show="isScored && isEditting">
+          <i class="iconfont icon-ykq_bianji f20"></i>
+          修改
+        </div>
       </header>
       
       <!-- 打分部分 -->
       <section class="fen-box f16">
         <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
         <div class="score-input f18">
-          <input type="number" v-model="studentScore" @focus="errorInfo = ''"/>
+          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="errorInfo = ''"/>
+          <span class="input-place" v-show="isScored && !isEditting">{{studentScore}}</span>
           <label>分</label>
           <div class="error f12">{{errorInfo}}</div>
         </div>
@@ -19,8 +28,9 @@
       <!-- 评语部分 -->
       <section class="remark-box f16">
         <p class="hint">评语</p>
-        <textarea v-model="remark" placeholder="请输入评语"></textarea>
-        <p class="remark-btns f14">
+        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语"></textarea>
+        <span class="textarea-place" v-show="isScored && !isEditting">{{remark}}</span>
+        <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)">写的不错</v-touch>
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)">继续加油</v-touch>
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)">想法很独特</v-touch>
@@ -28,7 +38,8 @@
         </p>
       </section>
 
-      <v-touch class="commit-btn btn" v-on:tap="decide">确定</v-touch>
+      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide">确定</v-touch>
+      <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting">已批改</div>
     </div>
   </div>
 </template>
@@ -61,6 +72,8 @@
         answerid: -1,            // 当前正在打分的 answer 的 id
         errorInfo: '',
         remark: '',              // 教师评语
+        isScored: false,         // 被评分过
+        isEditting: false,       // 被评分过，并且点击了修改按钮
       }
     },
     created () {
@@ -92,6 +105,7 @@
 
         self.isPanelHidden = false
         self.isSummoned = true
+        self.isScored = +studentScore !== -1
 
         self.answerid = answerid
         self.studentScore = +studentScore === -1 ? scoreTotal : +studentScore
@@ -109,8 +123,21 @@
         
         self.isPanelHidden = true
         clearTimeout(timer2)
-        timer2 = setTimeout(() => {self.isSummoned = false}, 400)
+        timer2 = setTimeout(() => {
+          self.isSummoned = false
+          self.isEditting = false
+        }, 400)
         self.$emit('cancelScore')
+      },
+      /**
+       * 点击修改按钮
+       *
+       * @event bindtap
+       */
+      toEdit () {
+        let self = this
+        
+        self.isEditting = true
       },
       /**
        * 点击快捷评语按钮
@@ -179,12 +206,22 @@
       bottom: 0;
 
       header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         height: 1.333333rem;
         line-height: 1.333333rem;
-        padding-left: 0.4rem;
+        padding: 0 0.4rem;
         border-bottom: 1px solid #C8C8C8;
         .iconfont {
           color: #000000;
+        }
+
+        .blue {
+          color: $blue;
+          .iconfont {
+            color: $blue;
+          }
         }
       }
 
@@ -203,7 +240,8 @@
           line-height: 1.066667rem;
           border-bottom: 1px solid #C8C8C8;
 
-          input{
+          .input-place {
+            display: inline-block;
             width: 3.2rem;
             height: 1.066667rem;
             outline: none;
@@ -233,7 +271,8 @@
           line-height: 1.386667rem;
         }
 
-        textarea {
+        .textarea-place {
+          display: inline-block;
           width: 100%;
           height: 2.28rem;
           padding: 0.133333rem;
@@ -265,6 +304,9 @@
         width: 7.733333rem;
         height: 1.173333rem;
         line-height: 1.173333rem;
+      }
+      .grey-btn {
+        background-color: #9D9D9D;
       }
     }
   }
