@@ -177,7 +177,7 @@
 	  	this.init()
 	  },
 	  beforeDestroy(){
-	    this.shutDown()
+	    this.endTimers()
 	    T_PUBSUB.unsubscribe('pro-msg')
 	  },
 	  watch: {
@@ -576,7 +576,6 @@
 	     */
 	    shutDown () {
 	      let self = this
-	      this.endTimers()
 
 	      // 关闭试题柱状图的投屏
 	      let str = JSON.stringify({

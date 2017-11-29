@@ -168,6 +168,7 @@
     '1200': '20分钟',
     '-1': '不限时'
   }
+  let scoreTapTimer = null
 
   // 页面滚动处理
   function handelScroll (posList = [0]) {
@@ -776,8 +777,12 @@
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
 
-	      self.scoringIndex = index
-	      self.$refs.StarPanel.$emit('enter', ...arguments)
+        // 防止用户频繁点击
+        clearTimeout(scoreTapTimer)
+        scoreTapTimer = setTimeout(() => {
+          self.scoringIndex = index
+          self.$refs.StarPanel.$emit('enter', ...arguments)
+        }, 100)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
