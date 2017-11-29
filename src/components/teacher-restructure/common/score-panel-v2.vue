@@ -1,6 +1,6 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
-  <div class="mask" v-show="!isPanelHidden">
+  <div class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
     <div class="pop">
       <header>
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
@@ -47,10 +47,14 @@
     '想法很独特',
     '小红花'
   ]
+
+  let timer2 = null
+
   export default {
     name: 'ScorePanelV2',
     data () {
       return {
+        isSummoned: false,       // 标记本组件是用户点击呼出的，
         isPanelHidden: true,     // 面板隐藏
         studentScore: -1,        // 学生当前分数
         scoreTotal: '--',        // 当前题目总分
@@ -87,6 +91,8 @@
         let self = this
 
         self.isPanelHidden = false
+        self.isSummoned = true
+
         self.answerid = answerid
         self.studentScore = +studentScore === -1 ? scoreTotal : +studentScore
         self.scoreTotal = scoreTotal
@@ -102,6 +108,8 @@
         let self = this
         
         self.isPanelHidden = true
+        clearTimeout(timer2)
+        timer2 = setTimeout(() => {self.isSummoned = false}, 400)
         self.$emit('cancelScore')
       },
       /**
@@ -259,6 +267,54 @@
         line-height: 1.173333rem;
       }
     }
+  }
+
+  .none {
+    display: none;
+  }
+
+  //参考微信文字淡入http://weread.qq.com/
+  @keyframes animateMobileTextIn {
+      0% {
+          transform: scale(0.5, 0.5) translateY(100%);
+          opacity: 0;
+      }
+      90% {
+          opacity: 1;
+      }
+      100% {
+          transform: scale(1, 1) translateY(0);
+          opacity: 1;
+      }
+  }
+  .animateMobileTextIn {
+      -webkit-animation: animateMobileTextIn 0.4s;
+      animation: animateMobileTextIn 0.4s;
+  //    -webkit-animation-fill-mode: forwards;
+  //    animation-fill-mode: forwards;
+      -webkit-animation-timing-function: ease;
+      animation-timing-function: ease;
+  }
+  @keyframes animateMobileTextOut {
+      0% {
+          transform: scale(1, 1) translateY(0);
+          opacity: 1;
+      }
+      90% {
+          opacity: 0;
+      }
+      100% {
+          transform: scale(0.5, 0.5) translateY(100%);
+          opacity: 0;
+      }
+  }
+  .animateMobileTextOut {
+      -webkit-animation: animateMobileTextOut 0.4s;
+      animation: animateMobileTextOut 0.4s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      -webkit-animation-timing-function: ease;
+      animation-timing-function: ease;
   }
   
 </style>
