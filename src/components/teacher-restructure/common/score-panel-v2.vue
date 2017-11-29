@@ -8,10 +8,10 @@
           <i class="iconfont icon-ykq_bianji f20"></i>
           修改
         </v-touch>
-        <div class="f16" v-show="isScored && isEditting">
+        <!-- <div class="f16" v-show="isScored && isEditting">
           <i class="iconfont icon-ykq_bianji f20"></i>
           修改
-        </div>
+        </div> -->
       </header>
       
       <!-- 打分部分 -->
@@ -19,7 +19,7 @@
         <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
         <div class="score-input f18">
           <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="errorInfo = ''"/>
-          <span class="input-place" v-show="isScored && !isEditting">{{studentScore}}</span>
+          <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
           <label>分</label>
           <div class="error f12">{{errorInfo}}</div>
         </div>
@@ -29,7 +29,7 @@
       <section class="remark-box f16">
         <p class="hint">评语</p>
         <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语"></textarea>
-        <span class="textarea-place" v-show="isScored && !isEditting">{{remark}}</span>
+        <span class="textarea-place b9" v-show="isScored && !isEditting">{{remark}}</span>
         <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)">写的不错</v-touch>
           <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)">继续加油</v-touch>
@@ -249,10 +249,13 @@
             border-radius: 0.213333rem;
             text-align: center;
             background-color: #F8F8F8;
-            color: #666666;
+            color: #333333;
           }
           label{
             color: #666666;
+          }
+          .b9 {
+            color: #9B9B9B;
           }
         }
         .error{
@@ -280,7 +283,10 @@
           border: 1px solid transparent;
           border-radius: 0.213333rem;
           background-color: #F8F8F8;
-          color: #666666;
+          color: #333333;
+        }
+        .b9 {
+          color: #9B9B9B;
         }
 
         .remark-btns {
