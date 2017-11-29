@@ -143,6 +143,7 @@
       }, 5000)
     },
     beforeDestroy(){
+      this.closeSubmissionmask()
       clearInterval(pollingTimer)
       T_PUBSUB.unsubscribe('submission-msg')
     },
