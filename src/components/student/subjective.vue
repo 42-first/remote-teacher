@@ -344,7 +344,7 @@
           let sMsg = minutes > 0 ? `延时 ${minutes}分钟 成功` : `延时 ${seconds}秒 成功`;
 
           // 同一个问题续时
-          if(id === this.problemID) {
+          if(id === this.problemID && !this.isComplete) {
             this.hasNewExtendTime = true;
             this.sExtendTimeMsg = sMsg;
 
@@ -901,7 +901,7 @@
   \*------------------*/
 
   .subjective-content {
-    padding-top: 1.6rem;
+    padding-top: 1.65rem;
 
     .content_wrapper {
       margin: 0.266667rem 0 0.266667rem;
