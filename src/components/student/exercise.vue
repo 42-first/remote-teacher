@@ -339,8 +339,8 @@
           let seconds = limit % 60;
           let sMsg = minutes > 0 ? `延时 ${minutes}分钟 成功` : `延时 ${seconds}秒 成功`;
 
-          // 同一个问题续时
-          if(id === this.problemID) {
+          // 同一个问题续时 切没有结束
+          if(id === this.problemID && !this.isComplete) {
             this.hasNewExtendTime = true;
             this.sExtendTimeMsg = sMsg;
 
@@ -674,7 +674,7 @@
 
   .exercise__tips {
     margin: 0.133333rem auto 0.666667rem;
-    width: 8.8rem;
+    width: 9.6rem;
     height: 1.6rem;
     line-height: 1.6rem;
 
