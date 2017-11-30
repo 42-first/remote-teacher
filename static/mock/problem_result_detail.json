@@ -6,7 +6,8 @@
       "members": [
         {
           "name": "\u738b\u5e86",
-          "avatar": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/0"
+          "avatar": "http://wx.qlogo.cn/mmopen/vBfxXHReCpbPyhKCcW21YTj7ibXBGUnmyHZr92FtXCK78ib31g5aGBxo3OEpa9RrmtPuQlPthy51zHyYX32M0K0H4rBkibgum74/0",
+          "result_type": 2
         }
       ],
       "label": "A"
@@ -15,7 +16,8 @@
       "members": [
         {
           "name": "\u5178\u540c\u5b66",
-          "avatar": "http://wx.qlogo.cn/mmhead/cmV7pPZ7ysflPFEwXwAowkmOyZzqIuOLoH36DG5H9CY/0"
+          "avatar": "http://wx.qlogo.cn/mmhead/cmV7pPZ7ysflPFEwXwAowkmOyZzqIuOLoH36DG5H9CY/0",
+          "result_type": 1
         }
       ],
       "label": "AB"
@@ -24,7 +26,8 @@
       "members": [
         {
           "name": "\u725b\u725b",
-          "avatar": "http://wx.qlogo.cn/mmopen/qymEBvYtCo6pdIG9weT0f5tEGT4eLTr9DiaLBvJibkveBPWNiboSHbdIMibNPMolTvw3m9KuRpuk6icSurnNASg4xaSkd7ZWzGZNS/0"
+          "avatar": "http://wx.qlogo.cn/mmopen/qymEBvYtCo6pdIG9weT0f5tEGT4eLTr9DiaLBvJibkveBPWNiboSHbdIMibNPMolTvw3m9KuRpuk6icSurnNASg4xaSkd7ZWzGZNS/0",
+          "result_type": 3
         }
       ],
       "label": "BC"
@@ -33,7 +36,8 @@
       "members": [
         {
           "name": "\u9648\u821f",
-          "avatar": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYarb7iasfgpqFGqQg9GVIjpvkw8p1KuG8icWLNsY9H1VgVJibI7rWBjUJfQBShHv0Y3bvmUNCHSWKw/0"
+          "avatar": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYarb7iasfgpqFGqQg9GVIjpvkw8p1KuG8icWLNsY9H1VgVJibI7rWBjUJfQBShHv0Y3bvmUNCHSWKw/0",
+          "result_type": 3
         }
       ],
       "label": "CD"
