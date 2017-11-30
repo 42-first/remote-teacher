@@ -345,6 +345,7 @@
         newTime = initTime
 
         self.refreshDataList()
+        pollingTimer = setInterval(self.pollingNewItem, 5000)
         // 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
         // 的 handleDuration 中又立即设置了 storage，
         // 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
