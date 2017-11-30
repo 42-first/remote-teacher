@@ -292,7 +292,7 @@ var actionsMixin = {
     * @method 计时习题 计算剩余时间
     * @params
     */
-    calcLeaveTime(leaveTime, probID) {
+    calcLeaveTime(leaveTime, probID, limit) {
       // 记录问题剩余时间并开始计时
       let oProblem = this.problemMap.get(probID);
       if(oProblem) {
@@ -306,7 +306,8 @@ var actionsMixin = {
         // 订阅发布定时
         PubSub && PubSub.publish('exercise.setTiming', {
           msg: 'exercise.setTiming',
-          leaveTime: leaveTime
+          leaveTime: leaveTime,
+          limit: limit
         });
 
       }

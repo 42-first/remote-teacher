@@ -121,7 +121,7 @@
         // 是否新的延时
         hasNewExtendTime: false,
         sExtendTimeMsg: '',
-        limit: 0,
+        limit: -1,
         leaveTime: 0,
         sLeaveTime: '00:00',
         warning: false,
@@ -226,6 +226,7 @@
         } else {
           // 开始启动定时
           data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          // this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 投票类型
@@ -274,7 +275,7 @@
 
         // 订阅定时消息
         PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
-          this.setTiming(data && data.leaveTime);
+          this.setProblemStatus(data);
         });
 
         // 订阅续时消息
@@ -286,6 +287,25 @@
         PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
           this.closedProblem(data && data.problemid);
         });
+      },
+
+      /*
+      * @method 问题状态
+      * @param
+      */
+      setProblemStatus(data) {
+        let leaveTime = data && data.leaveTime;
+
+        // 不限时
+        if(data.limit === -1) {
+          this.limit = -1;
+        } else if(data.limit === 0) {
+          // 已收题
+          this.setTiming(0);
+        } else {
+          // 限时题目
+          this.setTiming(data && data.leaveTime);
+        }
       },
 
       /*
@@ -337,7 +357,11 @@
           // 续时 分钟 秒
           let minutes = parseInt(limit / 60, 10);
           let seconds = limit % 60;
-          let sMsg = minutes > 0 ? `延时 ${minutes}分钟 成功` : `延时 ${seconds}秒 成功`;
+          let sMsg = minutes > 0 ? `题目续时 ${minutes}分钟` : `题目续时 ${seconds}秒`;
+
+          if(limit === -1) {
+            sMsg = '题目不限时';
+          }
 
           // 同一个问题续时 切没有结束
           if(id === this.problemID && !this.isComplete) {
@@ -345,8 +369,12 @@
             this.sExtendTimeMsg = sMsg;
 
             this.limit = limit;
-            let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
-            this.setTiming(leaveTime + limit);
+
+            if(limit > 0) {
+              let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
+              this.setTiming(leaveTime + limit);
+            }
+
             //
             this.timeOver === true && (this.timeOver = false);
             this.warning === true && (this.warning = false);
