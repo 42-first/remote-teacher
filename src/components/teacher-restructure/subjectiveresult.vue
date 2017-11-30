@@ -11,7 +11,6 @@
 		<StarPanel
 			ref="StarPanel"
 			@giveScore="giveScore"
-			@cancelScore="cancelScore"
 		></StarPanel>
 
     <Loadmore
@@ -500,16 +499,6 @@
           self.scoringIndex = index
           self.$refs.StarPanel.$emit('enter', ...arguments)
         }, 100)
-	    },
-	    /**
-	     * 点击打分部分，呼出打分面板
-	     *
-	     * @event bindtap
-	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
-	     */
-	    cancelScore () {
-	      let self = this
-        // TODO
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板

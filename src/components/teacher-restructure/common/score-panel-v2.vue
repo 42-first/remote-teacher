@@ -121,6 +121,9 @@
        */
       leave (evt) {
         let self = this
+
+        self.$el.querySelector('input').blur()
+        self.$el.querySelector('textarea').blur()
         
         self.isPanelHidden = true
         clearTimeout(timer2)
@@ -128,7 +131,6 @@
           self.isSummoned = false
           self.isEditting = false
         }, 400)
-        self.$emit('cancelScore')
       },
       /**
        * 点击分数输入框
@@ -211,7 +213,7 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .mask{
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     top:0;
