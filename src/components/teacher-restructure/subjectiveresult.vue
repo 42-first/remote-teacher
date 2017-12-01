@@ -435,7 +435,7 @@
           // 立即清理 计时、轮询定时器，设置时间为 0
 
           // 原来是倒计时，设置为不计时，时间从1开始
-          // 原来是倒计时，增加时间，直接增加剩余时间
+          // 原来是倒计时，增加时间，直接设置收到时间为剩余时间（新机制：后端、node端直接返回加好以后的时间）
           // 从已经收题，变成不限时，时间从1开始
           // 从已经收题，变成限时，开始新的倒计时
           // 从时间到，设置为不计时，时间从1开始
@@ -444,7 +444,10 @@
           let tempTime
 
           if (self.limit && newLimit === -1) {tempTime = 1}
-          if (self.limit && newLimit !== -1) {tempTime = newTime + newLimit}
+
+          // if (self.limit && newLimit !== -1) {tempTime = newTime + newLimit}
+          if (self.limit && newLimit !== -1) {tempTime = newLimit}
+
           if (newTime === ISCOLLECTED && newLimit === -1) {tempTime = 1}
           if (newTime === ISCOLLECTED && newLimit !== -1) {tempTime = newLimit}
           if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit === -1) {tempTime = 1}
