@@ -67,12 +67,21 @@
                   <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
                   
                   <div class="action f14">
-
-                    <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
-                      <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
-                      <span>投屏</span>
+                    <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
+                      <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                      投屏
                     </v-touch>
-                    <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                    <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                      发送全班
+                    </v-touch>
+                    <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
+                      已发全班
+                    </div>
+                    <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">
+                      <span class="fsqb-innerline"></span>
+                      取消投屏
+                    </v-touch>
+
                   </div>
                 </div>
               </div>
@@ -178,7 +187,8 @@
         'socket',
         'current',
         'pptData',
-        'postingSubjectiveid'
+        'postingSubjectiveid',
+        'postingSubjectiveSent',
       ])
 	  },
 	  components: {
@@ -443,6 +453,25 @@
         })
 
         self.socket.send(str)
+      },
+      /**
+       * 发送全班按钮
+       *
+       * @event bindtap
+       * @param {number} subjectiveid;
+       */
+      fsqbHander (subjectiveid) {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'sendsproblem',
+          'lessonid': self.lessonid,
+          'spid': subjectiveid,
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 处理计时
@@ -745,15 +774,35 @@
 	            justify-content: space-between;
 	          }
 
-	          .cancel-post-btn {
-	          	margin-right: -0.4rem;
-	            background: $blue;
-	            width: 2.733333rem;
-	            text-align: center;
-	            height: 0.826667rem;
-	            line-height: 0.826667rem;
-	            color: $white;
-	          }
+            .action .coll {
+              margin-right: 0.666667rem;
+              width: 2.133333rem;
+            }
+
+            .cancel-post-btn {
+              background: $blue;
+              width: 2.346667rem;
+              text-align: center;
+              height: 0.826667rem;
+              line-height: 0.826667rem;
+              color: $white;
+            }
+
+            .qxtp {
+              margin-right: -0.4rem;
+            }
+
+            .yfqb {
+              background: $graybg;
+            }
+
+            .fsqb-innerline {
+              float: left;
+              margin-top: 0.2rem;
+              width: 1px;
+              height: 0.4rem;
+              background: $white;
+            }
 	        }
 	      }
 

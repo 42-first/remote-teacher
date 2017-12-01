@@ -48,7 +48,7 @@
                     收藏
                   </v-touch>
 
-                  <v-touch  class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     投屏
                   </v-touch>
@@ -62,7 +62,6 @@
                     <span class="fsqb-innerline"></span>
                     取消投屏
                   </v-touch>
-
                   
                 </div>
               </div>

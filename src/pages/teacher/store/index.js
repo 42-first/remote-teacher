@@ -38,6 +38,7 @@ const store = new Vuex.Store({
     postingSubmissionid: -1,                // 正在投屏的投稿的id
     postingSubmissionSent: false,           // 正在投屏的投稿已经发送全班
     postingSubjectiveid: -1,                // 正在投屏的主观题的id
+    postingSubjectiveSent: false,           // 正在投屏的主观题已经发送全班
 
     isEnterEnded: false,                    // 遥控器进入是否结束
     isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
@@ -128,6 +129,9 @@ const store = new Vuex.Store({
     },
     set_postingSubjectiveid: (state, postingSubjectiveid) => {
       state.postingSubjectiveid = postingSubjectiveid
+    },
+    set_postingSubjectiveSent: (state, postingSubjectiveSent) => {
+      state.postingSubjectiveSent = postingSubjectiveSent
     },
 
     set_isEnterEnded: (state, isEnterEnded) => {

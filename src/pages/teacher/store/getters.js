@@ -29,6 +29,7 @@ const getters = {
   postingSubmissionid: state => state.postingSubmissionid,
   postingSubmissionSent: state => state.postingSubmissionSent,
   postingSubjectiveid: state => state.postingSubjectiveid,
+  postingSubjectiveSent: state => state.postingSubjectiveSent,
 
   isMsgMaskHidden: state => state.isMsgMaskHidden,
   isToastCtrlMaskHidden: state => state.isToastCtrlMaskHidden,

@@ -237,6 +237,13 @@ function socketProcessMessage(msg){
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', +msg.spid)
+    self.$store.commit('set_postingSubjectiveSent', msg.sent)
+    return
+  }
+
+  // 主观题已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
+  if (msg.op == 'sendsproblem') {
+    self.$store.commit('set_postingSubjectiveSent', true)
     return
   }
 
