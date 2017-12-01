@@ -37,9 +37,10 @@
             <div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
 
             <!-- 中间秒表 -->
-            <div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 5 && ~limit}]">
+            <div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
               <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-              <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+              <img v-show="~limit && newTime > 10" class="jishi" src="~images/teacher/jishi-dao-w.png" alt="">
+              <img v-show="~limit && newTime <= 10" class="jishi" src="~images/teacher/jishi-dao-r.png" alt="">
               <span class="time">{{durationLeft}}</span>
             </div>
 
