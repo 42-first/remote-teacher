@@ -322,7 +322,7 @@
           this.timer = setInterval(()=>{
             this.leaveTime--;
             let minutes = parseInt(this.leaveTime / 60, 10);
-            let seconds = this.leaveTime % 60;
+            let seconds = parseInt(this.leaveTime % 60, 10);
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
 
@@ -357,7 +357,7 @@
           let limit = problem.limit;
           // 续时 分钟 秒
           let minutes = parseInt(limit / 60, 10);
-          let seconds = limit % 60;
+          let seconds = parseInt(limit % 60, 10);
           let sMsg = minutes > 0 ? `题目续时 ${minutes}分钟` : `题目续时 ${seconds}秒`;
 
           if(limit === -1) {
@@ -373,7 +373,7 @@
 
             if(limit > 0) {
               let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
-              this.setTiming(leaveTime + limit);
+              this.setTiming(limit);
             }
 
             //
