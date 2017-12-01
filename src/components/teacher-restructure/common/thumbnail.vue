@@ -26,7 +26,7 @@
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
         <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || !imgHolder[item.index]"></span>
-        <img :src="pptData[item.index].Thumbnail" v-show="imgHolder[index]" alt="" class="gridimg">
+        <img :src="pptData[item.index].Thumbnail" v-show="imgHolder[item.index]" alt="" class="gridimg">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">不懂: {{item.val}}</div>
       </v-touch>
@@ -319,6 +319,7 @@
       }
       .item.active .gridimg-holder {
         height: 2.0rem;
+        border: 0.08rem solid $blue;
       }
       .item.active .gridlabel {
         right: 0.08rem;
