@@ -339,7 +339,7 @@
               this.warning = false;
             }
 
-            if(this.leaveTime === 10) {
+            if(this.leaveTime <= 10 && this.leaveTime > 0) {
               this.warning = true;
             }
 
