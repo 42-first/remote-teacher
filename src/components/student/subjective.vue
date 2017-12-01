@@ -226,7 +226,8 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 恢复作答结果
