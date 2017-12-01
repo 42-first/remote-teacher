@@ -308,6 +308,7 @@
           this.setTiming(0);
         } else {
           // 限时题目
+          this.limit = data.limit;
           this.setTiming(data && data.leaveTime);
         }
       },
