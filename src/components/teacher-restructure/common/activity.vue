@@ -141,6 +141,9 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  a {
+    text-decoration: none;
+  }
   .activity-box {
     position: absolute;
     left: 0;
