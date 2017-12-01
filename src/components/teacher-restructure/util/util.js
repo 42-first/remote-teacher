@@ -58,8 +58,29 @@ function sortDoubt (doubtList) {
   return arr
 }
 
+/**
+ * 设置字体禁止放大缩小 android手机字体缩放
+ * @param
+ */
+function setSize() {
+    if (typeof WeixinJSBridge === 'undefined') {
+        document.addEventListener('WeixinJSBridgeReady', function (e) {
+            setTimeout(function(){
+                typeof WeixinJSBridge !== 'undefined' && WeixinJSBridge.invoke('setFontSizeCallback',{'fontSize':0}, function(res) {
+                });
+            },0);
+        });
+    } else {
+        setTimeout(function(){
+            typeof WeixinJSBridge !== 'undefined' && WeixinJSBridge.invoke('setFontSizeCallback',{'fontSize':0}, function(res) {
+            });
+        },0);
+    }
+}
+
 export {
   formatTime,
   sec2str,
   sortDoubt,
+  setSize,
 }

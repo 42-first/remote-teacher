@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
+import {setSize} from '@/components/teacher-restructure/util/util'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
@@ -135,5 +136,15 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
+router.afterEach(function (transition){
+    setTimeout(()=>{
+        // 解决 android手机字体缩放
+        setSize();
+    }, 1050);
+})
+
+// 解决 android手机字体缩放
+setSize();
 
 export default router
