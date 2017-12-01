@@ -291,8 +291,10 @@
             isAllLoaded
           })
 
-          // 刷新的话回顶部，清零投稿未读数
-          self.$el.scrollTop = 0
+          // 刷新的话回顶部
+          setTimeout(() => {
+            self.$el.scrollTop = 0
+          }, 100)
         })
       },
       /**
