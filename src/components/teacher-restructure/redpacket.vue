@@ -6,19 +6,13 @@
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
-      <div class="desc f20" v-if="bonusTotal <= 100">您可以给回答正确且快速的<br>同学发红包以表奖励</div>
-      <div class="desc f20" v-else style="color: #fff;">
-      	单个红包金额不可超过
-      	<span class="f36">100</span>元
-      </div>
+      <div class="desc f20" v-if="bonusTotal <= 100" v-html="$t('bonustips')"></div>
+      <div class="desc f20" v-else style="color: #fff;" v-html="$t('bonuslimit')"></div>
     </div>
 		
 		<!-- 选取、输入红包个数、金额、确认、取消 的页面 -->
     <div class="action-box">
-      <div class="row f18">
-      	红包个数
-      	<span class="fz14">（班级共{{stuNumer}}人）</span>
-      </div>
+      <div class="row f18" v-html="$t('quantity', {num: stuNumer})"></div>
       
       <div class="btn-type" v-show="isNumInputHidden">
         <div class="choices">
@@ -27,22 +21,21 @@
           	<v-touch :class="['choice-item', 'f20', {'chosen': bonusNumber === 5}]" v-on:tap="tapNumber(5)">5</v-touch>
           	<v-touch :class="['choice-item', 'f20', {'chosen': bonusNumber === 10}]" v-on:tap="tapNumber(10)">10</v-touch>
           </div>
-          <v-touch class="more f18" v-on:tap="openNumInput">更多</v-touch>
+          <v-touch class="more f18" v-on:tap="openNumInput">{{ $t('readmore') }}</v-touch>
         </div>
       </div>
       
       <div class="input-type" v-show="!isNumInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
-            <input type="number" placeholder="请输入红包个数" v-model="NUM_INPUT_VALUE" v-on:input="numInputHandler"/>
-            <span>个</span>
+            <input type="number" :placeholder="$t('setquantity')" v-model="NUM_INPUT_VALUE" v-on:input="numInputHandler"/>
+            <span>{{ $t('pcs') }}</span>
           </div>
-          <v-touch class="back f18" v-on:tap="closeNumInput">返回</v-touch>
+          <v-touch class="back f18" v-on:tap="closeNumInput">{{ $t('back') }}</v-touch>
         </div>
       </div>
 
-      <div class="row f18">
-      	红包金额<span class="fz14">（单个红包）</span>
+      <div class="row f18" v-html="$t('amounteach')">
       </div>
       
       <div class="btn-type" v-show="isPriceInputHidden">
@@ -52,24 +45,24 @@
           	<v-touch :class="['choice-item', 'f20', {'chosen': bonusPrice === 1}]" v-on:tap="tapPrice(1)">￥1.00</v-touch>
           	<v-touch :class="['choice-item', 'f20', {'chosen': bonusPrice === 2}]" v-on:tap="tapPrice(2)">￥2.00</v-touch>
           </div>
-          <v-touch class="more f18" v-on:tap="openPriceInput">更多</v-touch>
+          <v-touch class="more f18" v-on:tap="openPriceInput">{{ $t('readmore') }}</v-touch>
         </div>
       </div>
       
       <div class="input-type" v-show="!isPriceInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
-            <input type="number" placeholder="请填写红包金额" v-model="PRICE_INPUT_VALUE" v-on:input="priceInputHandler" />
-            <span>元</span>
+            <input type="number" :placeholder="$t('setamount')" v-model="PRICE_INPUT_VALUE" v-on:input="priceInputHandler" />
+            <span>{{ $t('cny') }}</span>
           </div>
-          <v-touch class="back f18" v-on:tap="closePriceInput">返回</v-touch>
+          <v-touch class="back f18" v-on:tap="closePriceInput">{{ $t('back') }}</v-touch>
         </div>
       </div>
 
       <div class="total f40">￥{{bonusTotal}}</div>
 
-      <v-touch :class="['give-btn', 'f20', {'give-active': !isRedpacketDisabled}]" v-bind:enabled="!isRedpacketDisabled" v-on:tap="confirmBonus">打赏</v-touch>
-      <v-touch class="giveup give-btn f20" v-on:tap="giveupBonus">不赏了，返回</v-touch>
+      <v-touch :class="['give-btn', 'f20', {'give-active': !isRedpacketDisabled}]" v-bind:enabled="!isRedpacketDisabled" v-on:tap="confirmBonus">{{ $t('preparebonus') }}</v-touch>
+      <v-touch class="giveup give-btn f20" v-on:tap="giveupBonus">{{ $t('nobonus') }}</v-touch>
     </div>
 
     <!--确认金额页面-->
@@ -77,33 +70,33 @@
       <div class="paying-content confirm-box" v-show="payingStep === -1">
 	      <!-- 关闭按钮 -->
 		    <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f24" v-on:tap="closePayingWrapper"></v-touch>
-        <div class="title f18">请确认支付</div>
-        <div class="kthb f16">课堂红包</div>
+        <div class="title f18">{{ $t('plsconfpay') }}</div>
+        <div class="kthb f16">{{ $t('classbonus') }}</div>
         <div class="total f40">￥{{bonusTotal}}</div>
-        <div :class="['wallet', 'f16', {'nbt': wxToPay > 0}]">雨课堂钱包<span class="gray f14">（余额￥<span>{{bankLeft !== -1 ? bankLeft : '加载中...'}}</span>）</span></div>
+        <div :class="['wallet', 'f16', {'nbt': wxToPay > 0}]">{{ $t('yktwallet') }}<span class="gray f14">（{{ $t('balance') }}￥<span>{{bankLeft !== -1 ? bankLeft : $t('loading')+'...'}}</span>）</span></div>
         <div class="needmoremoney f16" v-show="wxToPay > 0">
-          微信钱包
-          <span class="gray f14">（支付￥{{wxToPay}}）</span>
+          {{ $t('wxwallet') }}
+          <span class="gray f14">（{{ $t('pay') }}￥{{wxToPay}}）</span>
         </div>
         <v-touch class="confirm-btn btn f18" v-bind:enabled="bankLeft !== -1" v-on:tap="confirmPay">
-          确认支付
+          {{ $t('cfmpay') }}
         </v-touch>
       </div>
       <div class="paying-content paying f24" v-show="payingStep === 0">
-        支付中...
+        {{ $t('loading') }}...
       </div>
       <div class="paying-content pay-success" v-show="payingStep === 1">
-        <div class="cg f28">支付成功!</div>
+        <div class="cg f28">{{ $t('paysuccess') }}!</div>
         <div class="wallet f16">
-          雨课堂钱包
-          <span class="gray f14">（余额￥{{bankLeft}}）</span>
+          {{ $t('yktwallet') }}
+          <span class="gray f14">（{{ $t('balance') }}￥{{bankLeft}}）</span>
         </div>
-        <v-touch class="confirm-btn btn" v-on:tap="confirmPaySuccess">确认</v-touch>
+        <v-touch class="confirm-btn btn" v-on:tap="confirmPaySuccess">{{ $t('confirm') }}</v-touch>
       </div>
       <div class="paying-content pay-fail" v-show="payingStep === 2">
-        <div class="cg f28">支付失败!</div>
-        <div class="warn f18">零钱已退还至雨课堂钱包</div>
-        <v-touch class="confirm-btn btn" v-on:tap="confirmPayFail">返回</v-touch>
+        <div class="cg f28">{{ $t('payfailed') }}!</div>
+        <div class="warn f18">{{ $t('reject') }}</div>
+        <v-touch class="confirm-btn btn" v-on:tap="confirmPayFail">{{ $t('back') }}</v-touch>
       </div>
     </div>
   </div>

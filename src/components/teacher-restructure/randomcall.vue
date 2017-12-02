@@ -4,17 +4,19 @@
     <slot name="ykt-msg"></slot>
 
     <div class="upper">
-      <div class="desc f24" v-show="step === 0">
-        当前共有 <span class="num f32">{{signInCount}}</span> 位学生进入课堂<br>即将开始随机点名
+      <div class="desc f24" v-show="step === 0" v-html="$t('attendingno', {attendingno: signInCount})">
       </div>
-      <div class="desc f24" v-show="step === 1">正在随机筛选...</div>
-      <div class="desc f24" v-show="step === 2">就是Ta了</div>
+      <div class="desc f24" v-show="step === 1">{{ $t('radomrolling') }}</div>
+      <div class="desc f24" v-show="step === 2">{{ $t('selhim') }}</div>
       <v-touch class="roll_btn_box" v-on:tap="rollBtnHandler">
         <img v-show="step !== 1" src="~images/teacher/light-pause.png" alt="" class="light_box">
         <img v-show="step === 1" src="~images/teacher/light-roll.png" alt="" class="light_box rolling">
-        <div class="wenzi f24">{{btnText}}</div>
+        <!-- <div class="wenzi f24">{{btnText}}</div> -->
+        <div class="wenzi f24" v-show="step === 0">{{ $t('rolling') }}</div>
+        <div class="wenzi f24" v-show="step === 1">{{ $t('pause') }}</div>
+        <div class="wenzi f24" v-show="step === 2">{{ $t('keeprolling') }}</div>
       </v-touch>
-      <div class="blink f20" v-show="!isNostuhintHidden">当前班级没有学生，不能点名</div>
+      <div class="blink f20" v-show="!isNostuhintHidden">{{ $t('norolling') }}</div>
     </div>
 
     <div v-show="calledlist.length || nowchosen.name" class="down">
@@ -193,7 +195,9 @@
     }
   }
 </script>
-
+<style>
+  .randomcall-num {color: #639EF4;}
+</style>
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .random-roll-box {
