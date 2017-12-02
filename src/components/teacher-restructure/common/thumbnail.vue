@@ -15,7 +15,8 @@
     <!-- PPT 类型 -->
     <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
-        <img :src="item.Thumbnail" alt="" class="gridimg">
+        <span class="gridimg-holder" v-show="!imgHolder[index]"></span>
+        <img :src="item.Thumbnail" alt="" class="gridimg" :onload="hideHolder(index)">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15 bdsz">{{doubtList[index] ? '不懂: '+doubtList[index] : ''}}</div>
       </v-touch>
@@ -24,7 +25,8 @@
     <!-- 不懂 类型 -->
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
-        <img :src="pptData[item.index].Thumbnail" alt="" class="gridimg">
+        <span class="gridimg-holder" v-show="!imgHolder[item.index]"></span>
+        <img :src="pptData[item.index].Thumbnail" alt="" class="gridimg" :onload="hideHolder(item.index)">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">不懂: {{item.val}}</div>
       </v-touch>
@@ -33,7 +35,8 @@
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
-        <img :src="item.Thumbnail" alt="" class="gridimg">
+        <span class="gridimg-holder" v-show="!imgHolder[index]"></span>
+        <img :src="item.Thumbnail" alt="" class="gridimg" :onload="hideHolder(index)">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
@@ -63,6 +66,7 @@
       return {
         tab: 1,         // 缩略图当前tab
         doubtList: [],  // 不懂人员分布
+        imgHolder: [],  // 图片加载成功前占位符
       }
     },
     computed: {
@@ -129,6 +133,17 @@
           self.$emit('checkDoubt')
           self.fetchPresentationTag()
         }
+      },
+      /**
+       * 图片加载完毕后隐藏占位框
+       *
+       * @event bindtap
+       * @param {Number} index  图片序号
+       */
+      hideHolder (index) {
+        let self = this
+
+        self.imgHolder[index] = 1
       },
       /**
        * 点击缩略图按钮给WebSocket发指令要进入某页
@@ -267,6 +282,15 @@
         .gridimg {
           box-sizing: border-box;
           width: 100%;
+          background: #9B9B9B;
+        }
+
+        .gridimg-holder {
+          display: inline-block;
+          box-sizing: border-box;
+          width: 100%;
+          height: 2.4rem;
+          background: #9B9B9B;
         }
 
         .bdsz {
@@ -277,7 +301,7 @@
           position: absolute;
           right: 0;
           top: 0;
-          width: 1.866667rem;
+          min-width: 1.866667rem;
           height: 0.8rem;
           line-height: 0.8rem;
           border-radius: 0 0 0 0.05rem;
@@ -291,6 +315,9 @@
         margin-top: -0.14rem;
         padding: 0.053333rem;
         border: 0.08rem solid $blue;
+      }
+      .item.active .gridimg-holder {
+        height: 2.0rem;
       }
       .item.active .gridlabel {
         right: 0.08rem;
