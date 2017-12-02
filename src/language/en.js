@@ -172,6 +172,7 @@ let pages = {
   "nonewpost": "No new post",
   "star": "Save",
   "stared": "Saved",
+  "screenmode": "Screen Mode",
   "postpublic": "Send",
   "postpubliced": "Sent",
   "screenmodeoff": "Exit Screen Mode",
@@ -197,7 +198,7 @@ let pages = {
 if (typeof define === 'function' && define.amd){
     // AMD. Register as an anonymous module.
     define(['exports'], function(){
-        return pages;
+      return pages;
     });
 } else if (typeof exports === 'object' && typeof module === 'object') {
   module.exports = pages; // nodejs support

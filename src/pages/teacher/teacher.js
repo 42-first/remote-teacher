@@ -13,6 +13,22 @@ import('pubsub-js').then(res => {
 let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
 
+import VueI18n from 'vue-i18n'
+// 通过插件的形式挂载
+Vue.use(VueI18n)
+
+import EnLanguage from '@/language/en'
+import ChLanguage from '@/language/zh_CN'
+
+const i18n = new VueI18n({
+  // 语言标识
+  locale: 'en',
+  messages: {
+    'zh_CN': ChLanguage,
+    'en': EnLanguage
+  }
+})
+
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
 window.STORE = store // 在 router 中判断是否刷新页面导致 socket 无效
@@ -22,6 +38,7 @@ Vue.component('ykt-modal', () => import('@/components/teacher-restructure/common
 
 /* eslint-disable no-new */
 new Vue({
+	i18n,
   el: '#app',
   router,
   store,
