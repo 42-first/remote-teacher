@@ -12,7 +12,7 @@
 		      <span class="time">{{durationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
-		      已经有 <span>{{total}}</span> / <span>{{members}}</span> 位同学提交了答案
+		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
 		    </div>
 	    </section>
 
@@ -21,17 +21,17 @@
 	    	<section class="mahint" v-if="problemType === 'MultipleChoiceMA'">
 	    		<div class="mahint-item f12">
 	    			<i style="background: #F5A623;"></i>
-	    			本题答案
+	    			{{ $t('standardans') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #639EF4;"></i>
-	    			正确选项
+	    			{{ $t('correctopt') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #C8C8C8;"></i>
-	    			错误选项
+	    			{{ $t('wrongopt') }}
 	    		</div>
 	    	</section>
 
@@ -58,28 +58,28 @@
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
 	      	</div>
-	        <div class="btn-desc f14">投屏</div>
+	        <div class="btn-desc f14">{{ $t('screenmode') }}</div>
 	      </v-touch>
 
 	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
-	        <div class="btn-desc f14">查看详情</div>
+	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
 	      <router-link tag="div" :to="{name: 'redpacket', params: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">课堂红包</div>
+	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',RedEnvelopeID) }}</div>
 	      </router-link>
 
 	      <router-link tag="div" :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">红包名单</div>
+	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',~RedEnvelopeID) }}</div>
 	      </router-link>
 	    </section>
 	  </div>

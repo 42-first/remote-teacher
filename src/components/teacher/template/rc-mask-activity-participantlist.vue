@@ -2,7 +2,7 @@
 <template>
 	<div class="participantlist-box allowscrollcallback">
     <div class="desc f18">
-      当前班级人数：<span class="f24">{{participantList.length}}</span> 人
+      {{ $t('totalstudent') }}<span class="f24">{{participantList.length}}</span> {{ $t('ren') }}
     </div>
     <div class="gap"></div>
     <section class="list">

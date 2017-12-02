@@ -178,7 +178,7 @@ let pages = {
   "screenmodeoff": "Exit Screen Mode",
   "release": "Release",
 
-  "totalstudent": "Active Students",
+  "totalstudent": "Active Students: ",
   "attendingno": "$number$students in the class",
   "toberolling": "Random Roll Call is about to begin",
   "rolling": "Rolling",

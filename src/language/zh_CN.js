@@ -178,7 +178,7 @@ let pages = {
   "screenmodeoff": "取消投屏",
   "release": "上拉加载更多",
 
-  "totalstudent": "当前班级人数",
+  "totalstudent": "当前班级人数：",
   "attendingno": "当前共有$number$位学生进入课堂",
   "toberolling": "即将开始随机点名",
   "rolling": "开始滚动",
