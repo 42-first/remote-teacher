@@ -38,7 +38,7 @@
         </p>
       </section>
 
-      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide">确定</v-touch>
+      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide">提交</v-touch>
       <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting">已批改</div>
     </div>
   </div>
@@ -49,8 +49,9 @@
   const errorList = [
     '分数超过本题最大分值，请重新输入',
     '分数最多保留一位小数，请重新输入',
-    '所输分数错误，请重新输入',
-    '分值不能为空'
+    '所输分数必须为数字，请重新输入',
+    '分值不能为空',
+    '分数必须为正数'
   ]
 
   const reList = [
@@ -173,7 +174,7 @@
       tapRe (idx) {
         let self = this
         
-        self.remark = reList[idx]
+        self.remark += reList[idx]
       },
       /**
        * 点击空白处或星星决定放弃或星级
@@ -202,6 +203,9 @@
               self.errorInfo = errorList[1]
               return false;
             }
+        }else if (num < 0) {
+          self.errorInfo = errorList[4]
+          return false;
         }else if (self.studentScore === "") {
           self.errorInfo = errorList[3]
           return false;
