@@ -83,7 +83,7 @@
       let self = this
 
       // 父组件呼出本子组件
-      self.$on('enter', function (answerid, studentScore, scoreTotal) {
+      self.$on('enter', function () {
         self.enter(...arguments)
       })
 

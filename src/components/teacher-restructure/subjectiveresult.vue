@@ -524,7 +524,8 @@
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'score': score
+	        'score': score,
+          remark
 	      }
 
 	      request.post(url, postData)
