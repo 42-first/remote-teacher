@@ -109,7 +109,7 @@
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
-  Vue.use(VueScroll)
+  Vue.use(VueScroll, {throttle: 600})
 
   import { Lazyload } from 'mint-ui';
   Vue.use(Lazyload);
@@ -123,34 +123,6 @@
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
   let scoreTapTimer = null
-
-  // 页面滚动处理
-  function handelScroll (posList = [0]) {
-  	let self = this
-  	let scrollTopNow = posList.pop()
-
-    self.isShow2TopBtn = scrollTopNow > windowHeight
-  }
-
-  // 页面滚动代理
-  let proxyHandleScroll = (function () {
-  	let timer = null
-  	let cachePos = []
-
-  	return function (pos) {
-  		let self = this
-
-  		cachePos.push(pos)
-  		if (timer) {return;}
-
-  		timer = setTimeout(() => {
-  			handelScroll.call(self, cachePos)
-  			clearTimeout(timer)
-  			timer = null
-  			cachePos.length = 0
-  		}, 300)
-  	}
-  })();
 
 	export default {
 	  name: 'Subjectiveresult',
@@ -291,12 +263,12 @@
 	     */
 	    onScroll (e, position) {
 	      let self = this
-	      
-	      proxyHandleScroll.call(self, position.scrollTop)
 
         // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
         let scoreDom = document.querySelector('#scoreDom')
         scoreDom.style.top = position.scrollTop + 'px'
+
+        self.isShow2TopBtn = position.scrollTop > windowHeight
 	    },
 	    /**
 	     * 回到顶部

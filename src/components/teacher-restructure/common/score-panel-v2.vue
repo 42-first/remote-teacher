@@ -18,7 +18,7 @@
       <section class="fen-box f16">
         <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
         <div class="score-input f18">
-          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="validate"/>
+          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
           <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
           <label>分</label>
           <div class="error f12">{{errorInfo}}</div>
@@ -145,6 +145,17 @@
         
         self.errorInfo = ''
         self.isTextFocused = true
+      },
+      /**
+       * 点击分数输入框
+       *
+       * @event bindtap
+       */
+      blurInput () {
+        let self = this
+        
+        self.isTextFocused = false
+        self.validate()
       },
       /**
        * 点击评语输入框
