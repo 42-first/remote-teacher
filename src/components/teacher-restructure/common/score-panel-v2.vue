@@ -1,6 +1,6 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
-  <div class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
+  <div id="scoreDom" class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
     <div :class="['pop', {'pop-up': isTextFocused, 'not-editting': isScored && !isEditting}]">
       <header>
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
@@ -49,7 +49,8 @@
   const errorList = [
     '分数超过本题最大分值，请重新输入',
     '分数最多保留一位小数，请重新输入',
-    '所输分数错误，请重新输入'
+    '所输分数错误，请重新输入',
+    '分值不能为空'
   ]
 
   const reList = [
@@ -109,7 +110,7 @@
         self.isScored = +studentScore !== -1
 
         self.answerid = answerid
-        self.studentScore = +studentScore === -1 ? scoreTotal : +studentScore
+        self.studentScore = +studentScore === -1 ? '' : +studentScore
         self.scoreTotal = scoreTotal
         self.remark = remark
       },
@@ -124,6 +125,7 @@
 
         self.$el.querySelector('input').blur()
         self.$el.querySelector('textarea').blur()
+        self.errorInfo = ''
         
         self.isPanelHidden = true
         clearTimeout(timer2)
@@ -200,6 +202,9 @@
               self.errorInfo = errorList[1]
               return false;
             }
+        }else if (self.studentScore === "") {
+          self.errorInfo = errorList[3]
+          return false;
         }else {
           self.errorInfo = errorList[2]
           return false;
@@ -340,7 +345,7 @@
     }
 
     .pop-up {
-      top: 2.0rem;
+      top: 2.5rem;
     }
 
     .not-editting {

@@ -293,6 +293,10 @@
 	      let self = this
 	      
 	      proxyHandleScroll.call(self, position.scrollTop)
+
+        // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
+        let scoreDom = document.querySelector('#scoreDom')
+        scoreDom.style.top = position.scrollTop + 'px'
 	    },
 	    /**
 	     * 回到顶部
