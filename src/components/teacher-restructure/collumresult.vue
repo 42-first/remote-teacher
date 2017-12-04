@@ -325,22 +325,38 @@
 			 * 所有状态下都能延时（除非不限时）
 			 * 限时后，能再改为不限时
 			 *
+			 * 延时规则：https://www.tapd.cn/20392061/prong/stories/view/1120392061001000893
+			 * 原来是倒计时，设置为不限时，时间从最初发题算
+			 * 从已经收题，变成不限时，时间从最初发题算
+			 * 从时间到，设置为不限时，时间从最初发题算
+			 * 原来是倒计时，增加时间，直接增加剩余时间
+			 * 从已经收题，变成限时，开始新的倒计时
+			 * 从时间到，设置限时，开始新的倒计时 
+			 *
 			 * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
-			 * @param {Number} newLimit 延时的时间，收题不传，为 undefined, 延时为 -1（不限时）或 正整数
+			 * @param {Object} newConfig 延时的设置, 就是小幺鸡 extendtime 的 problem 字段的值
+			 * {
+       *   "type": "problem",
+       *   "prob": 12,             // Problem ID
+       *   "pres": 21,             // Presentation ID
+       *   "sid": 1,               // SlideId
+       *   "dt": 1453348909053,    //第一次发送试题的时间戳 毫秒
+       *   "limit": 100,           //-1为不限时，总的限时时间。秒
+       *   "now": 1453348909053,   //当前时间 毫秒
+       *   "extend": 10            //本次续时时间 秒
+	     * }
        */
-      resetTiming (optype, newLimit) {
+      resetTiming (optype, newConfig) {
         let self = this
 
         if (optype === operationType['shouti']) {
-        	// 收题回调
-				  // 应该重置当前的时间，
-				  // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+        	// 收题回调：立即清理 计时、轮询定时器，设置时间为 0
 				  // 由于使用了 storage 机制，也需要立即处理 storage
 				  // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
 				  // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
-          // 立即清理 计时、轮询定时器，设置时间为 0
+          // 
         	self.endTimers()
-        	newTime = ISCOLLECTED
+        	newTime = ISCOLLECTED // 设为 -200，小于0， 会显示“作答时间结束”
 
         	self.setData({
         	  durationLeft: self.sec2str(newTime),
@@ -356,32 +372,20 @@
 				  // 应该重置当前的时间，
 				  // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
 				  // 由于使用了 storage 机制，也需要立即处理 storage
-				  // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
-				  // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
-          // 立即清理 计时、轮询定时器，设置时间为 0
-
-          // 原来是倒计时，设置为不计时，时间从1开始
-          // 原来是倒计时，增加时间，直接设置收到时间为剩余时间（新机制：后端、node端直接返回加好以后的时间）
-          // 从已经收题，变成不限时，时间从1开始
-          // 从已经收题，变成限时，开始新的倒计时
-          // 从时间到，设置为不计时，时间从1开始
-          // 从时间到，设置限时，开始新的倒计时
 
         	let tempTime
+        	let fromBegan = Math.round((newConfig.now - newConfig.dt)/1000)
+        	newConfig.limit = Math.round(newConfig.limit)
 
-        	if (self.limit && newLimit === -1) {tempTime = 1}
-
-        	// if (self.limit && newLimit !== -1) {tempTime = newTime + newLimit}
-        	if (self.limit && newLimit !== -1) {tempTime = newLimit}
-
-        	if (newTime === ISCOLLECTED && newLimit === -1) {tempTime = 1}
-        	if (newTime === ISCOLLECTED && newLimit !== -1) {tempTime = newLimit}
-        	if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit === -1) {tempTime = 1}
-        	if (self.limit && ISCOLLECTED < newTime <= 0  && newLimit !== -1) {tempTime = newLimit}
+        	if (newConfig.limit === -1) {
+        		tempTime = fromBegan
+        	} else {
+        		tempTime = newConfig.limit - fromBegan
+        	}
 
         	// 重置后权当重新进入页面重启
         	self.endTimers()
-        	let str = `${newLimit}|${+new Date()}|${tempTime}`
+        	let str = `${newConfig.limit}|${+new Date()}|${tempTime}`
         	localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
         	self.init()
         }
@@ -408,7 +412,7 @@
 
         // 从 node 传来，pc 延时事件
         T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
-          self.problemid === msg.problemid && self.resetTiming(operationType['yanshi'], msg.duration)
+          self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
       },
 	    /**

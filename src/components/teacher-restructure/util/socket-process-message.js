@@ -220,7 +220,7 @@ function socketProcessMessage(msg){
 
   //试题延时了
   if (msg.op == 'extendtime') {
-    T_PUBSUB.publish('pro-msg.yanshipc', {problemid: +msg.problem.prob, duration: +msg.problem.limit});
+    T_PUBSUB.publish('pro-msg.yanshipc', msg.problem);
     return
   }
 
