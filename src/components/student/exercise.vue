@@ -354,13 +354,13 @@
       extendTime(problem) {
         if(problem) {
           let id = problem.prob;
-          let limit = problem.limit;
+          let extend = problem.extend;
           // 续时 分钟 秒
-          let minutes = parseInt(limit / 60, 10);
-          let seconds = parseInt(limit % 60, 10);
+          let minutes = parseInt(extend / 60, 10);
+          let seconds = parseInt(extend % 60, 10);
           let sMsg = minutes > 0 ? `题目续时 ${minutes}分钟` : `题目续时 ${seconds}秒`;
 
-          if(limit === -1) {
+          if(extend === -1) {
             sMsg = '题目不限时';
           }
 
@@ -369,11 +369,11 @@
             this.hasNewExtendTime = true;
             this.sExtendTimeMsg = sMsg;
 
-            this.limit = limit;
+            this.limit = problem.limit;
 
-            if(limit > 0) {
+            if(extend > 0) {
               let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
-              this.setTiming(limit);
+              this.setTiming(this.limit);
             }
 
             //
