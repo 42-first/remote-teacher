@@ -348,7 +348,7 @@
     }
 
     .pop-up {
-      top: 2.5rem;
+      top: 1.0rem;
     }
 
     .not-editting {
