@@ -49,7 +49,7 @@
   const errorList = [
     '分数超过本题最大分值，请重新输入',
     '分数最多保留一位小数，请重新输入',
-    '所输分数必须为数字，请重新输入',
+    '所输分数必须为合法数字，请重新输入',
     '分值不能为空',
     '分数必须为正数'
   ]
@@ -202,6 +202,12 @@
        */
       validate () {
         let self = this
+        // 055 字符串
+        if (self.studentScore !== parseFloat(self.studentScore)) {
+          self.errorInfo = errorList[2]
+          return false;
+        }
+
         let num = Number(self.studentScore)
 
         if (self.studentScore !== "" && ( num >= 0)) {
