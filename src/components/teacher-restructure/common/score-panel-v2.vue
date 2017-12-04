@@ -144,6 +144,7 @@
         let self = this
         
         self.errorInfo = ''
+        self.isTextFocused = true
       },
       /**
        * 点击评语输入框
@@ -152,8 +153,6 @@
        */
       focusText () {
         let self = this
-        
-        self.isTextFocused = true
       },
       /**
        * 点击修改按钮
