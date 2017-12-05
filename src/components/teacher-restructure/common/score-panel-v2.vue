@@ -18,7 +18,7 @@
       <section class="fen-box f16">
         <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
         <div class="score-input f18">
-          <input class="input-place" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
+          <input class="input-place" placeholder="请输入分值" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
           <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
           <label>分</label>
           <div class="error f12">{{errorInfo}}</div>
@@ -375,6 +375,16 @@
     .not-editting {
       height: 10.0rem;
     }
+  }
+
+  [data-dpr="1"] .input-place::placeholder {
+    font-size: 16px;
+  }
+  [data-dpr="2"] .input-place::placeholder {
+      font-size: 32px;
+  }
+  [data-dpr="3"] .input-place::placeholder {
+    font-size: 48px;
   }
 
   .none {
