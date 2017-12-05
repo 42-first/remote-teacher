@@ -200,23 +200,44 @@
        *
        */
       validate () {
+        // const errorList = [
+        //   '分数超过本题最大分值，请重新输入',
+        //   '分数最多保留一位小数，请重新输入',
+        //   '输入无效，请重新输入',
+        //   '分数必须为正数'
+        // ]
+
         let self = this
-        // 055 字符串
+        // 处理空字符串 输入纯字母会进入这里
         if (self.studentScore === "") {
           self.errorInfo = errorList[2]
           return false;
         }
 
+        // 让 0 通过
+        if (self.studentScore === "0") {
+          return true;
+        }
+
+        // 处理0开头的数字
         let first = [...self.studentScore][0]
-        // if (self.studentScore !== parseFloat(self.studentScore)) {
         if (first <= 0 || first > 9 || +self.studentScore !== parseFloat(self.studentScore)) {
           self.errorInfo = errorList[2]
           return false;
         }
 
+        // Number 测不了0开头的数字
+        // Number('') // 0
+        // Number('0') // 0
+        // Number('11.111') // 11.111
+        // Number('011') // 11
+        // Number('01.1') // 1.1
+        // Number('01a') // NaN
+        // Number('a') // NaN
+        // Number('(a%') // 11
         let num = Number(self.studentScore)
 
-        if (self.studentScore !== "" && ( num >= 0)) {
+        if (num >= 0) {
             if (num > self.scoreTotal) {
               self.errorInfo = errorList[0]
               return false;
