@@ -175,7 +175,8 @@
 
         if (!self.dataList[0]) {
           setTimeout(() => {
-            this.$refs.Loadmore.onBottomLoaded()
+            // this.$refs.Loadmore.onBottomLoaded()
+            self.onBottomLoaded()
           }, 100)
           return;
         }
@@ -191,9 +192,28 @@
           }
           self.dataList = self.dataList.concat(jsonData.data.danmu_list)
 
-          this.$refs.Loadmore.onBottomLoaded()
+          // this.$refs.Loadmore.onBottomLoaded()
+          self.onBottomLoaded()
         })
       },
+      /**
+       * 复写 mint-ui loadmore 组件的 onBottomLoaded 方法
+       * 处理首次加载容器会往上偏移50px 的问题
+       *
+       */
+      onBottomLoaded () {
+        let self = this
+        var $loadmore = this.$refs.Loadmore
+        $loadmore.bottomStatus = 'pull'
+        $loadmore.bottomDropped = false
+        this.$nextTick(() => {
+          $loadmore.translate = 0
+        })
+        if (!$loadmore.bottomAllLoaded && !$loadmore.containerFilled) {
+          $loadmore.fillContainer()
+        }
+      },
+      
       /**
        * 获取弹幕数据
        *
