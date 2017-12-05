@@ -207,6 +207,7 @@ function socketProcessMessage(msg){
     // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
     // 所以如果是正计时的话，如果 timeLeft 为0，将其设置为1
     if (!~msg.limit && timeLeft === 0) {timeLeft = 1}
+    timeLeft = Math.round(timeLeft)
 
     self.showProblemResult(msg.problemid, msg.limit, timeLeft)
     return

@@ -165,7 +165,7 @@
     '240': '4分钟',
     '300': '5分钟',
     '600': '10分钟',
-    '90': '15分钟',
+    '900': '15分钟',
     '1200': '20分钟',
     '-1': '不限时'
   }
@@ -486,7 +486,7 @@
 
         // 从 node 传来，pc 延时事件
         T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
-          self.problemid === msg.problemid && self.resetTiming(operationType['yanshi'], msg.duration)
+          self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
       },
       /**
