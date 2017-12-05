@@ -49,8 +49,7 @@
   const errorList = [
     '分数超过本题最大分值，请重新输入',
     '分数最多保留一位小数，请重新输入',
-    '所输分数必须为合法数字，请重新输入',
-    '分值不能为空',
+    '输入无效，请重新输入',
     '分数必须为正数'
   ]
 
@@ -203,7 +202,14 @@
       validate () {
         let self = this
         // 055 字符串
-        if (self.studentScore !== parseFloat(self.studentScore)) {
+        if (self.studentScore === "") {
+          self.errorInfo = errorList[2]
+          return false;
+        }
+
+        let first = [...self.studentScore][0]
+        // if (self.studentScore !== parseFloat(self.studentScore)) {
+        if (first <= 0 || first > 9 || +self.studentScore !== parseFloat(self.studentScore)) {
           self.errorInfo = errorList[2]
           return false;
         }
@@ -220,9 +226,6 @@
               return false;
             }
         }else if (num < 0) {
-          self.errorInfo = errorList[4]
-          return false;
-        }else if (self.studentScore === "") {
           self.errorInfo = errorList[3]
           return false;
         }else {
@@ -332,6 +335,7 @@
           border-radius: 0.213333rem;
           background-color: #F8F8F8;
           color: #333333;
+          overflow: scroll;
         }
         .b9 {
           color: #9B9B9B;

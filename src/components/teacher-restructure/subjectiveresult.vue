@@ -162,6 +162,20 @@
 	  created(){
 	  	this.init()
 	  },
+    mounted(){
+      // 处理打分蒙版出现时，ios11+ 后面不要滚动
+      // 给整个打分的蒙版加上 touchmove 处理，但是对内部可能滚动的地方分情况处理下，一般用 e.preventDefault() 禁止滚动
+      // 有2个 textarea-place 元素，其中一个隐藏的时候，其 offsetHeight scrollHeight 都是0
+      let boxDom = document.querySelector('#scoreDom')
+      let textDomList = boxDom.querySelectorAll('.textarea-place')
+      boxDom.addEventListener('touchmove', e => {
+        // 评语部分再内容很多的时候能搓动
+        let isNotOverflow = textDomList[0].scrollHeight ? (textDomList[0].scrollHeight <= textDomList[0].offsetHeight) : (textDomList[1].scrollHeight <= textDomList[1].offsetHeight)
+        if (!~e.target.className.indexOf('textarea-place') || isNotOverflow) {
+          e.preventDefault()
+        }
+      }, false)
+    },
     beforeDestroy(){
       this.endTimers()
       this.closeSubjectivemask()
