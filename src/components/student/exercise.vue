@@ -299,6 +299,7 @@
         // 不限时
         if(data.limit === -1) {
           this.limit = -1;
+          !this.isComplete && (this.canSubmit = 1);
         } else if(data.limit === 0) {
           // 已收题
           this.setTiming(0);

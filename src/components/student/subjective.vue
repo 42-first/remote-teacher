@@ -303,6 +303,7 @@
         // 不限时
         if(data.limit === -1) {
           this.limit = -1;
+          !this.isComplete && (this.sendStatus = 1);
         } else if(data.limit === 0) {
           // 已收题
           this.setTiming(0);
@@ -379,7 +380,7 @@
               // let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
               let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
               this.setTiming(leaveTime);
-              this.canSubmit = 1;
+              this.sendStatus = 1;
             }
 
             //
