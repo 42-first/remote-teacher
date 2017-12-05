@@ -2,6 +2,7 @@
 <template>
 	<div class="danmu-box">
     <slot name="ykt-msg"></slot>
+    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
       <span>弹幕</span>
       <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
@@ -13,8 +14,8 @@
     <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
     <div v-show="isToastSwitch" class="no-new-item f18">弹幕已{{isDanmuOpen ? '开启' : '关闭'}}</div>
 
-    <!-- 没有试卷 -->
-    <div v-show="!dataList.length" class="no-paper-box">
+    <!-- 没有弹幕 -->
+    <div v-show="!isFetching && !dataList.length" class="no-paper-box">
       <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
       <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="" style="transform: translateY(50%); width: 6.5rem;">
     </div>
@@ -28,7 +29,7 @@
        :bottomDropText="'释放加载更多'"
        :class="{'allLoaded': isAllLoaded}"
        >
-      <section v-show="dataList.length" class="list">
+      <section v-show="!isFetching && dataList.length" class="list">
 
         <div class="item-with-gap" v-for="item in dataList" :key="item.id">
           <div class="item">
@@ -425,6 +426,13 @@
       text-align: center;
       line-height: 2.0rem;
       color: $white;
+    }
+
+    .isFetching {
+      position: relative;
+      z-index: 10;
+      padding-top: 7.0rem;
+      text-align: center;
     }
 
     .no-paper-box {

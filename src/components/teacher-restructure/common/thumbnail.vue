@@ -15,8 +15,8 @@
     <!-- PPT 类型 -->
     <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || !imgHolder[index]"></span>
-        <img :src="item.Thumbnail" alt="" v-show="imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)">
+        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
+        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15 bdsz">{{doubtList[index] ? '不懂: '+doubtList[index] : ''}}</div>
       </v-touch>
@@ -25,8 +25,8 @@
     <!-- 不懂 类型 -->
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
-        <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || !imgHolder[item.index]"></span>
-        <img :src="pptData[item.index].Thumbnail" v-show="imgHolder[item.index]" alt="" class="gridimg">
+        <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]"></span>
+        <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">不懂: {{item.val}}</div>
       </v-touch>
@@ -35,8 +35,8 @@
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || !imgHolder[index]"></span>
-        <img :src="item.Thumbnail" alt="" v-show="imgHolder[index]" class="gridimg">
+        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
+        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
@@ -66,7 +66,7 @@
       return {
         tab: 1,         // 缩略图当前tab
         doubtList: [],  // 不懂人员分布
-        imgHolder: [],  // 图片加载成功前占位符
+        imgHolder: [],  // 图片加载成功前占位符, 1表示显示占位符
       }
     },
     computed: {
@@ -144,7 +144,8 @@
       hideHolder (index, src) {
         let self = this
 
-        self.imgHolder[index] = !src ? 0 : 1
+        // 图片url为空 '' 时也要显示占位符
+        self.imgHolder[index] = !src ? 1 : 0
       },
       /**
        * 点击缩略图按钮给WebSocket发指令要进入某页
