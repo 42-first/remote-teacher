@@ -375,6 +375,7 @@
               // let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
               let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
               this.setTiming(leaveTime);
+              this.canSubmit = 1;
             }
 
             //
