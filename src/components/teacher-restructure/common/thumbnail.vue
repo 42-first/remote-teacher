@@ -319,7 +319,6 @@
         border: 0.08rem solid $blue;
       }
       .item.active .gridimg-holder {
-        height: 2.0rem;
         border: 0.08rem solid $blue;
       }
       .item.active .gridlabel {
