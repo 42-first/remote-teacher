@@ -310,7 +310,7 @@
           position: relative;
           height: 1.6rem;
           line-height: 1.066667rem;
-          border-bottom: 1px solid #C8C8C8;
+          // border-bottom: 1px solid #C8C8C8;
 
           .input-place {
             display: inline-block;
@@ -353,10 +353,11 @@
           padding: 0.133333rem;
           outline: none;
           border: 1px solid transparent;
-          border-radius: 0.213333rem;
+          border-radius: 0.106667rem;
           background-color: #F8F8F8;
           color: #333333;
           overflow: scroll;
+          word-break: break-all;
         }
         .b9 {
           color: #9B9B9B;
