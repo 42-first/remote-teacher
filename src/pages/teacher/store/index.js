@@ -21,6 +21,8 @@ const store = new Vuex.Store({
     presentationid: 0,
     isBrandNewPpt: true,                    // 是否是全新的ppt，主要用来控制二维码控制页“开始上课”、“继续上课”按钮文案。新上课或presentationcreated都为true。
     errType: 5,                             // 错误信息类型
+    isGuideDelayHidden: false,              // 延时引导隐藏
+    stepGuideDelay: 0,                      // 延时引导状态 0 查看答案；1 延时；2 收题；3 结束
     
     current: 1,                             // 当前页码，从1开始
     total: '',                              // 总页数
@@ -88,6 +90,12 @@ const store = new Vuex.Store({
     },
     set_errType: (state, errType) => {
       state.errType = errType
+    },
+    set_isGuideDelayHidden: (state, isGuideDelayHidden) => {
+      state.isGuideDelayHidden = isGuideDelayHidden
+    },
+    set_stepGuideDelay: (state, stepGuideDelay) => {
+      state.stepGuideDelay = stepGuideDelay
     },
     
     set_current: (state, current) => {
