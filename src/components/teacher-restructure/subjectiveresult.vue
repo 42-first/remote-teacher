@@ -2,6 +2,11 @@
 <template>
 	<div class="problem-root" v-scroll="onScroll">
     <slot name="ykt-msg"></slot>
+    <!-- 教师遥控器引导查看答案、续时 -->
+    <GuideDelay
+      v-show="!isGuideDelayHidden"
+    ></GuideDelay>
+
 		<v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
@@ -135,6 +140,8 @@
   import Loadmore from 'mint-ui/lib/loadmore'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  // 教师遥控器引导查看答案、续时
+  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -223,6 +230,7 @@
       ...mapGetters([
         'lessonid',
         'socket',
+        'isGuideDelayHidden',
         'current',
         'pptData',
         'postingSubjectiveid'
@@ -232,7 +240,8 @@
 	    StarPanel,
       Scale,
       Loadmore,
-      Problemtime
+      Problemtime,
+      GuideDelay
 	  },
 	  created(){
 	  	this.init()

@@ -2,6 +2,10 @@
 <template>
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
+		<!-- 教师遥控器引导查看答案、续时 -->
+    <GuideDelay
+      v-show="!isGuideDelayHidden"
+    ></GuideDelay>
 
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
@@ -122,6 +126,8 @@
 
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
+	// 教师遥控器引导查看答案、续时
+  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -169,10 +175,12 @@
 	    ...mapGetters([
         'lessonid',
         'socket',
+        'isGuideDelayHidden',
       ])
 	  },
 	  components: {
 	    Problemtime,
+	    GuideDelay
 	  },
 	  created(){
 	  	this.init()

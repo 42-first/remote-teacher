@@ -96,7 +96,11 @@ export default {
       request.post(API.publish_problem, postData)
         .then(jsonData => {
           // 打开柱状图页面
-          self.showProblemResult(problemid, limit, timeLeft)
+          if (self.isGuideDelayHidden) {
+            self.showProblemResult(problemid, limit, timeLeft)
+          } else {
+            self.goHome()
+          }
         })
     },
     

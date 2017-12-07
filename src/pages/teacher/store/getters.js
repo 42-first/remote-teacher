@@ -11,6 +11,8 @@ const getters = {
   presentationid: state => state.presentationid,
   isBrandNewPpt: state => state.isBrandNewPpt,
   errType: state => state.errType,
+  isGuideDelayHidden: state => state.isGuideDelayHidden,
+  stepGuideDelay: state => state.stepGuideDelay,
 
   current: state => state.current,
   total: state => state.total,
