@@ -248,7 +248,25 @@ var mixin = {
 
             leaveTime = msg['limit'] - leaveTime
 
-            this.calcLeaveTime(leaveTime, probID);
+            this.calcLeaveTime(leaveTime, probID, msg['limit']);
+            hasMsg = false;
+
+            break
+
+          // 延时
+          case 'extendtime':
+            let problem = msg['problem']
+            this.extendTime(problem);
+
+            hasMsg = false;
+
+            break
+
+          // 收题
+          case 'problemfinished':
+            let problemid = msg['prob']
+            this.closedProblem(problemid);
+
             hasMsg = false;
 
             break

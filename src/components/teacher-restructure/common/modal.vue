@@ -4,11 +4,11 @@
 		<div class="_inner">
       <div class="_title">{{msg}}</div>
       <div class="_btn-box">
-        <template v-if="hasCancel">
-          <div class="_btn">取消</div>
+        <template v-show="!isCancelHidden">
+          <v-touch class="_btn" v-on:tap="cancel">取消</v-touch>
           <div class="_bar"></div>
         </template>
-        <div class="_btn" style="color: #639EF4;" @click="confirm">确定</div>
+        <v-touch class="_btn" style="color: #639EF4;" v-on:tap="confirm">确定</v-touch>
       </div>
     </div>
 	</div>
@@ -16,6 +16,7 @@
 
 <script>
   import config from '@/pages/teacher/config/config'
+  let mark = '' //标记传递的信息，比如试题收题的话，传递的是 problemid
 
   export default {
     name: 'ykt-modal',
@@ -23,7 +24,7 @@
     data () {
       return {
         isShown: false,
-        hasCancel: false,
+        isCancelHidden: false,
         msg: 'loading...'
       }
     },
@@ -31,8 +32,8 @@
       let self = this
 
       T_PUBSUB.unsubscribe('ykt-msg-modal')
-      T_PUBSUB.subscribe('ykt-msg-modal', (_name, msg) => {
-        self.fire(msg)
+      T_PUBSUB.subscribe('ykt-msg-modal', (_name, opt) => {
+        self.fire(opt)
       })
     },
     methods: {
@@ -40,10 +41,13 @@
        * 触发弹出提示
        *
        */
-      fire (msg) {
+      fire (opt) {
         let self = this
 
-        self.msg = msg
+        mark = opt.mark
+
+        self.msg = opt.msg
+        self.isCancelHidden = opt.isCancelHidden
         self.isShown = true
       },
       /**
@@ -53,9 +57,24 @@
       confirm () {
         let self = this
 
-        if (self.msg === config.pubsubmsg.modal[0]) {
-          location.reload()
+        switch (self.msg) {
+          case config.pubsubmsg.modal[0]:
+            location.reload();
+            break;
+          case config.pubsubmsg.modal[1]:
+            T_PUBSUB.publish('pro-msg.shoutih5', {problemid: +mark});
+            self.isShown = false
+            break;
         }
+      },
+      /**
+       * 取消
+       *
+       */
+      cancel () {
+        let self = this
+
+        self.isShown = false
       },
     }
   }
