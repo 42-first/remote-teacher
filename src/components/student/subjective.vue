@@ -361,7 +361,7 @@
         let hasResult = this.text || this.imageURL;
 
         if(!this.isComplete && hasResult) {
-          this.sendStatus = 1;
+          this.sendStatus = 2;
         }
       },
 
@@ -392,9 +392,10 @@
             if(extend > 0) {
               let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
               this.setTiming(leaveTime);
-              // 是否可以点亮提交按钮
-              this.canSubmitFn();
             }
+
+            // 是否可以点亮提交按钮
+            this.canSubmitFn();
 
             //
             this.timeOver === true && (this.timeOver = false);
