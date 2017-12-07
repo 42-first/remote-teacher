@@ -18,7 +18,8 @@ const config = {
   pubsubmsg: {
     toast: [],
     modal: [
-      '您已经被夺权，请刷新页面'
+      '您已经被夺权，请刷新页面',
+      '确定结束答题？'
     ]
   }
 }

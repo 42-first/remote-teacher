@@ -21,6 +21,7 @@ if (process.env.NODE_ENV === 'production') {
     publish_problem:                    prefix + '/v/lesson/publish_problem/',        // 发布试题
     problem_statistics:                 prefix + '/v/lesson/problem_statistics',      // 试题柱状图数据
     problem_result_detail:              prefix + '/v/lesson/problem_result_detail',   // 试题详情数据
+    delay_problem:                      prefix + '/v/lesson/delay_problem',           // 试题收题
     publish_lesson_paper:               prefix + '/v/lesson/publish_lesson_paper',    // 发布试卷
     quiz_results_statistics:            prefix + '/api/quiz/quiz_results_statistics', // 获取试卷饼图数据
     quiz_results_detail:                prefix + '/api/quiz/quiz_results_detail',     // 获取试卷详情
@@ -57,6 +58,7 @@ if (process.env.NODE_ENV === 'production') {
     publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
     problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              '/static/lesson/mock/problem_result_detail.json',      // 试题详情数据
+    delay_problem:                      '/static/lesson/mock/delay_problem.json',              // 试题收题
     publish_lesson_paper:               '/static/lesson/mock/publish_lesson_paper.json',       // 发布试卷
     quiz_results_statistics:            '/static/lesson/mock/quiz_results_statistics.json',    // 获取试卷饼图数据
     quiz_results_detail:                '/static/lesson/mock/quiz_results_detail.json',        // 获取试卷详情

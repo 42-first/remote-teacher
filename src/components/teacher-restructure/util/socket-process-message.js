@@ -125,7 +125,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
-    T_PUBSUB.publish('ykt-msg-modal', config.pubsubmsg.modal[0])
+    T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
     return
   }
 
@@ -197,10 +197,31 @@ function socketProcessMessage(msg){
   
   //刷新了遥控器页面，且点击的是查看答案按钮
   if (msg.op == 'probleminfo') {
+    // msg.dt 是发题的时间
     let timePassed = Math.floor((msg.now-msg.dt)/1000)
     // 是倒计时则取剩下时间，没有限时则取已经过去的时间
     let timeLeft = ~msg.limit ? msg.limit - timePassed : timePassed
+
+    // 如果是倒计时，timeLeft 有可能为0或负数或正数
+    // 如果是正计时，timeLeft 有可能为0或正数
+    // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
+    // 所以如果是正计时的话，如果 timeLeft 为0，将其设置为1
+    if (!~msg.limit && timeLeft === 0) {timeLeft = 1}
+    timeLeft = Math.round(timeLeft)
+
     self.showProblemResult(msg.problemid, msg.limit, timeLeft)
+    return
+  }
+
+  //收题了
+  if (msg.op == 'problemfinished') {
+    T_PUBSUB.publish('pro-msg.shoutipc', {problemid: +msg.prob});
+    return
+  }
+
+  //试题延时了
+  if (msg.op == 'extendtime') {
+    T_PUBSUB.publish('pro-msg.yanshipc', msg.problem);
     return
   }
 
