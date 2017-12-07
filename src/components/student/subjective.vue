@@ -303,7 +303,8 @@
         // 不限时
         if(data.limit === -1) {
           this.limit = -1;
-          !this.isComplete && (this.sendStatus = 1);
+          // 是否可以点亮提交按钮
+          this.canSubmitFn();
         } else if(data.limit === 0) {
           // 已收题
           this.setTiming(0);
@@ -353,6 +354,18 @@
       },
 
       /*
+       * @method 是否点亮提交按钮
+       * @params problem
+       */
+      canSubmitFn() {
+        let hasResult = this.text || this.imageURL;
+
+        if(!this.isComplete && hasResult) {
+          this.sendStatus = 1;
+        }
+      },
+
+      /*
        * @method 答题续时
        * @params problem
        */
@@ -377,10 +390,10 @@
             this.limit = problem.limit;
 
             if(extend > 0) {
-              // let leaveTime = this.leaveTime > 0 ? this.leaveTime : 0;
               let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
               this.setTiming(leaveTime);
-              this.sendStatus = 1;
+              // 是否可以点亮提交按钮
+              this.canSubmitFn();
             }
 
             //
