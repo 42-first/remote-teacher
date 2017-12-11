@@ -6,6 +6,8 @@ import Vue from 'vue'
 import App from '@/pages/teacher/teacher.vue'
 import router from '@/router/index-teacher'
 import store from '@/pages/teacher/store';
+// 检测是否https
+import {initProtocal} from '@/util/util'
 import('pubsub-js').then(res => {
 	window.T_PUBSUB = res
 })
@@ -28,3 +30,6 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+// 检测http协议改成https
+initProtocal();
