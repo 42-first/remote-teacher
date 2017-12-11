@@ -55,9 +55,13 @@ var actionsMixin = {
 
               break;
 
-            // 主观题分享20171204
+            // 分享协议合并 主观题分享20171204
             case 'share':
-              this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
+              if(item['cat'] === 'post') {
+                this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+              } else if(item['cat'] === 'subjective') {
+                this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
+              }
 
               break;
 
