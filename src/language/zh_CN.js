@@ -64,6 +64,40 @@ let pages = {
   "del": "删除",
   "delselectedpost": "确定删除所选投稿",
 
+  // 新增部分
+  "sharepostpush" : "Hi, 老师正在分享课堂投稿",
+  "minilaunchpush" : "雨课堂小程序上线啦",
+  "entermini" : "长按识别图中小程序码开始体验",
+  "anonymous " : "匿名",
+  "timeout" : "时间到",
+  "timeoutnosubmit" : "时间已过，不能再提交啦～",
+  "neterrorpush" : "当前网络不畅，请检查系统已保存并将自动重复提交",
+  "classended" : "课程已结束",
+  "picuploading" : "图片上传中" ,
+  "picsizelimit" : "图片不可超过10M，请重试",
+  "cfmdelpic" : "确定删除图片",
+  "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
+  "subjectivepro" : "主观题",
+  "answerarea" : "作答区域" ,
+  "contentsizelimit" : "内容限制140字可插入1张图片",
+  "myanswer" : "我的回答",
+  "subjectivepro" : "主观题作答",
+  "classbonus" : "课堂红包",
+  "receiveclassbonus" : "你收到一个课堂红包",
+  "whosebonus" : "{name}的课堂红包",
+  "savedinpacket" : "已存入我的钱包",
+  "numopenedbonus" : "已领 {count}/{total} 个红包",
+
+  // socket event
+  "atndclass": "上课啦！",
+  "newslide": "新幻灯片：{name}",
+  "finishclass": "下课啦！",
+  "bulleton": "老师已开启弹幕",
+  "bulletoff": "老师已关闭弹幕",
+  "selstudent": "随机点名选中：{name}",
+  "slideended": "幻灯片 {name} 结束放映",
+  "quizcollected": "试卷 {name} 已收卷",
+
 
   // 遥控器
   "classsignal": "课堂暗号",

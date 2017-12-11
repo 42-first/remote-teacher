@@ -64,6 +64,39 @@ let pages = {
   "del": "Delete",
   "delselectedpost": "Delete Selected Post",
 
+  // 新增部分
+  "sharepostpush" : "Hi, the teacher is sharing post.",
+  "minilaunchpush" : "Rain Classroom Mini Program has been released！",
+  "entermini" : "Press and hold MiniProgram Code to start experience.",
+  "anonymous " : "Anonymous",
+  "timeout" : "Time Out",
+  "timeoutnosubmit" : "Time out, you can't sumbit.",
+  "neterrorpush" : "Network unavailable, please check the system.",
+  "classended" : "End Class",
+  "picuploading" : "Uploading",
+  "picsizelimit" : "Pictures should be less than 10 MB, please try again.",
+  "cfmdelpic" : "Are you sure to delete?",
+  "reuploadpiconly" : "We only support picture formats, please try again.",
+  "subjectivepro" : "Subjective Question",
+  "answerarea" : "Answer here (Please write your answer here.)",
+  "contentsizelimit" : "Maximum 140 characters and one picture",
+  "myanswer" : "My Answer",
+  "subjectivepro" : "Answer Subjective Question",
+  "classbonus" : "Class Bonus",
+  "receiveclassbonus" : "You have received a bonus.",
+  "whosebonus" : "{name}'s bonus",
+  "savedinpacket" : "Saved to Rain Classroom Wallet",
+  "numopenedbonus" : "{count}/{total } students opened the bonus",
+
+  // socket event
+  "atndclass": "Start Class!",
+  "newslide": "New Slide: {name}",
+  "finishclass": "End Class!",
+  "bulleton": "Danmu On",
+  "bulletoff": "Danmu Off",
+  "selstudent": "Random Roll Call: {name}",
+  "slideended": "End Show",
+
 
   // 遥控器
   "classsignal": "Class Code",
