@@ -8,15 +8,16 @@
 
 <template>
   <section class="submission__detail">
-    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <!-- 导航 -->
-      <header class="student__header">
-        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="student__header--back"></p>
-      </header>
+    <!-- 导航 -->
+    <header class="student__header submission__header">
+      <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
+      <h3 class="header-title f18">{{ title }}</h3>
+      <p class="student__header--back"></p>
+    </header>
 
-      <div class="submission__item" v-if="result">
+    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
+
+      <div class="submission__item">
         <!-- 投稿时间 -->
         <div class="item-avatar">
           <img class="" :src="result.user_avatar_46" alt="" />
@@ -189,7 +190,7 @@
 
 <style lang="scss">
   .submission__detail {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     top: 0;
     left: 0;
@@ -197,8 +198,25 @@
     height: 100%;
 
     background: #fff;
+    // overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-backface-visibility: hidden;
+    // -webkit-transform: translate3d(0,0,0);
+  }
 
-    overflow-y: scroll;
+  .submission__header {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+  }
+
+  .submission-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -207,7 +225,7 @@
     align-items: flex-start;
     justify-content: center;
 
-    padding: 0.533333rem 0.453333rem;
+    padding: 1.533333rem 0.453333rem 0.533333rem;
     color: #333333;
 
     .item-avatar {
@@ -238,7 +256,7 @@
         margin-top: 0.2rem;
         display: block;
         width: 6.933333rem;
-        max-width: 100%;
+        // max-width: 100%;
         // max-height: 7.04rem;
       }
 
