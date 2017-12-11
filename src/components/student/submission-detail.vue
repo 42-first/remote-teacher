@@ -198,7 +198,7 @@
     height: 100%;
 
     background: #fff;
-    // overflow-y: auto;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
     -webkit-backface-visibility: hidden;
     // -webkit-transform: translate3d(0,0,0);
@@ -214,6 +214,8 @@
   }
 
   .submission-wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     overflow-y: auto;
@@ -221,6 +223,7 @@
   }
 
   .submission__item {
+    flex: 1;
     display: flex;
     align-items: flex-start;
     justify-content: center;
