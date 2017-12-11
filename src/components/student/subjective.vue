@@ -21,7 +21,7 @@
       <section class="subjective-content" >
         <div class="content_wrapper">
           <header class="content__header problem-tag">
-            <p class="header-item f18">主观题</p>
+            <p class="header-item f18"><!-- 主观题 -->{{ $t('subjectivepro') }}</p>
             <p class="header-item f15">{{ $t('pno', { number: summary&&summary.pageIndex }) }}</p>
             <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
           </header>
@@ -31,8 +31,8 @@
         </div>
       </section>
 
-      <h3 class="subjective__answer--lable f17" v-if="!ispreview">作答区域<span class="tip f12">（内容限制140字可插入1张图片）</span></h3>
-      <h3 class="subjective__answer--lable f17" v-else >我的回答</h3>
+      <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
+      <h3 class="subjective__answer--lable f17" v-else ><!-- 我的回答 -->{{ $t('myanswer') }}</h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
@@ -149,7 +149,7 @@
         } else if(newValue === 4) {
           this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
-          this.submitText = '课程已结束';
+          this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
       }
     },
@@ -255,7 +255,7 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = '时间到';
+              this.sLeaveTime = this.$i18n.t('timeout') || '时间到';
               clearInterval(this.timer);
               this.timeOver = true;
             }
@@ -264,7 +264,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '时间到';
+          this.sLeaveTime = this.$i18n.t('timeout') || '时间到';
         }
       },
 
@@ -331,7 +331,7 @@
         // 是否超时
         if(this.timeOver) {
           this.$toast({
-            message: '时间已过，不能再提交啦～',
+            message: this.$i18n.t('timeoutnosubmit') || '时间已过，不能再提交啦～',
             duration: 3000
           });
 
@@ -399,7 +399,7 @@
             // 提交失败保存本地
             self.saveAnswer(param);
             self.$toast({
-               message: '当前网络不畅，请检查系统已保存并将自动重复提交',
+              message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
 
@@ -444,7 +444,7 @@
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
           this.$toast({
-            message: '当前仅支持图片格式，请重新上传',
+            message: this.$i18n.t('reuploadpiconly') || '当前仅支持图片格式，请重新上传',
             duration: 2000
           });
 
@@ -495,7 +495,7 @@
 
           if(size >= 10) {
             this.$toast({
-              message: '图片不可超过10M，请重试',
+              message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
               duration: 2000
             });
 
@@ -563,7 +563,7 @@
       handleDeleteImg() {
         let self = this;
 
-        this.$messagebox.confirm('确定删除图片?').then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?').then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';

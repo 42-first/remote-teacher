@@ -47,7 +47,7 @@
            <div class="timeline-wrapper" v-if="classroom && !classroom.isPro">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
-                <p class="pb15">雨课堂小程序上线啦<br>长按识别图中小程序码开始体验</p>
+                <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
                 <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
               </div>
             </section>

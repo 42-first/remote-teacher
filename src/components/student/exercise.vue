@@ -39,7 +39,7 @@
         <!-- 投票选择提示 -->
         <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
         <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? '(匿名)': ''}}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
 
       <!-- 观看者提示文字 返回 -->
@@ -271,7 +271,7 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = '时间到';
+              this.sLeaveTime = this.$i18n.t('timeout') || '时间到';
               clearInterval(this.timer);
               this.timeOver = true;
             }
@@ -280,7 +280,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '时间到';
+          this.sLeaveTime = this.$i18n.t('timeout') || '时间到';
         }
       },
 
@@ -386,7 +386,7 @@
           // 是否超时
           if(this.timeOver) {
             this.$toast({
-              message: '时间已过，不能再提交啦～',
+              message: this.$i18n.t('timeoutnosubmit') || '时间已过，不能再提交啦～',
               duration: 3000
             });
             this.canSubmit = 0;
@@ -448,7 +448,7 @@
               // 提交失败保存本地
               self.saveAnswer(param);
               self.$toast({
-                message: '当前网络不畅，请检查系统已保存并将自动重复提交',
+                message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
                 duration: 3000
               });
 
