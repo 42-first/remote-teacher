@@ -13,7 +13,7 @@
 	    <div class="choice-list">
 	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
-	      		<template v-show="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
+	      		<template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
 	      			<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
 	      			<i v-if="choiceItem.members[0].result_type === 1" :class="['iconfont', 'f20', 'icon-correct']"></i>
 	      			<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
