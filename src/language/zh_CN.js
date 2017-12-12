@@ -84,19 +84,19 @@ let pages = {
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
   "receiveclassbonus" : "你收到一个课堂红包",
-  "whosebonus" : "{name}的课堂红包",
+  "whosebonus" : '<span class="teacher_name">{name}</span>的课堂红包',
   "savedinpacket" : "已存入我的钱包",
   "numopenedbonus" : "已领 {count}/{total} 个红包",
 
   // socket event
-  "atndclass": "上课啦！",
-  "newslide": "新幻灯片：{name}",
-  "finishclass": "下课啦！",
-  "bulleton": "老师已开启弹幕",
-  "bulletoff": "老师已关闭弹幕",
-  "selstudent": "随机点名选中：{name}",
-  "slideended": "幻灯片 {name} 结束放映",
-  "quizcollected": "试卷 {name} 已收卷",
+  "LESSON_START": "上课啦！",
+  "SHOW_PRESENTATION": "新幻灯片：{0}",
+  "LESSON_FINISH": "下课啦！",
+  "DANMU_ON": "老师已开启弹幕",
+  "DANMU_OFF": "老师已关闭弹幕",
+  "RANDOM_PICK": "随机点名选中：{0}{1}",
+  "SHOW_FINISH": "幻灯片 {0} 结束放映",
+  "QUIZ_FINISH": "试卷 {0} 已收卷",
 
 
   // 遥控器

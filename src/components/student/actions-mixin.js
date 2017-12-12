@@ -38,7 +38,7 @@ var actionsMixin = {
 
             // event
             case 'event':
-              this.addMessage({ type: 1, message: item['title'], time: item['dt'], isFetch: isFetch });
+              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
@@ -63,13 +63,22 @@ var actionsMixin = {
 
     /*
     * @method 新增提醒消息
-    * data: { type: 1, message: '', time: '', isFetch: false }
+    * data: { type: 1, message: '', time: '', event: item, isFetch: false }
     */
     addMessage(data) {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 1 && item.message === data.message && data.isFetch;
       })
+
+      // 消息统一国际化
+      if(!hasEvent && data.event && data.event['code']) {
+        let code = data.event && data.event['code'];
+        let aReplace = data.event && data.event['replace'] || [];
+        let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
+
+        data.message = sMsg;
+      }
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);

@@ -102,7 +102,7 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
+            <p class="paper-name"><!-- Hi, 老师正在分享课堂投稿 -->{{ $t('sharepostpush') }}</p>
           </div>
           <i class="iconfont icon-ykq_tab_tougao f50"></i>
         </router-link>

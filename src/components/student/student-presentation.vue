@@ -31,7 +31,7 @@
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
         <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">{{ $t('total') }}</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">{{ $t('slide') }}</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">{{ $t('slide2') }}</li>
         <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob') }}</li>
         <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz') }}</li>
       </ul>
@@ -655,10 +655,16 @@
        *
        */
       handleOpenDanmu() {
+        // 国际化confirm options改造
+        let msgOptions = {
+          confirmButtonText: this.$i18n.t('confirm'),
+          cancelButtonText: this.$i18n.t('cancel')
+        }
+
         if(this.danmuStatus) {
           this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
         } else {
-          this.$messagebox( this.$i18n.t('tips') || '提示', this.$i18n.t('bulletban') || '老师暂时还未开放弹幕，等等吧～');
+          this.$messagebox.alert(this.$i18n.t('bulletban') || '老师暂时还未开放弹幕，等等吧～', msgOptions);
         }
       },
 

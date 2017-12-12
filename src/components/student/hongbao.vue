@@ -18,7 +18,9 @@
         <!-- 头像 -->
         <div :class="['hongbao__user', mine ? '' : 'mb100']">
           <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f15"><span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包</p>
+          <p class="user-name f15" v-html="$t('whosebonus', {name: teacher&&teacher.name})">
+            <!-- <span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包 -->
+          </p>
         </div>
       </section>
 
@@ -31,7 +33,9 @@
 
       <!-- 红包列表 -->
       <section class="hongbao__list-wrapper" v-if="hongbaoList&&summary">
-        <div class="hongbao--count f18">已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包</div>
+        <div class="hongbao--count f18">{{ $t('numopenedbonus', { count: hongbaoList&&hongbaoList.length, total: summary && summary.count }) }}
+          <!-- 已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包 -->
+        </div>
         <ul class="">
 
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
@@ -65,7 +69,7 @@
       return {
         index: 0,
         opacity: 0,
-        title: '课堂红包',
+        title: this.$i18n.t('classbonus') || '课堂红包',
         summary: null,
         mine: null,
         teacher: null,
@@ -118,7 +122,7 @@
         this.mine = mine;
 
         if(mine) {
-          this.title = '你收到一个课堂红包';
+          this.title = this.$i18n.t('receiveclassbonus') || '你收到一个课堂红包';
           mine.praise = titleAry[parseInt(Math.random()*9, 10)];
         } else {
 
