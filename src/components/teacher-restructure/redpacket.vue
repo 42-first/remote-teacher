@@ -284,7 +284,7 @@
 
 			.numhint {
 				height: 0.933333rem;
-				line-height: 0.533333rem;
+				line-height: 0.733333rem;
 				color: #9B9B9B;
 				.mizi {
 					color: #FFAD01;
