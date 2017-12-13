@@ -1,99 +1,101 @@
 <!--试题结果-主观题结果页面-->
 <template>
-	<div class="problem-root" v-scroll="onScroll">
-    <slot name="ykt-msg"></slot>
-		<v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
+	<div class="wai">
+    <div class="problem-root" v-scroll="onScroll">
+      <slot name="ykt-msg"></slot>
+      <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
 
-		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
-			<img class="jishi" src="~images/teacher/back-top.png" alt="">
-		</v-touch>
-		<!-- 打星星 -->
-		<StarPanel
-			ref="StarPanel"
-			@giveScore="giveScore"
-			@cancelScore="cancelScore"
-		></StarPanel>
+      <v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
+        <img class="jishi" src="~images/teacher/back-top.png" alt="">
+      </v-touch>
 
-    <Loadmore
-     ref="Loadmore"
-     :bottom-method="loadBottom"
-     :bottom-all-loaded="isAllLoaded"
-     :bottomPullText="'上拉加载更多'"
-     :bottomDropText="'释放加载更多'"
-     :class="{'allLoaded': isAllLoaded}"
-     >
-      <!--试题-主观题面板-->
-      <div id="subjective-wrapper" class="problemresult-box">
+      <Loadmore
+       ref="Loadmore"
+       :bottom-method="loadBottom"
+       :bottom-all-loaded="isAllLoaded"
+       :bottomPullText="'上拉加载更多'"
+       :bottomDropText="'释放加载更多'"
+       :class="{'allLoaded': isAllLoaded}"
+       >
+        <!--试题-主观题面板-->
+        <div id="subjective-wrapper" class="problemresult-box">
 
-        <!-- 上部时钟、人数统计 -->
-        <section class="upper">
-          <div class="f50" >
-            <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-            <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
-            <span class="time">{{durationLeft}}</span>
-          </div>
-          <div :class="['f18', 'yjy']">
-            已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
-          </div>
-        </section>
+          <!-- 上部时钟、人数统计 -->
+          <section class="upper">
+            <div class="f50" >
+              <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
+              <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
+              <span class="time">{{durationLeft}}</span>
+            </div>
+            <div :class="['f18', 'yjy']">
+              已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
+            </div>
+          </section>
 
-        <!-- 中间主观题页面 -->
-        <section class="subjective-box f18">
-          <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
+          <!-- 中间主观题页面 -->
+          <section class="subjective-box f18">
+            <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
 
-          <!-- 主观题部分 -->
-          <div class="subjective-list" v-show="dataList.length">
-            <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
-              <div class="item">
-                <div class="detail">
-                  <img :src="item.user_avatar_46" class="avatar" alt="">
-                  <div class="cont f18">
-                    <div class="time f15">{{item.end_time | formatTime}}</div>
-                    <span class="author f15">{{item.user_name}}</span><br>
-                    {{item.subj_result.content}}<br>
+            <!-- 主观题部分 -->
+            <div class="subjective-list" v-show="dataList.length">
+              <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
+                <div class="item">
+                  <div class="detail">
+                    <img :src="item.user_avatar_46" class="avatar" alt="">
+                    <div class="cont f18">
+                      <div class="time f15">{{item.end_time | formatTime}}</div>
+                      <span class="author f15">{{item.user_name}}</span><br>
+                      {{item.subj_result.content}}<br>
 
-                    <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
-                  </div>
-                </div>
-                <div class="action-box f14">
-                  <!-- 投屏时不能打分 -->
-                  <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
-                    <div class="gray">
-                      <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-                      <span>{{item.score === -1 ? '打分' : '得分'}}</span>
-                      <span v-show="item.score !== -1">{{item.score}}分</span>
+                      <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
-                  </v-touch>
-                  <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
-                  
-                  <div class="action f14">
-
-                    <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
-                      <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
-                      <span>投屏</span>
+                  </div>
+                  <div class="action-box f14">
+                    <!-- 投屏时不能打分 -->
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index, item.remark)">
+                      <div class="gray">
+                        <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
+                        <span>{{item.score === -1 ? '打分' : '得分'}}</span>
+                        <span v-show="item.score !== -1">{{item.score}}分</span>
+                      </div>
                     </v-touch>
-                    <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                    <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
+                    
+                    <div class="action f14">
+
+                      <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
+                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
+                        <span>投屏</span>
+                      </v-touch>
+                      <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                    </div>
                   </div>
                 </div>
+                <div class="gap"></div>
               </div>
-              <div class="gap"></div>
+
+              <div v-show="isContLonger" class="nomore f15">
+                <div class="bgline"></div>
+                <div class="wenan">end</div>
+              </div>
             </div>
+          </section>
+          
+        </div>
+      </Loadmore>
 
-            <div v-show="isContLonger" class="nomore f15">
-              <div class="bgline"></div>
-              <div class="wenan">end</div>
-            </div>
-          </div>
-        </section>
-        
-      </div>
-    </Loadmore>
+      
 
-		
+      <Scale></Scale>
+      
+    </div>
 
-    <Scale></Scale>
-		
-	</div>
+    <!-- 打星星 -->
+    <StarPanel
+      ref="StarPanel"
+      @giveScore="giveScore"
+    ></StarPanel> 
+  </div>
 </template>
 
 <script>
@@ -104,14 +106,13 @@
   import API from '@/pages/teacher/config/api'
   import Moment from 'moment'
 
-  // import StarPanel from '@/components/teacher/template/star-panel'
-  import StarPanel from './common/score-panel'
+  import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
-  Vue.use(VueScroll)
+  Vue.use(VueScroll, {throttle: 600})
 
   import { Lazyload } from 'mint-ui';
   Vue.use(Lazyload);
@@ -125,34 +126,6 @@
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
   let scoreTapTimer = null
-
-  // 页面滚动处理
-  function handelScroll (posList = [0]) {
-  	let self = this
-  	let scrollTopNow = posList.pop()
-
-    self.isShow2TopBtn = scrollTopNow > windowHeight
-  }
-
-  // 页面滚动代理
-  let proxyHandleScroll = (function () {
-  	let timer = null
-  	let cachePos = []
-
-  	return function (pos) {
-  		let self = this
-
-  		cachePos.push(pos)
-  		if (timer) {return;}
-
-  		timer = setTimeout(() => {
-  			handelScroll.call(self, cachePos)
-  			clearTimeout(timer)
-  			timer = null
-  			cachePos.length = 0
-  		}, 300)
-  	}
-  })();
 
 	export default {
 	  name: 'Subjectiveresult',
@@ -189,6 +162,20 @@
 	  created(){
 	  	this.init()
 	  },
+    mounted(){
+      // 处理打分蒙版出现时，ios11+ 后面不要滚动
+      // 给整个打分的蒙版加上 touchmove 处理，但是对内部可能滚动的地方分情况处理下，一般用 e.preventDefault() 禁止滚动
+      // 有2个 textarea-place 元素，其中一个隐藏的时候，其 offsetHeight scrollHeight 都是0
+      let boxDom = document.querySelector('#scoreDom')
+      let textDomList = boxDom.querySelectorAll('.textarea-place')
+      boxDom.addEventListener('touchmove', e => {
+        // 评语部分再内容很多的时候能搓动
+        let isNotOverflow = textDomList[0].scrollHeight ? (textDomList[0].scrollHeight <= textDomList[0].offsetHeight) : (textDomList[1].scrollHeight <= textDomList[1].offsetHeight)
+        if (!~e.target.className.indexOf('textarea-place') || isNotOverflow) {
+          e.preventDefault()
+        }
+      }, false)
+    },
     beforeDestroy(){
       this.endTimers()
       this.closeSubjectivemask()
@@ -293,8 +280,12 @@
 	     */
 	    onScroll (e, position) {
 	      let self = this
-	      
-	      proxyHandleScroll.call(self, position.scrollTop)
+
+        // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
+        // let scoreDom = document.querySelector('#scoreDom')
+        // scoreDom.style.top = position.scrollTop + 'px'
+
+        self.isShow2TopBtn = position.scrollTop > windowHeight
 	    },
 	    /**
 	     * 回到顶部
@@ -483,9 +474,13 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
+       * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} studentScore 当前分值
+       * @params {Number} scoreTotal 总分
+	     * @params {Number} index 当前的item的序号
+       * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, studentScore, scoreTotal, index) {
+	    initScore (answerid, studentScore, scoreTotal, index, remark) {
 	      let self = this
 
 	      // 投屏时不可打分
@@ -501,20 +496,12 @@
 	    /**
 	     * 点击打分部分，呼出打分面板
 	     *
-	     * @event bindtap
-	     * @params {number, number, number, index} answerid 将要打分的主观题答案的id; studentScore 当前分数; scoreTotal 当前题目总分数； index 当前的item的序号
-	     */
-	    cancelScore () {
-	      let self = this
-        // TODO
-	    },
-	    /**
-	     * 点击打分部分，呼出打分面板
-	     *
 	     * @event
-	     * @params {number, number} answerid 将要打分的主观题答案的id score 打的分
+	     * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} score 打的分
+       * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, score) {
+	    giveScore (answerid, score, remark) {
 	    	let self = this
 
 	    	if (score === -1) {
@@ -526,7 +513,8 @@
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'score': score
+	        'score': score,
+          remark
 	      }
 
 	      request.post(url, postData)
@@ -537,6 +525,7 @@
 	          // 关闭打分页面
 	          console.log(`打过分啦${score}`, self.scoringIndex)
 	          self.dataList[self.scoringIndex].score = +score
+            self.dataList[self.scoringIndex].remark = remark
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -596,6 +585,14 @@
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  .wai {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 101;
+  }
 	.problem-root {
     position: relative;
     height: 100%;

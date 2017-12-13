@@ -13,7 +13,13 @@
 	    <div class="choice-list">
 	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
-	      		<i v-show="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
+	      		<template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
+	      			<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
+	      			<i v-if="choiceItem.members[0].result_type === 1" :class="['iconfont', 'f20', 'icon-correct']"></i>
+	      			<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
+	      			<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
+	      		</template>
+	      		
 	      		<span class="f18 asw">{{choiceItem.label}}</span>
 	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}人</span>
 	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
@@ -96,6 +102,10 @@
 	      // 单次刷新
 	      request.get(url)
 	        .then(jsonData => {
+	        	// 多选题判分
+	        	// https://www.tapd.cn/20392061/prong/stories/view/1120392061001001309
+	        	// result_type 0 默认类型；1 多选题全对；2 多选题半对；3 多选题错误
+
 	        	// 设置试卷详情数据
 	          self.problemResultDetailData = jsonData
 
@@ -187,6 +197,9 @@
 	  }
 	  .icon-correct {
 	  	color: #7ED321;
+	  }
+	  .icon-banduibancuo {
+	  	color: #D0011B;
 	  }
 	  .title {
 	  	height: 2.0rem;
