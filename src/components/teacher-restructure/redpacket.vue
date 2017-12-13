@@ -6,7 +6,7 @@
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
-      <div class="desc f20" v-if="bonusTotal <= 100">您可以给回答正确且快速的<br>同学发红包以表奖励</div>
+      <div class="desc f20" v-if="bonusTotal <= 100">您可以给回答正确且快速的<br>同学发红包以表奖励.</div>
       <div class="desc f20" v-else style="color: #fff;">
       	单个红包金额不可超过
       	<span class="f36">100</span>元
