@@ -141,7 +141,7 @@
         if(newValue === 3) {
           this.submitText = this.$i18n.t('besending') || '正在发送';
         } else if(newValue === 1) {
-          this.submitText = '图片上传中';
+          this.submitText = this.$i18n.t('picuploading') || '图片上传中';
         } else if(newValue === 2) {
           this.submitText = this.$i18n.t('sendcfm') || '确认发送';
         } else if(newValue === 4) {
@@ -177,7 +177,7 @@
         this.sendStatus = 3;
 
         return request.post(URL, params)
-          .then(function (res) {
+          .then( (res) => {
             if(res) {
               let data = res;
               self.sendStatus = 4;
@@ -338,8 +338,13 @@
       },
       handleDeleteImg() {
         let self = this;
+        // 国际化confirm options改造
+        let msgOptions = {
+          confirmButtonText: this.$i18n.t('confirm'),
+          cancelButtonText: this.$i18n.t('cancel')
+        }
 
-        this.$messagebox.confirm('确定删除图片?').then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?', msgOptions).then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';

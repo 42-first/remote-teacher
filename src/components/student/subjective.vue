@@ -143,7 +143,7 @@
         if(newValue === 3) {
           this.submitText = this.$i18n.t('besending') || '正在发送';
         } else if(newValue === 1) {
-          this.submitText = '图片上传中';
+          this.submitText = this.$i18n.t('picuploading') || '图片上传中';
         } else if(newValue === 2) {
           this.submitText = this.$i18n.t('sendcfm') || '确认发送';
         } else if(newValue === 4) {

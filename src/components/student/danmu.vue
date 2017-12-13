@@ -99,7 +99,7 @@
         this.sendStatus = 2;
 
         return request.post(URL, params)
-          .then(function (res) {
+          .then( (res) => {
             if(res) {
               // 弹幕返回数据结构 danmuID success
               let data = res;
