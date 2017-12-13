@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
 import {setSize} from '@/components/teacher-restructure/util/util'
+import {configWX} from '@/util/wx-util'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
@@ -48,8 +49,12 @@ const router = new Router({
       // 解决微信确认支付路径的时候，ios 取 Landing Page， Android 取 Current Page 导致微信支付合法url认定不一致的问题
       // 微信会把 ? 后面的全给忽略掉，所以多长都不会占用路径层级了
       // http://get.ftqq.com/8572.get
-      // 本地开发的时候采用的 hash 路径，问号在 # 后面会转换，要开发红包页面的话，临时把问号去掉，记得上线前改回来
-      path: '/redpacket?/:problemid',
+      // path: '/redpacket?/:problemid',
+      
+      // 但是华为 p9 p10 手机却支付不了，干脆为了苹果的landing page 全都改为和landing page一样的一层路由好了，problemid 用 query 的方式传入
+      // 而且为了华为 P9 P10 要在下面 afterEach 中异步进行微信config 
+      // https://github.com/vuejs/vue-router/issues/481
+      path: '/redpacketqueryproblemid',
       name: 'redpacket',
       component: Redpacket
     },
@@ -141,11 +146,17 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-router.afterEach(function (transition){
+const isAndroid = window.navigator.userAgent.toLowerCase().indexOf('iphone') === -1
+router.afterEach(function (to, from){
     setTimeout(()=>{
         // 解决 android手机字体缩放
         setSize();
     }, 1050);
+
+    if(isAndroid && to.name === 'redpacket') {
+      setTimeout(configWX, 100);
+    }
+
 })
 
 // 解决 android手机字体缩放
