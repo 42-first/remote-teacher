@@ -40,8 +40,13 @@
           <v-touch class="back f18" v-on:tap="closeNumInput">返回</v-touch>
         </div>
       </div>
+      <p class="numhint f12">
+      	<span v-show="bonusNumber > 0">
+      		<span class="mizi">*</span> {{bonusNumber}}个最快答对的同学将收到您的红包
+      	</span>
+      </p>
 
-      <div class="row f18">
+      <div class="row f18" style="padding-top: 0;">
       	红包金额<span class="fz14">（单个红包）</span>
       </div>
       
@@ -113,7 +118,6 @@
 	// js功能模块，放到 mixins 中
 	// 红包相关函数
 	import redpacket from './util/redpacket'
-	import {configWX} from '@/util/wx-util'
 
 	export default {
 	  name: 'Redpacket',
@@ -152,10 +156,10 @@
 	    init () {
 		  	let self = this
 
-		  	self.problemid = +self.$route.params.problemid
+		  	// self.problemid = +self.$route.params.problemid
+		  	self.problemid = +self.$route.query.problemid
 		  	self.fetchStuBank()
 
-		  	configWX()
 		  	wx.ready(() => {
 		  	  wx.hideMenuItems({
 		  	    menuList: [
@@ -275,6 +279,15 @@
 				text-align: right;
 			  width: 1.8rem;
 			  color: $graybg;
+			}
+
+			.numhint {
+				height: 0.933333rem;
+				line-height: 0.733333rem;
+				color: #9B9B9B;
+				.mizi {
+					color: #FFAD01;
+				}
 			}
 
 			.total {

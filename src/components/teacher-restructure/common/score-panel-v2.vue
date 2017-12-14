@@ -215,18 +215,20 @@
         }
 
         // 让 0 通过
-        if (self.studentScore === "0") {
-          return true;
-        }
+        // if (self.studentScore === "0") {
+        //   return true;
+        // }
 
-        // 处理0开头的数字
-        let first = [...self.studentScore][0]
-        if (first <= 0 || first > 9 || +self.studentScore !== parseFloat(self.studentScore)) {
+        // 处理 '0a' 'ab' '.' 'a' '0.1a' '0.1a' '0.1.1' '045' 等不合法字符
+        // 不能错判 '0.1'
+        let arr = [...self.studentScore]
+        let len = arr.length
+        if (Number.isNaN(+self.studentScore) || (self.studentScore >= 1 && arr[0] === '0')) {
           self.errorInfo = errorList[2]
           return false;
         }
 
-        // Number 测不了0开头的数字
+        // Number 测不了0开头的数字 045
         // Number('') // 0
         // Number('0') // 0
         // Number('11.111') // 11.111
@@ -253,6 +255,7 @@
           self.errorInfo = errorList[2]
           return false;
         }
+        self.studentScore = '' + num
         return true
       },
     }
