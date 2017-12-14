@@ -12,14 +12,14 @@
       	<span class="f36">100</span>元
       </div>
     </div>
-		
+
 		<!-- 选取、输入红包个数、金额、确认、取消 的页面 -->
     <div class="action-box">
       <div class="row f18">
       	红包个数
       	<span class="fz14">（班级共{{stuNumer}}人）</span>
       </div>
-      
+
       <div class="btn-type" v-show="isNumInputHidden">
         <div class="choices">
           <div class="btns">
@@ -30,7 +30,7 @@
           <v-touch class="more f18" v-on:tap="openNumInput">更多</v-touch>
         </div>
       </div>
-      
+
       <div class="input-type" v-show="!isNumInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
@@ -49,7 +49,7 @@
       <div class="row f18" style="padding-top: 0;">
       	红包金额<span class="fz14">（单个红包）</span>
       </div>
-      
+
       <div class="btn-type" v-show="isPriceInputHidden">
         <div class="choices">
           <div class="btns">
@@ -60,7 +60,7 @@
           <v-touch class="more f18" v-on:tap="openPriceInput">更多</v-touch>
         </div>
       </div>
-      
+
       <div class="input-type" v-show="!isPriceInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
@@ -115,9 +115,12 @@
 </template>
 
 <script>
+  import {configWX} from '@/util/wx-util'
 	// js功能模块，放到 mixins 中
 	// 红包相关函数
 	import redpacket from './util/redpacket'
+
+	const isAndroid = window.navigator.userAgent.toLowerCase().indexOf('iphone') === -1
 
 	export default {
 	  name: 'Redpacket',
@@ -140,12 +143,8 @@
 	    }
 	  },
 	  created(){
+	  	console.log(2)
 	  	this.init()
-	  },
-	  watch: {
-	  	'$route' () {
-	  		this.init()
-	  	}
 	  },
 	  mixins: [redpacket],
 	  methods: {
@@ -160,14 +159,14 @@
 		  	self.problemid = +self.$route.query.problemid
 		  	self.fetchStuBank()
 
-		  	wx.ready(() => {
-		  	  wx.hideMenuItems({
-		  	    menuList: [
-		  	      'menuItem:share:appMessage', 'menuItem:share:timeline',
-		  	      'menuItem:share:qq', 'menuItem:share:weiboApp',
-		  	      'menuItem:favorite', 'menuItem:share:QZone']
-		  	  });
-		  	});
+		  	// wx.ready(() => {
+		  	//   wx.hideMenuItems({
+		  	//     menuList: [
+		  	//       'menuItem:share:appMessage', 'menuItem:share:timeline',
+		  	//       'menuItem:share:qq', 'menuItem:share:weiboApp',
+		  	//       'menuItem:favorite', 'menuItem:share:QZone']
+		  	//   });
+		  	// });
 	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
