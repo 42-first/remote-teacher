@@ -155,19 +155,6 @@
 	    init () {
 		  	let self = this
 
-		  	if(isAndroid) {
-			    // setTimeout(configWX, 100);
-			  }
-
-        // todo: 微信配置
-        if(wx) {
-        	console.log(4)
-          configWX();
-        } else {
-        	console.log(5)
-          setTimeout(configWX, 350);
-        }
-
 		  	// self.problemid = +self.$route.params.problemid
 		  	self.problemid = +self.$route.query.problemid
 		  	self.fetchStuBank()
