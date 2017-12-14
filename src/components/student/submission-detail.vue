@@ -16,7 +16,7 @@
     </header>
 
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-
+      <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
         <div class="item-avatar">
@@ -31,6 +31,7 @@
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
         </div>
 
+      </div>
       </div>
     </div>
   </section>
@@ -199,7 +200,7 @@
 
     background: #fff;
     overflow: hidden;
-    -webkit-overflow-scrolling: touch;
+    // -webkit-overflow-scrolling: touch;
     -webkit-backface-visibility: hidden;
     // -webkit-transform: translate3d(0,0,0);
   }
@@ -218,12 +219,19 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
+    // overflow-y: auto;
+    // -webkit-overflow-scrolling: touch;
+  }
+
+  .submission__inner {
+    flex: 1;
+    width: 100%;
+
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
   .submission__item {
-    flex: 1;
     display: flex;
     align-items: flex-start;
     justify-content: center;
