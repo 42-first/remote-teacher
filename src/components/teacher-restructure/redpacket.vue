@@ -120,6 +120,8 @@
 	// 红包相关函数
 	import redpacket from './util/redpacket'
 
+	const isAndroid = window.navigator.userAgent.toLowerCase().indexOf('iphone') === -1
+
 	export default {
 	  name: 'Redpacket',
 	  data () {
@@ -141,12 +143,8 @@
 	    }
 	  },
 	  created(){
+	  	console.log(2)
 	  	this.init()
-	  },
-	  watch: {
-	  	'$route' () {
-	  		// this.init()
-	  	}
 	  },
 	  mixins: [redpacket],
 	  methods: {
@@ -157,10 +155,16 @@
 	    init () {
 		  	let self = this
 
+		  	if(isAndroid) {
+			    // setTimeout(configWX, 100);
+			  }
+
         // todo: 微信配置
         if(wx) {
+        	console.log(4)
           configWX();
         } else {
+        	console.log(5)
           setTimeout(configWX, 350);
         }
 

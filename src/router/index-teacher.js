@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/teacher-restructure/home'
 import {setSize} from '@/components/teacher-restructure/util/util'
-import {configWX} from '@/util/wx-util'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
@@ -146,16 +145,11 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-const isAndroid = window.navigator.userAgent.toLowerCase().indexOf('iphone') === -1
 router.afterEach(function (to, from){
-    setTimeout(()=>{
-        // 解决 android手机字体缩放
-        setSize();
-    }, 1050);
-
-    if(isAndroid && to.name === 'redpacket') {
-      // setTimeout(configWX, 100);
-    }
+  setTimeout(()=>{
+      // 解决 android手机字体缩放
+      setSize();
+  }, 1050);
 
 })
 
