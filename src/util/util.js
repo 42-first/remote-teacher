@@ -25,3 +25,27 @@ if (!Array.prototype.find) {
     return undefined;
   };
 }
+
+
+/**
+ * 检测是否是https
+ * @param
+ */
+export function initProtocal() {
+  let url = location.href;
+
+  // 是否是网页版
+  let pubSub = window.parent && window.parent.PubSub || null;
+  if(pubSub) {
+    return this;
+  }
+
+  // 检测是否是http
+  if(location.protocol === 'http:') {
+    if(location.host.indexOf('yuketang') !== -1 || location.host.indexOf('ykt.io') !== -1) {
+      url = url.replace('http:', 'https:').replace('ykt.io', 'www.yuketang.cn');
+
+      location.replace(url);
+    }
+  }
+}

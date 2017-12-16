@@ -3,7 +3,7 @@
 	<div class="rc-mask">
     <section class="mask-content problemtime-box">
       <div class="block" style="margin-bottom: 0.133333rem;">
-      	<div class="title f16">{{ $t('timelimit') }}</div>
+      	<div class="title f16">{{isYanshi ? '请选择延长时限' : '限时发送'}}</div>
       	<div class="btn-box" v-show="problemType !== 'ShortAnswer'">
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30{{ $t('sec') }}</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
@@ -24,8 +24,8 @@
       </div>
 
       <div class="block">
-      	<div class="title f16">{{ $t('notimelimit') }}</div>
-      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">{{ $t('senddirectly') }}</v-touch>
+      	<div class="title f16" v-show="!isYanshi">不限时发送</div>
+      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">{{isYanshi ? '不限时' : '直接发送'}}</v-touch>
       </div>
     </section>
     <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem">{{ $t('cancel') }}</v-touch>
@@ -35,7 +35,7 @@
 <script>
 	export default {
 	  name: 'Problemtime',
-	  props: ['problemType'],
+	  props: ['problemType', 'isYanshi'],
 	  data () {
 	    return {
 	    }
@@ -105,5 +105,5 @@
 		background: $white;
 		color: #333333;
 	}
-	
+
 </style>

@@ -84,6 +84,12 @@
       @guideNext="guideNext"
     ></Guide>
 
+    <!-- 教师遥控器引导查看答案、续时 -->
+    <GuideDelay
+      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
+      @guideDelayNext="guideDelayNext"
+    ></GuideDelay>
+
   </div>
 </template>
 
@@ -105,6 +111,8 @@
 	import Toolbar from '@/components/teacher-restructure/common/toolbar'
 	// 新手引导蒙版
 	import Guide from '@/components/teacher-restructure/common/guide'
+	// 教师遥控器引导查看答案、续时
+	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 	// 错误蒙版
 	import Errormsg from '@/components/teacher-restructure/common/errormsg'
 	// 断网重连蒙版
@@ -184,6 +192,7 @@
         'lessonid',
         'presentationid',
         'errType',
+        'isGuideDelayHidden',
         'current',
         'total',
         'pptData',
@@ -207,6 +216,7 @@
 	  components: {
 	    Toolbar,
 	    Guide,
+	    GuideDelay,
 	    Errormsg,
 	    Reconnect,
 	    Deprive,
@@ -251,6 +261,8 @@
 		    }
 
 		    self.$store.commit('set_lessonid', lessonid)
+		    // self.$store.commit('set_isGuideDelayHidden', false)
+		    self.$store.commit('set_stepGuideDelay', 0)
 
 		    // 获取本地不懂、投稿已读数
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
@@ -556,6 +568,16 @@
 	          self.isGuideHidden = true
 	          localStorage.setItem('hasGuided', 'yes')
 	      }
+	    },
+	    /**
+	     * 用户在延时引导页点击了
+	     *
+	     * @param {number} step 当前处于什么引导步骤
+	     */
+	    guideDelayNext (step) {
+	      let self = this
+
+	      step === 1 && self.problemHandler()
 	    },
 	    /*
 	     * @method sentry ga 配置

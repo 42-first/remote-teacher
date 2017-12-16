@@ -1,0 +1,463 @@
+<!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
+<template>
+  <div id="scoreDom" class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
+    <div :class="['pop', {'pop-up': isTextFocused, 'not-editting': isScored && !isEditting}]">
+      <header>
+        <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
+        <v-touch class="f16 blue" v-on:tap="toEdit" v-show="isScored && !isEditting">
+          <i class="iconfont icon-ykq_bianji f20"></i>
+          修改
+        </v-touch>
+        <!-- <div class="f16" v-show="isScored && isEditting">
+          <i class="iconfont icon-ykq_bianji f20"></i>
+          修改
+        </div> -->
+      </header>
+      
+      <!-- 打分部分 -->
+      <section class="fen-box f16">
+        <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
+        <div class="score-input f18">
+          <input class="input-place" placeholder="请输入分值" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
+          <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
+          <label>分</label>
+          <div class="error f12">{{errorInfo}}</div>
+        </div>
+      </section>
+      
+      <!-- 评语部分 -->
+      <section class="remark-box f16">
+        <p class="hint">评语</p>
+        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语" @focus="focusText" @blur="isTextFocused = false"></textarea>
+        <span class="textarea-place b9" v-show="isScored && !isEditting">{{remark}}</span>
+        <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)">写的不错</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)">继续加油</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)">想法很独特</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(3)">小红花</v-touch>
+        </p>
+      </section>
+
+      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide">提交</v-touch>
+      <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting">已批改</div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+  const errorList = [
+    '分数超过本题最大分值，请重新输入',
+    '分数最多保留一位小数，请重新输入',
+    '输入无效，请重新输入',
+    '分数必须为正数'
+  ]
+
+  const reList = [
+    '写的不错',
+    '继续加油',
+    '想法很独特',
+    '小红花'
+  ]
+
+  let timer2 = null
+
+  export default {
+    name: 'ScorePanelV2',
+    data () {
+      return {
+        isSummoned: false,       // 标记本组件是用户点击呼出的，
+        isPanelHidden: true,     // 面板隐藏
+        studentScore: -1,        // 学生当前分数
+        scoreTotal: '--',        // 当前题目总分
+        answerid: -1,            // 当前正在打分的 answer 的 id
+        errorInfo: '',
+        remark: '',              // 教师评语
+        isScored: false,         // 被评分过
+        isEditting: false,       // 被评分过，并且点击了修改按钮
+        isTextFocused: false,    // 正在输入评语
+      }
+    },
+    created () {
+      let self = this
+
+      // 父组件呼出本子组件
+      self.$on('enter', function () {
+        self.enter(...arguments)
+      })
+
+      // 父组件交互成功后隐去本子组件
+      self.$on('leave', function () {
+        self.leave()
+      })
+    },
+    methods: {
+      /**
+       * 父组件呼出面板
+       *
+       * @event bindtap
+       * @params {number} answerid 将要打分的主观题答案的id
+       * @params {number} studentScore 当前分值
+       * @params {number} scoreTotal 总分
+       * @params {Number} index 当前的item的序号
+       * @params {String} remark 教师的评语
+       */
+      enter (answerid, studentScore = -1, scoreTotal, index, remark) {
+        let self = this
+
+        self.isPanelHidden = false
+        self.isSummoned = true
+        self.isScored = +studentScore !== -1
+
+        self.answerid = answerid
+        self.studentScore = +studentScore === -1 ? '' : +studentScore
+        self.scoreTotal = scoreTotal
+        self.remark = remark
+      },
+      /**
+       * 点击空白处或星星决定放弃或星级
+       *
+       * @event bindtap
+       * @param {object} evt event 对象
+       */
+      leave (evt) {
+        let self = this
+
+        self.$el.querySelector('input').blur()
+        self.$el.querySelector('textarea').blur()
+        self.errorInfo = ''
+        
+        self.isPanelHidden = true
+        clearTimeout(timer2)
+        timer2 = setTimeout(() => {
+          self.isSummoned = false
+          self.isEditting = false
+        }, 400)
+      },
+      /**
+       * 点击分数输入框
+       *
+       * @event bindtap
+       */
+      focusInput () {
+        let self = this
+        
+        self.errorInfo = ''
+        self.isTextFocused = true
+      },
+      /**
+       * 点击分数输入框
+       *
+       * @event bindtap
+       */
+      blurInput () {
+        let self = this
+        
+        self.isTextFocused = false
+        self.validate()
+      },
+      /**
+       * 点击评语输入框
+       *
+       * @event bindtap
+       */
+      focusText () {
+        let self = this
+      },
+      /**
+       * 点击修改按钮
+       *
+       * @event bindtap
+       */
+      toEdit () {
+        let self = this
+        
+        self.isEditting = true
+      },
+      /**
+       * 点击快捷评语按钮
+       *
+       * @event bindtap
+       * @param {Number} idx 快捷评语序号
+       */
+      tapRe (idx) {
+        let self = this
+        
+        self.remark += reList[idx]
+      },
+      /**
+       * 点击空白处或星星决定放弃或星级
+       *
+       * @event bindtap
+       */
+      decide (evt) {
+        let self = this
+
+        self.validate() && self.$emit('giveScore', self.answerid, self.studentScore, self.remark)
+      },
+      /**
+       * 校验输入值是否合法
+       *
+       */
+      validate () {
+        // const errorList = [
+        //   '分数超过本题最大分值，请重新输入',
+        //   '分数最多保留一位小数，请重新输入',
+        //   '输入无效，请重新输入',
+        //   '分数必须为正数'
+        // ]
+
+        let self = this
+        // 处理空字符串 输入纯字母会进入这里
+        if (self.studentScore === "") {
+          self.errorInfo = errorList[2]
+          return false;
+        }
+
+        // 让 0 通过
+        // if (self.studentScore === "0") {
+        //   return true;
+        // }
+
+        // 处理 '0a' 'ab' '.' 'a' '0.1a' '0.1a' '0.1.1' '045' 等不合法字符
+        // 不能错判 '0.1'
+        let arr = [...self.studentScore]
+        let len = arr.length
+        if (Number.isNaN(+self.studentScore) || (self.studentScore >= 1 && arr[0] === '0')) {
+          self.errorInfo = errorList[2]
+          return false;
+        }
+
+        // Number 测不了0开头的数字 045
+        // Number('') // 0
+        // Number('0') // 0
+        // Number('11.111') // 11.111
+        // Number('011') // 11
+        // Number('01.1') // 1.1
+        // Number('01a') // NaN
+        // Number('a') // NaN
+        // Number('(a%') // 11
+        let num = Number(self.studentScore)
+
+        if (num >= 0) {
+            if (num > self.scoreTotal) {
+              self.errorInfo = errorList[0]
+              return false;
+            }
+            if (Math.floor(num*10) < num*10) {
+              self.errorInfo = errorList[1]
+              return false;
+            }
+        }else if (num < 0) {
+          self.errorInfo = errorList[3]
+          return false;
+        }else {
+          self.errorInfo = errorList[2]
+          return false;
+        }
+        self.studentScore = '' + num
+        return true
+      },
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  @import "~@/style/_variables";
+  .mask{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    z-index: 100;
+    background: rgba(0,0,0,.4);
+    .pop{
+      width: 100%;
+      height: 12.106667rem;
+      position: absolute;
+      background: #fff;
+      left: 0;
+      bottom: 0;
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.333333rem;
+        line-height: 1.333333rem;
+        padding: 0 0.4rem;
+        border-bottom: 1px solid #C8C8C8;
+        .iconfont {
+          color: #000000;
+        }
+
+        .blue {
+          color: $blue;
+          .iconfont {
+            color: $blue;
+          }
+        }
+      }
+
+      .fen-box {
+        padding: 0 0.4rem;
+
+        .hint {
+          height: 1.386667rem;
+          line-height: 1.386667rem;
+        }
+
+        .score-input{
+          width: 100%;
+          position: relative;
+          height: 1.6rem;
+          line-height: 1.066667rem;
+          // border-bottom: 1px solid #C8C8C8;
+
+          .input-place {
+            display: inline-block;
+            width: 3.2rem;
+            height: 1.066667rem;
+            outline: none;
+            border: 1px solid transparent;
+            border-radius: 0.213333rem;
+            text-align: center;
+            background-color: #F8F8F8;
+            color: #333333;
+          }
+          label{
+            color: #666666;
+          }
+          .b9 {
+            color: #9B9B9B;
+          }
+        }
+        .error{
+          color : #ff1010;
+          width: 100%;
+          height: 0.533333rem;
+          line-height: 0.533333rem;
+        }
+      }
+
+      .remark-box {
+        padding: 0 0.4rem;
+
+        .hint {
+          height: 1.386667rem;
+          line-height: 1.386667rem;
+        }
+
+        .textarea-place {
+          display: inline-block;
+          width: 100%;
+          height: 2.28rem;
+          padding: 0.133333rem;
+          outline: none;
+          border: 1px solid transparent;
+          border-radius: 0.106667rem;
+          background-color: #F8F8F8;
+          color: #333333;
+          overflow: scroll;
+          word-break: break-all;
+        }
+        .b9 {
+          color: #9B9B9B;
+        }
+
+        .remark-btns {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          padding: 0.266667rem 0;
+
+          .remark-itm {
+            height: 0.8rem;
+            line-height: 0.8rem;
+            padding: 0 0.2rem;
+            border: 1px solid #C1C1C1;
+            border-radius: 0.4rem;
+          }
+        }
+      }
+      
+      .commit-btn {
+        margin: 0.4rem auto;
+        width: 7.733333rem;
+        height: 1.173333rem;
+        line-height: 1.173333rem;
+      }
+      .grey-btn {
+        background-color: #9D9D9D;
+      }
+    }
+
+    .pop-up {
+      top: 1.0rem;
+    }
+
+    .not-editting {
+      height: 10.0rem;
+    }
+  }
+
+  [data-dpr="1"] .input-place::placeholder {
+    font-size: 16px;
+  }
+  [data-dpr="2"] .input-place::placeholder {
+      font-size: 32px;
+  }
+  [data-dpr="3"] .input-place::placeholder {
+    font-size: 48px;
+  }
+
+  .none {
+    display: none;
+  }
+
+  //参考微信文字淡入http://weread.qq.com/
+  @keyframes animateMobileTextIn {
+      0% {
+          transform: scale(0.5, 0.5) translateY(100%);
+          opacity: 0;
+      }
+      90% {
+          opacity: 1;
+      }
+      100% {
+          transform: scale(1, 1) translateY(0);
+          opacity: 1;
+      }
+  }
+  .animateMobileTextIn {
+      -webkit-animation: animateMobileTextIn 0.4s;
+      animation: animateMobileTextIn 0.4s;
+  //    -webkit-animation-fill-mode: forwards;
+  //    animation-fill-mode: forwards;
+      -webkit-animation-timing-function: ease;
+      animation-timing-function: ease;
+  }
+  @keyframes animateMobileTextOut {
+      0% {
+          transform: scale(1, 1) translateY(0);
+          opacity: 1;
+      }
+      90% {
+          opacity: 0;
+      }
+      100% {
+          transform: scale(0.5, 0.5) translateY(100%);
+          opacity: 0;
+      }
+  }
+  .animateMobileTextOut {
+      -webkit-animation: animateMobileTextOut 0.4s;
+      animation: animateMobileTextOut 0.4s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      -webkit-animation-timing-function: ease;
+      animation-timing-function: ease;
+  }
+  
+</style>

@@ -9,11 +9,11 @@
       <div class="desc f20" v-if="bonusTotal <= 100" v-html="$t('bonustips')"></div>
       <div class="desc f20" v-else style="color: #fff;" v-html="$t('bonuslimit')"></div>
     </div>
-		
+
 		<!-- 选取、输入红包个数、金额、确认、取消 的页面 -->
     <div class="action-box">
       <div class="row f18" v-html="$t('quantity', {num: stuNumer})"></div>
-      
+
       <div class="btn-type" v-show="isNumInputHidden">
         <div class="choices">
           <div class="btns">
@@ -24,7 +24,7 @@
           <v-touch class="more f18" v-on:tap="openNumInput">{{ $t('readmore') }}</v-touch>
         </div>
       </div>
-      
+
       <div class="input-type" v-show="!isNumInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
@@ -34,10 +34,15 @@
           <v-touch class="back f18" v-on:tap="closeNumInput">{{ $t('back') }}</v-touch>
         </div>
       </div>
+      <p class="numhint f12">
+      	<span v-show="bonusNumber > 0">
+      		<span class="mizi">*</span> {{bonusNumber}}个最快答对的同学将收到您的红包
+      	</span>
+      </p>
 
       <div class="row f18" v-html="$t('amounteach')">
       </div>
-      
+
       <div class="btn-type" v-show="isPriceInputHidden">
         <div class="choices">
           <div class="btns">
@@ -48,7 +53,7 @@
           <v-touch class="more f18" v-on:tap="openPriceInput">{{ $t('readmore') }}</v-touch>
         </div>
       </div>
-      
+
       <div class="input-type" v-show="!isPriceInputHidden">
         <div class="input-wrapper">
           <div class="input-box f20">
@@ -103,10 +108,12 @@
 </template>
 
 <script>
+  import {configWX} from '@/util/wx-util'
 	// js功能模块，放到 mixins 中
 	// 红包相关函数
 	import redpacket from './util/redpacket'
-	import {configWX} from '@/util/wx-util'
+
+	const isAndroid = window.navigator.userAgent.toLowerCase().indexOf('iphone') === -1
 
 	export default {
 	  name: 'Redpacket',
@@ -129,12 +136,8 @@
 	    }
 	  },
 	  created(){
+	  	console.log(2)
 	  	this.init()
-	  },
-	  watch: {
-	  	'$route' () {
-	  		this.init()
-	  	}
 	  },
 	  mixins: [redpacket],
 	  methods: {
@@ -145,18 +148,18 @@
 	    init () {
 		  	let self = this
 
-		  	self.problemid = +self.$route.params.problemid
+		  	// self.problemid = +self.$route.params.problemid
+		  	self.problemid = +self.$route.query.problemid
 		  	self.fetchStuBank()
 
-		  	configWX()
-		  	wx.ready(() => {
-		  	  wx.hideMenuItems({
-		  	    menuList: [
-		  	      'menuItem:share:appMessage', 'menuItem:share:timeline',
-		  	      'menuItem:share:qq', 'menuItem:share:weiboApp',
-		  	      'menuItem:favorite', 'menuItem:share:QZone']
-		  	  });
-		  	});
+		  	// wx.ready(() => {
+		  	//   wx.hideMenuItems({
+		  	//     menuList: [
+		  	//       'menuItem:share:appMessage', 'menuItem:share:timeline',
+		  	//       'menuItem:share:qq', 'menuItem:share:weiboApp',
+		  	//       'menuItem:favorite', 'menuItem:share:QZone']
+		  	//   });
+		  	// });
 	    },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -268,6 +271,15 @@
 				text-align: right;
 			  width: 1.8rem;
 			  color: $graybg;
+			}
+
+			.numhint {
+				height: 0.933333rem;
+				line-height: 0.733333rem;
+				color: #9B9B9B;
+				.mizi {
+					color: #FFAD01;
+				}
 			}
 
 			.total {

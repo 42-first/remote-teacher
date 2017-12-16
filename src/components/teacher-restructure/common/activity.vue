@@ -14,7 +14,7 @@
         </span>
       </router-link>
     </section>
-    <router-link tag="div" :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -37,7 +37,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link tag="div" :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -141,6 +141,9 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  a {
+    text-decoration: none;
+  }
   .activity-box {
     position: absolute;
     left: 0;
