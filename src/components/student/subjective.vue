@@ -27,8 +27,8 @@
         <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
       </div>
       <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-      <div class="timing f24" v-else-if="isComplete">已完成</div>
-      <div class="timing f24" v-else>老师可能会随时结束答题</div>
+      <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
+      <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
     </section>
 
     <div :class="['subjective-wrapper', 'animated', opacity ? 'zoomIn': '']">
@@ -83,12 +83,12 @@
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
-          <span class="lable f15" >{{ $t('stuscore') }}: {{getScore}}分</span>
+          <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
         </div>
       </div>
 
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" v-show="!ispreview" @click="handleSend" >提交答案</p>
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
 
@@ -337,7 +337,7 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = this.$i18n.t('timeout') || '作答时间结束';
+              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
 
               clearInterval(this.timer);
               this.timeOver = true;
@@ -352,7 +352,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = this.$i18n.t('timeout') || '作答时间结束';
+          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
         }
       },
 
@@ -379,10 +379,10 @@
           // 续时 分钟 秒
           let minutes = parseInt(extend / 60, 10);
           let seconds = parseInt(extend % 60, 10);
-          let sMsg = minutes > 0 ? `题目续时 ${minutes}分钟` : `题目续时 ${seconds}秒`;
+          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
 
           if(extend === -1) {
-            sMsg = '题目不限时';
+            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
           }
 
           // 同一个问题续时 切没有结束

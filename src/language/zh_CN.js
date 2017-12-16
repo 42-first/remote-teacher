@@ -88,6 +88,27 @@ let pages = {
   "savedinpacket" : "已存入我的钱包",
   "numopenedbonus" : "已领 {count}/{total} 个红包",
 
+  "getpoint": "{score}分",
+  "animatepage": "当前页面有动画",
+  "lookatscreen": "请看大屏幕",
+  "notimelimit": "题目不限时",
+  "extendmin": "题目续时 {minutes}分钟",
+  "extendsec": "题目续时 {seconds}秒",
+  "receivertimeout": "作答时间结束",
+  "receiverdone": "已完成",
+  "collectprotip": "老师可能会随时结束答题",
+
+  "receiverexcellent": "答对了！你真棒！",
+  "receiverthumbsup": "答对了！赞一个！",
+  "receiverwonderful": "答得漂亮~再接再厉~",
+  "receivergoodforu ": "是的，必须奖励下你！",
+  "receiverfabulous": "答题小能手，红包接好~",
+  "receiverbrilliant": "答题小能手，我记住你了~",
+  "receiverawesome": "机智如你，必须奖励~",
+  "receiverwelldone": "聪颖如你，必须奖励~",
+  "receiversuperb": "好样的，答得又快又准！",
+  "receiverbravo": "真棒！答得又快又准！",
+
   // socket event
   "LESSON_START": "上课啦！",
   "SHOW_PRESENTATION": "新幻灯片：{0}",

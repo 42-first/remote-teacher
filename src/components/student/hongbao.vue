@@ -110,8 +110,11 @@
       */
       formatData(data) {
         // 随机文案
-        let titleAry = ["答对了！你真棒！", "答对了！赞一个！", "答得漂亮~再接再厉~", "是的，必须奖励下你！", "答题小能手，红包接好~",
-          "答题小能手，我记住你了~", "机智如你，必须奖励~","聪颖如你，必须奖励~", "好样的，答得又快又准！","真棒！答得又快又准！"];
+        let titleAry = [ this.$i18n.t('receiverexcellent') || "答对了！你真棒！", this.$i18n.t('receiverthumbsup') || "答对了！赞一个！",
+          this.$i18n.t('receiverwonderful') || "答得漂亮~再接再厉~", this.$i18n.t('receivergoodforu') || "是的，必须奖励下你！",
+          this.$i18n.t('receiverfabulous') || "答题小能手，红包接好~", this.$i18n.t('receiverbrilliant') || "答题小能手，我记住你了~",
+          this.$i18n.t('receiverawesome') || "机智如你，必须奖励~", this.$i18n.t('receiverwelldone') || "聪颖如你，必须奖励~",
+          this.$i18n.t('receiversuperb') || "好样的，答得又快又准！", this.$i18n.t('receiverbravo') || "真棒！答得又快又准！"];
 
         //
         let mine = data.event && data.event.detail.find((item)=>{

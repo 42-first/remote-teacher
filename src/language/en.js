@@ -88,6 +88,27 @@ let pages = {
   "savedinpacket" : "Saved to Rain Classroom Wallet",
   "numopenedbonus" : "{count}/{total } students opened the bonus",
 
+  "getpoint": "Point:{score}",
+  "animatepage": "The current page contains animation.",
+  "lookatscreen": "Please look at the screen.",
+  "notimelimit": "No Time Limit",
+  "extendmin": "Extend {minutes} mins",
+  "extendsec": "Extend {seconds} secs",
+  "receivertimeout": "Time Out",
+  "receiverdone": "Done",
+  "collectprotip": "The teacher may end the question at any time.",
+
+  "receiverexcellent": "Excellent!",
+  "receiverthumbsup": "Thumbs Up",
+  "receiverwonderful": "Wonderful!",
+  "receivergoodforu ": "Good For You",
+  "receiverfabulous": "Fabulous!",
+  "receiverbrilliant": "Brilliant!",
+  "receiverawesome": "Awesome!",
+  "receiverwelldone": "Well done!",
+  "receiversuperb": "Superb!",
+  "receiverbravo": "Bravo!",
+
   // socket event
   "LESSON_START": "Start Class!",
   "SHOW_PRESENTATION": "New Slide: {0}",

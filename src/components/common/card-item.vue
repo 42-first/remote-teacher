@@ -27,8 +27,8 @@
         <!-- 动画蒙版 -->
         <div class="ppt__modal" v-show="item.animation === 1">
           <div class="modal__center">
-            <p class="f24">当前页面有动画</p>
-            <p class="f32">请看大屏幕</p>
+            <p class="f24"><!-- 当前页面有动画 -->{{ $t('animatepage') }}</p>
+            <p class="f32"><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
           </div>
         </div>
       </div>
