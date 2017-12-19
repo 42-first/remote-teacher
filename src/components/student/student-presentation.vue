@@ -32,15 +32,15 @@
       <ul class="student__tabs f15" @click="handleShowTab">
         <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">{{ $t('total') }}</li>
         <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">{{ $t('slide2') }}</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob') }}</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz') }}</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob2') }}</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz2') }}</li>
       </ul>
     </section>
 
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
-      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" ref="loadmore">
+      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->

@@ -16,9 +16,9 @@ let pages = {
   "totalprob": "Total Questions:{number}",
 
   "total": "Total",
-  "slide2": "Slide",
-  "prob": "Question",
-  "quiz": "Test",
+  "slide2": "Slides",
+  "prob2": "Questions",
+  "quiz2": "Quizzes",
   "bonus": "Bonus",
 
   "unknown": "Unclear",
@@ -27,6 +27,10 @@ let pages = {
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
   "connnow": "Reconnection",
+
+  "toprelease": "Release",
+  "pullrefresh": "Pull down to refresh",
+  "toploading": "Loading…",
 
   "sendpost": "Post",
   "sendbullet": "Danmu",

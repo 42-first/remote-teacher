@@ -16,9 +16,9 @@ let pages = {
   "totalprob": "共{number}题",
 
   "total": "全部",
-  "slide": "PPT",
-  "prob": "习题",
-  "quiz": "试卷",
+  "slide2": "PPT",
+  "prob2": "习题",
+  "quiz2": "试卷",
   "bonus": "红包",
 
   "unknown": "不懂",
@@ -27,6 +27,10 @@ let pages = {
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
   "connnow": "立即重连",
+
+  "toprelease": "释放更新",
+  "pullrefresh": "下拉刷新",
+  "toploading": "加载中...",
 
   "sendpost": "发送投稿",
   "sendbullet": "发送弹幕",

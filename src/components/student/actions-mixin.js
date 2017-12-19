@@ -68,8 +68,11 @@ var actionsMixin = {
     addMessage(data) {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 1 && item.message === data.message && data.isFetch;
+        return item.type === 1 && item.oriMessage === data.message && data.isFetch;
       })
+
+      // 保留原来的msg 方便对比
+      data.oriMessage = data.message;
 
       // 消息统一国际化
       if(!hasEvent && data.event && data.event['code']) {
