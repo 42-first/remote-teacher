@@ -903,6 +903,7 @@
 
     border-radius: 0.053333rem;
     box-shadow: 0 0.066667rem 0.133333rem rgba(0,0,0,0.2);
+    overflow: hidden;
 
     .timing {
       display: flex;
@@ -974,7 +975,7 @@
     }
 
     .cover__wrapper {
-      margin-top: -0.55rem;
+      // margin-top: -0.55rem;
     }
 
     .cover {
