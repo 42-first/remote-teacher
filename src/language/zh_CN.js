@@ -41,6 +41,7 @@ let pages = {
   "submit": "提交",
   "submitansw": "提交答案",
   "cannotsubmit": "提交有困难",
+  "submitok": "提交成功",
 
   "voteremain": "您还可以再投{number}票",
   "novote": "您还未投票",
@@ -68,7 +69,7 @@ let pages = {
   "sharepostpush" : "Hi, 老师正在分享课堂投稿",
   "minilaunchpush" : "雨课堂小程序上线啦",
   "entermini" : "长按识别图中小程序码开始体验",
-  "anonymous " : "匿名",
+  "anonymous" : "(匿名)",
   "timeout" : "时间到",
   "timeoutnosubmit" : "时间已过，不能再提交啦～",
   "neterrorpush" : "当前网络不畅，请检查系统已保存并将自动重复提交",
@@ -84,7 +85,7 @@ let pages = {
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
   "receiveclassbonus" : "你收到一个课堂红包",
-  "whosebonus" : '<span class="teacher_name">{name}</span>的课堂红包',
+  "whosebonus" : '的课堂红包',
   "savedinpacket" : "已存入我的钱包",
   "numopenedbonus" : "已领 {count}/{total} 个红包",
 

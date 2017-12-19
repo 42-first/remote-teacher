@@ -68,7 +68,7 @@ let pages = {
   "sharepostpush" : "Hi, the teacher is sharing post.",
   "minilaunchpush" : "Rain Classroom Mini Program has been released！",
   "entermini" : "Press and hold MiniProgram Code to start experience.",
-  "anonymous " : "Anonymous",
+  "anonymous " : "(Anonymous)",
   "timeout" : "Time Out",
   "timeoutnosubmit" : "Time out, you can't sumbit.",
   "neterrorpush" : "Network unavailable, please check the system.",
@@ -84,7 +84,7 @@ let pages = {
   "subjectivepro" : "Answer Subjective Question",
   "classbonus" : "Class Bonus",
   "receiveclassbonus" : "You have received a bonus.",
-  "whosebonus" : "{name}'s bonus",
+  "whosebonus" : "'s bonus",
   "savedinpacket" : "Saved to Rain Classroom Wallet",
   "numopenedbonus" : "{count}/{total } students opened the bonus",
 
