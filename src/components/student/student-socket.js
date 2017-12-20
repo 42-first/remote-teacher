@@ -297,6 +297,14 @@ var mixin = {
 
             break
 
+           // 主观题分享20171204
+          case 'sendsproblem':
+            item = msg['problem'];
+
+            this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
+
+            break
+
           default:
             hasMsg = false;
             break

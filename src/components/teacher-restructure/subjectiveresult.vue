@@ -84,15 +84,24 @@
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
-                    
-                    <div class="action f14">
 
-                      <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
-                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
-                        <span>投屏</span>
+                    <div class="action f14">
+                      <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
+                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                        投屏
                       </v-touch>
-                      <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                      <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                        发送全班
+                      </v-touch>
+                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
+                        已发全班
+                      </div>
+                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">
+                        <span class="fsqb-innerline"></span>
+                        取消投屏
+                      </v-touch>
                     </div>
+
                   </div>
                 </div>
                 <div class="gap"></div>
@@ -104,19 +113,19 @@
               </div>
             </div>
           </section>
-          
+
         </div>
       </Loadmore>
 
       <Scale></Scale>
-      
+
     </div>
 
     <!-- 打星星 -->
     <StarPanel
       ref="StarPanel"
       @giveScore="giveScore"
-    ></StarPanel> 
+    ></StarPanel>
 
     <!-- 发题选时间蒙版 -->
     <Problemtime v-show="!isProblemtimeHidden"
@@ -209,7 +218,8 @@
         'isGuideDelayHidden',
         'current',
         'pptData',
-        'postingSubjectiveid'
+        'postingSubjectiveid',
+        'postingSubjectiveSent',
       ])
 	  },
 	  components: {
@@ -404,7 +414,7 @@
        * 从时间到，设置为不限时，时间从最初发题算
        * 原来是倒计时，增加时间，直接增加剩余时间
        * 从已经收题，变成限时，开始新的倒计时
-       * 从时间到，设置限时，开始新的倒计时 
+       * 从时间到，设置限时，开始新的倒计时
        *
        * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
        * @param {Object} newConfig 延时的设置, 就是小幺鸡 extendtime 的 problem 字段的值
@@ -427,7 +437,7 @@
           // 由于使用了 storage 机制，也需要立即处理 storage
           // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
           // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
-          // 
+          //
           self.endTimers()
           newTime = ISCOLLECTED // 设为 -200，小于0， 会显示“作答时间结束”
 
@@ -569,7 +579,7 @@
 	     */
 	    back2Top () {
 	      let self = this
-	      
+
 	      self.$el.scrollTop = 0
 	      self.isShow2TopBtn = false
 	    },
@@ -770,6 +780,51 @@
         self.socket.send(str)
       },
       /**
+       * 发送全班按钮
+       *
+       * @event bindtap
+       * @param {number} subjectiveid;
+       */
+      fsqbHander (subjectiveid) {
+        let self = this
+
+        let str = JSON.stringify({
+          'op': 'sendsproblem',
+          'lessonid': self.lessonid,
+          'spid': subjectiveid,
+          'msgid': 1234
+        })
+
+        self.socket.send(str)
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
+      },
+      /**
+       * 处理计时
+       *
+       */
+      handleDuration () {
+        let self = this
+
+        clearInterval(durationTimer)
+        self.setData({
+          durationLeft: self.sec2str(newTime)
+        })
+
+        durationTimer = setInterval(function(){
+          if(self.limit !== -1 && newTime <= 0){
+            clearInterval(durationTimer)
+          }
+
+          //更新闹钟时间
+          NOW = +new Date()
+          let diff = Math.round((NOW - START)/1000)
+          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+          self.setData({
+            durationLeft: self.sec2str(newTime)
+          })
+        }, 1000)
+      },
+      /**
        * 归零、结束定时器等
        *
        */
@@ -816,7 +871,7 @@
 	    		self.$refs.StarPanel.$emit('leave')
 	    		return;
 	    	}
-	      
+
 	      let url = API.subjective_problem_teacher_scorev2
 	      let postData = {
 	        'lesson_id': self.lessonid,
@@ -868,7 +923,7 @@
 
           tapToClose: true,
           // 解决消息点击问题
-          // history: false,       
+          // history: false,
         };
 
         // Initializes and opens PhotoSwipe
@@ -886,7 +941,7 @@
         }
 
       },
-	    
+
 	  }
 	}
 </script>
@@ -950,7 +1005,7 @@
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
 	  background: #000000;
-		
+
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
@@ -1007,7 +1062,7 @@
           }
         }
       }
-			
+
 			.jishi {
 				margin-top: -0.186667rem;
 				width: 0.9rem;
@@ -1021,7 +1076,7 @@
 	  .gap {
       height: 0.026667rem;
     }
-		
+
 		/* 主观题内容区 */
 	  .subjective-box {
 	  	margin-top: -1px;
@@ -1036,7 +1091,7 @@
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
-	      
+
 	      .item {
 	        padding: 0 0.4rem;
 	        background: $white;
@@ -1087,7 +1142,7 @@
 	          align-items: center;
 	          height: 1rem;
 	          margin-left: 1.386667rem;
-	          
+
 	          .gray {
 	            color: $graybg;
 	          }
@@ -1098,15 +1153,35 @@
 	            justify-content: space-between;
 	          }
 
-	          .cancel-post-btn {
-	          	margin-right: -0.4rem;
-	            background: $blue;
-	            width: 2.733333rem;
-	            text-align: center;
-	            height: 0.826667rem;
-	            line-height: 0.826667rem;
-	            color: $white;
-	          }
+            .action .coll {
+              margin-right: 0.666667rem;
+              width: 2.133333rem;
+            }
+
+            .cancel-post-btn {
+              background: $blue;
+              width: 2.346667rem;
+              text-align: center;
+              height: 0.826667rem;
+              line-height: 0.826667rem;
+              color: $white;
+            }
+
+            .qxtp {
+              margin-right: -0.4rem;
+            }
+
+            .yfqb {
+              background: $graybg;
+            }
+
+            .fsqb-innerline {
+              float: left;
+              margin-top: 0.2rem;
+              width: 1px;
+              height: 0.4rem;
+              background: $white;
+            }
 	        }
 	      }
 
@@ -1132,7 +1207,7 @@
 	          background: #c8c8c8;
 	        }
 	      }
-	      
+
       }
 	  }
 	}

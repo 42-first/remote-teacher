@@ -51,7 +51,17 @@ var actionsMixin = {
 
             // 投稿分享
             case 'post':
-               this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+              this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
+            // 分享协议合并 主观题分享20171204
+            case 'share':
+              if(item['cat'] === 'post') {
+                this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
+              } else if(item['cat'] === 'subjective') {
+                this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
+              }
 
               break;
 
@@ -277,6 +287,25 @@ var actionsMixin = {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 6 && item.postid === data.postid && data.isFetch;
+      })
+
+      data = Object.assign(data, {
+        status: '未读',
+        isComplete: false
+      })
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 新增分享主观题20171204
+     * { type: 7, spid: 123 , isFetch: false }
+     */
+    addSubjective(data) {
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 7 && item.spid === data.spid && data.isFetch;
       })
 
       data = Object.assign(data, {
