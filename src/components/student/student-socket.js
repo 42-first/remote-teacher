@@ -61,7 +61,8 @@ var mixin = {
             self.initws(true);
           }
 
-          clearInterval(self.xintiaoTimer);
+          // 心跳 取消心跳改用其他机制
+          // clearInterval(self.xintiaoTimer);
         }
 
         // 接收socket信息
@@ -69,8 +70,8 @@ var mixin = {
           self.isResetSocket = false;
           console.log('onopen');
 
-          // 心跳
-          self.sendXinTiao();
+          // 心跳 取消心跳改用其他机制
+          // self.sendXinTiao();
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
