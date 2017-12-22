@@ -34,11 +34,12 @@
       <!-- 问题内容 cover -->
       <section class="subjective-content" >
         <div class="content_wrapper">
-          <header class="content__header problem-tag">
+         <!--  <header class="content__header problem-tag">
             <p class="header-item f18">主观题</p>
             <p class="header-item f15">第{{ summary&&summary.pageIndex }}页</p>
             <p class="header-item f15">{{ oProblem&&oProblem.Score }}分</p>
-          </header>
+          </header> -->
+          <p class="page-no f12"><span>第{{ summary&&summary.pageIndex }}页</span></p>
           <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
             <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
           </div>
@@ -951,6 +952,7 @@
     padding-top: 1.65rem;
 
     .content_wrapper {
+      position: relative;
       margin: 0.266667rem 0 0.266667rem;
       background: #fff;
       overflow: hidden;
@@ -972,6 +974,19 @@
         margin-left: 0.4rem;
         text-align: center;
       }
+    }
+
+    .page-no {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      padding: 0 0.306667rem;
+      height: 0.666667rem;
+      line-height: 0.666667rem;
+      color: #fff;
+
+      background: rgba(0,0,0,0.5);
     }
 
     .cover__wrapper {

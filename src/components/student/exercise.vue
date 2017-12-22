@@ -37,7 +37,7 @@
 
       <!-- 问题内容 -->
       <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
+        <p class="page-no f12"><span>第{{ summary&&summary.pageIndex }}页</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
@@ -768,7 +768,9 @@
       top: 0;
       right: 0;
 
-      padding: 0.066667rem 0.453333rem;
+      padding: 0 0.306667rem;
+      height: 0.666667rem;
+      line-height: 0.666667rem;
       color: #fff;
 
       background: rgba(0,0,0,0.5);
