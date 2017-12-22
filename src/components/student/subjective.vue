@@ -979,7 +979,7 @@
     .page-no {
       position: absolute;
       top: 0;
-      right: 0;
+      right: 1px;
 
       padding: 0 0.306667rem;
       height: 0.666667rem;
