@@ -390,7 +390,8 @@ var actionsMixin = {
       this.cards.forEach((item) => {
         if(item.type === 5 && item.redpacketID === data.redpacketID) {
           item = Object.assign(item, {
-            caption: caption
+            caption: caption,
+            event: data.event
           })
 
           hasEvent = true;
