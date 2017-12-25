@@ -799,32 +799,6 @@
         typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
-       * 处理计时
-       *
-       */
-      handleDuration () {
-        let self = this
-
-        clearInterval(durationTimer)
-        self.setData({
-          durationLeft: self.sec2str(newTime)
-        })
-
-        durationTimer = setInterval(function(){
-          if(self.limit !== -1 && newTime <= 0){
-            clearInterval(durationTimer)
-          }
-
-          //更新闹钟时间
-          NOW = +new Date()
-          let diff = Math.round((NOW - START)/1000)
-          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
-          self.setData({
-            durationLeft: self.sec2str(newTime)
-          })
-        }, 1000)
-      },
-      /**
        * 归零、结束定时器等
        *
        */
