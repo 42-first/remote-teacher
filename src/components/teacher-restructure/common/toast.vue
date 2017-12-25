@@ -57,7 +57,8 @@
     z-index: 1000;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    margin-left: -2.0rem;
+    margin-top: -2.0rem;
     width: 4.0rem;
     height: 2.0rem;
     border-radius: 0.1rem;
@@ -74,14 +75,14 @@
   //参考微信文字淡入http://weread.qq.com/
   @keyframes animateMobileTextIn {
       0% {
-          transform: scale(0.5, 0.5) translate(-50%, -50%);
+          transform: scale(0.5, 0.5);
           opacity: 0;
       }
       90% {
           opacity: 1;
       }
       100% {
-          transform: scale(1, 1) translate(-50%, -50%);
+          transform: scale(1, 1);
           opacity: 1;
       }
   }
@@ -95,14 +96,14 @@
   }
   @keyframes animateMobileTextOut {
       0% {
-          transform: scale(1, 1) translate(-50%, -50%);
+          transform: scale(1, 1);
           opacity: 1;
       }
       90% {
           opacity: 0;
       }
       100% {
-          transform: scale(0.5, 0.5) translate(-50%, -50%);
+          transform: scale(0.5, 0.5);
           opacity: 0;
       }
   }
