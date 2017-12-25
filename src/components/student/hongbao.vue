@@ -12,39 +12,40 @@
       <!-- 红包头部信息 -->
       <section class="hongbao__header">
         <div class="hongbao__banner">
-          <p class="hongbao__title f25">{{ title }}</p>
-          <p class="hongbao__close" @click="handleBack"><i class="iconfont icon-wrong f25"></i></p>
+          <p class="hongbao__title f18">{{ title }}</p>
+          <!-- <p class="hongbao__close" @click="handleBack"><i class="iconfont icon-wrong f25"></i></p> -->
         </div>
         <!-- 头像 -->
         <div :class="['hongbao__user', mine ? '' : 'mb100']">
           <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f15"><span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包</p>
+          <p class="user-name f14"><span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包</p>
         </div>
       </section>
 
       <!-- 我的红包 -->
       <section class="hongbao__mine" v-if="mine">
-        <p class="hongbao__mine--praise f25">{{ mine.praise }}</p>
-        <p class="hongbao__mine--money f40">￥ {{ (mine.earning/100).toFixed(2) }}</p>
-        <P class="hongbao__mine--bank f15">已存入<a class="link" href="/v/index/bank">我的钱包</a></P>
+        <p class="hongbao__mine--praise f14">{{ mine.praise }}</p>
+        <p class="hongbao__mine--money f20">￥<span class="f50">{{ (mine.earning/100).toFixed(2) }}</span></p>
+        <P class="hongbao__mine--bank f15"><a class="link" href="/v/index/bank">已存入我的钱包</a></P>
       </section>
 
       <!-- 红包列表 -->
       <section class="hongbao__list-wrapper" v-if="hongbaoList&&summary">
         <div class="hongbao--count f18">已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包</div>
-        <ul class="">
+        <ul class="hongbao__list">
 
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
-            <div :class="['rank', index < 3 ? 'hex': '']"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>
+            <!-- <div :class="['rank', index < 3 ? 'hex': '']"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div> -->
             <div class="avatar">
               <img :src="item.profile.avatar" :alt="item.profile.name" />
+              <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>
             </div>
             <div class="hongbao-item--content">
               <div class="name-time">
-                <p class="name f18">{{ item.profile.name }}</p>
-                <p class="time f15">{{ item.time|formatTime }}</p>
+                <p class="name f14">{{ item.profile.name }}</p>
+                <p class="time f12">{{ item.time|formatTime }}</p>
               </div>
-              <p class="f21">￥ {{ (item.amount/100).toFixed(2) }}</p>
+              <p class="f14">￥ {{ (item.amount/100).toFixed(2) }}</p>
             </div>
           </li>
 
@@ -95,7 +96,7 @@
     },
     filters: {
       formatTime(time) {
-        return moment && moment(time).format('HH:mm:ss') || time;
+        return typeof moment !== 'undefined' && moment(time).format('HH:mm:ss') || time;
       }
     },
     mixins: [],
@@ -209,7 +210,8 @@
 
     .hongbao__banner {
       position: relative;
-      height: 4.0rem;
+      // height: 4.0rem;
+      height: 2.933333rem;
 
       color: #FFE595;
       background-image: url('http://sfe.ykt.io/o_1bhriotgh176ansqjom1kelmdfe.png');
@@ -217,26 +219,26 @@
     }
 
     .hongbao__title {
-      padding-top: 0.866667rem;
+      padding-top: 0.533333rem;
     }
 
-    .hongbao__close {
-      position: absolute;
-      top: 0;
-      right: 0;
+    // .hongbao__close {
+    //   position: absolute;
+    //   top: 0;
+    //   right: 0;
 
-      width: 1.333333rem;
-      height: 1.333333rem;
+    //   width: 1.333333rem;
+    //   height: 1.333333rem;
 
-      color: #4a4a4a;
-      background-color: #FFE595;
+    //   color: #4a4a4a;
+    //   background-color: #FFE595;
 
-      border-radius:0 0 0 100%;
+    //   border-radius:0 0 0 100%;
 
-      .iconfont {
-        margin-right: -0.2rem;
-      }
-    }
+    //   .iconfont {
+    //     margin-right: -0.2rem;
+    //   }
+    // }
 
   }
 
@@ -246,18 +248,19 @@
     color: #4A4A4A;
 
     .user-avatar {
-      margin: -1.066667rem auto 0;
+      margin: -0.933333rem auto 0;
 
       display: block;
-      width: 2.4rem;
-      height: 2.4rem;
-      border: 4px solid #fff;
+      width: 1.866667rem;
+      height: 1.866667rem;
+      border: 2px solid #FFE595;
       box-shadow: 0 0 6px rgba(0,0,0,0.2);
       border-radius: 50%;
     }
 
     .user-name {
-      padding: 0.24rem 0;
+      padding: 0.186667rem 0;
+      color: #333;
     }
   }
 
@@ -276,8 +279,8 @@
     padding-bottom: 1.333333rem;
 
     .hongbao__mine--praise {
-      padding-bottom: 0.533333rem;
-      color: #DCBC83;
+      padding-bottom: 0.8rem;
+      color: #9B9B9B;
     }
 
     .hongbao__mine--money {
@@ -298,14 +301,18 @@
   \*------------------*/
 
   .hongbao__list-wrapper {
-    padding: 0 0.453333rem;
+    // padding: 0 0.453333rem;
     .hongbao--count {
-      padding-bottom: 28px;
+      padding: 0 0.4rem 0.266667rem;
 
       text-align: left;
       color: #9B9B9B;
 
-      border-bottom: 1px solid #979797;
+      border-bottom: 1px solid #EEEEEE;
+    }
+
+    .hongbao__list {
+      padding: 0 0.4rem 0.4rem;
     }
 
     .hongbao-item {
@@ -316,7 +323,11 @@
       padding: 0.4rem 0 0;
 
       .rank {
-        position: relative;
+        position: absolute;
+        bottom: -0.276667rem;
+        left: 50%;
+        transform: translateX(-50%);
+
         width: 0.573333rem;
         margin-right: 0.266667rem;
         margin-bottom: 0.2rem;
@@ -333,12 +344,13 @@
       }
 
       .avatar {
+        position: relative;
         margin-bottom: 0.2rem;
-        width: 1.2rem;
+        // width: 1.2rem;
         img {
           display: block;
-          width: 0.986667rem;
-          height: 0.986667rem;
+          width: 1.066667rem;
+          height: 1.066667rem;
           border-radius: 50px;
         }
       }
@@ -353,7 +365,7 @@
         border-bottom: 1px solid rgba(151, 151, 151, 0.5);
 
         .name-time {
-          padding-left: 0.133333rem;
+          padding-left: 0.266667rem;
           text-align: left;
         }
         .time {
@@ -368,11 +380,19 @@
     position: relative;
     width: 0.56rem;
     height: 0.28rem;
-    background-color: #FFAE00;
+    background-color: #FFD24F;
     position: relative;
     text-align:center;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #fff;
+    border-left: 0.013333rem solid #fff;
+    border-right: 0.013333rem solid #fff;
+  }
+
+  .hex1 {
+    background-color: #9B9B9B;
+  }
+
+  .hex2 {
+    background-color: #D5ADAD;
   }
 
   .hex::before,
@@ -385,6 +405,8 @@
     left: 0;
     width: 100%;
     height: 100%;
+    border-left: 0.013333rem solid #fff;
+    border-right: 0.013333rem solid #fff;
     background: inherit;
     overflow: hidden;
     backface-visibility: hidden;
