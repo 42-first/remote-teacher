@@ -46,6 +46,9 @@ var mixin = {
         let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
 
+        // 记录socket链接
+        window.Raven && Raven.captureException(`WebSocket connect${SOCKET_HOST} userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
+
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
@@ -62,6 +65,9 @@ var mixin = {
           }
 
           clearInterval(self.xintiaoTimer);
+
+          // 记录socket关闭
+          window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
         }
 
         // 接收socket信息
@@ -89,6 +95,9 @@ var mixin = {
             'lessonid': self.lessonID,
             'presentation': self.presentationID
           }))
+
+          // 记录socket打开
+          window.Raven && Raven.captureException(`WebSocket hello userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
         }
       } catch (error) {
         Raven.captureException(error)
