@@ -304,6 +304,7 @@
         // 不限时
         if(data.limit === -1) {
           this.limit = -1;
+
           // 是否可以点亮提交按钮
           this.canSubmitFn();
         } else if(data.limit === 0) {
@@ -393,6 +394,8 @@
             if(extend > 0) {
               let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
               this.setTiming(leaveTime);
+            } else if(extend === -1) {
+              this.timer && clearInterval(this.timer)
             }
 
             // 是否可以点亮提交按钮
