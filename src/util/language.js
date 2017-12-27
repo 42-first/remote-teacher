@@ -5,7 +5,7 @@
  * @desc 国际化 命名空间格式 page-module-lable
  *
  */
-
+// import language from '@/language/en'
 
 class Language {
   constructor() {
@@ -69,33 +69,12 @@ class Language {
     allEle = Array.prototype.slice.call(allEle);
     allEle && allEle.forEach((element) => {
       let key = element.dataset.languageKey;
-      let aPath = key.split('.');
-      let value = element.innerText;
+      let value = this.languageRes[key] || element.innerText;
 
-      // 标准的静态文字
-      aPath.forEach((path, index) => {
-        index === 0 && (value = this.languageRes[path]);
-        index && (value = value[path]);
-      })
-
-      element.innerText = value;
-    })
-
-    // 根据状态显示的动态文字 例如'已完成' '未完成'
-    allEle = pageEl.querySelectorAll('[data-language-common]');
-
-    allEle = Array.prototype.slice.call(allEle);
-    allEle && allEle.forEach((element) => {
-      let obj = element.dataset.languageCommon;
-      let key = element.innerText;
-      let value = element.innerText;
-
-      value = this.languageRes[obj][key] || value
       element.innerText = value;
     })
 
     // 复杂模式 静态文字和业务数据混合在一起 暂定根据位置定位提取业务数据
-    // key: page-tplname
     allEle = pageEl.querySelectorAll('[data-language-complex]');
 
     allEle = Array.prototype.slice.call(allEle);
@@ -103,13 +82,7 @@ class Language {
       let key = element.dataset.languageComplex;
       let value = element.innerText;
       let info = element.dataset;
-
-      const keys = key.split('-');
-      const pageName = keys.length > 0 && keys[0];
-      const tplName = keys.length > 0 && keys[1];
-
-      let sTpl = this.languageRes[pageName]['complex'][tplName];
-      // console.log(sTpl);
+      let sTpl = this.languageRes[key] || '';
 
       // 根据特征或者规则 提取业务数据
       let text = this.temple(sTpl, info)

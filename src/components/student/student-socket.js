@@ -192,7 +192,7 @@ var mixin = {
           case 'turnondanmu':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
             this.danmuStatus = true;
             break
 
@@ -200,7 +200,7 @@ var mixin = {
           case 'turnoffdanmu':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
             this.danmuStatus = false;
             break
 
@@ -208,7 +208,7 @@ var mixin = {
           case 'showfinished':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
             // 产品确认 幻灯片切换不处理弹幕状态
             // this.danmuStatus = false;
             break
@@ -227,14 +227,14 @@ var mixin = {
           case 'quizfinished':
           case 'callpaused':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
 
             break
 
            // 下课啦
           case 'lessonfinished':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
 
             // 课程状态 弹幕状态
             this.lessonStatus = 1;

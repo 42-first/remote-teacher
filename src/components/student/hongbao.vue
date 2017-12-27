@@ -18,7 +18,9 @@
         <!-- 头像 -->
         <div :class="['hongbao__user', mine ? '' : 'mb100']">
           <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f14"><span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包</p>
+          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher&&teacher.name})">
+            <!-- <span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包 -->
+          </p>
         </div>
       </section>
 
@@ -31,7 +33,7 @@
 
       <!-- 红包列表 -->
       <section class="hongbao__list-wrapper" v-if="hongbaoList&&summary">
-        <div class="hongbao--count f18">已领 {{ hongbaoList&&hongbaoList.length }}/{{ summary && summary.count }} 个红包</div>
+        <div class="hongbao--count f18">{{ $t('numopenedbonus', { count: hongbaoList&&hongbaoList.length, total: summary && summary.count }) }}</div>
         <ul class="hongbao__list">
 
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
@@ -66,7 +68,7 @@
       return {
         index: 0,
         opacity: 0,
-        title: '课堂红包',
+        title: this.$i18n.t('classbonus') || '课堂红包',
         summary: null,
         mine: null,
         teacher: null,
@@ -107,8 +109,11 @@
       */
       formatData(data) {
         // 随机文案
-        let titleAry = ["答对了！你真棒！", "答对了！赞一个！", "答得漂亮~再接再厉~", "是的，必须奖励下你！", "答题小能手，红包接好~",
-          "答题小能手，我记住你了~", "机智如你，必须奖励~","聪颖如你，必须奖励~", "好样的，答得又快又准！","真棒！答得又快又准！"];
+        let titleAry = [ this.$i18n.t('receiverexcellent') || "答对了！你真棒！", this.$i18n.t('receiverthumbsup') || "答对了！赞一个！",
+          this.$i18n.t('receiverwonderful') || "答得漂亮~再接再厉~", this.$i18n.t('receivergoodforu') || "是的，必须奖励下你！",
+          this.$i18n.t('receiverfabulous') || "答题小能手，红包接好~", this.$i18n.t('receiverbrilliant') || "答题小能手，我记住你了~",
+          this.$i18n.t('receiverawesome') || "机智如你，必须奖励~", this.$i18n.t('receiverwelldone') || "聪颖如你，必须奖励~",
+          this.$i18n.t('receiversuperb') || "好样的，答得又快又准！", this.$i18n.t('receiverbravo') || "真棒！答得又快又准！"];
 
         //
         let mine = data.event && data.event.detail.find((item)=>{
@@ -119,7 +124,7 @@
         this.mine = mine;
 
         if(mine) {
-          this.title = '你收到一个课堂红包';
+          this.title = this.$i18n.t('receiveclassbonus') || '你收到一个课堂红包';
           mine.praise = titleAry[parseInt(Math.random()*9, 10)];
         } else {
 

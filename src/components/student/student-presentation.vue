@@ -16,33 +16,38 @@
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
-            <p class="action f17 line" @click="handleOpenDanmu"><i class="iconfont icon-ykq_tab_danmu f25"></i>发送弹幕</p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8"><i class="iconfont icon-ykq_tab_tougao f25"></i>发送投稿</router-link>
+            <p class="action f17 line" @click="handleOpenDanmu">
+              <i class="iconfont icon-ykq_tab_danmu f25"></i>
+              <span>{{ $t('sendbullet') }}</span>
+            </p>
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
+              <i class="iconfont icon-ykq_tab_tougao f25"></i>
+              <span>{{ $t('sendpost') }}</span>
+            </router-link>
           </div>
         </div>
       </header>
 
       <!-- tab  -->
       <ul class="student__tabs f15" @click="handleShowTab">
-        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1" data-language-key="student.nav.all">全部</li>
-        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2" data-language-key="student.nav.ppt">PPT</li>
-        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3" data-language-key="student.nav.problem">习题</li>
-        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4" data-language-key="student.nav.quiz">试卷</li>
-        <!-- <li :class="['tab-item', currTabIndex == 5 ? 'curr' : '']" data-index="5" data-language-key="student.nav.hongbao">红包</li> -->
+        <li :class="['tab-item', currTabIndex == 1 ? 'curr' : '']" data-index="1">{{ $t('total') }}</li>
+        <li :class="['tab-item', currTabIndex == 2 ? 'curr' : '']" data-index="2">{{ $t('slide2') }}</li>
+        <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob2') }}</li>
+        <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz2') }}</li>
       </ul>
     </section>
 
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
-      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" ref="loadmore">
+      <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->
            <div class="timeline-wrapper" v-if="classroom && !classroom.isPro">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
-                <p class="pb15">雨课堂小程序上线啦<br>长按识别图中小程序码开始体验</p>
+                <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
                 <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
               </div>
             </section>
@@ -53,18 +58,13 @@
           </div>
         </section>
 
-        <!-- <div slot="top" class="mint-loadmore-top">
-          <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
-          <span v-show="topStatus === 'loading'">Loading...</span>
-        </div> -->
-
       </loadmore>
     </section>
 
 
     <!-- 接收器 新消息提醒 -->
     <section class="student__msg f16" v-show="hasMsg" @click="handleScrollToTop">
-      <p class="">您有新的课堂动态</p>
+      <p class="" data-language-key="newfeed">{{ $t('newfeed') }}</p>
     </section>
 
     <!-- 习题试卷弹框 -->
@@ -115,8 +115,9 @@
     <!-- 网络不好 重新连接弹层 -->
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
-        <p class=" f16">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p>
-        <p class="connect-btn f18" @click="handleReconnect">立即重连</p>
+        <!-- <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p> -->
+         <p class=" f16" v-html="$t('connerr', {second: countdown})"></p>
+        <p class="connect-btn f18" @click="handleReconnect">{{ $t('connnow') }}</p>
       </div>
     </section>
 
@@ -136,7 +137,7 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
-  // import identity from '@/components/student/identityBinding.vue'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -161,7 +162,7 @@
         topStatus: '',
         topDistance: 120,
         //
-        title: '雨课堂',
+        title: this.$i18n.t('ykt') || '雨课堂',
         courseName: '',
         // 课程ID
         lessonID: 0,
@@ -654,10 +655,16 @@
        *
        */
       handleOpenDanmu() {
+        // 国际化confirm options改造
+        let msgOptions = {
+          confirmButtonText: this.$i18n.t('confirm'),
+          cancelButtonText: this.$i18n.t('cancel')
+        }
+
         if(this.danmuStatus) {
           this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
         } else {
-          this.$messagebox('提示', '老师暂时还未开放弹幕，等等吧～');
+          this.$messagebox.alert(this.$i18n.t('bulletban') || '老师暂时还未开放弹幕，等等吧～', msgOptions);
         }
       },
 
@@ -714,7 +721,7 @@
     mounted() {
     },
     updated() {
-      window.language && window.language.translate(this.$el);
+      // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();

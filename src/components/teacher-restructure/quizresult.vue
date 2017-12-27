@@ -10,15 +10,15 @@
         <span class="time">{{paperTimePassed}}</span>
       </div>
       <div class="f18" v-show="!isSVGHidden || isAllPoll">
-        已有 <span>{{stuCommited}}</span> / <span>{{stuTotal}}</span> 位同学提交了试卷
+        {{ $t('submittedstudent', { ss1: stuCommited, ss2: stuTotal }) }}
       </div>
     </section>
 
     <!-- 中间饼图 -->
     <section class="chart-box">
-      <div class="fsfb f18">分数分布</div>
-      <div v-show="isSVGHidden && !isAllPoll" class="hmy f18">还没有学生提交</div>
-      <div v-show="isAllPoll" class="hmy f18">此试卷全部为投票题~</div>
+      <div class="fsfb f18">{{ $t('scorechart') }}</div>
+      <div v-show="isSVGHidden && !isAllPoll" class="hmy f18">{{ $t('nosubmit') }}</div>
+      <div v-show="isAllPoll" class="hmy f18">{{ $t('allvote') }}~</div>
       <div id="pieSolid" class="pie-solid">
         <svg v-show="!isSVGHidden" id="quizpie" class="f16" width="100%" height="4.0rem" xml:space="preserve"></svg>
     </div>
@@ -30,21 +30,21 @@
         <div class="iconbox" style="background: #14C4E9;">
           <i class="iconfont icon-shiti_shijuan f28"></i>
         </div>
-        <div class="btn-desc f14">{{isPaperCollected ? '已收卷' : '收卷'}}</div>
+        <div class="btn-desc f14">{{ $tc('quizcollect', !isPaperCollected) }}</div>
       </v-touch>
 
       <v-touch class="btn-item" v-on:tap="postQuizresult">
         <div class="iconbox" style="background: #28CF6E;">
           <i class="iconfont icon-shiti_touping f28"></i>
         </div>
-        <div class="btn-desc f14">投屏</div>
+        <div class="btn-desc f14">{{ $t('screenmode') }}</div>
       </v-touch>
 
       <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>
-        <div class="btn-desc f14">查看详情</div>
+        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
       </router-link>
     </section>
 

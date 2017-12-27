@@ -38,7 +38,7 @@ var actionsMixin = {
 
             // event
             case 'event':
-              this.addMessage({ type: 1, message: item['title'], time: item['dt'], isFetch: isFetch });
+              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
@@ -73,13 +73,25 @@ var actionsMixin = {
 
     /*
     * @method 新增提醒消息
-    * data: { type: 1, message: '', time: '', isFetch: false }
+    * data: { type: 1, message: '', time: '', event: item, isFetch: false }
     */
     addMessage(data) {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 1 && item.message === data.message && data.isFetch;
+        return item.type === 1 && item.oriMessage === data.message && data.isFetch;
       })
+
+      // 保留原来的msg 方便对比
+      data.oriMessage = data.message;
+
+      // 消息统一国际化
+      if(!hasEvent && data.event && data.event['code']) {
+        let code = data.event && data.event['code'];
+        let aReplace = data.event && data.event['replace'] || [];
+        let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
+
+        data.message = sMsg;
+      }
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
@@ -212,7 +224,7 @@ var actionsMixin = {
         href: '/quiz/quiz_info/' + data.quiz,
         count: data.total,
         time: data.time,
-        status: oQuiz && oQuiz.answered ? '已完成' : '未完成',
+        status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
         isComplete: oQuiz && oQuiz.answered || false
       })
 
@@ -248,8 +260,8 @@ var actionsMixin = {
         presentationid: data.presentationid,
         time: data.time,
         problemType: problemType,
-        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? 'Hi,你有新的投票' :'Hi,你有新的课堂习题',
-        status: slideData['Problem']['Result'] ? '已完成' : '未完成',
+        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
+        status: slideData['Problem']['Result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
         isComplete: slideData['Problem']['Result'] ? true : false,
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
@@ -375,10 +387,10 @@ var actionsMixin = {
     * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
     */
     addHongbao(data) {
-      let caption = data.length + '位同学已赢得课堂红包';
+      let caption = this.$i18n.t('gainbonus', { number: data.length }) || data.length + '位同学已赢得课堂红包';
 
       if (data.length == 0) {
-        caption = 'Hi，本题有课堂红包发送';
+        caption = this.$i18n.t('recvbonus') || 'Hi，本题有课堂红包发送';
       }
 
       data = Object.assign(data, {

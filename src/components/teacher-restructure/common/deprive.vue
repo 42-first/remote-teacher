@@ -4,17 +4,17 @@
 
     <div class="" v-show="isRobber">
       <div>当前有老师正在上课<br>您希望</div>
-      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote">{{isRobbing ? '正在夺权...' : '我要上课夺主权'}}</v-touch>
-      <v-touch class="btn _btn" v-on:tap="gotoStu">以学生身份进入</v-touch>
+      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote">{{isRobbing ? $t('loading')+'...' : '我要上课夺主权'}}</v-touch>
+      <v-touch class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
       <v-touch class="btn _btn" v-on:tap="exitRC" >退出</v-touch>
     </div>
 
     <div class="" v-show="!isRobber">
       <div v-if="byself">您已在别处进入遥控器</div>
-      <div v-else>其他老师已登录<br>您已被迫下线</div>
+      <div v-else>{{ $t('otherslogin') }}<br>{{ $t('forcelogout') }}</div>
       <v-touch class="btn _btn" v-on:tap="exitRC">退出</v-touch>
-      <v-touch v-show="!byself" class="btn _btn" v-on:tap="gotoStu">以学生身份进入</v-touch>
-      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" >{{isRobbing ? '正在夺权...' : '我要夺回主权'}}</v-touch>
+      <v-touch v-show="!byself" class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
+      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" >{{isRobbing ? $t('loading')+'...' : $t('loginagain')}}</v-touch>
     </div>
     
   </div>

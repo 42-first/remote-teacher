@@ -4,7 +4,7 @@
 		<slot name="ykt-msg"></slot>
 		<div v-if="problemResultDetailData">
 	    
-	    <div class="title f18">{{(problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8) ? '票数最多' : '本题正确选项为'}}</div>
+	    <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('standardopt') : $t('votemost')}}</div>
 	    <div :class="['answer-box', {'toomany': answerList.length > 4}]">
 	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
 	    </div>
@@ -21,7 +21,7 @@
 	      		</template>
 	      		
 	      		<span class="f18 asw">{{choiceItem.label}}</span>
-	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}人</span>
+	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
 	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
 	      	</v-touch>
 	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
@@ -33,7 +33,7 @@
 	      </div>
 	    </div>
 
-	    <v-touch class="btn f18" v-on:tap="refreshProblemResultDetail">刷新</v-touch>
+	    <v-touch class="btn f18" v-on:tap="refreshProblemResultDetail">{{ $t('refresh') }}</v-touch>
 		</div>
   </div>
 </template>

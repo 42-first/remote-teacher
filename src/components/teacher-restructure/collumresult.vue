@@ -33,8 +33,8 @@
 	    			<v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
 	    		</div>
 		    </div>
-		    <div class="f18 yjy">
-		      已经有 <span>{{total}}</span> / <span>{{members}}</span> 位同学提交了答案
+		    <div :class="['f18', 'yjy']">
+		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
 		    </div>
 	    </section>
 
@@ -43,17 +43,17 @@
 	    	<section class="mahint" v-if="problemType === 'MultipleChoiceMA'">
 	    		<div class="mahint-item f12">
 	    			<i style="background: #F5A623;"></i>
-	    			本题答案
+	    			{{ $t('standardans') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #639EF4;"></i>
-	    			正确选项
+	    			{{ $t('correctopt') }}
 	    		</div>
 
 	    		<div class="mahint-item f12">
 	    			<i style="background: #C8C8C8;"></i>
-	    			错误选项
+	    			{{ $t('wrongopt') }}
 	    		</div>
 	    	</section>
 
@@ -72,7 +72,7 @@
   	      </div>
   	    </section>
 	    </section>
-	    
+
 
 	    <!-- 下方按钮 -->
 	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
@@ -80,28 +80,28 @@
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
 	      	</div>
-	        <div class="btn-desc f14">投屏</div>
+	        <div class="btn-desc f14">{{ $t('screenmode') }}</div>
 	      </v-touch>
 
 	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
-	        <div class="btn-desc f14">查看详情</div>
+	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
 	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">课堂红包</div>
+	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',RedEnvelopeID) }}</div>
 	      </router-link>
 
 	      <router-link tag="div" :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
-	        <div class="btn-desc f14">红包名单</div>
+	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',~RedEnvelopeID) }}</div>
 	      </router-link>
 	    </section>
 	  </div>
@@ -113,7 +113,7 @@
 		  @cancelPublishProblem="cancelPublishProblem"
 		  @chooseProblemDuration="yanshiProblem"
 		></Problemtime>
-		
+
 	</div>
 </template>
 
@@ -339,7 +339,7 @@
 			 * 从时间到，设置为不限时，时间从最初发题算
 			 * 原来是倒计时，增加时间，直接增加剩余时间
 			 * 从已经收题，变成限时，开始新的倒计时
-			 * 从时间到，设置限时，开始新的倒计时 
+			 * 从时间到，设置限时，开始新的倒计时
 			 *
 			 * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
 			 * @param {Object} newConfig 延时的设置, 就是小幺鸡 extendtime 的 problem 字段的值
@@ -362,7 +362,7 @@
 				  // 由于使用了 storage 机制，也需要立即处理 storage
 				  // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
 				  // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
-          // 
+          //
         	self.endTimers()
         	newTime = ISCOLLECTED // 设为 -200，小于0， 会显示“作答时间结束”
 
@@ -632,14 +632,14 @@
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
-		
+
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
 	  	width: 9.6rem;
 	  	height: 4.0rem;
 	  	padding-top: 0.8rem;
-	  	
+
 	  	.xitixushi {
 	  		display: flex;
 	  		justify-content: space-between;
@@ -692,7 +692,7 @@
 	  			}
 	  		}
 	  	}
-			
+
 			.jishi {
 				margin-top: -0.186667rem;
 				width: 0.9rem;
@@ -703,7 +703,7 @@
 				color: #AAAAAA;
 			}
 	  }
-		
+
 	  /* 中间柱状图 */
 	  .histogram-with-mahint {
 	  	margin: 1.0rem auto;
@@ -711,10 +711,10 @@
 	  	height: 5.0rem;
 	  	border-top: 1px solid #cccccc;
 	  }
-	  .mahint {	 
+	  .mahint {
 	  	display: flex;
 	  	align-items: center;
-	  	padding-left: 0.266667rem; 	
+	  	padding-left: 0.266667rem;
 	  	height: 0.693333rem;
 	  	background: linear-gradient(rgba(255,255,255,0.12) 10%, rgba(255,255,255,0.03));
 
@@ -736,7 +736,7 @@
 		  display: flex;
 		  justify-content: space-between;
 		  align-items: bottom;
-		  
+
 		  .histogram-item {
 			  flex: 1;
 			  position: relative;
@@ -775,7 +775,7 @@
 				}
 			}
 		}
-		
+
 		/* 下方按钮 */
 		.group-btns {
 			margin: 0 auto;
@@ -786,7 +786,7 @@
 		  padding: 1.2rem 0 0.5rem;
 
 		  .btn-item {
-			  width: 1.8rem; 
+			  width: 1.8rem;
 			  text-align: center;
 			  color: #fff;
 

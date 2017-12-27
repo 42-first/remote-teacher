@@ -31,13 +31,13 @@
           <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
         </div>
         <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-        <div class="timing f24" v-else-if="isComplete">已完成</div>
-        <div class="timing f24" v-else>老师可能会随时结束答题</div>
+        <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
+        <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
       </section>
 
       <!-- 问题内容 -->
       <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f12"><span>第{{ summary&&summary.pageIndex }}页</span></p>
+        <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
@@ -49,19 +49,18 @@
           </li>
         </ul>
         <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">您还未投票</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? '(匿名)': ''}}</p>
-
+        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
+        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
 
       <!-- 观看者提示文字 返回 -->
       <section v-if="observerMode">
-        <p class="f18">当前为观看模式，无法答题</p>
-        <p class="submit-btn can f18" @click="handleBack">返回</p>
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
+      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div>
 
     </div>
 
@@ -157,19 +156,19 @@
     },
     filters: {
       setSubmitText(submitStatus) {
-        let text = '提交答案';
+        let text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
 
         if(submitStatus) {
           switch (submitStatus) {
             case 0:
             case 1:
-              text = '提交答案';
+              text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
               break;
             case 2:
-              text = '提交中...';
+              text = typeof i18n !== 'undefined' && i18n.t('besending') || '提交中...';
               break;
             case 3:
-              text = '提交成功';
+              text = typeof i18n !== 'undefined' && i18n.t('sendsuccess') || '提交成功';
               break;
             default:
               break;
@@ -222,6 +221,8 @@
             this.setOptions(option, true, true);
           });
 
+          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
         } else {
           // 开始启动定时
@@ -330,8 +331,9 @@
 
             this.sLeaveTime = minutes + ':' + seconds;
 
-            if(this.leaveTime <= 0) {
-              this.sLeaveTime = '作答时间结束';
+            if(this.leaveTime === 0) {
+              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+
               clearInterval(this.timer);
               this.timeOver = true;
               this.warning = false;
@@ -345,7 +347,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '作答时间结束';
+          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
         }
       },
 
@@ -372,10 +374,10 @@
           // 续时 分钟 秒
           let minutes = parseInt(extend / 60, 10);
           let seconds = parseInt(extend % 60, 10);
-          let sMsg = minutes > 0 ? `题目续时 ${minutes}分钟` : `题目续时 ${seconds}秒`;
+          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
 
           if(extend === -1) {
-            sMsg = '题目不限时';
+            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
           }
 
           // 同一个问题续时 切没有结束
@@ -518,7 +520,7 @@
           // 是否超时
           if(this.timeOver) {
             this.$toast({
-              message: '时间已过，不能再提交啦～',
+              message: this.$i18n.t('timeoutnosubmit') || '时间已过，不能再提交啦～',
               duration: 3000
             });
             this.canSubmit = 0;
@@ -551,7 +553,7 @@
                 let data = res.data;
 
                 self.summary = Object.assign(self.summary, {
-                  status: '已完成',
+                  status: this.$i18n.t('done') || '已完成',
                   isComplete: true
                 })
 
@@ -562,11 +564,11 @@
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
-
+                this.sLeaveTime = this.$i18n.t('done') || '已完成';
                 this.isComplete = true;
 
                 this.$toast({
-                  message: '提交成功',
+                  message: this.$i18n.t('sendsuccess') || '提交成功',
                   duration: 2000
                 });
 
@@ -581,7 +583,7 @@
               // 提交失败保存本地
               self.saveAnswer(param);
               self.$toast({
-                message: '当前网络不畅，请检查系统已保存并将自动重复提交',
+                message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
                 duration: 3000
               });
 
