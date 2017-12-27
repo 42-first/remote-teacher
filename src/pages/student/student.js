@@ -18,7 +18,7 @@ Vue.use(VueI18n)
 
 const i18n = new VueI18n({
   // 语言标识
-  locale: 'en',
+  locale: 'zh_CN',
   messages: {
     'zh_CN': ChLanguage,
     'en': EnLanguage
