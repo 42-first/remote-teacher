@@ -15,7 +15,7 @@ function socketProcessMessage(msg){
 
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
-    msg.slideindex = self.idIndexMap[msg.slideid]
+    msg.slideindex = self.idIndexMap[msg.slide ? msg.slide.sid : msg.slideid]
   }
   
   let current = self.current - 1
