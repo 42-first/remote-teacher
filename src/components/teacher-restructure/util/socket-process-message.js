@@ -15,7 +15,10 @@ function socketProcessMessage(msg){
 
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
-    msg.slideindex = self.idIndexMap[msg.slide ? msg.slide.sid : msg.slideid]
+    // 有可能 presentationupdated 触发的 fetchData 比较慢（比 showpresentation 指令慢），这时还没有新 slideid 的 map
+    // 就暂时用 msg.slideindex
+    let mapResult = self.idIndexMap[msg.slide ? msg.slide.sid : msg.slideid]
+    msg.slideindex = mapResult ? mapResult : msg.slideindex
   }
   
   let current = self.current - 1
