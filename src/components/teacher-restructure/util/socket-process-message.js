@@ -2,8 +2,16 @@
  * @module socket处理函数
  */
 
- let isOldVersion = false               // 雨课堂软件是老版本
- import config from '@/pages/teacher/config/config'
+let isOldVersion = false               // 雨课堂软件是老版本
+import config from '@/pages/teacher/config/config'
+
+function goHome () {
+  console.log(991)
+  this.goHome.call(this)
+  if (this.$route.name !== 'home') {
+    location.href = `/lesson/teacher/${window.LESSONID}`
+  }
+}
 
 function socketProcessMessage(msg){
   let self = this
@@ -168,6 +176,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'showfinished') {
     self.showEscMask()
+    goHome.call(self)
     return
   }
 
@@ -194,7 +203,8 @@ function socketProcessMessage(msg){
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
     
-    self.showWhichPage(msg) 
+    self.showWhichPage(msg)
+    goHome.call(self)
     return
   }
   

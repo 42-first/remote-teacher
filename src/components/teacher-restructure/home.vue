@@ -254,6 +254,7 @@
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
+		    window.LESSONID = lessonid
 
 		    // 换课的话，要清掉持久化的旧 store
 		    if (lessonid !== self.lessonid) {
@@ -457,7 +458,7 @@
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('Activity')
+	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
 	    },
 	    /**
