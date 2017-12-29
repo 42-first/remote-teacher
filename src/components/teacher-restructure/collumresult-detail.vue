@@ -4,7 +4,7 @@
 		<slot name="ykt-msg"></slot>
 		<div v-if="problemResultDetailData">
 	    
-	    <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('standardopt') : $t('votemost')}}</div>
+	    <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
 	    <div :class="['answer-box', {'toomany': answerList.length > 4}]">
 	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
 	    </div>
