@@ -6,7 +6,6 @@ let isOldVersion = false               // 雨课堂软件是老版本
 import config from '@/pages/teacher/config/config'
 
 function goHome () {
-  console.log(991)
   this.goHome.call(this)
   if (this.$route.name !== 'home') {
     location.href = `/lesson/teacher/${window.LESSONID}`
