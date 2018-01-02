@@ -93,11 +93,6 @@
       // this.closeQuizresult()
       this.endTimers()
     },
-    watch: {
-      '$route' () {
-        this.init()
-      }
-    },
     methods: {
       /**
        * 复用页面，需要watch route

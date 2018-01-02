@@ -99,7 +99,6 @@
       self.handlePubSub()
     },
     beforeDestroy(){
-      T_PUBSUB.unsubscribe('quiz-msg')
     },
     methods: {
       /**

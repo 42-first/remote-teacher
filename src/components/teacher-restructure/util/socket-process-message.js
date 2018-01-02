@@ -382,13 +382,13 @@ function socketProcessMessage(msg){
 
   // 发了新的试卷，单通了
   if (msg.op == 'newquiz') {
-    PubSub.publish('quiz-msg.newquiz', msg)
+    T_PUBSUB.publish('quiz-msg.newquiz', msg)
     return
   }
 
   // 收卷了
   if (msg.op == 'quizfinished') {
-    PubSub.publish('quiz-msg.quizfinished', msg)
+    T_PUBSUB.publish('quiz-msg.quizfinished', msg)
     return
   }
 
