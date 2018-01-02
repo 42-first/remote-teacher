@@ -33,7 +33,7 @@
 	      </div>
 	    </div>
 
-	    <v-touch class="btn f18" v-on:tap="refreshProblemResultDetail">{{ $t('refresh') }}</v-touch>
+	    <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">{{ $t('refresh') }}</v-touch>
 		</div>
   </div>
 </template>
@@ -49,17 +49,29 @@
 	    	problemid: 0,
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    	showingIndex: -1,												// 正在展示的题目的序号
-	    	answerList: []
+	    	answerList: [],
+	    	isBottomBtnFixed: false,
 	    }
 	  },
 	  created(){
 	  	this.init()
 	  },
-	  watch: {
-	  	'$route' () {
-	  		this.init()
-	  	}
-	  },
+	  mounted () {
+      let self = this
+      let wh = window.innerHeight
+
+      // 如果搓到底了，不要到底，防止ios上搓露底
+      let boxDom = document.querySelector('.problemresultdetail-box')
+
+      self.isBottomBtnFixed = boxDom.scrollHeight !== boxDom.offsetHeight
+      boxDom.addEventListener('scroll', e => {
+      	self.isBottomBtnFixed = boxDom.scrollHeight !== boxDom.offsetHeight
+
+        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+          boxDom.scrollTop = boxDom.scrollTop -2
+        }
+      })
+    },
 	  methods: {
 	  	/**
 	     * 复用页面，需要watch route
@@ -186,7 +198,7 @@
 	@import "~@/style/_variables";
 	.problemresultdetail-box {
 	  position: relative;
-	  min-height: 100%;
+	  height: 100%;
 	  background: $white;
 	  color: #4A4A4A;
 	  text-align: center;
@@ -268,13 +280,14 @@
 			}
 
 			.item-bd {
-				margin: 0.533333rem auto 0;
-				width: 8.64rem;
-				text-align: left;
-				overflow: hidden;
+				display: flex;
+			  flex-wrap: wrap;
+			  justify-content: flex-start;
+			  width: 9.066667rem;
+			  margin: 0.533333rem auto 0;
+			  overflow: hidden;
 
 			  .stu {
-			  	display: inline-block;
 			  	text-align: center;
 			  	margin-right: 0.57687496rem;
 			  	margin-bottom: 0.8rem;
@@ -294,8 +307,7 @@
 			  }
 			}
 			.item-hidden {
-				height: 0;
-				margin: 0;
+				display: none;
 			}
 		}
 
@@ -308,6 +320,9 @@
 		  height: 1.466667rem;
 		  line-height: 1.466667rem;
 		  box-shadow: none;
+		}
+		.abs {
+			position: absolute;
 		}
 	}
 </style>

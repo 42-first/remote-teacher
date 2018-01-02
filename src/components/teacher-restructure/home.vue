@@ -254,6 +254,7 @@
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
+		    window.LESSONID = lessonid
 
 		    // 换课的话，要清掉持久化的旧 store
 		    if (lessonid !== self.lessonid) {
@@ -369,7 +370,15 @@
 	          let pptData = jsonData.presentationData.Slides
 	          let current = self.current
 	          let isProblem = (typeof pptData[current - 1].Problem) !== 'undefined'
-	          let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
+	          // let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
+
+	          let isProblemPublished
+
+	          if (self.isPPTVersionAboveOne && isProblem) {
+	            isProblemPublished = self.unlockedproblem.includes(pptData[current - 1].lessonSlideID)
+	          } else {
+	            isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+	          }
 
 	          // fetchPPTData的主要目的是获取pptData total
 	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
@@ -449,7 +458,7 @@
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('Activity')
+	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
 	    },
 	    /**
