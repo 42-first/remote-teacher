@@ -356,6 +356,12 @@
         }
 
         .paper-title {
+          overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
           color: #333333;
         }
 
