@@ -110,7 +110,7 @@ var actionsMixin = {
           // ppt不一致 通过sid取slideData
           slideData = slides.find((slide)=>{
             return slide.lessonSlideID === sid;
-          }) || slideData;
+          });
         }
       }
 
@@ -191,7 +191,7 @@ var actionsMixin = {
                 return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
               })
 
-              data = Object.assign(data, cardItem, { animation: 2 })
+              data = Object.assign(data, cardItem, { animation: 2, isRepeat: false })
               targetIndex && this.cards.splice(targetIndex, 1, data);
             }
           }
