@@ -130,13 +130,17 @@ var actionsMixin = {
       let index = -1;
       let cover = slideData && slideData['Cover'] || '';
 
+      if (!slideData) {
+        return;
+      }
+
       // 是否含有重复数据
       let hasPPT = this.cards.find((item)=>{
         return item.type === 2 && item.slideID === slideData.lessonSlideID && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
-      if (!slideData || !cover || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
+      if (!cover || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
@@ -247,7 +251,19 @@ var actionsMixin = {
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
+      let targetIndex = this.cards.findIndex((item, i) => {
+        return item.type === 3 && item.problemID === data.event['prob'];
+      })
+
       if(!slideData) {
+        // 问题被删除了
+        targetIndex && this.cards.splice(targetIndex, 1);
+
+        // 删除消息
+        if(this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob'] ) {
+          this.msgBoxs = [];
+        }
+
         return this;
       }
 
