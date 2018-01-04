@@ -136,6 +136,7 @@ var actionsMixin = {
       let cover = slideData && slideData['Cover'] || '';
 
       if (!slideData) {
+
         return;
       }
 
@@ -265,8 +266,18 @@ var actionsMixin = {
         targetIndex !== -1 && this.cards.splice(targetIndex, 1);
 
         // 删除消息
-        if(targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob'] ) {
+        if(targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob']) {
           this.msgBoxs = [];
+        } else if(this.msgBoxs.length && this.msgBoxs[0].problemID) {
+          // 矫正消息
+          let msgProblem = this.msgBoxs[0];
+          let msgIndex = this.cards.findIndex((item) => {
+            return item.type === 3 && item.problemID === msgProblem.problemID;
+          })
+
+          this.msgBoxs = [ Object.assign(msgProblem, {
+            index: msgIndex
+          }) ];
         }
 
         return this;
