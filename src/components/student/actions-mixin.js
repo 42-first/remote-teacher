@@ -105,13 +105,18 @@ var actionsMixin = {
       let slideData = slides && slides[si-1];
 
       // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
-      if(this.version == '1.1' && typeof sid !== 'undefined' && sid > 0) {
-        if(slideData && slideData.lessonSlideID !== sid) {
-          // ppt不一致 通过sid取slideData
-          slideData = slides.find((slide)=>{
-            return slide.lessonSlideID === sid;
-          });
-        }
+      if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0) {
+        // if(slideData && slideData.lessonSlideID !== sid) {
+        //   // ppt不一致 通过sid取slideData
+        //   slideData = slides.find((slide)=>{
+        //     return slide.lessonSlideID === sid;
+        //   });
+        // }
+
+        // ppt不一致 通过sid取slideData
+        slideData = slides.find((slide)=>{
+          return slide.lessonSlideID === sid;
+        });
       }
 
       return slideData;
@@ -251,16 +256,16 @@ var actionsMixin = {
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
-      let targetIndex = this.cards.findIndex((item, i) => {
-        return item.type === 3 && item.problemID === data.event['prob'];
-      })
-
       if(!slideData) {
+        let targetIndex = this.cards.findIndex((item) => {
+          return item.type === 3 && item.problemID === data.event['prob'];
+        })
+
         // 问题被删除了
-        targetIndex && this.cards.splice(targetIndex, 1);
+        targetIndex !== -1 && this.cards.splice(targetIndex, 1);
 
         // 删除消息
-        if(this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob'] ) {
+        if(targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob'] ) {
           this.msgBoxs = [];
         }
 
