@@ -71,7 +71,7 @@
         </section>
       </div>
       <!-- 预览状态 -->
-      <div class="subjective__answer" v-if="ispreview">
+      <div class="subjective__answer" v-if="ispreview && result">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
           <div class="answer--image" v-if="result.pics.length && result.pics[0].pic"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
