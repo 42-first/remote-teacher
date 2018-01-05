@@ -123,6 +123,24 @@ var actionsMixin = {
     },
 
     /*
+     * @method 取slideData 新版本1.1 问题是否修改废弃
+     * param: slides, problemID
+     */
+    filterProblem(slides, problemID) {
+      let hasProblem = true;
+
+      // 1.1 版本
+      if(+this.version >= 1.1 && problemID) {
+        // ppt不一致 通过sid取slideData
+        hasProblem = slides.find((slide) => {
+          return slide.Problem && slide.Problem.ProblemID === problemID;
+        });
+      }
+
+      return hasProblem;
+    },
+
+    /*
     * @method 新增PPT
     * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
@@ -257,7 +275,10 @@ var actionsMixin = {
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
-      if(!slideData) {
+      // 过滤下 问题是否过期
+      let hasProblem = this.filterProblem(pptData, data.event['prob']);
+
+      if(!slideData || !hasProblem) {
         let targetIndex = this.cards.findIndex((item) => {
           return item.type === 3 && item.problemID === data.event['prob'];
         })
