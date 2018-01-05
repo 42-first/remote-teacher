@@ -304,7 +304,7 @@ var actionsMixin = {
         return this;
       }
 
-      slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+      // slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       // 问题类型
       let problemType = slideData['Problem']['Type'];
 
@@ -341,6 +341,7 @@ var actionsMixin = {
       }
 
       !hasEvent && this.cards.push(data);
+      !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       this.allEvents.push(data);
     },
 
