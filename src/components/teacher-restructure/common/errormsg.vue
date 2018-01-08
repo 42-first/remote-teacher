@@ -2,15 +2,18 @@
 <template>
   <div class="mask-content f20">
   	<div v-html="errMsgList[errType]"></div>
-  	<v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">结束本次授课</v-touch>
+    <!-- <div v-show="errType === 2">
+      {{ $t('showended') }}<br>{{ $t('showconnecting') }}
+    </div> -->
+  	<v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">{{ $t('endclass') }}</v-touch>
   	<div class="rc-mask close-modal" v-show="!isModalHidden">
   		<div class="pub-inner">
         <div class="title f20">您即将结束本次授课</div>
         <div class="paper-title f18">电脑端将会同步结束授课</div>
         <div class="pub-btns f18">
-          <v-touch class="cancel" v-on:tap="closeModal">取消</v-touch>
+          <v-touch class="cancel" v-on:tap="closeModal">{{ $t('cancel') }}</v-touch>
           <div class="bar"></div>
-          <v-touch class="confirm" v-on:tap="endLesson">结束</v-touch>
+          <v-touch class="confirm" v-on:tap="endLesson">{{ $t('endclass') }}</v-touch>
         </div>
       </div>
   	</div>
@@ -20,8 +23,8 @@
 <script>
   import {mapGetters} from 'vuex'
 	import request from '@/util/request'
-  import API from '@/config/api'
-	import config from '@/config/config'
+  import API from '@/pages/teacher/config/api'
+	import config from '@/pages/teacher/config/config'
 
 	export default {
 	  name: 'RcMaskErrormsg',

@@ -13,22 +13,22 @@
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
       <div class="timeline__ppt" v-show="tabindex==1 || tabindex==item.type && !item.isRepeat">
-        <span class="ppt--pageno f14" data-language-complex="student-pageIndex" :data-page-index="item.pageIndex">第{{ item.pageIndex }}页</span>
+        <span class="ppt--pageno f14" >{{ $t('pno', { number: item.pageIndex }) }}</span>
         <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)" data-language-key="student.ppt.unknow">不懂</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)" data-language-key="student.ppt.store">收藏</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('star') }}</p>
           </div>
         </div>
         <!-- 动画蒙版 -->
         <div class="ppt__modal" v-show="item.animation === 1">
           <div class="modal__center">
-            <p class="f24">当前页面有动画</p>
-            <p class="f32">请看大屏幕</p>
+            <p class="f24"><!-- 当前页面有动画 -->{{ $t('animatepage') }}</p>
+            <p class="f32"><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
           <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.papername }}</p>
-              <p class="paper-count" data-language-complex="student-quizCount" :data-quiz-count="item.count">共{{ item.count }}题</p>
+              <p class="paper-count">{{ $t('totalprob', { number: item.count }) }}</p>
             </div>
             <i class="iconfont icon-shiti_shijuan f55"></i>
           </a>
@@ -48,7 +48,7 @@
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" data-language-common="status">{{ item.status }}</span>
+            <span class="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -59,7 +59,8 @@
         <router-link :to="'/'+lessonid+'/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
-              <p class="paper-name">{{ item.caption }}</p>
+              <p class="paper-name" data-language-complex="gainbonus" :data-number="item.length" v-if="item.length">{{ $t('gainbonus', { number: item.length }) }}</p>
+              <p class="paper-name" data-language-key="recvbonus" v-else >{{ $t('recvbonus') }}</p>
             </div>
             <i class="iconfont icon-shiti_hongbao f55"></i>
         </div>
@@ -76,7 +77,7 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
@@ -84,14 +85,14 @@
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count" data-language-complex="student-problemIndex" :data-problem-index="item.pageIndex">第{{ item.pageIndex }}页</p>
+              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
             </div>
             <i class="iconfont icon-ykq_shiti f55"></i>
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
-            <span class="status" data-language-common="status">{{ item.status }}</span>
+            <span class="status">{{ item.status }}</span>
           </div>
         </div>
       </div>
@@ -101,15 +102,29 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 老师正在分享课堂投稿</p>
+            <p class="paper-name"><!-- Hi, 老师正在分享课堂投稿 -->{{ $t('sharepostpush') }}</p>
           </div>
           <i class="iconfont icon-ykq_tab_tougao f50"></i>
         </router-link>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <!-- <span class="status" data-language-common="status">{{ item.status }}</span> -->
           </div>
+        </div>
+      </div>
+    </template>
+    <!-- 主观题答案分享 -->
+    <template v-else-if="item.type==7">
+      <div class="timeline__paper">
+        <router-link class="paper-info submission" :to="'/'+lessonid+'/subjective_share/'+index">
+          <div class="paper-txt f18">
+            <p class="paper-name">Hi, 老师正在分享主观题答案</p>
+          </div>
+          <i class="iconfont icon-ykq_shiti f50"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14"></div>
         </div>
       </div>
     </template>
@@ -121,9 +136,13 @@
   import API from '@/util/api'
   import timeago from 'timeago.js';
 
+  let locale = window.i18n && window.i18n.locale || 'zh_CN';
   // 在这里设置相对时间
-  // var timeagoInstance = timeago(null, new Date());
-  var timeagoInstance = timeago();
+  var timeagoInstance = timeago(null, locale);
+
+  if (locale != 'en' && locale != 'zh_CN') {
+    timeago.register(locale, require('timeago.js/locales/' + locale));
+  }
 
   export default {
     name: 'card-item',
@@ -143,7 +162,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 5000, language.options['lang'] === 'en' ? 'en': 'zh_CN');
+        return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
       }
     },
     methods: {

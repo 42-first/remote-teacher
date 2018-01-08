@@ -9,17 +9,17 @@
       <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
         <img v-for="item in participantList.slice(0, 10).reverse()" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
         <span class="dqxs">
-          当前学生{{participantList.length}}位
+          {{ $t('activeno', { activeno: participantList.length }) }}
           <i class="iconfont icon-dakai f15"></i>
         </span>
       </router-link>
     </section>
-    <router-link tag="div" :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
         </div>
-        试卷
+        {{ $t('quiz') }}
       </div>
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
@@ -30,19 +30,19 @@
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
         </div>
-        弹幕
+        {{ $t('bullet') }}
       </div>
       <div class="dakai-box">
-        <span class="kg">{{isDanmuOpen ? '已开启' : '已关闭'}}</span>
+        <span class="kg">{{ $tc('onoff', isDanmuOpen) }}</span>
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link tag="div" :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
         </div>
-        投稿
+        {{ $t('post') }}
       </div>
       <div class="dakai-box">
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
@@ -141,6 +141,9 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  a {
+    text-decoration: none;
+  }
   .activity-box {
     position: absolute;
     left: 0;

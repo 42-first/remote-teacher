@@ -4,13 +4,13 @@
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
-      <div class="desc f20" >课堂红包</div>
+      <div class="desc f20" >{{ $t('classbonus') }}</div>
     </div>
 
     <div class="rplist-wrapper">
       <div class="head f16">
-        <div>{{totalNum}}个红包 共{{totalMoney}}元</div>
-        <div class="right">{{redleft}}个未领取</div>
+        <div>{{ $t('packetquantity', {num: totalNum}) }} {{ $t('packetamount', {num: totalMoney}) }}</div>
+        <div class="right">{{ $t('bonusleft', {num: redleft}) }}</div>
       </div>
       <div class="list">
         <div class="item f17" v-for="item in list">
@@ -21,16 +21,16 @@
         			<span class="f14">{{item.time2.substring(5)}}</span>
         		</div>
         	</div>
-        	<div class="right">{{price}}元</div>
+        	<div class="right">￥{{price}}</div>
         </div>
       </div>
     </div>
 
-    <div class="hint f14">未领取的红包将于24小时后返还至您的雨课堂钱包</div>
+    <div class="hint f14">{{ $t('refund') }}</div>
 
     <div class="button-box f18">
-      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">刷新</v-touch>
-      <v-touch class="btn" v-on:tap="closeRedpacketList">返回</v-touch>
+      <v-touch class="btn" v-on:tap="refreshRedPacketDetail">{{ $t('refresh') }}</v-touch>
+      <v-touch class="btn" v-on:tap="closeRedpacketList">{{ $t('back') }}</v-touch>
     </div>
    
   </div>

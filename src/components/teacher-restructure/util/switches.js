@@ -93,7 +93,14 @@ export default {
       let current = msg.slideindex || 1
       // 防止一开始hello的时候数据还没有加载进来
       let isProblem = self.data.pptData.length && typeof self.data.pptData[current - 1].Problem !== 'undefined'
-      let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+      // let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+      let isProblemPublished
+
+      if (self.isPPTVersionAboveOne && isProblem) {
+        isProblemPublished = msg.unlockedproblem.includes(msg.slide ? msg.slide.sid : msg.slideid)
+      } else {
+        isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+      }
 
       self.$store.commit('set_current', current)
       self.$store.commit('set_isPubCheckProblemBtnHidden', !isProblem)

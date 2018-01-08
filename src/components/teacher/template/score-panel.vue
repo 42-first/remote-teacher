@@ -3,16 +3,16 @@
   <div class="mask dontcallback" v-show="!isPanelHidden">
     <div class="pop">
       <div class="con-mask">
-        <div class="score-show f14">打分 （本题{{scoreTotal}}分）</div>
+        <div class="score-show f14">{{ $tc('givestuscore', true) }} {{ $t('totalscore', {num: scoreTotal}) }}</div>
         <div class="score-input f18">
           <input type="number" v-model="studentScore" @focus="errorInfo = ''"/>
-          <label>分</label>
+          <label>{{ $t('stutestscore') }}</label>
         </div>
         <div class="error f12">{{errorInfo}}</div>
       </div>
       <div class="button-con f18">
-        <div class="cancel" @click = "leave">取消</div>
-        <div class="yes" @click = "decide">确定</div>
+        <div class="cancel" @click = "leave">{{ $t('cancel') }}</div>
+        <div class="yes" @click = "decide">{{ $t('confirm') }}</div>
       </div>
     </div>
   </div>

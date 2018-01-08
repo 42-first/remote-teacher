@@ -3,7 +3,12 @@
 	<div class="wai">
     <div class="problem-root" v-scroll="onScroll">
       <slot name="ykt-msg"></slot>
-      <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
+      <!-- 教师遥控器引导查看答案、续时 -->
+      <GuideDelay
+        v-show="!isGuideDelayHidden"
+      ></GuideDelay>
+
+      <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newans') }}</v-touch>
 
       <v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
         <img class="jishi" src="~images/teacher/back-top.png" alt="">
@@ -22,13 +27,31 @@
 
           <!-- 上部时钟、人数统计 -->
           <section class="upper">
-            <div class="f50" >
-              <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-              <img v-else class="jishi" src="~images/teacher/jishi-dao.png" alt="">
-              <span class="time">{{durationLeft}}</span>
+            <div class="xitixushi">
+              <!-- 延时相关 -->
+              <div class="time-rel f15">
+                <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi">延时</v-touch>
+                <div v-else class="tbtn nobtn">不限时</div>
+              </div>
+
+              <div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
+
+              <!-- 中间秒表 -->
+              <div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
+                <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
+                <img v-show="~limit && newTime > 10" class="jishi" src="~images/teacher/jishi-dao-w.png" alt="">
+                <img v-show="~limit && newTime <= 10" class="jishi" src="~images/teacher/jishi-dao-r.png" alt="">
+                <span class="time">{{durationLeft}}</span>
+              </div>
+
+              <!-- 收题相关 -->
+              <div v-show="newTime > 0" class="pro-rel f15">
+                <v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
+              </div>
             </div>
+
             <div :class="['f18', 'yjy']">
-              已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
+              {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }}
             </div>
           </section>
 
@@ -50,25 +73,36 @@
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
+
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
                     <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index, item.remark)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-                        <span>{{item.score === -1 ? '打分' : '得分'}}</span>
-                        <span v-show="item.score !== -1">{{item.score}}分</span>
+                        <span>{{ $tc('givestuscore', item.score === -1) }}</span>
+                        <span v-show="item.score !== -1">{{item.score}}{{ $t('stutestscore') }}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
-                    
-                    <div class="action f14">
 
-                      <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
-                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
-                        <span>投屏</span>
+                    <div class="action f14">
+                      <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
+                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                        <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                       </v-touch>
-                      <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                      <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                        发送全班
+                      </v-touch>
+                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
+                        已发全班
+                      </div>
+                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">
+                        <span class="fsqb-innerline"></span>
+                        <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
+                      </v-touch>
+
                     </div>
+
                   </div>
                 </div>
                 <div class="gap"></div>
@@ -80,21 +114,29 @@
               </div>
             </div>
           </section>
-          
+
         </div>
       </Loadmore>
 
-      
-
       <Scale></Scale>
-      
+
     </div>
 
     <!-- 打星星 -->
     <StarPanel
       ref="StarPanel"
       @giveScore="giveScore"
-    ></StarPanel> 
+    ></StarPanel>
+
+    <!-- 发题选时间蒙版 -->
+    <Problemtime v-show="!isProblemtimeHidden"
+      :problem-type="'ShortAnswer'"
+      :isYanshi="true"
+      @cancelPublishProblem="cancelPublishProblem"
+      @chooseProblemDuration="yanshiProblem"
+    ></Problemtime>
+    <Scale></Scale>
+
   </div>
 </template>
 
@@ -105,10 +147,15 @@
 	import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
   import Moment from 'moment'
+  import config from '@/pages/teacher/config/config'
 
   import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
+  // 试题延时
+  import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  // 教师遥控器引导查看答案、续时
+  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -125,6 +172,24 @@
   let initTime = 1              // 初始时间 秒
   let START, NOW, newTime       // 进入页面的本机时间，倒计时过程中本机实时时间，计时器应该显示的时间
 
+  let routeStamp = 0            // 首次进入本路由时时间戳
+  const ISCOLLECTED = -200        // 用数字 -200 标记已经收题
+  const operationType = {
+    shouti: Symbol(),
+    yanshi: Symbol()
+  }
+  const timeList = {
+    '30': '30秒',
+    '60': '1分钟',
+    '120': '2分钟',
+    '180': '3分钟',
+    '240': '4分钟',
+    '300': '5分钟',
+    '600': '10分钟',
+    '900': '15分钟',
+    '1200': '20分钟',
+    '-1': '不限时'
+  }
   let scoreTapTimer = null
 
 	export default {
@@ -143,21 +208,27 @@
         limit: '',                    // 设置的限时 -1 为未限时 单位 秒
         isAllLoaded: false,           // 上拉加载更多到底了
         isContLonger: false,          // 内容超过1屏
+        newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
+        isProblemtimeHidden: true,     // 延时面板隐藏
 	    }
 	  },
 	  computed: {
       ...mapGetters([
         'lessonid',
         'socket',
+        'isGuideDelayHidden',
         'current',
         'pptData',
-        'postingSubjectiveid'
+        'postingSubjectiveid',
+        'postingSubjectiveSent',
       ])
 	  },
 	  components: {
 	    StarPanel,
       Scale,
-      Loadmore
+      Loadmore,
+      Problemtime,
+      GuideDelay
 	  },
 	  created(){
 	  	this.init()
@@ -179,6 +250,7 @@
     beforeDestroy(){
       this.endTimers()
       this.closeSubjectivemask()
+      T_PUBSUB.unsubscribe('pro-msg')
     },
 	  filters: {
       formatTime(time) {
@@ -199,6 +271,41 @@
     },
 	  methods: {
       /**
+       * 取消延时
+       *
+       */
+      cancelPublishProblem () {
+        let self = this
+
+        setTimeout(() => {
+          self.isProblemtimeHidden = true
+        }, 100)
+      },
+      /**
+       * 延时题目
+       *
+       * @param {number} duration -1为不限时，以秒为单位，60为一分钟
+       */
+      yanshiProblem (duration) {
+        let self = this
+
+        setTimeout(() => {
+          self.isProblemtimeHidden = true
+        }, 100)
+
+        let postData = {
+          'op': 'extendtime',
+          'limit': duration,
+          'problemid': self.problemid
+        }
+
+        self.problemOperation(postData)
+          .then(() => {
+            console.log(duration, timeList[duration])
+            T_PUBSUB.publish('ykt-msg-toast', `延时${timeList[duration]}成功`);
+          })
+      },
+      /**
        * 复用页面，需要watch route
        *
        */
@@ -208,24 +315,203 @@
         let query = self.$route.query
 
         self.problemid = +params.problemid
-        self.limit = +query.lm
+        self.problemType = query.pt
 
-        initTime = +query.tl <= 0 ? 0 : +query.tl
+        routeStamp = query._t
         START = +new Date()
+
+        // 如果有 storage 存储，说明之前进去过
+        // 如果是倒计时， 之前显示的时间 - 计算时间差
+        // 如果是正计时， 之前显示的时间 + 计算时间差
+        // 被通知续时的话，如果在当前页直接处理，如果不在当前页，处理 storage
+
+        // 使用 storage 机制主要是为了处理当前在计时页，然后进入红包等子页面后又回退的情况
+        // 发题进来，或查看答案进来， storage 中都不会有该题在当前时间戳的数据
+
+        // localStorage-duration-info
+        // 如果是从发送试题或者查看答案进入本页面的话，会带有最新的时间戳： routeStamp
+        // 详见 showProblemResult 函数中的 query 参数: _t
+        let stoDurInfo = localStorage.getItem('durInfo'+self.problemid+routeStamp)
+
+        if (stoDurInfo) {
+          let arr = stoDurInfo.split('|')
+          let limit = +arr[0]
+          let timeStamp = +arr[1]
+          let newTime = +arr[2]
+          let diff = Math.round((+new Date() - +new Date(timeStamp))/1000)
+
+          self.limit = limit
+          // 如果限时，就让 initTime 更小，这样 initTime 可能为负数或正数或0
+          // 不管限时不限时，只要已经收题，就拿 -200 - diff，这样 initTime 必然为负数
+          if (~limit || newTime === ISCOLLECTED) {
+            initTime = newTime - diff
+          } else {
+            initTime = newTime + diff
+          }
+        } else {
+          self.limit = +query.lm
+          initTime = +query.tl
+        }
+
         newTime = initTime
-
-        if (self.limit === -1 && newTime === 0) {
-          newTime = 1
-        }
-
-        if (self.limit === -1 && initTime === 0) {
-          initTime = 1
-        }
 
         self.refreshDataList()
         pollingTimer = setInterval(self.pollingNewItem, 5000)
-
+        // 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
+        // 的 handleDuration 中又立即设置了 storage，
+        // 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
+        self.cleanDurInfoStorage()
         self.handleDuration()
+        self.handlePubSub()
+      },
+      /**
+       * 处理计时
+       *
+       */
+      handleDuration () {
+        let self = this
+
+        // 应对页面进入其他路由后又返回的情况
+        let str = `${self.limit}|${+new Date()}|${newTime}`
+        localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+        clearInterval(durationTimer)
+        self.setData({
+          durationLeft: self.sec2str(newTime),
+          newTime
+        })
+
+        durationTimer = setInterval(function(){
+          if(newTime <= 0){
+            clearInterval(durationTimer)
+            return;
+          }
+
+          //更新闹钟时间
+          NOW = +new Date()
+          let diff = Math.round((NOW - START)/1000)
+          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${newTime}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+          self.setData({
+            durationLeft: self.sec2str(newTime),
+            newTime
+          })
+        }, 1000)
+      },
+      /**
+       * 收题、延时等操作导致的重置计时初始值
+       *
+       * 所有状态下都能收题（除非已经收题或时间已到）
+       * 所有状态下都能延时（除非不限时）
+       * 限时后，能再改为不限时
+       *
+       * 延时规则：https://www.tapd.cn/20392061/prong/stories/view/1120392061001000893
+       * 原来是倒计时，设置为不限时，时间从最初发题算
+       * 从已经收题，变成不限时，时间从最初发题算
+       * 从时间到，设置为不限时，时间从最初发题算
+       * 原来是倒计时，增加时间，直接增加剩余时间
+       * 从已经收题，变成限时，开始新的倒计时
+       * 从时间到，设置限时，开始新的倒计时
+       *
+       * @param {Symbol} optype 导致重新设置时间的操作：收题 || 延时
+       * @param {Object} newConfig 延时的设置, 就是小幺鸡 extendtime 的 problem 字段的值
+       * {
+       *   "type": "problem",
+       *   "prob": 12,             // Problem ID
+       *   "pres": 21,             // Presentation ID
+       *   "sid": 1,               // SlideId
+       *   "dt": 1453348909053,    //第一次发送试题的时间戳 毫秒
+       *   "limit": 100,           //-1为不限时，总的限时时间。秒
+       *   "now": 1453348909053,   //当前时间 毫秒
+       *   "extend": 10            //本次续时时间 秒
+       * }
+       */
+      resetTiming (optype, newConfig) {
+        let self = this
+
+        if (optype === operationType['shouti']) {
+          // 收题回调：立即清理 计时、轮询定时器，设置时间为 0
+          // 由于使用了 storage 机制，也需要立即处理 storage
+          // 不改变的：收题不改变是否限时的状态，限时不限时都可以收题
+          // 注意：无论正计时倒计时，收题或时间到后不再显示时间或时间到，统一为 “作答时间结束”
+          //
+          self.endTimers()
+          newTime = ISCOLLECTED // 设为 -200，小于0， 会显示“作答时间结束”
+
+          self.setData({
+            durationLeft: self.sec2str(newTime),
+            newTime
+          })
+
+          // 应对页面进入其他路由后又返回的情况
+          let str = `${self.limit}|${+new Date()}|${ISCOLLECTED}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+
+        } else if (optype === operationType['yanshi']) {
+          // 重新设置限时回调
+          // 应该重置当前的时间，
+          // 但是定时器也在走，也需要处理影响定时器的数据，比如初始时间，时间差
+          // 由于使用了 storage 机制，也需要立即处理 storage
+
+          let tempTime
+          let fromBegan = Math.round((newConfig.now - newConfig.dt)/1000)
+          newConfig.limit = Math.round(newConfig.limit)
+
+          if (newConfig.limit === -1) {
+            tempTime = fromBegan
+          } else {
+            tempTime = newConfig.limit - fromBegan
+          }
+
+          // 重置后权当重新进入页面重启
+          self.endTimers()
+          let str = `${newConfig.limit}|${+new Date()}|${tempTime}`
+          localStorage.setItem('durInfo'+self.problemid+routeStamp, str)
+          self.init()
+        }
+      },
+      /**
+       * 处理发布订阅
+       *
+       */
+      handlePubSub () {
+        let self = this
+
+        // 订阅前清掉之前可能的订阅，避免多次触发回调
+        T_PUBSUB.unsubscribe('pro-msg')
+
+        // 从模态框组件传来，H5收题事件
+        T_PUBSUB.subscribe('pro-msg.shoutih5', (_name, msg) => {
+          self.problemid === msg.problemid && self.shoutiConfirm()
+        })
+
+        // 从 node 传来， pc收题事件
+        T_PUBSUB.subscribe('pro-msg.shoutipc', (_name, msg) => {
+          self.problemid === msg.problemid && self.resetTiming(operationType['shouti'])
+        })
+
+        // 从 node 传来，pc 延时事件
+        T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
+          self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
+        })
+      },
+      /**
+       * 清理 storage 中旧的 durInfo
+       *
+       */
+      cleanDurInfoStorage () {
+        let self = this
+        let re =  new RegExp('durInfo'+self.problemid)
+
+        Object.keys(localStorage).forEach(key => {
+          if (re.test(key)) {
+            localStorage.removeItem(key)
+          }
+        })
       },
 	  	/**
 	     * 模仿微信小程序的 setData 用法，简易设置data
@@ -294,7 +580,7 @@
 	     */
 	    back2Top () {
 	      let self = this
-	      
+
 	      self.$el.scrollTop = 0
 	      self.isShow2TopBtn = false
 	    },
@@ -401,6 +687,65 @@
         })
       },
       /**
+       * 延时
+       *
+       * @event bindtap
+       */
+      yanshi () {
+        let self = this
+
+        self.isProblemtimeHidden = false
+      },
+      /**
+       * 收题
+       *
+       * @event bindtap
+       */
+      shouti () {
+        let self = this
+
+        T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
+      },
+      /**
+       * 收题
+       *
+       * @event bindtap
+       */
+      shoutiConfirm () {
+        let self = this
+
+        let postData = {
+          'op': 'problemfinished',
+          'problemid': self.problemid
+        }
+
+        self.problemOperation(postData)
+      },
+      /**
+       * 收题、延时等具体请求的执行
+       *
+       * @event bindtap
+       * @param {Object} postData 请求数据
+       */
+      problemOperation (postData) {
+        let self = this
+
+        let url = API.delay_problem
+        return request.post(url, postData)
+          .then(jsonData => {
+            if (jsonData.success) {
+              let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
+              // 因为是单通，node会通知的，编码处理2遍，简单的解决是统一等node通知
+              // self.resetTiming(operationType[optype], postData.limit)
+            } else {
+              let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
+              throw new Error(str)
+            }
+          }).catch(error => {
+            console.error('error', error)
+          })
+      },
+      /**
        * 试题主观题页面页面中的 投屏 按钮
        *
        * @event bindtap
@@ -436,30 +781,23 @@
         self.socket.send(str)
       },
       /**
-       * 处理计时
+       * 发送全班按钮
        *
+       * @event bindtap
+       * @param {number} subjectiveid;
        */
-      handleDuration () {
+      fsqbHander (subjectiveid) {
         let self = this
 
-        clearInterval(durationTimer)
-        self.setData({
-          durationLeft: self.sec2str(newTime)
+        let str = JSON.stringify({
+          'op': 'sendsproblem',
+          'lessonid': self.lessonid,
+          'spid': subjectiveid,
+          'msgid': 1234
         })
 
-        durationTimer = setInterval(function(){
-          if(self.limit !== -1 && newTime <= 0){
-            clearInterval(durationTimer)
-          }
-
-          //更新闹钟时间
-          NOW = +new Date()
-          let diff = Math.round((NOW - START)/1000)
-          newTime = self.limit !== -1 ? initTime - diff : initTime + diff
-          self.setData({
-            durationLeft: self.sec2str(newTime)
-          })
-        }, 1000)
+        self.socket.send(str)
+        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 归零、结束定时器等
@@ -508,7 +846,7 @@
 	    		self.$refs.StarPanel.$emit('leave')
 	    		return;
 	    	}
-	      
+
 	      let url = API.subjective_problem_teacher_scorev2
 	      let postData = {
 	        'lesson_id': self.lessonid,
@@ -560,7 +898,7 @@
 
           tapToClose: true,
           // 解决消息点击问题
-          // history: false,       
+          // history: false,
         };
 
         // Initializes and opens PhotoSwipe
@@ -578,7 +916,7 @@
         }
 
       },
-	    
+
 	  }
 	}
 </script>
@@ -642,7 +980,7 @@
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
 	  background: #000000;
-		
+
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
@@ -651,7 +989,55 @@
 	  	padding-top: 0.8rem;
 	  	border-bottom: 1px solid #cccccc;
 	  	text-align: center;
-			
+
+      .xitixushi {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.866667rem;
+        padding: 0 0.3rem;
+        background: #212121;
+
+        .sjd {
+          padding-right: 1.333333rem;
+          color: #F84F41;
+        }
+
+        .rolex.warn {
+          color: #F84F41;
+          .iconfont {
+            color: #F84F41;
+          }
+        }
+
+        .time-rel, .pro-rel {
+          align-self: center;
+          color: $white;
+
+          .tbtn {
+            width: 1.733333rem;
+            height: 0.8rem;
+            line-height: 0.8rem;
+            border: 1px solid #CCCCCC;
+            border-radius: 0.4rem;
+          }
+          .nobtn {
+            border: none;
+            border-radius: 0.4rem;
+            background-color: #282828;
+            color: #08BC72;
+          }
+          .green {
+            border-color: #08BC72;
+            background-color: rgba(8, 188, 114, 0.2)
+          }
+          .red {
+            border-color: #F84F41;
+            background-color: rgba(248, 79, 65, 0.2)
+          }
+        }
+      }
+
 			.jishi {
 				margin-top: -0.186667rem;
 				width: 0.9rem;
@@ -665,7 +1051,7 @@
 	  .gap {
       height: 0.026667rem;
     }
-		
+
 		/* 主观题内容区 */
 	  .subjective-box {
 	  	margin-top: -1px;
@@ -680,7 +1066,7 @@
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
-	      
+
 	      .item {
 	        padding: 0 0.4rem;
 	        background: $white;
@@ -731,7 +1117,7 @@
 	          align-items: center;
 	          height: 1rem;
 	          margin-left: 1.386667rem;
-	          
+
 	          .gray {
 	            color: $graybg;
 	          }
@@ -742,15 +1128,35 @@
 	            justify-content: space-between;
 	          }
 
-	          .cancel-post-btn {
-	          	margin-right: -0.4rem;
-	            background: $blue;
-	            width: 2.733333rem;
-	            text-align: center;
-	            height: 0.826667rem;
-	            line-height: 0.826667rem;
-	            color: $white;
-	          }
+            .action .coll {
+              margin-right: 0.666667rem;
+              width: 2.133333rem;
+            }
+
+            .cancel-post-btn {
+              background: $blue;
+              width: 2.346667rem;
+              text-align: center;
+              height: 0.826667rem;
+              line-height: 0.826667rem;
+              color: $white;
+            }
+
+            .qxtp {
+              margin-right: -0.4rem;
+            }
+
+            .yfqb {
+              background: $graybg;
+            }
+
+            .fsqb-innerline {
+              float: left;
+              margin-top: 0.2rem;
+              width: 1px;
+              height: 0.4rem;
+              background: $white;
+            }
 	        }
 	      }
 
@@ -776,7 +1182,7 @@
 	          background: #c8c8c8;
 	        }
 	      }
-	      
+
       }
 	  }
 	}
@@ -786,5 +1192,24 @@
   }
   .btnfadeout {
   	transform: translateY(1.5rem);
+  }
+  .rc-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    overflow: auto;
+
+    .mask-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      color: $white;
+    }
   }
 </style>

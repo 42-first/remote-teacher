@@ -12,23 +12,19 @@ import MessageBox from 'mint-ui/lib/message-box';
 import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
 import Exercise from '@/components/student/exercise'
-// import Subjective from '@/components/student/subjective'
-// import Submission from '@/components/student/submission'
-// import SubmissionList from '@/components/student/submission-list'
-// import Danmu from '@/components/student/danmu'
 
 const Subjective = resolve => require(['@/components/student/subjective'], resolve)
 const Submission = resolve => require(['@/components/student/submission'], resolve)
 const SubmissionList = resolve => require(['@/components/student/submission-list'], resolve)
 const Danmu = resolve => require(['@/components/student/danmu'], resolve)
 const SubmissionDetail = resolve => require(['@/components/student/submission-detail'], resolve)
+const SubjectiveShare = resolve => require(['@/components/student/subjective-share'], resolve)
 
 
 // 国际化
 import language from '@/util/language'
 window.language = language;
 setTimeout(() => {
-  // language.requireRes('en');
   language.requireRes('zh_CN');
 }, 0)
 
@@ -70,6 +66,11 @@ const studentRouter = new Router({
           path: 'subjective/:index',
           name: 'student-subjective-page',
           component: Subjective
+        },
+        {
+          path: 'subjective_share/:index',
+          name: 'student-subjective-share-page',
+          component: SubjectiveShare
         },
         {
           path: 'submission2/:index',

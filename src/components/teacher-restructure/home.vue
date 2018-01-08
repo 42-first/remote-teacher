@@ -6,10 +6,10 @@
       <div id="upper" class="card-box upper">
         <div class="detail f14 dontcallback">
           <div>
-            当前幻灯片<span class="ct f18">{{current}}/{{total}}</span>
+            {{ $t('curslide') }}<span class="ct f18">{{current}}/{{total}}</span>
           </div>
           <v-touch v-show="!isPubCheckProblemBtnHidden" class="btn pubpblm_or_check_answer" v-on:tap="problemHandler">
-            {{isProblemPublished ? '查看答案' : '发送此题'}}
+            {{ $tc('sendprob', !isProblemPublished) }}
           </v-touch>
         </div>
         <img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
@@ -19,7 +19,7 @@
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
-        <div class="detail f14">下一张幻灯片</div>
+        <div class="detail f14">{{ $t('nextslide') }}</div>
         <img v-if="isDownImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         <img v-if="isDownImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         <img v-if="pptData.length && !pptData[current].Cover" class="img-error" :src="imgUploadingPath" />
@@ -84,6 +84,12 @@
       @guideNext="guideNext"
     ></Guide>
 
+    <!-- 教师遥控器引导查看答案、续时 -->
+    <GuideDelay
+      v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
+      @guideDelayNext="guideDelayNext"
+    ></GuideDelay>
+
   </div>
 </template>
 
@@ -105,6 +111,8 @@
 	import Toolbar from '@/components/teacher-restructure/common/toolbar'
 	// 新手引导蒙版
 	import Guide from '@/components/teacher-restructure/common/guide'
+	// 教师遥控器引导查看答案、续时
+	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 	// 错误蒙版
 	import Errormsg from '@/components/teacher-restructure/common/errormsg'
 	// 断网重连蒙版
@@ -184,6 +192,7 @@
         'lessonid',
         'presentationid',
         'errType',
+        'isGuideDelayHidden',
         'current',
         'total',
         'pptData',
@@ -207,6 +216,7 @@
 	  components: {
 	    Toolbar,
 	    Guide,
+	    GuideDelay,
 	    Errormsg,
 	    Reconnect,
 	    Deprive,
@@ -244,6 +254,7 @@
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
+		    window.LESSONID = lessonid
 
 		    // 换课的话，要清掉持久化的旧 store
 		    if (lessonid !== self.lessonid) {
@@ -251,6 +262,8 @@
 		    }
 
 		    self.$store.commit('set_lessonid', lessonid)
+		    // self.$store.commit('set_isGuideDelayHidden', false)
+		    self.$store.commit('set_stepGuideDelay', 0)
 
 		    // 获取本地不懂、投稿已读数
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
@@ -357,7 +370,15 @@
 	          let pptData = jsonData.presentationData.Slides
 	          let current = self.current
 	          let isProblem = (typeof pptData[current - 1].Problem) !== 'undefined'
-	          let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
+	          // let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
+
+	          let isProblemPublished
+
+	          if (self.isPPTVersionAboveOne && isProblem) {
+	            isProblemPublished = self.unlockedproblem.includes(pptData[current - 1].lessonSlideID)
+	          } else {
+	            isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+	          }
 
 	          // fetchPPTData的主要目的是获取pptData total
 	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
@@ -437,7 +458,7 @@
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 
 	      Vue.nextTick(function () {
-	        self.$refs.InitiativeCtrlMask.$emit('Activity')
+	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
 	    },
 	    /**
@@ -556,6 +577,16 @@
 	          self.isGuideHidden = true
 	          localStorage.setItem('hasGuided', 'yes')
 	      }
+	    },
+	    /**
+	     * 用户在延时引导页点击了
+	     *
+	     * @param {number} step 当前处于什么引导步骤
+	     */
+	    guideDelayNext (step) {
+	      let self = this
+
+	      step === 1 && self.problemHandler()
 	    },
 	    /*
 	     * @method sentry ga 配置

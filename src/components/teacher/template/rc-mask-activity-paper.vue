@@ -1,7 +1,7 @@
 <!-- 试卷列表 被父组件 rc-mask-activity.vue 引用 -->
 <template>
 	<div class="paper-box allowscrollcallback">
-    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+    <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
@@ -10,7 +10,7 @@
     <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
-        <div class="title f17">已发试卷</div>
+        <div class="title f17">{{ $t('publishedquiz') }}</div>
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
           <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
@@ -22,7 +22,7 @@
       
       <!-- 试卷库 -->
       <section class="list downer">
-        <div class="title f17">我的试卷库</div>
+        <div class="title f17">{{ $t('myquiz') }}</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
           <div class="desc f18 ellipsis">
@@ -36,17 +36,17 @@
     
     <div class="rc-mask pub-modal" v-show="!isPubmodalHidden">
       <div class="pub-inner">
-        <div class="title f20">发布试卷</div>
+        <div class="title f20">{{ $t('publishquiz') }}</div>
         <div class="paper-title f18">{{paperChosen.title}}</div>
         <div class="pub-btns f18">
-          <v-touch class="cancel" v-on:tap="closePubmodal">取消</v-touch>
+          <v-touch class="cancel" v-on:tap="closePubmodal">{{ $t('Cancel') }}</v-touch>
           <div class="bar"></div>
-          <v-touch class="confirm" v-on:tap="publishPaper">发布</v-touch>
+          <v-touch class="confirm" v-on:tap="publishPaper">{{ $t('Publish') }}</v-touch>
         </div>
       </div>
     </div>
 
-    <v-touch class="back-btn f18 J_ga" v-on:tap="closePaper" data-category="13" data-label="试卷页">返回</v-touch>
+    <v-touch class="back-btn f18 J_ga" v-on:tap="closePaper" data-category="13" data-label="试卷页">{{ $t('back') }}</v-touch>
 
     <RcMaskActivityPaperQuizresult
       ref="RcMaskActivityPaperQuizresult"

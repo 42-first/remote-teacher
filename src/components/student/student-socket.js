@@ -64,10 +64,11 @@ var mixin = {
             self.initws(true);
           }
 
-          clearInterval(self.xintiaoTimer);
-
           // 记录socket关闭
           // window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
+
+          // 心跳 取消心跳改用其他机制
+          // clearInterval(self.xintiaoTimer);
         }
 
         // 接收socket信息
@@ -75,8 +76,8 @@ var mixin = {
           self.isResetSocket = false;
           console.log('onopen');
 
-          // 心跳
-          self.sendXinTiao();
+          // 心跳 取消心跳改用其他机制
+          // self.sendXinTiao();
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
@@ -200,7 +201,7 @@ var mixin = {
           case 'turnondanmu':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
             this.danmuStatus = true;
             break
 
@@ -208,7 +209,7 @@ var mixin = {
           case 'turnoffdanmu':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
             this.danmuStatus = false;
             break
 
@@ -216,7 +217,7 @@ var mixin = {
           case 'showfinished':
             item = msg['event'];
 
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
             // 产品确认 幻灯片切换不处理弹幕状态
             // this.danmuStatus = false;
             break
@@ -235,14 +236,14 @@ var mixin = {
           case 'quizfinished':
           case 'callpaused':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'] });
+            this.addMessage({ type: 1, message: item['title'], event: item });
 
             break
 
            // 下课啦
           case 'lessonfinished':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'], time: item['dt'] });
+            this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
 
             // 课程状态 弹幕状态
             this.lessonStatus = 1;
@@ -257,7 +258,25 @@ var mixin = {
 
             leaveTime = msg['limit'] - leaveTime
 
-            this.calcLeaveTime(leaveTime, probID);
+            this.calcLeaveTime(leaveTime, probID, msg['limit']);
+            hasMsg = false;
+
+            break
+
+          // 延时
+          case 'extendtime':
+            let problem = msg['problem']
+            this.extendTime(problem);
+
+            hasMsg = false;
+
+            break
+
+          // 收题
+          case 'problemfinished':
+            let problemid = msg['prob']
+            this.closedProblem(problemid);
+
             hasMsg = false;
 
             break
@@ -284,6 +303,14 @@ var mixin = {
             item = msg['post'];
 
             this.addSubmission({ type: 6, postid: item.postid, time: item.dt, event: item });
+
+            break
+
+           // 主观题分享20171204
+          case 'sendsproblem':
+            item = msg['problem'];
+
+            this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
 
             break
 

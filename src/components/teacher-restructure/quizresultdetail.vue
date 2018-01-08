@@ -7,27 +7,27 @@
         <div class="name ellipsis">
         </div>
         <div class="detail">
-          <span class="score" style="margin-right: 1.3rem;">得分</span>
-          <span>交卷时间</span>
+          <span class="score" style="margin-right: 1.3rem;">{{ $t('stuscore') }}</span>
+          <span>{{ $t('submission') }}</span>
         </div>
       </div>
     </div>
     <div class="gap"></div>
     <section class="list">
-      <div v-show="!quizResultDetailData.length" class="hmy f18">还没有学生提交</div>
+      <div v-show="!quizResultDetailData.length" class="hmy f18">{{ $t('nosubmit') }}</div>
       <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
           <img :src="item.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           <span>{{item.name}}</span>
         </div>
         <div class="detail">
-          <span class="score">{{item.score}}分</span>
+          <span class="score">{{item.score}}{{ $t('stutestscore') }}</span>
           <span>{{item.time}}</span>
         </div>
       </div>
     </section>
 
-    <v-touch class="btn f18" v-on:tap="refreshQuizResultDetail">刷新</v-touch>
+    <v-touch class="btn f18" v-on:tap="refreshQuizResultDetail">{{ $t('refresh') }}</v-touch>
   </div>
 </template>
 

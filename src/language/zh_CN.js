@@ -7,40 +7,264 @@
  */
 
 let pages = {
-  // 根据状态显示的动态文字 例如'已完成' '未完成'
-  'status': {
-    '未完成': '未完成',
-    '已完成': '已完成'
-  },
   // 学生遥控器
-  'student': {
-    'complex': {
-      'pageIndex': '第$pageIndex$页',
-      'quizCount': '共$quizCount$题',
-      'problemIndex': '第$problemIndex$页'
-    },
-    'nav': {
-      'all' : '全部',
-      'ppt' : 'PPT',
-      'problem' : '习题',
-      'quiz' : '试卷',
-      'hongbao' : '红包'
-    },
-    'ppt': {
-      'unknow' : '不懂',
-      'store' : '收藏'
-    }
-  }
+  "ykt": "雨课堂",
+  "undone": "未完成",
+  "done": "已完成",
 
+  "pno": "第{number}页",
+  "totalprob": "共{number}题",
+
+  "total": "全部",
+  "slide2": "PPT",
+  "prob2": "习题",
+  "quiz2": "试卷",
+  "bonus": "红包",
+
+  "unknown": "不懂",
+  "star": "收藏",
+
+  "newfeed": "您有新的课堂动态",
+  "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
+  "connnow": "立即重连",
+
+  "toprelease": "释放更新",
+  "pullrefresh": "下拉刷新",
+  "toploading": "加载中...",
+
+  "sendpost": "发送投稿",
+  "sendbullet": "发送弹幕",
+  "bulletban": "老师暂时还未开放弹幕，等等吧～",
+  "tips": "提示",
+
+  "newprob": "Hi,你有新的课堂习题",
+  "newvote": "Hi,你有新的投票",
+  "recvbonus": "Hi，本题有课堂红包发送",
+  "gainbonus": "{number}位同学已赢得课堂红包",
+
+  "submit": "提交",
+  "submitansw": "提交答案",
+  "cannotsubmit": "提交有困难",
+  "submitok": "提交成功",
+
+  "voteremain": "您还可以再投{number}票",
+  "novote": "您还未投票",
+  "watchmode": "当前为观看模式，无法答题",
+  "autosubmitansw": "第{number}页习题已自动提交成功",
+
+  "bulletdflt": "说点啥好~",
+  "wordrvwtip": "温馨提示：发送前请自行审查用词",
+
+  "sendcfm": "确认发送",
+  "besending": "发送中",
+  "sendsuccess": "发送成功",
+
+  "isempty": "这里可以为空",
+  "uploadonepic": "上传图片（只能添加1张）",
+  "viewpost": "查看我的投稿",
+
+  "back": "返回",
+  "selall": "全选",
+  "batchoperation": "批量操作",
+  "del": "删除",
+  "delselectedpost": "确定删除所选投稿",
+
+  // 新增部分
+  "sharepostpush" : "Hi, 老师正在分享课堂投稿",
+  "minilaunchpush" : "雨课堂小程序上线啦",
+  "entermini" : "长按识别图中小程序码开始体验",
+  "anonymous" : "(匿名)",
+  "timeout" : "时间到",
+  "timeoutnosubmit" : "时间已过，不能再提交啦～",
+  "neterrorpush" : "当前网络不畅，请检查系统已保存并将自动重复提交",
+  "classended" : "课程已结束",
+  "picuploading" : "图片上传中" ,
+  "picsizelimit" : "图片不可超过10M，请重试",
+  "cfmdelpic" : "确定删除图片",
+  "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
+  "subjectivepro" : "主观题",
+  "answerarea" : "作答区域" ,
+  "contentsizelimit" : "内容限制140字可插入1张图片",
+  "myanswer" : "我的回答",
+  "subjectivepro" : "主观题作答",
+  "classbonus" : "课堂红包",
+  "receiveclassbonus" : "你收到一个课堂红包",
+  "whosebonus" : '的课堂红包',
+  "savedinpacket" : "已存入我的钱包",
+  "numopenedbonus" : "已领 {count}/{total} 个红包",
+
+  "getpoint": "{score}分",
+  "animatepage": "当前页面有动画",
+  "lookatscreen": "请看大屏幕",
+  "notimelimit": "题目不限时",
+  "extendmin": "题目续时 {minutes}分钟",
+  "extendsec": "题目续时 {seconds}秒",
+  "receivertimeout": "作答时间结束",
+  "receiverdone": "已完成",
+  "collectprotip": "老师可能会随时结束答题",
+
+  "receiverexcellent": "答对了！你真棒！",
+  "receiverthumbsup": "答对了！赞一个！",
+  "receiverwonderful": "答得漂亮~再接再厉~",
+  "receivergoodforu ": "是的，必须奖励下你！",
+  "receiverfabulous": "答题小能手，红包接好~",
+  "receiverbrilliant": "答题小能手，我记住你了~",
+  "receiverawesome": "机智如你，必须奖励~",
+  "receiverwelldone": "聪颖如你，必须奖励~",
+  "receiversuperb": "好样的，答得又快又准！",
+  "receiverbravo": "真棒！答得又快又准！",
+
+  // socket event
+  "LESSON_START": "上课啦！",
+  "SHOW_PRESENTATION": "新幻灯片：{0}",
+  "LESSON_FINISH": "下课啦！",
+  "DANMU_ON": "老师已开启弹幕",
+  "DANMU_OFF": "老师已关闭弹幕",
+  "RANDOM_PICK": "随机点名选中：{0}{1}",
+  "SHOW_FINISH": "幻灯片 {0} 结束放映",
+  "QUIZ_FINISH": "试卷 {0} 已收卷",
+
+
+  // 遥控器
+  "classsignal": "课堂暗号",
+  "zoomin": "点击放大",
+  "zoomout": "点击缩小",
+  "startclass": "开始上课 | 继续上课",
+  "curslide": "当前幻灯片",
+  "nextslide": "下一幻灯片",
+  "sendprob": "发送此题 | 查看答案",
+  "timelimit": "限时发送",
+  "sec": "秒",
+  "min": "分钟",
+  "senddirectly": "直接发送",
+  "submittotal": "已有 {ss1} / {ss2} 位同学提交了答案",
+  "noanssubmit": '还没有人提交<br>耐心等待一会儿吧~',
+  "newans": "您有新的答案",
+  "mark": "打分",
+  "screenmode": "投屏",
+  "viewdetails": "查看详情",
+  "classbonusBonuslist": "课堂红包 | 红包名单",
+  "standardopt": "本题正确选项为",
+
+  "totalscore": "（本题 {num}分）",
+  "bonuslist": "红包名单",
+  "correctanswer": "正确答案",
+  "standardans": "本题答案",
+  "correctopt": "正确选项",
+  "wrongopt": "错误选项",
+  "votemost": "票数最多",
+  "ren": "人",
+
+  "bonustips": "您可以给回答正确且快速的<br>同学发红包以表奖励",
+  "quantity": '红包个数<span class="f14">（班级共{num}人）</span>',
+  "amounteach": '红包金额<span class="f14">（单个红包）</span>',
+  "pcs": "个",
+  "cny": "元",
+  "nobonus": "不赏了，返回",
+  "preparebonus": "打赏",
+  "setquantity": "请填写红包个数",
+  "setamount": "请填写红包金额",
+  "bonuslimit": '单个红包金额不可超过<span class="f36">100</span>元',
+  "plsconfpay": "请确认支付",
+  "classbonus": "课堂红包",
+  "yktwallet": "雨课堂钱包",
+  "wxwallet": "微信钱包",
+  "cfmpay": "确认支付",
+  "paysuccess": "支付成功",
+  "payfailed": "支付失败",
+
+  "balance": "余额",
+  "zhifu": "支付",
+  "reject": "零钱已退还至雨课堂钱包",
+  "refund": "未领取的红包将于24小时后返还至您的雨课堂钱包",
+  "packetquantity": "{num} 个红包",
+  "packetamount": "共 {num} 元",
+  "bonusleft": "{num} 个未领取",
+
+  "remotectrl": "遥控器",
+  "thumbnail": "缩略图",
+  "classact": "课堂动态",
+  "readmore": "更多",
+  "qrcode": "二维码",
+  "radomrollcall": "随机点名",
+  "endshow": "退出放映",
+  "slide": "PPT",
+  "unknown": "不懂",
+  "prob": "习题",
+  "activeno": "当前学生{activeno}位",
+  "quiz": "试卷",
+  "bullet": "弹幕",
+  "post": "投稿",
+  "onoff": "已开启 | 已关闭",
+  "turnonoff": "开启 | 关闭",
+  "off": "已关闭",
+  "bulletintro": "开启弹幕，头脑风暴一下",
+  "nomail": "信箱空空的",
+  "myquiz": "我的试卷库",
+  "publishedquiz": "已发试卷",
+  "publishquiz": "发布试卷",
+  "quizcollect": "收卷 | 已收卷",
+  "scorechart": "分数分布",
+  "submittedstudent": "已有 {ss1} / {ss2} 位同学提交了试卷",
+  "nosubmit": "还没有学生提交",
+  "allvote": "此试卷全部为投票题~",
+  "cancel": "取消",
+  "confirm": "确定",
+  "publish": "发布",
+  "back": "返回",
+
+  "stuscore": "得分",
+  "givestuscore": "打分 | 得分",
+  "stutestscore": "分",
+  "submission": "交卷时间",
+  "shifang": "释放加载更多",
+  "newbullet": "您有新的弹幕",
+  "nonewbullet": "没有新的弹幕",
+  "bulletonoff": "弹幕已开启 | 弹幕已关闭",
+  "bulletoff": "",
+  "sendtoclass": "已发送全班",
+  "onscreenmode": "正在投屏中",
+  "postdeleted": "学生已删除此投稿",
+  "notimelimit": "不限时发送",
+
+  "refresh": "刷新",
+  "posttips": '试试让学生在手机端 <i class="iconfont icon-add f15"></i> 号中投稿吧！',
+  "loading": "正在加载中",
+  "recvpost": "你有新的投稿",
+  "nonewpost": "没有新的投稿",
+  "star": "收藏",
+  "stared": "已收藏",
+  "screenmode": "投屏",
+  "postpublic": "发送全班",
+  "postpubliced": "已发全班",
+  "screenmodeoff": "取消投屏",
+  "release": "上拉加载更多",
+
+  "totalstudent": "当前班级人数：",
+  "attendingno": '当前共有 <span class="randomcall-num f32">{attendingno}</span> 位学生进入课堂<br>即将开始随机点名',
+  "toberolling": "即将开始随机点名",
+  "rolling": "开始滚动",
+  "pause": "暂停",
+  "norolling": "no student no rolling",
+  "radomrolling": "正在随机筛选...",
+  "keeprolling": "继续滚动",
+  "selhim": "就是Ta了",
+  "endclass": "结束本次授课",
+  "showended": "已退出全屏放映",
+  "showconnecting": "或放映正在连接中",
+  "otherslogin": "其他老师已登录",
+  "forcelogout": "您已被迫下线",
+  "studentrole": "以学生身份进入",
+  "loginagain": "我要夺回主权",
 };
-
-
 
 if (typeof define === 'function' && define.amd){
     // AMD. Register as an anonymous module.
     define(['exports'], function(){
-        return pages;
+      return pages;
     });
+} else if (typeof exports === 'object' && typeof module === 'object') {
+  module.exports = pages; // nodejs support
 }
 
 export default pages;

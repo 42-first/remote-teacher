@@ -17,15 +17,27 @@
       </header>
 
       <!-- 定时时间 -->
-      <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0&&sLeaveTime">
+      <!-- <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0&&sLeaveTime">
         <img class="exercise__timing--icon" v-if="!timeOver" src="http://sfe.ykt.io/o_1bkbgjnktcp5182817bgn23rk9.png">
-        <img class="exercise__timing--icon over" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
+        <img class="exercise__timing--icon" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
         <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
+      </section> -->
+
+      <!-- 定时 续时等 -->
+      <section class="exercise__tips" v-show="isShowOption">
+        <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
+          <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
+          <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
+          <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
+        </div>
+        <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
+        <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
+        <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
       </section>
 
       <!-- 问题内容 -->
       <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f18"><span>第{{ summary&&summary.pageIndex }}页</span></p>
+        <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
@@ -37,19 +49,18 @@
           </li>
         </ul>
         <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">您还可以再投{{ selectedPollingCount }}票</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">您还未投票</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? '(匿名)': ''}}</p>
-
+        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
+        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
 
       <!-- 观看者提示文字 返回 -->
       <section v-if="observerMode">
-        <p class="f18">当前为观看模式，无法答题</p>
-        <p class="submit-btn can f18" @click="handleBack">返回</p>
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">提交有困难？</a></div>
+      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div>
 
     </div>
 
@@ -102,9 +113,17 @@
       return {
         index: 0,
         opacity: 0,
+        problemID: 0,
         title: '习题',
+        // 是否作答完成
+        isComplete: false,
+        // 是否新的延时
+        hasNewExtendTime: false,
+        sExtendTimeMsg: '',
+        limit: -1,
         leaveTime: 0,
         sLeaveTime: '00:00',
+        warning: false,
         timeOver: false,
         summary: null,
         options: null,
@@ -129,21 +148,6 @@
         rate: 1
       };
     },
-    /*
-    beforeRouteEnter (to, from, next) {
-      // 在渲染该组件的对应路由被 confirm 前调用
-      // 不！能！获取组件实例 `this`
-      // 因为当钩子执行前，组件实例还没被创建
-
-      if(from.name === 'student-presentation-page') {
-        next();
-      } else {
-        next(vm => {
-          vm.$router.back();
-        })
-      }
-    },
-    */
     components: {
     },
     computed: {
@@ -152,19 +156,19 @@
     },
     filters: {
       setSubmitText(submitStatus) {
-        let text = '提交答案';
+        let text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
 
         if(submitStatus) {
           switch (submitStatus) {
             case 0:
             case 1:
-              text = '提交答案';
+              text = typeof i18n !== 'undefined' && i18n.t('submitansw') || '提交答案';
               break;
             case 2:
-              text = '提交中...';
+              text = typeof i18n !== 'undefined' && i18n.t('besending') || '提交中...';
               break;
             case 3:
-              text = '提交成功';
+              text = typeof i18n !== 'undefined' && i18n.t('sendsuccess') || '提交成功';
               break;
             default:
               break;
@@ -187,6 +191,11 @@
         if(!problemID) {
           return ;
         }
+
+        this.problemID = problemID;
+
+        // event消息订阅
+        this.initPubSub();
 
         // 是否观察者模式
         this.observerMode = this.$parent.observerMode;
@@ -213,10 +222,13 @@
           });
 
           // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-          this.sLeaveTime = '已完成';
+          this.sLeaveTime = this.$i18n.t('done') || '已完成';
+          this.isComplete = true;
         } else {
           // 开始启动定时
-          data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.limit = data.limit;
 
           // 投票类型
           if(this.problemType && this.problemType.indexOf('Polling') > -1) {
@@ -255,33 +267,154 @@
       },
 
       /*
+       * @method 初始化订阅事件
+       * @param
+       */
+      initPubSub() {
+        // 取消练习的订阅
+        PubSub && PubSub.unsubscribe('exercise');
+
+        // 订阅定时消息
+        PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
+          this.setProblemStatus(data);
+        });
+
+        // 订阅续时消息
+        PubSub && PubSub.subscribe( 'exercise.extendTime', ( topic, data ) => {
+          this.extendTime(data && data.problem);
+        });
+
+        // 订阅收题消息
+        PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
+          this.closedProblem(data && data.problemid);
+        });
+      },
+
+      /*
+      * @method 问题状态
+      * @param
+      */
+      setProblemStatus(data) {
+        let leaveTime = data && data.leaveTime;
+
+        // 不限时
+        if(data.limit === -1) {
+          this.limit = -1;
+          // 是否可以点亮提交按钮
+          this.canSubmitFn();
+        } else if(data.limit === 0) {
+          // 已收题
+          this.setTiming(0);
+        } else {
+          // 限时题目
+          this.limit = data.limit;
+          this.setTiming(data && data.leaveTime);
+        }
+      },
+
+      /*
       * @method 设置计时器
       * @param
       */
       setTiming(leaveTime) {
-        this.leaveTime = leaveTime;
+        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
+
+        this.timer && clearInterval(this.timer)
 
         if (leaveTime > 0) {
           this.timer = setInterval(()=>{
             this.leaveTime--;
             let minutes = parseInt(this.leaveTime / 60, 10);
-            let seconds = this.leaveTime % 60;
+            let seconds = parseInt(this.leaveTime % 60, 10);
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
 
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = '时间到';
+              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+
               clearInterval(this.timer);
               this.timeOver = true;
+              this.warning = false;
+            }
+
+            if(this.leaveTime <= 10 && this.leaveTime > 0) {
+              this.warning = true;
             }
 
           }, 1000)
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = '时间到';
+          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+        }
+      },
+
+      /*
+       * @method 是否点亮提交按钮
+       * @params problem
+       */
+      canSubmitFn() {
+        let hasResult = [...this.optionsSet].length;
+
+        if(!this.isComplete && hasResult) {
+          this.canSubmit = 1;
+        }
+      },
+
+      /*
+       * @method 答题续时
+       * @params problem
+       */
+      extendTime(problem) {
+        if(problem) {
+          let id = problem.prob;
+          let extend = problem.extend;
+          // 续时 分钟 秒
+          let minutes = parseInt(extend / 60, 10);
+          let seconds = parseInt(extend % 60, 10);
+          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
+
+          if(extend === -1) {
+            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
+          }
+
+          // 同一个问题续时 切没有结束
+          if(id === this.problemID && !this.isComplete) {
+            this.hasNewExtendTime = true;
+            this.sExtendTimeMsg = sMsg;
+
+            this.limit = problem.limit;
+
+            if(extend > 0) {
+              let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
+              this.setTiming(leaveTime);
+            } else if(extend === -1) {
+              this.timer && clearInterval(this.timer)
+            }
+
+            // 是否可以点亮提交按钮
+            this.canSubmitFn();
+
+            //
+            this.timeOver === true && (this.timeOver = false);
+            this.warning === true && (this.warning = false);
+
+            setTimeout(()=>{
+              this.hasNewExtendTime = false;
+            }, 3000)
+          }
+        }
+      },
+
+      /*
+       * @method 收题
+       * @params problemid
+       */
+      closedProblem(problemid) {
+        if(problemid === this.problemID) {
+          this.setTiming(0);
         }
       },
 
@@ -387,7 +520,7 @@
           // 是否超时
           if(this.timeOver) {
             this.$toast({
-              message: '时间已过，不能再提交啦～',
+              message: this.$i18n.t('timeoutnosubmit') || '时间已过，不能再提交啦～',
               duration: 3000
             });
             this.canSubmit = 0;
@@ -420,7 +553,7 @@
                 let data = res.data;
 
                 self.summary = Object.assign(self.summary, {
-                  status: '已完成',
+                  status: this.$i18n.t('done') || '已完成',
                   isComplete: true
                 })
 
@@ -431,10 +564,11 @@
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
-                this.sLeaveTime = '已完成';
+                this.sLeaveTime = this.$i18n.t('done') || '已完成';
+                this.isComplete = true;
 
                 this.$toast({
-                  message: '提交成功',
+                  message: this.$i18n.t('sendsuccess') || '提交成功',
                   duration: 2000
                 });
 
@@ -449,7 +583,7 @@
               // 提交失败保存本地
               self.saveAnswer(param);
               self.$toast({
-                message: '当前网络不畅，请检查系统已保存并将自动重复提交',
+                message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
                 duration: 3000
               });
 
@@ -588,38 +722,33 @@
     $ 习题定时
   \*------------------*/
 
-  .exercise__timing {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .exercise__tips {
+    margin: 0.133333rem auto 0.666667rem;
+    width: 9.6rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
 
-    padding: 0.2rem 0 0;
-    height: 2.6rem;
-    /*min-height: 2.666667rem;*/
+    background: #212121;
+    color: #fff;
+    opacity: 0.8;
 
-    .exercise__timing--icon {
-      margin-right: 0.453333rem;
-      width: 1.293333rem;
-      height: 1.466667rem;
+    border-radius: 0.053333rem;
+    box-shadow: 0 0.066667rem 0.133333rem rgba(0,0,0,0.2);
 
-      .iconfont {
-        font-size: 1.0rem;
-        line-height: 1.4rem;
-        color: #fff;
+    .timing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .timing--icon {
+        margin-right: 0.453333rem;
+        width: 0.853333rem;
+        height: 0.933333rem;
       }
 
-    }
-
-    .exercise__timing--number {
-      color: #639EF4;
-    }
-
-    // .over.exercise__timing--icon {
-    //   background: #E64340;
-    // }
-
-    .over.exercise__timing--number {
-      color: #E64340;
+      .over.timing--number {
+        color: #F84F41;
+      }
     }
   }
 
@@ -643,7 +772,9 @@
       top: 0;
       right: 0;
 
-      padding: 0.066667rem 0.453333rem;
+      padding: 0 0.306667rem;
+      height: 0.666667rem;
+      line-height: 0.666667rem;
       color: #fff;
 
       background: rgba(0,0,0,0.5);

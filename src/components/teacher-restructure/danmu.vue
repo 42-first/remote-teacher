@@ -2,19 +2,20 @@
 <template>
 	<div class="danmu-box">
     <slot name="ykt-msg"></slot>
+    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
-      <span>弹幕</span>
+      <span>{{ $t('bullet') }}</span>
       <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
-        {{isDanmuOpen ? '关闭' : '开启'}}
+        {{ $tc('turnonoff', !isDanmuOpen) }}
       </v-touch>
     </div>
     <div class="gap"></div>
-    <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的弹幕</v-touch>
-    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的弹幕</div>
-    <div v-show="isToastSwitch" class="no-new-item f18">弹幕已{{isDanmuOpen ? '开启' : '关闭'}}</div>
+    <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newbullet') }}</v-touch>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">{{ $t('nonewbullet') }}</div>
+    <div v-show="isToastSwitch" class="no-new-item f18">{{ $tc('bulletonoff', isDanmuOpen) }}</div>
 
-    <!-- 没有试卷 -->
-    <div v-show="!dataList.length" class="no-paper-box">
+    <!-- 没有弹幕 -->
+    <div v-show="!isFetching && !dataList.length" class="no-paper-box">
       <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
       <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="" style="transform: translateY(50%); width: 6.5rem;">
     </div>
@@ -24,11 +25,11 @@
        v-show="dataList.length"
        :bottom-method="loadBottom"
        :bottom-all-loaded="isAllLoaded"
-       :bottomPullText="'上拉加载更多'"
-       :bottomDropText="'释放加载更多'"
+       :bottomPullText="$t('release')"
+       :bottomDropText="$t('shifang')"
        :class="{'allLoaded': isAllLoaded}"
        >
-      <section v-show="dataList.length" class="list">
+      <section v-show="!isFetching && dataList.length" class="list">
 
         <div class="item-with-gap" v-for="item in dataList" :key="item.id">
           <div class="item">
@@ -38,8 +39,8 @@
             </div>
             <div class="action-box">
               <div class="time f15">{{item.time.substring(11)}}</div>
-              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>投屏</v-touch>
-              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">退出投屏</v-touch>
+              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
+              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
             </div>
           </div>
           <div class="gap"></div>
@@ -54,7 +55,7 @@
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
-      <v-touch class="btn" v-on:tap="refreshDataList">刷新</v-touch>
+      <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     </div>
   </div>
 </template>
@@ -175,7 +176,8 @@
 
         if (!self.dataList[0]) {
           setTimeout(() => {
-            this.$refs.Loadmore.onBottomLoaded()
+            // this.$refs.Loadmore.onBottomLoaded()
+            self.onBottomLoaded()
           }, 100)
           return;
         }
@@ -191,9 +193,28 @@
           }
           self.dataList = self.dataList.concat(jsonData.data.danmu_list)
 
-          this.$refs.Loadmore.onBottomLoaded()
+          // this.$refs.Loadmore.onBottomLoaded()
+          self.onBottomLoaded()
         })
       },
+      /**
+       * 复写 mint-ui loadmore 组件的 onBottomLoaded 方法
+       * 处理首次加载容器会往上偏移50px 的问题
+       *
+       */
+      onBottomLoaded () {
+        let self = this
+        var $loadmore = this.$refs.Loadmore
+        $loadmore.bottomStatus = 'pull'
+        $loadmore.bottomDropped = false
+        this.$nextTick(() => {
+          $loadmore.translate = 0
+        })
+        if (!$loadmore.bottomAllLoaded && !$loadmore.containerFilled) {
+          $loadmore.fillContainer()
+        }
+      },
+      
       /**
        * 获取弹幕数据
        *
@@ -405,6 +426,13 @@
       text-align: center;
       line-height: 2.0rem;
       color: $white;
+    }
+
+    .isFetching {
+      position: relative;
+      z-index: 10;
+      padding-top: 7.0rem;
+      text-align: center;
     }
 
     .no-paper-box {

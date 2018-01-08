@@ -2,14 +2,14 @@
 <template>
 	<div class="submission-box">
     <slot name="ykt-msg"></slot>
-    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+    <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
 
-    <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">你有新的投稿</v-touch>
-    <div v-show="isShowNoNewItem" class="no-new-item f18">没有新的投稿</div>
+    <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('recvpost') }}</v-touch>
+    <div v-show="isShowNoNewItem" class="no-new-item f18">{{ $t('nonewpost') }}</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !dataList.length" class="no-paper-box">
       <img src="~images/teacher/no-tougao.png" alt="">
-      <div class="hint f12">试试让学生在手机端 <i class="iconfont icon-add f15"></i> 号中投稿吧！</div>
+      <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
       <div class="gap"></div>
@@ -18,8 +18,8 @@
          ref="Loadmore"
          :bottom-method="loadBottom"
          :bottom-all-loaded="isAllLoaded"
-         :bottomPullText="'上拉加载更多'"
-         :bottomDropText="'释放加载更多'"
+         :bottomPullText="$t('release')"
+         :bottomDropText="$t('shifang')"
          :class="{'allLoaded': isAllLoaded}"
          >
         <section class="list">
@@ -41,28 +41,27 @@
                   <!-- 投屏的时候不显示收藏状态 -->
                   <v-touch class="coll gray" v-show="item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 0)">
                     <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
-                    已收藏
+                    {{ $t('stared') }}
                   </v-touch>
                   <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 1)">
                     <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
-                    收藏
+                    {{ $t('star') }}
                   </v-touch>
 
-                  <v-touch  class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
-                    投屏
+                    {{ $t('screenmode') }}
                   </v-touch>
                   <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
-                    发送全班
+                    {{ $t('postpublic') }}
                   </v-touch>
                   <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
-                    已发全班
+                    {{ $t('postpubliced') }}
                   </div>
                   <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">
                     <span class="fsqb-innerline"></span>
-                    取消投屏
+                    {{ $t('screenmodeoff') }}
                   </v-touch>
-
                   
                 </div>
               </div>
@@ -81,10 +80,10 @@
     </div>
     
     <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
-      <span v-show="isAskingItemStatus">正在投屏中...</span>
-      <span v-show="isItemDeleted">学生已删除此投稿</span>
+      <span v-show="isAskingItemStatus">{{ $t('onscreenmode') }}...</span>
+      <span v-show="isItemDeleted">{{ $t('postdeleted') }}</span>
     </div>
-    <v-touch class="btn f18" v-on:tap="refreshDataList">刷新</v-touch>
+    <v-touch class="btn f18" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     <Scale></Scale>
   </div>
 </template>
@@ -204,7 +203,8 @@
         let self = this
         if (!self.dataList[0]) {
           setTimeout(() => {
-            this.$refs.Loadmore.onBottomLoaded()
+            // this.$refs.Loadmore.onBottomLoaded()
+            self.onBottomLoaded()
           }, 100)
           return;
         }
@@ -221,8 +221,26 @@
           }
           self.dataList = self.dataList.concat(jsonData.data.tougao_list)
 
-          this.$refs.Loadmore.onBottomLoaded()
+          // this.$refs.Loadmore.onBottomLoaded()
+          self.onBottomLoaded()
         })
+      },
+      /**
+       * 复写 mint-ui loadmore 组件的 onBottomLoaded 方法
+       * 处理首次加载容器会往上偏移50px 的问题
+       *
+       */
+      onBottomLoaded () {
+        let self = this
+        var $loadmore = this.$refs.Loadmore
+        $loadmore.bottomStatus = 'pull'
+        $loadmore.bottomDropped = false
+        this.$nextTick(() => {
+          $loadmore.translate = 0
+        })
+        if (!$loadmore.bottomAllLoaded && !$loadmore.containerFilled) {
+          $loadmore.fillContainer()
+        }
       },
       /**
        * 获取答案数据

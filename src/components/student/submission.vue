@@ -14,7 +14,7 @@
       <!-- 文字编辑 -->
       <section class="submission__text">
         <div class="submission__textarea--wrapper f17">
-          <textarea class="submission-textarea J_feed_content" maxlength="140" placeholder="这里可以为空" v-model="text"></textarea>
+          <textarea class="submission-textarea J_feed_content" maxlength="140" :placeholder="$t('isempty')" v-model="text"></textarea>
           <div class="submission-footer">
             <p class="">(<span class="">{{ count }}</span>/140)</p>
           </div>
@@ -25,7 +25,7 @@
       <section class="submission__pic">
         <div v-if="!hasImage">
           <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
-          <p class="submission__pic--remark f14">上传图片（只能添加1张）</p>
+          <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
           <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" src="" alt="" @load="handlelaodImg" @click="handleScaleImage" />
@@ -38,7 +38,7 @@
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
-      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">查看我的投稿</router-link>
+      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
@@ -98,10 +98,10 @@
       return {
         index: 0,
         opacity: 0,
-        title: '投稿',
+        title: this.$i18n.t('post') || '投稿',
         // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成 5课程已结束
         sendStatus: 0,
-        submitText: '确认发送',
+        submitText: this.$i18n.t('sendcfm') || '确认发送',
         text: '',
         imageURL: '',
         imageThumbURL: '',
@@ -139,13 +139,13 @@
       },
       sendStatus(newValue, oldValue) {
         if(newValue === 3) {
-          this.submitText = '正在发送';
+          this.submitText = this.$i18n.t('besending') || '正在发送';
         } else if(newValue === 1) {
-          this.submitText = '图片上传中';
+          this.submitText = this.$i18n.t('picuploading') || '图片上传中';
         } else if(newValue === 2) {
-          this.submitText = '确认发送';
+          this.submitText = this.$i18n.t('sendcfm') || '确认发送';
         } else if(newValue === 4) {
-          this.submitText = '发送成功';
+          this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
           this.submitText = '课程已结束';
         }
@@ -177,7 +177,7 @@
         this.sendStatus = 3;
 
         return request.post(URL, params)
-          .then(function (res) {
+          .then( (res) => {
             if(res) {
               let data = res;
               self.sendStatus = 4;
@@ -187,7 +187,7 @@
               }, 2000)
 
               self.$toast({
-                message: '发送成功',
+                message: this.$i18n.t('sendsuccess') || '发送成功',
                 duration: 2000
               });
 
@@ -338,8 +338,13 @@
       },
       handleDeleteImg() {
         let self = this;
+        // 国际化confirm options改造
+        let msgOptions = {
+          confirmButtonText: this.$i18n.t('confirm'),
+          cancelButtonText: this.$i18n.t('cancel')
+        }
 
-        this.$messagebox.confirm('确定删除图片?').then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?', msgOptions).then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';
@@ -408,7 +413,7 @@
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
-      document.title = '投稿';
+      document.title = this.$i18n.t('post') || '投稿';
 
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);

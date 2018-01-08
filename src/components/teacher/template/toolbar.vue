@@ -4,21 +4,21 @@
 		<div class="rc-toolbar f12">
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
         <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
-        <div class="icondesc">遥控器</div>
+        <div class="icondesc">{{ $t('remotectrl') }}</div>
       </v-touch>
 		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
-		    <div class="icondesc">缩略图</div>
+		    <div class="icondesc">{{ $t('thumbnail') }}</div>
         <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:tap="showActivity" data-category="4" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
-		    <div class="icondesc">课堂动态</div>
+		    <div class="icondesc">{{ $t('classact') }}</div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
 		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:tap="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
 		    <i class="iconfont f28" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
-		    <div class="icondesc">更多</div>
+		    <div class="icondesc">{{ $t('readmore') }}</div>
 		  </v-touch>
 		</div>
 
@@ -27,17 +27,17 @@
       <i class="iconfont icon-sanjiaoxing f24"></i>
 		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
 		    <i class="iconfont icon-ykq_erweima f24"></i>
-		    <span>二维码</span>
+		    <span>{{ $t('qrcode') }}</span>
 		  </v-touch>
 
 		  <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
 		    <i class="iconfont icon-suijidianming1 f24"></i>
-		    <span style="margin-left: 32rpx;">随机点名</span>
+		    <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
 		  </v-touch>
 
       <v-touch class="more-item" v-on:tap="setEndShow">
         <i class="iconfont icon-ykq-tuichufangying f24"></i>
-        <span style="margin-left: 32rpx;">退出放映</span>
+        <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
       </v-touch>
 		</div>
 	</div>

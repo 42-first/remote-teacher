@@ -1,7 +1,7 @@
 /*
- * @page：学生接收器分享投稿详情
+ * @page：学生接收器分享主观题答案
  * @author: chenzhou
- * @update: 2017.8.23
+ * @update: 2017.12.04
  * @desc
  *
  */
@@ -14,23 +14,21 @@
       <h3 class="header-title f18">{{ title }}</h3>
       <p class="student__header--back"></p>
     </header>
-
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
         <div class="item-avatar">
-          <img class="" :src="result.user_avatar_46" alt="" />
+          <img class="" :src="result.user_avatar" alt="" />
         </div>
 
         <!-- 投稿内容 -->
         <div class="item-content">
           <p class="user-name f15">{{ result.user_name }}</p>
-          <p class="f15">{{ result.content }}</p>
-          <img v-if="result.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
+          <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
+          <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
         </div>
-
       </div>
       </div>
     </div>
@@ -40,9 +38,10 @@
   import API from '@/util/api'
 
   export default {
-    name: 'submission-detail-page',
+    name: 'subjective-share-page',
     data() {
       return {
+        lessonID: 0,
         index: 0,
         opacity: 0,
         title: '',
@@ -70,10 +69,11 @@
        * @method 获取主观题分数
        * @param
        */
-      getSubmission(submissionID) {
-        let URL = API.student.GET_SUBMISSION;
+      getSubjective(spid) {
+        let URL = API.student.GET_SUBJECTIVE;
         let param = {
-          'tougao_id': submissionID
+          'lesson_id': this.lessonID,
+          'problem_result_id': spid
         };
 
         return request.get(URL, param)
@@ -82,11 +82,6 @@
               let data = res.data;
 
               this.result = data;
-
-              // this.summary = Object.assign(this.summary, {
-              //   status: '已读',
-              //   isComplete: true
-              // })
 
               return data;
             }
@@ -170,6 +165,7 @@
 
       let cards = this.$parent.cards;
       this.summary = cards[this.index];
+      this.lessonID = this.$parent.lessonID;
 
       setTimeout(()=>{
         this.opacity = 1;
@@ -177,7 +173,7 @@
 
       if(this.summary) {
         this.title = this.$parent.title;
-        this.getSubmission(this.summary.postid);
+        this.getSubjective(this.summary.spid);
       } else {
         this.$router.back();
       }
@@ -200,7 +196,6 @@
 
     background: #fff;
     overflow: hidden;
-    // -webkit-overflow-scrolling: touch;
     -webkit-backface-visibility: hidden;
     // -webkit-transform: translate3d(0,0,0);
   }
@@ -235,6 +230,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    // height: calc(100% - 1.33rem);
 
     padding: 1.533333rem 0.453333rem 0.533333rem;
     color: #333333;
@@ -247,7 +243,6 @@
         display: block;
         width: 0.986667rem;
         height: 0.986667rem;
-        // border-radius: 50%;
       }
     }
 

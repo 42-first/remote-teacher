@@ -2,7 +2,7 @@
 <template>
 	<div class="paper-box">
     <slot name="ykt-msg"></slot>
-    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
+    <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
       <img src="~images/teacher/no-paper.png" alt="">
@@ -11,7 +11,7 @@
     <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length">
-        <div class="title f17">已发试卷</div>
+        <div class="title f17">{{ $t('publishedquiz') }}</div>
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
           <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
@@ -23,7 +23,7 @@
       
       <!-- 试卷库 -->
       <section class="list downer">
-        <div class="title f17">我的试卷库</div>
+        <div class="title f17">{{ $t('myquiz') }}</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
           <div class="desc f18 ellipsis">
@@ -37,12 +37,12 @@
     
     <div class="rc-mask pub-modal" v-show="!isPubmodalHidden">
       <div class="pub-inner">
-        <div class="title f20">发布试卷</div>
+        <div class="title f20">{{ $t('publishquiz') }}</div>
         <div class="paper-title f18">{{paperChosen.title}}</div>
         <div class="pub-btns f18">
-          <v-touch class="cancel" v-on:tap="closePubmodal">取消</v-touch>
+          <v-touch class="cancel" v-on:tap="closePubmodal">{{ $t('cancel') }}</v-touch>
           <div class="bar"></div>
-          <v-touch class="confirm" v-on:tap="publishPaper">发布</v-touch>
+          <v-touch class="confirm" v-on:tap="publishPaper">{{ $t('publish') }}</v-touch>
         </div>
       </div>
     </div>
@@ -99,7 +99,6 @@
       self.handlePubSub()
     },
     beforeDestroy(){
-      T_PUBSUB.unsubscribe('quiz-msg')
     },
     methods: {
       /**
@@ -357,6 +356,12 @@
         }
 
         .paper-title {
+          overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
           color: #333333;
         }
 

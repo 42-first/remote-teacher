@@ -42,6 +42,8 @@ if (process.env.NODE_ENV === 'production') {
             'UPLOAD_PIC': '/v/api/tougao/pic_upload',
             // 单个投稿信息
             'GET_SUBMISSION': '/v/api/tougao/tougao_info',
+            // 主观题分享
+            'GET_SUBJECTIVE': '/v/lesson/subjective_problem_result_info',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         },
 
@@ -93,6 +95,10 @@ if (process.env.NODE_ENV === 'production') {
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
             'UPLOAD_PIC': 'v/tougao/pic_uplaod',
+             // 单个投稿信息
+            'GET_SUBMISSION': '/v/api/tougao/tougao_info',
+            // 主观题分享
+            'GET_SUBJECTIVE': '/v/lesson/subjective_problem_result_info',
             'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
         },
 

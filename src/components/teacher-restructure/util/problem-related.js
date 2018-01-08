@@ -7,7 +7,7 @@ import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
 // 发送试题
-import RcMaskProblemtime from '@/components/teacher-restructure/common/problemtime'
+import Problemtime from '@/components/teacher-restructure/common/problemtime'
 
 let problemType = ''
 
@@ -19,7 +19,7 @@ export default {
     }
   },
   components: {
-    RcMaskProblemtime,
+    Problemtime,
   },
   methods: {
     /**
@@ -51,7 +51,7 @@ export default {
         self.socket.send(str)
       }else{
         // 发送题目
-        self.$store.commit('set_initiativeCtrlMaskTpl', 'RcMaskProblemtime')
+        self.$store.commit('set_initiativeCtrlMaskTpl', 'Problemtime')
         self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
       }
     },
@@ -78,6 +78,12 @@ export default {
       let current = self.data.current - 1
       let pptData = self.data.pptData
       let problemid = pptData[current].Problem.ProblemID
+      let limit = duration
+
+      // 如果是正计时，timeLeft 可以为0或正数
+      // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
+      // 所以如果是正计时的话，将初始 timeLeft 设置为1
+      let timeLeft = ~limit ? duration : 1
 
       let postData = {
         "lessonid": self.data.lessonid,
@@ -89,8 +95,12 @@ export default {
 
       request.post(API.publish_problem, postData)
         .then(jsonData => {
-          // 打开柱状图页面，倒计时
-          self.showProblemResult(problemid, duration, duration)
+          // 打开柱状图页面
+          if (self.isGuideDelayHidden) {
+            self.showProblemResult(problemid, limit, timeLeft)
+          } else {
+            self.goHome()
+          }
         })
     },
     
@@ -99,9 +109,9 @@ export default {
      *
      * @param {number} problemid 发送的试题的id
      * @param {number} limit 限时
-     * @param {number} timeLeft 剩余的时间
+     * @param {number} timeLeft 剩余的时间或正计时进行到的时间
      */
-    showProblemResult (problemid, limit, timeLeft = 0) {
+    showProblemResult (problemid, limit, timeLeft) {
       let self = this
 
       // 主观题、普通题分别进入各自的页面
@@ -115,7 +125,8 @@ export default {
         query: {
           pt,
           lm: limit,
-          tl: timeLeft
+          tl: timeLeft,
+          _t: +new Date()
         }
       }
 

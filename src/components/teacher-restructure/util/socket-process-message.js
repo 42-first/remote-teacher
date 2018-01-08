@@ -2,8 +2,15 @@
  * @module socket处理函数
  */
 
- let isOldVersion = false               // 雨课堂软件是老版本
- import config from '@/pages/teacher/config/config'
+let isOldVersion = false               // 雨课堂软件是老版本
+import config from '@/pages/teacher/config/config'
+
+function goHome () {
+  this.goHome.call(this)
+  if (this.$route.name !== 'home') {
+    location.href = `/lesson/teacher/${window.LESSONID}`
+  }
+}
 
 function socketProcessMessage(msg){
   let self = this
@@ -15,7 +22,10 @@ function socketProcessMessage(msg){
 
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
-    msg.slideindex = self.idIndexMap[msg.slideid]
+    // 有可能 presentationupdated 触发的 fetchData 比较慢（比 showpresentation 指令慢），这时还没有新 slideid 的 map
+    // 就暂时用 msg.slideindex
+    let mapResult = self.idIndexMap[msg.slide ? msg.slide.sid : msg.slideid]
+    msg.slideindex = mapResult ? mapResult : msg.slideindex
   }
   
   let current = self.current - 1
@@ -125,7 +135,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
-    T_PUBSUB.publish('ykt-msg-modal', config.pubsubmsg.modal[0])
+    T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
     return
   }
 
@@ -165,6 +175,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'showfinished') {
     self.showEscMask()
+    goHome.call(self)
     return
   }
 
@@ -191,16 +202,38 @@ function socketProcessMessage(msg){
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
     
-    self.showWhichPage(msg) 
+    self.showWhichPage(msg)
+    goHome.call(self)
     return
   }
   
   //刷新了遥控器页面，且点击的是查看答案按钮
   if (msg.op == 'probleminfo') {
+    // msg.dt 是发题的时间
     let timePassed = Math.floor((msg.now-msg.dt)/1000)
     // 是倒计时则取剩下时间，没有限时则取已经过去的时间
     let timeLeft = ~msg.limit ? msg.limit - timePassed : timePassed
+
+    // 如果是倒计时，timeLeft 有可能为0或负数或正数
+    // 如果是正计时，timeLeft 有可能为0或正数
+    // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
+    // 所以如果是正计时的话，如果 timeLeft 为0，将其设置为1
+    if (!~msg.limit && timeLeft === 0) {timeLeft = 1}
+    timeLeft = Math.round(timeLeft)
+
     self.showProblemResult(msg.problemid, msg.limit, timeLeft)
+    return
+  }
+
+  //收题了
+  if (msg.op == 'problemfinished') {
+    T_PUBSUB.publish('pro-msg.shoutipc', {problemid: +msg.prob});
+    return
+  }
+
+  //试题延时了
+  if (msg.op == 'extendtime') {
+    T_PUBSUB.publish('pro-msg.yanshipc', msg.problem);
     return
   }
 
@@ -237,6 +270,13 @@ function socketProcessMessage(msg){
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', +msg.spid)
+    self.$store.commit('set_postingSubjectiveSent', msg.sent)
+    return
+  }
+
+  // 主观题已经发送给全班，发送全班肯定是在当前投屏的状态下进行的
+  if (msg.op == 'sendsproblem') {
+    self.$store.commit('set_postingSubjectiveSent', true)
     return
   }
 
@@ -342,13 +382,13 @@ function socketProcessMessage(msg){
 
   // 发了新的试卷，单通了
   if (msg.op == 'newquiz') {
-    PubSub.publish('quiz-msg.newquiz', msg)
+    T_PUBSUB.publish('quiz-msg.newquiz', msg)
     return
   }
 
   // 收卷了
   if (msg.op == 'quizfinished') {
-    PubSub.publish('quiz-msg.quizfinished', msg)
+    T_PUBSUB.publish('quiz-msg.quizfinished', msg)
     return
   }
 

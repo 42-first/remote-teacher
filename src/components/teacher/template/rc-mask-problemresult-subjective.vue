@@ -4,7 +4,7 @@
 		<v-touch v-show="isBigpicShown" class="bigpic-mask" v-on:tap="hideBigpic">
       <img :src="bigpicUrl" :class="[isWider ? 'w100' : 'h100']" alt="">
     </v-touch>
-		<v-touch v-on:tap="refreshSubjectivelist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">您有新的答案</v-touch>
+		<v-touch v-on:tap="refreshSubjectivelist" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newans') }}</v-touch>
 
 		<v-touch class="back-top-btn" v-on:tap="back2Top" v-show="isShow2TopBtn">
 			<img class="jishi" src="~images/teacher/back-top.png" alt="">
@@ -31,13 +31,13 @@
 		      <span class="time">{{problemDurationLeft}}</span>
 		    </div>
 		    <div :class="['f18', 'yjy']">
-		      已经有 <span>{{total_num}}</span> / <span>{{class_participant_num}}</span> 位同学提交了答案
+		    	{{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }}
 		    </div>
 	    </section>
 
 	    <!-- 中间主观题页面 -->
 	    <v-touch class="subjective-box f18">
-				<p v-show="!total_num" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
+				<p v-show="!total_num" class="hmy" v-html="$t('noanssubmit')"></p>
 
 				<!-- 主观题部分 -->
 				<div class="subjective-list" v-show="subjectiveList.length">
@@ -58,8 +58,8 @@
                 <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index)">
               		<div class="gray">
               	    <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
-              	    <span>{{item.score === -1 ? '打分' : '得分'}}</span>
-              	    <span v-show="item.score !== -1">{{item.score}}分</span>
+              	    <span>{{ $tc('givestuscore', item.score === -1) }}</span>
+              	    <span v-show="item.score !== -1">{{item.score}}{{ $t('stutestscore') }}</span>
               	  </div>
                 </v-touch>
                 <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -68,9 +68,9 @@
 
                   <v-touch v-show="postingSubjectiveid !== item.problem_result_id"  class="gray" v-on:tap="postSubjective(item.problem_result_id)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4;"></i>
-                    <span>投屏</span>
+                    <span>{{ $t('screenmode') }}</span>
                   </v-touch>
-                  <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">取消投屏</v-touch>
+                  <v-touch class="cancel-post-btn f17" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">{{ $t('screenmodeoff') }}</v-touch>
                 </div>
               </div>
             </div>
@@ -87,7 +87,7 @@
 	  </div>
 
 	  <div class="button-box f18" v-show="isShowBtnBox" :class="isShowBackBtn ? 'btnfadein' : 'btnfadeout'">
-      <v-touch class="btn f18" v-on:tap="closeProblemSubjective" >返回</v-touch>
+      <v-touch class="btn f18" v-on:tap="closeProblemSubjective" >{{ $t('back') }}</v-touch>
     </div>
 		
 	</div>
