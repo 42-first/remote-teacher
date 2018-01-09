@@ -29,21 +29,20 @@ export default {
      */
     problemHandler () {
       let self = this
-      self.data = self // hack 复用小程序代码
 
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
+      let current = self.current - 1
+      let pptData = self.pptData
       let problemid = pptData[current].Problem.ProblemID
 
       problemType = pptData[current].Problem.Type
       self.problemType = problemType
 
-      if(self.data.isProblemPublished){
+      if(self.isProblemPublished){
         // 查看答案
         // 查询当前题目的状态，在 WebSocket 回复的指令 probleminfo 中执行 showProblemResult 函数
         let str = JSON.stringify({
           'op': 'probleminfo',
-          'lessonid': self.data.lessonid,
+          'lessonid': self.lessonid,
           'problemid': problemid,
           'msgid': self.problemType // 使用 problemType 判断是不是主观题，因为主观题有正计时
         })
@@ -73,10 +72,9 @@ export default {
      */
     unlockProblem (duration) {
       let self = this
-      self.data = self // hack 复用小程序代码
 
-      let current = self.data.current - 1
-      let pptData = self.data.pptData
+      let current = self.current - 1
+      let pptData = self.pptData
       let problemid = pptData[current].Problem.ProblemID
       let limit = duration
 
@@ -86,9 +84,9 @@ export default {
       let timeLeft = ~limit ? duration : 1
 
       let postData = {
-        "lessonid": self.data.lessonid,
-        "presentation": self.data.presentationid,
-        "slideindex": self.data.current,
+        "lessonid": self.lessonid,
+        "presentation": self.presentationid,
+        "slideindex": self.current,
         "problemid": problemid,
         "limit": duration //-1为不限时，以秒为单位，60为一分钟
       }
