@@ -413,7 +413,7 @@
        * @params problemid
        */
       closedProblem(problemid) {
-        if(problemid === this.problemID) {
+        if(problemid === this.problemID && !this.isComplete) {
           this.setTiming(0);
         }
       },
@@ -586,6 +586,8 @@
                 message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
                 duration: 3000
               });
+
+              self.isComplete = true;
 
               setTimeout(() => {
                 self.$router.back();

@@ -106,7 +106,19 @@ const store = new Vuex.Store({
       state.total = total
     },
     set_pptData: (state, pptData) => {
-      state.pptData = pptData
+      console.log('====store.set_pptData', pptData)
+      // state.pptData = pptData
+      // state.pptData = Array.from(pptData)
+      
+      /*
+       * 注意！注意！注意！
+       * 在遥控器切换路由返回遥控器主界面之后，ppt 新增一页会获取新的data，并在这里设置 pptData，
+       * 这种情况下采用上面的方法都不能引发 vue 实例（home.vue）中 this.pptData 的更新
+       * 要用下面这种"变异方法"才行
+       * https://cn.vuejs.org/v2/guide/list.html
+       */
+      let len = state.pptData.length
+      state.pptData.splice(0, len, ...pptData)
     },
     set_finishedQuizList: (state, finishedQuizList) => {
       state.finishedQuizList = finishedQuizList

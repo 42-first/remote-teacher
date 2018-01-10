@@ -87,12 +87,11 @@ export default {
      */
     showWhichPage: function (msg) {
       let self = this
-      self.data = self // hack 复用小程序代码
 
       // 有可能打开遥控器的时候ppt还没有开始上课，此时hello返回的slideindex可能是0
       let current = msg.slideindex || 1
       // 防止一开始hello的时候数据还没有加载进来
-      let isProblem = self.data.pptData.length && typeof self.data.pptData[current - 1].Problem !== 'undefined'
+      let isProblem = self.pptData.length && typeof self.pptData[current - 1].Problem !== 'undefined'
       // let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
       let isProblemPublished
 
@@ -126,7 +125,6 @@ export default {
      */
     handleUploadSlide: function (msg) {
       let self = this
-      self.data = self // hack 复用小程序代码
       let current = msg.slideindex || 1
 
       // 到下一页重新让能够显示2秒的加载中并清除之前的定时器，否则可能不到2秒就 crash 了
@@ -135,21 +133,21 @@ export default {
         isUploadSlideCrash: false
       })
 
-      if (self.data.isUpImgError) {
+      if (self.isUpImgError) {
         let si = msg.slideindex
         let sid = msg.slideid
 
         sendUploadSocket.call(self, si, sid)
       }
 
-      if (self.data.isDownImgError) {
+      if (self.isDownImgError) {
         let si = msg.slideindex + 1
-        let sid = self.data.pptData[current].lessonSlideID
+        let sid = self.pptData[current].lessonSlideID
 
         sendUploadSocket.call(self, si, sid)
       }
 
-      if (self.data.isUpImgError || self.data.isDownImgError) {
+      if (self.isUpImgError || self.isDownImgError) {
         uploadslideCrashTimer = setTimeout(() => {
           self.setData({
             isUploadSlideCrash: true

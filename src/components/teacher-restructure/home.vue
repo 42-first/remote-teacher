@@ -239,11 +239,6 @@
 	    self.polyfillIncludes()
 	    self.importPhotoswipe()
 	  },
-	  watch: {
-	  	'$route' () {
-	  		this.init()
-	  	}
-	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
 	  	/**
@@ -251,10 +246,12 @@
 	     *
 	     */
 	    init () {
+	    	
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
 		    window.LESSONID = lessonid
+
 
 		    // 换课的话，要清掉持久化的旧 store
 		    if (lessonid !== self.lessonid) {
