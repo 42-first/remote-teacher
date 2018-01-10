@@ -45,6 +45,7 @@ let pages = {
   "submit": "Submit",
   "submitansw": "Submit Answer",
   "cannotsubmit": "Unable to submit",
+  "submitok": "Submited",
 
   "voteremain": "{number} more votes",
   "novote": "You haven't voted yet.",
@@ -140,7 +141,6 @@ let pages = {
   "noanssubmit": "No submission, please wait",
   "newans": "New Submission",
   "mark": "Mark",
-  "screenmode": "Screen",
   "viewdetails": "Details",
   "classbonusBonuslist": "Bonus | List of the Awarded",
   "standardopt": "Correct Answer",
@@ -237,6 +237,7 @@ let pages = {
   "postpublic": "Send",
   "postpubliced": "Sent",
   "screenmodeoff": "Exit Screen Mode",
+  "screenmodeonoff": "Screen | Exit Screen Mode",
   "release": "Release",
 
   "totalstudent": "Active Students: ",

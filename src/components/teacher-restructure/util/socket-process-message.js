@@ -225,6 +225,17 @@ function socketProcessMessage(msg){
     return
   }
 
+  //习题柱状图投屏了
+  if (msg.op == 'postproblemresult') {
+    T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: +msg.problemid});
+    return
+  }
+  //习题柱状图取消投屏了
+  if (msg.op == 'closeproblemresult') {
+    T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: +msg.problemid});
+    return
+  }
+
   //收题了
   if (msg.op == 'problemfinished') {
     T_PUBSUB.publish('pro-msg.shoutipc', {problemid: +msg.prob});
