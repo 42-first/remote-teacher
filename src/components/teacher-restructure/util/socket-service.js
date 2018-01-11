@@ -69,16 +69,22 @@ let mixin = {
         self.$store.commit('set_socket', socket)
 
         // 上报连接 socket 动作
-        let url = `/reporter/collect`
+        let url = '/reporter/collect'
         request.get(url, {
           'user_id': self.userid,
           'lesson_id': self.lessonid,
-          'type': 'connection',
+          'type': 'connection-h5-teacher',
           'dt': Date.now()
         })
 
         // 关闭
         this.socket.onclose = function(event) {
+          request.get(url, {
+            'user_id': self.userid,
+            'lesson_id': self.lessonid,
+            'type': 'close-h5-teacher',
+            'dt': Date.now()
+          })
 
           self.closews()
           self.isSocketConnected = false
