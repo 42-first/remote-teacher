@@ -8,7 +8,7 @@
             <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
           </p>
           <div class="footer-cr">
-            <p>©2017 清华大学&学堂在线</p>
+            <p>©2018 清华大学&学堂在线</p>
             <p>京ICP证140571号 | 京公网安备 11010802017721</p>
           </div>
           <!-- <p>京公网安备 11010802017721</p> -->
