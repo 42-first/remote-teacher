@@ -7,6 +7,7 @@
  */
 
 import socketProcessMessage from './socket-process-message'
+import request from '@/util/request'
 
 const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
@@ -67,8 +68,23 @@ let mixin = {
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
         self.$store.commit('set_socket', socket)
 
+        // 上报连接 socket 动作
+        let url = '/reporter/collect'
+        request.get(url, {
+          'user_id': self.userid,
+          'lesson_id': self.lessonid,
+          'type': 'connection-h5-teacher',
+          'dt': Date.now()
+        })
+
         // 关闭
         this.socket.onclose = function(event) {
+          request.get(url, {
+            'user_id': self.userid,
+            'lesson_id': self.lessonid,
+            'type': 'close-h5-teacher',
+            'dt': Date.now()
+          })
 
           self.closews()
           self.isSocketConnected = false

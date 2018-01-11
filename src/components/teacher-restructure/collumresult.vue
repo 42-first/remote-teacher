@@ -76,11 +76,11 @@
 
 	    <!-- 下方按钮 -->
 	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
-	      <v-touch class="btn-item" v-on:tap="postProblemresult">
+	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
 	      	</div>
-	        <div class="btn-desc f14">{{ $t('screenmode') }}</div>
+	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
 	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
@@ -169,6 +169,7 @@
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
+		    isTouping: false,							 // 当前正在投屏
 	    }
 	  },
 	  computed: {
@@ -413,6 +414,16 @@
           self.problemid === msg.problemid && self.shoutiConfirm()
         })
 
+        // 从 node 传来， 试题投屏事件
+        T_PUBSUB.subscribe('pro-msg.postproblemresult', (_name, msg) => {
+          self.problemid === msg.problemid && self.toggleTouping(true)
+        })
+
+        // 从 node 传来， 试题取消投屏事件
+        T_PUBSUB.subscribe('pro-msg.closeproblemresult', (_name, msg) => {
+          self.problemid === msg.problemid && self.toggleTouping(false)
+        })
+
         // 从 node 传来， pc收题事件
         T_PUBSUB.subscribe('pro-msg.shoutipc', (_name, msg) => {
           self.problemid === msg.problemid && self.resetTiming(operationType['shouti'])
@@ -423,6 +434,15 @@
           self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
       },
+      /**
+	     * 切换 投屏 取消投屏
+	     *
+	     * @param {boolean} status true 已经投屏
+	     */
+	    toggleTouping (status) {
+	    	let self = this
+	    	self.isTouping = status
+	    },
 	    /**
 	     * 清理 storage 中旧的 durInfo
 	     *
@@ -575,12 +595,15 @@
 	     * 试题柱状图页面中的 投屏 按钮
 	     *
 	     * @event bindtap
+	     * @param {boolean} isTouping true 正在投屏，要取消投屏
 	     */
-	    postProblemresult () {
+	    handlePostProblemresult (isTouping) {
 	      let self = this
 
+	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
+
 	      let str = JSON.stringify({
-	        'op': 'postproblemresult',
+	        op,
 	        'lessonid': self.lessonid,
 	        'problemid': self.problemid
 	      })

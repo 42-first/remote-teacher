@@ -141,7 +141,6 @@ let pages = {
   "noanssubmit": '还没有人提交<br>耐心等待一会儿吧~',
   "newans": "您有新的答案",
   "mark": "打分",
-  "screenmode": "投屏",
   "viewdetails": "查看详情",
   "classbonusBonuslist": "课堂红包 | 红包名单",
   "standardopt": "本题正确选项为",
@@ -238,6 +237,7 @@ let pages = {
   "postpublic": "发送全班",
   "postpubliced": "已发全班",
   "screenmodeoff": "取消投屏",
+  "screenmodeonoff": "投屏 | 取消投屏",
   "release": "上拉加载更多",
 
   "totalstudent": "当前班级人数：",
