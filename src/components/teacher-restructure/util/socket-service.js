@@ -59,6 +59,17 @@ let mixin = {
       }
 
       try {
+        let url = '/reporter/collect'
+        if (self.$store.state.socket && self.$store.state.socket.send) {
+          request.get(url, {
+            'user_id': self.userid,
+            'lesson_id': self.lessonid,
+            'type': 'vuex-old-socket-still-exist-h5-teacher',
+            'dt': Date.now()
+          })
+          self.$store.state.socket.send.closews()
+        }
+
         if(this.socket) {
           this.closews()
         }
@@ -69,7 +80,7 @@ let mixin = {
         self.$store.commit('set_socket', socket)
 
         // 上报连接 socket 动作
-        let url = '/reporter/collect'
+        
         request.get(url, {
           'user_id': self.userid,
           'lesson_id': self.lessonid,
