@@ -403,12 +403,12 @@ function socketProcessMessage(msg){
     return
   }
 
-  //习题柱状图投屏了
+  //试卷饼图投屏了
   if (msg.op == 'postquizresult') {
     T_PUBSUB.publish('quiz-msg.postquizresult', {quizid: +msg.quizid});
     return
   }
-  //习题柱状图取消投屏了
+  //试卷饼图取消投屏了
   if (msg.op == 'closequizresult') {
     T_PUBSUB.publish('quiz-msg.closequizresult', {quizid: +msg.quizid});
     return
