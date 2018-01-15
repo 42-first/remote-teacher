@@ -89,7 +89,7 @@ let pages = {
   "subjectivepro" : "Answer Subjective Question",
   "classbonus" : "Class Bonus",
   "receiveclassbonus" : "You have received a bonus.",
-  "whosebonus" : "'s bonus",
+  "whosebonus" : "{name}'s bonus",
   "savedinpacket" : "Saved to Rain Classroom Wallet",
   "numopenedbonus" : "{count}/{total } students opened the bonus",
 

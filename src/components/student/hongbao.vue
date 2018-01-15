@@ -98,7 +98,10 @@
     },
     filters: {
       formatTime(time) {
-        return typeof moment !== 'undefined' && moment(time).format('HH:mm:ss') || time;
+        let dt = new Date(time);
+        let sTime = dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds();
+
+        return typeof moment !== 'undefined' && moment(time).format('HH:mm:ss') || sTime;
       }
     },
     mixins: [],

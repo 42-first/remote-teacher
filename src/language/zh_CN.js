@@ -89,7 +89,7 @@ let pages = {
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
   "receiveclassbonus" : "你收到一个课堂红包",
-  "whosebonus" : '的课堂红包',
+  "whosebonus" : '{name}的课堂红包',
   "savedinpacket" : "已存入我的钱包",
   "numopenedbonus" : "已领 {count}/{total} 个红包",
 
