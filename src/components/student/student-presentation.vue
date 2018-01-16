@@ -577,20 +577,23 @@
        */
       formatUpdatePresentation(presentation, presentationID, oldPresentation) {
         if(presentation) {
+          let pptDataResult = [];
           let pptData = presentation['Slides'];
           let oldSildes = oldPresentation && oldPresentation['Slides'];
 
           if(pptData.length) {
-            pptData.forEach( (slide, index) => {
+            pptDataResult = pptData.map( (slide, index) => {
               // 是否存在旧的数据
               if(oldSildes) {
-                let oldSlide = this.getSlideData(oldSildes, index, slide.lessonSlideID);
-                slide = Object.assign(oldSlide, slide);
+                let oldSlide = this.getSlideData(oldSildes, index + 1, slide.lessonSlideID);
+                oldSlide && (slide = Object.assign({}, oldSlide, slide));
               }
+
+              return slide;
             });
 
             // 有可能存在更新的情况
-            presentation['Slides'] = pptData;
+            presentation['Slides'] = pptDataResult;
           }
 
           this.presentationMap.set(presentationID || presentation.presentationID, presentation);
