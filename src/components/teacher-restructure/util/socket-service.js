@@ -64,6 +64,7 @@ let mixin = {
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
+            'socket_id': self.$store.state.socket.socket_id,
             'type': 'vuex-old-socket-still-exist-h5-teacher',
             'dt': Date.now()
           })
@@ -77,6 +78,7 @@ let mixin = {
         // 雷上已经全部使用https了，本地调试也使用https
         let wsProtocol = location.protocol === 'https:' || location.host.indexOf('192.168') !== -1 ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
+        socket.socket_id = Date.now()
         self.$store.commit('set_socket', socket)
 
         // 上报连接 socket 动作
@@ -84,15 +86,27 @@ let mixin = {
         request.get(url, {
           'user_id': self.userid,
           'lesson_id': self.lessonid,
+          'socket_id': this.socket.socket_id,
           'type': 'connection-h5-teacher',
           'dt': Date.now()
         })
+
+        this.socket.onerror = function(event) {
+          request.get(url, {
+            'user_id': self.userid,
+            'lesson_id': self.lessonid,
+            'socket_id': this.socket.socket_id,
+            'type': 'error-h5-teacher',
+            'dt': Date.now()
+          })
+        }
 
         // 关闭
         this.socket.onclose = function(event) {
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
+            'socket_id': this.socket.socket_id,
             'type': 'close-h5-teacher',
             'dt': Date.now()
           })

@@ -4,6 +4,7 @@
 
 let isOldVersion = false               // 雨课堂软件是老版本
 import config from '@/pages/teacher/config/config'
+import request from '@/util/request'
 
 function goHome () {
   this.goHome.call(this)
@@ -136,6 +137,15 @@ function socketProcessMessage(msg){
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
     T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
+
+    let url = '/reporter/collect'
+    request.get(url, {
+      'user_id': self.userid,
+      'lesson_id': self.lessonid,
+      'socket_id': self.socket.socket_id,
+      'type': 'remotedeprived-h5-teacher',
+      'dt': Date.now()
+    })
     return
   }
 
