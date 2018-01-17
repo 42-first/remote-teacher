@@ -67,7 +67,7 @@ let mixin = {
             'type': 'vuex-old-socket-still-exist-h5-teacher',
             'dt': Date.now()
           })
-          self.$store.state.socket.send.closews()
+          self.$store.state.socket.close()
         }
 
         if(this.socket) {
