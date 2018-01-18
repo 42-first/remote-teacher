@@ -258,6 +258,15 @@ function socketProcessMessage(msg){
     return
   }
 
+  //试题延时了
+  if (msg.op == 'newsubmit') {
+    T_PUBSUB.publish('pro-msg.newsubmit', msg);
+    return
+  }
+
+
+  
+
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     self.$store.commit('set_isProblemPublished', true)
