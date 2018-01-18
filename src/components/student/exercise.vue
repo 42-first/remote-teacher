@@ -215,6 +215,11 @@
         if(data.isComplete) {
           this.isShowSubmit = false;
 
+          // 投票类型
+          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
+            this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
+          }
+          
           let result = this.oProblem['Result'];
 
           result && result.split('').forEach((option) => {
