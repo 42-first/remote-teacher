@@ -87,8 +87,8 @@
       sendDanmu() {
         let self = this;
         let URL = API.student.SEND_DANMU;
-        let socket = this.$parent.socket;
-        const message = this.text.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
+        // let socket = this.$parent.socket;
+        const message = this.text.replace(/^\s+|\s+$/g, '');
         let params = {
           'lessonID': this.lessonID,
           'presentationID': this.$parent.presentationID,
