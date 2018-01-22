@@ -521,7 +521,8 @@
               let presentation = data.presentationData;
 
               // set presentation map
-              self.formatPresentation(presentation, presentationID);
+              let oldPresentation = self.presentationMap.get(presentationID);
+              self.formatUpdatePresentation(presentation, presentationID, oldPresentation);
 
               // set title
               presentation.Title && (self.title = presentation.Title);
@@ -564,6 +565,35 @@
             });
 
             presentation['Slides'] = pptData;
+          }
+
+          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
+        }
+      },
+
+      /*
+       * @method 格式化ppt更新数据
+       * @param
+       */
+      formatUpdatePresentation(presentation, presentationID, oldPresentation) {
+        if(presentation) {
+          let pptDataResult = [];
+          let pptData = presentation['Slides'];
+          let oldSildes = oldPresentation && oldPresentation['Slides'];
+
+          if(pptData.length) {
+            pptDataResult = pptData.map( (slide, index) => {
+              // 是否存在旧的数据
+              if(oldSildes) {
+                let oldSlide = this.getSlideData(oldSildes, index + 1, slide.lessonSlideID);
+                oldSlide && (slide = Object.assign({}, oldSlide, slide));
+              }
+
+              return slide;
+            });
+
+            // 有可能存在更新的情况
+            presentation['Slides'] = pptDataResult;
           }
 
           this.presentationMap.set(presentationID || presentation.presentationID, presentation);
