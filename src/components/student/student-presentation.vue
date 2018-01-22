@@ -56,6 +56,10 @@
           <div class="timeline-wrapper" v-for="(item, index) in cards">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
+          <!-- 各类型中的空状态 -->
+          <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">还没有开始播放幻灯片~</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===3 && !hasProblem">还没有发布习题噢~</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===4 && !hasQuiz">还没有发布试卷噢~</div>
         </section>
 
       </loadmore>
@@ -213,7 +217,14 @@
         version: 0.9,
         commitDiffURL: '/lesson/lesson_submit_difficulties',
         backURL: '',
-        pro_perm_info: {}
+        pro_perm_info: {},
+
+        // 是否存在ppt
+        hasPPT: true,
+        // 是否存在习题
+        hasProblem: true,
+        // 是否存在试卷
+        hasQuiz: true
       };
     },
     components: {
@@ -665,6 +676,28 @@
 
         if(tabIndex) {
           this.currTabIndex = tabIndex;
+
+          // 检测ppt 习题 试卷是否为空
+          if(tabIndex > 1) {
+            let hasData = this.cards.find((item) => {
+              return item.type === tabIndex;
+            })
+
+            switch (tabIndex) {
+              case 2:
+                this.hasPPT = hasData;
+                break;
+              case 3:
+                this.hasProblem = hasData;
+                break;
+              case 4:
+                this.hasQuiz = hasData;
+                break;
+              default:
+                break;
+            }
+          }
+
         }
       },
 

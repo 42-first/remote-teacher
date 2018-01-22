@@ -59,8 +59,9 @@ let pages = {
   "besending": "发送中",
   "sendsuccess": "发送成功",
 
-  "isempty": "这里可以为空",
-  "uploadonepic": "上传图片（只能添加1张）",
+  "subjectivetext": "输入文字",
+  "isempty": "请输入想说的话（也可以为空）",
+  "uploadonepic": "点击+号上传图片（只能添加1张）",
   "viewpost": "查看我的投稿",
 
   "back": "返回",

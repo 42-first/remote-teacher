@@ -59,8 +59,9 @@ let pages = {
   "besending": "Sending",
   "sendsuccess": "Send successfully",
 
-  "isempty": "Unrequired",
-  "uploadonepic": "Upload Picture (One atmost)",
+  "subjectivetext": "Enter text here",
+  "isempty": "Please enter here…(Optional)",
+  "uploadonepic": 'Click “+” to upload picture (One Only)',
   "viewpost": "Check My Post",
 
   "back": "Back",
