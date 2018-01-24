@@ -245,7 +245,7 @@ let pages = {
   "toberolling": "即将开始随机点名",
   "rolling": "开始滚动",
   "pause": "暂停",
-  "norolling": "no student no rolling",
+  "norolling": "当前班级没有学生，不能点名",
   "radomrolling": "正在随机筛选...",
   "keeprolling": "继续滚动",
   "selhim": "就是Ta了",
