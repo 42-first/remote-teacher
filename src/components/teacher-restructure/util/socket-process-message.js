@@ -328,7 +328,10 @@ function socketProcessMessage(msg){
     }else if(msg.qrcode == 99){
       self.showQrcodeMask()
     }else if(msg.qrcode == 101){
-      self.fetchPPTData()
+      // slidenav 会去判断是不是 presentationid 变了，不要在这里 fetchPPTData 了
+      // 否则，在切换 ppt 的时候，这个 fetchPPTData 会和 slidenav 里面的 fetchPPTData 比赛速度，
+      // 如果这里的速度慢的话，这里的 fetchPPTData 生效，就不对了
+      // self.fetchPPTData()
       self.$store.commit('set_qrcodeStatus', 1)
       self.killMask()
       self.showQrcodeMask()
