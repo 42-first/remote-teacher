@@ -273,6 +273,10 @@ let pages = {
   "bxs": "不限时",
   "yhbflo": "您已经被夺权，请刷新页面",
   "aysts": "确定结束答题？",
+  "qxzycsx": "请选择延长时限",
+  "Officalaccount": "微信公众号",
+  "miniprogram": "微信小程序",
+  "scancode": "扫二维码",
 };
 
 if (typeof define === 'function' && define.amd){

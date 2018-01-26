@@ -121,6 +121,12 @@
           if (self.quizid === msg.quizid) {
             self.isPaperCollected = true
             self.endTimers()
+
+            // 记录收卷信息
+            let finishedQuizList = self.finishedQuizList
+
+            finishedQuizList['id'+self.quizid] = true
+            self.$store.commit('set_finishedQuizList', finishedQuizList)
           } 
         })
 

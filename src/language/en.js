@@ -273,6 +273,10 @@ let pages = {
   "bxs": "No Limit",
   "yhbflo": "You have been force logged out, please reload the page.",
   "aysts": "Are you sure to stop?",
+  "qxzycsx": "Please select",
+  "Officalaccount": "Offical Account",
+  "miniprogram": "Mini Program",
+  "scancode": "Scan Code",
 };
 
 if (typeof define === 'function' && define.amd){
