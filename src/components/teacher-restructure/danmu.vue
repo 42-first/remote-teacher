@@ -16,8 +16,8 @@
 
     <!-- 没有弹幕 -->
     <div v-show="!isFetching && !dataList.length" class="no-paper-box">
-      <img v-show="!isDanmuOpen" src="~images/teacher/no-danmu-closed.png" alt="">
-      <img v-show="isDanmuOpen" src="~images/teacher/no-danmu-open.png" alt="" style="transform: translateY(50%); width: 6.5rem;">
+      <img v-show="!isDanmuOpen" :src="nodanmuclosedImg" alt="">
+      <img v-show="isDanmuOpen" :src="nodanmuopenImg" alt="" style="transform: translateY(50%); width: 6.5rem;">
     </div>
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
     <Loadmore
@@ -81,6 +81,8 @@
         isShowNewHint: false,       // 上方提示有新的条目进来
         isShowBtnBox: false,        // 显示底部返回按钮
         isToastSwitch: false,       // 显示弹幕开启关闭提示
+        nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
+        nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
       }
     },
     computed: {
