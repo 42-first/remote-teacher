@@ -527,6 +527,9 @@
                 isComplete: true
               })
 
+              // 替换原来的数据
+              self.$parent.cards.splice(self.index, 1, self.summary);
+
               problem = Object.assign(problem, {
                 'Problem': self.oProblem
               })
