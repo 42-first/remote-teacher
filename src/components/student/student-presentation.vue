@@ -57,9 +57,9 @@
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
           <!-- 各类型中的空状态 -->
-          <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">还没有开始播放幻灯片~</div>
-          <div class="timeline__msg f15" v-if="currTabIndex===3 && !hasProblem">还没有发布习题噢~</div>
-          <div class="timeline__msg f15" v-if="currTabIndex===4 && !hasQuiz">还没有发布试卷噢~</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">{{ $t('noslides') }}</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===3 && !hasProblem">{{ $t('noquestions') }}</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===4 && !hasQuiz">{{ $t('noquizzes') }}</div>
         </section>
 
       </loadmore>

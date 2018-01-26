@@ -21,6 +21,11 @@ let pages = {
   "quiz2": "试卷",
   "bonus": "红包",
 
+  // 空状态
+  "noslides": "还没有开始播放幻灯片~",
+  "noquestions": "还没有发布习题噢~",
+  "noquizzes": "还没有发布试卷噢~",
+
   "unknown": "不懂",
   "star": "收藏",
 
