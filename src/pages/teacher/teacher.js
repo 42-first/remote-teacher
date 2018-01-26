@@ -24,12 +24,14 @@ import ChLanguage from '@/language/zh_CN'
 
 const i18n = new VueI18n({
   // 语言标识
-  locale: 'zh_CN',
+  locale: 'en',
   messages: {
     'zh_CN': ChLanguage,
     'en': EnLanguage
   }
 })
+
+window.i18n = i18n
 
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法

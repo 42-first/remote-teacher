@@ -8,7 +8,7 @@
     <div v-show="isShowNoNewItem" class="no-new-item f18">{{ $t('nonewpost') }}</div>
     <!-- 没有投稿 -->
     <div v-show="!isFetching && !dataList.length" class="no-paper-box">
-      <img src="~images/teacher/no-tougao.png" alt="">
+      <img :src="notougaoImg" alt="">
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
@@ -115,6 +115,7 @@
         isShowNoNewItem: false,       // 刷新后没有新的条目
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
+        notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
       }
     },
     computed: {
