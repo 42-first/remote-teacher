@@ -433,6 +433,11 @@
         T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
           self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
+
+        // 从 node 传来，有学生断网重连提交答案了
+        T_PUBSUB.subscribe('pro-msg.newsubmit', (_name, msg) => {
+        	self.problemid === +msg.prob && self.getProblemResult()
+        })
       },
       /**
 	     * 切换 投屏 取消投屏

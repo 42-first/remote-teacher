@@ -21,6 +21,11 @@ let pages = {
   "quiz2": "Quizzes",
   "bonus": "Bonus",
 
+  // 空状态
+  "noslides": "No slides yet.",
+  "noquestions": "No questions yet.",
+  "noquizzes": "No quizzes yet.",
+
   "unknown": "Unclear",
   "star": "Save",
 
@@ -59,8 +64,9 @@ let pages = {
   "besending": "Sending",
   "sendsuccess": "Send successfully",
 
-  "isempty": "Unrequired",
-  "uploadonepic": "Upload Picture (One atmost)",
+  "subjectivetext": "Enter text here",
+  "isempty": "Please enter here…(Optional)",
+  "uploadonepic": 'Click “+” to upload picture (One Only)',
   "viewpost": "Check My Post",
 
   "back": "Back",
@@ -89,7 +95,7 @@ let pages = {
   "subjectivepro" : "Answer Subjective Question",
   "classbonus" : "Class Bonus",
   "receiveclassbonus" : "You have received a bonus.",
-  "whosebonus" : "'s bonus",
+  "whosebonus" : "{name}'s bonus",
   "savedinpacket" : "Saved to Rain Classroom Wallet",
   "numopenedbonus" : "{count}/{total } students opened the bonus",
 

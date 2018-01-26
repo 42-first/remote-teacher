@@ -49,7 +49,7 @@
         <!-- 文字编辑 -->
         <section class="submission__text">
           <div class="submission__textarea--wrapper f17">
-            <textarea class="submission-textarea J_feed_content" maxlength="140" placeholder="输入文字" v-model="text"></textarea>
+            <textarea class="submission-textarea J_feed_content" maxlength="140" :placeholder="$t('subjectivetext')" v-model="text"></textarea>
             <div class="submission-footer">
               <p class="">(<span class="">{{ count }}</span>/140)</p>
             </div>
@@ -526,6 +526,9 @@
                 status: this.$i18n.t('done') || '已完成',
                 isComplete: true
               })
+
+              // 替换原来的数据
+              self.$parent.cards.splice(self.index, 1, self.summary);
 
               problem = Object.assign(problem, {
                 'Problem': self.oProblem

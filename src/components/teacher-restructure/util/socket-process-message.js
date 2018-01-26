@@ -258,6 +258,15 @@ function socketProcessMessage(msg){
     return
   }
 
+  //试题延时了
+  if (msg.op == 'newsubmit') {
+    T_PUBSUB.publish('pro-msg.newsubmit', msg);
+    return
+  }
+
+
+  
+
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     self.$store.commit('set_isProblemPublished', true)
@@ -416,12 +425,12 @@ function socketProcessMessage(msg){
     return
   }
 
-  //习题柱状图投屏了
+  //试卷饼图投屏了
   if (msg.op == 'postquizresult') {
     T_PUBSUB.publish('quiz-msg.postquizresult', {quizid: +msg.quizid});
     return
   }
-  //习题柱状图取消投屏了
+  //试卷饼图取消投屏了
   if (msg.op == 'closequizresult') {
     T_PUBSUB.publish('quiz-msg.closequizresult', {quizid: +msg.quizid});
     return

@@ -249,7 +249,7 @@ var actionsMixin = {
       data = Object.assign(data, {
         papername: data.title,
         quizid: data.quiz,
-        href: '/quiz/quiz_info/' + data.quiz,
+        href: '/v/quiz/quiz_result/' + data.quiz,
         count: data.total,
         time: data.time,
         status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
