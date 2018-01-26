@@ -98,7 +98,7 @@
       return {
         index: 0,
         opacity: 0,
-        title: this.$i18n.t('post') || '投稿',
+        title: this.$i18n.t('post') || '课堂投稿',
         // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成 5课程已结束
         sendStatus: 0,
         submitText: this.$i18n.t('sendcfm') || '确认发送',

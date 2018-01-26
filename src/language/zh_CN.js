@@ -21,6 +21,11 @@ let pages = {
   "quiz2": "试卷",
   "bonus": "红包",
 
+  // 空状态
+  "noslides": "还没有开始播放幻灯片~",
+  "noquestions": "还没有发布习题噢~",
+  "noquizzes": "还没有发布试卷噢~",
+
   "unknown": "不懂",
   "star": "收藏",
 
@@ -59,8 +64,9 @@ let pages = {
   "besending": "发送中",
   "sendsuccess": "发送成功",
 
-  "isempty": "这里可以为空",
-  "uploadonepic": "上传图片（只能添加1张）",
+  "subjectivetext": "输入文字",
+  "isempty": "请输入想说的话（也可以为空）",
+  "uploadonepic": "点击+号上传图片（只能添加1张）",
   "viewpost": "查看我的投稿",
 
   "back": "返回",
