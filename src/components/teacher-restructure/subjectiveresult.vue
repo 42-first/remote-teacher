@@ -18,8 +18,8 @@
        ref="Loadmore"
        :bottom-method="loadBottom"
        :bottom-all-loaded="isAllLoaded"
-       :bottomPullText="'上拉加载更多'"
-       :bottomDropText="'释放加载更多'"
+       :bottomPullText="$t('release')"
+       :bottomDropText="$t('shifang')"
        :class="{'allLoaded': isAllLoaded}"
        >
         <!--试题-主观题面板-->
@@ -30,11 +30,11 @@
             <div class="xitixushi">
               <!-- 延时相关 -->
               <div class="time-rel f15">
-                <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi">延时</v-touch>
-                <div v-else class="tbtn nobtn">不限时</div>
+                <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
+                <div v-else class="tbtn nobtn"><!-- 不限时 -->{{ $t('bxs') }}</div>
               </div>
 
-              <div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
+              <div class="sjd f24" v-show="newTime <= 0"><!-- 作答时间结束 -->{{ $t('receivertimeout') }}</div>
 
               <!-- 中间秒表 -->
               <div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
@@ -46,7 +46,7 @@
 
               <!-- 收题相关 -->
               <div v-show="newTime > 0" class="pro-rel f15">
-                <v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
+                <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
               </div>
             </div>
 
@@ -57,7 +57,9 @@
 
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
-            <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy">还没有人提交<br>耐心等待一会儿吧~</p>
+            <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
+              <!-- 还没有人提交<br>耐心等待一会儿吧~ -->
+            </p>
 
             <!-- 主观题部分 -->
             <div class="subjective-list" v-show="dataList.length">

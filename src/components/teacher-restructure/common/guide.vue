@@ -4,11 +4,11 @@
     <v-touch tag="i" class="iconfont icon-ykq-shiti-guanbi f40" v-on:tap="next(3)"></v-touch>
     <v-touch v-show="step === 1" v-on:tap="next(2)">
       <img class="guide-jt-ykq xiedong" src="~images/teacher/guide-jt-ykq.png" alt="">
-      <img class="guide-ykq" src="~images/teacher/guide-ykq.png" alt="">
+      <img class="guide-ykq" :src="ykqImg" alt="">
     </v-touch>
     <v-touch v-show="step === 0"  v-on:tap="next(1)">
       <img class="guide-jt-dongtai updown" src="~images/teacher/guide-jt-dongtai.png" alt="">
-      <img class="guide-dongtai" src="~images/teacher/guide-dongtai.png" alt="">
+      <img class="guide-dongtai" :src="dongtaiImg" alt="">
     </v-touch>
   </div>
 </template>
@@ -21,6 +21,8 @@
     data () {
       return {
         step: 0,           // 引导状态 0 课堂动态；1 遥控器；2 结束
+        dongtaiImg: require(`images/teacher/guide-dongtai${i18n.t('imgafterfix')}.png`),
+        ykqImg: require(`images/teacher/guide-ykq${i18n.t('imgafterfix')}.png`)
       }
     },
     created () {

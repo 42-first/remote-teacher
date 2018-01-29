@@ -14,11 +14,11 @@
 	    	<div class="xitixushi">
 	    		<!-- 延时相关 -->
 	    		<div class="time-rel f15">
-	    			<v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi">延时</v-touch>
-	    			<div v-else class="tbtn nobtn">不限时</div>
+	    			<v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
+	    			<div v-else class="tbtn nobtn"><!-- 不限时 -->{{ $t('bxs') }}</div>
 	    		</div>
 
-	    		<div class="sjd f24" v-show="newTime <= 0">作答时间结束</div>
+	    		<div class="sjd f24" v-show="newTime <= 0"><!-- 作答时间结束 -->{{ $t('receivertimeout') }}</div>
 
 	    		<!-- 中间秒表 -->
 	    		<div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
@@ -30,7 +30,7 @@
 
 	    		<!-- 收题相关 -->
 	    		<div v-show="newTime > 0" class="pro-rel f15">
-	    			<v-touch class="tbtn red" v-on:tap="shouti">收题</v-touch>
+	    			<v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
 	    		</div>
 		    </div>
 		    <div :class="['f18', 'yjy']">
