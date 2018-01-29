@@ -6,10 +6,14 @@
 	    
 	    <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
 	    <div :class="['answer-box', {'toomany': answerList.length > 4}]">
-	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
+	    	<template v-if="answerList.length">
+	    		<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
+	    	</template>
+
+	    	<div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
 	    </div>
 	    <div class="gap"></div>
-	    <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12">本题为匿名投票，不显示投票人</div>
+	    <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
 	    <div class="choice-list">
 	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
 	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
@@ -51,6 +55,7 @@
 	    	showingIndex: -1,												// 正在展示的题目的序号
 	    	answerList: [],
 	    	isBottomBtnFixed: false,
+	    	isFetching: true,
 	    }
 	  },
 	  created(){
@@ -186,8 +191,14 @@
 			    		}
 			    	}
 
+			    	self.isFetching = false
 			    	self.problemResultDetailData.answer = result.label
-			    	self.answerList = [...result.label]
+			    	// self.answerList = [...result.label]
+			    	if (result.value === 0) {
+			    		self.answerList = []
+			    	} else {
+			    		self.answerList = [...result.label]
+			    	}
 	    	  })
 	    },
 	  }
