@@ -4,7 +4,7 @@
 
 import Cookies from 'js-cookie'
 
-let lng = Cookies.get('django_language') || 'zh_CN';
+let lng = Cookies.get('django_language') || 'zh-cn';
 lng = lng === 'zh-cn' ? 'zh_CN' : 'en';
 
 
