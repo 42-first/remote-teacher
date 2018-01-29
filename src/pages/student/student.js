@@ -18,7 +18,7 @@ import ChLanguage from '@/language/zh_CN'
 Vue.use(VueI18n)
 
 let lng = Cookies.get('django_language') || 'zh_CN';
-lng == lng === 'zh-cn' ? 'zh_CN' : 'en';
+lng = lng === 'zh-cn' ? 'zh_CN' : 'en';
 
 const i18n = new VueI18n({
   // 语言标识

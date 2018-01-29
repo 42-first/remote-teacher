@@ -2,6 +2,12 @@
  * @module 预置文案、选择范围等
  */
 
+import Cookies from 'js-cookie'
+
+let lng = Cookies.get('django_language') || 'zh_CN';
+lng = lng === 'zh-cn' ? 'zh_CN' : 'en';
+
+
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 // 通过插件的形式挂载
@@ -12,7 +18,7 @@ import ChLanguage from '@/language/zh_CN'
 
 const i18n = new VueI18n({
   // 语言标识
-  locale: 'zh_CN',
+  locale: lng,
   messages: {
     'zh_CN': ChLanguage,
     'en': EnLanguage
