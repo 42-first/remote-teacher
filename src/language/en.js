@@ -97,7 +97,7 @@ let pages = {
   "receiveclassbonus" : "You have received a bonus.",
   "whosebonus" : "{name}'s bonus",
   "savedinpacket" : "Saved to Rain Classroom Wallet",
-  "numopenedbonus" : "{count}/{total } students opened the bonus",
+  "numopenedbonus" : "{count}/{total} students opened the bonus",
 
   "getpoint": "Point:{score}",
   "animatepage": "The current page contains animation.",
