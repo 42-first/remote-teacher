@@ -35,6 +35,8 @@ const i18n = new VueI18n({
   }
 })
 
+window.i18n = i18n
+
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法
 window.STORE = store // 在 router 中判断是否刷新页面导致 socket 无效

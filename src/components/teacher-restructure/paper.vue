@@ -5,8 +5,8 @@
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
-      <img src="~images/teacher/no-paper.png" alt="">
-      <div class="hint f12">试试从雨课堂桌面端制作并上传试卷吧</div>
+      <img :src="nopaperImg" alt="">
+      <div class="hint f12"><!-- 试试从雨课堂桌面端制作并上传试卷吧 -->{{ $t('ttmtobrc') }}</div>
     </div>
     <div v-show="!isFetching && paperList.length || quizList.length">
       <!-- 已发试卷 -->
@@ -82,6 +82,7 @@
         isPubmodalHidden: true,   // 发布模态框隐藏
         isQuizresultHidden: true, // 已发试卷饼图页隐藏
         isFetching: true,             // 正在获取数据
+        nopaperImg: require(`images/teacher/no-paper${i18n.t('imgafterfix')}.png`),
       }
     },
     computed: {

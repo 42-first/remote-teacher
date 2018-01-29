@@ -3,35 +3,35 @@
   <div class="guide-mask dontcallback">
      <v-touch v-show="stepGuideDelay === 0"  v-on:tap="next(1)">
       <img class="guide-jt-chakandaan updown" src="~images/teacher/guide-jt-chakandaan.png" alt="">
-      <img class="guide-chakandaan" src="~images/teacher/guide-chakandaan.png" alt="">
+      <img class="guide-chakandaan" :src="chakandaanImg" alt="">
     </v-touch>
 
     <div v-show="stepGuideDelay === 1">
       <div class="yanshi-box f15">
-        <div class="tbtn green">延时</div>
+        <div class="tbtn green"><!-- 延时 -->{{$t('extend')}}</div>
         <img class="guide-wanqujt" src="~images/teacher/guide-wanqujt.png" alt="">
       </div>
     </div>
 
     <div v-show="stepGuideDelay === 2">
       <div class="shouti-box f15">
-        <div class="tbtn red">收题</div>
+        <div class="tbtn red"><!-- 收题 -->{{$t('shouti')}}</div>
         <img class="guide-wanqujt" src="~images/teacher/guide-wanqujt.png" alt="">
       </div>
     </div>
 
     <div class="hint f25" v-show="stepGuideDelay === 1">
-      给学生延长答题时间
+      <!-- 给学生延长答题时间 -->{{$t('chtet')}}
     </div>
     <div class="hint f25" v-show="stepGuideDelay === 2">
-      立即结束，结束后仍可延时
+      <!-- 立即结束，结束后仍可延时 -->{{$t('chtca')}}
     </div>
 
     <v-touch class="action f18" v-show="stepGuideDelay === 1" v-on:tap="next(2)">
-      下一步
+      <!-- 下一步 -->{{$t('xyb')}}
     </v-touch>
     <v-touch class="action f18" v-show="stepGuideDelay === 2" v-on:tap="next(3)">
-      知道了
+      <!-- 知道了 -->{{$t('gotit')}}
     </v-touch>
   </div>
 </template>
@@ -45,6 +45,7 @@
     data () {
       return {
         step: 0,           // 引导状态 0 课堂动态；1 遥控器；2 结束
+        chakandaanImg: require(`images/teacher/guide-chakandaan${i18n.t('imgafterfix')}.png`),
       }
     },
     computed: {

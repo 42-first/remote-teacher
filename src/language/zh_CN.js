@@ -262,6 +262,21 @@ let pages = {
   "forcelogout": "您已被迫下线",
   "studentrole": "以学生身份进入",
   "loginagain": "我要夺回主权",
+  "imgafterfix": '',
+  "extend": "延时",
+  "chtet": "给学生延长答题时间",
+  "xyb": "下一步",
+  "shouti": "收题",
+  "chtca": "立即结束，结束后仍可延时",
+  "gotit": "知道了",
+  "ttmtobrc": "试试从雨课堂桌面端制作并上传试卷吧",
+  "bxs": "不限时",
+  "yhbflo": "您已经被夺权，请刷新页面",
+  "aysts": "确定结束答题？",
+  "qxzycsx": "请选择延长时限",
+  "Officalaccount": "微信公众号",
+  "miniprogram": "微信小程序",
+  "scancode": "扫二维码",
 };
 
 if (typeof define === 'function' && define.amd){
