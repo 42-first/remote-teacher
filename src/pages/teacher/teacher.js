@@ -15,6 +15,7 @@ import('pubsub-js').then(res => {
 let VueTouch = require('vue-touch') // 不是ES6模块，而是CommonJs模块
 Vue.use(VueTouch, {name: 'v-touch'})
 
+import Cookies from 'js-cookie'
 import VueI18n from 'vue-i18n'
 // 通过插件的形式挂载
 Vue.use(VueI18n)
@@ -22,9 +23,12 @@ Vue.use(VueI18n)
 import EnLanguage from '@/language/en'
 import ChLanguage from '@/language/zh_CN'
 
+let lng = Cookies.get('django_language') || 'zh_CN';
+lng == lng === 'zh-cn' ? 'zh_CN' : 'en';
+
 const i18n = new VueI18n({
   // 语言标识
-  locale: 'zh_CN',
+  locale: lng,
   messages: {
     'zh_CN': ChLanguage,
     'en': EnLanguage

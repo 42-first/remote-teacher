@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import Cookies from 'js-cookie'
 
 import App from '@/pages/student/student.vue'
 import router from '@/router/index-student'
@@ -16,9 +17,12 @@ import ChLanguage from '@/language/zh_CN'
 // 通过插件的形式挂载
 Vue.use(VueI18n)
 
+let lng = Cookies.get('django_language') || 'zh_CN';
+lng == lng === 'zh-cn' ? 'zh_CN' : 'en';
+
 const i18n = new VueI18n({
   // 语言标识
-  locale: 'zh_CN',
+  locale: lng,
   messages: {
     'zh_CN': ChLanguage,
     'en': EnLanguage
