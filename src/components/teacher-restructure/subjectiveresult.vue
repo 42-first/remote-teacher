@@ -93,10 +93,10 @@
                         <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                       </v-touch>
                       <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
-                        发送全班
+                        <!-- 发送全班 -->{{ $t('postpublic') }}
                       </v-touch>
                       <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
-                        已发全班
+                        <!-- 已发全班 -->{{ $t('postpubliced') }}
                       </div>
                       <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">
                         <span class="fsqb-innerline"></span>

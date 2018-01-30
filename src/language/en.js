@@ -150,7 +150,7 @@ let pages = {
   "viewdetails": "Details",
   "classbonusBonuslist": "Bonus | List of the Awarded",
   "standardopt": "Correct Answer",
-  "anonymouspoll": "This is an anonymous poll",
+  "anonymouspoll": "This is an anonymous poll.",
 
   "totalscore": "(Points: {num})",
   "bonuslist": "List of the Awarded",
