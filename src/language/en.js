@@ -165,7 +165,7 @@ let pages = {
   "quantity": 'Quantity <span class="f14">({num} students)</span>',
   "amounteach": "Amount Each",
   "pcs": "pcs",
-  "cny": "cny",
+  "cny": "CNY",
   "nobonus": "Cancel",
   "preparebonus": "Send Bonus",
   "setquantity": "Enter number",
