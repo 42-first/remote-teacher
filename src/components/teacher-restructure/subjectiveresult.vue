@@ -304,7 +304,8 @@
         self.problemOperation(postData)
           .then(() => {
             console.log(duration, timeList[duration])
-            T_PUBSUB.publish('ykt-msg-toast', `延时${timeList[duration]}成功`);
+            let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+            T_PUBSUB.publish('ykt-msg-toast', msg);
           })
       },
       /**
