@@ -278,6 +278,20 @@ let pages = {
   "Officalaccount": "Offical Account",
   "miniprogram": "Mini Program",
   "scancode": "Scan Code",
+
+  "subjectiveedit": "Edit",
+  "graded": "Graded",
+  "comment": "Comment",
+  "good": "Good!",
+  "comeon": "Come on!",
+  "uniqueidea": "Extraordinary!",
+  "excellent": "Excellent!",
+  "enterscoretip":"Please enter score.",
+  "quizentercomment": "Please enter comment",
+  "invaildinput": "Invalid input, please try again.",
+  "positivescore":"Score must be positive.",
+  "exceedmaximumscore": "Exceed maximum score, please try again.",
+  "keepadecimal": "One decimal at most , please try again.",
 };
 
 if (typeof define === 'function' && define.amd){

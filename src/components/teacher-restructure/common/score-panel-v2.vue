@@ -6,7 +6,7 @@
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
         <v-touch class="f16 blue" v-on:tap="toEdit" v-show="isScored && !isEditting">
           <i class="iconfont icon-ykq_bianji f20"></i>
-          修改
+          <!-- 修改 -->{{ $t('subjectiveedit') }}
         </v-touch>
         <!-- <div class="f16" v-show="isScored && isEditting">
           <i class="iconfont icon-ykq_bianji f20"></i>
@@ -16,30 +16,36 @@
       
       <!-- 打分部分 -->
       <section class="fen-box f16">
-        <p class="hint">得分 <span class="f12">（本题{{scoreTotal}}分）</span></p>
+        <p class="hint"><!-- 得分 -->{{ $t('stuscore') }} <span class="f12">
+          <!-- （本题{{scoreTotal}}分） -->
+          {{ $t('totalscore', { num: scoreTotal }) }}
+        </span></p>
         <div class="score-input f18">
-          <input class="input-place" placeholder="请输入分值" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
+          <input class="input-place" :placeholder="$t('enterscoretip')" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
+
+          <!-- placeholder 请输入分值-->
           <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
-          <label>分</label>
+          <label><!-- 分 -->{{$t('stutestscore')}}</label>
           <div class="error f12">{{errorInfo}}</div>
         </div>
       </section>
       
       <!-- 评语部分 -->
       <section class="remark-box f16">
-        <p class="hint">评语</p>
-        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" placeholder="请输入评语" @focus="focusText" @blur="isTextFocused = false"></textarea>
+        <p class="hint"><!-- 评语 -->{{$t('comment')}}</p>
+        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+        <!-- placeholder 请输入评语-->
         <span class="textarea-place b9" v-show="isScored && !isEditting">{{remark}}</span>
         <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)">写的不错</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)">继续加油</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)">想法很独特</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(3)">小红花</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)"><!-- 写的不错 -->{{ $t('good') }}</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)"><!-- 继续加油 -->{{ $t('comeon') }}</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)"><!-- 想法很独特 -->{{ $t('uniqueidea') }}</v-touch>
+          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(3)"><!-- 小红花 -->{{ $t('excellent') }}</v-touch>
         </p>
       </section>
 
-      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide">提交</v-touch>
-      <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting">已批改</div>
+      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide"><!-- 提交 -->{{ $t('submit') }}</v-touch>
+      <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting"><!-- 已批改 -->{{ $t('graded') }}</div>
     </div>
   </div>
 </template>
@@ -47,17 +53,17 @@
 <script>
 
   const errorList = [
-    '分数超过本题最大分值，请重新输入',
-    '分数最多保留一位小数，请重新输入',
-    '输入无效，请重新输入',
-    '分数必须为正数'
+    i18n.t('exceedmaximumscore') || '分数超过本题最大分值，请重新输入',
+    i18n.t('keepadecimal')       || '分数最多保留一位小数，请重新输入',
+    i18n.t('invaildinput')       || '输入无效，请重新输入',
+    i18n.t('positivescore')      || '分数必须为正数'
   ]
 
   const reList = [
-    '写的不错',
-    '继续加油',
-    '想法很独特',
-    '小红花'
+    i18n.t('good')       || '写的不错',
+    i18n.t('comeon')     || '继续加油',
+    i18n.t('uniqueidea') || '想法很独特',
+    i18n.t('excellent')  || '小红花'
   ]
 
   let timer2 = null
@@ -317,7 +323,7 @@
 
           .input-place {
             display: inline-block;
-            width: 3.2rem;
+            width: 3.7rem;
             height: 1.066667rem;
             outline: none;
             border: 1px solid transparent;
