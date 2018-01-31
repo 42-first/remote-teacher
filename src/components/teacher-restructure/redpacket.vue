@@ -91,7 +91,7 @@
         {{ $t('loading') }}...
       </div>
       <div class="paying-content pay-success" v-show="payingStep === 1">
-        <div class="cg f28">{{ $t('paysuccess') }}!</div>
+        <div class="cg f28">{{ $t('paysuccess') }}</div>
         <div class="wallet f16">
           {{ $t('yktwallet') }}
           <span class="gray f14">（{{ $t('balance') }}￥{{bankLeft}}）</span>
