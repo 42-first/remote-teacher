@@ -77,6 +77,7 @@ let pages = {
 
   // 新增部分
   "sharepostpush" : "Hi, the teacher is sharing post.",
+  "sharesubjective" : "Hi, the instructor posts an answer.",
   "minilaunchpush" : "Rain Classroom Mini Program has been released！",
   "entermini" : "Press and hold MiniProgram Code to start experience.",
   "anonymous " : "(Anonymous)",
@@ -107,7 +108,7 @@ let pages = {
   "extendsec": "Extend {seconds} secs",
   "receivertimeout": "Time Out",
   "receiverdone": "Done",
-  "collectprotip": "The teacher may end the question at any time.",
+  "collectprotip": "It may end at any time.",
 
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",

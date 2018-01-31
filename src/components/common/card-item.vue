@@ -118,7 +118,7 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/subjective_share/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 老师正在分享主观题答案</p>
+            <p class="paper-name"><!-- Hi, 老师正在分享主观题答案 -->{{ $t('sharesubjective') }}</p>
           </div>
           <i class="iconfont icon-ykq_shiti f50"></i>
         </router-link>
