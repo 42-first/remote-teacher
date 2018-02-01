@@ -77,6 +77,7 @@ let pages = {
 
   // 新增部分
   "sharepostpush" : "Hi, the teacher is sharing post.",
+  "sharesubjective" : "Hi, the instructor posts an answer.",
   "minilaunchpush" : "Rain Classroom Mini Program has been released！",
   "entermini" : "Press and hold MiniProgram Code to start experience.",
   "anonymous " : "(Anonymous)",
@@ -97,7 +98,7 @@ let pages = {
   "receiveclassbonus" : "You have received a bonus.",
   "whosebonus" : "{name}'s bonus",
   "savedinpacket" : "Saved to Rain Classroom Wallet",
-  "numopenedbonus" : "{count}/{total } students opened the bonus",
+  "numopenedbonus" : "{count}/{total} students opened the bonus",
 
   "getpoint": "Point:{score}",
   "animatepage": "The current page contains animation.",
@@ -107,7 +108,7 @@ let pages = {
   "extendsec": "Extend {seconds} secs",
   "receivertimeout": "Time Out",
   "receiverdone": "Done",
-  "collectprotip": "The teacher may end the question at any time.",
+  "collectprotip": "It may end at any time.",
 
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
@@ -150,6 +151,7 @@ let pages = {
   "viewdetails": "Details",
   "classbonusBonuslist": "Bonus | List of the Awarded",
   "standardopt": "Correct Answer",
+  "anonymouspoll": "This is an anonymous poll",
 
   "totalscore": "(Points: {num})",
   "bonuslist": "List of the Awarded",

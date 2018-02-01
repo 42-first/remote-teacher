@@ -77,6 +77,7 @@ let pages = {
 
   // 新增部分
   "sharepostpush" : "Hi, 老师正在分享课堂投稿",
+  "sharesubjective" : "Hi, 老师正在分享主观题答案",
   "minilaunchpush" : "雨课堂小程序上线啦",
   "entermini" : "长按识别图中小程序码开始体验",
   "anonymous" : "(匿名)",
@@ -150,6 +151,7 @@ let pages = {
   "viewdetails": "查看详情",
   "classbonusBonuslist": "课堂红包 | 红包名单",
   "standardopt": "本题正确选项为",
+  "anonymouspoll": "本题为匿名投票，不显示投票人",
 
   "totalscore": "（本题 {num}分）",
   "bonuslist": "红包名单",
