@@ -162,6 +162,7 @@ let pages = {
   "votemost": "票数最多",
   "ren": "人",
 
+  "swfacawryb": "个最快答对的同学将收到您的红包",
   "bonustips": "您可以给回答正确且快速的<br>同学发红包以表奖励",
   "quantity": '红包个数<span class="f14">（班级共{num}人）</span>',
   "amounteach": '红包金额<span class="f14">（单个红包）</span>',
@@ -179,6 +180,7 @@ let pages = {
   "cfmpay": "确认支付",
   "paysuccess": "支付成功",
   "payfailed": "支付失败",
+  "opened": "领取",
 
   "balance": "余额",
   "zhifu": "支付",
@@ -279,6 +281,11 @@ let pages = {
   "Officalaccount": "微信公众号",
   "miniprogram": "微信小程序",
   "scancode": "扫二维码",
+
+  "nybcykq": "您已在别处进入遥控器",
+  "dqquit": "退出",
+  "dqlssk": "当前有老师正在上课<br>您希望",
+  "loginagain": "我要上课夺主权",
 
   "subjectiveedit": "修改",
   "graded": "已批改",
