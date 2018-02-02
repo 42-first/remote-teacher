@@ -73,7 +73,7 @@ let pages = {
   "selall": "全选",
   "batchoperation": "批量操作",
   "del": "删除",
-  "delselectedpost": "确定删除所选投稿",
+  "delselectedpost": "确定删除所选投稿?",
 
   // 新增部分
   "sharepostpush" : "Hi, 老师正在分享课堂投稿",
