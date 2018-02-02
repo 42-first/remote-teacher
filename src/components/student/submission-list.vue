@@ -30,7 +30,7 @@
             <div class="item-date">
               <p class="">
                 <span class="date-day f25">{{ item.create_time|formatTime('DD') }}</span>
-                <span class="date-month f14">{{ item.create_time|formatTime('MM月') }}</span>
+                <span class="date-month f14">{{ item.create_time|formatTime('MMM') }}</span>
               </p>
               <p class="date-time f14">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
