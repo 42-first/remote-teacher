@@ -180,6 +180,11 @@ function socketProcessMessage(msg){
     self.$store.commit('set_isBrandNewPpt', false)
     self.showWhichPage(msg)
     self.killMask()
+
+    if (self.presentationid !== msg.presentation) {
+      self.$store.commit('set_presentationid', msg.presentation)
+      self.fetchPPTData()
+    }
     return
   }
 

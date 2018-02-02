@@ -105,7 +105,7 @@
     overflow: hidden;
   }
   ._title {
-    line-height: 2.5rem;
+    padding-top: 0.8rem;
   }
   ._btn-box {
     display: flex;

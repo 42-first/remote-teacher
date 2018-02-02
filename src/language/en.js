@@ -149,7 +149,7 @@ let pages = {
   "newans": "New Submission",
   "mark": "Mark",
   "viewdetails": "Details",
-  "classbonusBonuslist": "Bonus | List of the Awarded",
+  "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
   "anonymouspoll": "This is an anonymous poll.",
 
@@ -162,6 +162,7 @@ let pages = {
   "votemost": "The Most Voted",
   "ren": "",
 
+  "swfacawryb": " students will be rewarded.",
   "bonustips": "Reward students<br>with fast and correct answer",
   "quantity": 'Quantity <span class="f14">({num} students)</span>',
   "amounteach": "Amount Each",
@@ -174,11 +175,12 @@ let pages = {
   "bonuslimit": 'Up to <span class="f36">100</span>CNY each bonus',
   "plsconfpay": "Please confirm the payment",
   "classbonus": "Bonus",
-  "yktwallet": "Rain Classroom Wallet",
+  "yktwallet": "Rain Wallet",
   "wxwallet": "Wechat Wallet",
   "cfmpay": "Confirm Payment",
   "paysuccess": "Pay Successfully",
   "payfailed": "Pay Failed",
+  "opened": "Opened",
 
   "balance": "Balance",
   "zhifu": "Pay",
@@ -279,6 +281,11 @@ let pages = {
   "Officalaccount": "Offical Account",
   "miniprogram": "Mini Program",
   "scancode": "Scan Code",
+
+  "nybcykq": "Your have entered the remoter in other place",
+  "dqquit": "Quit",
+  "dqlssk": "Your account has been logged in by others.<br>You want to",
+  "loginagain": "Login again",
 
   "subjectiveedit": "Edit",
   "graded": "Graded",
