@@ -10,8 +10,7 @@
 
     <div class="rplist-wrapper">
       <div class="head f16">
-        <div>{{ $t('packetquantity', {num: totalNum}) }} {{ $t('packetamount', {num: totalMoney}) }}</div>
-        <div class="right">{{ $t('bonusleft', {num: redleft}) }}</div>
+        {{ $t('opened') }} {{issued_count}}/{{totalNum}}, ¥{{issued_money}}/{{totalMoney}}
       </div>
       <div class="list">
         <div class="item f17" v-for="item in list">
@@ -45,9 +44,10 @@
 	  data () {
 	    return {
 	    	redid: -1,
+	    	issued_count: '--',
 		    totalNum: '--',
+		    issued_money: '--',
 		    totalMoney: '--',
-		    redleft: '--',
 		    price: '',
 		    list: []
 	    }
@@ -81,10 +81,15 @@
 		    self.resetRedPacketDetail()
 		    
 		    self.getBonusWinner(function(data){
+		    	let issued_count = data.issued_count
+	        let price = data.amount/(data.quality*100)
+	        let issued_money = Number(issued_count * price).toFixed(2)
+
+	        self.issued_count = issued_count
 		    	self.totalNum = data.quality
+		    	self.issued_money = issued_money
 		    	self.totalMoney = data.amount/100
-		    	self.redleft = data.quality - data.issued_count
-		    	self.price = data.amount/(data.quality*100)
+		    	self.price = price
 		      self.list = data.issued_user_list
 		    })
 		  },
@@ -95,9 +100,10 @@
 		  resetRedPacketDetail () {
 		    let self = this
 
+		    self.issued_count = '--'
 		    self.totalNum = '--'
+		    self.issued_money = '--'
 	    	self.totalMoney = '--'
-	    	self.redleft = '--'
 		  },
 		  /**
 		   * 获取领取红包的名单
@@ -163,20 +169,12 @@
 			margin-bottom: 1.066667rem;
 
 		  .head {
-			  display: flex;
 			  padding: 0 0.453333rem;
 			  height: 1.133333rem;
 			  line-height: 1.133333rem;
 			  align-items: center;
 			  border-bottom: 1px solid #C8C8C8;
-
-			  &>div {
-				  flex: 1;
-				}
-				.right {
-					text-align: right;
-					color: $graybg;
-				}
+			  color: #9B9B9B;
 			}
 
 			.item {

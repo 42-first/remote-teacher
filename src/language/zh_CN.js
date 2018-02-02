@@ -180,6 +180,7 @@ let pages = {
   "cfmpay": "确认支付",
   "paysuccess": "支付成功",
   "payfailed": "支付失败",
+  "opened": "领取",
 
   "balance": "余额",
   "zhifu": "支付",
@@ -280,6 +281,10 @@ let pages = {
   "Officalaccount": "微信公众号",
   "miniprogram": "微信小程序",
   "scancode": "扫二维码",
+  "nybcykq": "您已在别处进入遥控器",
+  "dqquit": "退出",
+  "dqlssk": "当前有老师正在上课<br>您希望",
+  "loginagain": "我要上课夺主权",
 };
 
 if (typeof define === 'function' && define.amd){

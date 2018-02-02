@@ -149,7 +149,7 @@ let pages = {
   "newans": "New Submission",
   "mark": "Mark",
   "viewdetails": "Details",
-  "classbonusBonuslist": "Bonus | List of the Awarded",
+  "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
   "anonymouspoll": "This is an anonymous poll",
 
@@ -180,6 +180,7 @@ let pages = {
   "cfmpay": "Confirm Payment",
   "paysuccess": "Pay Successfully",
   "payfailed": "Pay Failed",
+  "opened": "Opened",
 
   "balance": "Balance",
   "zhifu": "Pay",
@@ -280,6 +281,10 @@ let pages = {
   "Officalaccount": "Offical Account",
   "miniprogram": "Mini Program",
   "scancode": "Scan Code",
+  "nybcykq": "Your have entered the remoter in other place",
+  "dqquit": "Quit",
+  "dqlssk": "Your account has been logged in by others.<br>You want to",
+  "loginagain": "Login again",
 };
 
 if (typeof define === 'function' && define.amd){
