@@ -151,7 +151,7 @@ let pages = {
   "viewdetails": "Details",
   "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
-  "anonymouspoll": "This is an anonymous poll",
+  "anonymouspoll": "This is an anonymous poll.",
 
   "totalscore": "(Points: {num})",
   "bonuslist": "List of the Awarded",
@@ -167,7 +167,7 @@ let pages = {
   "quantity": 'Quantity <span class="f14">({num} students)</span>',
   "amounteach": "Amount Each",
   "pcs": "pcs",
-  "cny": "cny",
+  "cny": "CNY",
   "nobonus": "Cancel",
   "preparebonus": "Send Bonus",
   "setquantity": "Enter number",
@@ -281,10 +281,25 @@ let pages = {
   "Officalaccount": "Offical Account",
   "miniprogram": "Mini Program",
   "scancode": "Scan Code",
+
   "nybcykq": "Your have entered the remoter in other place",
   "dqquit": "Quit",
   "dqlssk": "Your account has been logged in by others.<br>You want to",
   "loginagain": "Login again",
+
+  "subjectiveedit": "Edit",
+  "graded": "Graded",
+  "comment": "Comment",
+  "good": "Good!",
+  "comeon": "Come on!",
+  "uniqueidea": "Extraordinary!",
+  "excellent": "Excellent!",
+  "enterscoretip":"Please enter score.",
+  "quizentercomment": "Please enter comment",
+  "invaildinput": "Invalid input, please try again.",
+  "positivescore":"Score must be positive.",
+  "exceedmaximumscore": "Exceed maximum score, please try again.",
+  "keepadecimal": "One decimal at most , please try again.",
 };
 
 if (typeof define === 'function' && define.amd){
