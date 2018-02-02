@@ -73,7 +73,7 @@ let pages = {
   "selall": "全选",
   "batchoperation": "批量操作",
   "del": "删除",
-  "delselectedpost": "确定删除所选投稿",
+  "delselectedpost": "确定删除所选投稿?",
 
   // 新增部分
   "sharepostpush" : "Hi, 老师正在分享课堂投稿",
@@ -279,6 +279,20 @@ let pages = {
   "Officalaccount": "微信公众号",
   "miniprogram": "微信小程序",
   "scancode": "扫二维码",
+
+  "subjectiveedit": "修改",
+  "graded": "已批改",
+  "comment": "评语",
+  "good": "写得不错",
+  "comeon": "继续加油",
+  "uniqueidea": "想法很独特",
+  "excellent": "小红花",
+  "enterscoretip":"请输入分值",
+  "quizentercomment": "请输入评语",
+  "invaildinput": "输入无效，请重新输入",
+  "positivescore":"分数必须为正数",
+  "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
+  "keepadecimal": "分数最多保留一位小数，请重新输入",
 };
 
 if (typeof define === 'function' && define.amd){
