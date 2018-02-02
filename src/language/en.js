@@ -162,6 +162,7 @@ let pages = {
   "votemost": "The Most Voted",
   "ren": "",
 
+  "swfacawryb": " students will be rewarded.",
   "bonustips": "Reward students<br>with fast and correct answer",
   "quantity": 'Quantity <span class="f14">({num} students)</span>',
   "amounteach": "Amount Each",

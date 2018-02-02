@@ -36,7 +36,7 @@
       </div>
       <p class="numhint f12">
       	<span v-show="bonusNumber > 0">
-      		<span class="mizi">*</span> {{bonusNumber}}个最快答对的同学将收到您的红包
+      		<span class="mizi">*</span> {{bonusNumber}}<!-- 个最快答对的同学将收到您的红包 -->{{ $t('swfacawryb') }}
       	</span>
       </p>
 

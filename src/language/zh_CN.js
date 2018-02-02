@@ -162,6 +162,7 @@ let pages = {
   "votemost": "票数最多",
   "ren": "人",
 
+  "swfacawryb": "个最快答对的同学将收到您的红包",
   "bonustips": "您可以给回答正确且快速的<br>同学发红包以表奖励",
   "quantity": '红包个数<span class="f14">（班级共{num}人）</span>',
   "amounteach": '红包金额<span class="f14">（单个红包）</span>',
