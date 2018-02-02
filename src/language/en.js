@@ -175,7 +175,7 @@ let pages = {
   "bonuslimit": 'Up to <span class="f36">100</span>CNY each bonus',
   "plsconfpay": "Please confirm the payment",
   "classbonus": "Bonus",
-  "yktwallet": "Rain Classroom Wallet",
+  "yktwallet": "Rain Wallet",
   "wxwallet": "Wechat Wallet",
   "cfmpay": "Confirm Payment",
   "paysuccess": "Pay Successfully",
