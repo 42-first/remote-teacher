@@ -32,6 +32,7 @@ let pages = {
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
   "connnow": "立即重连",
+  "autosubmittip": "第{index}页习题已自动提交成功",
 
   "toprelease": "释放更新",
   "pullrefresh": "下拉刷新",
@@ -300,6 +301,11 @@ let pages = {
   "positivescore":"分数必须为正数",
   "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
+
+  // 图片国际化
+  imgs: {
+    "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
+  }
 };
 
 if (typeof define === 'function' && define.amd){

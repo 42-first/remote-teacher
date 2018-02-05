@@ -30,7 +30,7 @@
             <div class="item-date">
               <p class="">
                 <span class="date-day f25">{{ item.create_time|formatTime('DD') }}</span>
-                <span class="date-month f14">{{ item.create_time|formatTime('MM月') }}</span>
+                <span class="date-month f14">{{ item.create_time|formatTime('MMM') }}</span>
               </p>
               <p class="date-time f14">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
@@ -86,7 +86,7 @@
 
     <!-- 空状态 -->
     <section class="page-empty" v-if="isEmpty">
-      <img class="page-empty-img" src="http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png" alt="" />
+      <img class="page-empty-img" :src="$t('imgs.tougaoempty')" alt="" />
       <p class="page-empty-btn f18" @click="handleBack"><!-- 返回 -->{{ $t('back') }}</p>
     </section>
 
