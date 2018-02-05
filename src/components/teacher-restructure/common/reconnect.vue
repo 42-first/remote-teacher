@@ -2,8 +2,7 @@
 <template>
 	<div class="mask-content reconnect-box f18">
     <div v-show="isConnectingHidden">
-      <div class="">
-      	{{ $t('connerr', { second: connectCountDown }) }}
+      <div class="" v-html="$t('connerr', { second: connectCountDown })">
         <!-- 连接异常，<span>{{connectCountDown}}</span>秒后尝试重连 -->
       </div>
       <v-touch class="btn retry-btn" v-on:tap="triggerReconnect">{{ $t('connnow') }}</v-touch>
