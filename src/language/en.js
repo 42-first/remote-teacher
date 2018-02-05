@@ -32,6 +32,7 @@ let pages = {
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
   "connnow": "Reconnection",
+  "autosubmittip": "Question(Page {index}) has been submitted",
 
   "toprelease": "Release",
   "pullrefresh": "Pull down to refresh",

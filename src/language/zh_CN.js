@@ -32,6 +32,7 @@ let pages = {
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
   "connnow": "立即重连",
+  "autosubmittip": "第{index}页习题已自动提交成功",
 
   "toprelease": "释放更新",
   "pullrefresh": "下拉刷新",
