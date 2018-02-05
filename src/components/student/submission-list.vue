@@ -86,7 +86,7 @@
 
     <!-- 空状态 -->
     <section class="page-empty" v-if="isEmpty">
-      <img class="page-empty-img" src="http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png" alt="" />
+      <img class="page-empty-img" :src="$t('imgs.tougaoempty')" alt="" />
       <p class="page-empty-btn f18" @click="handleBack"><!-- 返回 -->{{ $t('back') }}</p>
     </section>
 

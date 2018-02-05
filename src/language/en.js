@@ -300,6 +300,11 @@ let pages = {
   "positivescore":"Score must be positive.",
   "exceedmaximumscore": "Exceed maximum score, please try again.",
   "keepadecimal": "One decimal at most , please try again.",
+
+  // 图片国际化
+  imgs: {
+    "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
+  }
 };
 
 if (typeof define === 'function' && define.amd){

@@ -300,6 +300,11 @@ let pages = {
   "positivescore":"分数必须为正数",
   "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
+
+  // 图片国际化
+  imgs: {
+    "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
+  }
 };
 
 if (typeof define === 'function' && define.amd){
