@@ -86,7 +86,7 @@ let mixin = {
         request.get(url, {
           'user_id': self.userid,
           'lesson_id': self.lessonid,
-          'socket_id': this.socket.socket_id,
+          'socket_id': self.socket.socket_id,
           'type': 'connection-h5-teacher',
           'dt': Date.now()
         })
@@ -95,7 +95,7 @@ let mixin = {
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
-            'socket_id': this.socket.socket_id,
+            'socket_id': self.socket.socket_id,
             'type': 'error-h5-teacher',
             'dt': Date.now()
           })
@@ -106,7 +106,7 @@ let mixin = {
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
-            'socket_id': this.socket.socket_id,
+            'socket_id': self.socket.socket_id,
             'type': 'close-h5-teacher',
             'dt': Date.now()
           })
