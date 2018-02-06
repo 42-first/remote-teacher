@@ -114,7 +114,7 @@ let pages = {
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
   "receiverwonderful": "Wonderful!",
-  "receivergoodforu ": "Good For You",
+  "receivergoodforu": "Good For You",
   "receiverfabulous": "Fabulous!",
   "receiverbrilliant": "Brilliant!",
   "receiverawesome": "Awesome!",
