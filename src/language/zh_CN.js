@@ -114,7 +114,7 @@ let pages = {
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
   "receiverwonderful": "答得漂亮~再接再厉~",
-  "receivergoodforu ": "是的，必须奖励下你！",
+  "receivergoodforu": "是的，必须奖励下你！",
   "receiverfabulous": "答题小能手，红包接好~",
   "receiverbrilliant": "答题小能手，我记住你了~",
   "receiverawesome": "机智如你，必须奖励~",
