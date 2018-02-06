@@ -302,6 +302,9 @@ let pages = {
   "exceedmaximumscore": "Exceed maximum score, please try again.",
   "keepadecimal": "One decimal at most , please try again.",
 
+  "tciate": "The class is about to end.",
+  "tsswes": "The slide show will end synchronously.",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"

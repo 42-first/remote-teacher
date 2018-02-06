@@ -302,6 +302,9 @@ let pages = {
   "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
 
+  "tciate": "您即将结束本次授课",
+  "tsswes": "电脑端将会同步结束授课",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
