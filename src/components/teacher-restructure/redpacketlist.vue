@@ -88,7 +88,7 @@
 	        self.issued_count = issued_count
 		    	self.totalNum = data.quality
 		    	self.issued_money = issued_money
-		    	self.totalMoney = data.amount/100
+		    	self.totalMoney = (data.amount/100).toFixed(2)
 		    	self.price = price
 		      self.list = data.issued_user_list
 		    })

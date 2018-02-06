@@ -227,6 +227,10 @@
 	  created () {
 	    this.init()
 	  },
+	  beforeDestroy () {
+	  	clearInterval(pollingPresentationTagTimer)
+	    clearInterval(pollingTougaoTimer)
+	  },
 	  mounted () {
 	    let self = this
 
@@ -267,6 +271,8 @@
 
 		    self.fetchUserInfo()
 		    		.then(self.initws)
+
+		    self.pollingPresentationTag()
 
 		    configWX()
 		    wx.ready(() => {
@@ -358,8 +364,10 @@
 	      let self = this
 	      let url = API.fetch_presentation_data
 
+	      // 切换路由后，presentationcreated 触发的去设置 presentationid，
+	      // 在这不会立即反映到 self.presentationid 上，所以干脆这里直接使用 store 上的值
 	      if (process.env.NODE_ENV === 'production') {
-	        url = API.fetch_presentation_data + '/' + this.presentationid + '/'
+	        url = API.fetch_presentation_data + '/' + self.$store.state.presentationid + '/'
 	      }
 
 	      request.get(url)

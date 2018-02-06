@@ -36,6 +36,7 @@ const i18n = new VueI18n({
 })
 
 window.i18n = i18n
+window.document.title = i18n.t('remotectrl')
 
 Vue.config.productionTip = false
 window.Vue = Vue // 设为全局变量，有时调用其 nextTick 方法

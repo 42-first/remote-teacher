@@ -94,8 +94,6 @@ function socketProcessMessage(msg){
 
     // 翻到初始页面（不一定是第一页），当前页有没有发试题按钮及状态在fetchPPTData的回调中处理
     self.showWhichPage(msg)
-    // 有了 presentationid 开始轮询不懂、投稿未读数
-    self.pollingPresentationTag()
 
     // 随机点名相关代码
     if((typeof msg.call !== 'undefined') && msg.call != -1){

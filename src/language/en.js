@@ -157,9 +157,9 @@ let pages = {
   "totalscore": "(Points: {num})",
   "bonuslist": "List of the Awarded",
   "correctanswer": "Correct Answer",
-  "standardans": "Correct Answer",
-  "correctopt": "Correct Answer",
-  "wrongopt": "Wrong Answer",
+  "standardans": " Standard",
+  "correctopt": " Correct",
+  "wrongopt": " Wrong",
   "votemost": "The Most Voted",
   "ren": "",
 
@@ -301,6 +301,9 @@ let pages = {
   "positivescore":"Score must be positive.",
   "exceedmaximumscore": "Exceed maximum score, please try again.",
   "keepadecimal": "One decimal at most , please try again.",
+
+  "tciate": "The class is about to end.",
+  "tsswes": "The slide show will end synchronously.",
 
   // 图片国际化
   imgs: {
