@@ -166,6 +166,7 @@ function socketProcessMessage(msg){
       //切换ppt的话显示二维码控制页面
       self.killMask()
       self.showQrcodeMask()
+      self.$store.commit('set_current', 1)
     }
 
     // 无论是新ppt还是更新，都需要fetch数据
