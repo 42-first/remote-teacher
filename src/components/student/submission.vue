@@ -147,7 +147,7 @@
         } else if(newValue === 4) {
           this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
-          this.submitText = '课程已结束';
+          this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
       }
     },
