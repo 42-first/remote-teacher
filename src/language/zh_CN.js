@@ -27,7 +27,7 @@ let pages = {
   "noquizzes": "还没有发布试卷噢~",
 
   "unknown": "不懂",
-  "star": "收藏",
+  "favorite": "收藏",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
