@@ -304,6 +304,8 @@ let pages = {
 
   "tciate": "The class is about to end.",
   "tsswes": "The slide show will end synchronously.",
+  "pcerrcon": "Error Connection",
+  "pctnoyc": "Please check the network of your computer",
 
   // 图片国际化
   imgs: {
