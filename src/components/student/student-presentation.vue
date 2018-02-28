@@ -127,6 +127,9 @@
 
     <router-view></router-view>
     <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
+
+    <!-- 填写个人信息 -->
+    <information :show-info="showInfo" v-if="showInfo"></information>
   </section>
 </template>
 <script>
@@ -224,12 +227,15 @@
         // 是否存在习题
         hasProblem: true,
         // 是否存在试卷
-        hasQuiz: true
+        hasQuiz: true,
+        // 是否需要完善个人信息
+        showInfo: false
       };
     },
     components: {
       CardItemComponent,
       PopupComponent,
+      information: () => import('@/components/common/information.vue'),
       identity: () => import('@/components/student/identityBinding.vue')
     },
     computed: {
@@ -501,6 +507,8 @@
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
+            } else if(error && error.status_code === 5) {
+              this.showInfo = true;
             }
           });
       },

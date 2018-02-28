@@ -14,7 +14,7 @@
     <section class="info__area">
       <header class="info__header">
         <div class="header__tip">
-          花30秒完善你的信息<br>方便老师快速认识你
+          <!-- 花30秒完善你的信息 -->{{ $t('infocosttime') }}<br><!-- 方便老师快速认识你 -->{{ $t('infogood') }}
         </div>
         <img class="user-avatar" :src="user_profile.avatar_96" v-if="user_profile" >
       </header>
@@ -22,21 +22,21 @@
       <!-- form -->
       <form class="info__form">
         <div class="form__item">
-          <label class="item--label" for="name" title="真实姓名">真实姓名</label>
-          <input class="item--ipt" type="text" name="name" v-model="name" placeholder="{{ $t('nameeg') }}">
+          <label class="item--label" for="name" title="真实姓名"><!-- 真实姓名 -->{{ $t('merealname') }}</label>
+          <input class="item--ipt" type="text" name="name" v-model="name" :placeholder="$t('nameeg')">
         </div>
         <div class="form__item">
-          <label class="item--label" for="name" title="社会身份">社会身份</label>
+          <label class="item--label" for="name" title="社会身份"><!-- 社会身份 -->{{ $t('merole') }}</label>
           <div class="info__roles">
-            <p :class="['role--btn', role === 1 ? 'active':'']" @click="handleselectRole(1)">老师</p>
-            <p :class="['role--btn', role === 2 ? 'active':'']" @click="handleselectRole(2)">学生</p>
-            <p :class="['role--btn', role === 3 ? 'active':'']" @click="handleselectRole(3)">其他</p>
+            <p :class="['role--btn', role === 1 ? 'active':'']" @click="handleselectRole(1)"><!-- 老师 -->{{ $t('meteacher') }}</p>
+            <p :class="['role--btn', role === 2 ? 'active':'']" @click="handleselectRole(2)"><!-- 学生 -->{{ $t('student') }}</p>
+            <p :class="['role--btn', role === 3 ? 'active':'']" @click="handleselectRole(3)"><!-- 其他 -->{{ $t('meothers') }}</p>
           </div>
         </div>
         <div class="form__item" v-if="role===1||role===2">
-          <label class="item--label" for="school" title="所在院校">所在院校</label>
+          <label class="item--label" for="school" title="所在院校"><!-- 所在院校 -->{{ $t('meschoolbelongs') }}</label>
           <div class="item--ipt">
-            <input class="item--ipt--inner" type="text" name="school" v-model="school" placeholder="{{ $t('schooleg') }}" autocomplete="off" @input="handlehint($event)" @focus="handleshowHint(true)" @blur="handleshowHint(false)" >
+            <input class="item--ipt--inner" type="text" name="school" v-model="school" :placeholder="$t('schooleg')" autocomplete="off" @input="handlehint($event)" @focus="handleshowHint(true)" @blur="handleshowHint(false)" >
             <!-- 学校提示 -->
             <ul class="school__list" v-show="showHint">
               <li class="school" v-for="school in schoolList" @click="handlesetSchol(school, $event)">{{ school }}</li>
@@ -44,19 +44,19 @@
           </div>
         </div>
         <div class="form__item" v-if="role===3">
-          <label class="item--label" for="school" title="组织/机构">组织/机构</label>
-          <input class="item--ipt" type="text" name="school" v-model="school" placeholder="可以为空">
+          <label class="item--label" for="school" title="组织/机构"><!-- 组织/机构 -->{{ $t('infoorg') }}</label>
+          <input class="item--ipt" type="text" name="school" v-model="school" :placeholder="$t('infoorgtip')">
         </div>
         <div class="form__item" v-if="role===2">
-          <label class="item--label" for="school_number" title="在校学号">在校学号</label>
-          <input class="item--ipt" type="text" name="school_number" v-model="school_number" placeholder="">
+          <label class="item--label" for="school_number" title="在校学号"><!-- 在校学号 -->{{ $t('mestudentid') }}</label>
+          <input class="item--ipt" type="text" name="school_number" v-model="school_number" :placeholder="$t('infonumbereg')">
         </div>
       </form>
 
       <!-- footer -->
       <footer class="info__footer">
-        <p :class="['info--comfirm', cansubmit ? 'active' : '']" @click="handleconfirm">确定</p>
-        <p class="footer--tip">* 你可以在“我的主页”中随时修改个人信息</p>
+        <p :class="['info--comfirm', cansubmit ? 'active' : '']" @click="handleconfirm"><!-- 确定 -->{{ $t('confirm') }}</p>
+        <p class="footer--tip"><!-- * 你可以在“我的主页”中随时修改个人信息 -->{{ $t('infotip') }}</p>
       </footer>
     </section>
   </div>
@@ -251,7 +251,7 @@
 <script>
 
   export default {
-    props:['refresh'],
+    props:['showInfo'],
     data() {
       return {
         miniprogram: false,
@@ -271,6 +271,9 @@
       }
     },
     watch: {
+      'showInfo'(newVal, oldVal) {
+        newVal && this.getUser();
+      },
       'role'(newVal, oldVal) {
         this.checkUserInfo();
       },
@@ -454,7 +457,6 @@
     },
     created() {
       let self = this;
-
       this.getUser();
     }
   }

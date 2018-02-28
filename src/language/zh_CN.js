@@ -132,6 +132,23 @@ let pages = {
   "SHOW_FINISH": "幻灯片 {0} 结束放映",
   "QUIZ_FINISH": "试卷 {0} 已收卷",
 
+  // 个人信息完善
+  "merealname": '真实姓名',
+  "nameeg": "如：李明",
+  "merole": '社会身份',
+  "meteacher": '教师',
+  "meothers": '其他',
+  "student": "学生",
+  "meschoolbelongs": '所属学校',
+  "schooleg": "如：清华大学",
+  "mestudentid": '在校学号',
+  'infocosttime': '花30秒完善你的信息',
+  'infogood': '方便老师快速认识你',
+  'infoorg': '组织/机构',
+  'infoorgtip': '可以为空',
+  'infonumbereg': '如：123456',
+  'infotip': '* 你可以在“我的主页”中随时修改个人信息',
+
 
   // 遥控器
   "classsignal": "课堂暗号",

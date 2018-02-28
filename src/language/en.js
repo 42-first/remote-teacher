@@ -132,6 +132,23 @@ let pages = {
   "SHOW_FINISH": "End Show",
   "QUIZ_FINISH": "The quiz has been collected.",
 
+  // 个人信息完善
+  "merealname": 'Real Name',
+  "nameeg": "e.g. Li Ming",
+  "merole": 'Role',
+  "meteacher": 'Instructor',
+  "meothers": 'Others',
+  "student": "Student",
+  "meschoolbelongs": 'School',
+  "schooleg": "e.g. Tsinghua University",
+  "mestudentid": 'Student ID',
+  'infocosttime': '花30秒完善你的信息',
+  'infogood': '方便老师快速认识你',
+  'infoorg': '组织/机构',
+  'infoorgtip': '可以为空',
+  'infonumbereg': '如：123456',
+  'infotip': '* 你可以在“我的主页”中随时修改个人信息',
+
 
   // 遥控器
   "classsignal": "Class Code",
