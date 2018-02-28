@@ -11,7 +11,8 @@ const Redpacket = () => import('@/components/teacher-restructure/redpacket')
 const Redpacketlist = () => import('@/components/teacher-restructure/redpacketlist')
 const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
 const Member = () => import('@/components/teacher-restructure/member')
-const Paper = () => import('@/components/teacher-restructure/paper')
+const Paper = () => import('@/components/teacher-restructure/paper2')
+const Paperfolder = () => import('@/components/teacher-restructure/paper-folder')
 const Danmu = () => import('@/components/teacher-restructure/danmu')
 const Submission = () => import('@/components/teacher-restructure/submission')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
@@ -82,6 +83,11 @@ const router = new Router({
       path: '/paper/xxx',
       name: 'paper',
       component: Paper
+    },
+    {
+      path: '/paperfolder/:folderid',
+      name: 'paperfolder',
+      component: Paperfolder
     },
     {
       path: '/danmu/xxx',
