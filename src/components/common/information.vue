@@ -79,7 +79,7 @@
     top: 50%;
     left: 50%;
 
-    width: calc(100% - 40px);
+    width: calc(100% - 1.066667rem);
     min-height: 13.866667rem;
     transform: translate(-50%, -50%);
 
@@ -119,20 +119,19 @@
     .info__form {
       box-sizing: border-box;
       height: 8.426667rem;
-      padding: 1.6rem 0.533333rem;
+      padding: 1.6rem 0.333333rem;
 
       font-size: 0.426667rem;
       color: #666;
 
       .form__item {
-        position: relative;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         padding-bottom: 0.4rem;
 
         .item--label {
-          width: 2.0rem;
+          width: 2.2rem;
           text-align: right;
         }
 
@@ -149,6 +148,8 @@
           .item--ipt--inner {
             width: 100%;
             outline: none;
+            appearance: none;
+            border: none;
           }
         }
       }
@@ -251,7 +252,15 @@
 <script>
 
   export default {
-    props:['showInfo'],
+    props: {
+      showInfo: {
+        type: Boolean,
+        default: false
+      },
+      refresh: {
+        type: Function
+      }
+    },
     data() {
       return {
         miniprogram: false,
@@ -449,7 +458,11 @@
           request.post(URL, params)
           .then((res) => {
             if(res.success) {
-              location.reload();
+              if(typeof this.refresh === 'function') {
+                this.refresh();
+              } else {
+                location.reload();
+              }
             }
           });
         }

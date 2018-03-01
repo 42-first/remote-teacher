@@ -142,12 +142,12 @@ let pages = {
   "meschoolbelongs": 'School',
   "schooleg": "e.g. Tsinghua University",
   "mestudentid": 'Student ID',
-  'infocosttime': '花30秒完善你的信息',
-  'infogood': '方便老师快速认识你',
-  'infoorg': '组织/机构',
-  'infoorgtip': '可以为空',
-  'infonumbereg': '如：123456',
-  'infotip': '* 你可以在“我的主页”中随时修改个人信息',
+  'infocosttime': 'Fill in your personal information in 30sec',
+  'infogood': '',
+  'infoorg': 'Organization',
+  'infoorgtip': 'Not required',
+  'infonumbereg': 'eg.123456',
+  'infotip': 'You can change the information at any time in "My Homepage"',
 
 
   // 遥控器
