@@ -71,7 +71,7 @@
       formatTime (value) {
         let self = this
 
-        return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+        return Moment(value*1000).format('YYYY-MM-DD HH:mm:ss')
       },
     },
     created () {
@@ -108,23 +108,15 @@
       fetchPaperData () {
         let self = this
 
-        let url = API.lesson_paper_quiz
+        let url = API.lesson_one_directory_paper
 
         if (process.env.NODE_ENV === 'production') {
-          url = API.lesson_paper_quiz + '?lesson_id=' + self.lessonid
+          url = API.lesson_one_directory_paper + `?lesson_id=${self.lessonid}&directory_id=${self.folderid}`
         }
 
         request.get(url)
           .then(jsonData => {
-            let _index
-
-            jsonData.data.directory_list.forEach((item, index) => {
-              if (item.id === self.folderid) {
-                _index = index
-              }
-            })
-
-            let folderNow = jsonData.data.directory_list[_index]
+            let folderNow = jsonData.data.directory
             self.folderTitle = folderNow.title
             self.paperList = folderNow.paper_list
           })

@@ -105,7 +105,7 @@
       formatTime (value) {
         let self = this
 
-        return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+        return Moment(value*1000).format('YYYY-MM-DD HH:mm:ss')
       },
     },
     created () {

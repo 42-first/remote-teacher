@@ -1,0 +1,20 @@
+{
+  "msg": "ok",
+  "data": {
+    "directory": {
+      "count": 1,
+      "paper_list": [
+        {
+          "total": 9,
+          "create_time": 1506498563,
+          "id": 422,
+          "title": "试卷"
+        }
+      ],
+      "create_time": 1519803349,
+      "id": 18,
+      "title": "第一个试卷文件夹"
+    }
+  },
+  "success": true
+}
