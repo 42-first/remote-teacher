@@ -129,7 +129,10 @@
     <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
 
     <!-- 填写个人信息 -->
-    <information :show-info.sync="showInfo" :refresh="init" v-if="showInfo"></information>
+    <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>
+
+    <!-- 新用户引导 -->
+    <guide :step.sync="step" :cover.sync="pptCover" :hide-guide="hideGuide" v-if="showGuide"></guide>
   </section>
 </template>
 <script>
@@ -229,13 +232,20 @@
         // 是否存在试卷
         hasQuiz: true,
         // 是否需要完善个人信息
-        showInfo: false
+        showInfo: false,
+        // 显示引导
+        showGuide: false,
+        // 引导初始化步骤
+        step: 1,
+        // 第一张ppt
+        pptCover: ''
       };
     },
     components: {
       CardItemComponent,
       PopupComponent,
       information: () => import('@/components/common/information.vue'),
+      guide: () => import('@/components/common/guide.vue'),
       identity: () => import('@/components/student/identityBinding.vue')
     },
     computed: {
@@ -286,9 +296,6 @@
               'menuItem:favorite', 'menuItem:share:QZone']
           });
         });
-
-        // 隐藏信息完善
-        this.showInfo = false;
       },
 
       /*
@@ -344,6 +351,24 @@
         }
 
         typeof ga === 'function' && ga('set', 'userId', this.userID);
+      },
+
+      /*
+      * @method 隐藏引导
+      */
+      hideGuide() {
+        this.showGuide = false;
+      },
+
+      /*
+      * @method 显示引导步骤3
+      */
+      gostep() {
+        this.step = 3;
+
+        this.init();
+        // 隐藏信息完善
+        this.showInfo = false;
       },
 
       /*
@@ -511,7 +536,8 @@
               // 没有权限
               console.log('没有权限');
             } else if(error && error.status_code === 5) {
-              this.showInfo = true;
+              // 显示引导
+              this.showGuide = true;
             }
           });
       },

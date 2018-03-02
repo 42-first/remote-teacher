@@ -10,7 +10,7 @@
 
 <template>
   <!-- 引导 -->
-  <div class="guide__wrap" aria-cmp="guide">
+  <div class="guide__wrap" aria-cmp="guide" v-show="show">
     <!-- 第一步 欢迎页 -->
     <section class="guide__step1" v-show="step===1">
       <div class="guide__banner ">
@@ -57,28 +57,47 @@
 
     <!-- 第四步 ppt引导 -->
     <section class="guide__step4" v-show="step===4">
-      <div class="step3__more">
-        <div class="more__actions">
-          <p class="action f17">
-            <i class="iconfont icon-ykq_tab_danmu f25"></i>
-            <span>{{ $t('sendbullet') }}</span>
-          </p>
-          <p class="action f17">
-            <i class="iconfont icon-ykq_tab_tougao f25"></i>
-            <span>{{ $t('sendpost') }}</span>
-          </p>
-        </div>
-      </div>
+      <h3 class="step4__title">课上不用拍PPT啦，课下也能<br>随时查看！</h3>
 
-      <!-- content -->
-      <div class="step3__arrow">
-        <img class="arrow__img" src="http://sfe.ykt.io/o_1c7ijl41pqvehgse841h3vo34e.png">
-        <h3 class="arrow__title">这里可以发弹幕和投稿</h3>
+      <!-- ppt -->
+      <div class="step4__ppt">
+        <section class="ppt__area">
+          <div class="ppt__wrap">
+            <img class="ppt__cover" :src="cover">
+            <div class="ppt__footer">
+              <p class="ppt__time f16">5分钟前</p>
+              <div class="ppt__opt f15">
+                <p class="ppt--action" >{{ $t('unknown') }}</p>
+                <p class="ppt--action selected">{{ $t('favorite') }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- btn -->
-      <p class="step3--go" @click="handlegoStep3">知道了</p>
+      <p class="step--go" @click="handlegoStep4">知道了</p>
     </section>
+
+    <!-- 第五步 操作引导 -->
+    <section class="guide__step5" v-show="step===5">
+      <!-- 操作 -->
+      <div class="step5__intro">
+        <h3 class="intro__title">可以点击不懂或收藏进行标注</h3>
+        <div class="intro__desc">不懂是匿名发送给老师的噢<br>收藏仅自己可见</div>
+        <img class="intro__arrow" src="http://sfe.ykt.io/o_1c7iqttup2j31t8g1o8k13no1r929.png">
+        <div class="ppt__opt f15">
+          <div class="opt__wrap">
+            <p class="ppt--action" >{{ $t('unknown') }}</p>
+            <p class="ppt--action selected">{{ $t('favorite') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- btn -->
+      <p class="step--go" @click="handlegoStep5">好的</p>
+    </section>
+
   </div>
 </template>
 <style lang="scss">
@@ -91,7 +110,29 @@
     width: 100%;
     height: 100%;
 
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .step--go {
+    position: absolute;
+    bottom: 1.733333rem;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    width: 3.293333rem;
+    height: 1.373333rem;
+    line-height: 1.2rem;
+
+    text-align: center;
+    font-size: 0.48rem;
+    font-weight: bolder;
+    color: #333;
+
+    background-image: url(http://sfe.ykt.io/o_1c7il47hqna51cta14facr6bv9.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
   }
 
 
@@ -257,18 +298,154 @@
 
 
 
+  /*-------------------*\
+    $ ppt引导
+  \*-------------------*/
+
+
+  .guide__step4 {
+    .step4__title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 100%;
+      height: 2.866667rem;
+      font-size: 0.64rem;
+      color: #fff;
+    }
+
+    .ppt__area {
+      padding: 0.2rem 0;
+      border-top: 0.04rem dashed #fff;
+      border-bottom: 0.04rem dashed #fff;
+    }
+
+    .ppt__wrap {
+      margin: 0 auto;
+      padding: 0.453333rem;
+      // width: 9.093333rem;
+      background: #fff;
+
+      .ppt__cover {
+        display: block;
+        width: 100%;
+        min-height: 6rem;
+      }
+
+      .ppt__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .ppt__opt {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .ppt--action {
+            margin-left: 0.266667rem;
+            display: inline-block;
+            padding: 0 0.266667rem;
+            height: 0.666667rem;
+            line-height: 0.666667rem;
+
+            color: #639EF4;
+            border: 1px solid #639EF4;
+            border-radius: 0.333333rem/50%;
+          }
+
+          .selected {
+            color: #fff;
+            background: #639EF4;
+          }
+        }
+      }
+
+    }
+  }
+
 
 
   /*-------------------*\
     $ 投稿弹幕介绍
   \*-------------------*/
 
-  /*-------------------*\
-    $ 投稿弹幕介绍
-  \*-------------------*/
 
+  .guide__step5 {
 
+    .step5__intro {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
 
+      padding-left: 0.84rem;
+      color: #fff;
+      text-align: left;
+    }
+
+    .intro__title {
+      padding-bottom: 1.2rem;
+      font-size: 0.64rem;
+      font-weight: bold;
+    }
+
+    .intro__desc {
+      font-size: 0.48rem;
+    }
+
+    .intro__arrow {
+      width: 3.586667rem;
+      height: 3.386667rem;
+      padding: 0.133333rem 0 0 0.666667rem;
+    }
+
+    .ppt__opt {
+      position: absolute;
+      bottom: -0.533333rem;
+      right: 0.133333rem;
+
+      width: 4.466667rem;
+      height: 1.586667rem;
+
+      padding: 0.093333rem;
+
+      border-radius: 0.106667rem;
+      border: 0.04rem dashed #fff;
+
+      .opt__wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        height: 100%;
+        background: #fff;
+        border-radius: 0.106667rem;
+      }
+
+      .ppt--action {
+        margin-left: 0.266667rem;
+        display: inline-block;
+        padding: 0 0.266667rem;
+        height: 0.666667rem;
+        line-height: 0.666667rem;
+        min-width: 1.6rem;
+        text-align: center;
+
+        color: #639EF4;
+        border: 1px solid #639EF4;
+        border-radius: 0.333333rem/50%;
+      }
+
+      .selected {
+        color: #fff;
+        background: #639EF4;
+      }
+
+    }
+  }
 
 
 
@@ -278,28 +455,29 @@
 
   export default {
     props: {
-      showGuide: {
-        type: Boolean,
-        default: false
+      cover: {
+        type: String,
+        default: ''
       },
       step: {
         type: String,
         default: 1
       },
-      refresh: {
+      hideGuide: {
         type: Function
       }
     },
     data() {
       return {
-        miniprogram: false,
-        // 是否可以提交
-        cansubmit: false
+        show: true
       }
     },
     watch: {
       'step'(newVal, oldVal) {
         newVal && this.stepChange(newVal);
+      },
+      'cover'(newVal, oldVal) {
+        newVal && this.stepChange(this.step);
       }
     },
     methods: {
@@ -308,61 +486,61 @@
        * @param
        */
       stepChange(step) {
+        if(step === 2) {
+          this.show = false;
+        } else if(step === 4) {
+          if(this.cover) {
+            this.show = true;
+          }
+        } else {
+          this.show = true;
+        }
       },
-
 
       /**
        * @method 走起
        * @param
        */
       handlego(evt) {
-        this.step = 3;
+        this.step = 2;
 
-        this.stepChange(this.step);
+        // 显示完善信息
+        this.$parent.showInfo = 2;
       },
 
       /**
-       * @method step2 go
+       * @method step3 go
        * @param
        */
       handlegoStep3(evt) {
-        this.step = 4;
+        // 当存在图片的时候才显示下一引导页
+        if(!this.cover){
+          this.show = false;
+        }
 
-        this.stepChange(this.step);
+        this.step = 4;
       },
 
       /**
-       * @method 提交个人信息
+       * @method step4 go
        * @param
        */
-      handleconfirm(evt) {
-        let URL = '/course_meta/simple_user_info';
-        let params = {
-          'name': this.name,
-          'school': this.school,
-          'role': this.role,
-          'school_number': this.school_number
-        };
+      handlegoStep4(evt) {
+        this.step = 5;
+      },
 
-        if(this.cansubmit) {
-          this.cansubmit = false;
-
-          request.post(URL, params)
-          .then((res) => {
-            if(res.success) {
-              if(typeof this.refresh === 'function') {
-                this.refresh();
-              } else {
-                location.reload();
-              }
-            }
-          });
+      /**
+       * @method 完成
+       * @param
+       */
+      handlegoStep5(evt) {
+        if(typeof this.hideGuide === 'function') {
+          this.hideGuide();
         }
       }
     },
     created() {
       let self = this;
-      this.getUser();
     }
   }
 </script>

@@ -63,7 +63,7 @@
 </template>
 <style lang="scss">
   .info__wrap {
-    z-index: 100;
+    z-index: 101;
     position: fixed;
     top: 0;
     left: 0;
@@ -257,7 +257,7 @@
         type: Boolean,
         default: false
       },
-      refresh: {
+      gostep: {
         type: Function
       }
     },
@@ -458,10 +458,10 @@
           request.post(URL, params)
           .then((res) => {
             if(res.success) {
-              if(typeof this.refresh === 'function') {
-                this.refresh();
+              if(typeof this.gostep === 'function') {
+                this.gostep();
               } else {
-                location.reload();
+                // location.reload();
               }
             }
           });

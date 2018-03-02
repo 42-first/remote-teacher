@@ -211,7 +211,7 @@ var actionsMixin = {
           isRepeat: hasPPT ? true : false
         };
 
-        // todo 之前有动画隐藏蒙版
+        // 之前有动画隐藏蒙版
         this.hideAnimationMask();
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
@@ -245,6 +245,11 @@ var actionsMixin = {
         }
 
         index = this.cards.length;
+
+        // 第一张ppt显示在引导页
+        if(!this.pptCover) {
+          this.pptCover = slideData['Cover'];
+        }
       }
 
       this.allEvents.push(data);
