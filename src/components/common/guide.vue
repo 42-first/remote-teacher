@@ -15,18 +15,18 @@
     <section class="guide__step1" v-show="step===1">
       <div class="guide__banner ">
         <img class="banner" src="http://sfe.ykt.io/o_1c7gia6u4d8d1q801u071b1i1feb9.png">
-        <h3 class="step1__title">欢迎来到雨课堂</h3>
-        <div class="step1__intro">这是一个可以用手机直接参与互动的<br>智慧课堂</div>
+        <h3 class="step1__title"><!-- 欢迎来到雨课堂 -->{{ $t('guide.welcome') }}</h3>
+        <div class="step1__intro" v-html="$t('guide.welcomeintro')">这是一个可以用手机直接参与互动的<br>智慧课堂</div>
       </div>
 
       <!-- content -->
       <div class="step1__text">
-        <p>你已加入 <span>***老师</span> 的课堂</p>
-        <p>准备开始上课吧</p>
+        <p v-html="$t('guide.joinclass')">你已加入 <span>***老师</span> 的课堂</p>
+        <p><!-- 准备开始上课吧 -->{{ $t('guide.ready') }}</p>
       </div>
 
       <!-- btn -->
-      <p class="step1--go" @click="handlego">走起</p>
+      <p class="step1--go" @click="handlego"><!-- 走起 -->{{ $t('guide.go') }}</p>
     </section>
 
     <!-- 第二步 信息完善 -->
@@ -48,16 +48,16 @@
       <!-- content -->
       <div class="step3__arrow">
         <img class="arrow__img" src="http://sfe.ykt.io/o_1c7ijl41pqvehgse841h3vo34e.png">
-        <h3 class="arrow__title">这里可以发弹幕和投稿</h3>
+        <h3 class="arrow__title"><!-- 这里可以发弹幕和投稿 -->{{ $t('guide.howsenddanmu') }}</h3>
       </div>
 
       <!-- btn -->
-      <p class="step3--go" @click="handlegoStep3">知道了</p>
+      <p class="step3--go" @click="handlegoStep3"><!-- 知道了 -->{{ $t('guide.iknown') }}</p>
     </section>
 
     <!-- 第四步 ppt引导 -->
     <section class="guide__step4" v-show="step===4">
-      <h3 class="step4__title">课上不用拍PPT啦，课下也能<br>随时查看！</h3>
+      <h3 class="step4__title" v-html="$t('guide.pptgood')">课上不用拍PPT啦，课下也能<br>随时查看！</h3>
 
       <!-- ppt -->
       <div class="step4__ppt">
@@ -65,7 +65,7 @@
           <div class="ppt__wrap">
             <img class="ppt__cover" :src="cover">
             <div class="ppt__footer">
-              <p class="ppt__time f16">5分钟前</p>
+              <p class="ppt__time f16"><!-- 5分钟前 -->{{ $t('guide.minunts5') }}</p>
               <div class="ppt__opt f15">
                 <p class="ppt--action" >{{ $t('unknown') }}</p>
                 <p class="ppt--action selected">{{ $t('favorite') }}</p>
@@ -76,15 +76,15 @@
       </div>
 
       <!-- btn -->
-      <p class="step--go" @click="handlegoStep4">知道了</p>
+      <p class="step--go" @click="handlegoStep4"><!-- 知道了 -->{{ $t('guide.iknown') }}</p>
     </section>
 
     <!-- 第五步 操作引导 -->
     <section class="guide__step5" v-show="step===5">
       <!-- 操作 -->
       <div class="step5__intro">
-        <h3 class="intro__title">可以点击不懂或收藏进行标注</h3>
-        <div class="intro__desc">不懂是匿名发送给老师的噢<br>收藏仅自己可见</div>
+        <h3 class="intro__title"><!-- 可以点击不懂或收藏进行标注 -->{{ $t('guide.howmarkppt') }}</h3>
+        <div class="intro__desc" v-html="$t('guide.unknownanonymous')">不懂是匿名发送给老师的噢<br>收藏仅自己可见</div>
         <img class="intro__arrow" src="http://sfe.ykt.io/o_1c7iqttup2j31t8g1o8k13no1r929.png">
         <div class="ppt__opt f15">
           <div class="opt__wrap">
@@ -95,7 +95,7 @@
       </div>
 
       <!-- btn -->
-      <p class="step--go" @click="handlegoStep5">好的</p>
+      <p class="step--go" @click="handlegoStep5"><!-- 好的 -->{{ $t('guide.ok') }}</p>
     </section>
 
   </div>

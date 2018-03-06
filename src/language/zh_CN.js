@@ -135,19 +135,19 @@ let pages = {
   // 个人信息完善
   "merealname": '真实姓名',
   "nameeg": "如：李明",
-  "merole": '社会身份',
-  "meteacher": '教师',
-  "meothers": '其他',
+  "merole": "社会身份",
+  "meteacher": "教师",
+  "meothers": "其他",
   "student": "学生",
-  "meschoolbelongs": '所属学校',
+  "meschoolbelongs": "所属学校",
   "schooleg": "如：清华大学",
-  "mestudentid": '在校学号',
-  'infocosttime': '花30秒完善你的信息',
-  'infogood': '方便老师快速认识你',
-  'infoorg': '组织/机构',
-  'infoorgtip': '可以为空',
-  'infonumbereg': '如：123456',
-  'infotip': '* 你可以在“我的主页”中随时修改个人信息',
+  "mestudentid": "在校学号",
+  "infocosttime": "花30秒完善你的信息",
+  "infogood": "方便老师快速认识你",
+  "infoorg": "组织/机构",
+  "infoorgtip": "可以为空",
+  "infonumbereg": "如：123456",
+  "infotip": "* 你可以在“我的主页”中随时修改个人信息",
 
 
   // 遥控器
@@ -323,6 +323,23 @@ let pages = {
   "tsswes": "电脑端将会同步结束授课",
   "pcerrcon": "您的电脑存在连接异常",
   "pctnoyc": "请您检查网络连接状况",
+
+  // 引导页
+  guide: {
+    "welcome": "欢迎来到雨课堂",
+    "welcomeintro": "这是一个可以用手机直接参与互动的<br>智慧课堂",
+    "joinclass": "你已加入 <span>***老师</span> 的课堂",
+    "ready": "准备开始上课吧",
+    "go": "走起",
+
+    "howsenddanmu": "这里可以发弹幕和投稿",
+    "iknown": "知道了",
+    "pptgood": "课上不用拍PPT啦，课下也能<br>随时查看！",
+    "minunts5": "5分钟前",
+    "howmarkppt": "可以点击不懂或收藏进行标注",
+    "unknownanonymous": "不懂是匿名发送给老师的噢<br>收藏仅自己可见",
+    "ok": "好的"
+  },
 
   // 图片国际化
   imgs: {
