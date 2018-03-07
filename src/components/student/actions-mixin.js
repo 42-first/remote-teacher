@@ -225,7 +225,7 @@ var actionsMixin = {
               data = Object.assign(data, cardItem, { animation: 0 })
             }
 
-            this.cards.push(data);
+            !data.isFetch && this.cards.push(data);
           } else if(data.event.step === -1) {
             // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
             if(hasPPT) {
