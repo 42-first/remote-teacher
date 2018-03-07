@@ -60,7 +60,6 @@
         request.post(API.market.rain_courseware_list).then(function (e) {
           let data = e.data
           self.downloadList = data.rain_courseware_list
-          self.downloadList = []
         })
       },
       order: function () {
