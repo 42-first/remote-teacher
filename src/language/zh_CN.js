@@ -21,12 +21,18 @@ let pages = {
   "quiz2": "试卷",
   "bonus": "红包",
 
+  // 空状态
+  "noslides": "还没有开始播放幻灯片~",
+  "noquestions": "还没有发布习题噢~",
+  "noquizzes": "还没有发布试卷噢~",
+
   "unknown": "不懂",
-  "star": "收藏",
+  "favorite": "收藏",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
   "connnow": "立即重连",
+  "autosubmittip": "第{index}页习题已自动提交成功",
 
   "toprelease": "释放更新",
   "pullrefresh": "下拉刷新",
@@ -59,18 +65,20 @@ let pages = {
   "besending": "发送中",
   "sendsuccess": "发送成功",
 
-  "isempty": "这里可以为空",
-  "uploadonepic": "上传图片（只能添加1张）",
+  "subjectivetext": "输入文字",
+  "isempty": "请输入想说的话（也可以为空）",
+  "uploadonepic": "点击+号上传图片（只能添加1张）",
   "viewpost": "查看我的投稿",
 
   "back": "返回",
   "selall": "全选",
   "batchoperation": "批量操作",
   "del": "删除",
-  "delselectedpost": "确定删除所选投稿",
+  "delselectedpost": "确定删除所选投稿?",
 
   // 新增部分
   "sharepostpush" : "Hi, 老师正在分享课堂投稿",
+  "sharesubjective" : "Hi, 老师正在分享主观题答案",
   "minilaunchpush" : "雨课堂小程序上线啦",
   "entermini" : "长按识别图中小程序码开始体验",
   "anonymous" : "(匿名)",
@@ -89,7 +97,7 @@ let pages = {
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
   "receiveclassbonus" : "你收到一个课堂红包",
-  "whosebonus" : '的课堂红包',
+  "whosebonus" : '{name}的课堂红包',
   "savedinpacket" : "已存入我的钱包",
   "numopenedbonus" : "已领 {count}/{total} 个红包",
 
@@ -106,7 +114,7 @@ let pages = {
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
   "receiverwonderful": "答得漂亮~再接再厉~",
-  "receivergoodforu ": "是的，必须奖励下你！",
+  "receivergoodforu": "是的，必须奖励下你！",
   "receiverfabulous": "答题小能手，红包接好~",
   "receiverbrilliant": "答题小能手，我记住你了~",
   "receiverawesome": "机智如你，必须奖励~",
@@ -144,6 +152,7 @@ let pages = {
   "viewdetails": "查看详情",
   "classbonusBonuslist": "课堂红包 | 红包名单",
   "standardopt": "本题正确选项为",
+  "anonymouspoll": "本题为匿名投票，不显示投票人",
 
   "totalscore": "（本题 {num}分）",
   "bonuslist": "红包名单",
@@ -154,6 +163,7 @@ let pages = {
   "votemost": "票数最多",
   "ren": "人",
 
+  "swfacawryb": "个最快答对的同学将收到您的红包",
   "bonustips": "您可以给回答正确且快速的<br>同学发红包以表奖励",
   "quantity": '红包个数<span class="f14">（班级共{num}人）</span>',
   "amounteach": '红包金额<span class="f14">（单个红包）</span>',
@@ -171,6 +181,7 @@ let pages = {
   "cfmpay": "确认支付",
   "paysuccess": "支付成功",
   "payfailed": "支付失败",
+  "opened": "领取",
 
   "balance": "余额",
   "zhifu": "支付",
@@ -245,7 +256,7 @@ let pages = {
   "toberolling": "即将开始随机点名",
   "rolling": "开始滚动",
   "pause": "暂停",
-  "norolling": "no student no rolling",
+  "norolling": "当前班级没有学生，不能点名",
   "radomrolling": "正在随机筛选...",
   "keeprolling": "继续滚动",
   "selhim": "就是Ta了",
@@ -256,6 +267,50 @@ let pages = {
   "forcelogout": "您已被迫下线",
   "studentrole": "以学生身份进入",
   "loginagain": "我要夺回主权",
+  "imgafterfix": '',
+  "extend": "延时",
+  "chtet": "给学生延长答题时间",
+  "xyb": "下一步",
+  "shouti": "收题",
+  "chtca": "立即结束，结束后仍可延时",
+  "gotit": "知道了",
+  "ttmtobrc": "试试从雨课堂桌面端制作并上传试卷吧",
+  "bxs": "不限时",
+  "yhbflo": "您已经被夺权，请刷新页面",
+  "aysts": "确定结束答题？",
+  "qxzycsx": "请选择延长时限",
+  "Officalaccount": "微信公众号",
+  "miniprogram": "微信小程序",
+  "scancode": "扫二维码",
+
+  "nybcykq": "您已在别处进入遥控器",
+  "dqquit": "退出",
+  "dqlssk": "当前有老师正在上课<br>您希望",
+  "loginagain": "我要上课夺主权",
+
+  "subjectiveedit": "修改",
+  "graded": "已批改",
+  "comment": "评语",
+  "good": "写得不错",
+  "comeon": "继续加油",
+  "uniqueidea": "想法很独特",
+  "excellent": "小红花",
+  "enterscoretip":"请输入分值",
+  "quizentercomment": "请输入评语",
+  "invaildinput": "输入无效，请重新输入",
+  "positivescore":"分数必须为正数",
+  "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
+  "keepadecimal": "分数最多保留一位小数，请重新输入",
+
+  "tciate": "您即将结束本次授课",
+  "tsswes": "电脑端将会同步结束授课",
+  "pcerrcon": "您的电脑存在连接异常",
+  "pctnoyc": "请您检查网络连接状况",
+
+  // 图片国际化
+  imgs: {
+    "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
+  }
 };
 
 if (typeof define === 'function' && define.amd){

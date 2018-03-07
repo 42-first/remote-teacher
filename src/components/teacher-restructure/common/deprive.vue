@@ -1,20 +1,21 @@
 <!--夺权面板 被父组件 home.vue 引用 -->
 <template>
-  <div class="mask-content deprive-box f18">
+  <div class="mask-content deprive-box f21">
 
     <div class="" v-show="isRobber">
-      <div>当前有老师正在上课<br>您希望</div>
-      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote">{{isRobbing ? $t('loading')+'...' : '我要上课夺主权'}}</v-touch>
+      <div class="title" v-html="$t('dqlssk')"><!-- 当前有老师正在上课<br>您希望 --></div>
+      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" style="margin-top: 1.5rem;">{{isRobbing ? $t('loading')+'...' : /*'我要上课夺主权'*/$t('loginagain')}}</v-touch>
       <v-touch class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
-      <v-touch class="btn _btn" v-on:tap="exitRC" >退出</v-touch>
+      <v-touch class="btn _btn" v-on:tap="exitRC" style="margin-top: 4.4rem;"><!-- 退出 -->{{ $t('dqquit') }}</v-touch>
     </div>
 
     <div class="" v-show="!isRobber">
-      <div v-if="byself">您已在别处进入遥控器</div>
-      <div v-else>{{ $t('otherslogin') }}<br>{{ $t('forcelogout') }}</div>
-      <v-touch class="btn _btn" v-on:tap="exitRC">退出</v-touch>
+      <div class="title" v-if="byself"><!-- 您已在别处进入遥控器 -->{{ $t('nybcykq') }}</div>
+      <div class="title" v-else>{{ $t('otherslogin') }}<br>{{ $t('forcelogout') }}</div>
+      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" style="margin-top: 1.5rem;">{{isRobbing ? $t('loading')+'...' : $t('loginagain')}}</v-touch>
       <v-touch v-show="!byself" class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
-      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" >{{isRobbing ? $t('loading')+'...' : $t('loginagain')}}</v-touch>
+      
+      <v-touch class="btn _btn" v-on:tap="exitRC" style="margin-top: 4.4rem;"><!-- 退出 -->{{ $t('dqquit') }}</v-touch>
     </div>
     
   </div>
@@ -85,12 +86,18 @@
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
 	.deprive-box {
+		.title {
+			width: 85%;
+			margin: 0 auto;
+		}
 	  ._btn {
-	  	width: 4.0rem;
+	  	width: 5.333333rem;
+	  	height: 1.173333rem;
+	  	line-height: 1.173333rem;
 	  	margin: 0.8rem auto;
 	  	background: none;
-	  	color: $white;
-	  	border: 1px solid $white;
+	  	color: $blue;
+	  	border: 0.025rem solid $blue;
 	  }
 	}
 </style>

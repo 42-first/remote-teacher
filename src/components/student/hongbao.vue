@@ -28,7 +28,7 @@
       <section class="hongbao__mine" v-if="mine">
         <p class="hongbao__mine--praise f14">{{ mine.praise }}</p>
         <p class="hongbao__mine--money f20">￥<span class="f50">{{ (mine.earning/100).toFixed(2) }}</span></p>
-        <P class="hongbao__mine--bank f15"><a class="link" href="/v/index/bank">已存入我的钱包</a></P>
+        <P class="hongbao__mine--bank f15"><a class="link" href="/v/index/bank"><!-- 已存入我的钱包 -->{{ $t('savedinpacket') }}</a></P>
       </section>
 
       <!-- 红包列表 -->
@@ -98,7 +98,10 @@
     },
     filters: {
       formatTime(time) {
-        return typeof moment !== 'undefined' && moment(time).format('HH:mm:ss') || time;
+        let dt = new Date(time);
+        let sTime = dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds();
+
+        return typeof moment !== 'undefined' && moment(time).format('HH:mm:ss') || sTime;
       }
     },
     mixins: [],

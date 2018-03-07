@@ -14,10 +14,10 @@
         </div>
         <div class="wayin">
           <span class="time">{{item.time}}</span>
-          <span class="ganbei" v-show="item.source === 1">扫二维码</span>
-          <span class="ganbei" v-show="item.source === 2">课堂暗号</span>
-          <span class="ganbei" v-show="item.source === 3">微信公众号</span>
-          <span class="ganbei" v-show="item.source === 4">微信小程序</span>
+          <span class="ganbei" v-show="item.source === 1"><!-- 扫二维码 -->{{ $t('scancode') }}</span>
+          <span class="ganbei" v-show="item.source === 2"><!-- 课堂暗号 -->{{ $t('classsignal') }}</span>
+          <span class="ganbei" v-show="item.source === 3"><!-- 微信公众号 -->{{ $t('Officalaccount') }}</span>
+          <span class="ganbei" v-show="item.source === 4"><!-- 微信小程序 -->{{ $t('miniprogram') }}</span>
         </div>
       </div>
     </section>

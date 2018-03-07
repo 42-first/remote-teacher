@@ -33,11 +33,11 @@
         <div class="btn-desc f14">{{ $tc('quizcollect', !isPaperCollected) }}</div>
       </v-touch>
 
-      <v-touch class="btn-item" v-on:tap="postQuizresult">
+      <v-touch class="btn-item" v-on:tap="handlePostQuizresult(isTouping)">
         <div class="iconbox" style="background: #28CF6E;">
           <i class="iconfont icon-shiti_touping f28"></i>
         </div>
-        <div class="btn-desc f14">{{ $t('screenmode') }}</div>
+        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
       </v-touch>
 
       <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
@@ -75,6 +75,7 @@
         stuTotal: '--',                   // 总学生数目
         isSVGHidden: true,                // 饼图svg隐藏
         isAllPoll: false,                 // 全部为投票题
+        isTouping: false,                 // 当前正在投屏
       }
     },
     computed: {
@@ -120,8 +121,33 @@
           if (self.quizid === msg.quizid) {
             self.isPaperCollected = true
             self.endTimers()
+
+            // 记录收卷信息
+            let finishedQuizList = self.finishedQuizList
+
+            finishedQuizList['id'+self.quizid] = true
+            self.$store.commit('set_finishedQuizList', finishedQuizList)
           } 
         })
+
+        // 从 node 传来， 试卷投屏事件
+        T_PUBSUB.subscribe('quiz-msg.postquizresult', (_name, msg) => {
+          self.quizid === msg.quizid && self.toggleTouping(true)
+        })
+
+        // 从 node 传来， 试卷取消投屏事件
+        T_PUBSUB.subscribe('quiz-msg.closequizresult', (_name, msg) => {
+          self.quizid === msg.quizid && self.toggleTouping(false)
+        })
+      },
+      /**
+       * 切换 投屏 取消投屏
+       *
+       * @param {boolean} status true 已经投屏
+       */
+      toggleTouping (status) {
+        let self = this
+        self.isTouping = status
       },
       /**
        * 归零、结束定时器等
@@ -269,15 +295,18 @@
           })
       },
       /**
-       * 公布至屏幕
+       * 试卷饼图页面中的 投屏 按钮
        *
        * @event bindtap
+       * @param {boolean} isTouping true 正在投屏，要取消投屏
        */
-      postQuizresult () {
+      handlePostQuizresult (isTouping) {
         let self = this
 
+        let op = !isTouping ? 'postquizresult' : 'closequizresult'
+
         let str = JSON.stringify({
-          'op': 'postquizresult',
+          op,
           'lessonid': self.lessonid,
           'quizid': self.quizid
         })

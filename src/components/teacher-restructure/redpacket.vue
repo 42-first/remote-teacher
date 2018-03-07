@@ -36,7 +36,7 @@
       </div>
       <p class="numhint f12">
       	<span v-show="bonusNumber > 0">
-      		<span class="mizi">*</span> {{bonusNumber}}个最快答对的同学将收到您的红包
+      		<span class="mizi">*</span> {{bonusNumber}}<!-- 个最快答对的同学将收到您的红包 -->{{ $t('swfacawryb') }}
       	</span>
       </p>
 
@@ -81,7 +81,7 @@
         <div :class="['wallet', 'f16', {'nbt': wxToPay > 0}]">{{ $t('yktwallet') }}<span class="gray f14">（{{ $t('balance') }}￥<span>{{bankLeft !== -1 ? bankLeft : $t('loading')+'...'}}</span>）</span></div>
         <div class="needmoremoney f16" v-show="wxToPay > 0">
           {{ $t('wxwallet') }}
-          <span class="gray f14">（{{ $t('pay') }}￥{{wxToPay}}）</span>
+          <span class="gray f14">（{{ $t('zhifu') }}￥{{wxToPay}}）</span>
         </div>
         <v-touch class="confirm-btn btn f18" v-bind:enabled="bankLeft !== -1" v-on:tap="confirmPay">
           {{ $t('cfmpay') }}
@@ -91,7 +91,7 @@
         {{ $t('loading') }}...
       </div>
       <div class="paying-content pay-success" v-show="payingStep === 1">
-        <div class="cg f28">{{ $t('paysuccess') }}!</div>
+        <div class="cg f28">{{ $t('paysuccess') }}</div>
         <div class="wallet f16">
           {{ $t('yktwallet') }}
           <span class="gray f14">（{{ $t('balance') }}￥{{bankLeft}}）</span>

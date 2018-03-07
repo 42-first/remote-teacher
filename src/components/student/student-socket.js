@@ -46,20 +46,31 @@ var mixin = {
         let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
 
+        // 记录socket链接
+        // window.Raven && Raven.captureException(`WebSocket connect${SOCKET_HOST} userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
+
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
           // 先尝试连接三次
-          if(self.reconnectcount > 2) {
+          if(self.reconnectcount < 3) {
+            self.initws(true);
+          } else if(self.reconnectcount === 3) {
+            setTimeout(() => {
+              self.initws(true);
+            }, 3000)
+          } else if(self.reconnectcount >= 4) {
             if(!self.isResetSocket) {
               setTimeout(() => {
                 self.reconnect();
               }, 1000)
             }
-          } else {
-            self.reconnectcount++;
-            self.initws(true);
           }
+
+          self.reconnectcount++;
+
+          // 记录socket关闭
+          // window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
 
           // 心跳 取消心跳改用其他机制
           // clearInterval(self.xintiaoTimer);
@@ -90,6 +101,9 @@ var mixin = {
             'lessonid': self.lessonID,
             'presentation': self.presentationID
           }))
+
+          // 记录socket打开
+          // window.Raven && Raven.captureException(`WebSocket hello userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
         }
       } catch (error) {
         Raven.captureException(error)
@@ -146,7 +160,7 @@ var mixin = {
               setTimeout(()=>{
                 this.initws(true);
               }, 10000)
-            } else {
+            } else if(timeline && timeline.length) {
               this.cards = [];
               this.setTimeline(timeline)
             }

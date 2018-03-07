@@ -5,10 +5,10 @@
       <div class="_title">{{msg}}</div>
       <div class="_btn-box">
         <template v-show="!isCancelHidden">
-          <v-touch class="_btn" v-on:tap="cancel">取消</v-touch>
+          <v-touch class="_btn" v-on:tap="cancel"><!-- 取消 -->{{ $t('cancel') }}</v-touch>
           <div class="_bar"></div>
         </template>
-        <v-touch class="_btn" style="color: #639EF4;" v-on:tap="confirm">确定</v-touch>
+        <v-touch class="_btn" style="color: #639EF4;" v-on:tap="confirm"><!-- 确定 -->{{ $t('confirm') }}</v-touch>
       </div>
     </div>
 	</div>
@@ -105,7 +105,7 @@
     overflow: hidden;
   }
   ._title {
-    line-height: 2.5rem;
+    padding-top: 0.8rem;
   }
   ._btn-box {
     display: flex;

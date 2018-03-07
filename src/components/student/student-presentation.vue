@@ -56,6 +56,10 @@
           <div class="timeline-wrapper" v-for="(item, index) in cards">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
+          <!-- 各类型中的空状态 -->
+          <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">{{ $t('noslides') }}</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===3 && !hasProblem">{{ $t('noquestions') }}</div>
+          <div class="timeline__msg f15" v-if="currTabIndex===4 && !hasQuiz">{{ $t('noquizzes') }}</div>
         </section>
 
       </loadmore>
@@ -213,7 +217,14 @@
         version: 0.9,
         commitDiffURL: '/lesson/lesson_submit_difficulties',
         backURL: '',
-        pro_perm_info: {}
+        pro_perm_info: {},
+
+        // 是否存在ppt
+        hasPPT: true,
+        // 是否存在习题
+        hasProblem: true,
+        // 是否存在试卷
+        hasQuiz: true
       };
     },
     components: {
@@ -521,7 +532,8 @@
               let presentation = data.presentationData;
 
               // set presentation map
-              self.formatPresentation(presentation, presentationID);
+              let oldPresentation = self.presentationMap.get(presentationID);
+              self.formatUpdatePresentation(presentation, presentationID, oldPresentation);
 
               // set title
               presentation.Title && (self.title = presentation.Title);
@@ -564,6 +576,35 @@
             });
 
             presentation['Slides'] = pptData;
+          }
+
+          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
+        }
+      },
+
+      /*
+       * @method 格式化ppt更新数据
+       * @param
+       */
+      formatUpdatePresentation(presentation, presentationID, oldPresentation) {
+        if(presentation) {
+          let pptDataResult = [];
+          let pptData = presentation['Slides'];
+          let oldSildes = oldPresentation && oldPresentation['Slides'];
+
+          if(pptData.length) {
+            pptDataResult = pptData.map( (slide, index) => {
+              // 是否存在旧的数据
+              if(oldSildes) {
+                let oldSlide = this.getSlideData(oldSildes, index + 1, slide.lessonSlideID);
+                oldSlide && (slide = Object.assign({}, oldSlide, slide));
+              }
+
+              return slide;
+            });
+
+            // 有可能存在更新的情况
+            presentation['Slides'] = pptDataResult;
           }
 
           this.presentationMap.set(presentationID || presentation.presentationID, presentation);
@@ -635,6 +676,28 @@
 
         if(tabIndex) {
           this.currTabIndex = tabIndex;
+
+          // 检测ppt 习题 试卷是否为空
+          if(tabIndex > 1) {
+            let hasData = this.cards.find((item) => {
+              return item.type === tabIndex;
+            })
+
+            switch (tabIndex) {
+              case 2:
+                this.hasPPT = hasData;
+                break;
+              case 3:
+                this.hasProblem = hasData;
+                break;
+              case 4:
+                this.hasQuiz = hasData;
+                break;
+              default:
+                break;
+            }
+          }
+
         }
       },
 

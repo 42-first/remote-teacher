@@ -215,6 +215,11 @@
         if(data.isComplete) {
           this.isShowSubmit = false;
 
+          // 投票类型
+          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
+            this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
+          }
+
           let result = this.oProblem['Result'];
 
           result && result.split('').forEach((option) => {
@@ -556,6 +561,9 @@
                   status: this.$i18n.t('done') || '已完成',
                   isComplete: true
                 })
+
+                // 替换原来的数据
+                self.$parent.cards.splice(self.index, 1, self.summary);
 
                 problem = Object.assign(problem, {
                   'Problem': self.oProblem

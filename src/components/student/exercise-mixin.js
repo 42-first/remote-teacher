@@ -54,14 +54,14 @@ var exerciseMixin = {
 
       // 处理习题状态 提交过得设置已完成
       card = Object.assign(card, {
-        status: '已完成',
+        status: this.$i18n.t('done') || '已完成',
         isComplete: true
       })
 
       problem['Problem']['Result'] = data['result'];
       this.problemMap.set(problemID, problem);
 
-      this.addMessage({ type: 1, message: '第' + card.pageIndex + '页习题已自动提交成功', time: +new Date() });
+      this.addMessage({ type: 1, message: this.$i18n.t('autosubmittip', { index: card.pageIndex }), time: +new Date() });
     },
 
     /*

@@ -4,6 +4,7 @@
 
 let isOldVersion = false               // 雨课堂软件是老版本
 import config from '@/pages/teacher/config/config'
+import request from '@/util/request'
 
 function goHome () {
   this.goHome.call(this)
@@ -93,8 +94,6 @@ function socketProcessMessage(msg){
 
     // 翻到初始页面（不一定是第一页），当前页有没有发试题按钮及状态在fetchPPTData的回调中处理
     self.showWhichPage(msg)
-    // 有了 presentationid 开始轮询不懂、投稿未读数
-    self.pollingPresentationTag()
 
     // 随机点名相关代码
     if((typeof msg.call !== 'undefined') && msg.call != -1){
@@ -136,6 +135,15 @@ function socketProcessMessage(msg){
     // TODO 是否需要关闭定时器
     self.openDeprive('notRobber', msg.byself)
     T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
+
+    let url = '/reporter/collect'
+    request.get(url, {
+      'user_id': self.userid,
+      'lesson_id': self.lessonid,
+      'socket_id': self.socket.socket_id,
+      'type': 'remotedeprived-h5-teacher',
+      'dt': Date.now()
+    })
     return
   }
 
@@ -156,6 +164,7 @@ function socketProcessMessage(msg){
       //切换ppt的话显示二维码控制页面
       self.killMask()
       self.showQrcodeMask()
+      self.$store.commit('set_current', 1)
     }
 
     // 无论是新ppt还是更新，都需要fetch数据
@@ -170,6 +179,11 @@ function socketProcessMessage(msg){
     self.$store.commit('set_isBrandNewPpt', false)
     self.showWhichPage(msg)
     self.killMask()
+
+    if (self.presentationid !== msg.presentation) {
+      self.$store.commit('set_presentationid', msg.presentation)
+      self.fetchPPTData()
+    }
     return
   }
 
@@ -248,6 +262,15 @@ function socketProcessMessage(msg){
     return
   }
 
+  //试题延时了
+  if (msg.op == 'newsubmit') {
+    T_PUBSUB.publish('pro-msg.newsubmit', msg);
+    return
+  }
+
+
+  
+
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     self.$store.commit('set_isProblemPublished', true)
@@ -318,7 +341,10 @@ function socketProcessMessage(msg){
     }else if(msg.qrcode == 99){
       self.showQrcodeMask()
     }else if(msg.qrcode == 101){
-      self.fetchPPTData()
+      // slidenav 会去判断是不是 presentationid 变了，不要在这里 fetchPPTData 了
+      // 否则，在切换 ppt 的时候，这个 fetchPPTData 会和 slidenav 里面的 fetchPPTData 比赛速度，
+      // 如果这里的速度慢的话，这里的 fetchPPTData 生效，就不对了
+      // self.fetchPPTData()
       self.$store.commit('set_qrcodeStatus', 1)
       self.killMask()
       self.showQrcodeMask()
@@ -400,6 +426,17 @@ function socketProcessMessage(msg){
   // 收卷了
   if (msg.op == 'quizfinished') {
     T_PUBSUB.publish('quiz-msg.quizfinished', msg)
+    return
+  }
+
+  //试卷饼图投屏了
+  if (msg.op == 'postquizresult') {
+    T_PUBSUB.publish('quiz-msg.postquizresult', {quizid: +msg.quizid});
+    return
+  }
+  //试卷饼图取消投屏了
+  if (msg.op == 'closequizresult') {
+    T_PUBSUB.publish('quiz-msg.closequizresult', {quizid: +msg.quizid});
     return
   }
 

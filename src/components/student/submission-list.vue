@@ -12,10 +12,10 @@
       <!-- header 批量操作 删除等 -->
       <section class="header ">
         <!-- 全选 v-model="selectAll"-->
-        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="selectAll" @change="handleCheckedAll" value="all" /><label for="all">全选</label></div>
+        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="selectAll" @change="handleCheckedAll" value="all" /><label for="all"><!-- 全选 -->{{ $t('selall') }}</label></div>
         <div class="header-inner f16">
-          <p class="action" v-show="!canSelect" @click="handleSetSelected">批量操作</p>
-          <p class="action delete" v-show="canSelect" @click="handleDelete">删除</p>
+          <p class="action" v-show="!canSelect" @click="handleSetSelected"><!-- 批量操作 -->{{ $t('batchoperation') }}</p>
+          <p class="action delete" v-show="canSelect" @click="handleDelete"><!-- 删除 -->{{ $t('del') }}</p>
         </div>
       </section>
 
@@ -30,7 +30,7 @@
             <div class="item-date">
               <p class="">
                 <span class="date-day f25">{{ item.create_time|formatTime('DD') }}</span>
-                <span class="date-month f14">{{ item.create_time|formatTime('MM月') }}</span>
+                <span class="date-month f14">{{ item.create_time|formatTime('MMM') }}</span>
               </p>
               <p class="date-time f14">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
@@ -86,8 +86,8 @@
 
     <!-- 空状态 -->
     <section class="page-empty" v-if="isEmpty">
-      <img class="page-empty-img" src="http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png" alt="" />
-      <p class="page-empty-btn f18" @click="handleBack">返回</p>
+      <img class="page-empty-img" :src="$t('imgs.tougaoempty')" alt="" />
+      <p class="page-empty-btn f18" @click="handleBack"><!-- 返回 -->{{ $t('back') }}</p>
     </section>
 
   </section>
@@ -269,8 +269,13 @@
         let self = this;
         // 批量删除
         let options = [...this.optionsSet];
+        // 国际化confirm options改造
+        let msgOptions = {
+          confirmButtonText: this.$i18n.t('confirm'),
+          cancelButtonText: this.$i18n.t('cancel')
+        }
 
-        this.$messagebox.confirm('确定删除所选投稿?').then(action => {
+        this.$messagebox.confirm(this.$i18n.t('delselectedpost')||'确定删除所选投稿?', msgOptions).then(action => {
           if(action === 'confirm' && options.length) {
             options.forEach( (id, index) => {
               self.deleteSubmission(+id);

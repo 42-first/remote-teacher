@@ -8,8 +8,8 @@
   	<v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">{{ $t('endclass') }}</v-touch>
   	<div class="rc-mask close-modal" v-show="!isModalHidden">
   		<div class="pub-inner">
-        <div class="title f20">您即将结束本次授课</div>
-        <div class="paper-title f18">电脑端将会同步结束授课</div>
+        <div class="title f20"><!-- 您即将结束本次授课 -->{{ $t('tciate') }}</div>
+        <div class="paper-title f18"><!-- 电脑端将会同步结束授课 -->{{ $t('tsswes') }}</div>
         <div class="pub-btns f18">
           <v-touch class="cancel" v-on:tap="closeModal">{{ $t('cancel') }}</v-touch>
           <div class="bar"></div>
@@ -114,7 +114,7 @@
       border-radius: 0.08rem;
 
       .title {
-        height: 1.973333rem;
+        height: 1.63333rem;
         line-height: 1.973333rem;
         color: $graybg;
       }

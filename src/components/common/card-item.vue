@@ -21,7 +21,7 @@
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
             <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('star') }}</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('favorite') }}</p>
           </div>
         </div>
         <!-- 动画蒙版 -->
@@ -118,7 +118,7 @@
       <div class="timeline__paper">
         <router-link class="paper-info submission" :to="'/'+lessonid+'/subjective_share/'+index">
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 老师正在分享主观题答案</p>
+            <p class="paper-name"><!-- Hi, 老师正在分享主观题答案 -->{{ $t('sharesubjective') }}</p>
           </div>
           <i class="iconfont icon-ykq_shiti f50"></i>
         </router-link>
@@ -424,7 +424,7 @@
     .ppt__modal {
       position: absolute;
       top: 0;
-      bottom: 0;
+      bottom: 0.933334rem;
       left: 0;
       right: 0;
 

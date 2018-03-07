@@ -98,7 +98,7 @@
       return {
         index: 0,
         opacity: 0,
-        title: this.$i18n.t('post') || '投稿',
+        title: this.$i18n.t('post') || '课堂投稿',
         // 0 初始化状态 1图片上传中 2可以发送 3发送中 4发送完成 5课程已结束
         sendStatus: 0,
         submitText: this.$i18n.t('sendcfm') || '确认发送',
@@ -147,7 +147,7 @@
         } else if(newValue === 4) {
           this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
-          this.submitText = '课程已结束';
+          this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
       }
     },
