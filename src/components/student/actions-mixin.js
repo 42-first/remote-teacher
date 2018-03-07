@@ -231,11 +231,16 @@ var actionsMixin = {
             if(hasPPT) {
               // 需要替换的index
               let targetIndex = this.cards.findIndex((item, i) => {
-                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
+                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
               })
 
               Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
               // targetIndex && this.cards.splice(targetIndex, 1, data);
+
+              if(targetIndex > 0 && !data.isFetch) {
+                Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                this.cards.push(data);
+              }
             } else {
               // 如果直接收到动画结束
               data = Object.assign(data, cardItem, { animation: 2 })
