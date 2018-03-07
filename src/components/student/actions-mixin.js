@@ -234,8 +234,12 @@ var actionsMixin = {
                 return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
               })
 
-              data = Object.assign(data, cardItem, { animation: 2, isRepeat: false })
-              targetIndex && this.cards.splice(targetIndex, 1, data);
+              Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
+              // targetIndex && this.cards.splice(targetIndex, 1, data);
+            } else {
+              // 如果直接收到动画结束
+              data = Object.assign(data, cardItem, { animation: 2 })
+              !data.isFetch && this.cards.push(data);
             }
           }
         } else {
