@@ -225,17 +225,26 @@ var actionsMixin = {
               data = Object.assign(data, cardItem, { animation: 0 })
             }
 
-            this.cards.push(data);
+            !data.isFetch && this.cards.push(data);
           } else if(data.event.step === -1) {
             // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
             if(hasPPT) {
               // 需要替换的index
               let targetIndex = this.cards.findIndex((item, i) => {
-                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 1;
+                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
               })
 
-              data = Object.assign(data, cardItem, { animation: 2, isRepeat: false })
-              targetIndex && this.cards.splice(targetIndex, 1, data);
+              Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
+              // targetIndex && this.cards.splice(targetIndex, 1, data);
+
+              if(targetIndex > 0 && !data.isFetch) {
+                Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                this.cards.push(data);
+              }
+            } else {
+              // 如果直接收到动画结束
+              data = Object.assign(data, cardItem, { animation: 2 })
+              !data.isFetch && this.cards.push(data);
             }
           }
         } else {
