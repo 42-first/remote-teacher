@@ -358,6 +358,16 @@
       */
       hideGuide() {
         this.showGuide = false;
+        let URL = API.student.SET_GUIDE;
+        let param = {
+          'lesson_id': this.lessonID
+        }
+
+        request.post(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+            }
+          });
       },
 
       /*
@@ -521,6 +531,12 @@
               setTimeout(() => {
                 self.initws();
               }, 20)
+
+              // 用户引导 老用户从第三页开始
+              if(data.need_read_guide) {
+                this.showGuide = true;
+                this.step = 3;
+              }
 
               return presentationData;
             }

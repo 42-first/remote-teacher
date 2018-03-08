@@ -44,7 +44,9 @@ if (process.env.NODE_ENV === 'production') {
             'GET_SUBMISSION': '/v/api/tougao/tougao_info',
             // 主观题分享
             'GET_SUBJECTIVE': '/v/lesson/subjective_problem_result_info',
-            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/',
+            // 用户引导设置完成
+            'SET_GUIDE': '/v/lesson/set_guide'
         },
 
         /*------------------*\
@@ -99,7 +101,9 @@ if (process.env.NODE_ENV === 'production') {
             'GET_SUBMISSION': '/v/api/tougao/tougao_info',
             // 主观题分享
             'GET_SUBJECTIVE': '/v/lesson/subjective_problem_result_info',
-            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/'
+            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/',
+            // 用户引导设置完成
+            'SET_GUIDE': '/v/lesson/set_guide'
         },
 
         /*------------------*\
