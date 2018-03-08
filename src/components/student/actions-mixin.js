@@ -372,6 +372,9 @@ var actionsMixin = {
       !hasEvent && this.cards.push(data);
       !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       this.allEvents.push(data);
+
+      // 之前有动画隐藏蒙版
+      this.hideAnimationMask();
     },
 
     /*
