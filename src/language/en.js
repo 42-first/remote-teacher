@@ -328,7 +328,7 @@ let pages = {
   guide: {
     "welcome": "欢迎来到雨课堂",
     "welcomeintro": "这是一个可以用手机直接参与互动的<br>智慧课堂",
-    "joinclass": "你已加入 <span>***老师</span> 的课堂",
+    "joinclass": "你已加入 <span>{name}老师</span> 的课堂",
     "ready": "准备开始上课吧",
     "go": "走起",
 

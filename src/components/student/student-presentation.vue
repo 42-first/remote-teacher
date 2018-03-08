@@ -132,7 +132,7 @@
     <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>
 
     <!-- 新用户引导 -->
-    <guide :step.sync="step" :cover.sync="pptCover" :hide-guide="hideGuide" v-if="showGuide"></guide>
+    <guide :step.sync="step" :cover.sync="pptCover" :name.sync="teacherName" :hide-guide="hideGuide" v-if="showGuide"></guide>
   </section>
 </template>
 <script>
@@ -238,7 +238,9 @@
         // 引导初始化步骤
         step: 1,
         // 第一张ppt
-        pptCover: ''
+        pptCover: '',
+        // 老师名称
+        teacherName: ''
       };
     },
     components: {
@@ -465,6 +467,26 @@
       },
 
       /*
+       * @method 获取老师信息
+       * @param  lessonID
+       */
+      getTeacherName(lessonID) {
+        let URL = API.student.GET_TEACHER;
+        let param = {
+          'lesson_id': lessonID
+        }
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              this.teacherName = data.teacher_name;
+            }
+          });
+      },
+
+      /*
       * @method 读取直播的课程列表和auth信息
       * @param  init: 是否初始化socket
       */
@@ -554,6 +576,7 @@
             } else if(error && error.status_code === 5) {
               // 显示引导
               this.showGuide = true;
+              this.getTeacherName(this.lessonID);
             }
           });
       },

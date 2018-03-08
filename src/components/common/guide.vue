@@ -21,7 +21,7 @@
 
       <!-- content -->
       <div class="step1__text">
-        <p v-html="$t('guide.joinclass')">你已加入 <span>***老师</span> 的课堂</p>
+        <p v-html="$t('guide.joinclass', { name: name })"><!-- 你已加入 <span>***老师</span> 的课堂 --></p>
         <p><!-- 准备开始上课吧 -->{{ $t('guide.ready') }}</p>
       </div>
 
@@ -462,6 +462,10 @@
       step: {
         type: String,
         default: 1
+      },
+      name: {
+        type: String,
+        default: ''
       },
       hideGuide: {
         type: Function
