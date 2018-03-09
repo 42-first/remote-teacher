@@ -326,19 +326,19 @@ let pages = {
 
   // 引导页
   guide: {
-    "welcome": "欢迎来到雨课堂",
-    "welcomeintro": "这是一个可以用手机直接参与互动的<br>智慧课堂",
-    "joinclass": "你已加入 <span>{name}老师</span> 的课堂",
-    "ready": "准备开始上课吧",
-    "go": "走起",
+    "welcome": "Welcome to RainClassroom",
+    "welcomeintro": "It is a smart learning tool to interact with instructors by phone.",
+    "joinclass": "You have joined the {name}'s class",
+    "ready": "Are you ready?",
+    "go": "Let's go!",
 
-    "howsenddanmu": "这里可以发弹幕和投稿",
-    "iknown": "知道了",
-    "pptgood": "课上不用拍PPT啦，课下也能<br>随时查看！",
-    "minunts5": "5分钟前",
-    "howmarkppt": "可以点击不懂或收藏进行标注",
-    "unknownanonymous": "不懂是匿名发送给老师的噢<br>收藏仅自己可见",
-    "ok": "好的"
+    "howsenddanmu": "You can send Danmu and Post here",
+    "iknown": "OK",
+    "pptgood": "No need to take pictures for those Slides, <br>check them whenever you want",
+    "minunts5": "5mins ago",
+    "howmarkppt": "You can marked Unclear and Save here",
+    "unknownanonymous": "Unclear : sent anonymously <br> Save : Private",
+    "ok": "OK"
   },
 
 
