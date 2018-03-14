@@ -134,6 +134,7 @@ router.beforeEach((to, from, next) => {
       'lessonid': STORE.state.lessonid,
       'quizid': from.params.quizid
     })
+    localStorage['isTouping'+from.params.quizid] = false
 
     STORE.state.socket.send(str)
   }
