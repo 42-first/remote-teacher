@@ -79,6 +79,15 @@ function wxpay (money, payCB) {
         fail: function(errMsg){
         	console.error(JSON.stringify(errMsg))
           payCB && payCB({success: false, errMsg: 'failorfail'})
+
+          let url = '/reporter/collect'
+          request.get(url, {
+            'user_id': window.USERID,
+            'lesson_id': window.LESSONID,
+            'type': 'chooseWXPay-error-h5-teacher',
+            'msg': JSON.stringify(errMsg),
+            'dt': Date.now()
+          })
         },
         cancel: function(errMsg){
           console.error(JSON.stringify(errMsg))
