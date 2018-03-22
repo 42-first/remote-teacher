@@ -16,6 +16,8 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:            prefix + '/v/lesson/fetch_presentation_data',   // ppt数据
     lesson_quiz_list:                   prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
+    lesson_paper_quiz:                  prefix + '/v/quiz/lesson_paper_quiz',         // 试卷数据（分文件夹，已发布、未发布）
+    lesson_one_directory_paper:         prefix + '/v/quiz/lesson_one_directory_paper',// 试卷数据（单个文件夹内的试卷）
     presentation_tag:                   prefix + '/v/lesson/presentation_tag',        // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   prefix + '/v/lesson/teaching_lesson_participant_list',  // 获取签到学生名单
     publish_problem:                    prefix + '/v/lesson/publish_problem/',        // 发布试题
@@ -53,6 +55,8 @@ if (process.env.NODE_ENV === 'production') {
     remote_control_list:                '/static/lesson/mock/remote_control_list.json',        // 遥控器列表
     fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
     lesson_quiz_list:                   '/static/lesson/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
+    lesson_paper_quiz:                  '/static/lesson/mock/lesson_paper_quiz.json',          // 试卷数据（分文件夹，已发布、未发布）
+    lesson_one_directory_paper:         '/static/lesson/mock/lesson_one_directory_paper.json', // 试卷数据（单个文件夹内的试卷）
     presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/static/lesson/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
     publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
