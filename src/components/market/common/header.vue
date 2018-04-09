@@ -7,10 +7,10 @@
       </a>
       <a href="/web" target="_blank" class="right loginweb">登录网页版</a>
       <a href="/help" class="right">帮助中心</a>
-      <a href="/lesson/market/courseware" id="rainMarket" class="right">雨课件</a>
+      <a href="/lesson/market/courseware" id="rainMarket" class="right active">雨课件</a>
       <a href="/presenter" class="right">翻页笔</a>
       <a href="/download" class="right">下载</a>
-      <a href="/" class="right active">首页</a>
+      <a href="/" class="right">首页</a>
     </div>
   </nav>
 </template>
