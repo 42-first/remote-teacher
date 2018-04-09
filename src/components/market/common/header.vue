@@ -50,7 +50,10 @@
   @import "~@/style/market/insert.css";
   /*导航条*/
   /*导航条background-color: #282C2F; */
-  .nav {position: fixed; z-index: 50; width: 100%; left: 0; top: 0; color: #fff;background-color:rgba(0,0,0,0.8);}
+  .nav {
+    position: fixed; z-index: 50; width: 100%; left: 0; top: 0; color: #fff;background-color:rgba(0,0,0,0.8);
+    -webkit-font-smoothing: auto;
+  }
   .nav .bg {position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: none;}
   .nav .box {position: relative; width: 1170px; margin: 0 auto; height: 74px;}
   .nav .box .logo {float: left; width: 94px; margin-top: 22px;}
