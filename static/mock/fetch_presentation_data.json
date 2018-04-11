@@ -8,7 +8,18 @@
         "Index": 1,
         "Cover": "http://st0.ykt.io/Foy8ZOtG5MUHqUYbFIJS91vwX0_9",
         "Thumbnail": "http://st0.ykt.io/FiOF0aOS1y_3xRthtfyzmw8Wd0Vc",
-        "lessonSlideID": 92414
+        "lessonSlideID": 92414,
+        "Shapes": [
+          {
+            "Top": 105.572281,
+            "PPTShapeType": 16,
+            "Width": 306.0,
+            "ZOrderPosition": 3,
+            "PPTShapeId": 4,
+            "Height": 209.7871,
+            "Left": 207.0
+          }
+        ]
       },
       {
         "Index": 2,
