@@ -15,7 +15,9 @@
 
         <div class="img-wrapper">
         	<template v-if="pptData.length && pptData[current - 1].Shapes && pptData[current - 1].Shapes.length">
-        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: btnItem.Left*100/cardWidth+'%', top: btnItem.Top*100/cardHeight+'%', width: btnItem.Width*100/cardWidth+'%', height: btnItem.Height*100/cardHeight+'%', zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)"></v-touch>
+        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: btnItem.Left*100/cardWidth+'%', top: btnItem.Top*100/cardHeight+'%', width: btnItem.Width*100/cardWidth+'%', height: btnItem.Height*100/cardHeight+'%', zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
+        			<div class="video-hint f12">点击 播放/暂停 视频</div>
+        		</v-touch>
         	</template>
         	
         	<img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
@@ -762,9 +764,21 @@
       			top: 50%;
       			width: 0.8rem;
       			height: 0.8rem;
-      			background: url(~images/teacher/play_pause.png);
+      			background-image: url(~images/teacher/play_pause.png);
       			background-size: 100%;
       			transform: translate(-50%, -50%);
+      		}
+
+      		&:active {
+      			background: yellow;
+      		}
+
+      		.video-hint {
+      			position: absolute;
+      			left: 0;
+      			width: 100%;
+      			bottom: 0.4rem;
+      			text-align: center;
       		}
       	}
       }
