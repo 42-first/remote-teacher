@@ -8,6 +8,7 @@
 
 import socketProcessMessage from './socket-process-message'
 import request from '@/util/request'
+import API from '@/pages/teacher/config/api'
 
 const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
@@ -34,15 +35,27 @@ let mixin = {
       let socket = this.socket
 
       try {
-        socket.close()
+        // socket.close()
         socket.onopen = null
         socket.onmessage = null
-
+        socket.send = null
+        
         self.$store.commit('set_socket', null)
         self.socket = null
 
+        socket.close()
+
         return this
       } catch(e) {
+        let url = API.reporter
+        request.get(url, {
+          'user_id': self.userid,
+          'lesson_id': self.lessonid,
+          'socket_id': self.$store.state.socket.socket_id,
+          'type': 'closews-catch-e-h5-teacher',
+          'error': JSON.stringify(e),
+          'dt': Date.now()
+        })
       }
     },
     /*
@@ -51,15 +64,17 @@ let mixin = {
     initws() {
       let self = this
       // 持久化了，所以总是有socket对象
+      console.log('initws.isReconnect.socket', isReconnect, self)
       if (!isReconnect && self.$store.state.socket && self.$store.state.socket.send) {
         // TODO 处理断网重连的socket怎么处理
         // 不用重连了：不是断网重连，并且有连接能力（刷新可能导致只是一个对象而已）
         self.socket = self.$store.state.socket
+
         return;
       }
 
       try {
-        let url = '/reporter/collect'
+        let url = API.reporter
         if (self.$store.state.socket && self.$store.state.socket.send) {
           request.get(url, {
             'user_id': self.userid,
@@ -68,6 +83,15 @@ let mixin = {
             'type': 'vuex-old-socket-still-exist-h5-teacher',
             'dt': Date.now()
           })
+
+          // 之前反复自己踢自己的可能原因
+          // closews 中的 socket.close() 是先执行的，可能它崩了
+          // 然后 closews try 中的第一行之后的语句就都没有执行，就进入了 initws 中的
+          // 这个 try， 然后本注释所在的这个if上的socket对象还存在，就进入了这个if，
+          // 下面的close是走网络的，然后立即执行后面的语句，下面的if应该也会执行，
+          // closews 的try 应该就会再崩一回，然后执行下面的 new WebSocket，
+          // 这时旧的socket还没有完全close，而 socket.onmessage = null 因为之前崩了没有执行，
+          // 新的socket就会导致旧的socket触发 deprived，触发夺权弹窗
           self.$store.state.socket.close()
         }
 
@@ -92,6 +116,7 @@ let mixin = {
         })
 
         this.socket.onerror = function(event) {
+          console.log('socket.onerror', event)
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
@@ -153,6 +178,7 @@ let mixin = {
           }
 
           // 握手开始通信
+          console.log('========onopen.sendhello========')
           self.socket.send(JSON.stringify({
             'op': 'hello',
             'userid': self.userid,

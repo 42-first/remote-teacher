@@ -270,7 +270,7 @@
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
 
 		    self.fetchUserInfo()
-		    		.then(self.initws)
+		    		.then(self.initws.bind(self))
 
 		    self.pollingPresentationTag()
 
