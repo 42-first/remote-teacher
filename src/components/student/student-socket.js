@@ -23,6 +23,7 @@ var mixin = {
         socket.close()
         socket.onopen = null
         socket.onmessage = null
+        socket.onclose = null
 
         return this
       } catch(e) {
