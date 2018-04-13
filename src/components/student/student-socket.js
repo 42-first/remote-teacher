@@ -73,7 +73,7 @@ var mixin = {
           // window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
 
           // 重连时重新拉取ppt数据 保证数据准确性
-          self.getPresentationList();
+          // self.getPresentationList();
         }
 
         // 接收socket信息
