@@ -478,7 +478,7 @@
                 presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
-                self.fetchPresentationCount < 3 && setTimeout(() => {
+                self.fetchPresentationCount < 2 && setTimeout(() => {
                   self.getPresentationList();
                 }, 5000)
 
