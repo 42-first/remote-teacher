@@ -475,7 +475,7 @@
                 // presentation没有数据 重新初始化
                 setTimeout(() => {
                   self.getPresentationList();
-                }, 1000)
+                }, 5000)
 
                 return presentationData;
               }
