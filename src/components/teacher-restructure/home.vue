@@ -15,7 +15,7 @@
 
         <div class="img-wrapper">
         	<template v-if="pptData.length && pptData[current - 1].Shapes && pptData[current - 1].Shapes.length">
-        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: btnItem.Left*100/cardWidth+'%', top: btnItem.Top*100/cardHeight+'%', width: btnItem.Width*100/cardWidth+'%', height: btnItem.Height*100/cardHeight+'%', zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
+        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
         			<div class="video-hint f12"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
         		</v-touch>
         	</template>
@@ -756,6 +756,7 @@
       		width: 1.333333rem;
       		height: 1.333333rem;
       		background: #000000;
+      		border: 0.026667rem solid #000000;
 
       		&:after {
       			position: absolute;
@@ -770,7 +771,8 @@
       		}
 
       		&:active {
-      			background: yellow;
+      			border-color: #639EF4;
+  					box-shadow: 0 0 0.4rem 0.133333rem rgba(99,158,244,0.8) inset;
       		}
 
       		.video-hint {
