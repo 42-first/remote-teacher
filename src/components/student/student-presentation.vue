@@ -224,7 +224,10 @@
         // 是否存在习题
         hasProblem: true,
         // 是否存在试卷
-        hasQuiz: true
+        hasQuiz: true,
+
+        // 尝试拉取数据的次数
+        fetchPresentationCount: 1
       };
     },
     components: {
@@ -431,6 +434,8 @@
           'lesson_id': this.lessonID
         }
 
+        this.fetchPresentationCount++;
+
         // lessons
         return request.get(URL, param)
           .then((res) => {
@@ -473,7 +478,7 @@
                 presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
-                setTimeout(() => {
+                self.fetchPresentationCount < 4 && setTimeout(() => {
                   self.getPresentationList();
                 }, 5000)
 
