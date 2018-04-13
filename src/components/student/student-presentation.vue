@@ -227,7 +227,7 @@
         hasQuiz: true,
 
         // 尝试拉取数据的次数
-        fetchPresentationCount: 1
+        fetchPresentationCount: 0
       };
     },
     components: {
@@ -478,7 +478,7 @@
                 presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
-                self.fetchPresentationCount < 4 && setTimeout(() => {
+                self.fetchPresentationCount < 3 && setTimeout(() => {
                   self.getPresentationList();
                 }, 5000)
 
