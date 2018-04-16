@@ -23,6 +23,7 @@ var mixin = {
         socket.close()
         socket.onopen = null
         socket.onmessage = null
+        socket.onclose = null
 
         return this
       } catch(e) {
@@ -72,8 +73,8 @@ var mixin = {
           // 记录socket关闭
           // window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
 
-          // 心跳 取消心跳改用其他机制
-          // clearInterval(self.xintiaoTimer);
+          // 重连时重新拉取ppt数据 保证数据准确性
+          // self.getPresentationList();
         }
 
         // 接收socket信息

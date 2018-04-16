@@ -1,0 +1,44 @@
+{
+    "msg": "",
+    "data": {
+        "nodir_paper_list": [
+            {
+                "id": 596,
+                "create_time": 1519726700,
+                "title": "再上传一个试卷"
+            },
+            {
+                "id": 595,
+                "create_time": 1519726700,
+                "title": "什么题目都有"
+            }
+        ],
+        "directory_list": [
+            {
+                "count": 2,
+                "paper_list": [
+                    {
+                        "id": 599,
+                        "create_time": 1519726700,
+                        "title": "怎么才对呢"
+                    },
+                    {
+                        "id": 598,
+                        "create_time": 1519726700,
+                        "title": "不对"
+                    }
+                ],
+                "id": 15,
+                "create_time": "2018-02-12 16:05",
+                "title": "试卷文件夹"
+            }
+        ],
+        "on_lesson_quiz_list": [{
+            "quiz_id": 123,
+            "paper_id": 456,
+            "title": "haha",
+            "time": 1519726700
+        }]
+    },
+    "success": true
+}

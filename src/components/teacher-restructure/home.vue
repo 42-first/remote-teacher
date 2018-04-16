@@ -270,7 +270,7 @@
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
 
 		    self.fetchUserInfo()
-		    		.then(self.initws)
+		    		.then(self.initws.bind(self))
 
 		    self.pollingPresentationTag()
 
@@ -350,6 +350,7 @@
 
 	      return request.get(url,{'lesson_id': self.lessonid})
 	        .then(jsonData => {
+	        	window.USERID = jsonData.data.user.user_id
 	        	self.$store.dispatch('saveUserInfo', jsonData.data)
 	        })
 	        .catch(() => {

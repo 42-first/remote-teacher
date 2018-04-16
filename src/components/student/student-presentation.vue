@@ -231,6 +231,7 @@
         hasProblem: true,
         // 是否存在试卷
         hasQuiz: true,
+
         // 是否需要完善个人信息
         showInfo: false,
         // 显示引导
@@ -240,7 +241,10 @@
         // 第一张ppt
         pptCover: '',
         // 老师名称
-        teacherName: ''
+        teacherName: '',
+        // 尝试拉取数据的次数
+        fetchPresentationCount: 0
+
       };
     },
     components: {
@@ -497,6 +501,8 @@
           'lesson_id': this.lessonID
         }
 
+        this.fetchPresentationCount++;
+
         // lessons
         return request.get(URL, param)
           .then((res) => {
@@ -539,9 +545,9 @@
                 presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
-                setTimeout(() => {
+                self.fetchPresentationCount < 2 && setTimeout(() => {
                   self.getPresentationList();
-                }, 1000)
+                }, 5000)
 
                 return presentationData;
               }

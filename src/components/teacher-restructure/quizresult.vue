@@ -105,6 +105,8 @@
         self.quizid = +self.$route.params.quizid
         self.showQuizResult()
         self.handlePubSub()
+
+        self.isTouping = localStorage['isTouping'+self.quizid] == 'true'
       },
       /**
        * 处理发布订阅
@@ -148,6 +150,7 @@
       toggleTouping (status) {
         let self = this
         self.isTouping = status
+        localStorage['isTouping'+self.quizid] = status
       },
       /**
        * 归零、结束定时器等
