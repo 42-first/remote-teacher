@@ -132,7 +132,10 @@
 
         .item--label {
           width: 2.2rem;
+          min-width: 75px;
           text-align: right;
+          overflow: hidden;
+          white-space: nowrap;
         }
 
         .item--ipt {
@@ -329,6 +332,11 @@
         // 真实姓名 角色 学校/组织
         if(!this.name || !this.role || !this.school) {
           cansubmit = false;
+        }
+
+        // 机构名称可以为空
+        if(this.name && this.role === 3 && !this.school) {
+          cansubmit = true;
         }
 
         // 学号
