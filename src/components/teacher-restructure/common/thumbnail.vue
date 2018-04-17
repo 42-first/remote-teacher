@@ -61,7 +61,7 @@
 
   export default {
     name: 'Thumbnail',
-    props: ['isSocketConnected'],
+    props: ['isSocketConnected', 'cardWidth', 'cardHeight'],
     data () {
       return {
         tab: 1,         // 缩略图当前tab
@@ -116,6 +116,27 @@
         container3.scrollTop = currentPage3.offsetTop
 
         self.fetchPresentationTag()
+      })
+    },
+
+    mounted () {
+      // 处理缩略图holder高度为真实高度
+      // 使用ppt类型中的最后一张图（或占位div）的宽度以及ppt卡片的宽高比计算得出
+      let self = this
+      let boxObj = document.querySelector('.scroll-box1')
+      let gridimgHolderArr = boxObj.querySelectorAll('.gridimg-holder')
+      let gridimgArr = boxObj.querySelectorAll('.gridimg')
+      let len = gridimgHolderArr.length
+
+      let holderWidth = gridimgHolderArr[len - 1].offsetWidth ||  gridimgArr[len - 1].offsetWidth
+      let bili = self.cardHeight/self.cardWidth
+      let realHeight = holderWidth * bili
+
+      // 如果得出的结果是0，就不执行
+      if (!realHeight) {return;}
+
+      gridimgHolderArr.forEach(item => {
+        item.style.height = `${realHeight}px`
       })
     },
     methods: {

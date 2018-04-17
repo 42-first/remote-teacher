@@ -12,10 +12,20 @@
             {{ $tc('sendprob', !isProblemPublished) }}
           </v-touch>
         </div>
-        <img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
-        <img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
-        <img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
+
+        <div class="img-wrapper">
+        	<template v-if="pptData.length && pptData[current - 1].Shapes && pptData[current - 1].Shapes.length">
+        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
+        			<div class="video-hint f12"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
+        		</v-touch>
+        	</template>
+        	
+        	<img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
+        	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
+        	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
+        	<img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
+        </div>
+
       </div>
       <!-- 下一张幻灯片 -->
       <div id="downer" class="card-box downer" v-if="current < pptData.length">
@@ -52,6 +62,8 @@
           @checkDoubt="checkDoubt"
 
           :problem-type="problemType"
+          :card-width="cardWidth"
+          :card-height="cardHeight"
         ></component>
       </div>
 
@@ -165,6 +177,8 @@
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
+	      cardWidth: 750,													// 大json中的ppt原始宽度
+	      cardHeight: 540,												// 大json中的ppt原始高度
 	    }
 	  },
 	  computed: {
@@ -341,6 +355,25 @@
 	      self.socket.send(str)
 	    },
 	    /**
+	     * 发送视频播放暂停的指令
+	     *
+	     * @param {number, number} sid: SlideId  pptshapeid: pptshapeid
+	     */
+	    videoControl (sid, pptshapeid) {
+	      let self = this
+	      console.log(900, self.lessonid, self.presentationid, sid, pptshapeid)
+	      let str = JSON.stringify({
+	        'op': 'videocontrol',
+	        'lessonid': self.lessonid,
+	        'pres': self.presentationid,
+	        'status': 'change',
+	        sid,
+	        pptshapeid,
+	      })
+
+	      self.socket.send(str)
+	    },
+	    /**
 	     * 获取用户数据
 	     *
 	     */
@@ -396,6 +429,8 @@
 	          self.$store.commit('set_isEnterEnded', true)
 	          self.initCardHeight()
 	          self.filterSlideid(pptData)
+	          self.cardWidth = jsonData.presentationData.Width
+	          self.cardHeight = jsonData.presentationData.Height
 	        })
 	    },
 	    /**
@@ -712,6 +747,45 @@
     }
     .upper {
       padding-top: 0.266667rem;
+
+      .img-wrapper {
+      	position: relative;
+
+      	.video-btn {
+      		position: absolute;
+      		left: 1.333333rem;
+      		top: 1.333333rem;
+      		width: 1.333333rem;
+      		height: 1.333333rem;
+      		background: #000000;
+      		border: 0.026667rem solid #000000;
+
+      		&:after {
+      			position: absolute;
+      			content: "";
+      			left: 50%;
+      			top: 50%;
+      			width: 0.8rem;
+      			height: 0.8rem;
+      			background-image: url(~images/teacher/play_pause.png);
+      			background-size: 100%;
+      			transform: translate(-50%, -50%);
+      		}
+
+      		&:active {
+      			border-color: #639EF4;
+  					box-shadow: 0 0 0.4rem 0.133333rem rgba(99,158,244,0.8) inset;
+      		}
+
+      		.video-hint {
+      			position: absolute;
+      			left: 0;
+      			width: 100%;
+      			bottom: 0.4rem;
+      			text-align: center;
+      		}
+      	}
+      }
     }
     .downer {
       opacity: 0.8;
@@ -747,6 +821,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 10;
   }
 
   .rc-mask {
