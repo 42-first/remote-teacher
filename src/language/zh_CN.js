@@ -153,6 +153,7 @@ let pages = {
   "classbonusBonuslist": "课堂红包 | 红包名单",
   "standardopt": "本题正确选项为",
   "anonymouspoll": "本题为匿名投票，不显示投票人",
+  "djbfztsp": "点击 播放/暂停 视频",
 
   "totalscore": "（本题 {num}分）",
   "bonuslist": "红包名单",
