@@ -62,6 +62,8 @@
           @checkDoubt="checkDoubt"
 
           :problem-type="problemType"
+          :card-width="cardWidth"
+          :card-height="cardHeight"
         ></component>
       </div>
 
