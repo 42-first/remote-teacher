@@ -127,6 +127,8 @@
 
     <router-view></router-view>
     <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
+    <!-- 语言切换 -->
+    <Lang-Component></Lang-Component>
   </section>
 </template>
 <script>
@@ -233,7 +235,9 @@
     components: {
       CardItemComponent,
       PopupComponent,
-      identity: () => import('@/components/student/identityBinding.vue')
+      identity: () => import('@/components/student/identityBinding.vue'),
+      LangComponent: resolve => require(['@/components/common/change_lang_dialog'], resolve)
+      // LangComponent: () => import('@/components/common/change_lang_dialog.vue')
     },
     computed: {
     },
