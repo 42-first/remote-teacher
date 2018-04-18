@@ -102,6 +102,9 @@
       @guideDelayNext="guideDelayNext"
     ></GuideDelay>
 
+    <!-- 切换语言弹窗 -->
+    <change_lang_dialog></change_lang_dialog>
+
   </div>
 </template>
 
@@ -137,6 +140,8 @@
 	import Thumbnail from '@/components/teacher-restructure/common/thumbnail'
 	// 课堂动态面板
 	import Activity from '@/components/teacher-restructure/common/activity'
+
+	import change_lang_dialog from "@/components/common/change_lang_dialog.vue"
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 	import './util/preventoverscroll'
@@ -236,7 +241,8 @@
 	    Deprive,
 	    Qrcode,
 	    Thumbnail,
-	    Activity
+	    Activity,
+	    change_lang_dialog
 	  },
 	  created () {
 	    this.init()
@@ -269,6 +275,7 @@
 
 		    let lessonid = +self.$route.params.lessonid
 		    window.LESSONID = lessonid
+		    return
 
 
 		    // 换课的话，要清掉持久化的旧 store
