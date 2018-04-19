@@ -110,7 +110,7 @@
                 <div class="gap"></div>
               </div>
 
-              <div v-show="isContLonger" class="nomore f15">
+              <div v-show="isAllLoaded && isContLonger" class="nomore f15">
                 <div class="bgline"></div>
                 <div class="wenan">end</div>
               </div>
@@ -119,6 +119,7 @@
 
         </div>
       </Loadmore>
+      <div class="gap"></div>
 
       <Scale></Scale>
 

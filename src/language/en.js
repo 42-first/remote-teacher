@@ -170,6 +170,7 @@ let pages = {
   "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
   "anonymouspoll": "This is an anonymous poll.",
+  "djbfztsp": "click to play/pause",
 
   "totalscore": "(Points: {num})",
   "bonuslist": "List of the Awarded",

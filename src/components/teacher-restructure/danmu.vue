@@ -53,6 +53,7 @@
 
       </section> 
      </Loadmore>
+     <div class="gap"></div>
 
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
