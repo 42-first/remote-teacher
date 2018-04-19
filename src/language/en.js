@@ -132,6 +132,23 @@ let pages = {
   "SHOW_FINISH": "End Show",
   "QUIZ_FINISH": "The quiz has been collected.",
 
+  // 个人信息完善
+  "merealname": "Real Name",
+  "nameeg": "e.g. Li Ming",
+  "merole": "Role",
+  "meteacher": "Instructor",
+  "meothers": "Others",
+  "student": "Student",
+  "meschoolbelongs": "School",
+  "schooleg": "e.g. Tsinghua University",
+  "mestudentid": "Student ID",
+  "infocosttime": "Fill in your personal information in 30sec",
+  "infogood": "",
+  "infoorg": "Organization",
+  "infoorgtip": "Not required",
+  "infonumbereg": "eg.123456",
+  "infotip": 'You can change the information at any time in "My Homepage"',
+
 
   // 遥控器
   "classsignal": "Class Code",
@@ -307,6 +324,24 @@ let pages = {
   "tsswes": "The slide show will end synchronously.",
   "pcerrcon": "Error Connection",
   "pctnoyc": "Please check the network of your computer",
+
+  // 引导页
+  guide: {
+    "welcome": "Welcome to RainClassroom",
+    "welcomeintro": "It is a smart learning tool to interact with instructors by phone.",
+    "joinclass": "You have joined the {name}'s class",
+    "ready": "Are you ready?",
+    "go": "Let's go!",
+
+    "howsenddanmu": "You can send Danmu and Post here",
+    "iknown": "OK",
+    "pptgood": "No need to take pictures for those Slides, <br>check them whenever you want",
+    "minunts5": "5mins ago",
+    "howmarkppt": "You can marked Unclear and Save here",
+    "unknownanonymous": "Unclear : sent anonymously <br> Save : Private",
+    "ok": "OK"
+  },
+
 
   // 图片国际化
   imgs: {

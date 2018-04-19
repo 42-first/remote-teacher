@@ -127,6 +127,12 @@
 
     <router-view></router-view>
     <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
+
+    <!-- 填写个人信息 -->
+    <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>
+
+    <!-- 新用户引导 -->
+    <guide :step.sync="step" :cover.sync="pptCover" :name.sync="teacherName" :hide-guide="hideGuide" v-if="showGuide"></guide>
   </section>
 </template>
 <script>
@@ -226,13 +232,26 @@
         // 是否存在试卷
         hasQuiz: true,
 
+        // 是否需要完善个人信息
+        showInfo: false,
+        // 显示引导
+        showGuide: false,
+        // 引导初始化步骤
+        step: 1,
+        // 第一张ppt
+        pptCover: '',
+        // 老师名称
+        teacherName: '',
         // 尝试拉取数据的次数
         fetchPresentationCount: 0
+
       };
     },
     components: {
       CardItemComponent,
       PopupComponent,
+      information: () => import('@/components/common/information.vue'),
+      guide: () => import('@/components/common/guide.vue'),
       identity: () => import('@/components/student/identityBinding.vue')
     },
     computed: {
@@ -341,6 +360,34 @@
       },
 
       /*
+      * @method 隐藏引导
+      */
+      hideGuide() {
+        this.showGuide = false;
+        let URL = API.student.SET_GUIDE;
+        let param = {
+          'lesson_id': this.lessonID
+        }
+
+        request.post(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+            }
+          });
+      },
+
+      /*
+      * @method 显示引导步骤3
+      */
+      gostep() {
+        this.step = 3;
+
+        this.init();
+        // 隐藏信息完善
+        this.showInfo = false;
+      },
+
+      /*
       * @method 测试环境初始化timeline
       */
       testTimeline() {
@@ -424,6 +471,26 @@
       },
 
       /*
+       * @method 获取老师信息
+       * @param  lessonID
+       */
+      getTeacherName(lessonID) {
+        let URL = API.student.GET_TEACHER;
+        let param = {
+          'lesson_id': lessonID
+        }
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              this.teacherName = data.teacher_name;
+            }
+          });
+      },
+
+      /*
       * @method 读取直播的课程列表和auth信息
       * @param  init: 是否初始化socket
       */
@@ -493,6 +560,12 @@
                 self.initws();
               }, 20)
 
+              // 用户引导 老用户从第三页开始
+              if(data.need_read_guide) {
+                this.showGuide = true;
+                this.step = 3;
+              }
+
               return presentationData;
             }
           })
@@ -506,6 +579,10 @@
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
+            } else if(error && error.status_code === 5) {
+              // 显示引导
+              this.showGuide = true;
+              this.getTeacherName(this.lessonID);
             }
           });
       },

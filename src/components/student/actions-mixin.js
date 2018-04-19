@@ -254,6 +254,11 @@ var actionsMixin = {
         }
 
         index = this.cards.length;
+
+        // 第一张ppt显示在引导页
+        if(!this.pptCover) {
+          this.pptCover = slideData['Cover'];
+        }
       }
 
       this.allEvents.push(data);
