@@ -802,14 +802,22 @@
       handleOpenDanmu() {
         // 国际化confirm options改造
         let msgOptions = {
-          confirmButtonText: this.$i18n.t('confirm'),
+          confirmButtonText: this.$i18n.t('gopost'),
           cancelButtonText: this.$i18n.t('cancel')
         }
 
         if(this.danmuStatus) {
           this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
         } else {
-          this.$messagebox.alert(this.$i18n.t('bulletban') || '老师暂时还未开放弹幕，等等吧～', msgOptions);
+          // 引导学生去投稿
+          let title = this.$i18n.t('bulletban') || '老师暂时未开放弹幕';
+          let message = this.$i18n.t('canposttips') || '温馨提示：您可以随时发送投稿<br>与老师互动';
+
+          this.$messagebox.confirm(message, title, msgOptions).then(action => {
+            if(action === 'confirm') {
+              this.$router.push({ path: '/'+ this.lessonID +'/submission' });
+            }
+          });
         }
       },
 

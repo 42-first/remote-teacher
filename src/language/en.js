@@ -41,6 +41,8 @@ let pages = {
   "sendpost": "Post",
   "sendbullet": "Danmu",
   "bulletban": "Please wait until the teacher enable the Danmu.",
+  "canposttips": "Tips: you can send post to interact with the instructor.",
+  "gopost": "Post",
   "tips": "Tips",
 
   "newprob": "Hi, you have a new question",

@@ -41,6 +41,8 @@ let pages = {
   "sendpost": "发送投稿",
   "sendbullet": "发送弹幕",
   "bulletban": "老师暂时还未开放弹幕，等等吧～",
+  "canposttips": "温馨提示：您可以随时发送投稿<br>与老师互动",
+  "gopost": "去投稿",
   "tips": "提示",
 
   "newprob": "Hi,你有新的课堂习题",
