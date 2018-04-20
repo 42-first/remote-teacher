@@ -16,6 +16,7 @@
     <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
         <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
+        <span class="gridimg-holder holder-mask"></span>
         <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15 bdsz">{{doubtList[index] ? $t('unknown')+': '+doubtList[index] : ''}}</div>
@@ -26,6 +27,7 @@
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
         <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]"></span>
+        <span class="gridimg-holder holder-mask"></span>
         <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">{{ $t('unknown') }}: {{item.val}}</div>
@@ -36,6 +38,7 @@
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
         <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
+        <span class="gridimg-holder holder-mask"></span>
         <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
@@ -177,8 +180,10 @@
       tapThumbnail (to) {
         let self = this
         if (self.current === to) {
-          self.$emit('goHome')
-          return
+          setTimeout(() => {
+            self.$emit('goHome')
+          }, 100)
+          return;
         }
 
         let str = JSON.stringify({
@@ -316,6 +321,15 @@
           background: #9B9B9B;
         }
 
+        .holder-mask {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: transparent;
+        }
+
         .bdsz {
           min-height: 0.6rem;
         }
@@ -341,6 +355,9 @@
       }
       .item.active .gridimg-holder {
         border: 0.08rem solid $blue;
+      }
+      .item.active .holder-mask {
+        border: none;
       }
       .item.active .gridlabel {
         right: 0.08rem;

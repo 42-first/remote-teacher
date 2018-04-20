@@ -95,8 +95,13 @@
         },
         // 元素开始滑动的时候记录元素的起始位置
         startMove: function(e) {
-            var e = e || win.event,
-                ele = this;
+            e = e || win.event;
+            var ele = this;
+            console.log('startMove.e', e)
+            // 针对微信 6.6.6 版本下安卓手机点击遥控器图片翻页的时候，会全屏显示图片，进行处理
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault()
+            }
 
             // xuetangx
             ele.timeStamp = e.timeStamp;
