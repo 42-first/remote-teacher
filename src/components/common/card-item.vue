@@ -176,7 +176,7 @@
         let cards = this.$parent.$parent.cards;
 
         cards.map((card)=>{
-          if(card.type === 2) {
+          if(card.type === 2 && card.animation !== 1) {
             items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
           }
         })
