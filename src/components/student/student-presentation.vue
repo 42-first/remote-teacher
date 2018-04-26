@@ -139,6 +139,7 @@
 
   import CardItemComponent from '@/components/common/card-item.vue'
   import PopupComponent from '@/components/common/popup-box.vue'
+  import LangComponent from '@/components/common/change_lang_dialog.vue'
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
@@ -235,9 +236,8 @@
     components: {
       CardItemComponent,
       PopupComponent,
-      identity: () => import('@/components/student/identityBinding.vue'),
-      LangComponent: resolve => require(['@/components/common/change_lang_dialog'], resolve)
-      // LangComponent: () => import('@/components/common/change_lang_dialog.vue')
+      LangComponent,
+      identity: () => import('@/components/student/identityBinding.vue')
     },
     computed: {
     },
