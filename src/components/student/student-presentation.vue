@@ -133,6 +133,9 @@
 
     <!-- 新用户引导 -->
     <guide :step.sync="step" :cover.sync="pptCover" :name.sync="teacherName" :hide-guide="hideGuide" v-if="showGuide"></guide>
+
+    <!-- 语言切换 -->
+    <Lang-Component></Lang-Component>
   </section>
 </template>
 <script>
@@ -143,6 +146,7 @@
 
   import CardItemComponent from '@/components/common/card-item.vue'
   import PopupComponent from '@/components/common/popup-box.vue'
+  import LangComponent from '@/components/common/change_lang_dialog.vue'
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
@@ -252,6 +256,7 @@
       PopupComponent,
       information: () => import('@/components/common/information.vue'),
       guide: () => import('@/components/common/guide.vue'),
+      LangComponent,
       identity: () => import('@/components/student/identityBinding.vue')
     },
     computed: {

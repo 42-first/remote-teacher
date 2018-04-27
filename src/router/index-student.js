@@ -22,11 +22,11 @@ const SubjectiveShare = resolve => require(['@/components/student/subjective-sha
 
 
 // 国际化
-import language from '@/util/language'
-window.language = language;
-setTimeout(() => {
-  language.requireRes('zh_CN');
-}, 0)
+// import language from '@/util/language'
+// window.language = language;
+// setTimeout(() => {
+//   language.requireRes('zh_CN');
+// }, 0)
 
 Vue.use(Router)
 Vue.component('loadmore', Loadmore);
