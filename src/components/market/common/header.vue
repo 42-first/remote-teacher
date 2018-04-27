@@ -55,7 +55,13 @@
     -webkit-font-smoothing: auto;
   }
   .nav .bg {position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: none;}
-  .nav .box {position: relative; width: 1170px; margin: 0 auto; height: 74px;}
+  .nav .box {
+    position: relative;
+    max-width: 1170px;
+    margin: 0 auto;
+    height: 74px;
+    width: 100%;
+  }
   .nav .box .logo {float: left; width: 94px; margin-top: 22px;}
 
   .nav .box .right {float: right; margin-left: 50px;margin-top:20px;   font-size: 13px; padding-top: 1px; box-sizing: border-box; height: 34px;line-height: 34px;}
