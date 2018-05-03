@@ -47,6 +47,11 @@ if (process.env.NODE_ENV === 'production') {
     subjective_problem_result_list:     prefix + '/v/lesson/subjective_problem_result_list',    // 主观题答案列表
     subjective_problem_teacher_score:   prefix + '/v/lesson/subjective_problem_teacher_score',  // 主观题老师给答案打分(打星星)
     subjective_problem_teacher_scorev2: prefix + '/v/lesson/subjective_problem_teacher_scorev2',// 主观题老师给答案打分
+    //获取用户当前语言设置
+    get_current_language: "/v/user/get_current_language",
+    //设置语言
+    set_lang_en: "/v/user/set_language/en",
+    set_lang_zh_cn: "/v/user/set_language/zh_cn",
   }
 } else {
   api = {
@@ -84,6 +89,12 @@ if (process.env.NODE_ENV === 'production') {
     subjective_problem_result_list:     '/static/lesson/mock/subjective_problem_result_list.json',     // 主观题答案列表
     subjective_problem_teacher_score:   '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分（打星星）
     subjective_problem_teacher_scorev2: '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分
+
+    //获取用户当前语言设置
+    get_current_language: "http://apimock.xuetangx.com/mock/115/v/user/get_current_language",
+    //设置语言
+    set_lang_en: "http://apimock.xuetangx.com/mock/115/v/user/set_language/en",
+    set_lang_zh_cn: "http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn",
   }
 }
 

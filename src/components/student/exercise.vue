@@ -575,10 +575,24 @@
                 this.sLeaveTime = this.$i18n.t('done') || '已完成';
                 this.isComplete = true;
 
-                this.$toast({
-                  message: this.$i18n.t('sendsuccess') || '提交成功',
-                  duration: 2000
-                });
+                // 是否重复提交了
+                if(data.status_code === 4) {
+                  // 此题已经作答过
+                  this.$toast({
+                    message: '此题已经作答过',
+                    duration: 2000
+                  });
+                } else {
+                  this.$toast({
+                    message: this.$i18n.t('sendsuccess') || '提交成功',
+                    duration: 2000
+                  });
+                }
+
+                // this.$toast({
+                //   message: this.$i18n.t('sendsuccess') || '提交成功',
+                //   duration: 2000
+                // });
 
                 setTimeout(() => {
                   self.$router.back();
