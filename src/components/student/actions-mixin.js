@@ -105,7 +105,7 @@ var actionsMixin = {
       let slideData = slides && slides[si-1];
 
       // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
-      if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0) {
+      if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0 && slides) {
         // if(slideData && slideData.lessonSlideID !== sid) {
         //   // ppt不一致 通过sid取slideData
         //   slideData = slides.find((slide)=>{
@@ -166,7 +166,8 @@ var actionsMixin = {
       let cover = slideData && slideData['Cover'] || '';
 
       if (!slideData) {
-
+        // fixed 息屏切换ppt问题
+        !presentation && this.getUpdatePPTData(data.presentationid);
         return;
       }
 
