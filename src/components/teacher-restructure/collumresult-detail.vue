@@ -3,7 +3,7 @@
 	<div class="problemresultdetail-box">
 		<slot name="ykt-msg"></slot>
 		<div v-if="problemResultDetailData">
-	    
+
 	    <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
 	    <div :class="['answer-box', {'toomany': answerList.length > 4}]">
 	    	<template v-if="answerList.length">
@@ -14,30 +14,55 @@
 	    </div>
 	    <div class="gap"></div>
 	    <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
-	    <div class="choice-list">
-	      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
-	      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
-	      		<template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
-	      			<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
-	      			<i v-if="choiceItem.members[0].result_type === 1" :class="['iconfont', 'f20', 'icon-correct']"></i>
-	      			<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
-	      			<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
-	      		</template>
-	      		
-	      		<span class="f18 asw">{{choiceItem.label}}</span>
-	      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
-	      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
-	      	</v-touch>
-	      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
-	      		<div class="stu" v-for="stu in choiceItem.members">
-	      			<img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-	      			<div class="ellipsis">{{stu.name}}</div>
-	      		</div>
-	      	</div>
-	      </div>
-	    </div>
+			<div class="tab">
+				<v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab" data-type="1">已投票</v-touch>
+				<v-touch :class="['tab-item', activeTab == 2 ? 'active f16' : 'f17']" v-on:tap="toggleTab" data-type="2">未投票</v-touch>
+			</div>
+			<template v-if="activeTab == 1">
+				<div class="choice-list">
+		      <div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
+		      	<v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
+		      		<template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
+		      			<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
+		      			<i v-if="choiceItem.members[0].result_type === 1" :class="['iconfont', 'f20', 'icon-correct']"></i>
+		      			<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
+		      			<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
+		      		</template>
 
-	    <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">{{ $t('refresh') }}</v-touch>
+		      		<span class="f18 asw">{{choiceItem.label}}</span>
+		      		<span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
+		      		<i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
+		      	</v-touch>
+		      	<div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
+		      		<div class="stu" v-for="stu in choiceItem.members">
+		      			<img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+		      			<div class="ellipsis">{{stu.name}}</div>
+		      		</div>
+		      	</div>
+		      </div>
+		    </div>
+			</template>
+	    <template v-else>
+	    	<div class="notAnswerList">
+	    		<div class="item-hd">
+	    			还剩{{not_answeredList.length}}人未作答
+	    		</div>
+					<div class="item-bd">
+						<div v-if="not_answeredList.length > 0" class="stu" v-for="stu in not_answeredList">
+							<img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+							<div class="ellipsis">{{stu.name}}</div>
+						</div>
+						<div class="empty" v-if="not_answeredList.length === 0">
+							<img src="~images/teacher/answered.png" alt="">
+							<p class="f12">您的学生已全部作答</p>
+						</div>
+					</div>
+	    	</div>
+	    </template>
+
+	    <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
+				<i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
+			</v-touch>
 		</div>
   </div>
 </template>
@@ -54,8 +79,10 @@
 	    	problemResultDetailData: null,          // 试题柱状图详情页数据
 	    	showingIndex: -1,												// 正在展示的题目的序号
 	    	answerList: [],
+				not_answeredList: [],
 	    	isBottomBtnFixed: false,
 	    	isFetching: true,
+				activeTab: 1														// 已投票1，未投票2
 	    }
 	  },
 	  created(){
@@ -101,7 +128,7 @@
 	      } else {
 	      	this.showingIndex = index
 	      }
-	      
+
 	    },
 	    /**
 	     * 更新试题详情的数据
@@ -133,6 +160,8 @@
 	          	// 投票类型不打开默认选项
 	          	self.openRightItem(jsonData)
 	          	self.answerList = [...jsonData.answer]
+							self.not_answeredList = [...jsonData.not_answered]
+
 	          }
 	        })
 	    },
@@ -201,6 +230,20 @@
 			    	}
 	    	  })
 	    },
+
+			/**
+			 * 切换答题状态
+			 *
+			 */
+
+			toggleTab (e) {
+				let self = this
+				// console.log(this);
+				let type = e.target.dataset.type
+				// console.log(type);
+
+				self.activeTab = type
+			}
 	  }
 	}
 </script>
@@ -265,11 +308,43 @@
 			color: #9B9B9B;
 		}
 
-		.choice-list {
+		.tab {
+			position: relative;
+			height: 1.306667rem;
+			background: $white;
+			width: 100%;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+
+			&::after {
+				content: "";
+				position: absolute;
+				width: 1px;
+				height: .586667rem;
+				top: 50%;
+				left: 50%;
+				background: #c8c8c8;
+				transform: translate(-50%, -50%);
+			}
+
+			.tab-item {
+				height: 100%;
+				color: #666;
+				line-height: 1.306667rem;
+			}
+
+			.active {
+				color: #639EF4;
+				border-bottom: .053333rem solid #639EF4;
+			}
+		}
+
+		.choice-list，.notAnswerList {
 			padding-bottom: 1.466667rem;
 		}
 
-		.choice-item {
+		.choice-item, .notAnswerList {
 			.item-hd {
 				height: 1.2rem;
 				line-height: 1.2rem;
@@ -322,15 +397,40 @@
 			}
 		}
 
+		.notAnswerList .item-hd {
+			border-top: 0;
+			color: #9b9b9b;
+		}
+
+		.empty {
+			width: 100%;
+			img {
+				display: inline-block;
+				margin: .533333rem auto;
+			}
+
+			p {
+				margin: 0 auto;
+				color: #9b9b9b;
+			}
+		}
+
 		.btn {
 		  position: fixed;
-		  left: 0;
-		  right: 0;
-		  bottom: 0;
-		  border-radius: 0;
+		  left: 50%;
+		  width: 4.093333rem;
+		  bottom: .666667rem;
+			transform: translateX(-50%);
+		  border-radius: .106667rem;
 		  height: 1.466667rem;
 		  line-height: 1.466667rem;
-		  box-shadow: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		  box-shadow: 0 .026667rem .053333rem 0 rgba(0,0,0,.5);
+			i {
+				margin-right: .133333rem;
+			}
 		}
 		.abs {
 			position: absolute;
