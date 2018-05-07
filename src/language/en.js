@@ -136,7 +136,7 @@ let pages = {
   "QUIZ_FINISH": "The quiz has been collected.",
 
   // 个人信息完善
-  "merealname": "Real Name",
+  "merealname": "Name",
   "nameeg": "e.g. Li Ming",
   "merole": "Role",
   "meteacher": "Instructor",
@@ -147,7 +147,7 @@ let pages = {
   "mestudentid": "Student ID",
   "infocosttime": "Fill in your personal information in 30sec",
   "infogood": "",
-  "infoorg": "Organization",
+  "infoorg": "Organ.",
   "infoorgtip": "Not required",
   "infonumbereg": "eg.123456",
   "infotip": 'You can change the information at any time in "My Homepage"',
