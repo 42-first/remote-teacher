@@ -478,7 +478,7 @@
     },
     watch: {
       'step'(newVal, oldVal) {
-        newVal && this.stepChange(newVal);
+        newVal > oldVal && this.stepChange(newVal);
       },
       'cover'(newVal, oldVal) {
         newVal && this.stepChange(this.step);
@@ -523,6 +523,7 @@
         }
 
         this.step = 4;
+        this.$parent.step = 4;
       },
 
       /**
