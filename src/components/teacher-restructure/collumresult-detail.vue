@@ -12,11 +12,16 @@
 
         <div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
       </div>
-      <div class="gap-small" v-if="problemResultDetailData.problem_type !== 8"></div>
       <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
       <div class="tab">
-        <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('yitoupiao') : $t('yizuoda')}}</v-touch>
-        <v-touch :class="['tab-item', activeTab == 2 ? 'active f16' : 'f17']" v-on:tap="toggleTab(2)">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('weitoupiao') : $t('weizuoda')}}</v-touch>
+        <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">
+          {{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('yitoupiao') : $t('yizuoda')}}
+          <span class="f12">({{answeredNum}}人)</span>
+        </v-touch>
+        <v-touch :class="['tab-item', activeTab == 2 ? 'active f16' : 'f17']" v-on:tap="toggleTab(2)">
+          {{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('weitoupiao') : $t('weizuoda')}}
+          <span class="f12">({{not_answeredList.length}}人)</span>
+        </v-touch>
       </div>
       <div class="choice-list" v-show="activeTab === 1">
         <template v-if="problemResultDetailData.data.length">
@@ -42,7 +47,7 @@
           </div>
         </template>
         <template v-else>
-          <div class="gap-large"></div>
+          <div class="gap"></div>
           <div class="empty">
             <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
             <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
@@ -54,9 +59,7 @@
 
       <div class="notAnswerList" v-show="activeTab === 2">
         <template v-if="not_answeredList.length && problemResultDetailData.problem_type !== 8">
-          <div class="item-hd">
-            {{$t('weizuodanumber', {number: not_answeredList.length})}}
-          </div>
+          <div class="gap"></div>
           <div class="item-bd">
   					<div class="stu" v-for="stu in not_answeredList">
   	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
@@ -65,14 +68,14 @@
           </div>
         </template>
         <template v-else-if="not_answeredList.length && problemResultDetailData.problem_type === 8">
-          <div class="gap-large"></div>
+          <div class="gap"></div>
           <div class="empty">
             <img src="~images/teacher/nimingtoupiao.png" alt="">
             <p class="f12">{{$t('weitoupiaonumber', {number: not_answeredList.length})}}</p>
           </div>
         </template>
         <template v-else>
-          <div class="gap-large"></div>
+          <div class="gap"></div>
           <div class="empty">
             <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
             <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
@@ -115,7 +118,8 @@
         not_answeredList: [],
         isBottomBtnFixed: false,
         isFetching: true,
-        activeTab: 1 // 已投票1，未投票2
+        activeTab: 1, // 已投票1，未投票2
+        answeredNum: 0    //已作答人数
       }
     },
     created() {
@@ -186,6 +190,7 @@
             // 设置试卷详情数据
             self.problemResultDetailData = jsonData
 
+
             // 投票类型每回要算投票数最多的
             if (jsonData.problem_type === 3 || jsonData.problem_type === 8) {
               self.findBigPoll()
@@ -195,7 +200,9 @@
               self.answerList = [...jsonData.answer]
 
             }
-
+            self.problemResultDetailData.data.map(item => {
+              self.answeredNum += item.members.length
+            })
             self.not_answeredList = [...jsonData.not_answered]
           })
       },
@@ -325,13 +332,8 @@
       line-height: 1.6rem;
     }
 
-    .gap-small {
+    .gap {
       height: .133333rem;
-      background: #EDF2F6;
-    }
-
-    .gap-large {
-      height: .266667rem;
       background: #EDF2F6;
     }
 
@@ -368,11 +370,16 @@
         height: 100%;
         color: #666;
         line-height: 1.306667rem;
+        width: 50%;
+
+        span {
+          margin-left: .133333rem;
+        }
       }
 
       .active {
         color: #639EF4;
-        border-bottom: 0.053333rem solid #639EF4;
+        border-bottom: .04rem solid #639EF4;
       }
     }
 
