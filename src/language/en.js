@@ -327,6 +327,16 @@ let pages = {
   "tsswes": "The slide show will end synchronously.",
   "pcerrcon": "Error Connection",
   "pctnoyc": "Please check the network of your computer",
+  "yizuoda": "Answered",
+  "weizuoda": "Unanswered",
+  "yitoupiao": "Voted",
+  "weitoupiao": "Not Voted",
+  "quanweida": "No one answered",
+  "quanyida": "All answered ",
+  "quanweitoupiao": "No one voted",
+  "quantoupiao": "All voted",
+  "weitoupiaonumber": "{number} students left",
+  "weizuodanumber": "{number} students left",
 
   // 引导页
   guide: {

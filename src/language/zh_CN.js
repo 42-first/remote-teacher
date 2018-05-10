@@ -326,6 +326,17 @@ let pages = {
   "tsswes": "电脑端将会同步结束授课",
   "pcerrcon": "您的电脑存在连接异常",
   "pctnoyc": "请您检查网络连接状况",
+  "yizuoda": "已作答",
+  "weizuoda": "未作答",
+  "yitoupiao": "已投票",
+  "weitoupiao": "未投票",
+  "quanweida": "还没有学生作答",
+  "quanyida": "您的学生已全部作答",
+  "quanweitoupiao": "还没有学生投票",
+  "quantoupiao": "您的学生已全部投票",
+  "weitoupiaonumber": "还剩{number}人未投票",
+  "weizuodanumber": "还剩{number}人未作答",
+
 
   // 引导页
   guide: {
