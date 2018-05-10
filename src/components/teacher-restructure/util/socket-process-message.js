@@ -247,6 +247,7 @@ function socketProcessMessage(msg){
   //习题柱状图取消投屏了
   if (msg.op == 'closeproblemresult') {
     T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: +msg.problemid});
+    localStorage.removeItem('posting-problem'+msg.problemid)
     return
   }
 
