@@ -67,7 +67,7 @@ if (process.env.NODE_ENV === 'production') {
     teaching_lesson_participant_list:   '/static/lesson/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
     publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
     problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
-    problem_result_detail:              '/static/lesson/mock/problem_result_detail.json',      // 试题详情数据
+    problem_result_detail:              'http://apimock.xuetangx.com/mock/115/v/lesson/problem_result_detail/{{problem_id}}/',      // 试题详情数据
     delay_problem:                      '/static/lesson/mock/delay_problem.json',              // 试题收题
     publish_lesson_paper:               '/static/lesson/mock/publish_lesson_paper.json',       // 发布试卷
     quiz_results_statistics:            '/static/lesson/mock/quiz_results_statistics.json',    // 获取试卷饼图数据
