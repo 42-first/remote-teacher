@@ -1,6 +1,10 @@
 {
   "name": "remote-teacher",
+<<<<<<< HEAD
   "version": "3.2.22",
+=======
+  "version": "3.2.21",
+>>>>>>> ee73f2246821c99cdc75a07ce29567affebbe7fd
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,

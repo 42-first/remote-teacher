@@ -247,8 +247,9 @@
         // 老师名称
         teacherName: '',
         // 尝试拉取数据的次数
-        fetchPresentationCount: 0
-
+        fetchPresentationCount: 0,
+        // 是否更新ppt开关
+        updatingPPT: false
       };
     },
     components: {
@@ -610,6 +611,13 @@
           URL = URL + presentationID;
         }
 
+        // 是否正在更新ppt, 防止重复请求压力
+        if(this.updatingPPT) {
+          return this;
+        } else {
+          this.updatingPPT = true;
+        }
+
         self.presentationID = presentationID;
 
         return request.get(URL, param).
@@ -631,6 +639,9 @@
                 'lessonid': self.lessonID,
                 'msgid': self.msgid++
               }));
+
+              // 更新完成
+              self.updatingPPT = false;
 
               return presentation;
             }
