@@ -200,9 +200,8 @@
               self.answerList = [...jsonData.answer]
 
             }
-            self.problemResultDetailData.data.map(item => {
-              self.answeredNum += item.members.length
-            })
+
+            self.answeredNum = jsonData.answered_count
             self.not_answeredList = [...jsonData.not_answered]
           })
       },
@@ -451,6 +450,7 @@
       img {
         display: inline-block;
         margin: 1.333333rem auto .533333rem;
+        width: 2.933333rem;
       }
 
       p {
