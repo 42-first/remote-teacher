@@ -334,8 +334,7 @@ let pages = {
   "quanyida": "您的学生已全部作答",
   "quanweitoupiao": "还没有学生投票",
   "quantoupiao": "您的学生已全部投票",
-  "weitoupiaonumber": "还剩{number}人未投票",
-  "weizuodanumber": "还剩{number}人未作答",
+  "nimingtoupiao": "本题为匿名投票",
 
 
   // 引导页

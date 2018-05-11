@@ -71,7 +71,7 @@
           <div class="gap"></div>
           <div class="empty">
             <img src="~images/teacher/nimingtoupiao.png" alt="">
-            <p class="f12">{{$t('weitoupiaonumber', {number: not_answeredList.length})}}</p>
+            <p class="f12">{{$t('nimingtoupiao')}}</p>
           </div>
         </template>
         <template v-else>

@@ -244,6 +244,10 @@
 		    self.problemid = +params.problemid
 		    self.problemType = query.pt
 
+		    let storedPosting = localStorage.getItem('posting-problem'+self.problemid)
+
+        self.isTouping = storedPosting === 'true'
+
 		    routeStamp = query._t
 		    START = +new Date()
 
@@ -448,6 +452,7 @@
 	    toggleTouping (status) {
 	    	let self = this
 	    	self.isTouping = status
+	    	localStorage.setItem('posting-problem'+self.problemid, status)
 	    },
 	    /**
 	     * 清理 storage 中旧的 durInfo
