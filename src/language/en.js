@@ -337,6 +337,11 @@ let pages = {
   "quantoupiao": "All voted",
   "nimingtoupiao": "This is an anonymous poll",
 
+  "yiqiandao": "Signed In",
+  "weiqiandao": "Not Signed in",
+  "qiandaoafterfix": '-eng',
+  "weiqiandaoafterfix": "-eng",
+
   // 引导页
   guide: {
     "welcome": "Welcome to RainClassroom",

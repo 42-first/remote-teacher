@@ -3,7 +3,7 @@
 	<div class="activity-box">
     <section class="head f20">
       <div class="teacher ellipsis clearfix">
-        <img :src="avatar" alt="">
+        <!-- <img :src="avatar" alt=""> -->
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
@@ -50,7 +50,7 @@
       </div>
     </router-link>
 
-    <Toolbar 
+    <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
       :active-index="2"
@@ -58,7 +58,7 @@
       @showThumbnail="showThumbnail"
     ></Toolbar>
 
-    
+
   </div>
 </template>
 
@@ -86,6 +86,7 @@
         'participantList',
         'isDanmuOpen',
         'newtougao',
+				'notParticipantList',
       ])
     },
     components: {
@@ -109,10 +110,10 @@
       fetchParticipantList () {
         let self = this
 
-        let url = API.teaching_lesson_participant_list
+        let url = API.teaching_lesson_participant_list + '/' + self.lessonid
 
         if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid + '/'
+          url = API.teaching_lesson_participant_list + '/' + self.lessonid
         }
 
         request.get(url)
@@ -151,7 +152,7 @@
     top: 0;
     bottom: 0;
     background: #EDF2F6;
-    
+
     .activity-tollbar {
       position: absolute;
       left: 0;
@@ -183,7 +184,7 @@
           float: left;
           width: 7.333333rem;
           margin-top: 0.146667rem;
-          margin-left: 0.133333rem;
+          // margin-left: 0.133333rem;
         }
       }
 
@@ -221,7 +222,7 @@
         width: 0.933333rem;
         height: 0.933333rem;
         margin-right: 0.3rem;
-        text-align: center; 
+        text-align: center;
         line-height: 0.933333rem;
         border-radius: 50%;
 
