@@ -122,8 +122,15 @@ function socketProcessMessage(msg){
       self.showQrcodeMask()
     }else if(!msg.shownow){
       // qrcode为0时，有可能是第一次打开页面，此时并未播放，要在手机上点击开始上课，也显示二维码控制页
-      self.$store.commit('set_isMsgMaskHidden', true)
-      self.showQrcodeMask()
+      if (msg.slideindex) {
+        // esc后，在再次放映的启动过程中在插件上点击 "点击展示二维码"；
+        self.showEscMask()
+      } else {
+        // 新开课，第一次放映
+        self.$store.commit('set_isMsgMaskHidden', true)
+        self.showQrcodeMask()
+      }
+      
     }
     
     self.fetchPPTData()
