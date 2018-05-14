@@ -340,6 +340,8 @@ let pages = {
   "weiqiandao": "未签到",
   "qiandaoafterfix": '',
   "weiqiandaoafterfix": "",
+  "weishezhixuehao": "未设置学号",
+  
 
 
   // 引导页

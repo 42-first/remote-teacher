@@ -341,6 +341,7 @@ let pages = {
   "weiqiandao": "Not Signed in",
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
+  "weishezhixuehao": "No Student ID",
 
   // 引导页
   guide: {

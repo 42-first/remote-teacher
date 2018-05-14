@@ -26,11 +26,8 @@
 							<span class="time f14">{{item.time}}</span>
 						</div>
 						<div class="info-item f14">
-							<span class="stuid ellipsis">{{item.profile.school_number ? item.profile.school_number : '未设置学号'}}</span>
-							<span class="ganbei" v-show="item.source === 1"><!-- 扫二维码 -->{{ $t('scancode') }}</span>
-		          <span class="ganbei" v-show="item.source === 2"><!-- 课堂暗号 -->{{ $t('classsignal') }}</span>
-		          <span class="ganbei" v-show="item.source === 3"><!-- 微信公众号 -->{{ $t('Officalaccount') }}</span>
-		          <span class="ganbei" v-show="item.source === 4"><!-- 微信小程序 -->{{ $t('miniprogram') }}</span>
+							<span class="stuid ellipsis">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+							<span class="ganbei">{{item.source_name}}</span>
 						</div>
 	        </div>
 	      </div>
