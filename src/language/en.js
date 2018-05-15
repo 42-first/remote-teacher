@@ -335,8 +335,7 @@ let pages = {
   "quanyida": "All answered ",
   "quanweitoupiao": "No one voted",
   "quantoupiao": "All voted",
-  "weitoupiaonumber": "{number} students left",
-  "weizuodanumber": "{number} students left",
+  "nimingtoupiao": "This is an anonymous poll",
 
   // 引导页
   guide: {
