@@ -68,10 +68,18 @@ function socketProcessMessage(msg){
       self.openDeprive('isRobber')
       return
     }
-
+    // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
-      // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
-      self.showEscMask()
+      if (msg.mask && msg.mask.type === 'qrcode') {
+        self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+        self.$store.commit('set_isMsgMaskHidden', true)
+
+        self.showQrcodeMask()
+      } else {
+        // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
+        self.showEscMask()
+      }
+      
       return
     }
 
@@ -117,10 +125,9 @@ function socketProcessMessage(msg){
     if(msg.mask && msg.mask.type === 'qrcode'){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
-      self.$store.commit('set_isMsgMaskHidden', true)
+    }
 
-      self.showQrcodeMask()
-    }else if(!msg.shownow){
+    if(!msg.shownow){
       // qrcode为0时，有可能是第一次打开页面，此时并未播放，要在手机上点击开始上课，也显示二维码控制页
       self.$store.commit('set_isMsgMaskHidden', true)
       self.showQrcodeMask()
