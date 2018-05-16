@@ -2,23 +2,12 @@
  * @page：学生接收器主观题作答页面
  * @author: chenzhou
  * @update: 2017.8.8
- * @desc
+ * @desc 小组作答 websocket命令是否是小组作答
  *
  */
 
 <template>
   <section class="page-subjective">
-    <!-- 练习导航 -->
-    <!-- <header class="subjective__header">
-      <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
-
-      <p class="heade-action f18" @click="handleBack" v-else>{{ $t('cancel') }}</p>
-      <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
-      <h3 class="header-title f18" v-else>{{ title }}</h3>
-      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': $t('submit') }}</p>
-    </header>
-    -->
-
     <!-- 定时 续时等 -->
     <section class="exercise__tips">
       <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -40,6 +29,12 @@
             <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
           </div>
         </div>
+      </section>
+
+      <!-- 小组作答 显示 -->
+      <section class="team__intro">
+        <p class="f18 c333">小组作答：嘻哈组</p>
+        <p class="f14 blue" @click="handleshowTeam">详情</p>
       </section>
 
       <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
@@ -74,7 +69,9 @@
       <div class="subjective__answer" v-if="ispreview && result">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
+          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
+            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" />
+          </div>
         </div>
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
@@ -83,10 +80,33 @@
         </div>
       </div>
 
+      <!-- 小组提示 -->
+      <div class="team__tip">
+        <span class="f18 yellow">*</span>
+        <p class="f14 c9b">本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再做作答，每人只有一次作答机会</p>
+      </div>
+
       <!-- 提交按钮 -->
       <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
+
+    <!-- 小组成员列表 -->
+    <section class="members__wrap" v-if="teamVisible">
+      <div class="team__members">
+        <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
+        <div class="members__header">
+          <p class="members__title f20 c333">小猪佩奇组</p>
+          <p class="members__total f14 c9b">12人</p>
+        </div>
+        <ul class="">
+          <li class="member__info">
+            <img class="member--avatar" src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYarb7iasfgpqFGqQg9GVIjpvkw8p1KuG8icWLNsY9H1VgVJibI7rWBjUJfQBShHv0Y3bvmUNCHSWKw/96" alt="姓名" >
+            <div class="member--name f16 c666"><span class="name">陈舟</span></div>
+          </li>
+        </ul>
+      </div>
+    </section>
 
   </section>
 </template>
@@ -134,7 +154,10 @@
         summary: null,
         // star count 获得星星的数量
         starCount: 0,
-        getScore: -1
+        getScore: -1,
+        // 小组详情
+        team: null,
+        teamVisible: false
       };
     },
     components: {
@@ -191,6 +214,10 @@
 
         this.problemID = problemID;
 
+        // TODO：检测这个问题是否分组
+        let isTeam = data.isTeam || true;
+        isTeam && this.getTeamInfo(problemID);
+
         // event消息订阅
         this.initPubSub();
 
@@ -224,7 +251,6 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
@@ -289,6 +315,22 @@
         PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
           this.closedProblem(data && data.problemid);
         });
+      },
+
+      /*
+       * @method 是否小组作答，拉取小组列表，作答结果 是否可以提交答案
+       * @param
+       */
+      getTeamInfo(problemID) {
+
+      },
+
+      handleshowTeam() {
+        this.teamVisible = true;
+      },
+
+      handleclosedTeam() {
+        this.teamVisible = false;
       },
 
       /*
@@ -553,11 +595,6 @@
                   duration: 2000
                 });
               }
-
-              // this.$toast({
-              //   message: this.$i18n.t('sendsuccess') || '提交成功',
-              //   duration: 2000
-              // });
 
               setTimeout(() => {
                 self.$router.back();
@@ -1216,6 +1253,103 @@
       }
     }
 
+  }
+
+
+  /*------------------*\
+    $ 小组详情
+  \*------------------*/
+
+  .team__intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 0.133333rem 0;
+    padding: 0 0.533333rem;
+    height: 1.733333rem;
+    line-height: 1.733333rem;
+    background: #fff;
+  }
+
+  .team__tip {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: -1.066667rem;
+    padding: 0 0.533333rem 0.8rem;
+    text-align: justify;
+
+    background: #fff;
+  }
+
+  .members--closed {
+    height: 1.333333rem;
+    line-height: 1.333333rem;
+    padding: 0 0.4rem;
+    text-align: left;
+    border-bottom: 1px solid #C8C8C8;
+  }
+
+  .team__members {
+    z-index: 1;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 75vh;
+    overflow-y: auto;
+    background: #fff;
+
+    .members__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.533333rem 0.533333rem 0.266667rem;
+
+      .members__title {
+        font-weight: bold;
+      }
+    }
+
+    .member__info {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      padding-left: 0.533333rem;
+      height: 1.493333rem;
+      line-height: 1.493333rem;
+
+      .member--avatar {
+        display: block;
+        width: 0.933333rem;
+        height: 0.933333rem;
+        border-radius: 50%;
+      }
+
+      .member--name {
+        flex: 1;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+
+        .name {
+          padding-left: 0.4rem;
+        }
+      }
+    }
+  }
+
+  .members__wrap:after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: rgba(0,0,0,0.45);
   }
 
 
