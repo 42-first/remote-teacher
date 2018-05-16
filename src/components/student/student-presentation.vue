@@ -20,10 +20,14 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action line f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
+            <p class="action f17" @click="handleenterTeam" v-if="classroom &&classroom.classroomId">
+              <i class="iconfont icon-fenzu f25"></i>
+              <span>我的分组</span>
+            </p>
           </div>
         </div>
       </header>
@@ -397,7 +401,7 @@
       * @method 测试环境初始化timeline
       */
       testTimeline() {
-        this.addMessage({ type: 1, message:"开课啦" });
+        this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
 
         this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
         this.addPPT({ type: 2, pageIndex:2, time: 1497431406048, presentationid: this.presentationID });
@@ -838,6 +842,14 @@
       },
 
       /*
+       * @method 进入分组
+       *
+       */
+      handleenterTeam(evt) {
+        location.href = '/team/student/' + this.classroom.classroomId;
+      },
+
+      /*
        * @method 滚动到最顶部
        *
        */
@@ -983,6 +995,7 @@
         }
 
         .action {
+          display: block;
           padding: 0.266667rem 0;
 
           line-height: 0.933333rem;
