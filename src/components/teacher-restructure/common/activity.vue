@@ -110,10 +110,10 @@
       fetchParticipantList () {
         let self = this
 
-        let url = API.teaching_lesson_participant_list + '/' + self.lessonid
+        let url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
 
         if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid
+          url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
         }
 
         request.get(url)

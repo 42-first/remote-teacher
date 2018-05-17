@@ -47,7 +47,7 @@
 			</template>
 			<template v-else>
 				<div class="empty">
-					<img :src="weiqiandao" alt="没有学生未签到">
+					<img :src="weqiandaonodata" alt="没有学生未签到">
 				</div>
 			</template>
 		</section>
@@ -88,10 +88,10 @@
       fetchList () {
         let self = this
 
-        let url = API.teaching_lesson_participant_list + '/' + self.lessonid
+        let url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
 
         if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid
+          url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
         }
 
         request.get(url)
@@ -141,9 +141,13 @@
     background: $white;
     color: #4A4A4A;
     overflow: auto;
+		padding-top: 1.373333rem;
 
 		.tabbar {
-			position: relative;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 666;
       height: 1.373333rem;
       background: $white;
       width: 100%;
