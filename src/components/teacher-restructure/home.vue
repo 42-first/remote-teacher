@@ -258,7 +258,8 @@
 
 	    // 根据localStorage判断是否显示新手引导
 	    if (localStorage.getItem('hasGuided') !== 'yes') {
-	      self.isGuideHidden = false
+	    	// 新遥控器上线很久了，不再显示新遥控器引导了
+	      // self.isGuideHidden = false
 	    }
 	    self.polyfillIncludes()
 	    self.importPhotoswipe()
