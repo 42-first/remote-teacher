@@ -218,7 +218,7 @@ var actionsMixin = {
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
           // step === 0 开始动画 正常插入
-          if(data.event.step === 0) {
+          if(data.event.step >= 0 && data.event.step < data.event.total) {
             // 之前没有播放过这个ppt
             if(!hasPPT) {
               data = Object.assign(data, cardItem, { animation: 1 })
@@ -227,7 +227,7 @@ var actionsMixin = {
             }
 
             !data.isFetch && this.cards.push(data);
-          } else if(data.event.step === -1) {
+          } else if(data.event.step === -1 || data.event.step === data.event.total) {
             // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
             if(hasPPT) {
               // 需要替换的index
@@ -375,7 +375,7 @@ var actionsMixin = {
       this.allEvents.push(data);
 
       // 之前有动画隐藏蒙版
-      this.hideAnimationMask();
+      !hasEvent && this.hideAnimationMask();
     },
 
     /*
