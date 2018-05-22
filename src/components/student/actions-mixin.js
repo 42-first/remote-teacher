@@ -426,11 +426,6 @@ var actionsMixin = {
       if(oProblem) {
         oProblem.leaveTime = leaveTime
 
-        // 习题组件实例中的定时方法
-        // this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
-        // this.$children[3] && this.$children[3].setTiming && this.$children[3].setTiming(leaveTime);
-        // this.$children[4] && this.$children[4].setTiming && this.$children[4].setTiming(leaveTime);
-
         // 订阅发布定时
         PubSub && PubSub.publish('exercise.setTiming', {
           msg: 'exercise.setTiming',
@@ -499,7 +494,16 @@ var actionsMixin = {
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
+    },
+
+    /*
+     * @method 发起分组
+     * @param { type: 8, time: '', event: all }
+     */
+    launchGroup(data) {
+
     }
+
   }
 }
 
