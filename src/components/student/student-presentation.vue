@@ -846,7 +846,7 @@
        *
        */
       handleenterTeam(evt) {
-        location.href = '/team/student/' + this.classroom.classroomId;
+        location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
       },
 
       /*
