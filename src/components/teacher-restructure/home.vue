@@ -19,7 +19,7 @@
         			<div class="video-hint f12"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
         		</v-touch>
         	</template>
-        	
+
         	<img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
@@ -170,15 +170,15 @@
 	      // 根页面不用store，每次进入后自己夺自己的权，简单粗暴，
 	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
-	      
+
 	      isRobber: false,                        // 是夺权者
 	      isRobbing: false,                       // 正在夺权
 	      byself: false,                          // 是自己夺权
 	      startPoint: [0, 0],
-	      
+
 	      connectCountDown: 10,
 	      isConnectingHidden: true,               // 连接中隐藏
-	      
+
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
@@ -203,8 +203,8 @@
 	    },
 	    ...mapGetters([
 	    	'userid',
-	    	'avatar', 
-	    	'auth',   
+	    	'avatar',
+	    	'auth',
 	    	'courseid',
 	    	'classroomid',
 	    	'coursename',
@@ -271,7 +271,7 @@
 	     *
 	     */
 	    init () {
-	    	
+
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
@@ -448,7 +448,7 @@
 	      let self = this
 
 	      let idIndexMap = {}
-	      
+
 	      pptData.forEach((item, index) => {
 	        // idIndexMap[item.lessonSlideID] = item.Index
 	        idIndexMap[item.lessonSlideID] = index + 1

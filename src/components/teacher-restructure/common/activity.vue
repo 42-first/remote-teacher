@@ -49,8 +49,19 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
+		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+      <div>
+        <div class="iconbox" style="background: #08BC72;">
+          <i class="iconfont icon-fenzu f21"></i>
+        </div>
+        分组
+      </div>
+			<div class="dakai-box">
+        <i class="iconfont icon-dakai f21"></i>
+      </div>
+    </v-touch>
 
-    <Toolbar 
+    <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
       :active-index="2"
@@ -58,7 +69,7 @@
       @showThumbnail="showThumbnail"
     ></Toolbar>
 
-    
+
   </div>
 </template>
 
@@ -86,6 +97,7 @@
         'participantList',
         'isDanmuOpen',
         'newtougao',
+				'classroomid'
       ])
     },
     components: {
@@ -135,6 +147,15 @@
       showThumbnail () {
         this.$emit('showThumbnail')
       },
+
+			/*
+			 * 分组入口
+			 */
+			toTeam() {
+				let self = this;
+				console.log(self.classroomid + '--' + self.lessonid);
+				location.href = '/team/teacher/' + self.classroomid + '?lessonid=' + self.lessonid;
+			}
     }
   }
 </script>
@@ -151,7 +172,7 @@
     top: 0;
     bottom: 0;
     background: #EDF2F6;
-    
+
     .activity-tollbar {
       position: absolute;
       left: 0;
@@ -221,7 +242,7 @@
         width: 0.933333rem;
         height: 0.933333rem;
         margin-right: 0.3rem;
-        text-align: center; 
+        text-align: center;
         line-height: 0.933333rem;
         border-radius: 50%;
 

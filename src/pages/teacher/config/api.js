@@ -52,6 +52,8 @@ if (process.env.NODE_ENV === 'production') {
     //设置语言
     set_lang_en: "/v/user/set_language/en",
     set_lang_zh_cn: "/v/user/set_language/zh_cn",
+    // 获取分组列表
+    get_classroom_group_list:           prefix + '/group/get_classroom_group_list/',
   }
 } else {
   api = {
@@ -65,7 +67,7 @@ if (process.env.NODE_ENV === 'production') {
     lesson_one_directory_paper:         '/static/lesson/mock/lesson_one_directory_paper.json', // 试卷数据（单个文件夹内的试卷）
     presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/static/lesson/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
-    publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
+    publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
     problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              'http://apimock.xuetangx.com/mock/115/v/lesson/problem_result_detail/{{problem_id}}/',      // 试题详情数据
     delay_problem:                      '/static/lesson/mock/delay_problem.json',              // 试题收题
@@ -95,6 +97,7 @@ if (process.env.NODE_ENV === 'production') {
     //设置语言
     set_lang_en: "http://apimock.xuetangx.com/mock/115/v/user/set_language/en",
     set_lang_zh_cn: "http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn",
+    get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
   }
 }
 

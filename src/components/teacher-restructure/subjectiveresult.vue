@@ -49,10 +49,13 @@
                 <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
               </div>
             </div>
-
-            <div :class="['f18', 'yjy']">
-              {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }}
-            </div>
+						<div class="faqihuping-box">
+							<div :class="['f16', 'yjy']">
+	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
+								已答： {{total_num}} / {{class_participant_num}}
+	            </div>
+							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch>
+						</div>
           </section>
 
           <!-- 中间主观题页面 -->
@@ -66,11 +69,18 @@
               <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
                 <div class="item">
                   <div class="detail">
-                    <img :src="item.user_avatar_46" class="avatar" alt="">
+										<div class="student-info">
+											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
+												<img :src="item.user_avatar_46" class="avatar" alt="">
+												<span class="author f15">{{item.user_name}}</span>
+											</v-touch>
+											<div class="time f15">{{item.end_time | formatTime}}</div>
+										</div>
+
                     <div class="cont f18">
-                      <div class="time f15">{{item.end_time | formatTime}}</div>
-                      <span class="author f15">{{item.user_name}}</span><br>
-                      {{item.subj_result.content}}<br>
+                      <div class="cont-title">
+                      	{{item.subj_result.content}}
+                      </div>
 
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
@@ -131,7 +141,9 @@
       @giveScore="giveScore"
     ></StarPanel>
 
-    <!-- 发题选时间蒙版 -->
+
+
+		<!-- 发题选时间蒙版客观题 -->
     <Problemtime v-show="!isProblemtimeHidden"
       :problem-type="'ShortAnswer'"
       :isYanshi="true"
@@ -139,6 +151,24 @@
       @chooseProblemDuration="yanshiProblem"
     ></Problemtime>
     <Scale></Scale>
+
+    <section class="teammember" v-show="showTeamMember">
+      <div class="member-content">
+        <v-touch class="member-actions" v-on:tap="handleTeammemberClosed">
+          <i class="iconfont icon-shiti_guanbitouping f16 c333"></i>
+        </v-touch>
+        <div class="member-detail">
+          <p class="team-info">
+            <span class="team-name f20">小猪佩奇组</span>
+            <span class="team-total f14">共12人</span>
+          </p>
+          <div class="team-item">
+            <img class="member--avatar" src="https://avatars1.githubusercontent.com/u/12670537?v=4" alt="" >
+            <div class="member--name f16 c666"><span class="name">兔兔</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </div>
 </template>
@@ -213,6 +243,8 @@
         isContLonger: false,          // 内容超过1屏
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
+        showTeamMember: false,         // 展示小组成员
+        teamMemberList: [],
 	    }
 	  },
 	  computed: {
@@ -920,7 +952,32 @@
         }
 
       },
-
+			/*
+			 * 发起互评
+			 */
+			faqihuping() {
+				if(this.newTime > 0){
+					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+					let msg = '收题后才可发起互评'
+					T_PUBSUB.publish('ykt-msg-toast', msg);
+				} else {
+					console.log('发起互评');
+				}
+			},
+			/*
+			 * 打开小组成员列表
+			 *
+			 */
+			handleOpenTeamMember(index) {
+				this.showTeamMember = true;
+			},
+			/*
+			 * 关闭小组成员列表
+			 *
+			 */
+			handleTeammemberClosed() {
+				this.showTeamMember = false;
+			}
 	  }
 	}
 </script>
@@ -938,7 +995,7 @@
 	.problem-root {
     position: relative;
     height: 100%;
-    background: #000000;
+    background: #fff;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -983,16 +1040,15 @@
 	  position: relative;
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
-	  background: #000000;
+	  background: $white;
 
 		/* 上部 */
 	  .upper {
-	  	margin: 0 auto;
-	  	width: 8.8rem;
-	  	height: 4.0rem;
-	  	padding-top: 0.8rem;
-	  	border-bottom: 1px solid #cccccc;
+	  	width: 100%;
+	  	height: 3.84rem;
+	  	padding: .133333rem .2rem 0;
 	  	text-align: center;
+			box-shadow: 0 .026667rem .16rem 0 #e2e2e2;
 
       .xitixushi {
         display: flex;
@@ -1000,7 +1056,8 @@
         align-items: center;
         height: 1.866667rem;
         padding: 0 0.3rem;
-        background: #212121;
+        background: rgba(0,0,0,.8);
+				border-radius: .133333rem;
 
         .sjd {
           padding-right: 1.333333rem;
@@ -1047,21 +1104,45 @@
 				width: 0.9rem;
 				vertical-align: middle;
 			}
-			.yjy {
-				padding-top: 0.5rem;
+			.faqihuping-box {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: .533333rem .333333rem;
+
+				.yjy {
+					color: #666;
+				}
+
+				.faqihuping {
+					width: 2.133333rem;
+					height: .746667rem;
+					line-height: .746667rem;
+					text-align: center;
+					border-radius: .106667rem;
+					background: rgba(99,158,244,.2);
+					color: #5096F5;
+				}
+
+				.disabled {
+					background: rgba(155,155,155,.2);
+					color: #9b9b9b;
+				}
 			}
+
 	  }
 
 	  .gap {
-      height: 0.026667rem;
+      height: .133333rem;
     }
 
 		/* 主观题内容区 */
 	  .subjective-box {
-	  	margin-top: -1px;
+			margin-top: .133333rem;
 	  	.hmy {
-        margin-top: 2.893333rem;
+        margin-top: 3.04rem;
         text-align: center;
+				color: #9B9B9B;
       }
 
       .subjective-list {
@@ -1072,39 +1153,54 @@
 	      -webkit-overflow-scrolling: touch;
 
 	      .item {
-	        padding: 0 0.4rem;
+	        padding: 0 .533333rem;
 	        background: $white;
 
 	        .detail {
-	          display: flex;
-	          margin-bottom: 0.346667rem;
 	          padding-top: 0.266667rem;
 
-	          .avatar {
-	            margin-right: 0.4rem;
-	            width: 0.986667rem;
-	            height: 0.986667rem;
-	            border-radius: 50%;
-	          }
-	          .cont {
-	            flex: 1;
-	            word-break: break-word;
+						.student-info {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							width: 100%;
 
-	            .time {
-	            	float: right;
+							.avatar-box {
+								display: flex;
+								align-items: center;
+
+								.avatar {
+			            margin-right: -.133333rem;
+			            width: .666667rem;
+			            height: .666667rem;
+			            border-radius: 50%;
+			          }
+								.avatar:last-of-type {
+									margin-right: .4rem;
+								}
+							}
+
+							.time {
 		            color: $graybg;
 		          }
 
 	            .author {
 	            	display: inline-block;
-	            	margin-bottom: 0.2rem;
-	              color: #4975B5;
+	              color: #666;
 	            }
 
+						}
+
+	          .cont {
+							.cont-title {
+								margin: .266667rem 0 .266667rem .093333rem;
+								color: #333;
+							}
+
 	            .pic {
-	            	margin-top: 0.266667rem;
-	              max-width: 7.573333rem;
-	              max-height: 7.04rem;
+	              max-width: 100%;
+	              max-height: 5.68rem;
+								display: block;
 	            }
 	            img[lazy=loading] {
 	              width: 4.666667rem;
@@ -1119,8 +1215,7 @@
 	          display: flex;
 	          justify-content: space-between;
 	          align-items: center;
-	          height: 1rem;
-	          margin-left: 1.386667rem;
+	          padding: .533333rem 0;
 
 	          .gray {
 	            color: $graybg;
@@ -1205,6 +1300,7 @@
     right: 0;
     background: rgba(0,0,0,0.9);
     overflow: auto;
+		z-index: 30;
 
     .mask-content {
       position: absolute;
@@ -1216,4 +1312,79 @@
       color: $white;
     }
   }
+  .teammember {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.75);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+
+      .member-content {
+        width: 100%;
+        height: 12.133333rem;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				background: #fff;
+        .member-actions {
+					height: 1.333333rem;
+					width: 100%;
+					padding-left: .4rem;
+					line-height: 1.333333rem;
+					border-bottom: .026667rem solid #c8c8c8;
+        }
+
+        .member-detail {
+					padding-left: .533333rem;
+
+          .team-info {
+						color: #333;
+						font-weight: bold;
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: .533333rem .4rem .266667rem 0;
+
+						.team-total {
+							font-weight: normal;
+							color: #9b9b9b;
+						}
+          }
+
+          .team-item {
+						height: 1.493333rem;
+						padding: .266667rem 0 .293333rem;
+						display: flex;
+						align-items: center;
+            .member--avatar {
+              display: block;
+              width: 0.933333rem;
+              height: 0.933333rem;
+              border-radius: 50%;
+            }
+
+            .member--name {
+              flex: 1;
+              text-align: left;
+              border-bottom: 1px solid #eee;
+							height: .933333rem;
+							line-height: .933333rem;
+							margin-left: .133333rem;
+
+              .name {
+                padding-left: 0.4rem;
+              }
+            }
+          }
+        }
+      }
+  }
+
+	.toast-box {
+		width: 5.333333rem;
+		margin: 0;
+		transform: translate(-50%,-50%);
+	}
 </style>
