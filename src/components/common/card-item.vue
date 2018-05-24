@@ -134,6 +134,7 @@
         <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href">
           <div class="paper-txt f18">
             <p class="paper-name">Hi，老师进行了随机分组<!-- {{ $t('sharesubjective') }} --></p>
+            <p class="paper-name">查看结果</p>
           </div>
           <i class="iconfont icon-fenzu f50"></i>
         </a>

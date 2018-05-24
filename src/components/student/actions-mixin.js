@@ -66,8 +66,8 @@ var actionsMixin = {
               break;
 
             // 分组创建分组
-            case 'launchgroup':
-              this.launchGroup({ type: 8, teamid: item['teamid'], group: item['group'], event: item, isFetch: isFetch });
+            case 'group':
+              this.launchGroup({ type: 8, teamid: item['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
@@ -504,30 +504,30 @@ var actionsMixin = {
 
     /*
      * @method 发起分组
-     * @param { type: 8, teamid: '', group: { cat: 'random', groupid: 2 }, event: all }
+     * @param { type: 8, teamid: '', groupid: item['groupid'], cat: item['cat'], event: all }
      */
     launchGroup(data) {
-      let oGroup = this.groupMap.get(data.group.groupid);
+      let oGroup = this.groupMap.get(data.groupid);
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 8 && item.groupid === data.group.groupid && data.isFetch;
+        return item.type === 8 && item.groupid === data.groupid && data.isFetch;
       })
 
-      let isComplete = data.teamid || oGroup && oGroup.team_id;
-      let groupType = data.group.cat;
+      let teamid = data.teamid || oGroup && oGroup.team_id;
+      let groupType = data.cat;
       let href = '';
       if(groupType === 'random') {
-        href = `/team/studentteam/${data.teamid}`;
+        href = `/team/studentteam/${teamid}`;
       } else if(groupType === 'free') {
-        href = `/team/join/${data.group.groupid}`;
+        href = `/team/join/${data.groupid}`;
       }
 
       Object.assign(data, {
-        groupid: data.group.groupid,
-        type: groupType,
+        groupid: data.groupid,
+        groupType: groupType,
         href: href,
-        status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
-        isComplete: isComplete ? true : false
+        status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
+        isComplete: teamid ? true : false
       })
 
       // 消息box弹框
