@@ -32,7 +32,7 @@
       </section>
 
       <!-- 小组作答 显示 -->
-      <section class="team__intro">
+      <section class="team__intro" v-if="team">
         <p class="f18 c333">小组作答：{{ team.team_name }}</p>
         <p class="f14 blue" @click="handleshowTeam">详情</p>
       </section>

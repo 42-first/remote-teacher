@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pro.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
