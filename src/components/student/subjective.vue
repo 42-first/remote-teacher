@@ -33,7 +33,7 @@
 
       <!-- 小组作答 显示 -->
       <section class="team__intro">
-        <p class="f18 c333">小组作答：嘻哈组</p>
+        <p class="f18 c333">小组作答：{{ team.team_name }}</p>
         <p class="f14 blue" @click="handleshowTeam">详情</p>
       </section>
 
@@ -96,13 +96,13 @@
       <div class="team__members">
         <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
         <div class="members__header">
-          <p class="members__title f20 c333">小猪佩奇组</p>
-          <p class="members__total f14 c9b">12人</p>
+          <p class="members__title f20 c333">{{ team.team_name }}</p>
+          <p class="members__total f14 c9b">{{ team.member_count }}人</p>
         </div>
         <ul class="">
-          <li class="member__info">
-            <img class="member--avatar" src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYarb7iasfgpqFGqQg9GVIjpvkw8p1KuG8icWLNsY9H1VgVJibI7rWBjUJfQBShHv0Y3bvmUNCHSWKw/96" alt="姓名" >
-            <div class="member--name f16 c666"><span class="name">陈舟</span></div>
+          <li class="member__info" v-for="member in team.members">
+            <img class="member--avatar" :src="member.avatar" :alt="member.name" >
+            <div class="member--name f16 c666"><span class="name">{{ member.name }}</span></div>
           </li>
         </ul>
       </div>
@@ -322,7 +322,53 @@
        * @param
        */
       getTeamInfo(problemID) {
+        let URL = API.student.GET_GROUP_STATUS;
+        let param = {
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
+        };
 
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              // 小组信息
+              let team = data.team_info;
+              // 当前学生是否进入分组
+              let noTeam = team && team.no_team;
+              // 学生是否作答过
+              let hasAnswered = data.user_answered;
+
+              // 拉取小组成员
+              team.team_id && this.getMembers(team.team_id);
+
+              // 作答结果
+              let problemResult = data.team_problem_result;
+
+            }
+          });
+      },
+
+      /*
+       * @method 小组成员
+       * @param
+       */
+      getMembers(teamID) {
+        let URL = API.student.GET_TEAM_DETAIL;
+        let param = {
+          'team_id': teamID
+        };
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              // 小组成员
+              this.team = data;
+            }
+          });
       },
 
       handleshowTeam() {
@@ -411,7 +457,7 @@
        * @method 答题续时
        * @params problem
        */
-       extendTime(problem) {
+      extendTime(problem) {
         if(problem) {
           let id = problem.prob;
           let extend = problem.extend;
@@ -719,11 +765,6 @@
             quality: .6
           }
         };
-
-        // this.$toast({
-        //   message: '图片上传中',
-        //   duration: 2000
-        // });
 
         // 压缩 浏览器旋转 微信崩溃等问题
         this.loading = true;
