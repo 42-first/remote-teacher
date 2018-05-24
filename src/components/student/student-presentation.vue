@@ -209,6 +209,8 @@
         presentationMap: new Map(),
         quizList: null,
         quizMap: new Map(),
+        // 分组map
+        groupMap: new Map(),
 
         // 习题map
         problemMap: new Map(),
@@ -527,6 +529,7 @@
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
+              self.groupList = data.groupList;
 
               // classroom
               self.classroom = data.classroom;
@@ -544,6 +547,13 @@
               if(self.quizList && self.quizList.length) {
                 self.quizList.forEach( function(quiz, index) {
                   self.quizMap.set(quiz.quizID, quiz);
+                });
+              }
+
+              // set groupMap
+              if(self.groupList && self.groupList.length) {
+                self.groupList.forEach( (group, index) => {
+                  self.groupMap.set(group.group_id, group);
                 });
               }
 

@@ -7,7 +7,7 @@
 <template>
 
   <section class="popup-item" v-if="item">
-    <!-- type : 3习题 4试卷  -->
+    <!-- type : 3习题 4试卷 8分组  -->
     <!-- 试卷模板 -->
     <template v-if="item.type==4">
       <div class="popup__paper">
@@ -38,6 +38,18 @@
             <p class="paper-name">{{ item.caption }}</p>
           </router-link>
           <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
+        </div>
+      </div>
+    </template>
+    <!-- 分组模板 -->
+    <template v-else-if="item.type==8">
+      <div class="popup__paper">
+        <div class="paper-info fenzu">
+          <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
+            <p class="icon-wrapper"><i class="iconfont icon-fenzu f32"></i></p>
+            <p class="paper-name">Hi，老师进行了随机分组</p>
+          </a>
+          <i class="iconfont gray icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>
       </div>
     </template>
@@ -160,6 +172,10 @@
 
     .paper-info.xt .paper-txt .icon-wrapper {
       background: #639EF4;
+    }
+
+    .paper-info.fenzu .paper-txt .icon-wrapper {
+      background: #71D2A5;
     }
 
     .paper-icon {

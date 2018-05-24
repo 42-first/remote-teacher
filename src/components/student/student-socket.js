@@ -320,6 +320,25 @@ var mixin = {
 
             break
 
+          // 分组创建分组
+          case 'launchgroup':
+            this.launchGroup({ type: 8, teamid: item['teamid'], group: item['group'], time: item['group']['dt'], isPopup: true, event: item });
+
+            break;
+
+          // 自由分组取消分组
+          case 'cancelgroup':
+            this.addMessage({ type: 1, message: item['event']['title'], event: item });
+            this.cancelGroup({ type: 8, groupid: item['groupid'], event: item });
+
+            break;
+
+          // 完成分组
+          case 'finishgroup':
+            this.finishGroup({ type: 8, groupid: item['groupid'], teamid: item['teamid'], event: item });
+
+            break;
+
           default:
             hasMsg = false;
             break

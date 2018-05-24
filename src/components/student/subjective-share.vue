@@ -67,7 +67,7 @@
     methods: {
       /*
        * @method 获取主观题分数
-       * @param
+       * @param 接口有变更 增加了个人作答还是小组作答信息
        */
       getSubjective(spid) {
         let URL = API.student.GET_SUBJECTIVE;
