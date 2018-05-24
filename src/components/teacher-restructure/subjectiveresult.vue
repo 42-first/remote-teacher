@@ -152,6 +152,11 @@
     ></Problemtime>
     <Scale></Scale>
 
+		<HupingPanel
+			ref="HupingPanel"
+			@giveHuping="giveHuping"
+		></HupingPanel>
+
     <section class="teammember" v-show="showTeamMember">
       <div class="member-content">
         <v-touch class="member-actions" v-on:tap="handleTeammemberClosed">
@@ -185,6 +190,7 @@
   import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
+	import HupingPanel from './common/huping-panel'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
@@ -224,6 +230,7 @@
     '-1': '不限时'
   }
   let scoreTapTimer = null
+	let hupingTapTimer = null
 
 	export default {
 	  name: 'Subjectiveresult',
@@ -263,7 +270,8 @@
       Scale,
       Loadmore,
       Problemtime,
-      GuideDelay
+      GuideDelay,
+			HupingPanel
 	  },
 	  created(){
 	  	this.init()
@@ -953,17 +961,61 @@
 
       },
 			/*
-			 * 发起互评
+			 * 发起互评,唤出互评面板
 			 */
 			faqihuping() {
-				if(this.newTime > 0){
-					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
-					let msg = '收题后才可发起互评'
-					T_PUBSUB.publish('ykt-msg-toast', msg);
-				} else {
-					console.log('发起互评');
-				}
+				let self = this
+				// if(this.newTime > 0){
+				// 	// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+				// 	let msg = '收题后才可发起互评'
+				// 	T_PUBSUB.publish('ykt-msg-toast', msg);
+				// } else {
+				// 	// 防止用户频繁点击
+	      //   clearTimeout(hupingTapTimer)
+	      //   hupingTapTimer = setTimeout(() => {
+	      //     self.$refs.HupingPanel.$emit('enterHuping')
+	      //   }, 100)
+				// }
+				// 防止用户频繁点击
+				clearTimeout(hupingTapTimer)
+				hupingTapTimer = setTimeout(() => {
+					self.$refs.HupingPanel.$emit('enterHuping')
+				}, 100)
 			},
+			/**
+	     * 点击打分部分，呼出打分面板
+	     *
+	     * @event
+	     * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} score 打的分
+       * @params {String} remark 教师的评语
+	     */
+	    giveHuping () {
+	    	let self = this
+
+	      // let url = API.subjective_problem_teacher_scorev2
+	      // let postData = {
+	      //   'lesson_id': self.lessonid,
+	      //   'problem_result_id': answerid,
+	      //   'score': score,
+        //   remark
+	      // }
+				//
+	      // request.post(url, postData)
+	      //   .then(jsonData => {
+	      //     // 不需要判断success，在request模块中判断如果success为false，会直接reject
+	      //     // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+				//
+	      //     // 关闭打分页面
+	      //     console.log(`打过分啦${score}`, self.scoringIndex)
+	      //     self.dataList[self.scoringIndex].score = +score
+        //     self.dataList[self.scoringIndex].remark = remark
+	      //     self.$refs.StarPanel.$emit('leave')
+	      //   })
+
+
+				console.log('发起互评');
+	    },
 			/*
 			 * 打开小组成员列表
 			 *
@@ -1384,7 +1436,6 @@
 
 	.toast-box {
 		width: 5.333333rem;
-		margin: 0;
-		transform: translate(-50%,-50%);
+		margin-left: -2.666665rem;
 	}
 </style>
