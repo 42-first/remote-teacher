@@ -21,7 +21,7 @@
     <div class="scale-of-marks">
       <div class="score-point">
         <h1 class="f20">评分要点</h1>
-        <textarea class="textarea-place f15" v-model="point" placeholder="请输入您的参考答案或评分要点，供学生参考" @focus="focusText" @blur="isTextFocused = false"></textarea>
+        <textarea class="textarea-place f15" v-model="point" placeholder="请输入您的参考答案或评分要点，供学生参考"></textarea>
       </div>
       <div class="score-rules">
         <h1 class="f20">互评规则</h1>

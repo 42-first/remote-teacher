@@ -678,7 +678,8 @@
           self.setData({
             isShowNewHint: jsonData.data.response_num,
             total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num
+            class_participant_num: jsonData.data.class_participant_num,
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : ''
           })
         })
       },
@@ -705,8 +706,8 @@
             isShowNewHint: false,
             total_num: jsonData.data.total_num,
             class_participant_num: jsonData.data.class_participant_num,
-						team_num: jsonData.data.group_team_num + jsonData.data.student_not_in_team,
-						problem_answer_type: jsonData.data.problem_answer_type
+						problem_answer_type: jsonData.data.problem_answer_type,
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : ''
           })
 
           let newList = jsonData.data.problem_results_list
