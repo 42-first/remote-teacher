@@ -32,9 +32,9 @@
       </section>
 
       <!-- 小组作答 显示 -->
-      <section class="team__intro">
-        <p class="f18 c333">小组作答：{{ team.team_name }}</p>
-        <p class="f14 blue" @click="handleshowTeam">详情</p>
+      <section class="team__intro" v-if="team">
+        <p class="f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
+        <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
       </section>
 
       <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
@@ -83,7 +83,7 @@
       <!-- 小组提示 -->
       <div class="team__tip">
         <span class="f18 yellow">*</span>
-        <p class="f14 c9b">本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再做作答，每人只有一次作答机会</p>
+        <p class="f14 c9b">{{ $t('team.groupansweredtip') }}</p>
       </div>
 
       <!-- 提交按钮 -->

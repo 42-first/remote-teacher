@@ -65,6 +65,12 @@ var actionsMixin = {
 
               break;
 
+            // 分组创建分组
+            case 'group':
+              this.launchGroup({ type: 8, teamid: item['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -375,7 +381,7 @@ var actionsMixin = {
       this.allEvents.push(data);
 
       // 之前有动画隐藏蒙版
-      this.hideAnimationMask();
+      !hasEvent && this.hideAnimationMask();
     },
 
     /*
@@ -498,11 +504,67 @@ var actionsMixin = {
 
     /*
      * @method 发起分组
-     * @param { type: 8, time: '', event: all }
+     * @param { type: 8, teamid: '', groupid: item['groupid'], cat: item['cat'], event: all }
      */
     launchGroup(data) {
+      let oGroup = this.groupMap.get(data.groupid);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 8 && item.groupid === data.groupid && data.isFetch;
+      })
 
-    }
+      let teamid = data.teamid || oGroup && oGroup.team_id;
+      let groupType = data.cat;
+      let href = '';
+      if(groupType === 'random') {
+        href = `/team/studentteam/${teamid}`;
+      } else if(groupType === 'free') {
+        href = `/team/join/${data.groupid}`;
+      }
+
+      Object.assign(data, {
+        groupid: data.groupid,
+        groupType: groupType,
+        href: href,
+        status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
+        isComplete: teamid ? true : false
+      })
+
+      // 消息box弹框
+      data.isPopup && (this.msgBoxs = [data]);
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 取消分组
+     * @param { type: 8, groupid: 2, event: all }
+     */
+    cancelGroup(data) {
+      let targetIndex = this.cards.findIndex((item) => {
+        return item.type === 8 && item.groupid === data.groupid;
+      })
+
+      // 可以确认分组被取消了
+      targetIndex !== -1 && this.cards.splice(targetIndex, 1);
+    },
+
+    /*
+     * @method 完成分组
+     * @param { type: 8, groupid: item['groupid'], teamid: item['teamid'], event: all }
+     */
+    finishGroup(data) {
+      let group = this.cards.find((item) => {
+        return item.type === 8 && item.groupid === data.groupid;
+      })
+
+      group && Object.assign(group, {
+        status: this.$i18n.t('undone'),
+        isComplete:  true
+      })
+    },
+
 
   }
 }
