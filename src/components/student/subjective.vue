@@ -346,6 +346,21 @@
               // 作答结果
               let problemResult = data.team_problem_result;
 
+              // 未进组提示
+              if(noTeam) {
+                let msgOptions = {
+                  confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
+                  cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+                };
+                let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
+                let message = this.$i18n && this.$i18n.t('team.tempteamtip');
+
+                this.$messagebox.confirm(message, title, msgOptions).
+                then( action => {
+                  if(action === 'confirm') {
+                  }
+                });
+              }
             }
           });
       },

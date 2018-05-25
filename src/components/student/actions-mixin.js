@@ -517,10 +517,11 @@ var actionsMixin = {
       let teamid = data.teamid || oGroup && oGroup.team_id;
       let groupType = data.cat;
       let href = '';
+      let lessonID = this.lessonID;
       if(teamid) {
-        href = `/team/studentteam/${teamid}`;
+        href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
       } else if(groupType === 'free') {
-        href = `/team/join/${data.groupid}`;
+        href = `/team/join/${data.groupid}?lessonid=${lessonID}`;
       }
 
       Object.assign(data, {
