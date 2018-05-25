@@ -144,7 +144,9 @@
         </a>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
-          <div class="f14"></div>
+          <div class="f14">
+            <span class="status">{{ item.status }}</span>
+          </div>
         </div>
       </div>
     </template>

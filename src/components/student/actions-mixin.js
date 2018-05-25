@@ -517,7 +517,7 @@ var actionsMixin = {
       let teamid = data.teamid || oGroup && oGroup.team_id;
       let groupType = data.cat;
       let href = '';
-      if(groupType === 'random') {
+      if(teamid) {
         href = `/team/studentteam/${teamid}`;
       } else if(groupType === 'free') {
         href = `/team/join/${data.groupid}`;
@@ -561,6 +561,7 @@ var actionsMixin = {
       })
 
       group && Object.assign(group, {
+        href: `/team/studentteam/${data.teamid}`,
         status: this.$i18n.t('undone'),
         isComplete:  true
       })
