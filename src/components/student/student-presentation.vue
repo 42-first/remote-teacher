@@ -26,7 +26,7 @@
             </router-link>
             <p class="action f17" @click="handleenterTeam" v-if="classroom &&classroom.classroomId">
               <i class="iconfont icon-fenzu f25"></i>
-              <span>我的分组</span>
+              <span><!-- 我的分组 -->{{ $t('team.mygroup') }}</span>
             </p>
           </div>
         </div>

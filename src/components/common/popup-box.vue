@@ -47,7 +47,8 @@
         <div class="paper-info fenzu">
           <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
             <p class="icon-wrapper"><i class="iconfont icon-fenzu f32"></i></p>
-            <p class="paper-name">Hi，老师进行了随机分组</p>
+            <p class="paper-name" v-if="item.groupType ==='random'"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
+            <p class="paper-name" v-else-if="item.groupType ==='free'">{{ $t('team.freegrouping') }}</p>
           </a>
           <i class="iconfont gray icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>
@@ -85,11 +86,6 @@
       },
       handlelink(index, evt) {
         this.$parent.msgBoxs.splice(index, 1);
-
-        // 如果是图片预览退出图片预览
-        // this.$parent.gallery && setTimeout(()=>{
-        //   this.$parent.gallery.close();
-        // }, 500)
       }
     },
     created() {

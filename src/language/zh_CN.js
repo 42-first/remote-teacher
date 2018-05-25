@@ -354,6 +354,23 @@ let pages = {
     "ok": "好的"
   },
 
+  // 分组
+  team: {
+    "mygroup": "我的分组",
+    "randomized": "Hi，老师进行了随机分组",
+    "freegrouping": "Hi，老师进行了自由分组",
+    "viewresults": "查看结果",
+    "enterpassword": "输入口令",
+    "groupanswered": "小组作答：",
+    "info": "详情",
+    "groupansweredtip": "本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再做作答，每人只有一次作答机会",
+    "hassubmitted": "已有人提交答案",
+    "coveragetip": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
+    "noteam": "未进组",
+    "tempteamtip": "您将会单独进入一个小组作答并提交",
+    "withoutteamhint": "当前题目为小组作答，您还没有进组",
+  },
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

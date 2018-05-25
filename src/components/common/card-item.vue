@@ -132,9 +132,13 @@
     <template v-else-if="item.type==8">
       <div class="timeline__paper">
         <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href">
-          <div class="paper-txt f18">
-            <p class="paper-name">Hi，老师进行了随机分组<!-- {{ $t('sharesubjective') }} --></p>
-            <p class="paper-name">查看结果</p>
+          <div class="paper-txt f18" v-if="item.groupType ==='random'">
+            <p class="paper-name"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
+            <p class="paper-name"><!-- 查看结果 -->{{ $t('team.viewresults') }}</p>
+          </div>
+          <div class="paper-txt f18" v-else-if="item.groupType ==='free'">
+            <p class="paper-name"><!-- Hi，老师进行了自由分组 -->{{ $t('team.freegrouping') }}</p>
+            <p class="paper-name"><!-- 输入口令 -->{{ $t('team.enterpassword') }}</p>
           </div>
           <i class="iconfont icon-fenzu f50"></i>
         </a>
