@@ -355,7 +355,8 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
-        index: index
+        index: index,
+        groupid: data.event['groupid']
       })
 
       // 消息box弹框

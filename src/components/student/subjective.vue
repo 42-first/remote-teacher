@@ -215,7 +215,7 @@
         this.problemID = problemID;
 
         // TODO：检测这个问题是否分组
-        let isTeam = data.isTeam || true;
+        let isTeam = data.groupid || true;
         isTeam && this.getTeamInfo(problemID);
 
         // event消息订阅
