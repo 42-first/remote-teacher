@@ -131,6 +131,7 @@
 			        this.teams.push(obj);
 			      })
 			      this.slots[0]['values'] = this.teams;
+						this.selectTeam = this.teams[0].id
 	        })
 	        .catch(() => {
 	        	console.error('获取分组列表失败')
@@ -153,6 +154,9 @@
 	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟
 	     */
 	    chooseProblemDuration (duration, groupid = this.selectTeam) {
+				if(this.activeTab == 1){
+					groupid = 0
+				}
 	      this.$emit('chooseProblemDuration', duration, groupid)
 	    },
 			/*
