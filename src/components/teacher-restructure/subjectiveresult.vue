@@ -50,9 +50,13 @@
               </div>
             </div>
 						<div class="faqihuping-box">
-							<div :class="['f16', 'yjy']">
+							<div :class="['f16', 'yjy']" v-if="problem_answer_type == 0">
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
 								已答： {{total_num}} / {{class_participant_num}}
+	            </div>
+							<div :class="['f16', 'yjy']" v-else>
+	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
+								已答： {{total_num}} / {{team_num}}
 	            </div>
 							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch>
 						</div>
@@ -69,11 +73,20 @@
               <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
                 <div class="item">
                   <div class="detail">
-										<div class="student-info">
+										<div class="student-info" v-if="problem_answer_type == 1">
 											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
-												<img :src="item.user_avatar_46" class="avatar" alt="">
-												<span class="author f15">{{item.user_name}}</span>
+												<template v-for="(item2, index2) in item.users">
+													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
+												</template>
+												<span class="author f15">{{item.team_name}}</span>
 											</v-touch>
+											<div class="time f15">{{item.end_time | formatTime}}</div>
+										</div>
+										<div class="student-info" v-else>
+											<div class="avatar-box">
+												<img :src="item.users[0].user_avatar_46" class="avatar" alt="">
+												<span class="author f15">{{item.users[0].user_name}}</span>
+											</div>
 											<div class="time f15">{{item.end_time | formatTime}}</div>
 										</div>
 
@@ -164,12 +177,12 @@
         </v-touch>
         <div class="member-detail">
           <p class="team-info">
-            <span class="team-name f20">小猪佩奇组</span>
-            <span class="team-total f14">共12人</span>
+            <span class="team-name f20">{{currentTeam}}</span>
+            <span class="team-total f14">共{{teamMemberList.length}}人</span>
           </p>
-          <div class="team-item">
-            <img class="member--avatar" src="https://avatars1.githubusercontent.com/u/12670537?v=4" alt="" >
-            <div class="member--name f16 c666"><span class="name">兔兔</span></div>
+          <div class="team-item" v-for="(item, index) in teamMemberList" :key="index">
+            <img class="member--avatar" :src="item.user_avatar_46" alt="" >
+            <div class="member--name f16 c666"><span class="name">{{item.user_name}}</span></div>
           </div>
         </div>
       </div>
@@ -251,7 +264,10 @@
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
         showTeamMember: false,         // 展示小组成员
-        teamMemberList: [],
+        teamMemberList: [],						 // 小组成员列表
+				currentTeam: '',							 // 当前点击的小组名称
+				problem_answer_type: 0,				 // 个人或小组作答 0:个人  1:小组
+				team_num: '--',								 // 组数+未进组人数
 	    }
 	  },
 	  computed: {
@@ -688,7 +704,9 @@
           self.setData({
             isShowNewHint: false,
             total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num
+            class_participant_num: jsonData.data.class_participant_num,
+						team_num: jsonData.data.group_team_num + jsonData.data.student_not_in_team,
+						problem_answer_type: jsonData.data.problem_answer_type
           })
 
           let newList = jsonData.data.problem_results_list
@@ -965,22 +983,17 @@
 			 */
 			faqihuping() {
 				let self = this
-				// if(this.newTime > 0){
-				// 	// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
-				// 	let msg = '收题后才可发起互评'
-				// 	T_PUBSUB.publish('ykt-msg-toast', msg);
-				// } else {
-				// 	// 防止用户频繁点击
-	      //   clearTimeout(hupingTapTimer)
-	      //   hupingTapTimer = setTimeout(() => {
-	      //     self.$refs.HupingPanel.$emit('enterHuping')
-	      //   }, 100)
-				// }
-				// 防止用户频繁点击
-				clearTimeout(hupingTapTimer)
-				hupingTapTimer = setTimeout(() => {
-					self.$refs.HupingPanel.$emit('enterHuping')
-				}, 100)
+				if(this.newTime > 0){
+					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+					let msg = '收题后才可发起互评'
+					T_PUBSUB.publish('ykt-msg-toast', msg);
+				} else {
+					// 防止用户频繁点击
+	        clearTimeout(hupingTapTimer)
+	        hupingTapTimer = setTimeout(() => {
+	          self.$refs.HupingPanel.$emit('enterHuping')
+	        }, 100)
+				}
 			},
 			/**
 	     * 点击打分部分，呼出打分面板
@@ -1022,6 +1035,8 @@
 			 */
 			handleOpenTeamMember(index) {
 				this.showTeamMember = true;
+				this.teamMemberList = this.dataList[index].users
+				this.currentTeam = this.dataList[index].team_name
 			},
 			/*
 			 * 关闭小组成员列表
@@ -1199,7 +1214,6 @@
 
       .subjective-list {
       	color: #4A4A4A;
-      	background: #EDF2F6;
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
@@ -1322,7 +1336,7 @@
 	          position: relative;
 	          margin: 0 auto;
 	          width: 2.093333rem;
-	          background: #EDF2F6;
+	          background: #fff;
 	        }
 
 	        .bgline {
@@ -1375,7 +1389,8 @@
 
       .member-content {
         width: 100%;
-        height: 12.133333rem;
+        max-height: 12.133333rem;
+				min-height: 50%;
 				position: absolute;
 				bottom: 0;
 				left: 0;
@@ -1390,6 +1405,9 @@
 
         .member-detail {
 					padding-left: .533333rem;
+					min-height: 6.706667rem;
+					max-height: 10.8rem;
+					overflow: scroll;
 
           .team-info {
 						color: #333;
