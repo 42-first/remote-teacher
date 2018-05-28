@@ -274,6 +274,10 @@
         console.log(from.name);
         console.log(to.name);
 
+        if (process.env.NODE_ENV !== 'production') {
+          return this;
+        }
+
         if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
           document.title = this.courseName && this.courseName;
           setTimeout(() => {
