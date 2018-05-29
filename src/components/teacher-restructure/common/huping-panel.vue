@@ -4,16 +4,16 @@
     <div class="proportion-box">
       <div class="score-box">
         <div class="score student">
-          <p class="f16"><span class="f36">{{rangeValue}}</span>%</p>
+          <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
           <p class="f14">互评分数占比</p>
         </div>
         <div class="score teacher">
-          <p class="f16"><span class="f36">{{teacherScore}}</span>%</p>
-          <p class="f14">互评分数占比</p>
+          <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+          <p class="f14">教师分数占比</p>
         </div>
       </div>
       <div class="range-box">
-        <mt-range v-model="rangeValue" min="0" max="100" step="1" bar-height="8">
+        <mt-range v-model="group_review_proportion" min="0" max="100" step="1" bar-height="8">
         </mt-range>
       </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="scale-of-marks">
       <div class="score-point">
         <h1 class="f20">评分要点</h1>
-        <textarea class="textarea-place f15" v-model="point" placeholder="请输入您的参考答案或评分要点，供学生参考"></textarea>
+        <textarea class="textarea-place f15" v-model="review_declaration" placeholder="请输入您的参考答案或评分要点，供学生参考" @focus="focusText" @blur="isTextFocused = false"></textarea>
       </div>
       <div class="score-rules">
         <h1 class="f20">互评规则</h1>
@@ -49,9 +49,8 @@
       return {
         isHupingPanelHidden: true,
         isSummoned: false,
-        rangeValue: 100,
-        hupingScore: 100,
-        point: '',
+        group_review_proportion: 100,
+        review_declaration: '',
       }
     },
     created () {
@@ -67,15 +66,9 @@
         self.leave()
       })
     },
-    mounted() {
-      this.cells2 = [{
-        value: 100,
-        barHeight: 8
-      }];
-    },
     computed: {
-      teacherScore() {
-        return 100 - this.rangeValue
+      teacher_score_proportion() {
+        return 100 - this.group_review_proportion
       }
     },
     methods: {
@@ -93,18 +86,17 @@
 
       },
 
-      leav() {
+      leave() {
         let self = this
 
-        self.$el.querySelector('input').blur()
-        self.$el.querySelector('textarea').blur()
+        // self.$el.querySelector('input').blur()
+        // self.$el.querySelector('textarea').blur()
         // self.errorInfo = ''
 
         self.isHupingPanelHidden = true
         clearTimeout(timer2)
         timer2 = setTimeout(() => {
           self.isSummoned = false
-          self.isEditting = false
         }, 400)
       },
 
@@ -113,8 +105,29 @@
        */
       submit (evt) {
         let self = this
+        let teacher_score_proportion = self.teacher_score_proportion / 100
+        let group_review_proportion = self.group_review_proportion / 100
+        self.$emit('giveHuping', teacher_score_proportion, group_review_proportion, self.review_declaration)
+      },
 
-        self.$emit('giveHuping')
+      /**
+       * 点击分数输入框
+       *
+       * @event bindtap
+       */
+      blurInput () {
+        let self = this
+
+        self.isTextFocused = false
+        self.validate()
+      },
+      /**
+       * 点击评语输入框
+       *
+       * @event bindtap
+       */
+      focusText () {
+        let self = this
       },
     }
   }

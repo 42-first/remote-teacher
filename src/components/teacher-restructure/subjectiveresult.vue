@@ -173,7 +173,7 @@
     <section class="teammember" v-show="showTeamMember">
       <div class="member-content">
         <v-touch class="member-actions" v-on:tap="handleTeammemberClosed">
-          <i class="iconfont icon-shiti_guanbitouping f16 c333"></i>
+          <i class="iconfont icon-shiti_guanbitouping f25 c333"></i>
         </v-touch>
         <div class="member-detail">
           <p class="team-info">
@@ -1000,35 +1000,33 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event
-	     * @params {Number} answerid 将要打分的主观题答案的id
-       * @params {Number} score 打的分
-       * @params {String} remark 教师的评语
+	     * @params {Number} problem_id 问题id
+       * @params {Number} teacher_score_proportion 教师评分比例
+       * @params {Number} group_review_proportion 小组互评的比例
+       * @params {String} review_declaration 评分要点
 	     */
-	    giveHuping () {
+	    giveHuping (teacher_score_proportion, group_review_proportion, review_declaration) {
 	    	let self = this
 
-	      // let url = API.subjective_problem_teacher_scorev2
-	      // let postData = {
-	      //   'lesson_id': self.lessonid,
-	      //   'problem_result_id': answerid,
-	      //   'score': score,
-        //   remark
-	      // }
-				//
-	      // request.post(url, postData)
-	      //   .then(jsonData => {
-	      //     // 不需要判断success，在request模块中判断如果success为false，会直接reject
-	      //     // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-				//
-	      //     // 关闭打分页面
-	      //     console.log(`打过分啦${score}`, self.scoringIndex)
-	      //     self.dataList[self.scoringIndex].score = +score
-        //     self.dataList[self.scoringIndex].remark = remark
-	      //     self.$refs.StarPanel.$emit('leave')
-	      //   })
+	      let url = API.publish_subj_problem_group_review
+	      let postData = {
+	        "problem_id": self.problemid,
+					teacher_score_proportion,
+					group_review_proportion,
+					review_declaration
+	      }
+
+	      request.post(url, postData)
+	        .then(jsonData => {
 
 
-				console.log('发起互评');
+	          // 关闭互评页面
+	          console.log('发起互评');
+	          self.$refs.HupingPanel.$emit('leaveHuping')
+	        })
+
+
+
 	    },
 			/*
 			 * 打开小组成员列表
