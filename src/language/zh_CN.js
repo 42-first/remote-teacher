@@ -369,6 +369,9 @@ let pages = {
     "noteam": "未进组",
     "tempteamtip": "您将会单独进入一个小组作答并提交",
     "withoutteamhint": "当前题目为小组作答，您还没有进组",
+
+    "teamhasanswer": "已有人提交答案",
+    "teamanswercover": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
   },
 
   // 图片国际化
