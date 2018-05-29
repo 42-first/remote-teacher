@@ -20,7 +20,7 @@
         <div class="content_wrapper">
           <p class="page-no f12"><span>第8页</span></p>
           <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
-            <img class="cover J_preview_img" src="http://st0.ykt.io/FizXt8_bsxPzdYICouZHUzpBMgkV" alt="雨课堂" @click=" (1, $event)" />
+            <img class="cover J_preview_img" src="http://st0.ykt.io/FqOgxWJctO7pymHwWJQ0Db_2CPci" alt="雨课堂" />
           </div>
         </div>
       </section>

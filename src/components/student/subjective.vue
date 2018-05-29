@@ -31,14 +31,17 @@
         </div>
       </section>
 
-      <!-- 小组作答 显示 -->
-      <section class="team__intro" v-if="team">
+      <!-- 小组作答 显示 未进组不显示小组详情 -->
+      <section class="team__intro" v-if="team && !noTeam">
         <p class="f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
         <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
       </section>
 
       <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
-      <h3 class="subjective__answer--lable f17" v-else ><!-- 我的回答 -->{{ $t('myanswer') }}</h3>
+      <h3 class="subjective__answer--lable answer__header f17" v-else >
+        <p><!-- 我的回答 -->{{ $t('myanswer') }}</p>
+        <p @click="handleedit" v-if="answerType && !hasAnswered"><i class="iconfont icon-bianji f25 blue"></i></p>
+      </h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
@@ -58,7 +61,7 @@
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="imageThumbURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
             <img class="J_loading_img" alt="" v-show="loading" />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
@@ -155,9 +158,17 @@
         // star count 获得星星的数量
         starCount: 0,
         getScore: -1,
+        // 个人作答还是小组作答 0 个人作答 1小组作答
+        answerType: 0,
         // 小组详情
         team: null,
-        teamVisible: false
+        teamVisible: false,
+        // 分组 我是否作答过
+        hasAnswered: true,
+        // 是否进组
+        noTeam: false,
+        // 是否再次编辑状态
+        isEdit: false
       };
     },
     components: {
@@ -215,7 +226,7 @@
         this.problemID = problemID;
 
         // TODO：检测这个问题是否分组
-        let isTeam = data.groupid || true;
+        let isTeam = data.groupid || false;
         isTeam && this.getTeamInfo(problemID);
 
         // event消息订阅
@@ -328,6 +339,9 @@
           'lesson_id': this.lessonID
         };
 
+        // 小组作答
+        this.answerType = 1;
+
         request.get(URL, param)
           .then((res) => {
             if(res && res.data) {
@@ -338,16 +352,27 @@
               // 当前学生是否进入分组
               let noTeam = team && team.no_team;
               // 学生是否作答过
-              let hasAnswered = data.user_answered;
+              this.hasAnswered = data.user_answered;
 
               // 拉取小组成员
               team.team_id && this.getMembers(team.team_id);
 
               // 作答结果
               let problemResult = data.team_problem_result;
+              if(problemResult) {
+                let result = problemResult.team_result_data;
+                this.text = result.content;
+                // 是否有图片
+                if(result.pics.length) {
+                  this.hasImage = true;
+                  this.imageURL = result.pics[0].pic;
+                  this.imageThumbURL = result.pics[0].thumb;
+                }
+              }
 
               // 未进组提示
               if(noTeam) {
+                this.noTeam = true;
                 let msgOptions = {
                   confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
                   cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
@@ -386,12 +411,61 @@
           });
       },
 
+      /*
+       * @method 是否小组有小组作答结果
+       * @param
+       */
+      getTeamResult(problemID) {
+        let URL = API.student.GET_GROUP_STATUS;
+        let param = {
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
+        };
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              let problemResult = data.team_problem_result;
+              // 答案覆盖提示
+              if(problemResult) {
+                let msgOptions = {
+                  confirmButtonText: '提交',
+                  cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+                };
+                let title = '已有人提交答案';
+                let message = '已有本组同学提交了答案，提交后将会覆盖已提交的答案';
+
+                this.$messagebox.confirm(message, title, msgOptions).
+                then( action => {
+                  if(action === 'confirm') {
+                    this.sendSubjective();
+                  }
+                });
+              } else {
+                this.sendSubjective();
+              }
+            }
+          });
+      },
+
       handleshowTeam() {
         this.teamVisible = true;
       },
 
       handleclosedTeam() {
         this.teamVisible = false;
+      },
+
+      /*
+       * @method 编辑答案
+       * @param
+       */
+      handleedit() {
+        this.ispreview = false;
+        this.sendStatus = 2;
+        this.isEdit = true;
       },
 
       /*
@@ -905,7 +979,17 @@
         gallery.init();
       },
       handleSend() {
-        this.sendStatus === 2 && this.sendSubjective();
+        // 是否可以提交
+        // 是否小组作答
+        // 小组作答先看下有没有人提交 提示覆盖信息
+
+        if(this.sendStatus === 2) {
+          if(this.answerType === 1 && !this.isEdit) {
+            this.getTeamResult(this.summary.problemID);
+          } else {
+            this.sendSubjective();
+          }
+        }
       },
       handleBack() {
         this.$router.back();
@@ -1121,6 +1205,12 @@
     .tip {
       color: #9B9B9B;
     }
+  }
+
+  .answer__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
   }
 
   .subjective-inner {

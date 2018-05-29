@@ -50,11 +50,9 @@ if (process.env.NODE_ENV === 'production') {
             // 用户引导设置完成
             'SET_GUIDE': '/v/lesson/set_guide',
             // 学生答题时获取分组作答主观题状态
-            // 'GET_GROUP_STATUS': '/v/lesson/student_group_subj_problem_status/'
-            'GET_GROUP_STATUS': 'http://apimock.xuetangx.com/mock/115/v/lesson/student_group_subj_problem_status/',
+            'GET_GROUP_STATUS': '/v/lesson/student_group_subj_problem_status/',
             // (学生端)获取小组详情
-            // 'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
-            'GET_TEAM_DETAIL': 'http://apimock.xuetangx.com/mock/115/group/student/get_team_detail/',
+            'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
 
         },
 
