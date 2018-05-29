@@ -86,7 +86,7 @@
       <!-- 小组提示 -->
       <div class="team__tip" v-show="answerType">
         <span class="f18 yellow">*</span>
-        <p class="f14 c9b" v-if="noTeam">当前题目为小组作答，您还没有进组</p>
+        <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
@@ -422,11 +422,11 @@
               // 答案覆盖提示
               if(problemResult) {
                 let msgOptions = {
-                  confirmButtonText: '提交',
+                  confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
                   cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
                 };
-                let title = '已有人提交答案';
-                let message = '已有本组同学提交了答案，提交后将会覆盖已提交的答案';
+                let title = this.$i18n && this.$i18n.t('team.teamhasanswer') || '已有人提交答案';
+                let message = this.$i18n && this.$i18n.t('team.teamanswercover') || '已有本组同学提交了答案，提交后将会覆盖已提交的答案';
 
                 this.$messagebox.confirm(message, title, msgOptions).
                 then( action => {
