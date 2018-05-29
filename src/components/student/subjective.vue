@@ -364,7 +364,7 @@
                 let result = problemResult.team_result_data;
                 this.text = result.content;
                 // 是否有图片
-                if(result.pics.length) {
+                if(result.pics && result.pics.length && result.pics[0].pic) {
                   this.hasImage = true;
                   this.imageURL = result.pics[0].pic;
                   this.imageThumbURL = result.pics[0].thumb;
