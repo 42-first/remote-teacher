@@ -54,6 +54,8 @@ if (process.env.NODE_ENV === 'production') {
     set_lang_zh_cn: "/v/user/set_language/zh_cn",
     // 获取分组列表
     get_classroom_group_list:           prefix + '/group/get_classroom_group_list/',
+    // (教师端)发起主观题互评
+    publish_subj_problem_group_review:  prefix + '/v/lesson/publish_subj_problem_group_review/',
   }
 } else {
   api = {
@@ -98,6 +100,7 @@ if (process.env.NODE_ENV === 'production') {
     set_lang_en: "http://apimock.xuetangx.com/mock/115/v/user/set_language/en",
     set_lang_zh_cn: "http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn",
     get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    publish_subj_problem_group_review:  'http://apimock.xuetangx.com/mock/115/v/lesson/publish_subj_problem_group_review/',
   }
 }
 
