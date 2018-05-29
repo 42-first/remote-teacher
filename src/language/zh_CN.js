@@ -336,6 +336,13 @@ let pages = {
   "quantoupiao": "您的学生已全部投票",
   "nimingtoupiao": "本题为匿名投票",
 
+  "yiqiandao": "已签到",
+  "weiqiandao": "未签到",
+  "qiandaoafterfix": '',
+  "weiqiandaoafterfix": "",
+  "weishezhixuehao": "未设置学号",
+  
+
 
   // 引导页
   guide: {

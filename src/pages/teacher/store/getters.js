@@ -19,9 +19,10 @@ const getters = {
   pptData: state => state.pptData,
   finishedQuizList: state => state.finishedQuizList,
   participantList: state => state.participantList,
+  notParticipantList: state => state.notParticipantList,
   newtougao: state => state.newtougao,
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
-  
+
   qrcodeStatus: state => state.qrcodeStatus,
   isDanmuOpen: state => state.isDanmuOpen,
   newdoubt: state => state.newdoubt,

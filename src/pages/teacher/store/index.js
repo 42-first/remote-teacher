@@ -23,13 +23,14 @@ const store = new Vuex.Store({
     errType: 5,                             // 错误信息类型
     isGuideDelayHidden: false,              // 延时引导隐藏
     stepGuideDelay: 0,                      // 延时引导状态 0 查看答案；1 延时；2 收题；3 结束
-    
+
     current: 1,                             // 当前页码，从1开始
     total: '',                              // 总页数
     pptData: [],                            // ppt数据
     finishedQuizList: {},                   // 给已经收卷的试卷做标记
     participantList: [],                    // 参与的学生
-    
+    notParticipantList: [],                 // 未签到学生
+
     qrcodeStatus: 1,                        // 二维码大小状态：1 和 2 分别为 小 和 大
     isDanmuOpen: false,                     // 弹幕是否处于打开状态
     newdoubt: 0,														// 未看的不懂人数
@@ -98,7 +99,7 @@ const store = new Vuex.Store({
     set_stepGuideDelay: (state, stepGuideDelay) => {
       state.stepGuideDelay = stepGuideDelay
     },
-    
+
     set_current: (state, current) => {
       state.current = current
     },
@@ -109,7 +110,7 @@ const store = new Vuex.Store({
       console.log('====store.set_pptData', pptData)
       // state.pptData = pptData
       // state.pptData = Array.from(pptData)
-      
+
       /*
        * 注意！注意！注意！
        * 在遥控器切换路由返回遥控器主界面之后，ppt 新增一页会获取新的data，并在这里设置 pptData，
@@ -125,6 +126,9 @@ const store = new Vuex.Store({
     },
     set_participantList: (state, participantList) => {
       state.participantList = participantList
+    },
+    set_notParticipantList: (state, notParticipantList) => {
+      state.notParticipantList = notParticipantList
     },
     set_isDanmuOpen: (state, isDanmuOpen) => {
       state.isDanmuOpen = isDanmuOpen
@@ -182,7 +186,7 @@ const store = new Vuex.Store({
     set_initiativeCtrlMaskTpl: (state, initiativeCtrlMaskTpl) => {
       state.initiativeCtrlMaskTpl = initiativeCtrlMaskTpl
     },
-    
+
   },
 
   actions: {
@@ -208,7 +212,7 @@ const store = new Vuex.Store({
 
       // 在 socket-process-message.js 中第 104 行根据 msg.slideindex !== 0 再重新设置
       commit('set_isBrandNewPpt', true)
-        
+
       commit('set_newdoubt', 0)
       commit('set_newtougao', 0)
 
