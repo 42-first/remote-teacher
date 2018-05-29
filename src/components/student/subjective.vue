@@ -368,6 +368,8 @@
                   this.imageURL = result.pics[0].pic;
                   this.imageThumbURL = result.pics[0].thumb;
                 }
+
+                this.result = result;
               }
 
               // 未进组提示
