@@ -376,18 +376,6 @@
               // 未进组提示
               if(noTeam) {
                 this.noTeam = true;
-                let msgOptions = {
-                  confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
-                  cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
-                };
-                let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
-                let message = this.$i18n && this.$i18n.t('team.tempteamtip');
-
-                this.$messagebox.alert(message, title, msgOptions).
-                then( action => {
-                  if(action === 'confirm') {
-                  }
-                });
               }
             }
           });
@@ -988,7 +976,24 @@
 
         if(this.sendStatus === 2) {
           if(this.answerType === 1 && !this.isEdit) {
-            this.getTeamResult(this.summary.problemID);
+            // 是否进组
+            if(this.noTeam) {
+              let msgOptions = {
+                confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
+                cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+              };
+              let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
+              let message = this.$i18n && this.$i18n.t('team.tempteamtip');
+
+              this.$messagebox.confirm(message, title, msgOptions).
+              then( action => {
+                if(action === 'confirm') {
+                  this.sendSubjective();
+                }
+              });
+            } else {
+              this.getTeamResult(this.summary.problemID);
+            }
           } else {
             this.sendSubjective();
           }
