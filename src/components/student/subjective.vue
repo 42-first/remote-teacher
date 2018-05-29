@@ -84,9 +84,10 @@
       </div>
 
       <!-- 小组提示 -->
-      <div class="team__tip">
+      <div class="team__tip" v-show="answerType">
         <span class="f18 yellow">*</span>
-        <p class="f14 c9b">{{ $t('team.groupansweredtip') }}</p>
+        <p class="f14 c9b" v-if="noTeam">当前题目为小组作答，您还没有进组</p>
+        <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
       <!-- 提交按钮 -->
@@ -382,7 +383,7 @@
                 let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
                 let message = this.$i18n && this.$i18n.t('team.tempteamtip');
 
-                this.$messagebox.confirm(message, title, msgOptions).
+                this.$messagebox.alert(message, title, msgOptions).
                 then( action => {
                   if(action === 'confirm') {
                   }
@@ -1422,7 +1423,7 @@
 
   .team__tip {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     margin-top: -1.066667rem;
     padding: 0 0.533333rem 0.8rem;
