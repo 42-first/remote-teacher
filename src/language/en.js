@@ -134,6 +134,7 @@ let pages = {
   "RANDOM_PICK": "Random Roll Call: {0}{1}",
   "SHOW_FINISH": "End Show",
   "QUIZ_FINISH": "The quiz has been collected.",
+  "FREE_GROUP_CANCEL": "老师取消了自由分组",
 
   // 个人信息完善
   "merealname": "Name",

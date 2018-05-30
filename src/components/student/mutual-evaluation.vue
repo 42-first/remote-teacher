@@ -113,14 +113,13 @@
     mixins: [],
     methods: {
       /*
-       * @method 获取主观题分数
-       * @param 接口有变更 增加了个人作答还是小组作答信息
+       * @method 获取互评的详情
+       * @param reviewID 互评ID
        */
-      getSubjective(spid) {
-        let URL = API.student.GET_SUBJECTIVE;
+      getGroupReview(reviewID) {
+        let URL = API.student.GET_GROUP_REVIEW;
         let param = {
-          'lesson_id': this.lessonID,
-          'problem_result_id': spid
+          'group_review_id': reviewID
         };
 
         return request.get(URL, param)
@@ -190,8 +189,7 @@
       }, 20)
 
       if(this.summary) {
-        this.title = this.$parent.title;
-        this.getSubjective(this.summary.spid);
+        this.getGroupReview(this.summary.spid);
       } else {
         // this.$router.back();
       }

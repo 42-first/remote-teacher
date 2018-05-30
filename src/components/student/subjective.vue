@@ -371,6 +371,7 @@
                 }
 
                 this.result = result;
+                this.ispreview = true;
               }
 
               // 未进组提示
