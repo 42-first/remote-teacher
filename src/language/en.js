@@ -372,6 +372,11 @@ let pages = {
 
     "teamhasanswer": "已有人提交答案",
     "teamanswercover": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
+    "answertype_person": "个人作答",
+    "answertype_group": "小组作答",
+    "creategroup": "创建分组",
+    "nogroup": "暂无分组，可将学生分组以小组形式作答",
+    "chooseteam": "选择分组",
   },
 
   // 图片国际化

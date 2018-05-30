@@ -24,8 +24,8 @@
 		<template v-else>
 			<section class="mask-content problemtime-box shortanswer-mask">
 				<div class="tab-box" v-show="!isYanshi">
-	        <v-touch :class="['tab','f20', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">个人作答</v-touch>
-	        <v-touch :class="['tab','f20', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">小组作答</v-touch>
+	        <v-touch :class="['tab','f20', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
+	        <v-touch :class="['tab','f20', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
 	      </div>
 	      <div class="teams-info" v-if="activeTab == 2">
 	        <template v-if="teams.length">
@@ -33,11 +33,11 @@
 	            <p class="team-name f18">{{teams[selectIndex].value}}</p>
 	            <i class="iconfont icon-dakai f20"></i>
 	          </v-touch>
-	          <v-touch class="create-team f17" v-on:tap="handleCreatGroup">创建分组</v-touch>
+	          <v-touch class="create-team f17" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
 	        </template>
 	        <template v-else>
-	          <v-touch class="create-team noteams f17" v-on:tap="handleCreatGroup">创建分组</v-touch>
-	          <p class="f15">暂无分组，可将学生分组以小组形式作答</p>
+	          <v-touch class="create-team noteams f17" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
+	          <p class="f15"><!-- 暂无分组，可将学生分组以小组形式作答 -->{{$t('team.nogroup')}}</p>
 	        </template>
 	      </div>
 	      <div class="block" :class="{'personal': activeTab == 1 || isYanshi, 'hasteams': activeTab == 2 && !isYanshi}">
@@ -50,7 +50,7 @@
 	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(900)">15{{ $t('min') }}</v-touch>
 	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(1200)">20{{ $t('min') }}</v-touch>
 	      	</div>
-	        <v-touch class="btn higher_btn f17" v-on:tap="chooseProblemDuration(-1)">不限时发送</v-touch>
+	        <v-touch class="btn higher_btn f17" v-on:tap="chooseProblemDuration(-1)">{{$t('notimelimit')}}<!-- 不限时发送 --></v-touch>
 	      </div>
 	    </section>
 		</template>
@@ -58,9 +58,9 @@
 		<section class="picker-box" v-show="showPicker && teams.length">
 			<template >
 				<div class="picker-bar">
-					<v-touch class="picker-btn f16 picker-cancel" v-on:tap="handlepickerclosed">取消</v-touch>
-	        <span class="picker-title f14">选择分组</span>
-	        <v-touch class="picker-btn f16 picker-confirm" v-on:tap="handlepickerConfirm">确定</v-touch>
+					<v-touch class="picker-btn f16 picker-cancel" v-on:tap="handlepickerclosed">{{$t('cancel')}}<!-- 取消 --></v-touch>
+	        <span class="picker-title f14">{{$t('team.chooseteam')}}<!-- 选择分组 --></span>
+	        <v-touch class="picker-btn f16 picker-confirm" v-on:tap="handlepickerConfirm">{{$t('confirm')}}<!-- 确定 --></v-touch>
 				</div>
 	      <mt-picker :slots="slots" value-key="value" :item-height="height" @change="onValuesChange"></mt-picker>
 			</template>
