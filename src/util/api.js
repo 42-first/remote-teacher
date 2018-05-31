@@ -53,6 +53,12 @@ if (process.env.NODE_ENV === 'production') {
             'GET_GROUP_STATUS': '/v/lesson/student_group_subj_problem_status/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
+            // (学生端)获取互评的详情
+            'GET_GROUP_REVIEW': '/v/lesson/get_problem_group_review_detail/',
+            // 查看单个主观题答案
+            'GET_PROBLEM_RESULT': '/v/lesson/subjective_problem_result_info',
+            // (学生端)互评打分
+            'SUBMIT_GROUP_REVIEW': '/v/lesson/submit_group_review_score/',
 
         },
 
@@ -117,6 +123,12 @@ if (process.env.NODE_ENV === 'production') {
             'GET_GROUP_STATUS': 'http://apimock.xuetangx.com/mock/115/v/lesson/student_group_subj_problem_status/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': 'http://apimock.xuetangx.com/mock/115/group/student/get_team_detail/',
+            // (学生端)获取互评的详情
+            'GET_GROUP_REVIEW': 'http://apimock.xuetangx.com/mock/115/v/lesson/get_problem_group_review_detail/',
+            // 查看单个主观题答案
+            'GET_PROBLEM_RESULT': 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_result_info',
+            // (学生端)互评打分
+            'SUBMIT_GROUP_REVIEW': 'http://apimock.xuetangx.com/mock/115/v/lesson/submit_group_review_score/',
         },
 
         /*------------------*\

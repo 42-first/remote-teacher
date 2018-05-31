@@ -133,6 +133,7 @@ let pages = {
   "RANDOM_PICK": "随机点名选中：{0}{1}",
   "SHOW_FINISH": "幻灯片 {0} 结束放映",
   "QUIZ_FINISH": "试卷 {0} 已收卷",
+  "FREE_GROUP_CANCEL": "老师取消了自由分组",
 
   // 个人信息完善
   "merealname": '真实姓名',
