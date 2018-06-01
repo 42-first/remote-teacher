@@ -331,7 +331,7 @@ var mixin = {
           case 'cancelgroup':
             item = msg['event'];
             this.addMessage({ type: 1, message: item['title'], event: item });
-            this.cancelGroup({ type: 8, groupid: item['groupid'], event: item });
+            this.cancelGroup({ type: 8, groupid: msg['groupid'], event: item });
 
             break;
 

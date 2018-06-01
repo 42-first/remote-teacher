@@ -135,7 +135,7 @@ let pages = {
   "SHOW_FINISH": "End Show",
   "QUIZ_FINISH": "The quiz has been collected.",
   "FREE_GROUP_CANCEL": "Free grouping has been cancelled",
-  "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
+  "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
 
   // 个人信息完善
   "merealname": "Name",
