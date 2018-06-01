@@ -3,13 +3,13 @@
   "msg": "",
   "data":{
     "user":{
-        "user_id": 50018,
+        "user_id": 585,
         "avatar": "http://wx.qlogo.cn/mmopen/OUicWJdJoz3H5rMVEWUH4mfJOIiaMARSg3INxRdqZMySdrMdj0c6ebZQfjFAflxjbxpvzs9RPeGcw9gXiaYj1V9Qib2hRQibwUiavC/64",
-        "user_auth": "e917d440-49f9-4c92-b7aa-e14b6ed343fa"
+        "user_auth": "cb53bb5b-b9b4-496a-ab2f-bf948619d8f7"
      },
      "lesson":{
         "invite_code": "UGZMS",
-        "user_auth": "f61177e8-84aa-4ca6-b6ca-57e2776a04a0"
+        "user_auth": "cb53bb5b-b9b4-496a-ab2f-bf948619d8f7"
      },
      "classroom":{
          "classroomid": 2409
