@@ -51,6 +51,8 @@
         isSummoned: false,
         group_review_proportion: 100,
         review_declaration: '',
+        rg_ascWords: /[\u0020-\u007E\n]/g,
+        maxLength: 100,
       }
     },
     created () {
@@ -69,6 +71,13 @@
     computed: {
       teacher_score_proportion() {
         return 100 - this.group_review_proportion
+      },
+    },
+    watch: {
+      review_declaration() {
+        if(this.getLength(this.review_declaration) >= this.maxLength){
+          this.review_declaration =  this.getText(this.review_declaration)
+        }
       }
     },
     methods: {
@@ -94,10 +103,7 @@
         // self.errorInfo = ''
 
         self.isHupingPanelHidden = true
-        clearTimeout(timer2)
-        timer2 = setTimeout(() => {
-          self.isSummoned = false
-        }, 400)
+        self.isSummoned = false
       },
 
       /*
@@ -129,6 +135,32 @@
       focusText () {
         let self = this
       },
+      /**
+       * 获取字节长度
+       */
+      getLength(text) {
+        var rg_sideSN = /^[\s\n]+|[\s\n]+$/g;
+        var cleanValue = text.replace(rg_sideSN, "");
+        var ascWord = cleanValue.match(this.rg_ascWords);
+        return cleanValue.length - (ascWord ? parseInt(ascWord.length / 2 + 0.5) : 0);
+      },
+      /**
+       * 截取文本内容函数
+       */
+       getText(text) {
+         var returnValue = '';
+         var byteValLen = 0;
+         for (var i = 0; i < text.length; i++) {
+           if (text[i].match(this.rg_ascWords) != null)
+             byteValLen += 0.5;
+           else
+             byteValLen += 1;
+           if (byteValLen > this.maxLength)
+             break;
+           returnValue += text[i];
+         }
+         return returnValue;
+       },
     }
   }
 </script>

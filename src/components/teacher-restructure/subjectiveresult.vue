@@ -883,15 +883,24 @@
 	     */
 	    initScore (answerid, studentScore, scoreTotal, index, remark) {
 	      let self = this
-
+				let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid;
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
+
 
         // 防止用户频繁点击
         clearTimeout(scoreTapTimer)
         scoreTapTimer = setTimeout(() => {
           self.scoringIndex = index
-          self.$refs.StarPanel.$emit('enter', ...arguments)
+					return request.get(url)
+	          .then(jsonData => {
+	            if (jsonData.success) {
+	              self.$refs.StarPanel.$emit('enter', answerid, jsonData.data.teacher_score, jsonData.data.group_review_score, index, remark)
+	            }
+	          }).catch(error => {
+	            console.error('error', error)
+	          })
+          // self.$refs.StarPanel.$emit('enter', ...arguments)
         }, 100)
 	    },
 	    /**
@@ -1200,6 +1209,7 @@
 
 	  .gap {
       height: .133333rem;
+			background: #f8f8f8;
     }
 
 		/* 主观题内容区 */
