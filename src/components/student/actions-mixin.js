@@ -514,6 +514,10 @@ var actionsMixin = {
         return item.type === 8 && item.groupid === data.groupid && data.isFetch;
       })
 
+      if(oGroup && oGroup.deleted) {
+        return this;
+      }
+
       let teamid = data.teamid || oGroup && oGroup.team_id;
       let groupType = data.cat;
       let href = '';
@@ -533,6 +537,7 @@ var actionsMixin = {
         status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
         isComplete: teamid ? true : false
       })
+
 
       // 消息box弹框
       data.isPopup && (this.msgBoxs = [data]);
