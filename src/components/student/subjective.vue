@@ -33,7 +33,7 @@
 
       <!-- 小组作答 显示 未进组不显示小组详情 -->
       <section class="team__intro" v-if="team && !noTeam">
-        <p class="f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
+        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
         <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
       </section>
 
@@ -1425,6 +1425,10 @@
     height: 1.733333rem;
     line-height: 1.733333rem;
     background: #fff;
+
+    .team__intro--name {
+      flex: 1;
+    }
   }
 
   .team__tip {
