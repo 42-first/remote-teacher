@@ -127,7 +127,7 @@
             if(res && res.data) {
               let data = res.data;
 
-              this.result = data;
+              this.review = data;
 
               return data;
             }

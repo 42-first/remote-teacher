@@ -522,6 +522,8 @@ var actionsMixin = {
         href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
       } else if(groupType === 'free') {
         href = `/team/join/${data.groupid}?lessonid=${lessonID}`;
+      } else {
+        href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
       }
 
       Object.assign(data, {
