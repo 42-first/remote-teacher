@@ -134,6 +134,7 @@ let pages = {
   "SHOW_FINISH": "幻灯片 {0} 结束放映",
   "QUIZ_FINISH": "试卷 {0} 已收卷",
   "FREE_GROUP_CANCEL": "老师取消了自由分组",
+  "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
 
   // 个人信息完善
   "merealname": '真实姓名',
@@ -364,7 +365,7 @@ let pages = {
     "enterpassword": "输入口令",
     "groupanswered": "小组作答：",
     "info": "详情",
-    "groupansweredtip": "本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再做作答，每人只有一次作答机会",
+    "groupansweredtip": "本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再作答，每人只有一次作答机会",
     "hassubmitted": "已有人提交答案",
     "coveragetip": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
     "noteam": "未进组",
