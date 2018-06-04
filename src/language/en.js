@@ -342,6 +342,13 @@ let pages = {
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
   "weishezhixuehao": "No Student ID",
+  "set": "set",
+  "studentsVisible": "Visible to Students",
+  "visibleAll": "All",
+  "visibleStu": "Taught",
+  "areUV": "Are you sure to show “{text}” slides to students?",
+  "nextDefault": "Remember this option",
+  "setSuc": "OK",
 
   // 引导页
   guide: {

@@ -341,7 +341,13 @@ let pages = {
   "qiandaoafterfix": '',
   "weiqiandaoafterfix": "",
   "weishezhixuehao": "未设置学号",
-  
+  "set": "设置",
+  "studentsVisible": "学生可见",
+  "visibleAll": "全部课件",
+  "visibleStu": "课上讲解的",
+  "areUV": "确定学生可见”{text}”吗?",
+  "nextDefault": "下次授课默认使用该选择",
+  "setSuc": "设置成功",
 
 
   // 引导页
