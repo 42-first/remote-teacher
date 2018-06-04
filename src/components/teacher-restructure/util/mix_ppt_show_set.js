@@ -49,19 +49,19 @@ var mixin = {
         let pickConfirm = this.picker.confirmEl
         pickChoose.style.backgroundColor = '#f8f8f8'
         pickChoose.querySelector('.picker-title').style.color = '#9b9b9b'
-        pickChoose.querySelector('.picker-title').style.fontSize = '14px'
+        pickChoose.querySelector('.picker-title').style.fontSize = '0.374rem'
         pickChoose.querySelector('.picker-title').style.fontWeight = 'normal'
-        pickChoose.style.height = '46px'
-        pickCancel.style.paddingLeft = '16px'
+        pickChoose.style.height = '1.226rem'
+        pickCancel.style.paddingLeft = '0.426rem'
         pickCancel.style.color = '#333'
-        pickCancel.style.fontSize = '16px'
+        pickCancel.style.fontSize = '0.426rem'
         pickConfirm.style.color = '#639ef4'
-        pickConfirm.style.paddingRight = '16px'
-        pickConfirm.style.fontSize = '16px'
+        pickConfirm.style.paddingRight = '0.426rem'
+        pickConfirm.style.fontSize = '0.426rem'
         pickCancel.style.top = pickConfirm.style.top = 0
         $(this.picker.pickerEl).find('h1.picker-title').css({
           'overflow': 'hidden',
-          'padding-top': '13px',
+          'padding-top': '0.374rem',
           'line-height': 'normal'
         })
       }
