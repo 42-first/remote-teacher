@@ -1428,6 +1428,7 @@
 
     .team__intro--name {
       flex: 1;
+      text-align: left;
     }
   }
 
