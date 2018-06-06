@@ -44,6 +44,12 @@
         <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
       </v-touch>
 		</div>
+
+    <!-- 新功能提示 -->
+    <div class="tips" v-if="newToolBar">
+      您可以设置学生课后查看课件的范围啦！
+      <i class="iconfont icon-shiti_guanbitouping" @click="closeTips"></i>
+    </div>
 	</div>
 </template>
 
@@ -66,6 +72,7 @@
         'socket',
         'newdoubt',
         'newtougao',
+        'newToolBar'
       ])
     },
     created () {
@@ -75,6 +82,9 @@
       self.$on('hideToolbarMore', function () {
         self.isToolbarMoreBoxHidden = true
       })
+      // 临时
+      let newToolBar = !localStorage.getItem('newToolBar')
+      this.$store.commit('set_newToolBar', newToolBar)
     },
     methods: {
       /**
@@ -165,7 +175,12 @@
         self.isToolbarMoreBoxHidden = true
       },
       goSet () {
-        this.$emit('stateSet')
+        this.$emit('stateSet', 1)
+      },
+    //  关闭新功能提示tips
+      closeTips () {
+        this.$store.commit('set_newToolBar', false)
+        localStorage.setItem('newToolBar', 1)
       }
     }
   }
@@ -264,6 +279,26 @@
       &:last-child {
         border: 0;
       }
+    }
+  }
+
+  /* 新功能提示 */
+  .tips{
+    height: 1.067rem;
+    line-height: 1.067rem;
+    padding: 0 0.4rem;
+    color: #fff;
+    border-radius: 0.5333rem;
+    background-color: rgba(0,0,0,1);
+    position: absolute;
+    top: -1.1rem;
+    left: 50%;
+    margin-left: -40%;
+    overflow: hidden;
+    font-size: 0.373rem;
+    .iconfont{
+      font-size: 0.764rem;
+      vertical-align: middle;
     }
   }
 </style>

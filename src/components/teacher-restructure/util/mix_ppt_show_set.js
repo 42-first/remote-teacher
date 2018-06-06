@@ -47,11 +47,29 @@ var mixin = {
         let pickChoose = this.picker.pickerEl.querySelector('.picker-choose')
         let pickCancel = this.picker.cancelEl
         let pickConfirm = this.picker.confirmEl
+        console.log(this.picker)
+        this.picker.panelEl.style.height = '4.8rem'
+        $(this.picker.wheelEl).css({
+          height: '2.6rem',
+          fontSize: '0.56rem'
+        })
+        $(this.picker.wheelEl).find('.wheel-scroll').css({
+          'margin-top': '0.9rem',
+          'line-height': '0.96rem'
+        })
+        $(this.picker.wheelEl).find('.wheel-item').css({
+          'height': '0.96rem'
+        })
+        pickCancel.style.padding = pickConfirm.style.padding = 0
+        pickCancel.style.height = pickConfirm.style.height = '100%'
         pickChoose.style.backgroundColor = '#f8f8f8'
         pickChoose.querySelector('.picker-title').style.color = '#9b9b9b'
         pickChoose.querySelector('.picker-title').style.fontSize = '0.374rem'
         pickChoose.querySelector('.picker-title').style.fontWeight = 'normal'
+        pickChoose.querySelector('.picker-title').style.height = '100%'
+        pickChoose.querySelector('.picker-title').style.lineHeight = '1.226rem'
         pickChoose.style.height = '1.226rem'
+        pickChoose.style.lineHeight = '1.226rem'
         pickCancel.style.paddingLeft = '0.426rem'
         pickCancel.style.color = '#333'
         pickCancel.style.fontSize = '0.426rem'

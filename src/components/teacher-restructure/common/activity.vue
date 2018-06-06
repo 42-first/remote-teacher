@@ -68,6 +68,7 @@
       :active-index="2"
       @goHome="goHome"
       @showThumbnail="showThumbnail"
+      @stateSet="stateSetFn"
     ></Toolbar>
 
 
@@ -148,6 +149,10 @@
       showThumbnail () {
         this.$emit('showThumbnail')
       },
+      // 设置
+      stateSetFn () {
+        this.$emit('stateSet')
+      }
     }
   }
 </script>

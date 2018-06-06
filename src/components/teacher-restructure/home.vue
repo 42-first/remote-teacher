@@ -61,7 +61,7 @@
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
-
+          @stateSet="stateSetFn"
           :problem-type="problemType"
           :card-width="cardWidth"
           :card-height="cardHeight"
@@ -102,7 +102,9 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
       @guideDelayNext="guideDelayNext"
     ></GuideDelay>
-    <state-set id="stateSet" v-show="stateSet"></state-set>
+    <state-set id="stateSet" v-show="stateSet" @goHome="goHome"
+               @showThumbnail="showThumbnail"
+               @showActivity="showActivity"></state-set>
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
 
@@ -186,7 +188,6 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
 	      cardWidth: 750,												// 大json中的ppt原始宽度
 	      cardHeight: 540,												// 大json中的ppt原始高度
-      stateSet: !1
 	    }
 	  },
 	  computed: {
@@ -229,10 +230,10 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
         'isPubCheckProblemBtnHidden',
         'isProblemPublished',
 
-
         'msgMaskTpl',
         'toastCtrlMaskTpl',
-        'initiativeCtrlMaskTpl'
+        'initiativeCtrlMaskTpl',
+        'stateSet'
       ])
 	  },
 	  components: {
@@ -343,8 +344,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	        } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
 	          op = opAction.isSwipeDown ? 'prev' : 'next'
 	        }
-
-	        self.sendSlideOp (op)
+            self.sendSlideOp (op)
 	      })
 	    },
 	    /**
@@ -391,13 +391,13 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	      let self = this
 	      let url = API.userinfo
 
-	      return request.get(url,{'lesson_id': self.lessonid})
+	      return request.get(url, {'lesson_id': self.lessonid})
 	        .then(jsonData => {
-	        	window.USERID = jsonData.data.user.user_id
-	        	self.$store.dispatch('saveUserInfo', jsonData.data)
+          window.USERID = jsonData.data.user.user_id
+          self.$store.dispatch('saveUserInfo', jsonData.data)
 	        })
 	        .catch(() => {
-	        	console.error('获取用户信息失败')
+          console.error('获取用户信息失败')
 	        })
 	    },
 	    /**
@@ -488,18 +488,22 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	     */
 	    showThumbnail () {
 	      let self = this
-
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Thumbnail')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
-
+      self.$store.commit('set_stateSet', false)
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask.$emit('Thumbnail')
 	      })
 	    },
     // 点开设置
     stateSetFn () {
+      this.$store.commit('set_stateSet', true)
+      this.$store.commit('set_isInitiativeCtrlMaskHidden', true)
+      this.$store.commit('set_isToastCtrlMaskHidden', true)
+      this.$store.commit('set_isMsgMaskHidden', true)
+      // this.$store.commit('set_isEnterEnded', false)
+      this.$refs.Toolbar.$emit('hideToolbarMore')
     },
 	    /**
 	     * 点开 课堂动态 按钮
@@ -510,7 +514,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
+      self.$store.commit('set_stateSet', false)
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
@@ -525,6 +529,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
 	      self.$store.commit('set_initiativeCtrlMaskTpl', '')
+      self.$store.commit('set_stateSet', false)
 	    },
 	    /**
 	     * 轮询获取缩略图页 不懂 等标志的信息

@@ -9,6 +9,7 @@
       </span>
       <div class="icon-span"><i class="iconfont icon-kejiankejianqiehuan color63"></i></div>
     </div>
+    <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar>
   </div>
 </template>
 
@@ -16,6 +17,8 @@
   import axios from 'axios'
   import {mixin} from '../util/mix_ppt_show_set'
   import MessageBoxMin from './messagebox.vue'
+  // 工具栏
+  import Toolbar from './toolbar'
 
   export default {
     name: 'StateSet',
@@ -26,7 +29,8 @@
     },
     mixins: [mixin],
     components: {
-      MessageBoxMin
+      MessageBoxMin,
+      Toolbar
     },
     created () {
       this.init()
@@ -50,6 +54,32 @@
           get_config: this.show_presentation
         })
       },
+      /**
+       * 点击 遥控器 按钮
+       * 一般是用于主动关闭缩略图蒙版
+       *
+       */
+      goHome () {
+        this.$emit('goHome')
+      },
+      /**
+       * 点击 缩略图 按钮
+       *
+       */
+      showThumbnail () {
+        this.$emit('showThumbnail')
+      },
+      /**
+       * 点击 课堂动态 按钮
+       *
+       */
+      showActivity () {
+        this.$emit('showActivity')
+      },
+      // 设置
+      stateSetFn () {
+        this.$emit('stateSet')
+      },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {
           return 'http://apimock.xuetangx.com/mock/115/' + url
@@ -65,6 +95,15 @@
     background-color: #F6F7F8;
     height: 100%;
     overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 4;
+    .state-set-tollbar{
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+    }
     .ppt-show-set{
       margin-top: 0.267rem;
       font-size: 0.373rem;
