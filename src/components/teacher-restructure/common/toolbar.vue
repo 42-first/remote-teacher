@@ -190,6 +190,7 @@
   @import "~@/style/_variables";
   .toolbar-root {
     position: relative;
+    color: #9b9b9b;
   }
 
   .rc-toolbar {
