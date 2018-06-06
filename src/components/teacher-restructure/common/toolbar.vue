@@ -39,6 +39,10 @@
         <i class="iconfont icon-ykq-tuichufangying f24"></i>
         <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
       </v-touch>
+      <v-touch class="more-item" v-on:tap="goSet">
+        <i class="iconfont icon-ykq-yaokongqishezhi f24"></i>
+        <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
+      </v-touch>
 		</div>
 	</div>
 </template>
@@ -160,6 +164,9 @@
         // self.$emit('update:isToolbarMoreBoxHidden', true)
         self.isToolbarMoreBoxHidden = true
       },
+      goSet () {
+        this.$emit('stateSet')
+      }
     }
   }
 </script>
@@ -188,7 +195,7 @@
         width: 100%;
         text-align: center;
       }
-      
+
       .icondesc {
         margin-top: -0.133333rem;
       }
@@ -229,7 +236,7 @@
     right: 0.133333rem;
     bottom: 2.026667rem;
     width: 3.6rem;
-    height: 4.5rem;
+    /*height: 4.5rem;*/
 
     background: #333333;
     border-radius: 10px;

@@ -43,6 +43,7 @@
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
+        @stateSet="stateSetFn"
       ></Toolbar>
     </div>
 
@@ -101,7 +102,7 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
       @guideDelayNext="guideDelayNext"
     ></GuideDelay>
-
+    <state-set id="stateSet" v-show="stateSet"></state-set>
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
 
@@ -153,7 +154,8 @@
 	import socketService from './util/socket-service'
 	// 课堂试题相关
 	import problemRelated from './util/problem-related'
-
+  // 设置面板
+import stateSet from '@/components/teacher-restructure/common/stateSet'
 	let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
 	let pollingTougaoTimer = null          // 轮询获取投稿数的信息
 	let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
@@ -182,8 +184,9 @@
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
-	      cardWidth: 750,													// 大json中的ppt原始宽度
+	      cardWidth: 750,												// 大json中的ppt原始宽度
 	      cardHeight: 540,												// 大json中的ppt原始高度
+      stateSet: !1
 	    }
 	  },
 	  computed: {
@@ -242,14 +245,15 @@
 	    Qrcode,
 	    Thumbnail,
 	    Activity,
-	    change_lang_dialog
+	    change_lang_dialog,
+    stateSet
 	  },
 	  created () {
 	    this.init()
 	  },
 	  beforeDestroy () {
-	  	clearInterval(pollingPresentationTagTimer)
-	    clearInterval(pollingTougaoTimer)
+    clearInterval(pollingPresentationTagTimer)
+    clearInterval(pollingTougaoTimer)
 	  },
 	  mounted () {
 	    let self = this
@@ -494,6 +498,9 @@
 	        self.$refs.InitiativeCtrlMask.$emit('Thumbnail')
 	      })
 	    },
+    // 点开设置
+    stateSetFn () {
+    },
 	    /**
 	     * 点开 课堂动态 按钮
 	     *

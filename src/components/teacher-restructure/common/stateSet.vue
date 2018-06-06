@@ -14,8 +14,8 @@
 
 <script>
   import axios from 'axios'
-  import {mixin} from './util/mix_ppt_show_set'
-  import MessageBoxMin from './common/messagebox.vue'
+  import {mixin} from '../util/mix_ppt_show_set'
+  import MessageBoxMin from './messagebox.vue'
 
   export default {
     name: 'StateSet',

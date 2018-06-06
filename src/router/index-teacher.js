@@ -15,7 +15,7 @@ const Paper = () => import('@/components/teacher-restructure/paper2')
 const Paperfolder = () => import('@/components/teacher-restructure/paper-folder')
 const Danmu = () => import('@/components/teacher-restructure/danmu')
 const Submission = () => import('@/components/teacher-restructure/submission')
-const StateSet = () => import('@/components/teacher-restructure/stateSet')
+// const StateSet = () => import('@/components/teacher-restructure/stateSet')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
 
@@ -100,11 +100,11 @@ const router = new Router({
       component: Submission
     },
     // 课堂动态设置
-    {
-      path: '/stateSet/xxx',
-      name: 'stateSet',
-      component: StateSet
-    },
+    // {
+    //   path: '/stateSet/xxx',
+    //   name: 'stateSet',
+    //   component: StateSet
+    // },
     {
       path: '/quizresult/:quizid',
       name: 'quizresult',

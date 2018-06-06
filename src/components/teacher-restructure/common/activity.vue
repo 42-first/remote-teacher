@@ -49,18 +49,19 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link :to="{name: 'stateSet'}" class="activity-item f18 J_ga" data-category="18" data-label="课堂动态页">
-      <div>
-        <div class="iconbox" style="background: #F6BC4E;">
-          <i class="iconfont icon-yaokongqishezhi f21"></i>
-        </div>
-        {{ $t('set') }}
-      </div>
-      <div class="dakai-box">
-        <span class="info f12">new</span>
-        <i class="iconfont icon-dakai f21"></i>
-      </div>
-    </router-link>
+    <!-- 设置不放在这里了 -->
+    <!--<router-link :to="{name: 'stateSet'}" class="activity-item f18 J_ga" data-category="18" data-label="课堂动态页">-->
+      <!--<div>-->
+        <!--<div class="iconbox" style="background: #F6BC4E;">-->
+          <!--<i class="iconfont icon-yaokongqishezhi f21"></i>-->
+        <!--</div>-->
+        <!--{{ $t('set') }}-->
+      <!--</div>-->
+      <!--<div class="dakai-box">-->
+        <!--<span class="info f12">new</span>-->
+        <!--<i class="iconfont icon-dakai f21"></i>-->
+      <!--</div>-->
+    <!--</router-link>-->
     <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
