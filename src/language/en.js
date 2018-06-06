@@ -361,7 +361,7 @@ let pages = {
     "mygroup": "My Grouping",
     "randomized": "Random grouping is launched",
     "freegrouping": "Free grouping is launched",
-    "viewresults": "查看结果",
+    "viewresults": "check",
     "enterpassword": "Enter a password",
     "groupanswered": "Group answer:",
     "info": "Detail",
