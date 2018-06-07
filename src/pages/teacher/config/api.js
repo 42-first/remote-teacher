@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
     end_lesson:                         '/static/lesson/mock/end_lesson.json',                 // 主动结束课程
     subjective_problem_result_list:     'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_result_list',     // 主观题答案列表
     subjective_problem_teacher_score:   '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分（打星星）
-    subjective_problem_teacher_scorev2: '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分
+    subjective_problem_teacher_scorev2: 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_teacher_scorev2/',   // 主观题老师给答案打分
 
     //获取用户当前语言设置
     get_current_language: "http://apimock.xuetangx.com/mock/115/v/user/get_current_language",

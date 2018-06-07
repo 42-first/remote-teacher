@@ -1,7 +1,7 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
   <div id="scoreDom" class="mask" :class="{'animateMobileTextIn': !isPanelHidden, 'animateMobileTextOut': isPanelHidden, 'none': !isSummoned}">
-    <div :class="['pop', {'pop-up': isTextFocused, 'not-editting': isScored && !isEditting}]">
+    <div :class="['pop', {'pop-up': isTextFocused, 'not-editting': isScored && !isEditting, 'huping': groupReviewScore != -2}]">
       <header>
         <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
         <v-touch class="f16 blue" v-on:tap="toEdit" v-show="isScored && !isEditting">
@@ -13,39 +13,87 @@
           修改
         </div> -->
       </header>
-      
-      <!-- 打分部分 -->
-      <section class="fen-box f16">
-        <p class="hint"><!-- 得分 -->{{ $t('stuscore') }} <span class="f12">
-          <!-- （本题{{scoreTotal}}分） -->
-          {{ $t('totalscore', { num: scoreTotal }) }}
-        </span></p>
-        <div class="score-input f18">
-          <input class="input-place" :placeholder="$t('enterscoretip')" v-show="!isScored || (isScored && isEditting)" type="number" v-model="studentScore" @focus="focusInput" @blur="blurInput"/>
 
-          <!-- placeholder 请输入分值-->
-          <span class="input-place b9" v-show="isScored && !isEditting">{{studentScore}}</span>
-          <label><!-- 分 -->{{$t('stutestscore')}}</label>
-          <div class="error f12">{{errorInfo}}</div>
-        </div>
-      </section>
-      
-      <!-- 评语部分 -->
-      <section class="remark-box f16">
-        <p class="hint"><!-- 评语 -->{{$t('comment')}}</p>
-        <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
-        <!-- placeholder 请输入评语-->
-        <span class="textarea-place b9" v-show="isScored && !isEditting">{{remark}}</span>
-        <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)"><!-- 写的不错 -->{{ $t('good') }}</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)"><!-- 继续加油 -->{{ $t('comeon') }}</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)"><!-- 想法很独特 -->{{ $t('uniqueidea') }}</v-touch>
-          <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(3)"><!-- 小红花 -->{{ $t('excellent') }}</v-touch>
-        </p>
-      </section>
+      <template v-if="!isScored && !isEditting">
+        <!-- 打分部分 -->
+        <section class="fen-box f14">
+          <template v-if="problemGroupReviewId == 0">
+            <p class="hint">本题总分{{scoreTotal}}分</p>
+            <div class="score-input f18">
+              <div class="score-item">
+                <label class="f16">教师评分：</label>
+                <div class="">
+                  <input class="input-place" type="number" v-model="teacherScore" @focus="focusInput" @blur="blurInput('teacherScore')"/>
+                  <span class="f18">分</span>
+                </div>
+                <div class="error f12">{{errorInfo1}}</div>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <p class="hint">
+              本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}%
+            </p>
+            <p class="finally—score f18">最终得分：{{finallyScore}}</p>
+            <div class="score-input f18">
+              <div class="score-item">
+                <label class="f16">教师评分：</label>
+                <div class="">
+                  <input class="input-place" type="number" v-model="teacherScore" @focus="focusInput" @blur="blurInput('teacherScore')"/>
+                  <span class="f18">分</span>
+                </div>
+                <div class="error f12">{{errorInfo1}}</div>
+              </div>
+              <div class="score-item">
+                <label class="f16">互评得分：</label>
+                <div class="">
+                  <input class="input-place" type="number" v-model="groupReviewScore" @focus="focusInput" @blur="blurInput('groupReviewScore')"/>
+                  <span class="f18">分</span>
+                </div>
+                <div class="error f12">{{errorInfo2}}</div>
+              </div>
+            </div>
+          </template>
+        </section>
 
-      <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide"><!-- 提交 -->{{ $t('submit') }}</v-touch>
-      <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting"><!-- 已批改 -->{{ $t('graded') }}</div>
+        <!-- 评语部分 -->
+        <section class="remark-box f16">
+          <textarea class="textarea-place" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
+            <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)"><!-- 写的不错 -->{{ $t('good') }}</v-touch>
+            <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)"><!-- 继续加油 -->{{ $t('comeon') }}</v-touch>
+            <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(2)"><!-- 想法很独特 -->{{ $t('uniqueidea') }}</v-touch>
+            <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(3)"><!-- 小红花 -->{{ $t('excellent') }}</v-touch>
+          </p>
+        </section>
+
+        <v-touch class="commit-btn btn" v-show="!isScored || (isScored && isEditting)" v-on:tap="decide"><!-- 提交 -->{{ $t('submit') }}</v-touch>
+        <div class="commit-btn grey-btn btn" v-show="isScored && !isEditting"><!-- 已批改 -->{{ $t('graded') }}</div>
+      </template>
+      <template v-else>
+        <section class="score-result">
+          <template v-if="problemGroupReviewId == 0">
+            <p class="hint">本题总分{{scoreTotal}}分</p>
+            <p class="defen f16"><span class="f40">{{teacherScore}}</span>分</p>
+          </template>
+          <template v-else>
+            <p class="hint">本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}%</p>
+            <div class="result-info">
+              <div class="defen f16"><span class="f40">{{teacherScore}}</span>分</div>
+              <div class="">
+                <p class="f16">教师评分：{{teacherScore}}</p>
+                <p class="f16">互评得分：{{groupReviewScore}}</p>
+              </div>
+            </div>
+          </template>
+          <div class="gap"></div>
+          <div class="remark-box">
+            <p v-if="remark" class="f17 c333">{{remark}}</p>
+            <p v-else class="f17 c9b">暂无评语</p>
+          </div>
+        </section>
+      </template>
+
     </div>
   </div>
 </template>
@@ -77,11 +125,18 @@
         studentScore: -1,        // 学生当前分数
         scoreTotal: '--',        // 当前题目总分
         answerid: -1,            // 当前正在打分的 answer 的 id
-        errorInfo: '',
+        errorInfo1: '',          // 教师评分错误验证
+        errorInfo2: '',          // 互评评分错误验证
         remark: '',              // 教师评语
         isScored: false,         // 被评分过
         isEditting: false,       // 被评分过，并且点击了修改按钮
         isTextFocused: false,    // 正在输入评语
+        groupReviewScore: -2,    // 互评分数，-1表示没打分, -2表示是个人作答的题目
+        teacherScore: 0,        // 教师评分
+        finallyScore: '--',      // 最终得分
+        teacherProportion: 0,    // 教师评分占比
+        groupReviewProportion: 0,  // 互评占比
+        problemGroupReviewId: 0,   // 小组互评的id
       }
     },
     created () {
@@ -108,16 +163,20 @@
        * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
        */
-      enter (answerid, studentScore = -1, scoreTotal, index, remark) {
+      enter (answerid, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark, problemGroupReviewId) {
         let self = this
 
         self.isPanelHidden = false
         self.isSummoned = true
-        self.isScored = +studentScore !== -1
+        self.isScored = +teacherScore !== -1
 
         self.answerid = answerid
-        self.studentScore = +studentScore === -1 ? '' : +studentScore
+        self.teacherScore = +teacherScore === -1 ? '' : +teacherScore
+        self.groupReviewScore = +groupReviewScore === -2 ? -2 :  (+groupReviewScore === -1) ? '' : +groupReviewScore
         self.scoreTotal = scoreTotal
+        self.groupReviewProportion = groupReviewProportion
+        self.teacherProportion = teacherProportion
+        self.problemGroupReviewId = problemGroupReviewId
         self.remark = remark
       },
       /**
@@ -129,10 +188,9 @@
       leave (evt) {
         let self = this
 
-        self.$el.querySelector('input').blur()
-        self.$el.querySelector('textarea').blur()
-        self.errorInfo = ''
-        
+        self.errorInfo1 = ''
+        self.errorInfo2 = ''
+
         self.isPanelHidden = true
         clearTimeout(timer2)
         timer2 = setTimeout(() => {
@@ -147,8 +205,9 @@
        */
       focusInput () {
         let self = this
-        
-        self.errorInfo = ''
+
+        self.errorInfo1 = ''
+        self.errorInfo2 = ''
         self.isTextFocused = true
       },
       /**
@@ -156,11 +215,11 @@
        *
        * @event bindtap
        */
-      blurInput () {
+      blurInput (score) {
         let self = this
-        
+
         self.isTextFocused = false
-        self.validate()
+        self.validate(score)
       },
       /**
        * 点击评语输入框
@@ -177,8 +236,8 @@
        */
       toEdit () {
         let self = this
-        
-        self.isEditting = true
+
+        self.isScored = false
       },
       /**
        * 点击快捷评语按钮
@@ -188,7 +247,7 @@
        */
       tapRe (idx) {
         let self = this
-        
+
         self.remark += reList[idx]
       },
       /**
@@ -199,13 +258,13 @@
       decide (evt) {
         let self = this
 
-        self.validate() && self.$emit('giveScore', self.answerid, self.studentScore, self.remark)
+        self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark)
       },
       /**
        * 校验输入值是否合法
        *
        */
-      validate () {
+      validate (score) {
         // const errorList = [
         //   '分数超过本题最大分值，请重新输入',
         //   '分数最多保留一位小数，请重新输入',
@@ -215,8 +274,13 @@
 
         let self = this
         // 处理空字符串 输入纯字母会进入这里
-        if (self.studentScore === "") {
-          self.errorInfo = errorList[2]
+        if (self[score] === "") {
+          if(score == 'teacherScore'){
+            self.errorInfo1 = errorList[2]
+          }else {
+            self.errorInfo2 = errorList[2]
+          }
+
           return false;
         }
 
@@ -227,10 +291,14 @@
 
         // 处理 '0a' 'ab' '.' 'a' '0.1a' '0.1a' '0.1.1' '045' 等不合法字符
         // 不能错判 '0.1'
-        let arr = [...self.studentScore]
+        let arr = [...self[score]]
         let len = arr.length
-        if (Number.isNaN(+self.studentScore) || (self.studentScore >= 1 && arr[0] === '0')) {
-          self.errorInfo = errorList[2]
+        if (Number.isNaN(+self[score]) || (self[score] >= 1 && arr[0] === '0')) {
+          if(score == 'teacherScore'){
+            self.errorInfo1 = errorList[2]
+          }else {
+            self.errorInfo2 = errorList[2]
+          }
           return false;
         }
 
@@ -243,25 +311,41 @@
         // Number('01a') // NaN
         // Number('a') // NaN
         // Number('(a%') // 11
-        let num = Number(self.studentScore)
+        let num = Number(self[score])
 
         if (num >= 0) {
             if (num > self.scoreTotal) {
-              self.errorInfo = errorList[0]
+              if(score == 'teacherScore'){
+                self.errorInfo1 = errorList[0]
+              }else {
+                self.errorInfo2 = errorList[0]
+              }
               return false;
             }
             if (Math.floor(num*10) < num*10) {
-              self.errorInfo = errorList[1]
+              if(score == 'teacherScore'){
+                self.errorInfo1 = errorList[1]
+              }else {
+                self.errorInfo2 = errorList[1]
+              }
               return false;
             }
         }else if (num < 0) {
-          self.errorInfo = errorList[3]
+          if(score == 'teacherScore'){
+            self.errorInfo1 = errorList[3]
+          }else {
+            self.errorInfo2 = errorList[3]
+          }
           return false;
         }else {
-          self.errorInfo = errorList[2]
+          if(score == 'teacherScore'){
+            self.errorInfo1 = errorList[2]
+          }else {
+            self.errorInfo2 = errorList[2]
+          }
           return false;
         }
-        self.studentScore = '' + num
+        self[score] = '' + num
         return true
       },
     }
@@ -310,34 +394,66 @@
         padding: 0 0.4rem;
 
         .hint {
-          height: 1.386667rem;
-          line-height: 1.386667rem;
+          height: .4rem;
+          line-height: .4rem;
+          margin: .4rem 0 .8rem;
         }
 
+        .finally—score {
+          height: .506667rem;
+          line-height: .506667rem;
+          margin-bottom: .8rem;
+          color: #FEA300;
+        }
         .score-input{
           width: 100%;
           position: relative;
-          height: 1.6rem;
-          line-height: 1.066667rem;
+          height: 1.746667rem;
+          line-height: 1.746667rem;
           // border-bottom: 1px solid #C8C8C8;
+          display: flex;
+          justify-content: space-between;
 
-          .input-place {
-            display: inline-block;
-            width: 3.7rem;
-            height: 1.066667rem;
-            outline: none;
-            border: 1px solid transparent;
-            border-radius: 0.213333rem;
-            text-align: center;
-            background-color: #F8F8F8;
-            color: #333333;
+          .score-item {
+            height: 100%;
+            div:first-of-type {
+              display: flex;
+              justify-content: space-between;
+              padding: .293333rem .4rem;
+              height: 1.146667rem;
+              box-sizing: border-box;
+              border-radius: 0.213333rem;
+              background: #F8F8F8;
+              margin-top: .133333rem;
+              width: 4rem;
+              align-items: center;
+
+              span {
+                color: #9b9b9b;
+              }
+            }
+            .input-place {
+              display: block;
+              width: 80%;
+              height: 100%;
+              outline: none;
+              border: 1px solid transparent;
+              background-color: #F8F8F8;
+              color: #333333;
+              text-align: left;
+            }
+            label{
+              color: #4A4A4A;
+              height: .453333rem;
+              line-height: .453333rem;
+              display: block;
+            }
+            .b9 {
+              color: #9B9B9B;
+            }
           }
-          label{
-            color: #666666;
-          }
-          .b9 {
-            color: #9B9B9B;
-          }
+
+
         }
         .error{
           color : #ff1010;
@@ -349,6 +465,7 @@
 
       .remark-box {
         padding: 0 0.4rem;
+        margin-top: .8rem;
 
         .hint {
           height: 1.386667rem;
@@ -387,16 +504,97 @@
           }
         }
       }
-      
+
       .commit-btn {
         margin: 0.4rem auto;
-        width: 7.733333rem;
+        width: 5.333333rem;
         height: 1.173333rem;
         line-height: 1.173333rem;
+        border-radius: .76rem;
+        box-shadow: 0 .106667rem .186667rem 0 rgba(80,150,245,.4);
       }
       .grey-btn {
         background-color: #9D9D9D;
       }
+
+      .score-result {
+        padding: 0 0.4rem;
+
+        .hint {
+          height: .4rem;
+          line-height: .4rem;
+          margin: .4rem 0 .8rem;
+        }
+        .defen {
+          color: #FEA300;
+          min-height: 1.093333rem;
+          text-align: center;
+
+          span {
+            display: inline-block;
+          }
+        }
+
+        .result-info {
+          display: flex;
+          justify-content: space-around;
+          height: 1.173333rem;
+          align-items: center;
+          position: relative;
+
+          &::after {
+            position: absolute;
+            content: "";
+            width: 1px;
+            height: 1.066667rem;
+            background: #eee;
+            top: 50%;
+            left: 3.866667rem;
+            transform: translateY(-50%);
+          }
+
+          .defen {
+            color: #FEA300;
+            min-height: 1.093333rem;
+            text-align: center;
+
+            span {
+              display: inline-block;
+            }
+          }
+          p {
+            color: #333;
+            line-height: .453333rem;
+          }
+
+          p:last-of-type {
+            margin-top: .266667rem;
+          }
+        }
+
+        .gap {
+          width: 100%;
+          height: .026667rem;
+          background: #eee;
+          margin-top: .8rem;
+          margin-bottom: .4rem;
+        }
+
+        .remark-box {
+          .c333 {
+            color: #333;
+          }
+
+          .c9b {
+            color: #9b9b9b;
+          }
+        }
+      }
+
+    }
+
+    .huping {
+      height: 13.466667rem;
     }
 
     .pop-up {
@@ -465,5 +663,5 @@
       -webkit-animation-timing-function: ease;
       animation-timing-function: ease;
   }
-  
+
 </style>
