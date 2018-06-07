@@ -349,6 +349,7 @@ let pages = {
   "areUV": "Are you sure to show “{text}” slides to students?",
   "nextDefault": "Remember this option",
   "setSuc": "OK",
+  "hasSubmit": "已提交",
 
   // 引导页
   guide: {

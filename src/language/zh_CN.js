@@ -348,6 +348,7 @@ let pages = {
   "areUV": "确定学生可见”{text}”吗?",
   "nextDefault": "下次授课默认使用该选择",
   "setSuc": "设置成功",
+  "hasSubmit": "已提交",
 
 
   // 引导页

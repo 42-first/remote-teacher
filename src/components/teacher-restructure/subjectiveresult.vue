@@ -51,7 +51,12 @@
             </div>
 
             <div :class="['f18', 'yjy']">
-              {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }}
+              <span>
+                {{ $t('hasSubmit')}}: {{total_num}}/{{class_participant_num}}
+              </span>
+              <span>
+                <i class="iconfont "></i>
+              </span>
             </div>
           </section>
 
@@ -357,15 +362,15 @@
           initTime = +query.tl
         }
 
-        newTime = initTime
+        newTime = 100 //initTime
 
         self.refreshDataList()
-        pollingTimer = setInterval(self.pollingNewItem, 5000)
+        // pollingTimer = setInterval(self.pollingNewItem, 5000)
         // 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
         // 的 handleDuration 中又立即设置了 storage，
         // 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
         self.cleanDurInfoStorage()
-        self.handleDuration()
+        // self.handleDuration()
         self.handlePubSub()
       },
       /**
@@ -983,16 +988,18 @@
 	  position: relative;
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
-	  background: #000000;
+	  background: #f6f7f8;
 
 		/* 上部 */
 	  .upper {
 	  	margin: 0 auto;
 	  	width: 8.8rem;
 	  	height: 4.0rem;
-	  	padding-top: 0.8rem;
-	  	border-bottom: 1px solid #cccccc;
+	  	padding: 0.8rem 0.6rem 0 0.6rem;
+	  	// border-bottom: 1px solid #cccccc;
 	  	text-align: center;
+      width: 100%;
+      background-color: #fff;
 
       .xitixushi {
         display: flex;
@@ -1001,7 +1008,7 @@
         height: 1.866667rem;
         padding: 0 0.3rem;
         background: #212121;
-
+        border-radius: 0.1066667rem;
         .sjd {
           padding-right: 1.333333rem;
           color: #F84F41;
@@ -1048,7 +1055,13 @@
 				vertical-align: middle;
 			}
 			.yjy {
-				padding-top: 0.5rem;
+				margin-top: 0.3466667rem;
+        padding-top: 0.26667rem;
+        line-height: 0.53333rem;
+        color: #9b9b9b;
+        text-align: left;
+        font-size: 0.37333333rem;
+        border-top: solid #aaa 0.013333rem;
 			}
 	  }
 
@@ -1058,7 +1071,7 @@
 
 		/* 主观题内容区 */
 	  .subjective-box {
-	  	margin-top: -1px;
+	  	margin-top: 0.26667rem;
 	  	.hmy {
         margin-top: 2.893333rem;
         text-align: center;
