@@ -799,6 +799,7 @@
     }
     .card {
       width: 100%;
+			background-color: #F6F7F8;
       // max-height: 5.666667rem;
     }
     .img-error {
