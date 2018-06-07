@@ -46,7 +46,7 @@
 		</div>
 
     <!-- 新功能提示 -->
-    <div class="tips" v-if="newToolBar">
+    <div class="tips" v-show="newToolBar && !activeIndex">
       您可以设置学生课后查看课件的范围啦！
       <i class="iconfont icon-shiti_guanbitouping" @click="closeTips"></i>
     </div>
@@ -82,9 +82,8 @@
       self.$on('hideToolbarMore', function () {
         self.isToolbarMoreBoxHidden = true
       })
-      // 临时
       let newToolBar = !localStorage.getItem('newToolBar')
-      this.$store.commit('set_newToolBar', newToolBar)
+        this.$store.commit('set_newToolBar', newToolBar)
     },
     methods: {
       /**

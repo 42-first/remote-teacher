@@ -342,7 +342,7 @@ let pages = {
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
   "weishezhixuehao": "No Student ID",
-  "set": "set",
+  "set": "seting",
   "studentsVisible": "Visible to Students",
   "visibleAll": "All",
   "visibleStu": "Taught",

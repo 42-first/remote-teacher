@@ -166,7 +166,6 @@ const store = new Vuex.Store({
     },
     set_stateSet (state, isstateSet) {
       state.stateSet = isstateSet
-      console.log(state)
     },
     set_isMsgMaskHidden: (state, isMsgMaskHidden) => {
       state.isMsgMaskHidden = isMsgMaskHidden
