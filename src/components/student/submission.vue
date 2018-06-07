@@ -28,7 +28,7 @@
           <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
-          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" src="" alt="" @load="handlelaodImg" @click="handleScaleImage" />
+          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" />
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
@@ -244,6 +244,12 @@
               duration: 3000
             });
 
+            // 帮用户清空上传
+            this.hasImage = false;
+            this.imageURL = '';
+            this.imageThumbURL = '';
+            this.text && (this.sendStatus = 2);
+
             return null;
           });
       },
@@ -315,23 +321,18 @@
         };
 
         // 压缩 浏览器旋转 微信崩溃等问题
+        this.hasImage = true;
+        this.imageThumbURL = '/vue_images/images/loading-3.gif';
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
-            imgEl.src = dataUrl;
+            // imgEl.src = dataUrl;
 
             // 上传图片
             self.uploadImage(dataUrl, fileType);
-            self.hasImage = true;
+            // self.hasImage = true;
           }
         });
 
-        // let reader = new FileReader();
-        // reader.onload = function(e) {
-        //   let data = e.target.result;
-
-        //   self.compress(data, fileType);
-        // };
-        // reader.readAsDataURL(file);
       },
       handlelaodImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
