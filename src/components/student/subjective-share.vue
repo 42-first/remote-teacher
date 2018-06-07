@@ -95,8 +95,6 @@
                 this.avatar = data.users[0].user_avatar;
               }
 
-              this.result = data;
-
               return data;
             }
           });
