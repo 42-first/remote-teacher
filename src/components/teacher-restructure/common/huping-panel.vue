@@ -51,8 +51,6 @@
         isSummoned: false,
         group_review_proportion: 100,
         review_declaration: '',
-        rg_ascWords: /[\u0020-\u007E\n]/g,
-        maxLength: 100,
       }
     },
     created () {
@@ -74,11 +72,14 @@
       },
     },
     watch: {
-      review_declaration() {
-        if(this.getLength(this.review_declaration) >= this.maxLength){
-          this.review_declaration =  this.getText(this.review_declaration)
+      review_declaration(newVal, oldVal) {
+        if(newVal && newVal.length > 100) {
+          let len = this.getLength(newVal);
+          if(len > 100) {
+            this.review_declaration = newVal.substr(0, 100);
+          }
         }
-      }
+      },
     },
     methods: {
       /**
@@ -138,29 +139,19 @@
       /**
        * 获取字节长度
        */
-      getLength(text) {
-        var rg_sideSN = /^[\s\n]+|[\s\n]+$/g;
-        var cleanValue = text.replace(rg_sideSN, "");
-        var ascWord = cleanValue.match(this.rg_ascWords);
-        return cleanValue.length - (ascWord ? parseInt(ascWord.length / 2 + 0.5) : 0);
-      },
-      /**
-       * 截取文本内容函数
-       */
-       getText(text) {
-         var returnValue = '';
-         var byteValLen = 0;
-         for (var i = 0; i < text.length; i++) {
-           if (text[i].match(this.rg_ascWords) != null)
-             byteValLen += 0.5;
-           else
-             byteValLen += 1;
-           if (byteValLen > this.maxLength)
-             break;
-           returnValue += text[i];
+       getLength(str) {
+         let result = 0;
+         let length = str.length;
+         while (length--) {
+           if (/^[\u0000-\u00ff]$/.test(str.charAt(length))) {
+             result += 1;
+           } else {
+             result += 2;
+           }
          }
-         return returnValue;
-       },
+
+         return result;
+       }
     }
   }
 </script>

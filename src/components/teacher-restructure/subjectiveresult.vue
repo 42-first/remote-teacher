@@ -58,7 +58,7 @@
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
 								已答： {{total_num}} / {{team_num}}
 	            </div>
-							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch>
+							<!-- <v-touch  :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch> -->
 						</div>
           </section>
 
@@ -101,7 +101,7 @@
 
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index, item.remark)">
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
@@ -268,6 +268,7 @@
 				currentTeam: '',							 // 当前点击的小组名称
 				problem_answer_type: 0,				 // 个人或小组作答 0:个人  1:小组
 				team_num: '--',								 // 组数+未进组人数
+				problem_group_review_id: 0,		 // 小组互评的id
 	    }
 	  },
 	  computed: {
@@ -876,14 +877,13 @@
 	     *
 	     * @event bindtap
        * @params {Number} answerid 将要打分的主观题答案的id
-       * @params {Number} studentScore 当前分值
        * @params {Number} scoreTotal 总分
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, studentScore, scoreTotal, index, remark) {
+	    initScore (answerid, scoreTotal, index, remark) {
 	      let self = this
-				let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid;
+				let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
 
@@ -895,7 +895,7 @@
 					return request.get(url)
 	          .then(jsonData => {
 	            if (jsonData.success) {
-	              self.$refs.StarPanel.$emit('enter', answerid, jsonData.data.teacher_score, jsonData.data.group_review_score, index, remark)
+	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark, self.problem_group_review_id)
 	            }
 	          }).catch(error => {
 	            console.error('error', error)
@@ -911,10 +911,10 @@
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, score, remark) {
+	    giveScore (answerid, teacherScore, groupReviewScore, remark) {
 	    	let self = this
 
-	    	if (score === -1) {
+	    	if (teacherScore === -1) {
 	    		self.$refs.StarPanel.$emit('leave')
 	    		return;
 	    	}
@@ -923,7 +923,9 @@
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'score': score,
+	        'score': teacherScore,
+					'group_review_score': groupReviewScore,
+					'problem_id': self.problemid,
           remark
 	      }
 
@@ -933,9 +935,16 @@
 	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
 
 	          // 关闭打分页面
-	          console.log(`打过分啦${score}`, self.scoringIndex)
-	          self.dataList[self.scoringIndex].score = +score
-            self.dataList[self.scoringIndex].remark = remark
+	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
+						// if(groupReviewScore == -2){
+						// 	self.dataList[self.scoringIndex].score = +teacherScore
+	          //   self.dataList[self.scoringIndex].remark = remark
+						// }else {
+						// 	self.refreshDataList()
+						// }
+						self.dataList[self.scoringIndex].score = +teacherScore
+	          self.dataList[self.scoringIndex].remark = remark
+
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -1028,10 +1037,16 @@
 	      request.post(url, postData)
 	        .then(jsonData => {
 
+						if(jsonData.success){
+							// 关闭互评页面
+		          console.log('发起互评');
+							self.problem_group_review_id = jsonData.data.problem_group_review_id
+		          self.$refs.HupingPanel.$emit('leaveHuping')
+						}else {
+							let msg = jsonData.msg
+							T_PUBSUB.publish('ykt-msg-toast', msg);
+						}
 
-	          // 关闭互评页面
-	          console.log('发起互评');
-	          self.$refs.HupingPanel.$emit('leaveHuping')
 	        })
 
 

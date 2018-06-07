@@ -43,14 +43,14 @@
 	      <div class="block" :class="{'personal': activeTab == 1 || isYanshi, 'hasteams': activeTab == 2 && !isYanshi}">
 					<div class="msg f17">发送时间</div>
 	      	<div class="btn-box f17">
-						<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(600)">10{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(900)">15{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(1200)">20{{ $t('min') }}</v-touch>
+						<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(600)">10{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(900)">15{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(1200)">20{{ $t('min') }}</v-touch>
 	      	</div>
-	        <v-touch class="btn higher_btn f17" v-on:tap="chooseProblemDuration(-1)">{{$t('notimelimit')}}<!-- 不限时发送 --></v-touch>
+	        <v-touch class="btn higher_btn f17" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(-1)">{{$t('notimelimit')}}<!-- 不限时发送 --></v-touch>
 	      </div>
 	    </section>
 		</template>
@@ -156,6 +156,9 @@
 	    chooseProblemDuration (duration, groupid = this.selectTeam) {
 				if(this.activeTab == 1){
 					groupid = 0
+				}
+				if(this.activeTab == 2 && !this.teams.length){
+					return false
 				}
 	      this.$emit('chooseProblemDuration', duration, groupid)
 	    },
@@ -361,6 +364,9 @@
           height: 1.173333rem;
       		line-height: 1.173333rem;
   	  	}
+				.disabled {
+					background: #9b9b9b;
+				}
   	  }
 
       .higher_btn {
@@ -370,9 +376,15 @@
         color: #fff;
         border-radius: .106667rem;
     	}
+
+			.disabled {
+				background: #9b9b9b;
+			}
     }
 
 	}
+
+
 
 	.cancel_btn {
 		position: absolute;
