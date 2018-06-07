@@ -54,8 +54,12 @@
               <span>
                 {{ $t('hasSubmit')}}: {{total_num}}/{{class_participant_num}}
               </span>
-              <span>
-                <i class="iconfont "></i>
+              <span class="hide-show-name">
+                <label for="">
+                  <i class="iconfont icon-kuang" v-show="!isHideName" @click="hideNameHandle"></i>
+                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName" @click="hideNameHandle"></i>
+                  <span class="info">投屏隐藏学生姓名</span>
+                </label>
               </span>
             </div>
           </section>
@@ -74,7 +78,9 @@
                     <img :src="item.user_avatar_46" class="avatar" alt="">
                     <div class="cont f18">
                       <div class="time f15">{{item.end_time | formatTime}}</div>
-                      <span class="author f15">{{item.user_name}}</span><br>
+                      <span class="author f15" v-show="!isHideName">{{item.user_name}}</span>
+                      <span class="author f15" v-show="isHideName">匿名</span>
+                      <br>
                       {{item.subj_result.content}}<br>
 
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
@@ -218,6 +224,7 @@
         isContLonger: false,          // 内容超过1屏
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
+        isHideName: !0,                // 是否隐藏学生姓名
 	    }
 	  },
 	  computed: {
@@ -278,6 +285,10 @@
       }
     },
 	  methods: {
+      // 点击确定是否显示学生姓名
+      hideNameHandle () {
+        this.isHideName = !this.isHideName;
+      },
       /**
        * 取消延时
        *
@@ -1062,6 +1073,23 @@
         text-align: left;
         font-size: 0.37333333rem;
         border-top: solid #aaa 0.013333rem;
+        display: flex;
+        .hide-show-name{
+          flex: 2;
+          text-align: right;
+          .iconfont{
+            font-size: 0.373333rem; 
+          }
+          .icon-kuang{
+            color: #666;
+          }
+          .icon-kuangxuanzhong{
+            color: #639efc;
+          }
+          .info{
+            color: #666;
+          }
+        }
 			}
 	  }
 
