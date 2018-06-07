@@ -530,6 +530,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
 	      self.$store.commit('set_initiativeCtrlMaskTpl', '')
       self.$store.commit('set_stateSet', false)
+			
 	    },
 	    /**
 	     * 轮询获取缩略图页 不懂 等标志的信息
