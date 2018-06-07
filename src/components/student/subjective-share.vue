@@ -53,6 +53,7 @@
         // 被分享者的信息
         avatar: '',
         name: '',
+        teamAvatar: 'http://sfe.ykt.io/o_1cfcr67hc3l11c0a1cit11beav89.png',
       };
     },
     components: {
@@ -89,7 +90,7 @@
               if(data.group_answer) {
                 this.name = data.team_name;
                 // 后面使用小组头像 暂时使用个人头像
-                this.avatar = data.users[0].user_avatar;
+                this.avatar = this.teamAvatar;
               } else {
                 this.name = data.users[0].user_name;
                 this.avatar = data.users[0].user_avatar;
