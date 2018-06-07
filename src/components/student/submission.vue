@@ -227,7 +227,7 @@
 
         this.sendStatus = 1;
         return request.post(URL, params)
-          .then(function (res) {
+          .then( (res) => {
             if(res && res.data) {
               let data = res.data;
 
@@ -237,10 +237,15 @@
 
               return self.imageURL;
             }
+          }).catch(error => {
+            // 提交失败保存本地
+            this.$toast({
+              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+              duration: 3000
+            });
+
+            return null;
           });
-      },
-      handleChooseImage() {
-        console.log(wx);
       },
       compress2(res, fileType) {
         let self = this;

@@ -18,13 +18,13 @@
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
-        <div class="item-avatar">
-          <img class="" :src="result.user_avatar" alt="" />
+        <div class="item-avatar" v-if="result.users && result.users.length">
+          <img class="" :src="result.users[0].user_avatar" alt="" />
         </div>
 
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15">{{ result.user_name }}</p>
+          <p class="user-name f15" v-if="result.users && result.users.length">{{ result.users[0].user_name }}</p>
           <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
           <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>

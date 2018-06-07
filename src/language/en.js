@@ -124,6 +124,7 @@ let pages = {
   "receiverwelldone": "Well done!",
   "receiversuperb": "Superb!",
   "receiverbravo": "Bravo!",
+  "networkerror" : "Failed，please try again",
 
   // socket event
   "LESSON_START": "Start Class!",

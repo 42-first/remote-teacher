@@ -123,6 +123,7 @@ let pages = {
   "receiverwelldone": "聪颖如你，必须奖励~",
   "receiversuperb": "好样的，答得又快又准！",
   "receiverbravo": "真棒！答得又快又准！",
+  "networkerror" : "网络不佳，图片上传失败，请重新上传",
 
   // socket event
   "LESSON_START": "上课啦！",
