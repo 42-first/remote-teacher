@@ -62,7 +62,7 @@
           </div>
           <div class="pic-view" v-show="hasImage||loading">
             <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="imageThumbURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
-            <img class="J_loading_img" alt="" v-show="loading" />
+            <!-- <img class="J_loading_img" alt="" v-show="loading" /> -->
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
           </div>
@@ -282,6 +282,8 @@
                 imgEl.src = this.imageURL;
               }, 300)
             }
+
+            this.sendStatus = 2;
           }
 
           if (process.env.NODE_ENV !== 'production') {
@@ -804,6 +806,20 @@
 
               return self.imageURL;
             }
+          }).catch(error => {
+            // 提交失败保存本地
+            this.$toast({
+              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+              duration: 3000
+            });
+
+            // 帮用户清空上传
+            this.hasImage = false;
+            this.imageURL = '';
+            this.imageThumbURL = '';
+            this.text && (this.sendStatus = 2);
+
+            return null;
           });
       },
 
@@ -848,18 +864,19 @@
         };
 
         // 压缩 浏览器旋转 微信崩溃等问题
-        this.loading = true;
-        let loadingEl = this.$el.querySelector('.J_loading_img');
-        loadingEl.src = '/vue_images/images/loading-3.gif';
+        self.hasImage = true;
+        // let loadingEl = this.$el.querySelector('.J_loading_img');
+        // loadingEl.src = '/vue_images/images/loading-3.gif';
+        this.imageThumbURL = '/vue_images/images/loading-3.gif';
 
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
-            self.loading = false;
-            imgEl.src = dataUrl;
+            // self.loading = false;
+            // imgEl.src = dataUrl;
 
             // 上传图片
             self.uploadImage(dataUrl, fileType);
-            self.hasImage = true;
+            // self.hasImage = true;
           }
         });
       },
