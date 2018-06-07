@@ -4,11 +4,11 @@
     <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
-    <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
+    <div v-show="!isFetching && !paperList.length && !quizList.length && !dirList.length" class="no-paper-box">
       <img :src="nopaperImg" alt="">
       <div class="hint f12"><!-- 试试从雨课堂桌面端制作并上传试卷吧 -->{{ $t('ttmtobrc') }}</div>
     </div>
-    <div v-show="!isFetching && paperList.length || quizList.length">
+    <div v-show="!isFetching && paperList.length || quizList.length || dirList.length">
       <section class="navtab f17">
         <v-touch :class="['tabitm', {'active f20': activeTab === 0}]" v-on:tap="switchTab(0)"><!-- 我的试卷库 -->{{ $t('myquiz') }}</v-touch>
         <v-touch :class="['tabitm', {'active f20': activeTab === 1}]" v-on:tap="switchTab(1)"><!-- 已发试卷 -->{{ $t('publishedquiz') }}</v-touch>
