@@ -18,13 +18,13 @@
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
-        <div class="item-avatar" v-if="result.users && result.users.length">
-          <img class="" :src="result.users[0].user_avatar" alt="" />
+        <div class="item-avatar" v-if="avatar">
+          <img class="" :src="avatar" alt="" />
         </div>
 
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15" v-if="result.users && result.users.length">{{ result.users[0].user_name }}</p>
+          <p class="user-name f15" v-if="name">{{ name }}</p>
           <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
           <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
@@ -49,7 +49,10 @@
         width: 0,
         height: 0,
         // 图片比例
-        rate: 1
+        rate: 1,
+        // 被分享者的信息
+        avatar: '',
+        name: '',
       };
     },
     components: {
@@ -80,6 +83,17 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
+              this.result = data;
+
+              if(data.group_answer) {
+                this.name = data.team_name;
+                // 后面使用小组头像 暂时使用个人头像
+                this.avatar = data.users[0].user_avatar;
+              } else {
+                this.name = data.users[0].user_name;
+                this.avatar = data.users[0].user_avatar;
+              }
 
               this.result = data;
 
