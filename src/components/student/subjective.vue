@@ -1051,6 +1051,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    height: 100vh;
 
     background: #f6f7f8;
 
@@ -1060,9 +1061,10 @@
 
   .subjective-wrapper {
     width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    min-height: 100%;
+    min-height: 100vh;
+    // overflow-y: scroll;
+    // -webkit-overflow-scrolling: touch;
   }
 
   .problem-tag {
