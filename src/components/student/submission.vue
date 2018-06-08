@@ -28,7 +28,8 @@
           <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
-          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" />
+          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
+          <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
@@ -105,13 +106,16 @@
         text: '',
         imageURL: '',
         imageThumbURL: '',
+        // 本地图片base64/二进制
+        fileData: '',
         hasImage: false,
         count: 0,
         imageData: null,
         width: 0,
         height: 0,
         // 图片比例
-        rate: 1
+        rate: 1,
+        retryTimes: 0,
       };
     },
     components: {
@@ -238,20 +242,38 @@
               return self.imageURL;
             }
           }).catch(error => {
-            // 提交失败保存本地
-            this.$toast({
-              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
-              duration: 3000
-            });
-
-            // 帮用户清空上传
-            this.hasImage = false;
-            this.imageURL = '';
-            this.imageThumbURL = '';
-            this.text && (this.sendStatus = 2);
+            self.retryUpload(data, fileType);
 
             return null;
           });
+      },
+      /*
+       * @method 上传图片失败重试策略
+       * @param
+       */
+      retryUpload(data, fileType) {
+        // 重试次数
+        let retryTimes = this.retryTimes + 1;
+
+        if(retryTimes < 4) {
+          setTimeout(()=>{
+            this.uploadImage(data, fileType);
+          }, 2000 * retryTimes)
+
+          this.retryTimes = retryTimes;
+        } else {
+          this.$toast({
+            message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+            duration: 3000
+          });
+
+          // 帮用户清空上传
+          this.hasImage = false;
+          this.imageURL = '';
+          this.imageThumbURL = '';
+          this.text && (this.sendStatus = 2);
+          this.retryTimes = 0;
+        }
       },
       compress2(res, fileType) {
         let self = this;
@@ -287,7 +309,6 @@
       handleChooseImageChange(evt) {
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
-        let imgEl = this.$el.querySelector('.J_preview_img');
 
         let file = targetEl.files[0];
         let fileType = file.type;
@@ -325,11 +346,10 @@
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
-            // imgEl.src = dataUrl;
+            self.fileData = dataUrl;
 
             // 上传图片
             self.uploadImage(dataUrl, fileType);
-            // self.hasImage = true;
           }
         });
 
@@ -363,12 +383,11 @@
       handleScaleImage() {
         let targetEl = event.target;
         let pswpElement = this.$el.querySelector('.J_submission_pswp');
-        let imgEl = this.$el.querySelector('.J_preview_img');
         let index = 0;
         let items = [];
 
         // build items array
-        items.unshift({ src: this.imageURL || imgEl.src, w: this.width || 750, h: this.height || 520 });
+        items.unshift({ src: this.fileData || this.imageURL, w: this.width || 750, h: this.height || 520 });
 
         let options = {
           index: 0,
@@ -558,6 +577,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+      }
+
+      .img--loading {
+        width: 2.0rem;
       }
 
       .higher {
