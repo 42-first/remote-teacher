@@ -17,14 +17,14 @@
       <template v-if="!isScored && !isEditting">
         <!-- 打分部分 -->
         <section class="fen-box f14">
-          <template v-if="problemGroupReviewId == 0">
-            <p class="hint">本题总分{{scoreTotal}}分</p>
+          <template v-if="groupReviewScore == -2">
+            <p class="hint"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
             <div class="score-input f18">
               <div class="score-item">
-                <label class="f16">教师评分：</label>
+                <label class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：</label>
                 <div class="">
                   <input class="input-place" type="number" v-model="teacherScore" @focus="focusInput" @blur="blurInput('teacherScore')"/>
-                  <span class="f18">分</span>
+                  <span class="f18"><!-- 分 -->{{ $t('stutestscore') }}</span>
                 </div>
                 <div class="error f12">{{errorInfo1}}</div>
               </div>
@@ -32,23 +32,23 @@
           </template>
           <template v-else>
             <p class="hint">
-              本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}%
+              <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}
             </p>
-            <p class="finally—score f18">最终得分：{{finallyScore}}</p>
+            <p class="finally—score f18"><!-- 最终得分 -->{{ $t('finalscore') }}：{{finallyScore}}</p>
             <div class="score-input f18">
               <div class="score-item">
-                <label class="f16">教师评分：</label>
+                <label class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：</label>
                 <div class="">
                   <input class="input-place" type="number" v-model="teacherScore" @focus="focusInput" @blur="blurInput('teacherScore')"/>
-                  <span class="f18">分</span>
+                  <span class="f18"><!-- 分 -->{{ $t('stutestscore') }}</span>
                 </div>
                 <div class="error f12">{{errorInfo1}}</div>
               </div>
               <div class="score-item">
-                <label class="f16">互评得分：</label>
+                <label class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：</label>
                 <div class="">
                   <input class="input-place" type="number" v-model="groupReviewScore" @focus="focusInput" @blur="blurInput('groupReviewScore')"/>
-                  <span class="f18">分</span>
+                  <span class="f18"><!-- 分 -->{{ $t('stutestscore') }}</span>
                 </div>
                 <div class="error f12">{{errorInfo2}}</div>
               </div>
@@ -72,17 +72,17 @@
       </template>
       <template v-else>
         <section class="score-result">
-          <template v-if="problemGroupReviewId == 0">
-            <p class="hint">本题总分{{scoreTotal}}分</p>
-            <p class="defen f16"><span class="f40">{{teacherScore}}</span>分</p>
+          <template v-if="groupReviewScore == -2">
+            <p class="hint"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
+            <p class="defen f16"><span class="f40">{{teacherScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</p>
           </template>
           <template v-else>
-            <p class="hint">本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}%</p>
+            <p class="hint"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}</p>
             <div class="result-info">
-              <div class="defen f16"><span class="f40">{{teacherScore}}</span>分</div>
+              <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">
-                <p class="f16">教师评分：{{teacherScore}}</p>
-                <p class="f16">互评得分：{{groupReviewScore}}</p>
+                <p class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：{{teacherScore}}</p>
+                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{groupReviewScore ? groupReviewScore : '--'}}</p>
               </div>
             </div>
           </template>
@@ -136,7 +136,6 @@
         finallyScore: '--',      // 最终得分
         teacherProportion: 0,    // 教师评分占比
         groupReviewProportion: 0,  // 互评占比
-        problemGroupReviewId: 0,   // 小组互评的id
       }
     },
     created () {
@@ -152,6 +151,11 @@
         self.leave()
       })
     },
+    watch: {
+      finallyScore() {
+        this.finallyScore = this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+      }
+    },
     methods: {
       /**
        * 父组件呼出面板
@@ -163,7 +167,7 @@
        * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
        */
-      enter (answerid, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark, problemGroupReviewId) {
+      enter (answerid, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
         let self = this
 
         self.isPanelHidden = false
@@ -176,7 +180,7 @@
         self.scoreTotal = scoreTotal
         self.groupReviewProportion = groupReviewProportion
         self.teacherProportion = teacherProportion
-        self.problemGroupReviewId = problemGroupReviewId
+        self.finallyScore = +teacherScore * teacherProportion + +groupReviewScore * groupReviewProportion
         self.remark = remark
       },
       /**
@@ -258,7 +262,7 @@
       decide (evt) {
         let self = this
 
-        self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark)
+        self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
       },
       /**
        * 校验输入值是否合法

@@ -52,11 +52,11 @@
 						<div class="faqihuping-box">
 							<div :class="['f16', 'yjy']" v-if="problem_answer_type == 0">
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
-								已答： {{total_num}} / {{class_participant_num}}
+								{{ $t('yizuoda') }}： {{total_num}} / {{class_participant_num}}
 	            </div>
 							<div :class="['f16', 'yjy']" v-else>
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
-								已答： {{total_num}} / {{team_num}}
+								{{ $t('yizuoda') }}： {{total_num}} / {{team_num}}
 	            </div>
 							<!-- <v-touch  :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch> -->
 						</div>
@@ -178,7 +178,7 @@
         <div class="member-detail">
           <p class="team-info">
             <span class="team-name f20">{{currentTeam}}</span>
-            <span class="team-total f14">共{{teamMemberList.length}}人</span>
+            <span class="team-total f14"><!-- 共{{teamMemberList.length}}人 -->{{ $t('team.totalmembers', {num: teamMemberList.length}) }}</span>
           </p>
           <div class="team-item" v-for="(item, index) in teamMemberList" :key="index">
             <img class="member--avatar" :src="item.user_avatar_46" alt="" >
@@ -701,6 +701,9 @@
          * 注：
          * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
          * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
+         *
+         *
+         * 由于小组作答可能会出现小组成员覆盖原有答案，所以刷新列表后直接把列表赋新的值，不然需要每条数据去进行比较
          */
         self.fetchList().then(jsonData => {
           self.setData({
@@ -721,25 +724,13 @@
           let isAllLoaded = self.isAllLoaded
           if (response_num === 0) {
             isAllLoaded = true
-          } else if (headNow === 0) {
+          } else {
             self.setData({
               dataList: newList
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
-          } else if (~headIndex) {
-            // 包含
-            let _list = newList.slice(0, headIndex).concat(self.dataList)
-            self.setData({
-              dataList: _list
-            })
-          } else {
-            self.setData({
-              dataList: newList
-            })
-            isAllLoaded = false
           }
-
           self.setData({
             isAllLoaded
           })
@@ -895,7 +886,7 @@
 					return request.get(url)
 	          .then(jsonData => {
 	            if (jsonData.success) {
-	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark, self.problem_group_review_id)
+	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
 	            }
 	          }).catch(error => {
 	            console.error('error', error)
@@ -911,7 +902,7 @@
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, teacherScore, groupReviewScore, remark) {
+	    giveScore (answerid, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
 	    	let self = this
 
 	    	if (teacherScore === -1) {
@@ -936,14 +927,9 @@
 
 	          // 关闭打分页面
 	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-						// if(groupReviewScore == -2){
-						// 	self.dataList[self.scoringIndex].score = +teacherScore
-	          //   self.dataList[self.scoringIndex].remark = remark
-						// }else {
-						// 	self.refreshDataList()
-						// }
-						self.dataList[self.scoringIndex].score = +teacherScore
-	          self.dataList[self.scoringIndex].remark = remark
+						self.dataList[self.scoringIndex].score = (+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion)
+						self.dataList[self.scoringIndex].remark = remark
+
 
 	          self.$refs.StarPanel.$emit('leave')
 	        })

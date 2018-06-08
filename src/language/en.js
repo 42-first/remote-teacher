@@ -380,7 +380,15 @@ let pages = {
     "creategroup": "New Grouping",
     "nogroup": "No grouping yet. Create new grouping to assign subjective questions to groups. ",
     "chooseteam": "Grouping",
+    "totalmembers": "{num} people",
   },
+
+  // 打分
+  "newtotalscore": "The total score is {total} point(s)",
+  "hupingtotalscore": "The total score is {total} point(s), {groupReviewProportion}% from peer grading and {teacherProportion}% from teacher grading",
+  "finalscore": "Final score",
+  "teachergrading": "Teacher grading",
+  "peergrading": "Peer grading",
 
   // 图片国际化
   imgs: {

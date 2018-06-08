@@ -380,7 +380,15 @@ let pages = {
     "creategroup": "创建分组",
     "nogroup": "暂无分组，可将学生分组以小组形式作答",
     "chooseteam": "选择分组",
+    "totalmembers": "共{num}人",
   },
+
+  // 打分
+  "newtotalscore": "本题总分{total}分",
+  "hupingtotalscore": "本题总分{total}分，互评占比{groupReviewProportion}%，教师占比{teacherProportion}%",
+  "finalscore": "最终得分",
+  "teachergrading": "教师评分",
+  "peergrading": "互评得分",
 
   // 图片国际化
   imgs: {
