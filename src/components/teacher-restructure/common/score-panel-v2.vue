@@ -133,7 +133,6 @@
         isTextFocused: false,    // 正在输入评语
         groupReviewScore: -2,    // 互评分数，-1表示没打分, -2表示是个人作答的题目
         teacherScore: 0,        // 教师评分
-        finallyScore: '--',      // 最终得分
         teacherProportion: 0,    // 教师评分占比
         groupReviewProportion: 0,  // 互评占比
       }
@@ -151,9 +150,19 @@
         self.leave()
       })
     },
-    watch: {
-      finallyScore() {
-        this.finallyScore = this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+    computed: {
+      finallyScore: {
+        set() {
+          return this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+        },
+        get() {
+          if(this.groupReviewScore == -2) {
+            return '--'
+          }else {
+            return this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+          }
+        }
+
       }
     },
     methods: {
@@ -180,7 +189,7 @@
         self.scoreTotal = scoreTotal
         self.groupReviewProportion = groupReviewProportion
         self.teacherProportion = teacherProportion
-        self.finallyScore = +teacherScore * teacherProportion + +groupReviewScore * groupReviewProportion
+        // self.finallyScore = +teacherScore * teacherProportion + +groupReviewScore * groupReviewProportion
         self.remark = remark
       },
       /**
@@ -318,14 +327,14 @@
         let num = Number(self[score])
 
         if (num >= 0) {
-            if (num > self.scoreTotal) {
-              if(score == 'teacherScore'){
-                self.errorInfo1 = errorList[0]
-              }else {
-                self.errorInfo2 = errorList[0]
-              }
+            if(score == 'teacherScore' && num * self.teacherProportion > self.scoreTotal){
+              self.errorInfo1 = errorList[0]
+              return false;
+            }else if( score == 'groupReviewScore' && num * self.groupReviewProportion > self.scoreTotal) {
+              self.errorInfo2 = errorList[0]
               return false;
             }
+
             if (Math.floor(num*10) < num*10) {
               if(score == 'teacherScore'){
                 self.errorInfo1 = errorList[1]
