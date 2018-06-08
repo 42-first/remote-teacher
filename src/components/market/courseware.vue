@@ -27,13 +27,22 @@
           <div class="color4a font20 describe">
             <!--{{i.introduce}}-->
           </div>
-          <div class="font20 price">
-            ¥ {{i.discount_price}}
+          <div class="actions-box">
+            <div class="actions-item">
+              <div class="free font14">免费</div>
+              <a href="http://scd0.ykt.io/pub_notice/1528447969864/download.zip" class="download_courseware font16">下载样章</a>
+            </div>
+            <div class="actions-item">
+              <div class="font20 price">
+                ¥ {{i.discount_price}}
+              </div>
+              <div class="font14 old-price">
+                ¥ {{i.price}}
+              </div>
+              <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
+            </div>
           </div>
-          <div class="font14 old-price">
-            ¥ {{i.price}}
-          </div>
-          <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
+
         </li>
         <li class="inline-block expect">
           <div>
@@ -210,27 +219,64 @@
             height: 20px;
             line-height: 20px;
           }
-          .price {
-            height: 30px;
-            line-height: 30px;
-            color: #F5A623;
+          .actions-box {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 44px;
+            align-items: flex-end;
+
+            .price {
+              height: 30px;
+              line-height: 30px;
+              color: #F5A623;
+            }
+            .old-price{
+              height: 20px;
+              line-height: 20px;
+              color: #9b9b9b;
+              text-decoration: line-through;
+              text-decoration-color: #979797;
+            }
+            a {
+              background-color: #F5A623;
+              color: #fff;
+              width: 128px;
+              height: 38px;
+              border-radius: 19px;
+              line-height: 38px;
+              margin: 10px auto;
+            }
+            a.download_courseware:link {
+              width: 128px;
+              height: 38px;
+              border-radius: 100px;
+              border: 1px solid #639EF4;
+              display: block;
+              background: #fff;
+              color: #639EF4;
+            }
+            a.download_courseware:visited {
+              background: #639EF4;
+              color: #fff;
+              opacity: .5;
+            }
+            a.download_courseware:hover {
+              background: #639EF4;
+              color: #fff;
+            }
+            a.download_courseware:active {
+              background: #639EF4;
+              color: #fff;
+              opacity: .5;
+            }
+
+            .free {
+              height: 20px;
+              line-height: 20px;
+              color: #9b9b9b;
+            }
           }
-          .old-price{
-            height: 20px;
-            line-height: 20px;
-            color: #9b9b9b;
-            text-decoration: line-through;
-            text-decoration-color: #979797;
-          }
-          a {
-            background-color: #F5A623;
-            color: #fff;
-            width: 128px;
-            height: 38px;
-            border-radius: 19px;
-            line-height: 38px;
-            margin: 10px auto;
-          }
+
         }
         li:nth-child(even){
           margin-left: 34px;

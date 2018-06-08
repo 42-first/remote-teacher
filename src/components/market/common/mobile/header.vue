@@ -13,18 +13,18 @@
 
 <script>
   export default {
-    name: 'header',
+    name: 'page-header',
     data () {
       return {
         isIos: !1
       }
     },
     created: function () {
-      this._init()
+      this.init()
     },
     components: {},
     methods: {
-      _init: function () {
+      init: function () {
         var browser = {
           versions: (function () {
             var u = navigator.userAgent

@@ -28,17 +28,26 @@
 
                 </div>
               </div>
-              <div class="price">
-                ¥ {{i.discount_price}}
+              <div class="actions-box">
+                <div class="actions-item">
+                  <div class="free font14">免费</div>
+                  <a href="http://scd0.ykt.io/pub_notice/1528447969864/download.zip" class="download_courseware font16">下载样章</a>
+                </div>
+                <div class="actions-item">
+                  <div class="price">
+                    ¥ {{i.discount_price}}
 
 
+                  </div>
+                  <div class="font14 old-price">
+                    ¥ {{i.price}}
+
+
+                  </div>
+                  <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
+                </div>
               </div>
-              <div class="font14 old-price">
-                ¥ {{i.price}}
 
-
-              </div>
-              <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
             </div>
           </div>
         </li>
@@ -75,10 +84,10 @@
       }
     },
     created: function () {
-      this._init()
+      this.init()
     },
     methods: {
-      _init: function () {
+      init: function () {
         let self = this
         request.get(API.market.get_rain_courseware_list).then(function (e) {
           let data = e.data
@@ -236,6 +245,42 @@
                 height: .6rem;
                 overflow: hidden;
                 font-size: .28rem;
+              }
+              .actions-box {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+                a.download_courseware:link {
+                  width: 1.5rem;
+                  height: .5rem;
+                  border-radius: .4rem;
+                  line-height: .5rem;
+                  font-size: .28rem;
+                  border: 1px solid #639EF4;
+                  display: block;
+                  background: #fff;
+                  color: #639EF4;
+                }
+                a.download_courseware:visited {
+                  background: #639EF4;
+                  color: #fff;
+                  opacity: .5;
+                }
+                a.download_courseware:hover {
+                  background: #639EF4;
+                  color: #fff;
+                }
+                a.download_courseware:active {
+                  background: #639EF4;
+                  color: #fff;
+                  opacity: .5;
+                }
+
+                .free {
+                  height: 20px;
+                  line-height: 20px;
+                  color: #9b9b9b;
+                }
               }
               .price {
                 height: .4rem;
