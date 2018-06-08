@@ -1054,7 +1054,7 @@
 
     background: #f6f7f8;
 
-    // overflow-y: scroll;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
