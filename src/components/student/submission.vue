@@ -107,7 +107,7 @@
         imageURL: '',
         imageThumbURL: '',
         // 本地图片base64/二进制
-        fileData: '',
+        fileData: null,
         hasImage: false,
         count: 0,
         imageData: null,

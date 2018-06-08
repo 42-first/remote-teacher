@@ -61,8 +61,8 @@
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="imageThumbURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
-            <!-- <img class="J_loading_img" alt="" v-show="loading" /> -->
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
+            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
           </div>
@@ -143,6 +143,8 @@
         text: '',
         imageURL: '',
         imageThumbURL: '',
+        // 本地图片base64/二进制
+        fileData: null,
         hasImage: false,
         // 图片加载中
         loading: false,
@@ -169,7 +171,8 @@
         // 是否进组
         noTeam: false,
         // 是否再次编辑状态
-        isEdit: false
+        isEdit: false,
+        retryTimes: 0,
       };
     },
     components: {
@@ -807,20 +810,38 @@
               return self.imageURL;
             }
           }).catch(error => {
-            // 提交失败保存本地
-            this.$toast({
-              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
-              duration: 3000
-            });
-
-            // 帮用户清空上传
-            this.hasImage = false;
-            this.imageURL = '';
-            this.imageThumbURL = '';
-            this.text && (this.sendStatus = 2);
+            self.retryUpload(data, fileType);
 
             return null;
           });
+      },
+      /*
+       * @method 上传图片失败重试策略
+       * @param
+       */
+      retryUpload(data, fileType) {
+        // 重试次数
+        let retryTimes = this.retryTimes + 1;
+
+        if(retryTimes < 4) {
+          setTimeout(()=>{
+            this.uploadImage(data, fileType);
+          }, 2000 * retryTimes)
+
+          this.retryTimes = retryTimes;
+        } else {
+          this.$toast({
+            message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+            duration: 3000
+          });
+
+          // 帮用户清空上传
+          this.hasImage = false;
+          this.imageURL = '';
+          this.imageThumbURL = '';
+          this.text && (this.sendStatus = 2);
+          this.retryTimes = 0;
+        }
       },
 
       /*
@@ -864,15 +885,12 @@
         };
 
         // 压缩 浏览器旋转 微信崩溃等问题
-        self.hasImage = true;
-        // let loadingEl = this.$el.querySelector('.J_loading_img');
-        // loadingEl.src = '/vue_images/images/loading-3.gif';
+        this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
 
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
-            // self.loading = false;
-            // imgEl.src = dataUrl;
+            self.fileData = dataUrl;
 
             // 上传图片
             self.uploadImage(dataUrl, fileType);
@@ -931,7 +949,7 @@
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
-        let src = this.imageURL;
+        let src = this.fileData || this.imageURL;
         let width = this.width;
         let height = this.height;
 
@@ -1352,6 +1370,10 @@
 
       .pic--loading {
         width: 75%;
+      }
+
+      .img--loading {
+        width: 2.0rem;
       }
 
       .higher {
