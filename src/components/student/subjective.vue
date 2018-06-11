@@ -204,7 +204,7 @@
         } else if(newValue === 1) {
           this.submitText = this.$i18n.t('picuploading') || '图片上传中';
         } else if(newValue === 2) {
-          this.submitText = this.$i18n.t('sendcfm') || '确认发送';
+          this.submitText = this.$i18n.t('submitansw') || '提交答案';
         } else if(newValue === 4) {
           this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {

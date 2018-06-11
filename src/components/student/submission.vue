@@ -197,6 +197,15 @@
 
               return data;
             }
+          }).catch(error => {
+            this.sendStatus = 2;
+
+            this.$toast({
+              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+              duration: 3000
+            });
+
+            return null;
           });
       },
       /*
