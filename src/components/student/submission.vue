@@ -201,7 +201,7 @@
             this.sendStatus = 2;
 
             this.$toast({
-              message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+              message: this.$i18n.t('networkerror2') || '网络不佳，答案提交失败，请重试',
               duration: 3000
             });
 
