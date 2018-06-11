@@ -10,35 +10,36 @@
   <section class="evaluation__page">
     <div :class="['evaluation__wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 互评得分 修改入口 -->
-      <section class="evaluation__getscore mb10">
-        <p class="f20 yellow">互评得分：100分</p>
-        <p @click="handlescore"><i class="iconfont icon-bianji f25 blue"></i></p>
+      <section class="evaluation__getscore mb10" v-if="reviewScore">
+        <p class="f20 yellow">互评得分：{{ reviewScore }}分</p>
+        <p @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
       <!-- 主观题题干 -->
       <section class="subjective-content mb10" >
         <div class="content_wrapper">
           <p class="page-no f12"><span>第8页</span></p>
-          <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
+          <!-- :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }" -->
+          <div class="cover__wrapper">
             <img class="cover J_preview_img" src="http://st0.ykt.io/FqOgxWJctO7pymHwWJQ0Db_2CPci" alt="雨课堂" />
           </div>
         </div>
       </section>
 
       <!-- 主观题答案 -->
-      <section class="evaluation__answer">
+      <section class="evaluation__answer" v-if="result">
         <h3 class="answer__header">
           <p class="f21 c333">答案</p>
           <p class="answer--points f14 blue" @click="handlenode">评分要点</p>
         </h3>
         <div class="">
-          <img class="answer--pic" src="http://st0.ykt.io/FkE8Q9Yo7IC8SW0y_XmYUPnM5PwS" alt="雨课堂主观题" />
-          <div class="answer--text f17 c333">这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符，这里全部显示。一二三这里是文字描述，投稿限制了140个字符</div>
+          <img class="answer--pic" :src="result.pics[0].thumb" alt="雨课堂主观题" v-if="result.pics && result.pics[0]" />
+          <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
 
       <!-- 打分 -->
-      <section class="evaluation__score f18">
+      <section class="evaluation__score f18" v-if="canSubmitScore">
         <p class="score--btn" @click="handlescore">打分</p>
       </section>
 
@@ -60,7 +61,7 @@
           </div>
         </div>
 
-        <p class="score--submit f18">提交</p>
+        <p class="score--submit f18" @click="handlesubmit">提交</p>
       </div>
     </section>
 
@@ -91,15 +92,25 @@
         index: 0,
         opacity: 0,
         title: '',
-        result: {},
+        // 作答结果
+        result: null,
+        reviewScore: 0,
         width: 0,
         height: 0,
         pptRate: 1,
         // 图片比例
         rate: 1,
         score: 0,
+        // 互评ID
+        reviewID: 0,
+        // 问题ID
+        problemID: 0,
+        // 作答结果ID
+        problemResultID: 0,
+
         scoreVisible: false,
-        nodeVisible: false
+        nodeVisible: false,
+        canSubmitScore: false
       };
     },
     components: {
@@ -128,11 +139,58 @@
               let data = res.data;
 
               this.review = data;
+              this.problemID = data.problem_id;
+              this.canSubmitScore = data.can_submit_score;
+
+              // 作答结果
+              if(data.problem_result_list && data.problem_result_list.length) {
+                let resultInfo = data.problem_result_list[0];
+                this.result = resultInfo.result;
+                this.reviewScore = resultInfo.review_score;
+                this.score = this.reviewScore;
+                this.problemResultID = resultInfo.review_score;
+              }
 
               return data;
             }
           });
       },
+
+      /*
+       * @method 读取互评问题的基本信息
+       * @param
+       */
+      getProblem(problemID) {
+        // this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+      },
+
+      /*
+       * @method 互评打分
+       * @param
+       */
+      handlesubmit() {
+        let URL = API.student.SUBMIT_GROUP_REVIEW;
+        let param = {
+          'group_review_id': this.reviewID,
+          'problem_result_id': this.problemResultID,
+          'score': this.score
+        };
+
+        if(!this.score) {
+          return this;
+        }
+
+        return request.post(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              return data;
+            }
+          });
+      },
+
+
       /*
        * @method 显示打分弹层
        * @param
@@ -178,6 +236,8 @@
       }
     },
     created() {
+      this.getGroupReview(10012);
+
       this.index = +this.$route.params.index;
 
       let cards = this.$parent.cards;
@@ -215,17 +275,15 @@
     height: 100%;
 
     background: #f8f8f8;
-    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     -webkit-backface-visibility: hidden;
   }
 
   .evaluation__wrapper {
-    // display: flex;
-    // flex-direction: column;
     width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    // height: 100%;
+    min-height: 100vh;
   }
 
   .evaluation__getscore {
@@ -299,6 +357,9 @@
       padding-bottom: 0.4rem;
     }
 
+    .answer--text {
+      text-align: left;
+    }
   }
 
 
