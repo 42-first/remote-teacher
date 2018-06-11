@@ -306,7 +306,8 @@
         .gridimg {
           box-sizing: border-box;
           width: 100%;
-          background: #9B9B9B;
+          background-color: #f6f7f8;
+          // background: #9B9B9B;
         }
 
         .gridimg-holder {
