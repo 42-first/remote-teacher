@@ -14,6 +14,8 @@
       </div>
       <div class="range-box">
         <mt-range v-model="group_review_proportion" min="0" max="100" step="1" bar-height="8">
+          <div class="start" slot="start"> </div>
+          <div class="end" slot="end"> </div>
         </mt-range>
       </div>
     </div>
@@ -339,11 +341,9 @@
 
 .mt-range-progress {
   background: #FEA300 !important;
-  border-radius: .053333rem !important;
 }
 .mt-range-runway {
   border-top-color: #5096F5 !important;
-  border-radius: .053333rem !important;
 }
 .mt-range-thumb {
   width: .933333rem !important;
@@ -352,5 +352,17 @@
   box-shadow: 0 .04rem .16rem 0 rgba(0,0,0,.3) !important;
   top: 50% !important;
   transform: translateY(-50%);
+}
+.start {
+  width: .133333rem;
+  background: #FEA300;
+  border-top-left-radius: .053333rem !important;
+  border-bottom-left-radius: .053333rem !important;
+}
+.end {
+  width: .666667rem;
+  background: #5096F5;
+  border-top-right-radius: .053333rem !important;
+  border-bottom-right-radius: .053333rem !important;
 }
 </style>
