@@ -15,9 +15,9 @@
     <!-- PPT 类型 -->
     <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
-        <span class="gridimg-holder holder-mask"></span>
-        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)">
+        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
+        <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
+        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15 bdsz">{{doubtList[index] ? $t('unknown')+': '+doubtList[index] : ''}}</div>
       </v-touch>
@@ -26,9 +26,9 @@
     <!-- 不懂 类型 -->
     <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
       <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
-        <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]"></span>
-        <span class="gridimg-holder holder-mask"></span>
-        <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg">
+        <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]" :style="{height: realHeight + 'rem'}"></span>
+        <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
+        <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">{{ $t('unknown') }}: {{item.val}}</div>
       </v-touch>
@@ -37,14 +37,14 @@
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
       <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]"></span>
-        <span class="gridimg-holder holder-mask"></span>
-        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg">
+        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
+        <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
+        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
 
-    <Toolbar 
+    <Toolbar
       ref="Toolbar"
       :active-index="1"
       :is-socket-connected="isSocketConnected"
@@ -70,6 +70,7 @@
         tab: 1,         // 缩略图当前tab
         doubtList: [],  // 不懂人员分布
         imgHolder: [],  // 图片加载成功前占位符, 1表示显示占位符
+				realHeight: null,
       }
     },
     computed: {
@@ -126,21 +127,16 @@
       // 处理缩略图holder高度为真实高度
       // 使用ppt类型中的最后一张图（或占位div）的宽度以及ppt卡片的宽高比计算得出
       let self = this
-      let boxObj = document.querySelector('.scroll-box1')
-      let gridimgHolderArr = boxObj.querySelectorAll('.gridimg-holder')
-      let gridimgArr = boxObj.querySelectorAll('.gridimg')
-      let len = gridimgHolderArr.length
 
-      let holderWidth = gridimgHolderArr[len - 1].offsetWidth ||  gridimgArr[len - 1].offsetWidth
+			// 缩略图宽度为4.4rem，直接取用该值
+      let holderWidth = 4.4
       let bili = self.cardHeight/self.cardWidth
       let realHeight = holderWidth * bili
 
       // 如果得出的结果是0，就不执行
       if (!realHeight) {return;}
 
-      gridimgHolderArr.forEach(item => {
-        item.style.height = `${realHeight}px`
-      })
+			this.realHeight = realHeight
     },
     methods: {
       /**
@@ -310,7 +306,8 @@
         .gridimg {
           box-sizing: border-box;
           width: 100%;
-          background: #9B9B9B;
+          background-color: #f6f7f8;
+          // background: #9B9B9B;
         }
 
         .gridimg-holder {
