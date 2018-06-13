@@ -30,7 +30,7 @@
           <div class="actions-box">
             <div class="actions-item">
               <div class="free font14">免费</div>
-              <a href="http://scd0.ykt.io/pub_notice/1528447969864/download.zip" class="download_courseware font16">下载样章</a>
+              <a :href="i.example_link" class="download_courseware inline-block font16">下载样章</a>
             </div>
             <div class="actions-item">
               <div class="font20 price">
@@ -246,25 +246,26 @@
               line-height: 38px;
               margin: 10px auto;
             }
-            a.download_courseware:link {
+            .download_courseware {
               width: 128px;
               height: 38px;
-              border-radius: 100px;
+              border-radius: 19px;
               border: 1px solid #639EF4;
-              display: block;
               background: #fff;
               color: #639EF4;
+              box-sizing: border-box;
+              cursor: pointer;
             }
-            a.download_courseware:visited {
+            .download_courseware:visited {
               background: #639EF4;
               color: #fff;
               opacity: .5;
             }
-            a.download_courseware:hover {
+            .download_courseware:hover {
               background: #639EF4;
               color: #fff;
             }
-            a.download_courseware:active {
+            .download_courseware:active {
               background: #639EF4;
               color: #fff;
               opacity: .5;

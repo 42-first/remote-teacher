@@ -29,7 +29,7 @@
                 ¥ {{i.price}}
               </div>
               <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
-              <a href="javascript:alert('请在电脑上打开 \n ykt.io \n下载样章');" class="download_courseware font16">免费下载样章</a>
+              <a href="javascript:alert('请在电脑上打开 \n ykt.io \n下载样章');" class="download_courseware inline-block font16">免费下载样章</a>
             </div>
           </div>
         </li>
@@ -215,19 +215,23 @@
               margin-top: .22rem;
               padding-left: .08rem;
               .name {
-                width: 100%;
+                width: 3.44rem;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 height: .4rem;
                 line-height: .4rem;
                 overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               .author {
-                width: 100%;
+                width: 3.44rem;
                 height: .32rem;
-                overflow: hidden;
                 font-size: .28rem;
                 line-height: .32rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
             }
             .actions-box {
@@ -269,6 +273,7 @@
                 background: #fff;
                 color: #639EF4;
                 margin: 0 auto;
+                box-sizing: border-box;
               }
             }
 
