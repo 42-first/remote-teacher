@@ -27,7 +27,7 @@
 
           <!-- 上部时钟、人数统计 -->
           <section class="upper">
-            <div class="xitixushi">
+            <div class="xitixushi" v-if="!problem_group_review_id">
               <!-- 延时相关 -->
               <div class="time-rel f15">
                 <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
@@ -58,7 +58,7 @@
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
 								{{ $t('yizuoda') }}： {{total_num}} / {{team_num}}
 	            </div>
-							<!-- <v-touch  :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">发起互评</v-touch> -->
+							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
 						</div>
           </section>
 
@@ -167,7 +167,10 @@
 
 		<HupingPanel
 			ref="HupingPanel"
+			:tProportion="tProportion"
+			:gProportion="gProportion"
 			@giveHuping="giveHuping"
+			@editHuping="editHuping"
 		></HupingPanel>
 
     <section class="teammember" v-show="showTeamMember">
@@ -269,6 +272,8 @@
 				problem_answer_type: 0,				 // 个人或小组作答 0:个人  1:小组
 				team_num: '--',								 // 组数+未进组人数
 				problem_group_review_id: 0,		 // 小组互评的id
+				tProportion: 0,								 // 默认教师占比
+				gProportion: 100,							 // 默认互评占比
 	    }
 	  },
 	  computed: {
@@ -666,6 +671,16 @@
         // 单次刷新
         return request.get(url, data)
       },
+			/**
+       * 获取已经互评了的数量
+       *
+       */
+			fetchHupingCount(){
+				let self = this
+				let url = API.get_subj_problem_group_review + '?group_review_id=' + self.problem_group_review_id
+
+				return request.get(url)
+			},
 	    /**
        * 查询有没有新的答案，根据 response_num 来判断
        *
@@ -680,9 +695,20 @@
             isShowNewHint: jsonData.data.response_num,
             total_num: jsonData.data.total_num,
             class_participant_num: jsonData.data.class_participant_num,
-						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : ''
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+						problem_group_review_id: jsonData.data.group_review_id
           })
         })
+
+				// self.fetchHupingCount().then(res => {
+				// 	self.setData({
+				// 		group_review_total_num: res.data.group_review_total_num,
+				// 		group_review_done_num: res.data.group_review_done_num,
+		    //     tProportion: res.data.teacher_score_proportion * 100,
+		    //     gProportion: res.data.group_review_score_proportion * 100,
+		    //     group_review_declaration: res.data.group_review_declaration
+				// 	})
+				// })
       },
 	    /**
        * 更新试题详情的数据
@@ -711,7 +737,8 @@
             total_num: jsonData.data.total_num,
             class_participant_num: jsonData.data.class_participant_num,
 						problem_answer_type: jsonData.data.problem_answer_type,
-						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : ''
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+						problem_group_review_id: jsonData.data.group_review_id
           })
 
           let newList = jsonData.data.problem_results_list
@@ -740,6 +767,17 @@
           // 刷新的话回顶部
           self.back2Top()
         })
+				// if(!self.problem_group_review_id){
+				// 	self.fetchHupingCount().then(res => {
+				// 		self.setData({
+				// 			group_review_total_num: res.data.group_review_total_num,
+				// 			group_review_done_num: res.data.group_review_done_num,
+			  //       tProportion: res.data.teacher_score_proportion * 100,
+			  //       gProportion: res.data.group_review_score_proportion * 100,
+			  //       group_review_declaration: res.data.group_review_declaration
+				// 		})
+				// 	})
+				// }
       },
       /**
        * 延时
@@ -996,7 +1034,7 @@
 					// 防止用户频繁点击
 	        clearTimeout(hupingTapTimer)
 	        hupingTapTimer = setTimeout(() => {
-	          self.$refs.HupingPanel.$emit('enterHuping')
+	          self.$refs.HupingPanel.$emit('enterHuping', self.problem_group_review_id, self.tProportion, self.gProportion, self.group_review_declaration)
 	        }, 100)
 				}
 			},
@@ -1028,16 +1066,44 @@
 		          console.log('发起互评');
 							self.problem_group_review_id = jsonData.data.problem_group_review_id
 		          self.$refs.HupingPanel.$emit('leaveHuping')
-						}else {
-							let msg = jsonData.msg
-							T_PUBSUB.publish('ykt-msg-toast', msg);
 						}
 
-	        })
+	        }).catch(res => {
+						let msg = res.msg
+						T_PUBSUB.publish('ykt-msg-toast', msg);
+          });
 
 
 
 	    },
+			/**
+			 * 修改占比
+			 *
+			 * @event
+			 * @params {Number} teacher_score_proportion 教师评分比例
+			 */
+			editHuping(teacher_proportion){
+				let self = this
+
+	      let url = API.edit_subj_problem_score_proportion
+	      let postData = {
+					teacher_proportion
+	      }
+
+	      request.post(url, postData)
+	        .then(jsonData => {
+
+						if(jsonData.success){
+							// 关闭互评页面
+		          console.log('修改成功');
+		          self.$refs.HupingPanel.$emit('leaveHuping')
+						}
+
+	        }).catch(res => {
+						let msg = res.msg
+						T_PUBSUB.publish('ykt-msg-toast', msg);
+          });
+			},
 			/*
 			 * 打开小组成员列表
 			 *
@@ -1121,7 +1187,7 @@
 		/* 上部 */
 	  .upper {
 	  	width: 100%;
-	  	height: 3.84rem;
+	  	max-height: 3.84rem;
 	  	padding: .133333rem .2rem 0;
 	  	text-align: center;
 			box-shadow: 0 .026667rem .16rem 0 #e2e2e2;

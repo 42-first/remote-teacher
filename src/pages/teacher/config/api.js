@@ -58,6 +58,10 @@ if (process.env.NODE_ENV === 'production') {
     publish_subj_problem_group_review:  prefix + '/v/lesson/publish_subj_problem_group_review/',
     // 主观题打分界面获取回答目前打分情况
     get_subj_result_score_detail:       prefix + '/v/lesson/get_subj_result_score_detail/',
+    // (教师端) 修改主观题打分比例
+    edit_subj_problem_score_proportion: prefix + '/v/lesson/edit_subj_problem_score_proportion',
+    // (教师端)获取互评状态
+    get_subj_problem_group_review:      prefix + '/v/lesson/get_subj_problem_group_review',
   }
 } else {
   api = {
@@ -104,6 +108,8 @@ if (process.env.NODE_ENV === 'production') {
     get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
     publish_subj_problem_group_review:  'http://apimock.xuetangx.com/mock/115/v/lesson/publish_subj_problem_group_review/',
     get_subj_result_score_detail:       'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_result_score_detail/',
+    edit_subj_problem_score_proportion: 'http://apimock.xuetangx.com/mock/115/v/lesson/edit_subj_problem_score_proportion',
+    get_subj_problem_group_review:      'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_problem_group_review',
   }
 }
 

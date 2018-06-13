@@ -1,41 +1,80 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
   <div class="mask hupingPanel" :class="{'animateMobileTextIn': !isHupingPanelHidden, 'animateMobileTextOut': isHupingPanelHidden, 'none': !isSummoned}">
-    <div class="proportion-box">
-      <div class="score-box">
-        <div class="score student">
-          <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
-          <p class="f14">互评分数占比</p>
+    <template v-if="!group_review_id">
+      <div class="proportion-box">
+        <div class="score-box">
+          <div class="score student">
+            <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
+            <p class="f14">互评分数占比</p>
+          </div>
+          <div class="score teacher">
+            <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+            <p class="f14">教师分数占比</p>
+          </div>
         </div>
-        <div class="score teacher">
-          <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
-          <p class="f14">教师分数占比</p>
+        <div class="range-box">
+          <mt-range v-model="group_review_proportion" :min="0" :max="100" :step="1" :bar-height="8">
+            <div class="start" slot="start"> </div>
+            <div class="end" slot="end"> </div>
+          </mt-range>
         </div>
       </div>
-      <div class="range-box">
-        <mt-range v-model="group_review_proportion" min="0" max="100" step="1" bar-height="8">
-          <div class="start" slot="start"> </div>
-          <div class="end" slot="end"> </div>
-        </mt-range>
+      <div class="gap"></div>
+      <div class="scale-of-marks">
+        <div class="score-point">
+          <h1 class="f20">评分要点</h1>
+          <textarea class="textarea-place f15" v-model="review_declaration" placeholder="请输入您的参考答案或评分要点，供学生参考" @focus="focusText" @blur="isTextFocused = false"></textarea>
+        </div>
+        <div class="score-rules">
+          <h1 class="f20">互评规则</h1>
+          <ul>
+            <li class="f12"><i>＊</i> 已提交答案的各组才能参加互评，每个组将收到<span class="f15">一份</span>非本组的作答内容</li>
+            <li class="f12"><i>＊</i> 各组之间相互匿名</li>
+            <li class="f12"><i>＊</i> 教师可随时修改互评占比或者直接修改总得分</li>
+          </ul>
+        </div>
+        <v-touch class="btn-submit f18" v-on:tap="submit">发起互评</v-touch>
+        <v-touch class="btn-cancel f15" v-on:tap="leave">取消</v-touch>
       </div>
-    </div>
-    <div class="gap"></div>
-    <div class="scale-of-marks">
-      <div class="score-point">
-        <h1 class="f20">评分要点</h1>
-        <textarea class="textarea-place f15" v-model="review_declaration" placeholder="请输入您的参考答案或评分要点，供学生参考" @focus="focusText" @blur="isTextFocused = false"></textarea>
+    </template>
+    <template v-else>
+      <div class="proportion-box edit-box">
+        <div class="score-box">
+          <div class="score student">
+            <p class="f16"><span class="f36">{{gProportion}}</span>%</p>
+            <p class="f14">互评分数占比</p>
+          </div>
+          <div class="score teacher">
+            <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+            <p class="f14">教师分数占比</p>
+          </div>
+        </div>
+        <div class="range-box">
+          <mt-range v-model="gProportion" :min="0" :max="100" :step="1" :bar-height="8">
+            <div class="start" slot="start"> </div>
+            <div class="end" slot="end"> </div>
+          </mt-range>
+        </div>
+        <v-touch class="btn-submit f18" :class="group_review_id && changed ? 'disabled': ''" v-on:tap="save">保存</v-touch>
+        <v-touch class="btn-cancel f15" v-on:tap="leave">取消</v-touch>
       </div>
-      <div class="score-rules">
-        <h1 class="f20">互评规则</h1>
-        <ul>
-          <li class="f12"><i>＊</i> 已提交答案的各组才能参加互评，每个组将收到<span class="f15">一份</span>非本组的作答内容</li>
-          <li class="f12"><i>＊</i> 各组之间相互匿名</li>
-          <li class="f12"><i>＊</i> 教师可随时修改互评占比或者直接修改总得分</li>
-        </ul>
+      <div class="gap"></div>
+      <div class="scale-of-marks">
+        <div class="score-point">
+          <h1 class="f20">评分要点</h1>
+          <p class="f15 point">{{group_review_declaration}}</p>
+        </div>
+        <div class="score-rules">
+          <h1 class="f20">互评规则</h1>
+          <ul>
+            <li class="f12"><i>＊</i> 已提交答案的各组才能参加互评，每个组将收到<span class="f15">一份</span>非本组的作答内容</li>
+            <li class="f12"><i>＊</i> 各组之间相互匿名</li>
+            <li class="f12"><i>＊</i> 教师可随时修改互评占比或者直接修改总得分</li>
+          </ul>
+        </div>
       </div>
-      <v-touch class="btn-submit f18" v-on:tap="submit">发起互评</v-touch>
-      <v-touch class="btn-cancel f15" v-on:tap="leave">取消</v-touch>
-    </div>
+    </template>
 
 
   </div>
@@ -53,6 +92,10 @@
         isSummoned: false,
         group_review_proportion: 100,
         review_declaration: '',
+        group_review_id: 0,
+        gProportion: 100,
+        group_review_declaration: '',
+        changed: true
       }
     },
     created () {
@@ -60,7 +103,7 @@
 
       // 父组件呼出本子组件
       self.$on('enterHuping', function () {
-        self.enter()
+        self.enter(...arguments)
       })
 
       // 父组件交互成功后隐去本子组件
@@ -70,7 +113,11 @@
     },
     computed: {
       teacher_score_proportion() {
-        return 100 - this.group_review_proportion
+        if(this.group_review_id){
+          return 100 - this.gProportion
+        }else {
+          return 100 - this.group_review_proportion
+        }
       },
     },
     watch: {
@@ -82,31 +129,39 @@
           }
         }
       },
+      gProportion(newVal, oldVal){
+        if(newVal != this.$parent.gProportion){
+          this.changed = false
+        }
+      }
     },
     methods: {
       /**
        * 父组件呼出面板
        *
        * @event bindtap
-       * @params {number, number} answerid 将要打分的主观题答案的id, oldFullStars 当前星级
+       * @params {number, number} group_review_id 互评id
+       * @params {number, number} tProportion 教师占比
+       * @params {number, number} gProportion 互评占比
+       * @params {string, string} group_review_declaration 评分要点
+       *
        */
-      enter () {
+      enter (group_review_id, tProportion, gProportion, group_review_declaration) {
         let self = this
 
         self.isHupingPanelHidden = false
         self.isSummoned = true
-
+        self.group_review_id = group_review_id
+        self.gProportion = gProportion
+        self.group_review_declaration = group_review_declaration
       },
 
       leave() {
         let self = this
 
-        // self.$el.querySelector('input').blur()
-        // self.$el.querySelector('textarea').blur()
-        // self.errorInfo = ''
-
         self.isHupingPanelHidden = true
         self.isSummoned = false
+        self.changed = true
       },
 
       /*
@@ -116,9 +171,19 @@
         let self = this
         let teacher_score_proportion = self.teacher_score_proportion / 100
         let group_review_proportion = self.group_review_proportion / 100
+        self.changed = true
         self.$emit('giveHuping', teacher_score_proportion, group_review_proportion, self.review_declaration)
       },
-
+      /*
+       * 修改占比
+       */
+      save(){
+        let self = this
+        let teacher_proportion = self.teacher_score_proportion / 100
+        if(self.changed) return
+        self.changed = true
+        self.$emit('editHuping', teacher_proportion)
+      },
       /**
        * 点击分数输入框
        *
@@ -167,7 +232,8 @@
     width: 100%;
     height: 100%;
     background: #fff;
-    z-index: 999999;
+    overflow: auto;
+    z-index: 999;
 
     .proportion-box {
       width: 100%;
@@ -214,6 +280,33 @@
         width: 7.733333rem;
       }
     }
+    .edit-box {
+      height: 8.066667rem;
+      .btn-submit {
+        width: 5.333333rem;
+        height: 1.173333rem;
+        border-radius: .76rem;
+        box-shadow: 0 .106667rem .186667rem 0 rgba(80,150,245,.4);
+        margin: 1.466667rem auto .533333rem;
+        text-align: center;
+        line-height: 1.173333rem;
+        color: #fff;
+        background: #5096F5;
+      }
+
+      .disabled {
+        background: #E5E5E5;
+        color: #9b9b9b;
+        box-shadow: none;
+      }
+      .btn-cancel {
+        color: #5096F5;
+        font-weight: bold;
+        text-decoration: underline;
+        margin: 0 auto;
+        text-align: center;
+      }
+    }
 
     .gap {
       width: 100%;
@@ -242,6 +335,10 @@
           color: #333333;
           overflow: scroll;
           word-break: break-all;
+        }
+        .point {
+          color: #333;
+          margin-top: .266667rem;
         }
       }
 
@@ -360,7 +457,7 @@
   border-bottom-left-radius: .053333rem !important;
 }
 .end {
-  width: .666667rem;
+  width: .8rem;
   background: #5096F5;
   border-top-right-radius: .053333rem !important;
   border-bottom-right-radius: .053333rem !important;

@@ -154,7 +154,7 @@
 			toTeam() {
 				let self = this;
 				console.log(self.classroomid + '--' + self.lessonid);
-				location.href = '/team/teacher/' + self.classroomid + '?from=lesson';
+				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
 			}
     }
   }

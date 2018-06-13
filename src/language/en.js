@@ -376,8 +376,8 @@ let pages = {
 
     "teamhasanswer": "Answer Already Submitted",
     "teamanswercover": "A group member has already submitted an answer. Your submission will overwrite the present group answer.",
-    "answertype_person": "For individuals",
-    "answertype_group": "For groups",
+    "answertype_person": "Individuals",
+    "answertype_group": "Groups",
     "creategroup": "New Grouping",
     "nogroup": "No grouping yet. Create new grouping to assign subjective questions to groups. ",
     "chooseteam": "Grouping",
