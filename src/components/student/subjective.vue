@@ -87,6 +87,7 @@
       <div class="team__tip" v-show="answerType">
         <span class="f18 yellow">*</span>
         <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
+        <p class="f14 c9b" v-else-if="forceTempTeam">当前题目为小组作答，本组已提交过答案，你将以个人身份作答</p>
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
@@ -168,6 +169,8 @@
         teamVisible: false,
         // 分组 我是否作答过
         hasAnswered: true,
+        // 是否强制临时组
+        forceTempTeam: false,
         // 是否进组
         noTeam: false,
         // 是否再次编辑状态
@@ -359,6 +362,8 @@
               let noTeam = team && team.no_team;
               // 学生是否作答过
               this.hasAnswered = data.user_answered;
+              // 是否强制临时组作答
+              this.forceTempTeam = data.user_force_temp_team;
 
               // 拉取小组成员
               team.team_id && this.getMembers(team.team_id);
@@ -1013,13 +1018,17 @@
         if(this.sendStatus === 2) {
           if(this.answerType === 1 && !this.isEdit) {
             // 是否进组
-            if(this.noTeam) {
+            if(this.noTeam || this.forceTempTeam) {
               let msgOptions = {
                 confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
                 cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
               };
               let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
               let message = this.$i18n && this.$i18n.t('team.tempteamtip');
+
+              if(this.forceTempTeam) {
+                message = '进组之前本组已经提交过答案您将单独作答并提交';
+              }
 
               this.$messagebox.confirm(message, title, msgOptions).
               then( action => {
