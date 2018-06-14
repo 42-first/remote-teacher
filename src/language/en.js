@@ -350,6 +350,8 @@ let pages = {
   "nextDefault": "Remember this option",
   "setSuc": "OK",
   "hasSubmit": "已提交",
+  "projectionHideStuInfo": "投屏隐藏学生信息",
+  "projectionHideStuName": "投屏隐藏学生姓名",
 
   // 引导页
   guide: {

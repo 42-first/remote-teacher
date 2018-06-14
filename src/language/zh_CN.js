@@ -349,6 +349,8 @@ let pages = {
   "nextDefault": "下次授课默认使用该选择",
   "setSuc": "设置成功",
   "hasSubmit": "已提交",
+  "projectionHideStuInfo": "投屏隐藏学生信息",
+  "projectionHideStuName": "投屏隐藏学生姓名",
 
 
   // 引导页
