@@ -12,7 +12,7 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
-      <div class="hide-show-name">
+      <div class="hide-show-name" v-if="0">
         <label @click="hideNameHandle">
           <i class="iconfont icon-kuang" v-show="!isHideName"></i>
           <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
