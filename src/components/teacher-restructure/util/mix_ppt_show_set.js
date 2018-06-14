@@ -33,7 +33,6 @@ var mixin = {
         $(this.picker.cancelEl).text(this.$t('cancel') || '取消')
         this.picker.on('picker.select', selectedVal => {
           let result = arr[selectedVal]['result']
-          console.log(result)
           this.show_presentation = result
           this.pcSet(result)
         })
@@ -47,7 +46,6 @@ var mixin = {
         let pickChoose = this.picker.pickerEl.querySelector('.picker-choose')
         let pickCancel = this.picker.cancelEl
         let pickConfirm = this.picker.confirmEl
-        console.log(this.picker)
         this.picker.panelEl.style.height = '4.8rem'
         $(this.picker.wheelEl).css({
           height: '2.6rem',

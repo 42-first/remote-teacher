@@ -55,9 +55,9 @@
                 {{ $t('hasSubmit')}}: {{total_num}}/{{class_participant_num}}
               </span>
               <span class="hide-show-name">
-                <label for="">
-                  <i class="iconfont icon-kuang" v-show="!isHideName" @click="hideNameHandle"></i>
-                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName" @click="hideNameHandle"></i>
+                <label @click="hideNameHandle">
+                  <i class="iconfont icon-kuang" v-show="!isHideName"></i>
+                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
                   <span class="info">投屏隐藏学生姓名</span>
                 </label>
               </span>

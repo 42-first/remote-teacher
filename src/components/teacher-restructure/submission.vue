@@ -12,6 +12,13 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
+      <div class="hide-show-name">
+        <label @click="hideNameHandle">
+          <i class="iconfont icon-kuang" v-show="!isHideName"></i>
+          <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
+          <span class="info">投屏隐藏学生信息</span>
+        </label>
+      </div>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -22,6 +29,7 @@
          :bottomDropText="$t('shifang')"
          :class="{'allLoaded': isAllLoaded}"
          >
+
         <section class="list">
 
           <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.id">
@@ -117,6 +125,7 @@
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
+        isHideName: !1,               // 是否隐藏学生信息
       }
     },
     computed: {
@@ -509,13 +518,20 @@
         }
 
       },
-      
+      // 点击确定是否显示学生姓名
+      hideNameHandle () {
+        this.isHideName = !this.isHideName;
+      },
     }
   }
 </script>
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @function px2rem($px) {
+    $rem: 75px;
+    @return ($px/$rem) + rem;
+  }
   .submission-box {
     position: relative;
     height: 100%;
@@ -523,6 +539,29 @@
     color: #4A4A4A;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+
+    .hide-show-name{
+      width: 100%;
+      height: px2rem(88px);
+      line-height: px2rem(88px);
+      background-color: #fff;
+      box-sizing: border-box;
+      padding-left: px2rem(30px);
+      font-size: px2rem(28px);
+      .iconfont{
+        font-size: px2rem(32px);
+        vertical-align: middle;
+      }
+      .icon-kuang{
+        color: #666;
+      }
+      .icon-kuangxuanzhong{
+        color: #639efc;
+      }
+      .info{
+        color: #666;
+      }
+    }
 
     .new-item-hint {
       position: fixed;
@@ -615,7 +654,7 @@
     }
 
     .gap {
-      height: 0.266667rem;
+      height: px2rem(20px);
       background: #EDF2F6;
     }
 
