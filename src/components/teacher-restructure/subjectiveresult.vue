@@ -56,7 +56,7 @@
 	            </div>
 							<div :class="['f16', 'yjy']" v-else>
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
-								{{ $t('yizuoda') }}： {{total_num}} / {{team_num}}
+								<span>{{ $t('yizuoda') }}： {{total_num}} / {{team_num}} </span><span v-if="problem_group_review_id"><i></i>已互评：{{group_review_done_num}}</span>
 	            </div>
 							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
 						</div>
@@ -105,7 +105,7 @@
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score}}{{ $t('stutestscore') }}</span>
+                        <span v-show="item.score !== -1">{{item.score}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -698,17 +698,20 @@
 						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
 						problem_group_review_id: jsonData.data.group_review_id
           })
+					if(jsonData.data.group_review_id){
+						self.fetchHupingCount().then(res => {
+							self.setData({
+								group_review_total_num: res.data.group_review_total_num,
+								group_review_done_num: res.data.group_review_done_num,
+				        tProportion: res.data.teacher_score_proportion * 100,
+				        gProportion: res.data.group_review_score_proportion * 100,
+				        group_review_declaration: res.data.group_review_declaration
+							})
+						})
+					}
         })
 
-				// self.fetchHupingCount().then(res => {
-				// 	self.setData({
-				// 		group_review_total_num: res.data.group_review_total_num,
-				// 		group_review_done_num: res.data.group_review_done_num,
-		    //     tProportion: res.data.teacher_score_proportion * 100,
-		    //     gProportion: res.data.group_review_score_proportion * 100,
-		    //     group_review_declaration: res.data.group_review_declaration
-				// 	})
-				// })
+
       },
 	    /**
        * 更新试题详情的数据
@@ -766,18 +769,20 @@
 
           // 刷新的话回顶部
           self.back2Top()
+
+					if(jsonData.data.group_review_id){
+						self.fetchHupingCount().then(res => {
+							self.setData({
+								group_review_total_num: res.data.group_review_total_num,
+								group_review_done_num: res.data.group_review_done_num,
+				        tProportion: res.data.teacher_score_proportion * 100,
+				        gProportion: res.data.group_review_score_proportion * 100,
+				        group_review_declaration: res.data.group_review_declaration
+							})
+						})
+					}
         })
-				// if(!self.problem_group_review_id){
-				// 	self.fetchHupingCount().then(res => {
-				// 		self.setData({
-				// 			group_review_total_num: res.data.group_review_total_num,
-				// 			group_review_done_num: res.data.group_review_done_num,
-			  //       tProportion: res.data.teacher_score_proportion * 100,
-			  //       gProportion: res.data.group_review_score_proportion * 100,
-			  //       group_review_declaration: res.data.group_review_declaration
-				// 		})
-				// 	})
-				// }
+
       },
       /**
        * 延时
@@ -965,7 +970,7 @@
 
 	          // 关闭打分页面
 	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-						self.dataList[self.scoringIndex].score = (+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion)
+						self.dataList[self.scoringIndex].score = ((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion)).toFixed(1)
 						self.dataList[self.scoringIndex].remark = remark
 
 
@@ -1066,6 +1071,7 @@
 		          console.log('发起互评');
 							self.problem_group_review_id = jsonData.data.problem_group_review_id
 		          self.$refs.HupingPanel.$emit('leaveHuping')
+							self.init()
 						}
 
 	        }).catch(res => {
@@ -1087,7 +1093,8 @@
 
 	      let url = API.edit_subj_problem_score_proportion
 	      let postData = {
-					teacher_proportion
+					teacher_proportion,
+					problem_id: self.problemid
 	      }
 
 	      request.post(url, postData)
@@ -1254,6 +1261,14 @@
 
 				.yjy {
 					color: #666;
+					i {
+						width: 1px;
+						height: .32rem;
+						background: #eee;
+						display: inline-block;
+						vertical-align: middle;
+						margin: 0 .266667rem;
+					}
 				}
 
 				.faqihuping {

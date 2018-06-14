@@ -185,17 +185,6 @@
         self.$emit('editHuping', teacher_proportion)
       },
       /**
-       * 点击分数输入框
-       *
-       * @event bindtap
-       */
-      blurInput () {
-        let self = this
-
-        self.isTextFocused = false
-        self.validate()
-      },
-      /**
        * 点击评语输入框
        *
        * @event bindtap
