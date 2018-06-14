@@ -92,9 +92,9 @@ var mixin = {
       let url = 'pc/web_ppt_config'
       axios.post(this.urlMock(url), {
         'op': 'set_config',
-        'set_data': JSON.stringify({
+        'set_data': {
           'show_presentation': name
-        })
+        }
       }).then(e => {
       })
     },
