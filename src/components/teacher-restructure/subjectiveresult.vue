@@ -54,7 +54,7 @@
               <span>
                 {{ $t('hasSubmit')}}: {{total_num}}/{{class_participant_num}}
               </span>
-              <span class="hide-show-name" v-if="0">
+              <span class="hide-show-name">
                 <label @click="hideNameHandle">
                   <i class="iconfont icon-kuang" v-show="!isHideName"></i>
                   <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
