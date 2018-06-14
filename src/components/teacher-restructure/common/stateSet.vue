@@ -9,6 +9,11 @@
       </span>
       <div class="icon-span"><i class="iconfont icon-kejiankejianqiehuan color63"></i></div>
     </div>
+    <div class="hideStu color3 back-f">
+      <span>{{$t('projectionHideStuInfo')}}</span>
+      <i class="iconfont icon-kuang color63 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
+    </div>
     <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar>
   </div>
 </template>
@@ -24,7 +29,8 @@
     name: 'StateSet',
     data () {
       return {
-        show_presentation: 'all'
+        show_presentation: 'all',
+        isHideName: !1
       }
     },
     mixins: [mixin],
@@ -80,6 +86,10 @@
       stateSetFn () {
         this.$emit('stateSet')
       },
+      // 点击确定是否显示学生姓名
+      hideNameHandle () {
+        this.isHideName = !this.isHideName;
+      },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {
           return 'http://apimock.xuetangx.com/mock/115/' + url
@@ -119,6 +129,21 @@
         i{
           font-size: 0.8rem;
         }
+      }
+    }
+    .hideStu{
+      height: px2rem(125px);
+      box-sizing: border-box;
+      padding: 0 px2rem(30px);
+      font-size: px2rem(36px);
+      line-height: px2rem(125px);
+      margin-top: px2rem(20px);
+      display: flex;
+      span:first-child{
+        flex: 1;
+      }
+      .iconfont{
+        font-size: px2rem(62px);
       }
     }
   }

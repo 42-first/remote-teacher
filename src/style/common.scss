@@ -1,3 +1,7 @@
+@function px2rem($px) {
+    $rem: 75px;
+    @return ($px/$rem) + rem;
+}
 .color4a{
     color: #4a4a4a;
 }

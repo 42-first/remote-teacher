@@ -16,7 +16,7 @@
         <label @click="hideNameHandle">
           <i class="iconfont icon-kuang" v-show="!isHideName"></i>
           <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
-          <span class="info">投屏隐藏学生信息</span>
+          <span class="info">{{$t('projectionHideStuInfo')}}</span>
         </label>
       </div>
       <div class="gap"></div>
