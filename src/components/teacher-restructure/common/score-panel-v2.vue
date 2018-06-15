@@ -81,8 +81,8 @@
             <div class="result-info">
               <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">
-                <p class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：{{teacherScore}}</p>
-                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{groupReviewScore ? groupReviewScore : '--'}}</p>
+                <p class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：{{teacherScore}}<!-- 分 -->{{ $t('stutestscore') }}</p>
+                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{groupReviewScore ? groupReviewScore : '--'}}<!-- 分 -->{{ $t('stutestscore') }}</p>
               </div>
             </div>
           </template>
@@ -153,13 +153,13 @@
     computed: {
       finallyScore: {
         set() {
-          return this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+          return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
         },
         get() {
-          if(this.groupReviewScore == -2) {
+          if(this.groupReviewScore == -2 || (!this.groupReviewScore && !this.teacherScore)) {
             return '--'
           }else {
-            return this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)
+            return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
           }
         }
 
