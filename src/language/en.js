@@ -373,6 +373,8 @@ let pages = {
     "noteam": "Not In Group",
     "tempteamtip": "You will submit your answer as the answer of a temporary group.",
     "withoutteamhint": "This question is assigned for groups. You are not in group yet.",
+    "forcetempteam": "This question is assigned for groups. The answer has been submitted before. You will submit your answer alone.",
+    "forcetempteamtip": "You will submit your answer as the answer of a temporary group.",
 
     "teamhasanswer": "Answer Already Submitted",
     "teamanswercover": "A group member has already submitted an answer. Your submission will overwrite the present group answer.",

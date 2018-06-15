@@ -1027,7 +1027,7 @@
               let message = this.$i18n && this.$i18n.t('team.tempteamtip');
 
               if(this.forceTempTeam) {
-                message = '进组之前本组已经提交过答案您将单独作答并提交';
+                message = this.$i18n && this.$i18n.t('team.forcetempteamtip');
               }
 
               this.$messagebox.confirm(message, title, msgOptions).

@@ -373,6 +373,8 @@ let pages = {
     "noteam": "未进组",
     "tempteamtip": "您将会单独进入一个小组作答并提交",
     "withoutteamhint": "当前题目为小组作答，您还没有进组",
+    "forcetempteam": "当前题目为小组作答，本组已提交过答案，你将以个人身份作答",
+    "forcetempteamtip": "进组之前本组已经提交过答案您将单独作答并提交",
 
     "teamhasanswer": "已有人提交答案",
     "teamanswercover": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
