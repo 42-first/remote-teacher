@@ -12,48 +12,42 @@
       <ul class="con-width">
         <li class="over text-center inline-block" v-for="i in list">
           <div class="container">
-            <div class="img over">
-              <img :src="i.cover"/>
+            <div class="course_info">
+              <div class="img over">
+                <img :src="i.cover"/>
+              </div>
+              <div class="text-con">
+                <div class="color0 text-left over name">{{i.title}}</div>
+                <div class="color9b text-left author">{{i.school}} {{i.author}}</div>
+              </div>
             </div>
-            <div class="text-con">
-              <div class="color0 text-left over name">
-                {{i.title}}
-
-
-              </div>
-              <div class="color9b text-left author">
-                <div v-line-bottom>
-                  {{i.school}} {{i.author}}
-
-
-                </div>
-              </div>
+            <div class="actions-box">
               <div class="price">
                 ¥ {{i.discount_price}}
-
-
               </div>
               <div class="font14 old-price">
                 ¥ {{i.price}}
-
-
               </div>
               <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
+              <a href="javascript:alert('请在电脑上打开 \n ykt.io \n下载样章');" class="download_courseware inline-block font16">免费下载样章</a>
             </div>
           </div>
         </li>
         <li class="inline-block text-center expect">
           <div class="container">
-            <div class="over img-con">
-              <i class="iconfont icon-logo-book"></i>
-              <div class="show"><span>
-                  更多雨课件<br/>敬请期待……
-                </span></div>
+            <div class="course_info">
+              <div class="over img-con">
+                <i class="iconfont icon-logo-book"></i>
+                <div class="show"><span>
+                    更多雨课件敬请期待……
+                  </span></div>
+              </div>
             </div>
+
             <div class="font12 colora text-left text">
               <p>雨课堂盼望具有丰富教学经验的老师出品自己的雨课件，以共建共享完善的教学方案体系。</p>
-              <p>联系客服获取更多信息。</p>
-              <p>邮箱：</p>
+              <p class="mt20">联系客服获取更多信息。</p>
+              <p>客服邮箱：</p>
               <p class="color6">yuketang@xuetangx.com</p>
             </div>
           </div>
@@ -75,10 +69,10 @@
       }
     },
     created: function () {
-      this._init()
+      this.init()
     },
     methods: {
-      _init: function () {
+      init: function () {
         let self = this
         request.get(API.market.get_rain_courseware_list).then(function (e) {
           let data = e.data
@@ -182,9 +176,10 @@
     }
     .product {
       width: 100%;
-      padding: 0 .16rem;
+      padding: 0 .2rem;
+      box-sizing: border-box;
       .con-width {
-        width: auto;
+        width: 100%;
       }
       .list-name {
         font-size: .32rem;
@@ -195,19 +190,19 @@
         font-size: 0;
         padding-bottom: .4rem;
         li {
-          width: 50%;
-          height: 5.3rem;
-          padding-right: .1rem;
+          width: 100%;
+          height: 3.24rem;
           box-sizing: border-box;
-          margin-top: .2rem;
+          margin-top: .3rem;
           overflow: hidden;
           div.container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
             height: 100%;
-            border: .02rem solid #c8c8c8;
-            background-color: #fff;
-            overflow: hidden;
+            background: #fff;
             .img {
-              width: 100%;
+              width: 3.44rem;
               height: 1.92rem;
               img {
                 width: 100%;
@@ -217,35 +212,42 @@
               width: 100%;
               font-size: .32rem;
               line-height: .5rem;
+              margin-top: .22rem;
+              padding-left: .08rem;
               .name {
-                width: 100%;
+                width: 3.44rem;
                 text-overflow: ellipsis;
-                padding-left: .1rem;
+                white-space: nowrap;
                 height: .4rem;
-                margin-top: .06rem;
                 line-height: .4rem;
                 overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               .author {
-                width: 100%;
-                border-bottom: .02rem solid #c8c8c8;
-                margin: 0 auto .2rem auto;
-                padding: 0 0 .1rem .1rem;
-                box-sizing: content-box;
-                line-height: .3rem;
-                height: .6rem;
-                overflow: hidden;
+                width: 3.44rem;
+                height: .32rem;
                 font-size: .28rem;
+                line-height: .32rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
+            }
+            .actions-box {
+              flex: 1;
+              padding: .2rem 0 .3rem;
+
               .price {
-                height: .4rem;
+                height: .66rem;
                 color: #F5A623;
-                font-size: .32rem;
-                margin-top: .2rem;
+                font-size: .48rem;
+                line-height: .66rem;
+                margin: 0;
               }
               .old-price {
-                font-size: .28rem;
-                line-height: .4rem;
+                font-size: .24rem;
+                line-height: .32rem;
                 color: #9b9b9b;
                 text-decoration: line-through;
                 text-decoration-color: #979797;
@@ -253,21 +255,35 @@
               a {
                 background-color: #F5A623;
                 color: #fff;
-                width: 1.5rem;
-                height: .5rem;
+                width: 2.2rem;
+                height: .6rem;
                 border-radius: .4rem;
-                line-height: .5rem;
+                line-height: .6rem;
                 font-size: .28rem;
-                margin: .12rem auto;
+                margin: .24rem auto .3rem;
+              }
+              a.download_courseware {
+                width: 2.2rem;
+                height: .6rem;
+                border-radius: .4rem;
+                line-height: .6rem;
+                font-size: .28rem;
+                border: 1px solid #639EF4;
+                display: block;
+                background: #fff;
+                color: #639EF4;
+                margin: 0 auto;
+                box-sizing: border-box;
               }
             }
+
           }
         }
         li.expect {
           div.container {
             .img-con {
-              width: 100%;
-              height: 3.06rem;
+              width: 3.44rem;
+              height: 3.24rem;
               margin-bottom: .2rem;
               line-height: 3.1rem;
               background-color: #B1CEF9;
@@ -286,7 +302,7 @@
                 text-align: center;
                 color: #fff;
                 z-index: 2;
-                font-size: .3rem;
+                font-size: .22rem;
                 span {
                   display: inline-block;
                   line-height: .3rem;
@@ -294,16 +310,18 @@
               }
             }
             .text {
-              padding: 0 .1rem;
-              font-size: .2rem;
+              padding: .4rem .15rem .14rem .15rem;
+              p {
+                font-size: .24rem;
+                line-height: 1.4;
+              }
+              .mt20 {
+                margin-top: .4rem;
+              }
             }
           }
         }
-        li:nth-child(even) {
-          padding-right: 0;
-          padding-left: .1rem;
-        }
-        li:nth-child(1), li:nth-child(2) {
+        li:first-child {
           margin-top: 0;
         }
       }

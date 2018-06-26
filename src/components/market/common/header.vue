@@ -19,7 +19,7 @@
   import request from '@/util/request'
   import API from '@/util/api'
   export default {
-    name: 'header',
+    name: 'header-nav',
     data () {
       return {
         name: '',
@@ -27,11 +27,11 @@
       }
     },
     created: function () {
-      this._init()
+      this.init()
     },
     components: {},
     methods: {
-      _init: function () {
+      init: function () {
         let self = this
         request.get(API.market.user_info).then(function (e) {
           let data = e.data

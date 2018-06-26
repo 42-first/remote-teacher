@@ -54,7 +54,7 @@
 <script>
   import $ from 'jquery'
   export default {
-    name: 'header',
+    name: 'page-footer',
     data: function () {
       return {
         codeShow: !1,
