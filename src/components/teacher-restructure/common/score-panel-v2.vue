@@ -18,7 +18,7 @@
         <!-- 打分部分 -->
         <section class="fen-box f14">
           <template v-if="groupReviewScore == -2">
-            <p class="hint"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
+            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
             <div class="score-input f18">
               <div class="score-item">
                 <label class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：</label>
@@ -31,7 +31,7 @@
             </div>
           </template>
           <template v-else>
-            <p class="hint">
+            <p class="hint f14">
               <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}
             </p>
             <p class="finally—score f18"><!-- 最终得分 -->{{ $t('finalscore') }}：{{finallyScore}}</p>
@@ -73,11 +73,11 @@
       <template v-else>
         <section class="score-result">
           <template v-if="groupReviewScore == -2">
-            <p class="hint"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
+            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分 -->{{ $t('newtotalscore', {total: scoreTotal}) }}</p>
             <p class="defen f16"><span class="f40">{{teacherScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</p>
           </template>
           <template v-else>
-            <p class="hint"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}</p>
+            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}</p>
             <div class="result-info">
               <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">

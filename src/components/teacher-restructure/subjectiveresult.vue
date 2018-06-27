@@ -58,7 +58,7 @@
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
 								<span>{{ $t('yizuoda') }}： {{total_num}} / {{team_num}} </span><span v-if="problem_group_review_id"><i></i>已互评：{{group_review_done_num}}</span>
 	            </div>
-							<v-touch :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
+							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
 						</div>
           </section>
 
@@ -929,6 +929,8 @@
 					return request.get(url)
 	          .then(jsonData => {
 	            if (jsonData.success) {
+								self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
+								self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
 	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
 	            }
 	          }).catch(error => {
