@@ -200,7 +200,7 @@
   .link-us-qcode img{ display: block; margin: auto; width: 160px; height: 160px; }
 
   .link-us-qqgroup {
-    top: -188px;
+    top: -250px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
