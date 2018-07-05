@@ -61,7 +61,7 @@
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
             <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
