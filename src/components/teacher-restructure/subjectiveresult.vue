@@ -58,7 +58,7 @@
 	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
 								<span>{{ $t('yizuoda') }}： {{total_num}} / {{team_num}} </span><span v-if="problem_group_review_id"><i></i>已互评：{{group_review_done_num}}</span>
 	            </div>
-							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
+							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
 						</div>
           </section>
 
