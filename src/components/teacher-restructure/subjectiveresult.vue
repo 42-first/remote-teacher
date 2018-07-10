@@ -50,14 +50,27 @@
               </div>
             </div>
 						<div class="faqihuping-box">
-							<div :class="['f16', 'yjy']" v-if="problem_answer_type == 0">
-	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
-								{{ $t('yizuoda') }}： {{total_num}} / {{class_participant_num}}
-	            </div>
-							<div :class="['f16', 'yjy']" v-else>
-	              <!-- {{ $t('submittotal', { ss1: total_num, ss2: class_participant_num }) }} -->
-								<span>{{ $t('yizuoda') }}： {{total_num}} / {{team_num}} </span><span v-if="problem_group_review_id"><i></i>已互评：{{group_review_done_num}}</span>
-	            </div>
+							<div class="total-box">
+								<div :class="['f12', 'yjy']">
+									<span class="f18">{{total_num}}</span>
+									{{ $t('yizuoda') }}
+		            </div>
+								<div class="line"></div>
+								<div :class="['f12', 'yjy']">
+									<span class="f18" v-if="problem_answer_type == 0">{{unfinished_count}}</span>
+									<span class="f18" v-else>{{unfinished_team_count}}</span>
+									<v-touch class="tips" v-on:tap="showTips"> {{ $t('weizuoda') }}<i class="ques"></i></v-touch>
+
+		            </div>
+								<template v-if="problem_group_review_id">
+									<div class="line"></div>
+									<div :class="['f12', 'yjy']">
+										<span class="f18">group_review_done_num</span>
+										{{ $t('yizuoda') }}
+			            </div>
+								</template>
+							</div>
+
 							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
 						</div>
           </section>
@@ -274,6 +287,8 @@
 				problem_group_review_id: 0,		 // 小组互评的id
 				tProportion: 0,								 // 默认教师占比
 				gProportion: 100,							 // 默认互评占比
+				unfinished_count: 0,					// 未答题人数
+				unfinished_team_count: 0,				// 没有回答的组数
 	    }
 	  },
 	  computed: {
@@ -696,7 +711,9 @@
             total_num: jsonData.data.total_num,
             class_participant_num: jsonData.data.class_participant_num,
 						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-						problem_group_review_id: jsonData.data.group_review_id
+						problem_group_review_id: jsonData.data.group_review_id,
+						unfinished_count: jsonData.data.unfinished_count,
+						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
           })
 					if(jsonData.data.group_review_id){
 						self.fetchHupingCount().then(res => {
@@ -741,7 +758,9 @@
             class_participant_num: jsonData.data.class_participant_num,
 						problem_answer_type: jsonData.data.problem_answer_type,
 						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-						problem_group_review_id: jsonData.data.group_review_id
+						problem_group_review_id: jsonData.data.group_review_id,
+						unfinished_count: jsonData.data.unfinished_count,
+						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
           })
 
           let newList = jsonData.data.problem_results_list
@@ -1128,6 +1147,11 @@
 			 */
 			handleTeammemberClosed() {
 				this.showTeamMember = false;
+			},
+			showTips(){
+				let msg = "未作答数为“未作答的组数”和“已签到未进组的学生数”"
+				let newClassName = 'longtips'
+				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
 			}
 	  }
 	}
@@ -1196,7 +1220,7 @@
 		/* 上部 */
 	  .upper {
 	  	width: 100%;
-	  	max-height: 3.84rem;
+	  	max-height: 4.453333rem;
 	  	padding: .133333rem .2rem 0;
 	  	text-align: center;
 			box-shadow: 0 .026667rem .16rem 0 #e2e2e2;
@@ -1261,17 +1285,38 @@
 				justify-content: space-between;
 				padding: .533333rem .333333rem;
 
-				.yjy {
-					color: #666;
-					i {
+				.total-box{
+					display: flex;
+					align-items: center;
+					.yjy {
+						color: #666;
+						padding: 0 .186667rem;
+						height: 1.333333rem;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-around;
+						span:first-of-type {
+							display: block;
+							line-height: .426667rem;
+						}
+						.ques {
+							width: .346667rem;
+							height: .346667rem;
+							display: inline-block;
+							vertical-align: middle;
+							background: url(~images/teacher/question.png)no-repeat 0 0/contain;
+							margin-left: .053333rem;
+						}
+					}
+					.line {
 						width: 1px;
-						height: .32rem;
+						height: .8rem;
 						background: #eee;
-						display: inline-block;
-						vertical-align: middle;
 						margin: 0 .266667rem;
 					}
 				}
+
+
 
 				.faqihuping {
 					width: 2.133333rem;
@@ -1548,5 +1593,13 @@
 	.toast-box {
 		width: 5.333333rem;
 		margin-left: -2.666665rem;
+	}
+	.longtips {
+		width: 8.4rem;
+		height: 2.133333rem;
+		text-align: center;
+		margin-left: -4.2rem;
+		padding: .4rem .453333rem;
+		line-height: .666667rem;
 	}
 </style>
