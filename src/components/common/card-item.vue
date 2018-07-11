@@ -128,10 +128,10 @@
         </div>
       </div>
     </template>
-    <!-- todo 发起了分组 -->
+    <!-- 发起了分组 -->
     <template v-else-if="item.type==8">
       <div class="timeline__paper">
-        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href">
+        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href" @click="handlecanJoin" >
           <div class="paper-txt f18" v-if="item.groupType ==='random'">
             <p class="paper-name"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
             <p class="paper-name"><!-- 查看结果 -->{{ $t('team.viewresults') }}</p>
@@ -144,7 +144,7 @@
         </a>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
-          <div class="f14">
+          <div class="f14" v-show="!observerMode">
             <span class="status">{{ item.status }}</span>
           </div>
         </div>
@@ -311,6 +311,25 @@
               return res;
             }
           });
+      },
+
+      /*
+      * @method 是否可以加入小组
+      */
+      handlecanJoin(evt) {
+        if(this.observerMode) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          this.$toast({
+            message: this.$i18n.t('cantintoteam') || '当前是协同教师身份，不参与分组',
+            duration: 3000
+          });
+
+          return false;
+        }
+
+        return true;
       }
     },
     created() {

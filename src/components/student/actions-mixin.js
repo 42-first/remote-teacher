@@ -540,7 +540,7 @@ var actionsMixin = {
 
 
       // 消息box弹框
-      data.isPopup && (this.msgBoxs = [data]);
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
