@@ -274,7 +274,7 @@
 
           // 恢复作答结果
           let sResult = localStorage.getItem('lessonsubjective'+problemID);
-          if(sResult) {
+          if(sResult && !this.observerMode) {
             let result = JSON.parse(sResult);
             this.text = result.content;
             // 是否有图片
