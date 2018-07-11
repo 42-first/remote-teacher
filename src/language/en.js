@@ -50,6 +50,7 @@ let pages = {
   "newvote": "Hi, you have a new vote.",
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
+  "cantintoteam": "The co-instructor does not belong to any groups.",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

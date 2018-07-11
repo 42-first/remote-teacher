@@ -49,6 +49,7 @@ let pages = {
   "newvote": "Hi,你有新的投票",
   "recvbonus": "Hi，本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
+  "cantintoteam": "当前是协同教师身份，不参与分组",
 
   "submit": "提交",
   "submitansw": "提交答案",
