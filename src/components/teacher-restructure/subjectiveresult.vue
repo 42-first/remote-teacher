@@ -56,17 +56,17 @@
 									{{ $t('yizuoda') }}
 		            </div>
 								<div class="line"></div>
-								<div :class="['f12', 'yjy']">
+								<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
 									<span class="f18" v-if="problem_answer_type == 0">{{unfinished_count}}</span>
 									<span class="f18" v-else>{{unfinished_team_count}}</span>
-									<v-touch class="tips" v-on:tap="showTips"> {{ $t('weizuoda') }}<i class="ques"></i></v-touch>
+									<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
 
-		            </div>
+		            </v-touch>
 								<template v-if="problem_group_review_id">
 									<div class="line"></div>
 									<div :class="['f12', 'yjy']">
 										<span class="f18">group_review_done_num</span>
-										{{ $t('yizuoda') }}
+										{{ $t('team.yihuping') }}
 			            </div>
 								</template>
 							</div>
@@ -1149,7 +1149,7 @@
 				this.showTeamMember = false;
 			},
 			showTips(){
-				let msg = "未作答数为“未作答的组数”和“已签到未进组的学生数”"
+				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
 				let newClassName = 'longtips'
 				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
 			}
@@ -1595,10 +1595,10 @@
 		margin-left: -2.666665rem;
 	}
 	.longtips {
-		width: 8.4rem;
+		width: 8.666667rem;
 		height: 2.133333rem;
 		text-align: center;
-		margin-left: -4.2rem;
+		margin-left: -4.333333rem;
 		padding: .4rem .453333rem;
 		line-height: .666667rem;
 	}

@@ -384,6 +384,10 @@ let pages = {
     "nogroup": "No grouping yet. Create new grouping to assign subjective questions to groups. ",
     "chooseteam": "Grouping",
     "totalmembers": "{num} people",
+    "weizuoda": "Unanswered",
+    "yihuping": "Scored",
+    "faqihuping": "Peer Grading",
+    "hupingguize": "Rules of Peer Grading",
   },
 
   // 打分

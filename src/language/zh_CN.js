@@ -384,6 +384,10 @@ let pages = {
     "nogroup": "暂无分组，可将学生分组以小组形式作答",
     "chooseteam": "选择分组",
     "totalmembers": "共{num}人",
+    "weizuoda": "未作答",
+    "yihuping": "已互评",
+    "faqihuping": "发起互评",
+    "hupingguize": "互评规则",
   },
 
   // 打分
