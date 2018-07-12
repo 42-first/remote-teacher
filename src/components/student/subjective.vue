@@ -87,7 +87,7 @@
       <div class="team__tip" v-show="answerType">
         <span class="f18 yellow">*</span>
         <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
-        <p class="f14 c9b" v-else-if="forceTempTeam">当前题目为小组作答，本组已提交过答案，你将以个人身份作答</p>
+        <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
