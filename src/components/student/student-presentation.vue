@@ -1014,6 +1014,7 @@
 
           line-height: 0.933333rem;
           text-align: center;
+          white-space: nowrap;
 
           .iconfont {
             padding-right: 0.186667rem;
