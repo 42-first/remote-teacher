@@ -231,6 +231,7 @@ let pages = {
   "quiz": "Quiz",
   "bullet": "Danmu",
   "post": "Post",
+  "group": "Group",
   "onoff": "On | Off",
   "turnonoff": "Turn On | Turn Off",
   "off": "off",
@@ -341,6 +342,10 @@ let pages = {
   "quanweitoupiao": "No one voted",
   "quantoupiao": "All voted",
   "nimingtoupiao": "This is an anonymous poll",
+  "no_time_limit": "No time limit",
+  "user_defined": "User-defined",
+  "select_group": "Select group",
+  "select": "Select",
 
   // 引导页
   guide: {

@@ -56,12 +56,19 @@
 									{{ $t('yizuoda') }}
 		            </div>
 								<div class="line"></div>
-								<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
-									<span class="f18" v-if="problem_answer_type == 0">{{unfinished_count}}</span>
-									<span class="f18" v-else>{{unfinished_team_count}}</span>
-									<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
+								<template v-if="problem_answer_type == 0">
+									<div class="f12 yjy">
+										<span class="f18" >{{unfinished_count}}</span>
+										<span class="tips"> {{ $t('team.weizuoda') }}</span>
+									</div>
+								</template>
+								<template v-else>
+									<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
+										<span class="f18">{{unfinished_team_count}}</span>
+										<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
+			            </v-touch>
+								</template>
 
-		            </v-touch>
 								<template v-if="problem_group_review_id">
 									<div class="line"></div>
 									<div :class="['f12', 'yjy']">
@@ -74,6 +81,12 @@
 							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
 						</div>
           </section>
+					<template v-if="group_name">
+						<div class="group_name f14">
+							<i class="iconfont icon-fenzu f21"></i>{{group_name | formatName}}
+						</div>
+						<div class="gap"></div>
+					</template>
 
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
@@ -91,7 +104,7 @@
 												<template v-for="(item2, index2) in item.users">
 													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
 												</template>
-												<span class="author f15">{{item.team_name}}</span>
+												<span class="author f15">{{item.team_name | formatName}}</span>
 											</v-touch>
 											<div class="time f15">{{item.end_time | formatTime}}</div>
 										</div>
@@ -289,6 +302,7 @@
 				gProportion: 100,							 // 默认互评占比
 				unfinished_count: 0,					// 未答题人数
 				unfinished_team_count: 0,				// 没有回答的组数
+				group_name: '',									// 分组名
 	    }
 	  },
 	  computed: {
@@ -335,7 +349,31 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
-      }
+      },
+			formatName(name){
+				let parttern_inclass = /[1-9]{1,2}月[0-9]{1,2}日课堂分组$/g
+				let parttern_offclass = /[1-9]{1,2}月[0-9]{1,2}日课下分组$/g
+				let parttern_team = /^临时组/g
+				let parttern_number = /\d+/g
+				let arr = []
+				let str = null
+				while((str = parttern_number.exec(name)) != null)
+				arr.push(str[0])
+
+				if(parttern_inclass.test(name)){
+					name = i18n.locale === 'zh_CN' ? name : 'In-class Grouping on ' + arr[0] + '.' + arr[1]
+				}else if(parttern_offclass.test(name)) {
+					name = i18n.locale === 'zh_CN' ? name : 'Off-class Grouping on ' + arr[0] + '.' + arr[1]
+				}else if(parttern_team.test(name)){
+					name = i18n.locale === 'zh_CN' ? name : 'temporary group' + arr[0]
+				}else if(name.indexOf('第') == 0 && name.indexOf('组') == name.length - 1 ){
+					name = i18n.locale === 'zh_CN' ? name : 'Group' + arr[0]
+				}else {
+					name = name
+				}
+
+				return name
+			}
     },
     watch: {
       dataList: function() {
@@ -382,7 +420,7 @@
         self.problemOperation(postData)
           .then(() => {
             console.log(duration, timeList[duration])
-            let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+            let msg = i18n.locale === 'zh_CN' ? `延时${duration > 0 ? duration / 60 + '分钟' : '不限时' }成功` : 'Successful'
             T_PUBSUB.publish('ykt-msg-toast', msg);
           })
       },
@@ -757,6 +795,7 @@
             total_num: jsonData.data.total_num,
             class_participant_num: jsonData.data.class_participant_num,
 						problem_answer_type: jsonData.data.problem_answer_type,
+						group_name: jsonData.data.group_name ? jsonData.data.group_name : '',
 						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
 						problem_group_review_id: jsonData.data.group_review_id,
 						unfinished_count: jsonData.data.unfinished_count,
@@ -1336,6 +1375,17 @@
 
 	  }
 
+		.group_name {
+			padding-left: .533333rem;
+			color: #666;
+			width: 100%;
+			height: 1.226667rem;
+			line-height: 1.226667rem;
+			.iconfont {
+				color: #B684C8;
+				margin-right: .266667rem;
+			}
+		}
 	  .gap {
       height: .133333rem;
 			background: #f8f8f8;

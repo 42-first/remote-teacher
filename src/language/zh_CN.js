@@ -230,6 +230,7 @@ let pages = {
   "quiz": "试卷",
   "bullet": "弹幕",
   "post": "投稿",
+  "group": "分组",
   "onoff": "已开启 | 已关闭",
   "turnonoff": "开启 | 关闭",
   "off": "已关闭",
@@ -340,6 +341,11 @@ let pages = {
   "quanweitoupiao": "还没有学生投票",
   "quantoupiao": "您的学生已全部投票",
   "nimingtoupiao": "本题为匿名投票",
+  "no_time_limit": "不限时",
+  "user_defined": "自定义",
+  "select_group": "选择小组",
+  "select": "请选择",
+
 
 
   // 引导页

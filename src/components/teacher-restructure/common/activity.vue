@@ -54,7 +54,7 @@
         <div class="iconbox" style="background: #08BC72;">
           <i class="iconfont icon-fenzu f21"></i>
         </div>
-        分组
+        {{ $t('group') }}
       </div>
 			<div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>

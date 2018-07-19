@@ -2,27 +2,23 @@
 <template>
 	<div class="rc-mask">
 		<template v-if="problemType !== 'ShortAnswer'">
-			<section class="mask-content problemtime-box">
-	      <div class="block" style="margin-bottom: 0.133333rem;">
-	      	<div class="title f16">{{isYanshi ? $t('qxzycsx')/* '请选择延长时限' */ : $t('timelimit')/* '限时发送' */}}</div>
-	      	<div class="btn-box">
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30{{ $t('sec') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(240)">4{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
-	      	</div>
-	      </div>
-
+			<section class="problemtime-box">
 	      <div class="block">
-	      	<div class="title f16" v-show="!isYanshi">{{$t('notimelimit')}}<!-- 不限时发送 --></div>
-	      	<v-touch class="btn higher_btn" v-on:tap="chooseProblemDuration(-1)">{{isYanshi ? $t('notimelimit')/*'不限时'*/ : $t('senddirectly')/*'直接发送'*/}}</v-touch>
+	      	<div class="btn-box">
+	      		<v-touch class="btn" :class="sendTime == 30 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(30)">30{{ $t('sec') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 60 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(60)">1{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 180 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(180)">3{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
+	      		<v-touch v-if="!custom" class="btn big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
+						<v-touch class="btn big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						</v-touch>
+	      	</div>
 	      </div>
 	    </section>
 		</template>
 		<template v-else>
-			<section class="mask-content problemtime-box shortanswer-mask">
+			<section class="problemtime-box shortanswer-mask">
 				<div class="tab-box" v-show="!isYanshi">
 	        <v-touch :class="['tab','f20', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
 	        <v-touch :class="['tab','f20', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
@@ -30,51 +26,69 @@
 	      <div class="teams-info" v-if="activeTab == 2">
 	        <template v-if="teams.length">
 	          <v-touch class="choose-team" v-on:tap="handlepicker">
-	            <p class="team-name f18">{{teams[selectIndex].value}}</p>
-	            <i class="iconfont icon-dakai f20"></i>
+							<p class="f17"><!-- 选择小组 -->{{$t('select_group')}}</p>
+	            <p class="team-name f18">{{selectTeam ? teams[selectIndex].value : $t('select')}}<i class="iconfont icon-dakai f20"></i></p>
 	          </v-touch>
-	          <v-touch class="create-team f17" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
 	        </template>
 	        <template v-else>
 	          <v-touch class="create-team noteams f17" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
-	          <p class="f15"><!-- 暂无分组，可将学生分组以小组形式作答 -->{{$t('team.nogroup')}}</p>
+	          <p class="f15 noteamtips"><!-- 暂无分组，可将学生分组以小组形式作答 -->{{$t('team.nogroup')}}</p>
 	        </template>
 	      </div>
-	      <div class="block" :class="{'personal': activeTab == 1 || isYanshi, 'hasteams': activeTab == 2 && !isYanshi}">
-					<div class="msg f17">发送时间</div>
+	      <div class="block" :class="{'personal': activeTab == 1, 'hasteams': activeTab == 2 && !isYanshi , 'isYanshi': isYanshi}">
 	      	<div class="btn-box f17">
-						<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(600)">10{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(900)">15{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn normal_btn" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(1200)">20{{ $t('min') }}</v-touch>
+						<v-touch class="btn" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 300 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(300)">5{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 600 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(600)">10{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn" :class="sendTime == 900 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(900)">15{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
+	      		<v-touch v-if="!custom" class="btn big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
+						<v-touch class="btn big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						</v-touch>
 	      	</div>
-	        <v-touch class="btn higher_btn f17" :class="{'disabled' : activeTab == 2 && !teams.length}" v-on:tap="chooseProblemDuration(-1)">{{$t('notimelimit')}}<!-- 不限时发送 --></v-touch>
 	      </div>
 	    </section>
 		</template>
-    <v-touch class="btn cancel_btn higher_btn" v-on:tap="cancelPublishProblem"></v-touch>
-		<section class="picker-box" v-show="showPicker && teams.length">
-			<template >
-				<div class="picker-bar">
-					<v-touch class="picker-btn f16 picker-cancel" v-on:tap="handlepickerclosed">{{$t('cancel')}}<!-- 取消 --></v-touch>
-	        <span class="picker-title f14">{{$t('team.chooseteam')}}<!-- 选择分组 --></span>
-	        <v-touch class="picker-btn f16 picker-confirm" v-on:tap="handlepickerConfirm">{{$t('confirm')}}<!-- 确定 --></v-touch>
-				</div>
-	      <mt-picker :slots="slots" value-key="value" :item-height="height" @change="onValuesChange"></mt-picker>
-			</template>
-    </section>
+		<v-touch class="btn confirm_btn" :class="{'disabled' : activeTab == 2 && !selectTeam}" v-on:tap="chooseProblemDuration">{{$t('confirm')}}<!-- 确定 --></v-touch>
+    <v-touch class="cancel_btn" v-on:tap="cancelPublishProblem"></v-touch>
+		<section class="picker__wrapper" v-show="showPicker" >
+			<v-touch class="picker_mask" v-on:tap="handlepickerclosed"></v-touch>
+			<section class="picker__limit">
+				<section>
+					<div class="picker__header blueColor">
+						<v-touch class="picker-btn f16 picker-cancel" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
+		        <v-touch class="picker-btn f16 picker-confirm" v-on:tap="handlepickerConfirm">{{$t('confirm')}}<!-- 确定 --></v-touch>
+					</div>
+					<mt-picker :slots="slots" value-key="value" :item-height="height" @change="onValuesChange"></mt-picker>
+				</section>
+			</section>
+		</section>
+		<section class="picker__wrapper" v-show="showPicker2" >
+			<section class="picker_mask"></section>
+			<section class="picker__limit">
+				<section>
+					<div class="picker__header">
+						<v-touch class="f16" v-on:tap="handlepickerclosed2">{{$t('cancel')}}<!-- 取消 --></v-touch>
+						<v-touch class="f16" v-on:tap="handlepickerConfirm2">{{$t('confirm')}}<!-- 确定 --></v-touch>
+					</div>
+					<mt-picker :slots="slots2" :item-height="height" @change="onValuesChange2"></mt-picker>
+				</section>
+			</section>
+		</section>
   </div>
 </template>
 
 <script>
 	import 'mint-ui/lib/picker/style.css'
+	import 'mint-ui/lib/message-box/style.css'
 	import Vue from 'vue'
 	import API from '@/pages/teacher/config/api'
 	import request from '@/util/request'
 	import { Picker } from 'mint-ui';
 	import {mapGetters} from 'vuex'
+	import MessageBox from 'mint-ui/lib/message-box';
+
+	Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 
 	Vue.component(Picker.name, Picker);
 	export default {
@@ -88,11 +102,27 @@
           values: [{}],
         }],
         showPicker: false,
-        height: 30,
+        height: 35,
         selectTeam: 0,
+				sendTime: -1,
+				tempTime: 0,
         team: null,
 				index: 0,
 				selectIndex: 0,
+				showPicker2: false,
+				slots2: [{
+          flex: 1,
+          values: ['1', '2', '3', '4', '5', '6', '7', '8', '9','10','11','12','13','14','15','16','17','18','19','20','21', '22', '23', '24', '25', '26', '27', '28', '29','30','31','32','33','34','35','36','37','38','39','40','41', '42', '43', '44', '45', '46', '47', '48', '49','50','51', '52', '53', '54', '55', '56', '57', '58', '59','60'],
+          className: 'slot1',
+          textAlign: 'right'
+        },  {
+          flex: 1,
+          values: [i18n.locale === 'zh_CN' ? '分钟' : 'min'],
+          className: 'slot2',
+          textAlign: 'left'
+        }],
+				custom: false,
+				isActive: false
 	    }
 	  },
 		computed: {
@@ -120,18 +150,31 @@
 
 	      return request.get(url,{'classroom_id': self.classroomid})
 	        .then(jsonData => {
-	        	this.groups = jsonData.data;
-						let group = this.groups;
+	        	self.groups = jsonData.data;
+						let group = self.groups;
 			      group.map((item, i) => {
+							let parttern_inclass = /[1-9]{1,2}月[0-9]{1,2}日课堂分组$/g
+							let parttern_offclass = /[1-9]{1,2}月[0-9]{1,2}日课下分组$/g
+							let parttern_number = /\d+/g
+							let arr = []
+							let str = null
+							while((str = parttern_number.exec(item.name)) != null)
+							arr.push(str[0])
+
+							if(parttern_inclass.test(item.name)){
+								item.name = i18n.locale === 'zh_CN' ? item.name : 'In-class Grouping on ' + arr[0] + '.' + arr[1]
+							}else if(parttern_offclass.test(item.name)) {
+								item.name = i18n.locale === 'zh_CN' ? item.name : 'Off-class Grouping on ' + arr[0] + '.' + arr[1]
+							}
 			        let obj = {
 			          value: item.name,
 			          id: item.id,
-								index: i
+								index: i,
+								active: item.active
 			        }
-			        this.teams.push(obj);
+			        self.teams.push(obj);
 			      })
-			      this.slots[0]['values'] = this.teams;
-						this.selectTeam = this.teams[0].id
+			      self.slots[0]['values'] = self.teams;
 	        })
 	        .catch(() => {
 	        	console.error('获取分组列表失败')
@@ -153,20 +196,30 @@
 	     * @event bindtap
 	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟
 	     */
-	    chooseProblemDuration (duration, groupid = this.selectTeam) {
+	    chooseProblemDuration () {
+				let self = this
+				let groupid = this.selectTeam
 				if(this.activeTab == 1){
 					groupid = 0
 				}
-				if(this.activeTab == 2 && !this.teams.length){
+				if(this.activeTab == 2 && !groupid){
 					return false
 				}
+				let duration = this.sendTime
 	      this.$emit('chooseProblemDuration', duration, groupid)
+				setTimeout(function () {
+					self.sendTime = -1
+					self.custom = false
+				}, 500);
+
 	    },
 			/*
        * 切换作答类型
        */
       toggleTab(tab) {
         this.activeTab = tab;
+				this.sendTime = -1;
+				this.custom = false;
       },
 
       /*
@@ -176,9 +229,11 @@
       onValuesChange(picker, values) {
         let team = values[0].id;
 				let index = values[0].index;
+				let active = values[0].active
 
         this.team = team;
 				this.index = index;
+				this.isActive = active
       },
       /*
        * @method picker操作
@@ -191,9 +246,15 @@
         this.showPicker = false;
       },
       handlepickerConfirm() {
-        this.selectTeam = this.team;
-				this.selectIndex = this.index;
-        this.handlepickerclosed();
+				if(this.isActive){
+					let title =  i18n.locale === 'zh_CN' ? '提示' : 'Notice';
+					let message = i18n.locale === 'zh_CN' ? '分组未结束' : 'Unfinished';
+					this.$messagebox.alert(message, title)
+				}else {
+					this.selectTeam = this.team;
+					this.selectIndex = this.index;
+	        this.handlepickerclosed();
+				}
       },
 
       /*
@@ -202,17 +263,39 @@
        handleCreatGroup() {
          let self = this;
          location.href = '/team/teacher/' + self.classroomid + '?lessonid=' + self.lessonid;
-       }
+       },
+
+			 chooseTime(time){
+				 this.sendTime = time
+				 this.custom = false
+			 },
+			 handlePicker2(){
+				 this.showPicker2 = true
+			 },
+			 handlepickerclosed2() {
+         this.showPicker2 = false;
+       },
+       handlepickerConfirm2() {
+         this.sendTime = +this.tempTime * 60;
+				 this.custom = true
+         this.handlepickerclosed2();
+       },
+			 onValuesChange2(picker, values){
+				 let limit = values[0];
+         console.log(values[0]);
+
+         this.tempTime = limit;
+			 }
 	  }
 	}
 </script>
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+	@import "~@/style/mintui.css";
 	/*发题蒙版*/
 	.problemtime-box {
-		transform: translate(-50%, -70%);
-	  width: 7.733333rem;
+		width: 100%;
 
 	  .title {
 	  	height: 1.04rem;
@@ -222,20 +305,28 @@
 	  	display: flex;
 	  	flex-wrap: wrap;
 	  	justify-content: space-between;
-
-	  	.btn {
-	  		width: 2.4rem;
-	  		margin-bottom: 0.666667rem;
-	  	}
+			margin: 4.4rem .666667rem 0;
 	  }
 	}
-	.normal_btn {
-		height: 1.106667rem;
-		line-height: 1.106667rem;
-	}
-	.higher_btn {
+	.btn {
+		width: 1.866667rem;
 		height: 1.173333rem;
 		line-height: 1.173333rem;
+		margin-bottom: .533333rem;
+		border-radius: .106667rem;
+		border: 1px solid #5096F5;
+		background: rgba(80,150,245,.2);
+		color: #fff;
+	}
+	.big_btn {
+		width: 4.133333rem;
+		.iconfont {
+			float: right;
+    	margin-right: 30px;
+		}
+	}
+	.activeSendTime {
+		background: #639EF4;
 	}
 	.cancel_btn {
 		position: absolute;
@@ -246,11 +337,20 @@
     height: .72rem;
     background: url(~images/teacher/cancel.png)no-repeat 0 0/contain;
 	}
-
-	.rc-mask .shortanswer-mask {
-		top: 0;
+	.confirm_btn {
+		width: 7.733333rem;
+		background: #639EF4;
+		position: absolute;
+		left: 50%;
 		transform: translateX(-50%);
+		bottom: 3.12rem;
 	}
+	.disabled {
+		background: #9b9b9b;
+		border: none;
+		color: #666;
+	}
+
 	.shortanswer-mask {
 		.tab-box {
       margin: 1.053333rem auto 0;
@@ -281,6 +381,7 @@
         height: 100%;
         color: #fff;
         z-index: 66;
+				text-align: center;
       }
       .active {
         background: #5096F5;
@@ -289,19 +390,32 @@
     }
 
 		.teams-info {
-      width: 7.733333rem;
+      width: 100%;
       margin: 1.493333rem auto 0;
+			text-align: center;
 
       .choose-team {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: .24rem;
-        border-bottom: 1px solid #fff;
+        padding: 0 .666667rem;
+				height: 1.44rem;
+				border-top: 1px solid #5096F5;
+        border-bottom: 1px solid #5096F5;
+				background: rgba(80,150,245,.3);
+				position: relative;
 
-        .team-name, .iconfont {
-          color: #fff;
-        }
+				p {
+					padding-right: .533333rem;
+					color: #fff;
+				}
+				.iconfont {
+					color: #fff;
+					position: absolute;
+					top: 50%;
+					right: .666667rem;
+					transform: translateY(-50%);
+				}
       }
 
       .create-team {
@@ -326,75 +440,26 @@
       .noteams {
         margin-top: -.133333rem;
       }
+			.noteamtips {
+				margin-top: .4rem;
+				color: #aaa;
+			}
 
-      p {
-        color: #aaa;
-        margin-top: .4rem;
-      }
     }
+		.btn-box {
+			margin-top: 1.333333rem;
+		}
 
     .personal {
-      top: 5.84rem;
+      margin-top: 2.933333rem;
     }
 
-    .hasteams {
-      top: 6.746667rem;
-    }
-
-
-   .block {
-      position: absolute;
-
-      .msg {
-        color: #fff;
-        margin-bottom: .533333rem;
-      }
-
-      .btn-box {
-  	  	display: flex;
-  	  	flex-wrap: wrap;
-  	  	justify-content: space-between;
-
-  	  	.btn {
-  	  		width: 2.4rem;
-  	  		margin-bottom: .4rem;
-          background: #5096F5;
-          color: #fff;
-          border-radius: .106667rem;
-          height: 1.173333rem;
-      		line-height: 1.173333rem;
-  	  	}
-				.disabled {
-					background: #9b9b9b;
-				}
-  	  }
-
-      .higher_btn {
-    		background: #5096F5;
-        height: 1.173333rem;
-        line-height: 1.173333rem;
-        color: #fff;
-        border-radius: .106667rem;
-    	}
-
-			.disabled {
-				background: #9b9b9b;
-			}
-    }
+		.isYanshi {
+			margin-top: 4.426667rem;
+		}
 
 	}
 
-
-
-	.cancel_btn {
-		position: absolute;
-		left: 50%;
-		bottom: 1.04rem;
-		transform: translateX(-50%);
-		width: .72rem;
-    height: .72rem;
-    background: url(~images/teacher/cancel.png)no-repeat 0 0/contain;
-	}
 	.picker-box {
 		width: 100%;
     height: 6.266667rem;
@@ -425,7 +490,45 @@
 	    color: #9b9b9b;
 	  }
 	}
-
+	.picker__wrapper {
+		position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+		.picker_mask {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,.7);
+			top: 0;
+			left: 0;
+			z-index: 999;
+		}
+	}
+	.picker__limit {
+		height: 6.266667rem;
+		width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+		z-index: 9999;
+		background: #fff;
+		.picker__header {
+			height: 1.173333rem;
+			line-height: 1.173333rem;
+			padding: 0 .533333rem;
+			background: #f8f8f8;
+	    display: flex;
+	    justify-content: space-between;
+			p {
+				color: #333;
+			}
+		}
+		.blueColor {
+			color: #5096F5;
+		}
+	}
 </style>
 <style>
   .picker {
@@ -434,7 +537,10 @@
     position: fixed;
     left: 0;
     bottom: 0;
-    background: #fff;
+    background: #fff !important;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
   }
 
 
