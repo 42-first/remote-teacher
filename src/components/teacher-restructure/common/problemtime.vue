@@ -5,13 +5,13 @@
 			<section class="problemtime-box">
 	      <div class="block">
 	      	<div class="btn-box">
-	      		<v-touch class="btn" :class="sendTime == 30 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(30)">30{{ $t('sec') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 60 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(60)">1{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 180 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(180)">3{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
-	      		<v-touch v-if="!custom" class="btn big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+	      		<v-touch class="btn f17" :class="sendTime == 30 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(30)">30{{ $t('sec') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 60 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(60)">1{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 180 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(180)">3{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
+	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
+						<v-touch class="btn f17 big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -20,8 +20,8 @@
 		<template v-else>
 			<section class="problemtime-box shortanswer-mask">
 				<div class="tab-box" v-show="!isYanshi">
-	        <v-touch :class="['tab','f20', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
-	        <v-touch :class="['tab','f20', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
+	        <v-touch :class="['tab','f14', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
+	        <v-touch :class="['tab','f14', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
 	      </div>
 	      <div class="teams-info" v-if="activeTab == 2">
 	        <template v-if="teams.length">
@@ -37,13 +37,13 @@
 	      </div>
 	      <div class="block" :class="{'personal': activeTab == 1, 'hasteams': activeTab == 2 && !isYanshi , 'isYanshi': isYanshi}">
 	      	<div class="btn-box f17">
-						<v-touch class="btn" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 300 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(300)">5{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 600 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(600)">10{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn" :class="sendTime == 900 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(900)">15{{ $t('min') }}</v-touch>
-	      		<v-touch class="btn big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
-	      		<v-touch v-if="!custom" class="btn big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						<v-touch class="btn f17" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 300 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(300)">5{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 600 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(600)">10{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17" :class="sendTime == 900 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(900)">15{{ $t('min') }}</v-touch>
+	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
+	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
+						<v-touch class="btn f17 big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -338,17 +338,19 @@
     background: url(~images/teacher/cancel.png)no-repeat 0 0/contain;
 	}
 	.confirm_btn {
-		width: 7.733333rem;
+		width: 8.666667rem;
 		background: #639EF4;
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: 3.12rem;
+		margin-bottom: 0;
 	}
 	.disabled {
 		background: #9b9b9b;
 		border: none;
 		color: #666;
+		margin-bottom: 0;
 	}
 
 	.shortanswer-mask {
@@ -360,9 +362,9 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      border-radius: .466667rem;
+      border-radius: .506667rem;
       position: relative;
-      padding: .066667rem .08rem;
+      padding: .08rem .08rem;
 
       &::before {
         content: "";
@@ -378,7 +380,8 @@
 
       .tab {
         width: 50%;
-        height: 100%;
+        height: .88rem;
+				line-height: .88rem;
         color: #fff;
         z-index: 66;
 				text-align: center;
@@ -400,9 +403,9 @@
         align-items: center;
         padding: 0 .666667rem;
 				height: 1.44rem;
-				border-top: 1px solid #5096F5;
-        border-bottom: 1px solid #5096F5;
-				background: rgba(80,150,245,.3);
+				border-top: 1px solid rgba(80,150,245,.7);
+        border-bottom: 1px solid rgba(80,150,245,.7);
+				background: rgba(80,150,245,.2);
 				position: relative;
 
 				p {
