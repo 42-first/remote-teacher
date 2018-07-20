@@ -83,7 +83,7 @@
           </section>
 					<template v-if="group_name">
 						<div class="group_name f14">
-							<i class="iconfont icon-fenzu f21"></i>{{group_name | formatName}}
+							<i class="iconfont icon-fenzu f21"></i>{{group_name}}
 						</div>
 						<div class="gap"></div>
 					</template>
@@ -104,7 +104,7 @@
 												<template v-for="(item2, index2) in item.users">
 													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
 												</template>
-												<span class="author f15">{{item.team_name | formatName}}</span>
+												<span class="author f15">{{item.team_name}}</span>
 											</v-touch>
 											<div class="time f15">{{item.end_time | formatTime}}</div>
 										</div>
@@ -350,30 +350,6 @@
       formatTime(time) {
         return Moment(time).format('HH:mm')
       },
-			formatName(name){
-				let parttern_inclass = /[1-9]{1,2}月[0-9]{1,2}日课堂分组$/g
-				let parttern_offclass = /[1-9]{1,2}月[0-9]{1,2}日课下分组$/g
-				let parttern_team = /^临时组/g
-				let parttern_number = /\d+/g
-				let arr = []
-				let str = null
-				while((str = parttern_number.exec(name)) != null)
-				arr.push(str[0])
-
-				if(parttern_inclass.test(name)){
-					name = i18n.locale === 'zh_CN' ? name : 'In-class Grouping on ' + arr[0] + '.' + arr[1]
-				}else if(parttern_offclass.test(name)) {
-					name = i18n.locale === 'zh_CN' ? name : 'Off-class Grouping on ' + arr[0] + '.' + arr[1]
-				}else if(parttern_team.test(name)){
-					name = i18n.locale === 'zh_CN' ? name : 'temporary group' + arr[0]
-				}else if(name.indexOf('第') == 0 && name.indexOf('组') == name.length - 1 ){
-					name = i18n.locale === 'zh_CN' ? name : 'Group' + arr[0]
-				}else {
-					name = name
-				}
-
-				return name
-			}
     },
     watch: {
       dataList: function() {

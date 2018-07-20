@@ -11,7 +11,7 @@
 	      		<v-touch class="btn f17" :class="sendTime == 180 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(180)">3{{ $t('min') }}</v-touch>
 	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
 	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn f17 big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -43,7 +43,7 @@
 	      		<v-touch class="btn f17" :class="sendTime == 900 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(900)">15{{ $t('min') }}</v-touch>
 	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
 	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn f17 big_btn" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -153,19 +153,6 @@
 	        	self.groups = jsonData.data;
 						let group = self.groups;
 			      group.map((item, i) => {
-							let parttern_inclass = /[1-9]{1,2}月[0-9]{1,2}日课堂分组$/g
-							let parttern_offclass = /[1-9]{1,2}月[0-9]{1,2}日课下分组$/g
-							let parttern_number = /\d+/g
-							let arr = []
-							let str = null
-							while((str = parttern_number.exec(item.name)) != null)
-							arr.push(str[0])
-
-							if(parttern_inclass.test(item.name)){
-								item.name = i18n.locale === 'zh_CN' ? item.name : 'In-class Grouping on ' + arr[0] + '.' + arr[1]
-							}else if(parttern_offclass.test(item.name)) {
-								item.name = i18n.locale === 'zh_CN' ? item.name : 'Off-class Grouping on ' + arr[0] + '.' + arr[1]
-							}
 			        let obj = {
 			          value: item.name,
 			          id: item.id,
@@ -352,7 +339,9 @@
 		color: #666;
 		margin-bottom: 0;
 	}
-
+	.pl30 {
+		padding-left: .4rem;
+	}
 	.shortanswer-mask {
 		.tab-box {
       margin: 1.053333rem auto 0;
