@@ -402,6 +402,7 @@ let pages = {
   "finalscore": "Final score",
   "teachergrading": "Teacher grading",
   "peergrading": "Peer grading",
+  "noComment": "No comment",
 
   // 图片国际化
   imgs: {

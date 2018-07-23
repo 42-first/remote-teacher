@@ -89,7 +89,7 @@
           <div class="gap"></div>
           <div class="remark-box">
             <p v-if="remark" class="f17 c333">{{remark}}</p>
-            <p v-else class="f17 c9b">暂无评语</p>
+            <p v-else class="f17 c9b"><!-- 暂无评语 -->{{ $t('noComment') }}</p>
           </div>
         </section>
       </template>
