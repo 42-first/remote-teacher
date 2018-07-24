@@ -52,7 +52,7 @@
 		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #08BC72;">
-          <i class="iconfont icon-fenzu f21"></i>
+          <i class="iconfont icon-fenzu1 f21"></i>
         </div>
         {{ $t('group') }}
       </div>
