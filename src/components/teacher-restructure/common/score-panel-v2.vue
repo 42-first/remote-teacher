@@ -270,8 +270,13 @@
        */
       decide (evt) {
         let self = this
+        if (self.problem_group_review_id){
+          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+        }else {
+          self.validate('teacherScore') && self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+        }
 
-        self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+
       },
       /**
        * 校验输入值是否合法
