@@ -128,6 +128,28 @@
         </div>
       </div>
     </template>
+    <!-- 发起了分组 -->
+    <template v-else-if="item.type==8">
+      <div class="timeline__paper">
+        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href" @click="handlecanJoin" >
+          <div class="paper-txt f18" v-if="item.groupType ==='random'">
+            <p class="paper-name"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
+            <p class="paper-name"><!-- 查看结果 -->{{ $t('team.viewresults') }}</p>
+          </div>
+          <div class="paper-txt f18" v-else-if="item.groupType ==='free'">
+            <p class="paper-name"><!-- Hi，老师进行了自由分组 -->{{ $t('team.freegrouping') }}</p>
+            <p class="paper-name"><!-- 输入口令 -->{{ $t('team.enterpassword') }}</p>
+          </div>
+          <i class="iconfont icon-fenzu f50"></i>
+        </a>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
 
   </section>
 
@@ -289,6 +311,25 @@
               return res;
             }
           });
+      },
+
+      /*
+      * @method 是否可以加入小组
+      */
+      handlecanJoin(evt) {
+        if(this.observerMode) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          this.$toast({
+            message: this.$i18n.t('cantintoteam') || '当前是协同教师身份，不参与分组',
+            duration: 3000
+          });
+
+          return false;
+        }
+
+        return true;
       }
     },
     created() {
@@ -464,7 +505,7 @@
       margin-bottom: 0.266667rem;
       padding: .26rem .25rem .3rem .4rem;
 
-      color: #FFFFFF;
+      color: #fff;
       background: rgba(40,207,110,0.7);
 
       border-radius: 4px;
@@ -491,6 +532,10 @@
     .paper-info.hongbao {
       color: #FFE595;
       background: #e64340;
+    }
+
+    .paper-info.fenzu {
+      background: #71D2A5;
     }
 
     .paper-info.complete,

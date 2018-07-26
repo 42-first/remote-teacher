@@ -65,6 +65,12 @@ var actionsMixin = {
 
               break;
 
+            // 分组创建分组
+            case 'group':
+              this.launchGroup({ type: 8, teamid: item['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -349,7 +355,8 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
-        index: index
+        index: index,
+        groupid: data.event['groupid']
       })
 
       // 消息box弹框
@@ -426,11 +433,6 @@ var actionsMixin = {
       if(oProblem) {
         oProblem.leaveTime = leaveTime
 
-        // 习题组件实例中的定时方法
-        // this.$children[2] && this.$children[2].setTiming && this.$children[2].setTiming(leaveTime);
-        // this.$children[3] && this.$children[3].setTiming && this.$children[3].setTiming(leaveTime);
-        // this.$children[4] && this.$children[4].setTiming && this.$children[4].setTiming(leaveTime);
-
         // 订阅发布定时
         PubSub && PubSub.publish('exercise.setTiming', {
           msg: 'exercise.setTiming',
@@ -499,7 +501,81 @@ var actionsMixin = {
 
       !hasEvent && this.cards.push(data);
       this.allEvents.push(data);
-    }
+    },
+
+    /*
+     * @method 发起分组
+     * @param { type: 8, teamid: '', groupid: item['groupid'], cat: item['cat'], event: all }
+     */
+    launchGroup(data) {
+      let oGroup = this.groupMap.get(data.groupid);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 8 && item.groupid === data.groupid && data.isFetch;
+      })
+
+      if(oGroup && oGroup.deleted) {
+        return this;
+      }
+
+      let teamid = data.teamid || oGroup && oGroup.team_id;
+      let groupType = data.cat;
+      let href = '';
+      let lessonID = this.lessonID;
+      if(teamid) {
+        href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
+      } else if(groupType === 'free') {
+        href = `/team/join/${data.groupid}?lessonid=${lessonID}`;
+      } else {
+        href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
+      }
+
+      Object.assign(data, {
+        groupid: data.groupid,
+        groupType: groupType,
+        href: href,
+        status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
+        isComplete: teamid ? true : false
+      })
+
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 取消分组
+     * @param { type: 8, groupid: 2, event: all }
+     */
+    cancelGroup(data) {
+      let targetIndex = this.cards.findIndex((item) => {
+        return item.type === 8 && item.groupid === data.groupid;
+      })
+
+      // 可以确认分组被取消了
+      targetIndex !== -1 && this.cards.splice(targetIndex, 1);
+    },
+
+    /*
+     * @method 完成分组
+     * @param { type: 8, groupid: item['groupid'], teamid: item['teamid'], event: all }
+     */
+    finishGroup(data) {
+      let group = this.cards.find((item) => {
+        return item.type === 8 && item.groupid === data.groupid;
+      })
+
+      group && Object.assign(group, {
+        href: `/team/studentteam/${data.teamid}`,
+        status: this.$i18n.t('undone'),
+        isComplete:  true
+      })
+    },
+
+
   }
 }
 
