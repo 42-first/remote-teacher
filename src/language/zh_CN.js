@@ -49,6 +49,7 @@ let pages = {
   "newvote": "Hi,你有新的投票",
   "recvbonus": "Hi，本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
+  "cantintoteam": "当前是协同教师身份，不参与分组",
 
   "submit": "提交",
   "submitansw": "提交答案",
@@ -123,6 +124,8 @@ let pages = {
   "receiverwelldone": "聪颖如你，必须奖励~",
   "receiversuperb": "好样的，答得又快又准！",
   "receiverbravo": "真棒！答得又快又准！",
+  "networkerror" : "网络不佳，图片上传失败，请重新上传",
+  "networkerror2" : "网络不佳，答案提交失败，请重试",
 
   // socket event
   "LESSON_START": "上课啦！",
@@ -133,6 +136,8 @@ let pages = {
   "RANDOM_PICK": "随机点名选中：{0}{1}",
   "SHOW_FINISH": "幻灯片 {0} 结束放映",
   "QUIZ_FINISH": "试卷 {0} 已收卷",
+  "FREE_GROUP_CANCEL": "老师取消了自由分组",
+  "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
 
   // 个人信息完善
   "merealname": '真实姓名',
@@ -225,6 +230,7 @@ let pages = {
   "quiz": "试卷",
   "bullet": "弹幕",
   "post": "投稿",
+  "group": "分组",
   "onoff": "已开启 | 已关闭",
   "turnonoff": "开启 | 关闭",
   "off": "已关闭",
@@ -335,13 +341,18 @@ let pages = {
   "quanweitoupiao": "还没有学生投票",
   "quantoupiao": "您的学生已全部投票",
   "nimingtoupiao": "本题为匿名投票",
+  "no_time_limit": "不限时",
+  "user_defined": "自定义",
+  "select_group": "选择小组",
+  "select": "请选择",
+
 
   "yiqiandao": "已签到",
   "weiqiandao": "未签到",
   "qiandaoafterfix": '',
   "weiqiandaoafterfix": "",
   "weishezhixuehao": "未设置学号",
-  
+
 
 
   // 引导页
@@ -360,6 +371,47 @@ let pages = {
     "unknownanonymous": "不懂是匿名发送给老师的噢<br>收藏仅自己可见",
     "ok": "好的"
   },
+
+  // 分组
+  team: {
+    "mygroup": "我的分组",
+    "randomized": "Hi，老师进行了随机分组",
+    "freegrouping": "Hi，老师进行了自由分组",
+    "viewresults": "查看结果",
+    "enterpassword": "输入口令",
+    "groupanswered": "小组作答：",
+    "info": "详情",
+    "groupansweredtip": "本题以小组形式作答，答案仅保留最后一次提交的内容，请与本组同学沟通后再作答，每人只有一次作答机会",
+    "hassubmitted": "已有人提交答案",
+    "coveragetip": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
+    "noteam": "未进组",
+    "tempteamtip": "您将会单独进入一个小组作答并提交",
+    "withoutteamhint": "当前题目为小组作答，您还没有进组",
+    "forcetempteam": "当前题目为小组作答，本组已提交过答案，你将以个人身份作答",
+    "forcetempteamtip": "进组之前本组已经提交过答案您将单独作答并提交",
+    "guestStudent": "旁听生不参与分组作答",
+
+    "teamhasanswer": "已有人提交答案",
+    "teamanswercover": "已有本组同学提交了答案，提交后将会覆盖已提交的答案",
+    "answertype_person": "个人作答",
+    "answertype_group": "小组作答",
+    "creategroup": "创建分组",
+    "nogroup": "暂无分组，可将学生分组以小组形式作答",
+    "chooseteam": "选择分组",
+    "totalmembers": "共{num}人",
+    "weizuoda": "未作答",
+    "yihuping": "已互评",
+    "faqihuping": "发起互评",
+    "hupingguize": "互评规则",
+  },
+
+  // 打分
+  "newtotalscore": "本题总分{total}分",
+  "hupingtotalscore": "本题总分{total}分，互评占比{groupReviewProportion}%，教师占比{teacherProportion}%",
+  "finalscore": "最终得分",
+  "teachergrading": '教师评分',
+  "peergrading": "互评得分",
+  "noComment": "暂无凭语",
 
   // 图片国际化
   imgs: {

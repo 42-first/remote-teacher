@@ -203,11 +203,12 @@
     props: ['type', 'is_can_audit', 'university_name', 'url'],
     created () {
       let self = this
+      this.is_can = this.is_can_audit + ''
       // 检测是否在小程序中
-      typeof wx !== 'undefined' && wx.miniProgram.getEnv(function(res) {
+      typeof wx !== 'undefined' && wx.miniProgram.getEnv && wx.miniProgram.getEnv(function(res) {
           self.miniprogram = res.miniprogram
       })
-      this.is_can = this.is_can_audit + ''
+
     },
     methods: {
       goClassroom: function () {

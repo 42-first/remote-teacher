@@ -2,23 +2,12 @@
  * @page：学生接收器主观题作答页面
  * @author: chenzhou
  * @update: 2017.8.8
- * @desc
+ * @desc 小组作答 websocket命令是否是小组作答
  *
  */
 
 <template>
   <section class="page-subjective">
-    <!-- 练习导航 -->
-    <!-- <header class="subjective__header">
-      <p class="heade-action subjective--back" @click="handleBack" v-if="ispreview"><i class="iconfont icon-fanhui f25"></i></p>
-
-      <p class="heade-action f18" @click="handleBack" v-else>{{ $t('cancel') }}</p>
-      <h3 class="header-title f18" v-if="summary && summary.limit>0 && sLeaveTime">{{ sLeaveTime }}</h3>
-      <h3 class="header-title f18" v-else>{{ title }}</h3>
-      <p :class="['heade-action', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend" >{{ ispreview ? '': $t('submit') }}</p>
-    </header>
-    -->
-
     <!-- 定时 续时等 -->
     <section class="exercise__tips">
       <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -42,8 +31,17 @@
         </div>
       </section>
 
+      <!-- 小组作答 显示 未进组不显示小组详情 -->
+      <section class="team__intro" v-if="team && !noTeam">
+        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
+        <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
+      </section>
+
       <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
-      <h3 class="subjective__answer--lable f17" v-else ><!-- 我的回答 -->{{ $t('myanswer') }}</h3>
+      <h3 class="subjective__answer--lable answer__header f17" v-else >
+        <p><!-- 我的回答 -->{{ $t('myanswer') }}</p>
+        <p @click="handleedit" v-if="answerType && !hasAnswered"><i class="iconfont icon-bianji f25 blue"></i></p>
+      </h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
         <!-- 文字编辑 -->
@@ -63,8 +61,8 @@
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" />
-            <img class="J_loading_img" alt="" v-show="loading" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
+            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
           </div>
@@ -74,7 +72,9 @@
       <div class="subjective__answer" v-if="ispreview && result">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic"><img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" /></div>
+          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
+            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" />
+          </div>
         </div>
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
@@ -83,10 +83,36 @@
         </div>
       </div>
 
+      <!-- 小组提示 -->
+      <div class="team__tip" v-show="answerType">
+        <span class="f18 yellow">*</span>
+        <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
+        <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
+        <p class="f14 c9b" v-else-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
+        <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
+      </div>
+
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
+
+    <!-- 小组成员列表 -->
+    <section class="members__wrap" v-if="teamVisible">
+      <div class="team__members">
+        <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
+        <div class="members__header">
+          <p class="members__title f20 c333">{{ team.team_name }}</p>
+          <p class="members__total f14 c9b">{{ team.member_count }}人</p>
+        </div>
+        <ul class="">
+          <li class="member__info" v-for="member in team.members">
+            <img class="member--avatar" :src="member.avatar" :alt="member.name" >
+            <div class="member--name f16 c666"><span class="name">{{ member.name }}</span></div>
+          </li>
+        </ul>
+      </div>
+    </section>
 
   </section>
 </template>
@@ -119,6 +145,8 @@
         text: '',
         imageURL: '',
         imageThumbURL: '',
+        // 本地图片base64/二进制
+        fileData: null,
         hasImage: false,
         // 图片加载中
         loading: false,
@@ -134,7 +162,23 @@
         summary: null,
         // star count 获得星星的数量
         starCount: 0,
-        getScore: -1
+        getScore: -1,
+        // 个人作答还是小组作答 0 个人作答 1小组作答
+        answerType: 0,
+        // 小组详情
+        team: null,
+        teamVisible: false,
+        // 分组 我是否作答过
+        hasAnswered: true,
+        // 是否强制临时组
+        forceTempTeam: false,
+        // 是否进组
+        noTeam: false,
+        // 是否再次编辑状态
+        isEdit: false,
+        retryTimes: 0,
+        // 是否旁听生
+        isGuestStudent: false,
       };
     },
     components: {
@@ -166,7 +210,7 @@
         } else if(newValue === 1) {
           this.submitText = this.$i18n.t('picuploading') || '图片上传中';
         } else if(newValue === 2) {
-          this.submitText = this.$i18n.t('sendcfm') || '确认发送';
+          this.submitText = this.$i18n.t('submitansw') || '提交答案';
         } else if(newValue === 4) {
           this.submitText = this.$i18n.t('sendsuccess') || '发送成功';
         } else if(newValue === 5) {
@@ -190,6 +234,10 @@
         }
 
         this.problemID = problemID;
+
+        // TODO：检测这个问题是否分组
+        let isTeam = data.groupid || false;
+        isTeam && this.getTeamInfo(problemID);
 
         // event消息订阅
         this.initPubSub();
@@ -224,13 +272,12 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 恢复作答结果
           let sResult = localStorage.getItem('lessonsubjective'+problemID);
-          if(sResult) {
+          if(sResult && !this.observerMode) {
             let result = JSON.parse(sResult);
             this.text = result.content;
             // 是否有图片
@@ -244,6 +291,8 @@
                 imgEl.src = this.imageURL;
               }, 300)
             }
+
+            this.sendStatus = 2;
           }
 
           if (process.env.NODE_ENV !== 'production') {
@@ -289,6 +338,144 @@
         PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
           this.closedProblem(data && data.problemid);
         });
+      },
+
+      /*
+       * @method 是否小组作答，拉取小组列表，作答结果 是否可以提交答案
+       * @param
+       */
+      getTeamInfo(problemID) {
+        let URL = API.student.GET_GROUP_STATUS;
+        let param = {
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
+        };
+
+        // 小组作答
+        this.answerType = 1;
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              // 小组信息
+              let team = data.team_info;
+              // 当前学生是否进入分组
+              let noTeam = team && team.no_team;
+              // 学生是否作答过
+              this.hasAnswered = data.user_answered;
+              // 是否强制临时组作答
+              this.forceTempTeam = data.user_force_temp_team;
+
+              // 拉取小组成员
+              team.team_id && this.getMembers(team.team_id);
+
+              // 作答结果
+              let problemResult = data.team_problem_result;
+              if(problemResult) {
+                let result = problemResult.team_result_data;
+                this.text = result.content;
+                // 是否有图片
+                if(result.pics && result.pics.length && result.pics[0].pic) {
+                  this.hasImage = true;
+                  this.imageURL = result.pics[0].pic;
+                  this.imageThumbURL = result.pics[0].thumb;
+                }
+
+                this.result = result;
+                this.ispreview = true;
+              }
+
+              // 未进组提示
+              if(noTeam) {
+                this.noTeam = true;
+              }
+            }
+          })
+          .catch((error) => {
+            if(error.status_code == 604){
+              this.isGuestStudent = true
+            }
+          });
+      },
+
+      /*
+       * @method 小组成员
+       * @param
+       */
+      getMembers(teamID) {
+        let URL = API.student.GET_TEAM_DETAIL;
+        let param = {
+          'team_id': teamID
+        };
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              // 小组成员
+              this.team = data;
+            }
+          });
+      },
+
+      /*
+       * @method 是否小组有小组作答结果
+       * @param
+       */
+      getTeamResult(problemID) {
+        let URL = API.student.GET_GROUP_STATUS;
+        let param = {
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
+        };
+
+        request.get(URL, param)
+          .then((res) => {
+            if(res && res.data) {
+              let data = res.data;
+
+              let problemResult = data.team_problem_result;
+              // 答案覆盖提示
+              if(problemResult) {
+                let msgOptions = {
+                  confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
+                  cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+                };
+                let title = this.$i18n && this.$i18n.t('team.teamhasanswer') || '已有人提交答案';
+                let message = this.$i18n && this.$i18n.t('team.teamanswercover') || '已有本组同学提交了答案，提交后将会覆盖已提交的答案';
+
+                this.$messagebox.confirm(message, title, msgOptions).
+                then( action => {
+                  if(action === 'confirm') {
+                    this.sendSubjective();
+                  }
+                });
+              } else {
+                this.sendSubjective();
+              }
+            }
+          });
+      },
+
+      handleshowTeam() {
+        this.teamVisible = true;
+      },
+
+      handleclosedTeam() {
+        this.teamVisible = false;
+      },
+
+      /*
+       * @method 编辑答案
+       * @param
+       */
+      handleedit() {
+        this.ispreview = false;
+        this.sendStatus = 2;
+        this.isEdit = true;
       },
 
       /*
@@ -369,7 +556,7 @@
        * @method 答题续时
        * @params problem
        */
-       extendTime(problem) {
+      extendTime(problem) {
         if(problem) {
           let id = problem.prob;
           let extend = problem.extend;
@@ -554,11 +741,6 @@
                 });
               }
 
-              // this.$toast({
-              //   message: this.$i18n.t('sendsuccess') || '提交成功',
-              //   duration: 2000
-              // });
-
               setTimeout(() => {
                 self.$router.back();
               }, 2000)
@@ -640,7 +822,39 @@
 
               return self.imageURL;
             }
+          }).catch(error => {
+            self.retryUpload(data, fileType);
+
+            return null;
           });
+      },
+      /*
+       * @method 上传图片失败重试策略
+       * @param
+       */
+      retryUpload(data, fileType) {
+        // 重试次数
+        let retryTimes = this.retryTimes + 1;
+
+        if(retryTimes < 4) {
+          setTimeout(()=>{
+            this.uploadImage(data, fileType);
+          }, 2000 * retryTimes)
+
+          this.retryTimes = retryTimes;
+        } else {
+          this.$toast({
+            message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
+            duration: 3000
+          });
+
+          // 帮用户清空上传
+          this.hasImage = false;
+          this.imageURL = '';
+          this.imageThumbURL = '';
+          this.text && (this.sendStatus = 2);
+          this.retryTimes = 0;
+        }
       },
 
       /*
@@ -683,24 +897,17 @@
           }
         };
 
-        // this.$toast({
-        //   message: '图片上传中',
-        //   duration: 2000
-        // });
-
         // 压缩 浏览器旋转 微信崩溃等问题
-        this.loading = true;
-        let loadingEl = this.$el.querySelector('.J_loading_img');
-        loadingEl.src = '/vue_images/images/loading-3.gif';
+        this.hasImage = true;
+        this.imageThumbURL = '/vue_images/images/loading-3.gif';
 
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
-            self.loading = false;
-            imgEl.src = dataUrl;
+            self.fileData = dataUrl;
 
             // 上传图片
             self.uploadImage(dataUrl, fileType);
-            self.hasImage = true;
+            // self.hasImage = true;
           }
         });
       },
@@ -755,7 +962,7 @@
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
-        let src = this.imageURL;
+        let src = this.fileData || this.imageURL;
         let width = this.width;
         let height = this.height;
 
@@ -812,7 +1019,38 @@
         gallery.init();
       },
       handleSend() {
-        this.sendStatus === 2 && this.sendSubjective();
+        // 是否可以提交
+        // 是否小组作答
+        // 小组作答先看下有没有人提交 提示覆盖信息
+
+        if(this.sendStatus === 2) {
+          if(this.answerType === 1 && !this.isEdit) {
+            // 是否进组
+            if(this.noTeam || this.forceTempTeam) {
+              let msgOptions = {
+                confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
+                cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+              };
+              let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
+              let message = this.$i18n && this.$i18n.t('team.tempteamtip');
+
+              if(this.forceTempTeam) {
+                message = this.$i18n && this.$i18n.t('team.forcetempteamtip');
+              }
+
+              this.$messagebox.confirm(message, title, msgOptions).
+              then( action => {
+                if(action === 'confirm') {
+                  this.sendSubjective();
+                }
+              });
+            } else {
+              this.getTeamResult(this.summary.problemID);
+            }
+          } else {
+            this.sendSubjective();
+          }
+        }
       },
       handleBack() {
         this.$router.back();
@@ -848,18 +1086,20 @@
     left: 0;
     width: 100%;
     height: 100%;
+    height: 100vh;
 
     background: #f6f7f8;
 
-    // overflow-y: scroll;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
   .subjective-wrapper {
     width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    min-height: 100%;
+    min-height: 100vh;
+    // overflow-y: scroll;
+    // -webkit-overflow-scrolling: touch;
   }
 
   .problem-tag {
@@ -1030,6 +1270,12 @@
     }
   }
 
+  .answer__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
   .subjective-inner {
     background: #fff;
   }
@@ -1143,6 +1389,10 @@
         width: 75%;
       }
 
+      .img--loading {
+        width: 2.0rem;
+      }
+
       .higher {
         max-width: 100%;
       }
@@ -1216,6 +1466,108 @@
       }
     }
 
+  }
+
+
+  /*------------------*\
+    $ 小组详情
+  \*------------------*/
+
+  .team__intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 0.133333rem 0;
+    padding: 0 0.533333rem;
+    height: 1.733333rem;
+    line-height: 1.733333rem;
+    background: #fff;
+
+    .team__intro--name {
+      flex: 1;
+      text-align: left;
+    }
+  }
+
+  .team__tip {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: -1.066667rem;
+    padding: 0 0.533333rem 0.8rem;
+    text-align: justify;
+
+    background: #fff;
+  }
+
+  .members--closed {
+    height: 1.333333rem;
+    line-height: 1.333333rem;
+    padding: 0 0.4rem;
+    text-align: left;
+    border-bottom: 1px solid #C8C8C8;
+  }
+
+  .team__members {
+    z-index: 1;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 75vh;
+    overflow-y: auto;
+    background: #fff;
+
+    .members__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.533333rem 0.533333rem 0.266667rem;
+
+      .members__title {
+        font-weight: bold;
+      }
+    }
+
+    .member__info {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      padding-left: 0.533333rem;
+      height: 1.493333rem;
+      line-height: 1.493333rem;
+
+      .member--avatar {
+        display: block;
+        width: 0.933333rem;
+        height: 0.933333rem;
+        border-radius: 50%;
+      }
+
+      .member--name {
+        flex: 1;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+
+        .name {
+          padding-left: 0.4rem;
+        }
+      }
+    }
+  }
+
+  .members__wrap:after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: rgba(0,0,0,0.45);
   }
 
 
