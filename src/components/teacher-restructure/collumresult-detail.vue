@@ -382,7 +382,7 @@
       }
     }
 
-    .choice-list，.notAnswerList {
+    .choice-list, .notAnswerList {
       padding-bottom: 1.466667rem;
     }
 

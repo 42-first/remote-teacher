@@ -166,10 +166,13 @@ let pages = {
   "min": "min",
   "senddirectly": "Send",
   "submittotal": "{ss1} / {ss2} students submitted",
+  "submittotal2": "Submitted: {ss1}/{ss2}",
   "noanssubmit": "No submission, please wait",
   "newans": "New Submission",
   "mark": "Mark",
   "viewdetails": "Details",
+  "zqrs": "Correct",
+  "tpxsda": "show answers on the screen",
   "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
   "anonymouspoll": "This is an anonymous poll.",
@@ -342,6 +345,9 @@ let pages = {
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
   "weishezhixuehao": "No Student ID",
+  "zhengque": "Correct",
+  "cuowu": "Wrong",
+  "weida": "Unanswerd",
 
   // 引导页
   guide: {

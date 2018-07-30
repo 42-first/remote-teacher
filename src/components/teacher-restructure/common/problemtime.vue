@@ -4,7 +4,7 @@
     <section class="mask-content problemtime-box">
       <div class="block" style="margin-bottom: 0.133333rem;">
       	<div class="title f16">{{isYanshi ? $t('qxzycsx')/* '请选择延长时限' */ : $t('timelimit')/* '限时发送' */}}</div>
-      	<div class="btn-box" v-show="problemType !== 'ShortAnswer'">
+      	<div class="btn-box" v-show="!['FillBlank', 'ShortAnswer'].includes(problemType)">
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(30)">30{{ $t('sec') }}</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(120)">2{{ $t('min') }}</v-touch>
@@ -13,7 +13,7 @@
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>
       	</div>
 
-      	<div class="btn-box" v-show="problemType === 'ShortAnswer'">
+      	<div class="btn-box" v-show="['FillBlank', 'ShortAnswer'].includes(problemType)">
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(60)">1{{ $t('min') }}</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(180)">3{{ $t('min') }}</v-touch>
       		<v-touch class="btn normal_btn" v-on:tap="chooseProblemDuration(300)">5{{ $t('min') }}</v-touch>

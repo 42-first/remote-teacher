@@ -165,10 +165,13 @@ let pages = {
   "min": "分钟",
   "senddirectly": "直接发送",
   "submittotal": "已有 {ss1} / {ss2} 位同学提交了答案",
+  "submittotal2": "已提交: {ss1}/{ss2}",
   "noanssubmit": '还没有人提交<br>耐心等待一会儿吧~',
   "newans": "您有新的答案",
   "mark": "打分",
   "viewdetails": "查看详情",
+  "zqrs": "正确人数",
+  "tpxsda": "投屏显示答案",
   "classbonusBonuslist": "课堂红包 | 红包名单",
   "standardopt": "本题正确选项为",
   "anonymouspoll": "本题为匿名投票，不显示投票人",
@@ -341,6 +344,9 @@ let pages = {
   "qiandaoafterfix": '',
   "weiqiandaoafterfix": "",
   "weishezhixuehao": "未设置学号",
+  "zhengque": "正确",
+  "cuowu": "错误",
+  "weida": "未答",
   
 
 
