@@ -54,6 +54,16 @@ if (process.env.NODE_ENV === 'production') {
     //设置语言
     set_lang_en: "/v/user/set_language/en",
     set_lang_zh_cn: "/v/user/set_language/zh_cn",
+    // 获取分组列表
+    get_classroom_group_list:           prefix + '/group/get_classroom_group_list/',
+    // (教师端)发起主观题互评
+    publish_subj_problem_group_review:  prefix + '/v/lesson/publish_subj_problem_group_review/',
+    // 主观题打分界面获取回答目前打分情况
+    get_subj_result_score_detail:       prefix + '/v/lesson/get_subj_result_score_detail/',
+    // (教师端) 修改主观题打分比例
+    edit_subj_problem_score_proportion: prefix + '/v/lesson/edit_subj_problem_score_proportion',
+    // (教师端)获取互评状态
+    get_subj_problem_group_review:      prefix + '/v/lesson/get_subj_problem_group_review',
   }
 } else {
   api = {
@@ -68,7 +78,7 @@ if (process.env.NODE_ENV === 'production') {
     presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   'http://apimock.xuetangx.com/mock/115/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
     lesson_not_participant_list:        'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
-    publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
+    publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
     problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
     fill_blank_problem_statistics:      'http://apimock.xuetangx.com/mock/115/v/lesson/fill_blank_problem_statistics/{problem_id}/',         // 填空题条形图数据
     problem_result_detail:              'http://apimock.xuetangx.com/mock/115/v/lesson/problem_result_detail/{{problem_id}}/',      // 试题详情数据
@@ -90,15 +100,20 @@ if (process.env.NODE_ENV === 'production') {
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
     collectsubmission_cancel:           '/static/lesson/mock/collectsubmission_cancel.json',   // 取消收藏投稿
     end_lesson:                         '/static/lesson/mock/end_lesson.json',                 // 主动结束课程
-    subjective_problem_result_list:     '/static/lesson/mock/subjective_problem_result_list.json',     // 主观题答案列表
+    subjective_problem_result_list:     'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_result_list',     // 主观题答案列表
     subjective_problem_teacher_score:   '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分（打星星）
-    subjective_problem_teacher_scorev2: '/static/lesson/mock/subjective_problem_teacher_score.json',   // 主观题老师给答案打分
+    subjective_problem_teacher_scorev2: 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_teacher_scorev2/',   // 主观题老师给答案打分
 
-    //获取用户当前语言设置
-    get_current_language: "http://apimock.xuetangx.com/mock/115/v/user/get_current_language",
-    //设置语言
-    set_lang_en: "http://apimock.xuetangx.com/mock/115/v/user/set_language/en",
-    set_lang_zh_cn: "http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn",
+    // 获取用户当前语言设置
+    get_current_language:  'http://apimock.xuetangx.com/mock/115/v/user/get_current_language',
+    // 设置语言
+    set_lang_en: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/en',
+    set_lang_zh_cn: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn',
+    get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    publish_subj_problem_group_review:  'http://apimock.xuetangx.com/mock/115/v/lesson/publish_subj_problem_group_review/',
+    get_subj_result_score_detail:       'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_result_score_detail/',
+    edit_subj_problem_score_proportion: 'http://apimock.xuetangx.com/mock/115/v/lesson/edit_subj_problem_score_proportion',
+    get_subj_problem_group_review:      'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_problem_group_review',
   }
 }
 

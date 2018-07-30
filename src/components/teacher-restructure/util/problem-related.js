@@ -61,16 +61,16 @@ export default {
      */
     cancelPublishProblem () {
       let self = this
-      
+
       self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
     },
-    
+
     /**
      * 发送题目，在 rc-mask-problemtime.vue 中点击选择了时间后的处理函数
      *
      * @param {number} duration 设定时限的时间，以秒计算
      */
-    unlockProblem (duration) {
+    unlockProblem (duration, groupid) {
       let self = this
 
       let current = self.current - 1
@@ -88,7 +88,8 @@ export default {
         "presentation": self.presentationid,
         "slideindex": self.current,
         "problemid": problemid,
-        "limit": duration //-1为不限时，以秒为单位，60为一分钟
+        "limit": duration, // -1为不限时，以秒为单位，60为一分钟
+        "groupid": groupid
       }
 
       request.post(API.publish_problem, postData)
@@ -101,7 +102,7 @@ export default {
           }
         })
     },
-    
+
     /**
      * 发试题后显示结果：主观题或柱状图倒计时页面
      *
@@ -146,6 +147,6 @@ export default {
       // 跳到试题结果页
       self.$router.push(to)
     },
-    
+
   }
 }

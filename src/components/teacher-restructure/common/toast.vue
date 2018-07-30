@@ -1,6 +1,6 @@
 <!-- 全局弹层组件 -->
 <template>
-	<div class="toast-box f18" :class="{'animateMobileTextIn': isShown, 'animateMobileTextOut': !isShown, 'none': !isSummoned}">
+	<div class="toast-box f18" :class="[{'animateMobileTextIn': isShown, 'animateMobileTextOut': !isShown, 'none': !isSummoned}, newClassName]">
 		{{msg}}
 	</div>
 </template>
@@ -16,7 +16,8 @@
       return {
         isSummoned: false,       // 标记本组件是用户点击呼出的，
         isShown: false,
-        msg: 'loading...'
+        msg: 'loading...',
+				newClassName: ''
       }
     },
     created () {
@@ -34,8 +35,13 @@
        */
       fire (msg) {
         let self = this
+				if(typeof msg == "object"){
+					self.msg = msg.msg
+					self.newClassName = msg.newClassName
+				}else {
+					self.msg = msg
+				}
 
-        self.msg = msg
         self.isShown = true
         self.isSummoned = true
 
@@ -44,7 +50,10 @@
         timer1 = setTimeout(() => {
           self.isShown = false
           clearTimeout(timer2)
-          timer2 = setTimeout(() => {self.isSummoned = false}, 400)
+          timer2 = setTimeout(() => {
+						self.isSummoned = false
+						self.newClassName = ''
+					}, 400)
         }, 3000)
       },
     }

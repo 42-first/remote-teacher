@@ -228,7 +228,16 @@
 	      self.problemOperation(postData)
 	      	.then(() => {
 	      		console.log(duration, timeList[duration])
-	      		let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+	      		// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+						let time = ''
+						if(duration > 30){
+							time = duration / 60 + '分钟'
+						}else if(duration == 30) {
+							time = duration + '秒'
+						} else {
+							time = '不限时'
+						}
+						let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
 	      		T_PUBSUB.publish('ykt-msg-toast', msg);
 	      	})
 	    },
