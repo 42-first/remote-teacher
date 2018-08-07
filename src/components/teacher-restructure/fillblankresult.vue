@@ -621,7 +621,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 1.2rem 0 0.5rem;
+		  padding: 0.2rem 0 0.5rem;
 
 		  .btn-item {
 			  width: 1.8rem;

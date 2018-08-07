@@ -75,7 +75,7 @@
   /* 中间条形图 */
   .fillblank-box {
     position: relative;
-    margin: 1.0rem auto;
+    margin: 0.5rem auto;
     width: 8.8rem;
     height: 5.0rem;
     border-bottom: 0.0133rem solid #AAAAAA;
@@ -101,7 +101,7 @@
       .line {
         flex: 1;
         width: 0;
-        border-right: 0.0267rem dashed $white;
+        border-right: 0.0267rem dashed rgba(255,255,255,0.3);
       }
 
     }

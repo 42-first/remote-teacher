@@ -72,7 +72,7 @@
   /* 上部 */
   .upper {
     margin: 0 auto;
-    width: 9.6rem;
+    width: 9.7rem;
     height: 4.0rem;
     padding-top: 0.8rem;
 
@@ -141,7 +141,7 @@
     .yjyfb {
       display: flex;
       justify-content: space-between;
-      margin: 0 0.3rem;
+      margin: 0.3rem 0.3rem;
       padding-top: 0.2rem;
       border-top: 0.0133rem solid #AAAAAA;
       text-align: left;
