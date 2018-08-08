@@ -575,6 +575,29 @@ var actionsMixin = {
       })
     },
 
+     /*
+     * @method 发起互评
+     * @param { type: 9, type: 'review', reviewid: 2, dt: 1510000, event: all }
+     */
+    launchReview(data) {
+      let oGroup = this.groupMap.get(data.groupid);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 9 && item.reviewid === data.reviewid && data.isFetch;
+      })
+
+      // Object.assign(data, {
+      //   status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
+      //   isComplete: teamid ? true : false
+      // })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
 
   }
 }
