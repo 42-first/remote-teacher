@@ -6,11 +6,11 @@
         <div class="score-box">
           <div class="score student">
             <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
-            <p class="f14">互评分数占比</p>
+            <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
           </div>
           <div class="score teacher">
             <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
-            <p class="f14">教师分数占比</p>
+            <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
           </div>
         </div>
         <div class="range-box">
@@ -23,19 +23,19 @@
       <div class="gap"></div>
       <div class="scale-of-marks">
         <div class="score-point">
-          <h1 class="f20">评分要点</h1>
-          <textarea class="textarea-place f15" v-model="review_declaration" placeholder="请输入您的参考答案或评分要点，供学生参考" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
+          <textarea class="textarea-place f15" v-model="review_declaration" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
         </div>
         <div class="score-rules">
-          <h1 class="f20">互评规则</h1>
+          <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
           <ul>
-            <li class="f12"><i>＊</i> 已提交答案的各组才能参加互评，每个组将收到<span class="f15">一份</span>非本组的作答内容</li>
-            <li class="f12"><i>＊</i> 各组之间相互匿名</li>
-            <li class="f12"><i>＊</i> 教师可随时修改互评占比或者直接修改总得分</li>
+            <li class="f12" v-html="$t('grading.rule1')"></li>
+            <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
+            <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
           </ul>
         </div>
-        <v-touch class="btn-submit f18" v-on:tap="submit">发起互评</v-touch>
-        <v-touch class="btn-cancel f15" v-on:tap="leave">取消</v-touch>
+        <v-touch class="btn-submit f18" v-on:tap="submit"><!-- 发起互评 -->{{$t('grading.faqihuping')}}</v-touch>
+        <v-touch class="btn-cancel f15" v-on:tap="leave"><!-- 取消 -->{{$t('grading.cancel')}}</v-touch>
       </div>
     </template>
     <template v-else>
@@ -43,11 +43,11 @@
         <div class="score-box">
           <div class="score student">
             <p class="f16"><span class="f36">{{gProportion}}</span>%</p>
-            <p class="f14">互评分数占比</p>
+            <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
           </div>
           <div class="score teacher">
             <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
-            <p class="f14">教师分数占比</p>
+            <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
           </div>
         </div>
         <div class="range-box">
@@ -56,21 +56,21 @@
             <div class="end" slot="end"> </div>
           </mt-range>
         </div>
-        <v-touch class="btn-submit f18" :class="group_review_id && changed ? 'disabled': ''" v-on:tap="save">保存</v-touch>
-        <v-touch class="btn-cancel f15" v-on:tap="leave">取消</v-touch>
+        <v-touch class="btn-submit f18" :class="group_review_id && changed ? 'disabled': ''" v-on:tap="save"><!-- 保存 -->{{$t('grading.save')}}</v-touch>
+        <v-touch class="btn-cancel f15" v-on:tap="leave"><!-- 取消 -->{{$t('grading.cancel')}}</v-touch>
       </div>
       <div class="gap"></div>
       <div class="scale-of-marks">
         <div class="score-point">
-          <h1 class="f20">评分要点</h1>
+          <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
           <p class="f15 point">{{group_review_declaration}}</p>
         </div>
         <div class="score-rules">
-          <h1 class="f20">互评规则</h1>
+          <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
           <ul>
-            <li class="f12"><i>＊</i> 已提交答案的各组才能参加互评，每个组将收到<span class="f15">一份</span>非本组的作答内容</li>
-            <li class="f12"><i>＊</i> 各组之间相互匿名</li>
-            <li class="f12"><i>＊</i> 教师可随时修改互评占比或者直接修改总得分</li>
+            <li class="f12" v-html="$t('grading.rule1')"></li>
+            <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
+            <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
           </ul>
         </div>
       </div>
@@ -451,4 +451,10 @@
   border-top-right-radius: .053333rem !important;
   border-bottom-right-radius: .053333rem !important;
 }
+
+.score-rules i, .score-rules span {
+  color: #FEA300;
+  font-style: normal;
+}
+
 </style>

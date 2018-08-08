@@ -78,12 +78,12 @@
 								</template>
 							</div>
 
-							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
+							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
 						</div>
           </section>
 					<template v-if="group_name">
 						<div class="group_name f14">
-							<i class="iconfont icon-fenzu f21"></i>{{group_name}}
+							<i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
 						</div>
 						<div class="gap"></div>
 					</template>

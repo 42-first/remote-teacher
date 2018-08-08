@@ -417,6 +417,21 @@ let pages = {
   "peergrading": "互评得分",
   "noComment": "暂无凭语",
 
+  // 互评
+  grading: {
+    "scoreofpeergrading": "互评分数占比",
+    "scoreofteachergrading": "教师分数占比",
+    "pointsofgrading": "评分要点",
+    "textareaplaceholder": "请输入您的参考答案或评分要点，供学生参考",
+    "hupingguize": "互评规则",
+    "rule1": "<i>＊</i>已提交答案的各组才能参加互评，每个组将收到<span class='f15'>一份</span>非本组的作答内容",
+    "rule2": "各组之间相互匿名",
+    "rule3": "教师可随时修改互评占比或者直接修改总得分",
+    "faqihuping": "发起互评",
+    "cancel": "取消",
+    "save": "保存"
+  },
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

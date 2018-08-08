@@ -417,6 +417,21 @@ let pages = {
   "peergrading": "Peer grading",
   "noComment": "No comment",
 
+  // 互评
+  grading: {
+    "scoreofpeergrading": "Score of Peer Grading",
+    "scoreofteachergrading": "Score of Teacher Grading",
+    "pointsofgrading": "Points for Grading",
+    "textareaplaceholder": "Please enter the key or points for students' reference.",
+    "hupingguize": "Rules of Peer Grading",
+    "rule1": "<i>＊</i>Groups can take part in peer grading only after answer submission. Each group will receive <span class='f15'>One</span> answer from other groups.",
+    "rule2": "The peer grading is anonymous.",
+    "rule3": "The teacher can change the proportion of peer grading to teacher grading or edit the final score at any time.",
+    "faqihuping": "Launch",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
