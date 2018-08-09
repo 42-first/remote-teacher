@@ -7,7 +7,7 @@
 <template>
 
   <section class="popup-item" v-if="item">
-    <!-- type : 3习题 4试卷 8分组  -->
+    <!-- type : 3习题 4试卷 8分组 9:互评 -->
     <!-- 试卷模板 -->
     <template v-if="item.type==4">
       <div class="popup__paper">
@@ -51,6 +51,18 @@
             <p class="paper-name" v-else-if="item.groupType ==='free'">{{ $t('team.freegrouping') }}</p>
           </a>
           <i class="iconfont gray icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
+        </div>
+      </div>
+    </template>
+    <!-- 互评模板 -->
+    <template v-else-if="item.type==9">
+     <div class="popup__paper">
+        <div :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" @click="handlelink(index, $event)">
+          <router-link class="paper-txt f17" :to="'/'+lessonid+'/evaluation/'+item.index" >
+            <p class="icon-wrapper"><i class="iconfont icon-huping f32"></i></p>
+            <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
+          </router-link>
+          <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
         </div>
       </div>
     </template>

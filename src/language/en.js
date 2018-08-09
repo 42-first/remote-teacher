@@ -429,9 +429,10 @@ let pages = {
     "rule3": "The teacher can change the proportion of peer grading to teacher grading or edit the final score at any time.",
     "faqihuping": "Launch",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "launchedgrading" : "A peer grading is launched.",
   },
-  
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"

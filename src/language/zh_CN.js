@@ -429,7 +429,8 @@ let pages = {
     "rule3": "教师可随时修改互评占比或者直接修改总得分",
     "faqihuping": "发起互评",
     "cancel": "取消",
-    "save": "保存"
+    "save": "保存",
+    "launchedgrading" : "Hi，老师发起了互评",
   },
 
   // 图片国际化

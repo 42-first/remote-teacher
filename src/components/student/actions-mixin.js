@@ -71,6 +71,12 @@ var actionsMixin = {
 
               break;
 
+            // 分组互评
+            case 'review':
+              this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -577,19 +583,26 @@ var actionsMixin = {
 
      /*
      * @method 发起互评
-     * @param { type: 9, type: 'review', reviewid: 2, dt: 1510000, event: all }
+     * @param { type: 9, reviewid: 2, prob: 1002, dt: 1510000, event: all }
      */
     launchReview(data) {
-      let oGroup = this.groupMap.get(data.groupid);
+      let oReview = this.groupReviewMap.get(data.reviewid);
+      let isComplete = oReview && oReview.finished || false;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 9 && item.reviewid === data.reviewid && data.isFetch;
       })
 
-      // Object.assign(data, {
-      //   status: teamid ? this.$i18n.t('done') : this.$i18n.t('undone'),
-      //   isComplete: teamid ? true : false
-      // })
+      // 互评题目信息
+      let slideData = this.problemMap.get(data.prob);
+
+      Object.assign(data, {
+        pageIndex: slideData && slideData.Index,
+        cover: slideData && slideData['Cover'],
+        score: slideData && slideData['Problem'] && slideData['Problem']['Score'],
+        status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
+        isComplete
+      })
 
       // 消息box弹框
       data.isPopup && !this.observerMode && (this.msgBoxs = [data]);

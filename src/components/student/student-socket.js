@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pro.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -338,6 +338,13 @@ var mixin = {
           // 完成分组
           case 'finishgroup':
             this.finishGroup({ type: 8, groupid: msg['groupid'], teamid: msg['teamid'], event: item });
+
+            break;
+
+          // 发起互评
+          case 'launchreview':
+            item = msg['review'];
+            this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item.dt, isPopup: true, event: item });
 
             break;
 

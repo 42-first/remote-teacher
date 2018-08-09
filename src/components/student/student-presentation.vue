@@ -211,6 +211,8 @@
         quizMap: new Map(),
         // 分组map
         groupMap: new Map(),
+        // 互评map
+        groupReviewMap: new Map(),
 
         // 习题map
         problemMap: new Map(),
@@ -534,6 +536,7 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
               self.groupList = data.groupList;
+              self.groupReviewList = data.groupReviewList;
 
               // classroom
               self.classroom = data.classroom;
@@ -558,6 +561,13 @@
               if(self.groupList && self.groupList.length) {
                 self.groupList.forEach( (group, index) => {
                   self.groupMap.set(group.group_id, group);
+                });
+              }
+
+              // set groupReviewMap
+              if(self.groupReviewList && self.groupReviewList.length) {
+                self.groupReviewList.forEach( (review) => {
+                  self.groupReviewMap.set(review.group_review_id, review);
                 });
               }
 
