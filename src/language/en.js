@@ -431,6 +431,16 @@ let pages = {
     "cancel": "Cancel",
     "save": "Save",
     "launchedgrading" : "A peer grading is launched.",
+    "pointsgrading" : "Points for Grading",
+    "grade" : "Grade",
+    "answer" : "Answer",
+    "gradingscore" : "Peer grading score: {score} point(s)",
+    "gradingtotalscore" : "Enter the score (total score is {score} point(s))",
+    "notice" : "Notice",
+    "noticecontent" : "This question is graded by groups. Each student has only one chance to grade the question, and only the last submission in each group will be accepted as the final score.",
+    "close" : "Close",
+    "gradedalready" : "Graded Already",
+    "gradedoverwrite" : "Your submission will overwrite the present grading.",
   },
 
   // 图片国际化

@@ -581,7 +581,7 @@ var actionsMixin = {
       })
     },
 
-     /*
+    /*
      * @method 发起互评
      * @param { type: 9, reviewid: 2, prob: 1002, dt: 1510000, event: all }
      */
