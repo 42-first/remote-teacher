@@ -72,13 +72,13 @@
 								<template v-if="problem_group_review_id">
 									<div class="line"></div>
 									<div :class="['f12', 'yjy']">
-										<span class="f18">group_review_done_num</span>
+										<span class="f18">{{group_review_done_num}}</span>
 										{{ $t('team.yihuping') }}
 			            </div>
 								</template>
 							</div>
 
-							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch>
+							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
 					<template v-if="group_name">
