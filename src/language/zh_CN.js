@@ -431,6 +431,16 @@ let pages = {
     "cancel": "取消",
     "save": "保存",
     "launchedgrading" : "Hi，老师发起了互评",
+    "pointsgrading" : "评分要点",
+    "grade" : "打分",
+    "answer" : "答案",
+    "gradingscore" : "互评得分：{score}分",
+    "gradingtotalscore" : "请输入互评分数（满分{score}分）",
+    "notice" : "注意",
+    "noticecontent" : "本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主",
+    "close" : "关闭",
+    "gradedalready" : "已有人批改",
+    "gradedoverwrite" : "提交后将会覆盖之前的评分",
   },
 
   // 图片国际化

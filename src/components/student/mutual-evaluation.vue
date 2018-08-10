@@ -11,7 +11,7 @@
     <div :class="['evaluation__wrapper', 'animated', opacity ? 'zoomIn': '']">
       <!-- 互评得分 修改入口 -->
       <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
-        <p class="f20 yellow">互评得分：{{ reviewScore }}分</p>
+        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
         <p @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
@@ -28,8 +28,8 @@
       <!-- 主观题答案 -->
       <section class="evaluation__answer" v-if="result">
         <h3 class="answer__header">
-          <p class="f21 c333">答案</p>
-          <p class="answer--points f14 blue" @click="handlenode">评分要点</p>
+          <p class="f21 c333"><!-- 答案 -->{{ $t('grading.answer') }}</p>
+          <p class="answer--points f14 blue" @click="handlenode"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
           <img class="answer--pic" :src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" />
@@ -39,7 +39,7 @@
 
       <!-- 打分 -->
       <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
-        <p class="score--btn" @click="handlescore">打分</p>
+        <p class="score--btn" @click="handlescore"><!-- 打分 -->{{ $t('grading.grade') }}</p>
       </section>
 
     </div>
@@ -49,27 +49,27 @@
       <div class="score__modal">
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
-          <p class="input--tip f14 c666">请输入互评分数（本题总分{{ summary&&summary.score }}分）</p>
+          <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
           <input class="input f30 c9b" type="tel" v-model="score" />
         </div>
         <div class="score__node">
-          <h3 class="f20 c333">注意</h3>
+          <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
           <div class="node__info">
             <span class="f18 yellow">*</span>
-            <p class="f12 c9b">本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主</p>
+            <p class="f12 c9b" v-html="$t('grading.noticecontent')">本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主</p>
           </div>
         </div>
 
-        <p class="score--submit f18" @click="handlesubmit">提交</p>
+        <p class="score--submit f18" @click="handlesubmit"><!-- 提交 -->{{ $t('submit') }}</p>
       </div>
     </section>
 
     <!-- 评分要点 -->
     <section class="node__wrap" v-show="nodeVisible">
       <div class="node__modal">
-        <header class="node--title f18 c333">评分要点</header>
+        <header class="node--title f18 c333"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</header>
         <div class="node__content f14 c666">{{ declaration }}</div>
-        <footer class="node--footer f18" @click="handleclosedNode">关闭</footer>
+        <footer class="node--footer f18" @click="handleclosedNode"><!-- 关闭 -->{{ $t('grading.close') }}</footer>
       </div>
     </section>
 

@@ -186,6 +186,10 @@
       background: #71D2A5;
     }
 
+    .paper-info.evaluation .paper-txt .icon-wrapper {
+      background: rgba(239,175,79,0.7);
+    }
+
     .paper-icon {
       display: block;
       width: 1.386667rem;
