@@ -37,8 +37,11 @@
       <!-- 填空选项 -->
       <section class="blanks__wrap">
         <header class="blanks__header f20">我的答案</header>
-        <ul class="blank__options">
-          <li></li>
+        <ul class="blanks__options">
+          <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
+            <p class="blank__order">{{ index + 1 }}</p>
+            <input class="blank__input f17" type="text" v-model="blanks.result" @input="handleinput" :data-index="index" placeholder="输入答案" />
+          </li>
         </ul>
       </section>
 
@@ -47,6 +50,8 @@
         <p class="f18">{{ $t('watchmode') }}</p>
         <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
+
+      <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
 
     </div>
 
@@ -114,6 +119,9 @@
         summary: null,
         // 填空题填空列表
         blanks: null,
+        // 作答结果
+        result: {},
+        oProblem: null,
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
 
@@ -187,7 +195,7 @@
         // 问题类型
         this.problemType = this.oProblem['Type'];
         // 选项
-        this.blanks = data.Blanks;
+        let blanks = this.oProblem.Blanks;
 
         // 是否观察者模式
         if(this.observerMode) {
@@ -201,9 +209,9 @@
 
           let result = this.oProblem['Result'];
 
-          result && result.split('').forEach((option) => {
-            this.setOptions(option, true, true);
-          });
+          // result && result.split('').forEach((option) => {
+          //   this.setOptions(option, true, true);
+          // });
 
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
@@ -212,17 +220,20 @@
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
-          this.blanks.forEach((item) => {
-            // 是否有选项
-            if(item.selected) {
+          blanks.forEach((item) => {
+            // 是否有作答
+            if(!item.result) {
+              item.result = '';
             }
           })
 
           if (process.env.NODE_ENV !== 'production') {
-            // todo: test测试
+            // test测试
             this.setTiming(data.limit)
           }
         }
+
+        this.blanks = blanks;
 
         setTimeout(()=>{
           this.opacity = 1;
@@ -388,7 +399,6 @@
         }
       },
 
-
       /*
       * @method 返回主页面
       */
@@ -397,9 +407,17 @@
       },
 
       /*
-      * @method 设置答案选项
-      */
+       * @method 填空答案输入
+       */
+      handleinput(evt) {
+        let target = evt.target;
+        let index = target.dataset.index;
+        let value = target.value;
 
+        if(value && !this.canSubmit) {
+          this.canSubmit = 1;
+        }
+      },
 
       /*
       * @method 提交答案
@@ -672,7 +690,6 @@
     padding-bottom: 0.4rem;
 
     border-top: 1px solid #C8C8C8;
-    // border-bottom: 1px solid #C8C8C8;
     overflow: hidden;
     .page-no {
       position: absolute;
@@ -703,7 +720,7 @@
 
   .blanks__wrap {
     margin-top: 0.266667rem;
-    padding-top: 0.533333rem;
+    padding: 0.533333rem 0;
 
     background: #fff;
   }
@@ -716,8 +733,40 @@
     text-align: left;
   }
 
-  .blank__options {
+  .blanks__options {
     padding: 0.533333rem;
+  }
+
+  .blank__item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 1.066667rem;
+    border: 2px solid #eee;
+    border-left: none;
+    border-radius: 0.106667rem;
+  }
+
+  .blank__order {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 1.066667rem;
+    height: 1.066667rem;
+    font-weight: bold;
+    color: #5096F5;
+    border: 2px solid #5096F5;
+    border-radius: 0.106667rem 0 0 0.106667rem;
+  }
+
+  .blank__input {
+    flex: 1;
+    padding: 0.066667rem 0.266667rem;
+    outline: none;
+    border: none;
+    appearance: none;
   }
 
 
