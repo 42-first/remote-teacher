@@ -34,17 +34,12 @@
         <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
       </section>
 
-      <!-- 问题选项 -->
-      <section class="" v-if="isShowOption">
-        <ul class="exercise-options" v-if="summary">
-          <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="(item, index) in options">
-            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label, $event)" :data-option="item.Label">{{ item.Label }}</p>
-          </li>
+      <!-- 填空选项 -->
+      <section class="blanks__wrap">
+        <header class="blanks__header f20">我的答案</header>
+        <ul class="blank__options">
+          <li></li>
         </ul>
-        <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
 
       <!-- 观看者提示文字 返回 -->
@@ -117,7 +112,8 @@
         warning: false,
         timeOver: false,
         summary: null,
-        options: null,
+        // 填空题填空列表
+        blanks: null,
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
 
@@ -127,8 +123,6 @@
         optionsSet: new Set(),
         // 问题类型
         problemType: '',
-        selectedPollingCount: 0,
-        pollingCount: 0,
 
         isShowSubmit: true,
         isShowOption: true,
@@ -193,7 +187,7 @@
         // 问题类型
         this.problemType = this.oProblem['Type'];
         // 选项
-        this.options = data.options;
+        this.blanks = data.Blanks;
 
         // 是否观察者模式
         if(this.observerMode) {
@@ -204,11 +198,6 @@
         // 是否完成
         if(data.isComplete) {
           this.isShowSubmit = false;
-
-          // 投票类型
-          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
-            this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
-          }
 
           let result = this.oProblem['Result'];
 
@@ -223,23 +212,11 @@
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
-          // 投票类型
-          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
-            this.selectedPollingCount = this.pollingCount = parseInt(this.oProblem['Answer'], 10);
-          }
-
-          this.options.forEach((item) => {
+          this.blanks.forEach((item) => {
             // 是否有选项
             if(item.selected) {
-              this.canSubmit = 1;
-              this.optionsSet.add(item.Label);
-
-              this.problemType === 'Polling' && this.selectedPollingCount--;
             }
           })
-
-          // 提交有困难地址
-          this.commitDiffURL = this.commitDiffURL + problemID;
 
           if (process.env.NODE_ENV !== 'production') {
             // todo: test测试
@@ -411,38 +388,6 @@
         }
       },
 
-      /*
-      * @method 设置答案选项是否选中
-      * @param option: 选项
-      *        isSelected: 是否选中
-      *        multi: 是否多选
-      */
-      setOptions(option, isSelected, multi) {
-        let options = this.options;
-
-        options = options.map( (element, index) => {
-          if(!isSelected) {
-            // 取消
-            element.Label === option && (element.selected = isSelected);
-          } else {
-            if(multi) {
-              // 多选
-              element.Label === option && (element.selected = isSelected);
-            } else {
-              // 单选
-              if(element.Label === option) {
-                element.selected = isSelected;
-              } else {
-                element.selected = false;
-              }
-            }
-          }
-
-          return element;
-        });
-
-        this.options = options;
-      },
 
       /*
       * @method 返回主页面
@@ -454,51 +399,7 @@
       /*
       * @method 设置答案选项
       */
-      handleSetOption(option, evt) {
-        // let targetEl = event.target;
-        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
 
-        // 提交中或者已完成
-        if(this.canSubmit === 2 || this.summary.isComplete || this.timeOver) {
-          return this;
-        }
-
-        if(this.optionsSet.has(option)) {
-          this.setOptions(option, false);
-          this.optionsSet.delete(option);
-
-          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
-            this.selectedPollingCount++;
-          }
-        } else if(this.problemType) {
-          // 是否多选
-          if(this.problemType === 'MultipleChoiceMA') {
-            this.setOptions(option, true, true);
-            this.optionsSet.add(option);
-          } else if(this.problemType === 'MultipleChoice') {
-            this.setOptions(option, true, false);
-            this.optionsSet.clear();
-            this.optionsSet.add(option);
-          } else if(this.problemType.indexOf('Polling') > -1 && this.selectedPollingCount && this.pollingCount > 1) {
-            this.selectedPollingCount--;
-            this.setOptions(option, true, true);
-            this.optionsSet.add(option);
-          } else if(this.problemType.indexOf('Polling') > -1 && this.pollingCount === 1) {
-            this.setOptions(option, true, false);
-            this.optionsSet.clear();
-            this.optionsSet.add(option);
-            this.selectedPollingCount > 0 && this.selectedPollingCount--;
-          }
-        }
-
-        // 是否可以提交
-        if(this.optionsSet.size) {
-          this.canSubmit = 1;
-          console.log([...this.optionsSet].sort().join(''));
-        } else {
-          this.canSubmit = 0;
-        }
-      },
 
       /*
       * @method 提交答案
@@ -693,7 +594,7 @@
       if(this.summary) {
         this.init(this.summary);
       } else {
-        this.$router.back();
+        // this.$router.back();
       }
     },
     mounted() {
@@ -770,9 +671,8 @@
     margin: 0.4rem 0.453333rem 0;
     padding-bottom: 0.4rem;
 
-
     border-top: 1px solid #C8C8C8;
-    border-bottom: 1px solid #C8C8C8;
+    // border-bottom: 1px solid #C8C8C8;
     overflow: hidden;
     .page-no {
       position: absolute;
@@ -798,15 +698,28 @@
 
 
   /*------------------*\
-    $ 习题选项
+    $ 填空选项
   \*------------------*/
 
+  .blanks__wrap {
+    margin-top: 0.266667rem;
+    padding-top: 0.533333rem;
 
-  .polling-count {
-    padding-top: 0.25rem;
-    text-align: center;
-    color: #E64340;
+    background: #fff;
   }
+
+  .blanks__header {
+    padding-left: 0.293333rem;
+    height: 0.746667rem;
+    border-left: 0.16rem solid #639EF4;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .blank__options {
+    padding: 0.533333rem;
+  }
+
 
   .submit-btn {
     margin: 0.8rem auto 1.226667rem;
@@ -833,7 +746,5 @@
 
 
 </style>
-
-
 
 
