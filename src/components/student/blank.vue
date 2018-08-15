@@ -40,7 +40,7 @@
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
             <p class="blank__order">{{ index + 1 }}</p>
-            <input class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index]" @input="handleinput" :data-index="index" placeholder="输入答案" />
+            <input class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" placeholder="输入答案" />
           </li>
         </ul>
       </section>
@@ -216,10 +216,10 @@
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
-          blanks.forEach((item) => {
+          blanks.forEach((item, index) => {
             // 是否有作答
-            if(!item.result) {
-              item.result = '';
+            if(!this.result[index + 1]) {
+              this.result[index + 1] = '';
             }
           })
 
@@ -336,7 +336,7 @@
         let hasAnswer = false;
 
         hasAnswer = this.blanks.find((blank, index)=>{
-          return result[index];
+          return result[index + 1];
         });
 
         if(!this.isComplete && hasAnswer) {
@@ -534,7 +534,7 @@
 
         // 检测是否所有的选项都作答了
         let hasNoAnswer = this.blanks.find((blank, index)=>{
-          return !result[index];
+          return !result[index + 1];
         });
 
         if(hasNoAnswer) {
