@@ -40,7 +40,7 @@
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
             <p class="blank__order">{{ index + 1 }}</p>
-            <input class="blank__input f17" type="text" v-model="blanks.result" @input="handleinput" :data-index="index" placeholder="输入答案" />
+            <input class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index]" @input="handleinput" :data-index="index" placeholder="输入答案" />
           </li>
         </ul>
       </section>
@@ -207,11 +207,7 @@
         if(data.isComplete) {
           this.isShowSubmit = false;
 
-          let result = this.oProblem['Result'];
-
-          // result && result.split('').forEach((option) => {
-          //   this.setOptions(option, true, true);
-          // });
+          this.result = this.oProblem['Result'];
 
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
@@ -228,7 +224,6 @@
           })
 
           if (process.env.NODE_ENV !== 'production') {
-            // test测试
             this.setTiming(data.limit)
           }
         }
@@ -337,11 +332,21 @@
        * @params problem
        */
       canSubmitFn() {
-        let hasResult = [...this.optionsSet].length;
+        let result = this.result;
+        let hasAnswer = false;
 
-        if(!this.isComplete && hasResult) {
+        hasAnswer = this.blanks.find((blank, index)=>{
+          return result[index];
+        });
+
+        if(!this.isComplete && hasAnswer) {
           this.canSubmit = 1;
+        } else if(!this.isComplete && !hasAnswer) {
+          this.canSubmit = 0;
         }
+
+        // 保存作答记录
+        this.oProblem['Result'] = result;
       },
 
       /*
@@ -414,18 +419,17 @@
         let index = target.dataset.index;
         let value = target.value;
 
-        if(value && !this.canSubmit) {
-          this.canSubmit = 1;
-        }
+        this.canSubmitFn();
       },
 
       /*
       * @method 提交答案
       */
-      handleSubmit() {
+      submitProblem() {
         let self = this;
         let problemID = this.summary.problemID;
         let URL = API.student.ANSWER_LESSON_PROBLEM;
+        let result = this.result;
 
         // 是否可以提交
         if(this.canSubmit === 1) {
@@ -452,7 +456,7 @@
             'startTime': startTime,
             'submit_time': endTime,
             'lesson_problem_id': problemID,
-            'result': [...this.optionsSet].sort().join(''),
+            'result': result,
             'retry_times': retryTimes
           }
 
@@ -519,6 +523,35 @@
             });
 
           clearInterval(this.timer);
+        }
+      },
+
+      /*
+       * @method 提交作答结果
+       */
+      handleSubmit() {
+        let result = this.result;
+
+        // 检测是否所有的选项都作答了
+        let hasNoAnswer = this.blanks.find((blank, index)=>{
+          return !result[index];
+        });
+
+        if(hasNoAnswer) {
+          let msgOptions = {
+            confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
+            cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+          };
+          let message = '有空格未填写，确认提交吗？';
+
+          this.$messagebox.confirm(message, msgOptions).
+            then( action => {
+              if(action === 'confirm') {
+                this.submitProblem();
+              }
+          });
+        } else {
+          this.submitProblem();
         }
       },
 
