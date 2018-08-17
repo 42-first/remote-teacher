@@ -46,11 +46,11 @@
 
     <!-- 打分弹层 -->
     <section class="score__wrap" v-if="scoreVisible">
-      <div class="score__modal">
+      <div :class="[ 'score__modal', modalActive ? 'active' : '']" >
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
           <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
-          <input class="input f30 c9b" type="tel" v-model="score" />
+          <input class="input f30 c9b" type="tel" v-model="score" @focus="handlefocus" @blur="handleblur" />
         </div>
         <div class="score__node">
           <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
@@ -107,7 +107,9 @@
 
         scoreVisible: false,
         nodeVisible: false,
-        canSubmitScore: false
+        canSubmitScore: false,
+
+        modalActive: false
       };
     },
     components: {
@@ -243,6 +245,18 @@
       },
       handleclosedNode () {
         this.nodeVisible = false;
+      },
+
+      /*
+       * @method 打分输入框focus
+       * @param
+       */
+      handlefocus() {
+        this.modalActive = true;
+      },
+
+      handleblur() {
+        this.modalActive = false;
       },
 
       handlelaodImg(evt) {
@@ -417,7 +431,8 @@
 
   .score__wrap:after {
     content: '';
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
@@ -428,7 +443,8 @@
 
   .score__modal {
     z-index: 1;
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
@@ -485,6 +501,11 @@
       border-radius: 0.6rem/50%;
       box-shadow: 0 0.106667rem 0.186667rem rgba(80, 150, 245, 0.4);
     }
+  }
+
+  .score__modal.active {
+    top: 0;
+    bottom: initial;
   }
 
   .node__wrap {
