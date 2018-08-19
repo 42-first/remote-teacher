@@ -365,6 +365,7 @@ let pages = {
   "hasSubmit": "已提交",
   "projectionHideStuInfo": "投屏隐藏学生信息",
   "projectionHideStuName": "投屏隐藏学生姓名",
+  "hideanswer": "隐藏答案",
   "zhengque": "正确",
   "cuowu": "错误",
   "weida": "未答",

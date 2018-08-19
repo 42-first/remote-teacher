@@ -33,9 +33,18 @@
 	    			<v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
 	    		</div>
 		    </div>
-		    <div :class="['f18', 'yjy']">
+		    <!-- <div :class="['f18', 'yjy']">
 		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
-		    </div>
+		    </div> -->
+				<div class="yjy">
+					<div class="status text-left">已提交： 50/68</div>
+					<div class="text-right hide-answer-wrapper">
+						<i class="iconfont icon-kuang" v-show="!showAnswer" @click="showAnswer = true"></i>
+						<i class="iconfont icon-kuangxuanzhong color63" v-show="showAnswer"  @click="showAnswer = false"></i>
+						<span class="hide-answer">隐藏答案</span>
+						<i class="iconfont icon-question"></i>
+					</div>
+				</div>
 	    </section>
 
 	    <!-- 中间柱状图 -->
@@ -64,7 +73,7 @@
   	          <span class="label f18">{{ma_right_count.label}}</span>
   	        </div>
   	      </div>
-  				<div class="histogram-item" v-for="item in graph">
+  				<div class="histogram-item" v-for="(item, index) in graph" :key="index">
   	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/total*100+'%'}">
   	          <span class="value f18">{{item.value}}</span>
   	          <span class="label f18">{{item.label}}</span>
@@ -169,7 +178,8 @@
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
-		    isTouping: false,							 // 当前正在投屏
+				isTouping: false,							 // 当前正在投屏
+				hideAnswer: false,             // 隐藏答案
 	    }
 	  },
 	  computed: {
@@ -662,6 +672,7 @@
 <!-- TODO 柱状图滑动 icon图片？ -->
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+	@import "~@/style/common";
 	.problem-root {
 		height: 100%;
 		min-height: 100%;
@@ -742,8 +753,24 @@
 				vertical-align: middle;
 			}
 			.yjy {
-				padding-top: 0.5rem;
-				color: #AAAAAA;
+				margin-top: px2rem(32px);
+				border-top: px2rem(1px) solid #fff;
+				padding-top: px2rem(20px);
+				height: px2rem(62px);
+				color: #fff;
+				font-size: px2rem(28px);
+				display: flex;
+				.status{
+					flex: 1;
+				}
+				.hide-answer-wrapper{
+					.hide-answer{
+						margin: 0 px2rem(20px) 0 px2rem(10px);
+					}
+					i{
+						font-size: px2rem(30px);
+					}
+				}
 			}
 	  }
 
