@@ -653,11 +653,11 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	     */
 	    setSentry() {
 	      if(typeof Raven !== 'undefined') {
-	        Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+	        Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	        Raven.setUserContext({ userid: this.userid });
 	      } else {
 	        setTimeout(() => {
-	          Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+	          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	          Raven.setUserContext({ userid: this.userid });
 	        }, 1500)
 	      }

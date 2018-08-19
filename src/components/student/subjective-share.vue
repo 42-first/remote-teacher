@@ -18,13 +18,13 @@
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
-        <div class="item-avatar">
-          <img class="" :src="result.user_avatar" alt="" />
+        <div class="item-avatar" v-if="avatar">
+          <img class="" :src="avatar" alt="" />
         </div>
 
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15">{{ result.user_name }}</p>
+          <p class="user-name f15" v-if="name">{{ name }}</p>
           <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
           <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
@@ -49,7 +49,11 @@
         width: 0,
         height: 0,
         // 图片比例
-        rate: 1
+        rate: 1,
+        // 被分享者的信息
+        avatar: '',
+        name: '',
+        teamAvatar: 'http://sfe.ykt.io/o_1cfcr67hc3l11c0a1cit11beav89.png',
       };
     },
     components: {
@@ -67,7 +71,7 @@
     methods: {
       /*
        * @method 获取主观题分数
-       * @param
+       * @param 接口有变更 增加了个人作答还是小组作答信息
        */
       getSubjective(spid) {
         let URL = API.student.GET_SUBJECTIVE;
@@ -82,6 +86,15 @@
               let data = res.data;
 
               this.result = data;
+
+              if(data.group_answer) {
+                this.name = data.team_name;
+                // 后面使用小组头像 暂时使用个人头像
+                this.avatar = this.teamAvatar;
+              } else {
+                this.name = data.users[0].user_name;
+                this.avatar = data.users[0].user_avatar;
+              }
 
               return data;
             }

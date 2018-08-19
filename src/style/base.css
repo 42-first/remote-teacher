@@ -42,6 +42,37 @@ textarea { outline: none; resize: none; }
 .clearfix:after {display: block; content: ""; clear: both;}
 
 
+/*-----------------------*\
+    $ 常用颜色
+\*-----------------------*/
+
+.c333 {
+  color: #333;
+}
+
+.c666 {
+  color: #666;
+}
+
+.c9b {
+  color: #9B9B9B;
+}
+
+.blue {
+  color: #5096F5;
+}
+
+.red {
+  color: #F84F41;
+}
+.yellow {
+  color: #FEA300;
+}
+.cfff {
+  color: #fff;
+}
+
+
 /*-----------------------------*\
     $ 基本字体大小
 \*-----------------------------*/

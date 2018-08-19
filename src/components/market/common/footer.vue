@@ -15,7 +15,7 @@
         </div>
         <div class="footer-right fr">
           <img class="link-time" src="http://sfe.ykt.io/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
-          <p class="link-tel">010-82152560</p>
+          <p class="link-tel">400-099-6061</p>
           <!-- 联系方式 -->
           <div class="link-us clearfix">
             <div class="link-us-email fr">
@@ -27,7 +27,9 @@
             </div>
             <div class="link-us-qq fr">
               <div class="link-us-qqgroup">
-                <p>QQ:487470016（推荐）</p>
+                <p>QQ:661757223（推荐）</p>
+                <p>QQ:577760819（已满）</p>
+                <p>QQ:487470016（已满）</p>
                 <p>QQ:470686527（已满）</p>
                 <p>QQ:314940327（已满）</p>
                 <p class="remark">雨课堂官方QQ群</p>
@@ -198,7 +200,7 @@
   .link-us-qcode img{ display: block; margin: auto; width: 160px; height: 160px; }
 
   .link-us-qqgroup {
-    top: -188px;
+    top: -250px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;

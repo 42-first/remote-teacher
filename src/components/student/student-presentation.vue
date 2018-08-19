@@ -20,10 +20,14 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action f17" v-if="version > 0.8">
+            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action line f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
+            <p class="action f17" @click="handleenterTeam" v-if="classroom &&classroom.classroomId">
+              <i class="iconfont icon-fenzu f25"></i>
+              <span><!-- 我的分组 -->{{ $t('team.mygroup') }}</span>
+            </p>
           </div>
         </div>
       </header>
@@ -205,6 +209,8 @@
         presentationMap: new Map(),
         quizList: null,
         quizMap: new Map(),
+        // 分组map
+        groupMap: new Map(),
 
         // 习题map
         problemMap: new Map(),
@@ -267,6 +273,10 @@
         // 对路由变化作出响应...
         console.log(from.name);
         console.log(to.name);
+
+        if (process.env.NODE_ENV !== 'production') {
+          return this;
+        }
 
         if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
           document.title = this.courseName && this.courseName;
@@ -353,11 +363,11 @@
       */
       setSentry() {
         if(typeof Raven !== 'undefined') {
-          Raven.config('http://1a033df516274a349716c21d7d4ce6b2@rain-sentry.xuetangx.com/4').install();
+          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userID });
         } else {
           setTimeout(() => {
-            Raven.config('http://1a033df516274a349716c21d7d4ce6b2@rain-sentry.xuetangx.com/4').install();
+            Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
@@ -397,7 +407,7 @@
       * @method 测试环境初始化timeline
       */
       testTimeline() {
-        this.addMessage({ type: 1, message:"开课啦" });
+        this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
 
         this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
         this.addPPT({ type: 2, pageIndex:2, time: 1497431406048, presentationid: this.presentationID });
@@ -523,6 +533,7 @@
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
+              self.groupList = data.groupList;
 
               // classroom
               self.classroom = data.classroom;
@@ -540,6 +551,13 @@
               if(self.quizList && self.quizList.length) {
                 self.quizList.forEach( function(quiz, index) {
                   self.quizMap.set(quiz.quizID, quiz);
+                });
+              }
+
+              // set groupMap
+              if(self.groupList && self.groupList.length) {
+                self.groupList.forEach( (group, index) => {
+                  self.groupMap.set(group.group_id, group);
                 });
               }
 
@@ -838,6 +856,14 @@
       },
 
       /*
+       * @method 进入分组
+       *
+       */
+      handleenterTeam(evt) {
+        location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+      },
+
+      /*
        * @method 滚动到最顶部
        *
        */
@@ -983,10 +1009,12 @@
         }
 
         .action {
+          display: block;
           padding: 0.266667rem 0;
 
           line-height: 0.933333rem;
           text-align: center;
+          white-space: nowrap;
 
           .iconfont {
             padding-right: 0.186667rem;

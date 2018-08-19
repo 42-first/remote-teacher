@@ -196,12 +196,19 @@
     data () {
       return {
         showMasking: !1,
-        is_can: 'false'
+        is_can: 'false',
+        miniprogram: !1
       }
     },
     props: ['type', 'is_can_audit', 'university_name', 'url'],
     created () {
+      let self = this
       this.is_can = this.is_can_audit + ''
+      // 检测是否在小程序中
+      typeof wx !== 'undefined' && wx.miniProgram.getEnv && wx.miniProgram.getEnv(function(res) {
+          self.miniprogram = res.miniprogram
+      })
+
     },
     methods: {
       goClassroom: function () {
@@ -210,7 +217,11 @@
         $parent && $parent.removeChild($super)
       },
       goUrl: function () {
-        window.location.href = this.url
+        if (this.miniprogram) {
+            location.href = location.origin + '/v/index/bindGuidance'
+        } else {
+            location.href = this.url
+        }
       }
     }
   }

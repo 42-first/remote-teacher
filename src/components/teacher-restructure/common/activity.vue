@@ -49,19 +49,18 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <!-- 设置不放在这里了 -->
-    <!--<router-link :to="{name: 'stateSet'}" class="activity-item f18 J_ga" data-category="18" data-label="课堂动态页">-->
-      <!--<div>-->
-        <!--<div class="iconbox" style="background: #F6BC4E;">-->
-          <!--<i class="iconfont icon-yaokongqishezhi f21"></i>-->
-        <!--</div>-->
-        <!--{{ $t('set') }}-->
-      <!--</div>-->
-      <!--<div class="dakai-box">-->
-        <!--<span class="info f12">new</span>-->
-        <!--<i class="iconfont icon-dakai f21"></i>-->
-      <!--</div>-->
-    <!--</router-link>-->
+		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+      <div>
+        <div class="iconbox" style="background: #08BC72;">
+          <i class="iconfont icon-fenzu1 f21"></i>
+        </div>
+        {{ $t('group') }}
+      </div>
+			<div class="dakai-box">
+        <i class="iconfont icon-dakai f21"></i>
+      </div>
+    </v-touch>
+
     <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
@@ -100,6 +99,7 @@
         'isDanmuOpen',
         'newtougao',
 				'notParticipantList',
+				'classroomid'
       ])
     },
     components: {
@@ -152,7 +152,16 @@
       // 设置
       stateSetFn () {
         this.$emit('stateSet')
-      }
+      },
+
+			/*
+			 * 分组入口
+			 */
+			toTeam() {
+				let self = this;
+				console.log(self.classroomid + '--' + self.lessonid);
+				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+			}
     }
   }
 </script>

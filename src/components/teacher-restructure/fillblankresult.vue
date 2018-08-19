@@ -1,81 +1,29 @@
-<!--试题柱状图页-->
+<!--填空题条形图页-->
 <template>
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
-		<!-- 教师遥控器引导查看答案、续时 -->
-    <GuideDelay
-      v-show="!isGuideDelayHidden"
-    ></GuideDelay>
 
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
-	    <section class="upper">
-	    	<div class="xitixushi">
-	    		<!-- 延时相关 -->
-	    		<div class="time-rel f15">
-	    			<v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
-	    			<div v-else class="tbtn nobtn"><!-- 不限时 -->{{ $t('bxs') }}</div>
-	    		</div>
+      <Rolex
+        :limit="limit"
+        :newTime="newTime"
+        :durationLeft="durationLeft"
+        :total="total"
+        :members="members"
+        @yanshi="yanshi"
+        @shouti="shouti"
+      ></Rolex>
 
-	    		<div class="sjd f24" v-show="newTime <= 0"><!-- 作答时间结束 -->{{ $t('receivertimeout') }}</div>
-
-	    		<!-- 中间秒表 -->
-	    		<div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
-	    			<img v-show="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-	    			<img v-show="~limit && newTime > 10" class="jishi" src="~images/teacher/jishi-dao-w.png" alt="">
-	    			<img v-show="~limit && newTime <= 10" class="jishi" src="~images/teacher/jishi-dao-r.png" alt="">
-	    			<span class="time">{{durationLeft}}</span>
-	    		</div>
-
-	    		<!-- 收题相关 -->
-	    		<div v-show="newTime > 0" class="pro-rel f15">
-	    			<v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
-	    		</div>
-		    </div>
-		    <div :class="['f18', 'yjy']">
-		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
-		    </div>
-	    </section>
-
-	    <!-- 中间柱状图 -->
-	    <section class="histogram-with-mahint">
-	    	<section class="mahint" v-if="problemType === 'MultipleChoiceMA'">
-	    		<div class="mahint-item f12">
-	    			<i style="background: #F5A623;"></i>
-	    			{{ $t('standardans') }}
-	    		</div>
-
-	    		<div class="mahint-item f12">
-	    			<i style="background: #639EF4;"></i>
-	    			{{ $t('correctopt') }}
-	    		</div>
-
-	    		<div class="mahint-item f12">
-	    			<i style="background: #C8C8C8;"></i>
-	    			{{ $t('wrongopt') }}
-	    		</div>
-	    	</section>
-
-  	    <section class="histogram-box">
-  	    	<div class="histogram-item" v-if="problemType === 'MultipleChoiceMA'">
-  	        <div class="bar maright" :style="{height: ma_right_count.value/total*100+'%'}">
-  	          <span class="value f18">{{ma_right_count.value}}</span>
-  	          <span class="label f18">{{ma_right_count.label}}</span>
-  	        </div>
-  	      </div>
-  				<div class="histogram-item" v-for="item in graph">
-  	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/total*100+'%'}">
-  	          <span class="value f18">{{item.value}}</span>
-  	          <span class="label f18">{{item.label}}</span>
-  	        </div>
-  	      </div>
-  	    </section>
-	    </section>
-
+	    <FillblankBox class="FillblankBox"
+				:total="total"
+				:correctNum="correct_students.length"
+				:result_graph="result_graph"
+      ></FillblankBox>
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
+	    <section :class="['group-btns']">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -83,7 +31,7 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+	      <router-link tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
@@ -124,10 +72,12 @@
 	import API from '@/pages/teacher/config/api'
   import config from '@/pages/teacher/config/config'
 
+  // 时钟组件
+	import Rolex from '@/components/teacher-restructure/common/rolex'
+	// 中间条形图
+	import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
-	// 教师遥控器引导查看答案、续时
-  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -155,7 +105,7 @@
 	}
 
 	export default {
-	  name: 'Collumresult',
+	  name: 'Fillblankresult',
 	  data () {
 	    return {
 	    	problemid: -1,
@@ -163,25 +113,26 @@
 		    durationLeft: '--:--',         // 题目的倒计时剩余时间
 		    total: '--',                   // 提交的人数
 		    members: '--',                 // 参与上课的人数
-		    graph: [],                     // 柱状图数据
-		    ma_right_count: {},            // 多选题答案及人数
 		    limit: '',                     // 设置的限时 -1 为未限时 单位 秒
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
-		    isTouping: false,							 // 当前正在投屏
+				isTouping: false,							 // 当前正在投屏
+				is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
+				result_graph: {},
+				correct_students: [],
 	    }
 	  },
 	  computed: {
 	    ...mapGetters([
         'lessonid',
         'socket',
-        'isGuideDelayHidden',
       ])
 	  },
 	  components: {
-	    Problemtime,
-	    GuideDelay
+      Problemtime,
+			Rolex,
+			FillblankBox,
 	  },
 	  created(){
 	  	this.init()
@@ -189,11 +140,6 @@
 	  beforeDestroy(){
 	    this.endTimers()
 	    T_PUBSUB.unsubscribe('pro-msg')
-	  },
-	  watch: {
-	  	'$route' () {
-	  		this.init()
-	  	}
 	  },
 	  methods: {
 	  	/**
@@ -228,16 +174,7 @@
 	      self.problemOperation(postData)
 	      	.then(() => {
 	      		console.log(duration, timeList[duration])
-	      		// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
-						let time = ''
-						if(duration > 30){
-							time = duration / 60 + '分钟'
-						}else if(duration == 30) {
-							time = duration + '秒'
-						} else {
-							time = '不限时'
-						}
-						let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
+	      		let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
 	      		T_PUBSUB.publish('ykt-msg-toast', msg);
 	      	})
 	    },
@@ -523,29 +460,25 @@
 		  getProblemResult(){
 		    let self = this
 
-		    let url = API.problem_statistics
+		    let url = API.fill_blank_problem_statistics
 
 	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_statistics + '/' + self.problemid + '/'
+	        url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
 	      }
 
 	      request.get(url)
 	      	.then(jsonData => {
 
 	      		let _answer = jsonData.answer
-	      		let _graph = jsonData.graph.data
-	      		_graph.forEach(item => {
-	      		  item.isRight = new RegExp(item.label).test(_answer)
-	      		  return item
-	      		})
 
 	      		if(jsonData.success){
 	      		  self.setData({
 	      		    total: jsonData.total,
 	      		    members: jsonData.members,
-	      		    graph: _graph,
-	      		    ma_right_count: jsonData.graph.ma_right_count,
-	      		    RedEnvelopeID: jsonData.RedEnvelopeID || -1
+								RedEnvelopeID: jsonData.RedEnvelopeID || -1,
+								is_sensitive: jsonData.is_sensitive,
+								result_graph: jsonData.result_graph,
+								correct_students: jsonData.correct_students,
 	      		  })
 	      		}
 	      	}).catch(error => {
@@ -659,7 +592,7 @@
 	  }
 	}
 </script>
-<!-- TODO 柱状图滑动 icon图片？ -->
+
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
 	.problem-root {
@@ -676,147 +609,9 @@
 	  color: $white;
 	  background: #000000;
 
-		/* 上部 */
-	  .upper {
-	  	margin: 0 auto;
-	  	width: 9.6rem;
-	  	height: 4.0rem;
-	  	padding-top: 0.8rem;
-
-	  	.xitixushi {
-	  		display: flex;
-	  		justify-content: space-between;
-	  		align-items: center;
-	  		height: 1.866667rem;
-	  		padding: 0 0.3rem;
-	  		background: #212121;
-
-	  		.sjd {
-	  			padding-right: 1.333333rem;
-	  			color: #F84F41;
-	  		}
-
-	  		.rolex .time {
-	  			display: inline-block;
-	  			width: 2.666667rem;
-	  		}
-
-	  		.rolex.warn {
-	  			color: #F84F41;
-	  			.iconfont {
-	  				color: #F84F41;
-	  			}
-	  		}
-
-	  		.time-rel, .pro-rel {
-	  			align-self: center;
-	  			color: $white;
-
-	  			.tbtn {
-	  				width: 1.733333rem;
-	  				height: 0.8rem;
-	  				line-height: 0.8rem;
-	  				border: 1px solid #CCCCCC;
-	  				border-radius: 0.4rem;
-	  			}
-	  			.nobtn {
-	  				border: none;
-	  				border-radius: 0.4rem;
-	  				background-color: #282828;
-	  				color: #08BC72;
-	  			}
-	  			.green {
-	  				border-color: #08BC72;
-	  				background-color: rgba(8, 188, 114, 0.2)
-	  			}
-	  			.red {
-	  				border-color: #F84F41;
-	  				background-color: rgba(248, 79, 65, 0.2)
-	  			}
-	  		}
-	  	}
-
-			.jishi {
-				margin-top: -0.186667rem;
-				width: 0.9rem;
-				vertical-align: middle;
-			}
-			.yjy {
-				padding-top: 0.5rem;
-				color: #AAAAAA;
-			}
-	  }
-
-	  /* 中间柱状图 */
-	  .histogram-with-mahint {
-	  	margin: 1.0rem auto;
-	  	width: 8.8rem;
-	  	height: 5.0rem;
-	  	border-top: 1px solid #cccccc;
-	  }
-	  .mahint {
-	  	display: flex;
-	  	align-items: center;
-	  	padding-left: 0.266667rem;
-	  	height: 0.693333rem;
-	  	background: linear-gradient(rgba(255,255,255,0.12) 10%, rgba(255,255,255,0.03));
-
-	  	.mahint-item {
-	  		margin-right: 0.666667rem;
-
-	  		i {
-	  			display: inline-block;
-	  			width: 0.266667rem;
-	  			height: 0.266667rem;
-	  		}
-	  	}
-	  }
-	  .histogram-box {
-	  	margin: 0 auto;
-	  	padding-top: 1rem;
-	  	width: 8.8rem;
-	  	height: 100%;
-		  display: flex;
-		  justify-content: space-between;
-		  align-items: bottom;
-
-		  .histogram-item {
-			  flex: 1;
-			  position: relative;
-			  border-bottom: 1px solid $white;
-
-			  .bar {
-				  position: absolute;
-				  left: 50%;
-				  bottom: 0.173333rem;
-				  transform: translateX(-50%);
-				  width: 0.8rem;
-				  background-color: #C8C8C8;
-
-					span {
-					  position: absolute;
-					  width: 100%;
-					  left: 0;
-					  text-align: center;
-					  color: #fff;
-					}
-					.value {
-					  top: -0.746667rem;
-					}
-					.label {
-					  bottom: -1.0rem;
-					}
-				}
-				.right {
-				  background-color: $blue;
-				}
-				.maright {
-				  background-color: #F5A623;
-				  span {
-				  	color: #F5A623;
-				  }
-				}
-			}
+		/* 调整中间条形头的高度 */
+		.FillblankBox {
+			flex: 1;
 		}
 
 		/* 下方按钮 */
@@ -826,7 +621,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 1.2rem 0 0.5rem;
+		  padding: 0.2rem 0 0.5rem;
 
 		  .btn-item {
 			  width: 1.8rem;

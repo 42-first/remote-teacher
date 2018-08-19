@@ -27,7 +27,7 @@
 
           <!-- 上部时钟、人数统计 -->
           <section class="upper">
-            <div class="xitixushi">
+            <div class="xitixushi" v-if="!problem_group_review_id">
               <!-- 延时相关 -->
               <div class="time-rel f15">
                 <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
@@ -62,7 +62,44 @@
                 </label>
               </span>
             </div>
+						<div class="faqihuping-box">
+							<div class="total-box">
+								<div :class="['f12', 'yjy']">
+									<span class="f18">{{total_num}}</span>
+									{{ $t('yizuoda') }}
+		            </div>
+								<div class="line"></div>
+								<template v-if="problem_answer_type == 0">
+									<div class="f12 yjy">
+										<span class="f18" >{{unfinished_count}}</span>
+										<span class="tips"> {{ $t('team.weizuoda') }}</span>
+									</div>
+								</template>
+								<template v-else>
+									<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
+										<span class="f18">{{unfinished_team_count}}</span>
+										<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
+			            </v-touch>
+								</template>
+
+								<template v-if="problem_group_review_id">
+									<div class="line"></div>
+									<div :class="['f12', 'yjy']">
+										<span class="f18">group_review_done_num</span>
+										{{ $t('team.yihuping') }}
+			            </div>
+								</template>
+							</div>
+
+							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
+						</div>
           </section>
+					<template v-if="group_name">
+						<div class="group_name f14">
+							<i class="iconfont icon-fenzu f21"></i>{{group_name}}
+						</div>
+						<div class="gap"></div>
+					</template>
 
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
@@ -75,13 +112,32 @@
               <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
                 <div class="item">
                   <div class="detail">
-                    <img :src="item.user_avatar_46" class="avatar" alt="">
+										<div class="student-info" v-if="problem_answer_type == 1">
+											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
+												<template v-for="(item2, index2) in item.users">
+													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
+												</template>
+												<span class="author f15">{{item.team_name}}</span>
+											</v-touch>
+											<div class="time f15">{{item.end_time | formatTime}}</div>
+										</div>
+										<div class="student-info" v-else>
+											<div class="avatar-box">
+												<img :src="item.users[0].user_avatar_46" class="avatar" alt="">
+												<span class="author f15">{{item.users[0].user_name}}</span>
+											</div>
+											<div class="time f15">{{item.end_time | formatTime}}</div>
+										</div>
+
                     <div class="cont f18">
                       <div class="time f15">{{item.end_time | formatTime}}</div>
                       <span class="author f15" v-show="!isHideName">{{item.user_name}}</span>
                       <span class="author f15" v-show="isHideName">匿名</span>
                       <br>
                       {{item.subj_result.content}}<br>
+                      <div class="cont-title">
+                      	{{item.subj_result.content}}
+                      </div>
 
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
@@ -89,11 +145,11 @@
 
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.source_score, index, item.remark)">
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score}}{{ $t('stutestscore') }}</span>
+                        <span v-show="item.score !== -1">{{item.score}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -142,7 +198,9 @@
       @giveScore="giveScore"
     ></StarPanel>
 
-    <!-- 发题选时间蒙版 -->
+
+
+		<!-- 发题选时间蒙版客观题 -->
     <Problemtime v-show="!isProblemtimeHidden"
       :problem-type="'ShortAnswer'"
       :isYanshi="true"
@@ -150,6 +208,32 @@
       @chooseProblemDuration="yanshiProblem"
     ></Problemtime>
     <Scale></Scale>
+
+		<HupingPanel
+			ref="HupingPanel"
+			:tProportion="tProportion"
+			:gProportion="gProportion"
+			@giveHuping="giveHuping"
+			@editHuping="editHuping"
+		></HupingPanel>
+
+    <section class="teammember" v-show="showTeamMember">
+      <div class="member-content">
+        <v-touch class="member-actions" v-on:tap="handleTeammemberClosed">
+          <i class="iconfont icon-shiti_guanbitouping f25 c333"></i>
+        </v-touch>
+        <div class="member-detail">
+          <p class="team-info">
+            <span class="team-name f20">{{currentTeam}}</span>
+            <span class="team-total f14"><!-- 共{{teamMemberList.length}}人 -->{{ $t('team.totalmembers', {num: teamMemberList.length}) }}</span>
+          </p>
+          <div class="team-item" v-for="(item, index) in teamMemberList" :key="index">
+            <img class="member--avatar" :src="item.user_avatar_46" alt="" >
+            <div class="member--name f16 c666"><span class="name">{{item.user_name}}</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </div>
 </template>
@@ -166,6 +250,7 @@
   import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
+	import HupingPanel from './common/huping-panel'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
@@ -205,6 +290,7 @@
     '-1': '不限时'
   }
   let scoreTapTimer = null
+	let hupingTapTimer = null
 
 	export default {
 	  name: 'Subjectiveresult',
@@ -225,6 +311,17 @@
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
         isHideName: !0,                // 是否隐藏学生姓名
+        showTeamMember: false,         // 展示小组成员
+        teamMemberList: [],						 // 小组成员列表
+				currentTeam: '',							 // 当前点击的小组名称
+				problem_answer_type: 0,				 // 个人或小组作答 0:个人  1:小组
+				team_num: '--',								 // 组数+未进组人数
+				problem_group_review_id: 0,		 // 小组互评的id
+				tProportion: 0,								 // 默认教师占比
+				gProportion: 100,							 // 默认互评占比
+				unfinished_count: 0,					// 未答题人数
+				unfinished_team_count: 0,				// 没有回答的组数
+				group_name: '',									// 分组名
 	    }
 	  },
 	  computed: {
@@ -243,7 +340,8 @@
       Scale,
       Loadmore,
       Problemtime,
-      GuideDelay
+      GuideDelay,
+			HupingPanel
 	  },
 	  created(){
 	  	this.init()
@@ -270,7 +368,7 @@
 	  filters: {
       formatTime(time) {
         return Moment(time).format('HH:mm')
-      }
+      },
     },
     watch: {
       dataList: function() {
@@ -321,7 +419,7 @@
         self.problemOperation(postData)
           .then(() => {
             console.log(duration, timeList[duration])
-            let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+            let msg = i18n.locale === 'zh_CN' ? `延时${duration > 0 ? duration / 60 + '分钟' : '不限时' }成功` : 'Successful'
             T_PUBSUB.publish('ykt-msg-toast', msg);
           })
       },
@@ -625,6 +723,16 @@
         // 单次刷新
         return request.get(url, data)
       },
+			/**
+       * 获取已经互评了的数量
+       *
+       */
+			fetchHupingCount(){
+				let self = this
+				let url = API.get_subj_problem_group_review + '?group_review_id=' + self.problem_group_review_id
+
+				return request.get(url)
+			},
 	    /**
        * 查询有没有新的答案，根据 response_num 来判断
        *
@@ -638,9 +746,26 @@
           self.setData({
             isShowNewHint: jsonData.data.response_num,
             total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num
+            class_participant_num: jsonData.data.class_participant_num,
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+						problem_group_review_id: jsonData.data.group_review_id,
+						unfinished_count: jsonData.data.unfinished_count,
+						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
           })
+					if(jsonData.data.group_review_id){
+						self.fetchHupingCount().then(res => {
+							self.setData({
+								group_review_total_num: res.data.group_review_total_num,
+								group_review_done_num: res.data.group_review_done_num,
+				        tProportion: res.data.teacher_score_proportion * 100,
+				        gProportion: res.data.group_review_score_proportion * 100,
+				        group_review_declaration: res.data.group_review_declaration
+							})
+						})
+					}
         })
+
+
       },
 	    /**
        * 更新试题详情的数据
@@ -659,12 +784,21 @@
          * 注：
          * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
          * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
+         *
+         *
+         * 由于小组作答可能会出现小组成员覆盖原有答案，所以刷新列表后直接把列表赋新的值，不然需要每条数据去进行比较
          */
         self.fetchList().then(jsonData => {
           self.setData({
             isShowNewHint: false,
             total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num
+            class_participant_num: jsonData.data.class_participant_num,
+						problem_answer_type: jsonData.data.problem_answer_type,
+						group_name: jsonData.data.group_name ? jsonData.data.group_name : '',
+						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+						problem_group_review_id: jsonData.data.group_review_id,
+						unfinished_count: jsonData.data.unfinished_count,
+						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
           })
 
           let newList = jsonData.data.problem_results_list
@@ -677,25 +811,13 @@
           let isAllLoaded = self.isAllLoaded
           if (response_num === 0) {
             isAllLoaded = true
-          } else if (headNow === 0) {
+          } else {
             self.setData({
               dataList: newList
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
-          } else if (~headIndex) {
-            // 包含
-            let _list = newList.slice(0, headIndex).concat(self.dataList)
-            self.setData({
-              dataList: _list
-            })
-          } else {
-            self.setData({
-              dataList: newList
-            })
-            isAllLoaded = false
           }
-
           self.setData({
             isAllLoaded
           })
@@ -704,7 +826,20 @@
 
           // 刷新的话回顶部
           self.back2Top()
+
+					if(jsonData.data.group_review_id){
+						self.fetchHupingCount().then(res => {
+							self.setData({
+								group_review_total_num: res.data.group_review_total_num,
+								group_review_done_num: res.data.group_review_done_num,
+				        tProportion: res.data.teacher_score_proportion * 100,
+				        gProportion: res.data.group_review_score_proportion * 100,
+				        group_review_declaration: res.data.group_review_declaration
+							})
+						})
+					}
         })
+
       },
       /**
        * 延时
@@ -833,22 +968,32 @@
 	     *
 	     * @event bindtap
        * @params {Number} answerid 将要打分的主观题答案的id
-       * @params {Number} studentScore 当前分值
        * @params {Number} scoreTotal 总分
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, studentScore, scoreTotal, index, remark) {
+	    initScore (answerid, scoreTotal, index, remark) {
 	      let self = this
-
+				let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
+
 
         // 防止用户频繁点击
         clearTimeout(scoreTapTimer)
         scoreTapTimer = setTimeout(() => {
           self.scoringIndex = index
-          self.$refs.StarPanel.$emit('enter', ...arguments)
+					return request.get(url)
+	          .then(jsonData => {
+	            if (jsonData.success) {
+								self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
+								self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
+	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
+	            }
+	          }).catch(error => {
+	            console.error('error', error)
+	          })
+          // self.$refs.StarPanel.$emit('enter', ...arguments)
         }, 100)
 	    },
 	    /**
@@ -859,10 +1004,10 @@
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, score, remark) {
+	    giveScore (answerid, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
 	    	let self = this
 
-	    	if (score === -1) {
+	    	if (teacherScore === -1) {
 	    		self.$refs.StarPanel.$emit('leave')
 	    		return;
 	    	}
@@ -871,7 +1016,9 @@
 	      let postData = {
 	        'lesson_id': self.lessonid,
 	        'problem_result_id': answerid,
-	        'score': score,
+	        'score': teacherScore,
+					'group_review_score': groupReviewScore,
+					'problem_id': self.problemid,
           remark
 	      }
 
@@ -881,9 +1028,11 @@
 	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
 
 	          // 关闭打分页面
-	          console.log(`打过分啦${score}`, self.scoringIndex)
-	          self.dataList[self.scoringIndex].score = +score
-            self.dataList[self.scoringIndex].remark = remark
+	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
+						self.dataList[self.scoringIndex].score = ((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion)).toFixed(1)
+						self.dataList[self.scoringIndex].remark = remark
+
+
 	          self.$refs.StarPanel.$emit('leave')
 	        })
 	    },
@@ -936,7 +1085,112 @@
         }
 
       },
+			/*
+			 * 发起互评,唤出互评面板
+			 */
+			faqihuping() {
+				let self = this
+				if(this.newTime > 0){
+					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+					let msg = '收题后才可发起互评'
+					T_PUBSUB.publish('ykt-msg-toast', msg);
+				} else {
+					// 防止用户频繁点击
+	        clearTimeout(hupingTapTimer)
+	        hupingTapTimer = setTimeout(() => {
+	          self.$refs.HupingPanel.$emit('enterHuping', self.problem_group_review_id, self.tProportion, self.gProportion, self.group_review_declaration)
+	        }, 100)
+				}
+			},
+			/**
+	     * 点击打分部分，呼出打分面板
+	     *
+	     * @event
+	     * @params {Number} problem_id 问题id
+       * @params {Number} teacher_score_proportion 教师评分比例
+       * @params {Number} group_review_proportion 小组互评的比例
+       * @params {String} review_declaration 评分要点
+	     */
+	    giveHuping (teacher_score_proportion, group_review_proportion, review_declaration) {
+	    	let self = this
 
+	      let url = API.publish_subj_problem_group_review
+	      let postData = {
+	        "problem_id": self.problemid,
+					teacher_score_proportion,
+					group_review_proportion,
+					review_declaration
+	      }
+
+	      request.post(url, postData)
+	        .then(jsonData => {
+
+						if(jsonData.success){
+							// 关闭互评页面
+		          console.log('发起互评');
+							self.problem_group_review_id = jsonData.data.problem_group_review_id
+		          self.$refs.HupingPanel.$emit('leaveHuping')
+							self.init()
+						}
+
+	        }).catch(res => {
+						let msg = res.msg
+						T_PUBSUB.publish('ykt-msg-toast', msg);
+          });
+
+
+
+	    },
+			/**
+			 * 修改占比
+			 *
+			 * @event
+			 * @params {Number} teacher_score_proportion 教师评分比例
+			 */
+			editHuping(teacher_proportion){
+				let self = this
+
+	      let url = API.edit_subj_problem_score_proportion
+	      let postData = {
+					teacher_proportion,
+					problem_id: self.problemid
+	      }
+
+	      request.post(url, postData)
+	        .then(jsonData => {
+
+						if(jsonData.success){
+							// 关闭互评页面
+		          console.log('修改成功');
+		          self.$refs.HupingPanel.$emit('leaveHuping')
+						}
+
+	        }).catch(res => {
+						let msg = res.msg
+						T_PUBSUB.publish('ykt-msg-toast', msg);
+          });
+			},
+			/*
+			 * 打开小组成员列表
+			 *
+			 */
+			handleOpenTeamMember(index) {
+				this.showTeamMember = true;
+				this.teamMemberList = this.dataList[index].users
+				this.currentTeam = this.dataList[index].team_name
+			},
+			/*
+			 * 关闭小组成员列表
+			 *
+			 */
+			handleTeammemberClosed() {
+				this.showTeamMember = false;
+			},
+			showTips(){
+				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
+				let newClassName = 'longtips'
+				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
+			}
 	  }
 	}
 </script>
@@ -954,7 +1208,7 @@
 	.problem-root {
     position: relative;
     height: 100%;
-    background: #000000;
+    background: #fff;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -999,18 +1253,15 @@
 	  position: relative;
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
-	  background: #f6f7f8;
+	  background: $white;
 
 		/* 上部 */
 	  .upper {
-	  	margin: 0 auto;
-	  	width: 8.8rem;
-	  	height: 4.0rem;
-	  	padding: 0.8rem 0.6rem 0 0.6rem;
-	  	// border-bottom: 1px solid #cccccc;
+	  	width: 100%;
+	  	max-height: 4.453333rem;
+	  	padding: .133333rem .2rem 0;
 	  	text-align: center;
-      width: 100%;
-      background-color: #fff;
+			box-shadow: 0 .026667rem .16rem 0 #e2e2e2;
 
       .xitixushi {
         display: flex;
@@ -1018,8 +1269,9 @@
         align-items: center;
         height: 1.866667rem;
         padding: 0 0.3rem;
-        background: #212121;
-        border-radius: 0.1066667rem;
+        background: rgba(0,0,0,.8);
+				border-radius: .133333rem;
+
         .sjd {
           padding-right: 1.333333rem;
           color: #F84F41;
@@ -1065,87 +1317,143 @@
 				width: 0.9rem;
 				vertical-align: middle;
 			}
-			.yjy {
-				margin-top: 0.3466667rem;
-        padding-top: 0.26667rem;
-        line-height: 0.53333rem;
-        color: #9b9b9b;
-        text-align: left;
-        font-size: 0.37333333rem;
-        border-top: solid #aaa 0.013333rem;
-        display: flex;
-        .hide-show-name{
-          flex: 2;
-          text-align: right;
-          .iconfont{
-            font-size: 0.373333rem; 
-          }
-          .icon-kuang{
-            color: #666;
-          }
-          .icon-kuangxuanzhong{
-            color: #639efc;
-          }
-          .info{
-            color: #666;
-          }
-        }
+			.faqihuping-box {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: .533333rem .333333rem;
+
+				.total-box{
+					display: flex;
+					align-items: center;
+					.yjy {
+						color: #666;
+						padding: 0 .186667rem;
+						height: 1.333333rem;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-around;
+						span:first-of-type {
+							display: block;
+							line-height: .426667rem;
+						}
+						.ques {
+							width: .346667rem;
+							height: .346667rem;
+							display: inline-block;
+							vertical-align: middle;
+							background: url(~images/teacher/question.png)no-repeat 0 0/contain;
+							margin-left: .053333rem;
+						}
+					}
+					.line {
+						width: 1px;
+						height: .8rem;
+						background: #eee;
+						margin: 0 .266667rem;
+					}
+				}
+
+
+
+				.faqihuping {
+					width: 2.133333rem;
+					height: .746667rem;
+					line-height: .746667rem;
+					text-align: center;
+					border-radius: .106667rem;
+					background: rgba(99,158,244,.2);
+					color: #5096F5;
+				}
+
+				.disabled {
+					background: rgba(155,155,155,.2);
+					color: #9b9b9b;
+				}
 			}
+
 	  }
 
+		.group_name {
+			padding-left: .533333rem;
+			color: #666;
+			width: 100%;
+			height: 1.226667rem;
+			line-height: 1.226667rem;
+			.iconfont {
+				color: #B684C8;
+				margin-right: .266667rem;
+			}
+		}
 	  .gap {
-      height: 0.026667rem;
+      height: .133333rem;
+			background: #f8f8f8;
     }
 
 		/* 主观题内容区 */
 	  .subjective-box {
-	  	margin-top: 0.26667rem;
+			margin-top: .133333rem;
 	  	.hmy {
-        margin-top: 2.893333rem;
+        margin-top: 3.04rem;
         text-align: center;
+				color: #9B9B9B;
       }
 
       .subjective-list {
       	color: #4A4A4A;
-      	background: #EDF2F6;
 
       	padding-bottom: 1.5rem;
 	      -webkit-overflow-scrolling: touch;
 
 	      .item {
-	        padding: 0 0.4rem;
+	        padding: 0 .533333rem;
 	        background: $white;
 
 	        .detail {
-	          display: flex;
-	          margin-bottom: 0.346667rem;
 	          padding-top: 0.266667rem;
 
-	          .avatar {
-	            margin-right: 0.4rem;
-	            width: 0.986667rem;
-	            height: 0.986667rem;
-	            border-radius: 50%;
-	          }
-	          .cont {
-	            flex: 1;
-	            word-break: break-word;
+						.student-info {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							width: 100%;
 
-	            .time {
-	            	float: right;
+							.avatar-box {
+								display: flex;
+								align-items: center;
+
+								.avatar {
+			            margin-right: -.133333rem;
+			            width: .666667rem;
+			            height: .666667rem;
+			            border-radius: 50%;
+			          }
+								.avatar:last-of-type {
+									margin-right: .4rem;
+								}
+							}
+
+							.time {
 		            color: $graybg;
 		          }
 
 	            .author {
 	            	display: inline-block;
-	            	margin-bottom: 0.2rem;
-	              color: #4975B5;
+	              color: #666;
 	            }
 
+						}
+
+	          .cont {
+							.cont-title {
+								margin: .266667rem 0 .266667rem .093333rem;
+								color: #333;
+							}
+
 	            .pic {
-	            	margin-top: 0.266667rem;
-	              max-width: 7.573333rem;
-	              max-height: 7.04rem;
+	              max-width: 100%;
+	              max-height: 5.68rem;
+								display: block;
 	            }
 	            img[lazy=loading] {
 	              width: 4.666667rem;
@@ -1160,8 +1468,7 @@
 	          display: flex;
 	          justify-content: space-between;
 	          align-items: center;
-	          height: 1rem;
-	          margin-left: 1.386667rem;
+	          padding: .533333rem 0;
 
 	          .gray {
 	            color: $graybg;
@@ -1216,7 +1523,7 @@
 	          position: relative;
 	          margin: 0 auto;
 	          width: 2.093333rem;
-	          background: #EDF2F6;
+	          background: #fff;
 	        }
 
 	        .bgline {
@@ -1246,6 +1553,7 @@
     right: 0;
     background: rgba(0,0,0,0.9);
     overflow: auto;
+		z-index: 30;
 
     .mask-content {
       position: absolute;
@@ -1257,4 +1565,90 @@
       color: $white;
     }
   }
+  .teammember {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.75);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+
+      .member-content {
+        width: 100%;
+        max-height: 12.133333rem;
+				min-height: 50%;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				background: #fff;
+        .member-actions {
+					height: 1.333333rem;
+					width: 100%;
+					padding-left: .4rem;
+					line-height: 1.333333rem;
+					border-bottom: .026667rem solid #c8c8c8;
+        }
+
+        .member-detail {
+					padding-left: .533333rem;
+					min-height: 6.706667rem;
+					max-height: 10.8rem;
+					overflow: scroll;
+
+          .team-info {
+						color: #333;
+						font-weight: bold;
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: .533333rem .4rem .266667rem 0;
+
+						.team-total {
+							font-weight: normal;
+							color: #9b9b9b;
+						}
+          }
+
+          .team-item {
+						height: 1.493333rem;
+						padding: .266667rem 0 .293333rem;
+						display: flex;
+						align-items: center;
+            .member--avatar {
+              display: block;
+              width: 0.933333rem;
+              height: 0.933333rem;
+              border-radius: 50%;
+            }
+
+            .member--name {
+              flex: 1;
+              text-align: left;
+              border-bottom: 1px solid #eee;
+							height: .933333rem;
+							line-height: .933333rem;
+							margin-left: .133333rem;
+
+              .name {
+                padding-left: 0.4rem;
+              }
+            }
+          }
+        }
+      }
+  }
+
+	.toast-box {
+		width: 5.333333rem;
+		margin-left: -2.666665rem;
+	}
+	.longtips {
+		width: 8.666667rem;
+		height: 2.133333rem;
+		text-align: center;
+		margin-left: -4.333333rem;
+		padding: .4rem .453333rem;
+		line-height: .666667rem;
+	}
 </style>

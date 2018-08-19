@@ -50,6 +50,7 @@ let pages = {
   "newvote": "Hi, you have a new vote.",
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
+  "cantintoteam": "The co-instructor does not belong to any groups.",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
@@ -124,6 +125,8 @@ let pages = {
   "receiverwelldone": "Well done!",
   "receiversuperb": "Superb!",
   "receiverbravo": "Bravo!",
+  "networkerror" : "Failed，please try again",
+  "networkerror2" : "Submit failed，please try again",
 
   // socket event
   "LESSON_START": "Start Class!",
@@ -134,6 +137,8 @@ let pages = {
   "RANDOM_PICK": "Random Roll Call: {0}{1}",
   "SHOW_FINISH": "End Show",
   "QUIZ_FINISH": "The quiz has been collected.",
+  "FREE_GROUP_CANCEL": "Free grouping has been cancelled",
+  "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
 
   // 个人信息完善
   "merealname": "Name",
@@ -166,10 +171,13 @@ let pages = {
   "min": "min",
   "senddirectly": "Send",
   "submittotal": "{ss1} / {ss2} students submitted",
+  "submittotal2": "Submitted: {ss1}/{ss2}",
   "noanssubmit": "No submission, please wait",
   "newans": "New Submission",
   "mark": "Mark",
   "viewdetails": "Details",
+  "zqrs": "Correct",
+  "tpxsda": "show answers on the screen",
   "classbonusBonuslist": "Bonus | List",
   "standardopt": "Correct Answer",
   "anonymouspoll": "This is an anonymous poll.",
@@ -226,6 +234,7 @@ let pages = {
   "quiz": "Quiz",
   "bullet": "Danmu",
   "post": "Post",
+  "group": "Group",
   "onoff": "On | Off",
   "turnonoff": "Turn On | Turn Off",
   "off": "off",
@@ -336,6 +345,10 @@ let pages = {
   "quanweitoupiao": "No one voted",
   "quantoupiao": "All voted",
   "nimingtoupiao": "This is an anonymous poll",
+  "no_time_limit": "No time limit",
+  "user_defined": "User-defined",
+  "select_group": "Select group",
+  "select": "Select",
 
   "yiqiandao": "Signed In",
   "weiqiandao": "Not Signed in",
@@ -352,6 +365,9 @@ let pages = {
   "hasSubmit": "已提交",
   "projectionHideStuInfo": "投屏隐藏学生信息",
   "projectionHideStuName": "投屏隐藏学生姓名",
+  "zhengque": "Correct",
+  "cuowu": "Wrong",
+  "weida": "Unanswerd",
 
   // 引导页
   guide: {
@@ -370,6 +386,46 @@ let pages = {
     "ok": "OK"
   },
 
+  // 分组
+  team: {
+    "mygroup": "My Grouping",
+    "randomized": "Random grouping is launched",
+    "freegrouping": "Free grouping is launched",
+    "viewresults": "check",
+    "enterpassword": "Enter a password",
+    "groupanswered": "Group answer:",
+    "info": "Detail",
+    "groupansweredtip": "This question is assigned for groups. Each student has only one chance to answer the question, and only the last submission in each group will be accepted as the final group answer.",
+    "hassubmitted": "Answer Already Submitted",
+    "coveragetip": "A group member has already submitted an answer. Your submission will overwrite the present group answer.",
+    "noteam": "Not In Group",
+    "tempteamtip": "You will submit your answer as the answer of a temporary group.",
+    "withoutteamhint": "This question is assigned for groups. You are not in group yet.",
+    "forcetempteam": "This question is assigned for groups. The answer has been submitted before. You will submit your answer alone.",
+    "forcetempteamtip": "You will submit your answer as the answer of a temporary group.",
+    "guestStudent": "guest students cannot answer the question.",
+
+    "teamhasanswer": "Answer Already Submitted",
+    "teamanswercover": "A group member has already submitted an answer. Your submission will overwrite the present group answer.",
+    "answertype_person": "Individuals",
+    "answertype_group": "Groups",
+    "creategroup": "New Grouping",
+    "nogroup": "No grouping yet. Create new grouping to assign subjective questions to groups. ",
+    "chooseteam": "Grouping",
+    "totalmembers": "{num} people",
+    "weizuoda": "Unanswered",
+    "yihuping": "Scored",
+    "faqihuping": "Peer Grading",
+    "hupingguize": "Rules of Peer Grading",
+  },
+
+  // 打分
+  "newtotalscore": "The total score is {total} point(s)",
+  "hupingtotalscore": "The total score is {total} point(s), {groupReviewProportion}% from peer grading and {teacherProportion}% from teacher grading",
+  "finalscore": "Final score",
+  "teachergrading": "Teacher grading",
+  "peergrading": "Peer grading",
+  "noComment": "No comment",
 
   // 图片国际化
   imgs: {

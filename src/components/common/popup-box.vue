@@ -7,7 +7,7 @@
 <template>
 
   <section class="popup-item" v-if="item">
-    <!-- type : 3习题 4试卷  -->
+    <!-- type : 3习题 4试卷 8分组  -->
     <!-- 试卷模板 -->
     <template v-if="item.type==4">
       <div class="popup__paper">
@@ -38,6 +38,19 @@
             <p class="paper-name">{{ item.caption }}</p>
           </router-link>
           <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
+        </div>
+      </div>
+    </template>
+    <!-- 分组模板 -->
+    <template v-else-if="item.type==8">
+      <div class="popup__paper">
+        <div class="paper-info fenzu">
+          <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
+            <p class="icon-wrapper"><i class="iconfont icon-fenzu f32"></i></p>
+            <p class="paper-name" v-if="item.groupType ==='random'"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
+            <p class="paper-name" v-else-if="item.groupType ==='free'">{{ $t('team.freegrouping') }}</p>
+          </a>
+          <i class="iconfont gray icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>
       </div>
     </template>
@@ -73,11 +86,6 @@
       },
       handlelink(index, evt) {
         this.$parent.msgBoxs.splice(index, 1);
-
-        // 如果是图片预览退出图片预览
-        // this.$parent.gallery && setTimeout(()=>{
-        //   this.$parent.gallery.close();
-        // }, 500)
       }
     },
     created() {
@@ -160,6 +168,10 @@
 
     .paper-info.xt .paper-txt .icon-wrapper {
       background: #639EF4;
+    }
+
+    .paper-info.fenzu .paper-txt .icon-wrapper {
+      background: #71D2A5;
     }
 
     .paper-icon {

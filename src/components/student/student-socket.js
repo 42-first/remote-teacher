@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pro.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -319,6 +319,27 @@ var mixin = {
             this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
 
             break
+
+          // 分组创建分组
+          case 'launchgroup':
+            item = msg['group'];
+            this.launchGroup({ type: 8, teamid: msg['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], isPopup: true, event: item });
+
+            break;
+
+          // 自由分组取消分组
+          case 'cancelgroup':
+            item = msg['event'];
+            this.addMessage({ type: 1, message: item['title'], event: item });
+            this.cancelGroup({ type: 8, groupid: msg['groupid'], event: item });
+
+            break;
+
+          // 完成分组
+          case 'finishgroup':
+            this.finishGroup({ type: 8, groupid: msg['groupid'], teamid: msg['teamid'], event: item });
+
+            break;
 
           default:
             hasMsg = false;
