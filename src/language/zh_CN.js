@@ -365,10 +365,14 @@ let pages = {
   "hasSubmit": "已提交",
   "projectionHideStuInfo": "投屏隐藏学生信息",
   "projectionHideStuName": "投屏隐藏学生姓名",
-  "hideanswer": "隐藏答案",
+  "hideanswer": "投屏隐藏答案",
+  "toupingexplain": "此处修改仅对本题有效，可以在更多—设置中修改偏好设置。",
+  "toupingexplaintitle": "投屏帮助说明",
+  "toupingfanweitishi": "您可以设置学生课后查看课件的范围啦！",
   "zhengque": "正确",
   "cuowu": "错误",
   "weida": "未答",
+  "close": "关闭",
 
   // 引导页
   guide: {

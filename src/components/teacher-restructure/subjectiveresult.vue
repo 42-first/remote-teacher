@@ -49,19 +49,6 @@
                 <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
               </div>
             </div>
-
-            <div :class="['f18', 'yjy']">
-              <span>
-                {{ $t('hasSubmit')}}: {{total_num}}/{{class_participant_num}}
-              </span>
-              <span class="hide-show-name">
-                <label @click="hideNameHandle">
-                  <i class="iconfont icon-kuang" v-show="!isHideName"></i>
-                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
-                  <span class="info">{{$t('projectionHideStuName')}}</span>
-                </label>
-              </span>
-            </div>
 						<div class="faqihuping-box">
 							<div class="total-box">
 								<div :class="['f12', 'yjy']">
@@ -101,6 +88,16 @@
 						<div class="gap"></div>
 					</template>
 
+          <div :class="['f18', 'yjy']">
+            <span class="hide-show-name">
+                <label @click="hideNameHandle">
+                  <i class="iconfont icon-kuang" v-show="!isHideName"></i>
+                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
+                  <span class="info">{{$t('projectionHideStuName')}}</span>
+                </label>
+              </span>
+          </div>
+
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
             <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
@@ -130,11 +127,6 @@
 										</div>
 
                     <div class="cont f18">
-                      <div class="time f15">{{item.end_time | formatTime}}</div>
-                      <span class="author f15" v-show="!isHideName">{{item.user_name}}</span>
-                      <span class="author f15" v-show="isHideName">匿名</span>
-                      <br>
-                      {{item.subj_result.content}}<br>
                       <div class="cont-title">
                       	{{item.subj_result.content}}
                       </div>
@@ -471,15 +463,15 @@
           initTime = +query.tl
         }
 
-        newTime = 100 //initTime
+        newTime = initTime
 
         self.refreshDataList()
-        // pollingTimer = setInterval(self.pollingNewItem, 5000)
+        pollingTimer = setInterval(self.pollingNewItem, 5000)
         // 初始化时使用完计时的 storage 后，清理掉本题相关的，然后在下面
         // 的 handleDuration 中又立即设置了 storage，
         // 防止刚进入本页面立即进入课堂红包等子页面再返回后没有 storage 信息
         self.cleanDurInfoStorage()
-        // self.handleDuration()
+        self.handleDuration()
         self.handlePubSub()
       },
       /**
@@ -1197,6 +1189,7 @@
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  @import "~@/style/common";
   .wai {
     height: 100%;
     width: 100%;
@@ -1388,6 +1381,11 @@
 	  .gap {
       height: .133333rem;
 			background: #f8f8f8;
+    }
+
+    .hide-show-name{
+      color: #666;
+      font-size: px2rem(28px);
     }
 
 		/* 主观题内容区 */

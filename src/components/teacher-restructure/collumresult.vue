@@ -37,12 +37,12 @@
 		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
 		    </div> -->
 				<div class="yjy">
-					<div class="status text-left">已提交： 50/68</div>
+					<div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
 					<div class="text-right hide-answer-wrapper">
 						<i class="iconfont icon-kuang" v-show="!showAnswer" @click="showAnswer = true"></i>
-						<i class="iconfont icon-kuangxuanzhong color63" v-show="showAnswer"  @click="showAnswer = false"></i>
-						<span class="hide-answer">隐藏答案</span>
-						<i class="iconfont icon-question"></i>
+						<i class="iconfont icon-kuangxuanzhong color-f" v-show="showAnswer"  @click="showAnswer = false"></i>
+						<span class="hide-answer">{{$t("hideanswer")}}</span>
+						<i class="iconfont icon-question" @click="explainShow = true"></i>
 					</div>
 				</div>
 	    </section>
@@ -122,7 +122,11 @@
 		  @cancelPublishProblem="cancelPublishProblem"
 		  @chooseProblemDuration="yanshiProblem"
 		></Problemtime>
-
+		<explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
+			<div slot="content">
+				<p>{{$t('toupingexplain')}}</p>
+			</div>
+		</explainbox>
 	</div>
 </template>
 
@@ -131,7 +135,8 @@
 	import {sec2str} from './util/util'
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
-  import config from '@/pages/teacher/config/config'
+	import config from '@/pages/teacher/config/config'
+	import explainbox from "@/components/teacher-restructure/common/explainbox"
 
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
@@ -180,6 +185,7 @@
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 				isTouping: false,							 // 当前正在投屏
 				hideAnswer: false,             // 隐藏答案
+				explainShow: false             // 投屏帮助说明
 	    }
 	  },
 	  computed: {
@@ -191,7 +197,8 @@
 	  },
 	  components: {
 	    Problemtime,
-	    GuideDelay
+			GuideDelay,
+			explainbox
 	  },
 	  created(){
 	  	this.init()
@@ -665,7 +672,7 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
-	    },
+			}
 	  }
 	}
 </script>
@@ -765,10 +772,15 @@
 				}
 				.hide-answer-wrapper{
 					.hide-answer{
-						margin: 0 px2rem(20px) 0 px2rem(10px);
+						margin-right: px2rem(10px);
+						vertical-align: middle;
+						line-height: px2rem(28px);
+						display: inline-block;
+						height: px2rem(28px);
 					}
 					i{
 						font-size: px2rem(30px);
+						vertical-align: middle;
 					}
 				}
 			}

@@ -23,31 +23,33 @@
 		</div>
 
 		<!-- 更多的内容 -->
-		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
-      <i class="iconfont icon-sanjiaoxing f24"></i>
-		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
-		    <i class="iconfont icon-ykq_erweima f24"></i>
-		    <span>{{ $t('qrcode') }}</span>
-		  </v-touch>
+    <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden">
+      <div class="toolbar-more-box f14">
+        <i class="iconfont icon-sanjiaoxing f24"></i>
+        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
+          <i class="iconfont icon-ykq_erweima f24"></i>
+          <span>{{ $t('qrcode') }}</span>
+        </v-touch>
 
-		  <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
-		    <i class="iconfont icon-suijidianming1 f24"></i>
-		    <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
-		  </v-touch>
+        <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
+          <i class="iconfont icon-suijidianming1 f24"></i>
+          <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
+        </v-touch>
 
-      <v-touch class="more-item" v-on:tap="setEndShow">
-        <i class="iconfont icon-ykq-tuichufangying f24"></i>
-        <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
-      </v-touch>
-      <v-touch class="more-item" v-on:tap="goSet">
-        <i class="iconfont icon-ykq-yaokongqishezhi f24"></i>
-        <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
-      </v-touch>
-		</div>
+        <v-touch class="more-item" v-on:tap="setEndShow">
+          <i class="iconfont icon-ykq-tuichufangying f24"></i>
+          <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
+        </v-touch>
+        <v-touch class="more-item" v-on:tap="goSet">
+          <i class="iconfont icon-ykq-yaokongqishezhi f24"></i>
+          <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
+        </v-touch>
+      </div>
+    </div>
 
     <!-- 新功能提示 -->
     <div class="tips" v-show="newToolBar && !activeIndex">
-      您可以设置学生课后查看课件的范围啦！
+      {{$t('toupingfanweitishi')}}
       <i class="iconfont icon-shiti_guanbitouping" @click="closeTips"></i>
     </div>
 	</div>
@@ -115,9 +117,7 @@
        */
       toggleToolbarMoreBox () {
         let self = this
-
         self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
-
         // self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
       },
       /**
@@ -244,12 +244,18 @@
     }
   }
 
-
+  .toolbar-more-box-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 1.706667rem);
+  }
   /*更多按钮打开的内容*/
   .toolbar-more-box {
     position: absolute;
     right: 0.133333rem;
-    bottom: 2.026667rem;
+    bottom: 0.24rem;
     width: 3.6rem;
     /*height: 4.5rem;*/
 
