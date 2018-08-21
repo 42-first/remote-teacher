@@ -214,15 +214,12 @@
        * @params
        */
       onValuesChange(picker, values) {
-				console.log(values)
-				if (values && values.length && values[0]) {
-					let team = values[0].id;
-					let index = values[0].index;
-					let active = values[0].active
-					this.team = team;
-					this.index = index;
-					this.isActive = active
-				}        
+        let team = values[0].id;
+				let index = values[0].index;
+				let active = values[0].active
+        this.team = team;
+				this.index = index;
+				this.isActive = active
       },
       /*
        * @method picker操作
