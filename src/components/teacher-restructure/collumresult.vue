@@ -39,8 +39,8 @@
 				<div class="yjy">
 					<div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
 					<div class="text-right hide-answer-wrapper">
-						<i class="iconfont icon-kuang" v-show="!showAnswer" @click="showAnswer = true"></i>
-						<i class="iconfont icon-kuangxuanzhong color-f" v-show="showAnswer"  @click="showAnswer = false"></i>
+						<i class="iconfont icon-kuang" v-show="!showAnswer" @click="showAnswerHandle"></i>
+						<i class="iconfont icon-kuangxuanzhong color-f" v-show="showAnswer"  @click="showAnswerHandle"></i>
 						<span class="hide-answer">{{$t("hideanswer")}}</span>
 						<i class="iconfont icon-question" @click="explainShow = true"></i>
 					</div>
@@ -184,7 +184,7 @@
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 				isTouping: false,							 // 当前正在投屏
-				hideAnswer: false,             // 隐藏答案
+				showAnswer: false,             // 隐藏答案
 				explainShow: false             // 投屏帮助说明
 	    }
 	  },
@@ -672,6 +672,22 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
+			},
+			/**
+			*
+			* 隐藏答案
+			*
+			*
+			*/
+			showAnswerHandle() {
+				this.showAnswer = !this.showAnswer
+				let str = JSON.stringify({
+	        'op': "problemresult",
+	        'lessonid': self.lessonid,
+					'problemid': self.problemid,
+					'show': this.showAnswer
+	      })
+	      this.socket.send(str)
 			}
 	  }
 	}

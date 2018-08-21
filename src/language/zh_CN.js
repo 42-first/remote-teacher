@@ -369,6 +369,7 @@ let pages = {
   "toupingexplain": "此处修改仅对本题有效，可以在更多—设置中修改偏好设置。",
   "toupingexplaintitle": "投屏帮助说明",
   "toupingfanweitishi": "您可以设置学生课后查看课件的范围啦！",
+  "toupingshow": "习题投屏显示答案",
   "zhengque": "正确",
   "cuowu": "错误",
   "weida": "未答",

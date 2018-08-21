@@ -88,14 +88,15 @@
 						<div class="gap"></div>
 					</template>
 
-          <div :class="['f18', 'yjy']">
+          <div :class="['f18', 'yjy', 'text-right']">
             <span class="hide-show-name">
-                <label @click="hideNameHandle">
-                  <i class="iconfont icon-kuang" v-show="!isHideName"></i>
-                  <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
-                  <span class="info">{{$t('projectionHideStuName')}}</span>
-                </label>
-              </span>
+              <label @click="hideNameHandle">
+                <i class="iconfont icon-kuang" v-show="!isHideName"></i>
+                <i class="iconfont icon-kuangxuanzhong color63" v-show="isHideName"></i>
+                <span class="info">{{$t('projectionHideStuName')}}</span>
+              </label>
+              <i class="iconfont icon-question" @click="explainShow = true"></i>
+            </span>
           </div>
 
           <!-- 中间主观题页面 -->
@@ -226,7 +227,11 @@
         </div>
       </div>
     </section>
-
+    <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
+			<div slot="content">
+				<p>{{$t('toupingexplain')}}</p>
+			</div>
+		</explainbox>
   </div>
 </template>
 
@@ -247,6 +252,8 @@
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
   import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+
+  import explainbox from "@/components/teacher-restructure/common/explainbox"
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -303,6 +310,7 @@
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
         isHideName: !0,                // 是否隐藏学生姓名
+        explainShow: false             // 投屏帮助说明
         showTeamMember: false,         // 展示小组成员
         teamMemberList: [],						 // 小组成员列表
 				currentTeam: '',							 // 当前点击的小组名称
@@ -333,7 +341,8 @@
       Loadmore,
       Problemtime,
       GuideDelay,
-			HupingPanel
+      HupingPanel,
+      explainbox
 	  },
 	  created(){
 	  	this.init()
@@ -378,6 +387,12 @@
       // 点击确定是否显示学生姓名
       hideNameHandle () {
         this.isHideName = !this.isHideName;
+        this.socket(JSON.stringify({
+          "op": "protectprivacy",
+          "lessonid": this.lessonid,
+          "hide": this.isHideName
+          })
+        )
       },
       /**
        * 取消延时
@@ -905,7 +920,8 @@
           'op': 'showsproblem',
           'lessonid': self.lessonid,
           'spid': id,
-          'msgid': 1234
+          'msgid': 1234,
+          'hide': this.isHideName
         })
 
         self.socket.send(str)
@@ -1386,6 +1402,15 @@
     .hide-show-name{
       color: #666;
       font-size: px2rem(28px);
+      padding: px2rem(30px);
+      overflow: hidden;
+      i{
+        font-size: px2rem(30px);
+        vertical-align: middle;
+      }
+      label{
+        vertical-align: middle;
+      }
     }
 
 		/* 主观题内容区 */

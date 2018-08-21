@@ -1,7 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="page">
-    <div class="ppt-show-set w100 color6 border-box" @click="pptShowSetLink">
+    <div class="ppt-show-set w100 color3 border-box" @click="pptShowSetLink">
       <span class="text">
           <span>{{ $t('studentsVisible') }}:</span><!--学生可见-->
           <span v-show="show_presentation === 'film'">{{ $t('visibleStu') }}</span><!--课上讲解的-->
@@ -11,8 +11,13 @@
     </div>
     <div class="hideStu color3 back-f">
       <span>{{$t('projectionHideStuInfo')}}</span>
-      <i class="iconfont icon-kuang color63 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
-      <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-danmu-close color-c8 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-danmu-open color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
+    </div>
+    <div class="hideStu color3 back-f">
+      <span>{{$t('toupingshow')}}</span>
+      <i class="iconfont icon-danmu-close color-c8 ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
+      <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
     <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar>
   </div>
@@ -30,7 +35,8 @@
     data () {
       return {
         show_presentation: 'all',
-        isHideName: !1
+        isHideName: !1,
+        showAnswer: true
       }
     },
     mixins: [mixin],
@@ -90,6 +96,9 @@
       hideNameHandle () {
         this.isHideName = !this.isHideName;
       },
+      showAnswerHandle() {
+        this.showAnswer = !this.showAnswer
+      },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {
           return 'http://apimock.xuetangx.com/mock/115/' + url
@@ -135,7 +144,7 @@
       height: px2rem(125px);
       box-sizing: border-box;
       padding: 0 px2rem(30px);
-      font-size: px2rem(36px);
+      font-size: px2rem(28px);
       line-height: px2rem(125px);
       margin-top: px2rem(20px);
       display: flex;
