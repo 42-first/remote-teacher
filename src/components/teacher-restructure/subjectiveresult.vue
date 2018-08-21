@@ -310,7 +310,7 @@
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
         isHideName: !0,                // 是否隐藏学生姓名
-        explainShow: false             // 投屏帮助说明
+        explainShow: false,         // 投屏帮助说明
         showTeamMember: false,         // 展示小组成员
         teamMemberList: [],						 // 小组成员列表
 				currentTeam: '',							 // 当前点击的小组名称
