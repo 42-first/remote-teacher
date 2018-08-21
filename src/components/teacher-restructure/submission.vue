@@ -13,11 +13,12 @@
     </div>
     <div v-show="!isFetching && dataList.length">
       <div class="hide-show-name" >
-        <label @click="hideNameHandle">
-          <i class="iconfont icon-kuang" v-show="!isHideName"></i>
-          <i class="iconfont icon-kuangxuanzhong" v-show="isHideName"></i>
-          <span class="info">{{$t('projectionHideStuInfo')}}</span>
+        <label @click="hideNameHandle" class="inline-block ver-middle">
+          <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
+          <i class="iconfont icon-kuangxuanzhong ver-middle" v-show="isHideName"></i>
+          <span class="info ver-middle">{{$t('projectionHideStuInfo')}}</span>
         </label>
+        <i class="iconfont icon-question ver-middle" @click="explainhandle"></i>
       </div>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
@@ -94,6 +95,11 @@
     </div>
     <v-touch class="btn f18" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     <Scale></Scale>
+    <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
+			<div slot="content">
+				<p>{{$t('toupingexplain')}}</p>
+			</div>
+		</explainbox>
   </div>
 </template>
 
@@ -104,6 +110,8 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
   import Scale from './common/scale'
+  import explainbox from "@/components/teacher-restructure/common/explainbox"
+  import axios from 'axios'
 
   let FENYE_COUNT = 10
 
@@ -125,7 +133,8 @@
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
-        isHideName: !1,               // 是否隐藏学生信息
+        isHideName: false,               // 是否隐藏学生信息
+        explainShow: false            // 投屏帮助说明
       }
     },
     computed: {
@@ -133,12 +142,15 @@
         'lessonid',
         'socket',
         'postingSubmissionid',
-        'postingSubmissionSent'
+        'postingSubmissionSent',
+        'userid',
+        'auth'
       ])
     },
     components: {
       Loadmore,
-      Scale
+      Scale,
+      explainbox
     },
     created () {
       let self = this
@@ -519,9 +531,17 @@
 
       },
       // 点击确定是否显示学生姓名
-      hideNameHandle () {
+      hideNameHandle() {
         this.isHideName = !this.isHideName;
+        axios.post('/api/lesson/get_show_user_profile_config/',{
+          "UserID": this.userid,
+          "Auth": this.auth,
+          "Language": this.$i18n.locale
+        })
       },
+      explainhandle() {
+        this.explainShow = !this.explainShow
+      }
     }
   }
 </script>
@@ -547,9 +567,9 @@
       background-color: #fff;
       box-sizing: border-box;
       padding-left: px2rem(30px);
-      font-size: px2rem(28px);
+      font-size: 0;
       .iconfont{
-        font-size: px2rem(32px);
+        font-size: px2rem(30px);
         vertical-align: middle;
       }
       .icon-kuang{
@@ -560,6 +580,8 @@
       }
       .info{
         color: #666;
+        font-size: px2rem(28px);
+        margin: 0 px2rem(10px);
       }
     }
 

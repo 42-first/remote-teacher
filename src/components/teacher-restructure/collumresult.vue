@@ -39,10 +39,12 @@
 				<div class="yjy">
 					<div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
 					<div class="text-right hide-answer-wrapper">
-						<i class="iconfont icon-kuang" v-show="!showAnswer" @click="showAnswerHandle"></i>
-						<i class="iconfont icon-kuangxuanzhong color-f" v-show="showAnswer"  @click="showAnswerHandle"></i>
-						<span class="hide-answer">{{$t("hideanswer")}}</span>
-						<i class="iconfont icon-question" @click="explainShow = true"></i>
+						<label @click="showAnswerHandle" class="ver-middle inline-block">
+							<i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
+							<i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
+							<span class="hide-answer ver-middle">{{$t("hideanswer")}}</span>
+						</label>
+						<i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
 					</div>
 				</div>
 	    </section>
@@ -683,9 +685,9 @@
 				this.showAnswer = !this.showAnswer
 				let str = JSON.stringify({
 	        'op': "problemresult",
-	        'lessonid': self.lessonid,
-					'problemid': self.problemid,
-					'show': this.showAnswer
+	        'lessonid': this.lessonid,
+					'problemid': this.problemid,
+					'show': !this.showAnswer
 	      })
 	      this.socket.send(str)
 			}
@@ -777,7 +779,6 @@
 			}
 			.yjy {
 				margin-top: px2rem(32px);
-				border-top: px2rem(1px) solid #fff;
 				padding-top: px2rem(20px);
 				height: px2rem(62px);
 				color: #fff;
@@ -787,16 +788,18 @@
 					flex: 1;
 				}
 				.hide-answer-wrapper{
-					.hide-answer{
-						margin-right: px2rem(10px);
-						vertical-align: middle;
-						line-height: px2rem(28px);
-						display: inline-block;
-						height: px2rem(28px);
-					}
+					font-size: 0;
 					i{
-						font-size: px2rem(30px);
-						vertical-align: middle;
+							font-size: px2rem(30px);
+						}
+					label{
+						.hide-answer{
+							margin-right: px2rem(10px);
+							font-size: px2rem(28px);
+						}
+						i{
+							margin: 0 px2rem(10px);
+						}
 					}
 				}
 			}

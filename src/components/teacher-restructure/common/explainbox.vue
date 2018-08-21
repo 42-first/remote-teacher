@@ -24,7 +24,6 @@
     },
     methods: {
       close() {
-        console.log(1)
         this.$emit('close')
       }
     }
@@ -35,7 +34,7 @@
   @import "~@/style/_variables";
   @import "~@/style/common";
   .masking{
-    background-color: rgba(0, 0, 0, .2);
+    background-color: rgba(0, 0, 0, .5);
     position: fixed;
     top: 0;
     left: 0;

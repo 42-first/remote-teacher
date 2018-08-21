@@ -3,20 +3,22 @@
 	<div class="page">
     <div class="ppt-show-set w100 color3 border-box" @click="pptShowSetLink">
       <span class="text">
-          <span>{{ $t('studentsVisible') }}:</span><!--学生可见-->
-          <span v-show="show_presentation === 'film'">{{ $t('visibleStu') }}</span><!--课上讲解的-->
-          <span v-show="show_presentation === 'all' || !show_presentation">{{ $t('visibleAll') }}</span><!--全部课件-->
+          <span>{{ $t('studentsVisible') }}</span><!--学生可见-->
       </span>
-      <div class="icon-span"><i class="iconfont icon-kejiankejianqiehuan color63"></i></div>
+      <div class="icon-span color-9b">
+        <span v-show="show_presentation === 'film'">{{ $t('visibleStu') }}</span><!--课上讲解的-->
+        <span v-show="show_presentation === 'all' || !show_presentation">{{ $t('visibleAll') }}</span><!--全部课件-->
+        <i class="iconfont icon-kejiankejianqiehuan color63 ver-middle"></i>
+      </div>
     </div>
     <div class="hideStu color3 back-f">
       <span>{{$t('projectionHideStuInfo')}}</span>
-      <i class="iconfont icon-danmu-close color-c8 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
     </div>
     <div class="hideStu color3 back-f">
       <span>{{$t('toupingshow')}}</span>
-      <i class="iconfont icon-danmu-close color-c8 ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
+      <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
     <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar>
@@ -27,6 +29,7 @@
   import axios from 'axios'
   import {mixin} from '../util/mix_ppt_show_set'
   import MessageBoxMin from './messagebox.vue'
+  import {mapGetters} from 'vuex'
   // 工具栏
   import Toolbar from './toolbar'
 
@@ -35,14 +38,22 @@
     data () {
       return {
         show_presentation: 'all',
-        isHideName: !1,
-        showAnswer: true
+        isHideName: true,
+        showAnswer: false
       }
     },
     mixins: [mixin],
     components: {
       MessageBoxMin,
       Toolbar
+    },
+    computed: {
+      ...mapGetters([
+        'lessonid',
+        'socket',
+        'userid',
+        'auth'
+      ])
     },
     created () {
       this.init()
@@ -95,9 +106,19 @@
       // 点击确定是否显示学生姓名
       hideNameHandle () {
         this.isHideName = !this.isHideName;
+        axios.post('/api/lesson/get_show_user_profile_config/',{
+          "UserID": this.userid,
+          "Auth": this.auth,
+          "Language": this.$i18n.locale
+        })
       },
       showAnswerHandle() {
         this.showAnswer = !this.showAnswer
+        axios.post('/api/lesson/get_problem_show_answer_config/', {
+          "UserID": this.userid,
+          "Auth": this.auth,
+          "Language": this.$i18n.locale
+        })
       },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {
@@ -128,13 +149,18 @@
       font-size: 0.373rem;
       height: 1.2rem;
       line-height: 1.2rem;
-      padding: 0 0.4rem;
+      padding: 0 px2rem(30px);
       display: flex;
       background-color: #fff;
       .text{
         flex: 1;
+        font-size: px2rem(34px);
       }
       .icon-span{
+        span{
+          font-size: px2rem(28px);
+          vertical-align: middle;
+        }
         i{
           font-size: 0.8rem;
         }
@@ -144,7 +170,7 @@
       height: px2rem(125px);
       box-sizing: border-box;
       padding: 0 px2rem(30px);
-      font-size: px2rem(28px);
+      font-size: px2rem(34px);
       line-height: px2rem(125px);
       margin-top: px2rem(20px);
       display: flex;
@@ -152,7 +178,7 @@
         flex: 1;
       }
       .iconfont{
-        font-size: px2rem(62px);
+        font-size: px2rem(110px);
       }
     }
   }

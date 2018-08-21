@@ -90,12 +90,12 @@
 
           <div :class="['f18', 'yjy', 'text-right']">
             <span class="hide-show-name">
-              <label @click="hideNameHandle">
-                <i class="iconfont icon-kuang" v-show="!isHideName"></i>
-                <i class="iconfont icon-kuangxuanzhong color63" v-show="isHideName"></i>
-                <span class="info">{{$t('projectionHideStuName')}}</span>
+              <label @click="hideNameHandle" class="ver-middle inline-block">
+                <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
+                <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
+                <span class="info ver-middle">{{$t('projectionHideStuName')}}</span>
               </label>
-              <i class="iconfont icon-question" @click="explainShow = true"></i>
+              <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
             </span>
           </div>
 
@@ -309,7 +309,7 @@
         isContLonger: false,          // 内容超过1屏
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
-        isHideName: !0,                // 是否隐藏学生姓名
+        isHideName: false,                // 是否隐藏学生姓名
         explainShow: false,         // 投屏帮助说明
         showTeamMember: false,         // 展示小组成员
         teamMemberList: [],						 // 小组成员列表
@@ -387,7 +387,7 @@
       // 点击确定是否显示学生姓名
       hideNameHandle () {
         this.isHideName = !this.isHideName;
-        this.socket(JSON.stringify({
+        this.socket.send(JSON.stringify({
           "op": "protectprivacy",
           "lessonid": this.lessonid,
           "hide": this.isHideName
@@ -1401,15 +1401,16 @@
 
     .hide-show-name{
       color: #666;
-      font-size: px2rem(28px);
+      font-size: 0;
       padding: px2rem(30px);
       overflow: hidden;
       i{
         font-size: px2rem(30px);
         vertical-align: middle;
       }
-      label{
-        vertical-align: middle;
+      .info{
+        font-size: px2rem(28px);
+        margin: 0 px2rem(10px);
       }
     }
 
