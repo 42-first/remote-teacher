@@ -468,10 +468,8 @@
 
 	      request.get(url)
 	      	.then(jsonData => {
-
-	      		let _answer = jsonData.answer
-
 	      		if(jsonData.success){
+							jsonData = jsonData.data
 	      		  self.setData({
 	      		    total: jsonData.total,
 	      		    members: jsonData.members,
