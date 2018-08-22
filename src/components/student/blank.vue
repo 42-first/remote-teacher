@@ -807,6 +807,7 @@
     outline: none;
     border: none;
     appearance: none;
+    box-sizing: border-box;
   }
 
 
