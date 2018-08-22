@@ -183,7 +183,7 @@
         // 单次刷新
         request.get(url)
           .then(jsonData => {
-
+            jsonData = jsonData.data
             // 设置试卷详情数据
             self.problemResultDetailData = jsonData
             self.answer = jsonData.answer
