@@ -39,8 +39,8 @@
         <header class="blanks__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
-            <p class="blank__order">{{ index + 1 }}</p>
-            <input class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" placeholder="输入答案" />
+            <div class="blank__order">{{ index + 1 }}</div>
+            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" placeholder="输入答案" ></textarea>
           </li>
         </ul>
       </section>
@@ -194,6 +194,7 @@
         this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
+        this.result = this.oProblem['Result'] || this.result;
         // 选项
         let blanks = this.oProblem.Blanks;
 
@@ -206,9 +207,6 @@
         // 是否完成
         if(data.isComplete) {
           this.isShowSubmit = false;
-
-          this.result = this.oProblem['Result'];
-
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
         } else {
@@ -222,6 +220,12 @@
               this.result[index + 1] = '';
             }
           })
+
+          setTimeout(()=>{
+            this.$el.querySelectorAll('textarea').forEach((ele) => {
+              ele.style.height = (ele.scrollHeight) + 'px';
+            })
+          }, 300)
 
           if (process.env.NODE_ENV !== 'production') {
             this.setTiming(data.limit)
@@ -420,6 +424,7 @@
         let value = target.value;
 
         this.canSubmitFn();
+        target.style.height = (target.scrollHeight) + 'px';
       },
 
       /*
@@ -772,10 +777,10 @@
 
   .blank__item {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    // justify-content: flex-start;
+    // align-items: center;
 
-    height: 1.066667rem;
+    min-height: 1.066667rem;
     border: 2px solid #eee;
     border-left: none;
     border-radius: 0.106667rem;
@@ -796,7 +801,9 @@
 
   .blank__input {
     flex: 1;
-    padding: 0.066667rem 0.266667rem;
+    // padding: 0.066667rem 0.266667rem;
+    padding: 0.133333rem;
+    line-height: 1.5;
     outline: none;
     border: none;
     appearance: none;
