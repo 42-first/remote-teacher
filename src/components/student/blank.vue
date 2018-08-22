@@ -36,7 +36,7 @@
 
       <!-- 填空选项 -->
       <section class="blanks__wrap">
-        <header class="blanks__header f20">我的答案</header>
+        <header class="blanks__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
             <p class="blank__order">{{ index + 1 }}</p>
@@ -787,7 +787,7 @@
     align-items: center;
 
     width: 1.066667rem;
-    height: 1.066667rem;
+    min-height: 1.066667rem;
     font-weight: bold;
     color: #5096F5;
     border: 2px solid #5096F5;

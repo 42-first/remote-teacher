@@ -113,6 +113,7 @@ let pages = {
   "receivertimeout": "作答时间结束",
   "receiverdone": "已完成",
   "collectprotip": "老师可能会随时结束答题",
+  "myanswer": "我的答案",
 
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
