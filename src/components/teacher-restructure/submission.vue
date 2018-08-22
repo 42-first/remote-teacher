@@ -565,6 +565,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common";
   @function px2rem($px) {
     $rem: 75px;
     @return ($px/$rem) + rem;
