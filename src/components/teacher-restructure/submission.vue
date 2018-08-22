@@ -175,6 +175,8 @@
           boxDom.scrollTop = boxDom.scrollTop -2
         }
       })
+      // 获取投屏是否隐藏学生信息
+      this.getShowUserInfo()
     },
     beforeDestroy(){
       this.closeSubmissionmask()
@@ -533,10 +535,25 @@
       // 点击确定是否显示学生姓名
       hideNameHandle() {
         this.isHideName = !this.isHideName;
+        axios.post('/pc/web_ppt_config',{
+          "op":"set_config",
+          "set_data": {
+            "show_user_profile": this.isHideName
+          }
+        })
+      },
+      getShowUserInfo() {
+        let self = this
         axios.post('/api/lesson/get_show_user_profile_config/',{
           "UserID": this.userid,
           "Auth": this.auth,
           "Language": this.$i18n.locale
+        }).then(e => {
+          try {
+            self.isHideName = !!e.data.Data.show_user_profile
+          } catch (err) {
+            console.log(err)
+          }
         })
       },
       explainhandle() {

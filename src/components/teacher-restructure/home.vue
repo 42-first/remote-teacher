@@ -43,7 +43,6 @@
         @showThumbnail="showThumbnail"
         @showActivity="showActivity"
         @goHome="goHome"
-        @stateSet="stateSetFn"
       ></Toolbar>
     </div>
 
@@ -60,8 +59,7 @@
           @showActivity="showActivity"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
-          @checkDoubt="checkDoubt"
-          @stateSet="stateSetFn"
+          @checkDoubt="checkDoubt" 
           :problem-type="problemType"
           :card-width="cardWidth"
           :card-height="cardHeight"
@@ -102,9 +100,6 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
       @guideDelayNext="guideDelayNext"
     ></GuideDelay>
-    <state-set id="stateSet" v-show="stateSet" @goHome="goHome"
-               @showThumbnail="showThumbnail"
-               @showActivity="showActivity"></state-set>
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
 
@@ -156,8 +151,6 @@
 	import socketService from './util/socket-service'
 	// 课堂试题相关
 	import problemRelated from './util/problem-related'
-  // 设置面板
-import stateSet from '@/components/teacher-restructure/common/stateSet'
 	let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
 	let pollingTougaoTimer = null          // 轮询获取投稿数的信息
 	let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
@@ -232,8 +225,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 
         'msgMaskTpl',
         'toastCtrlMaskTpl',
-        'initiativeCtrlMaskTpl',
-        'stateSet'
+        'initiativeCtrlMaskTpl'
       ])
 	  },
 	  components: {
@@ -246,8 +238,7 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	    Qrcode,
 	    Thumbnail,
 	    Activity,
-	    change_lang_dialog,
-    stateSet
+	    change_lang_dialog
 	  },
 	  created () {
 	    this.init()
@@ -491,20 +482,10 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Thumbnail')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
-      self.$store.commit('set_stateSet', false)
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask.$emit('Thumbnail')
 	      })
 	    },
-    // 点开设置
-    stateSetFn () {
-      this.$store.commit('set_stateSet', true)
-      this.$store.commit('set_isInitiativeCtrlMaskHidden', true)
-      this.$store.commit('set_isToastCtrlMaskHidden', true)
-      this.$store.commit('set_isMsgMaskHidden', true)
-      // this.$store.commit('set_isEnterEnded', false)
-      this.$refs.Toolbar.$emit('hideToolbarMore')
-    },
 	    /**
 	     * 点开 课堂动态 按钮
 	     *
@@ -514,7 +495,6 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-      self.$store.commit('set_stateSet', false)
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
@@ -526,11 +506,8 @@ import stateSet from '@/components/teacher-restructure/common/stateSet'
 	     */
 	    goHome () {
 	      let self = this
-
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
 	      self.$store.commit('set_initiativeCtrlMaskTpl', '')
-      self.$store.commit('set_stateSet', false)
-			
 	    },
 	    /**
 	     * 轮询获取缩略图页 不懂 等标志的信息

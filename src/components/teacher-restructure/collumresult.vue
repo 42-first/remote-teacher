@@ -690,7 +690,21 @@
 					'show': !this.showAnswer
 	      })
 	      this.socket.send(str)
-			}
+			},
+			getShowUserInfo() {
+        let self = this
+        axios.post('/api/lesson/get_problem_show_answer_config/',{
+          "UserID": this.userid,
+          "Auth": this.auth,
+          "Language": this.$i18n.locale
+        }).then(e => {
+          try {
+            self.showAnswer = !!e.data.Data.problem_show_answer
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
 	  }
 	}
 </script>

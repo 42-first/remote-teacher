@@ -247,7 +247,8 @@
   import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
-	import HupingPanel from './common/huping-panel'
+  import HupingPanel from './common/huping-panel'
+  import axios from 'axios'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
@@ -333,6 +334,8 @@
         'pptData',
         'postingSubjectiveid',
         'postingSubjectiveSent',
+        'userid',
+        'auth'
       ])
 	  },
 	  components: {
@@ -345,7 +348,9 @@
       explainbox
 	  },
 	  created(){
-	  	this.init()
+      this.init()
+      // 获取投屏是否隐藏学生信息
+      this.getShowUserInfo()
 	  },
     mounted(){
       // 处理打分蒙版出现时，ios11+ 后面不要滚动
@@ -385,14 +390,39 @@
     },
 	  methods: {
       // 点击确定是否显示学生姓名
-      hideNameHandle () {
+      // hideNameHandle () {
+      //   this.isHideName = !this.isHideName;
+      //   this.socket.send(JSON.stringify({
+      //     "op": "protectprivacy",
+      //     "lessonid": this.lessonid,
+      //     "hide": this.isHideName
+      //     })
+      //   )
+      // },
+
+      // 点击确定是否显示学生姓名
+      hideNameHandle() {
         this.isHideName = !this.isHideName;
-        this.socket.send(JSON.stringify({
-          "op": "protectprivacy",
-          "lessonid": this.lessonid,
-          "hide": this.isHideName
-          })
-        )
+        axios.post('/pc/web_ppt_config',{
+          "op":"set_config",
+          "set_data": {
+            "show_user_profile": this.isHideName
+          }
+        })
+      },
+      getShowUserInfo() {
+        let self = this
+        axios.post('/api/lesson/get_show_user_profile_config/',{
+          "UserID": this.userid,
+          "Auth": this.auth,
+          "Language": this.$i18n.locale
+        }).then(e => {
+          try {
+            self.isHideName = !!e.data.Data.show_user_profile
+          } catch (err) {
+            console.log(err)
+          }
+        })
       },
       /**
        * 取消延时

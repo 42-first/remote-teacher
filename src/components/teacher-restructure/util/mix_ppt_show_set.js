@@ -43,12 +43,13 @@ var mixin = {
           $(this.picker.cancelEl).click()
         })
         this.picker.pickerEl.style.zIndex = '10000'
+        this.picker.pickerEl.style.backgroundColor = 'transparent !important'
         let pickChoose = this.picker.pickerEl.querySelector('.picker-choose')
         let pickCancel = this.picker.cancelEl
         let pickConfirm = this.picker.confirmEl
-        this.picker.panelEl.style.height = '4.8rem'
+        this.picker.panelEl.style.height = this.px2rem(486)
         $(this.picker.wheelEl).css({
-          height: '2.6rem',
+          height: '3rem',
           fontSize: '0.56rem'
         })
         $(this.picker.wheelEl).find('.wheel-scroll').css({
@@ -62,28 +63,29 @@ var mixin = {
         pickCancel.style.height = pickConfirm.style.height = '100%'
         pickChoose.style.backgroundColor = '#f8f8f8'
         pickChoose.querySelector('.picker-title').style.color = '#9b9b9b'
-        pickChoose.querySelector('.picker-title').style.fontSize = '0.374rem'
+        pickChoose.querySelector('.picker-title').style.fontSize = this.px2rem(28)
         pickChoose.querySelector('.picker-title').style.fontWeight = 'normal'
         pickChoose.querySelector('.picker-title').style.height = '100%'
-        pickChoose.querySelector('.picker-title').style.lineHeight = '1.226rem'
-        pickChoose.style.height = '1.226rem'
-        pickChoose.style.lineHeight = '1.226rem'
-        pickCancel.style.paddingLeft = '0.426rem'
+        pickChoose.querySelector('.picker-title').style.lineHeight = this.px2rem(92)
+        pickChoose.style.height = this.px2rem(92)
+        pickChoose.style.lineHeight = this.px2rem(92)
+        pickCancel.style.paddingLeft = this.px2rem(32)
         pickCancel.style.color = '#333'
-        pickCancel.style.fontSize = '0.426rem'
+        pickCancel.style.fontSize = this.px2rem(32)
         pickConfirm.style.color = '#639ef4'
-        pickConfirm.style.paddingRight = '0.426rem'
-        pickConfirm.style.fontSize = '0.426rem'
+        pickConfirm.style.paddingRight = this.px2rem(32)
+        pickConfirm.style.fontSize = this.px2rem(32)
         pickCancel.style.top = pickConfirm.style.top = 0
         $(this.picker.pickerEl).find('h1.picker-title').css({
           'overflow': 'hidden',
-          'padding-top': '0.374rem',
+          'padding-top': this.px2rem(28),
           'line-height': 'normal'
         })
       }
       // stateSet 调用本函数，传入参数 show_presentation 设置
       this.picker.selectedIndex = [data.show_presentation === 'all' ? 0 : 1]
       this.picker && this.picker.show()
+      console.log(this.picker)
     },
     // 全局设置ppt
     pcSet (name) {
@@ -101,6 +103,10 @@ var mixin = {
         return 'http://apimock.xuetangx.com/mock/115/' + url
       }
       return '/' + url
+    },
+    // 像素转rem 
+    px2rem(px) {
+      return (px/75) + "rem"
     }
   },
   beforeDestroy () {

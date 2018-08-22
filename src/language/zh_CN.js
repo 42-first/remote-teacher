@@ -370,6 +370,7 @@ let pages = {
   "toupingexplaintitle": "投屏帮助说明",
   "toupingfanweitishi": "您可以设置学生课后查看课件的范围啦！",
   "toupingshow": "客观题投屏显示答案",
+  "toupingshow1": "投屏显示答案",
   "zhengque": "正确",
   "cuowu": "错误",
   "weida": "未答",

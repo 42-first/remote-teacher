@@ -65,6 +65,7 @@
       return {
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
         isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
+        isHideSet: false,           // 工具栏设置按钮的隐藏
       }
     },
     computed: {
@@ -79,13 +80,13 @@
     },
     created () {
       let self = this
-
       // 主屏幕点击 缩略图、课堂动态 后，隐藏更多
       self.$on('hideToolbarMore', function () {
         self.isToolbarMoreBoxHidden = true
       })
       let newToolBar = !localStorage.getItem('newToolBar')
-        this.$store.commit('set_newToolBar', newToolBar)
+      this.$store.commit('set_newToolBar', newToolBar)
+      this.isHideSet = this.$route.name === "stateSet"
     },
     methods: {
       /**
@@ -175,6 +176,7 @@
       },
       goSet () {
         this.$emit('stateSet', 1)
+        this.$router.push({name: 'stateSet'})
       },
     //  关闭新功能提示tips
       closeTips () {
