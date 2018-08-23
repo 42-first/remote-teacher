@@ -40,7 +40,7 @@
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
             <div class="blank__order">{{ index + 1 }}</div>
-            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" placeholder="输入答案" ></textarea>
+            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" :placeholder="$t('enteranswer')" ></textarea>
           </li>
         </ul>
       </section>
@@ -547,7 +547,7 @@
             confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
             cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
           };
-          let message = '有空格未填写，确认提交吗？';
+          let message = this.$i18n && this.$i18n.t('blanksnotanswer') || '有空格未填写，确认提交吗？';
 
           this.$messagebox.confirm(message, msgOptions).
             then( action => {

@@ -114,7 +114,8 @@ let pages = {
   "receivertimeout": "Time Out",
   "receiverdone": "Done",
   "collectprotip": "It may end at any time.",
-  "myanswer": "My Answer",
+  "enteranswer": "Enter your answer",
+  "blanksnotanswer": "Not all of the blanks had been filled. Are you sure to submit?",
 
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
