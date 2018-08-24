@@ -118,7 +118,8 @@
         axios.post('/pc/web_ppt_config', {
           "op": "set_config",
           "set_data": {
-            "show_user_profile": this.isHideName
+            "show_user_profile": this.isHideName，
+            "lessonid": this.lessonid
           }
         })
       },

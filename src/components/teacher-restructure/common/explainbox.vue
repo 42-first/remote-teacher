@@ -40,6 +40,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 100;
     .explain-wrapper{
       width: px2rem(590px);
       position: absolute;

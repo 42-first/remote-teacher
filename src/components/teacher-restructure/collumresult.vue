@@ -638,7 +638,7 @@
 	     */
 	    handlePostProblemresult (isTouping) {
 	      let self = this
-
+				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
 
 	      let str = JSON.stringify({
@@ -687,9 +687,9 @@
 	        'op': "problemresult",
 	        'lessonid': this.lessonid,
 					'problemid': this.problemid,
-					'show': !this.showAnswer
+					'showresult': !this.showAnswer
 	      })
-	      this.socket.send(str)
+	      !this.isTouping && this.socket.send(str)
 			},
 			getShowUserInfo() {
         let self = this

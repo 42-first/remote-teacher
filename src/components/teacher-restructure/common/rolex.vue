@@ -24,24 +24,35 @@
         <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
       </div>
     </div>
-    <div :class="['f18', 'yjy', 'yjyfb']">
-      <div class="f14">
-        {{ $t('submittotal2', { ss1: total, ss2: members }) }}
+    <div class="yjy">
+        <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
+        <div class="text-right hide-answer-wrapper">
+          <label @click="showAnswerHandle" class="ver-middle inline-block">
+            <i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
+            <i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
+            <span class="hide-answer ver-middle">{{$t("hideanswer")}}</span>
+          </label>
+          <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
+        </div>
       </div>
-      <div class="tpanswer f14">
-        <!-- <i class="iconfont f28" :class="true ? 'icon-kuang' : 'icon-kuangxuanzhong' "></i> -->
-        <!-- 投屏显示答案 --><!-- {{$t('tpxsda')}} -->
-      </div>
-    </div>
+      <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
+        <div slot="content">
+          <p>{{$t('toupingexplain')}}</p>
+        </div>
+      </explainbox>
   </section>
 </template>
 
 <script>
+	import explainbox from "@/components/teacher-restructure/common/explainbox"
+
 	export default {
 	  name: 'Rolex',
-	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members'],
+	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'problemid', 'lessonid', 'isTouping', 'socket'],
 	  data () {
 	    return {
+        showAnswer: false,             // 隐藏答案
+        explainShow: false             // 投屏帮助说明
 	    }
 	  },
 	  created(){
@@ -62,13 +73,34 @@
 	     */
 	    shouti () {
 	      this.$emit('shouti')
-	    },
-	  }
+      },
+      	/**
+			*
+			* 隐藏答案
+			*
+			*
+			*/
+			showAnswerHandle() {
+				this.showAnswer = !this.showAnswer
+				let str = JSON.stringify({
+	        'op': "problemresult",
+	        'lessonid': this.lessonid,
+					'problemid': this.problemid,
+					'showresult': !this.showAnswer
+        })
+        console.log(str, this.socket, this.isTouping)
+	      !this.isTouping && this.socket.send(str)
+			}
+    },
+    components: {
+      explainbox
+    }
 	}
 </script>
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  @import "~@/style/common";
   /* 上部 */
   .upper {
     margin: 0 auto;
@@ -135,19 +167,29 @@
       vertical-align: middle;
     }
     .yjy {
-      padding-top: 0.5rem;
-      color: #AAAAAA;
-    }
-    .yjyfb {
+      margin-top: px2rem(32px);
+      padding-top: px2rem(20px);
+      height: px2rem(62px);
+      color: #fff;
+      font-size: px2rem(28px);
       display: flex;
-      justify-content: space-between;
-      margin: 0.3rem 0.3rem;
-      padding-top: 0.2rem;
-      border-top: 0.0133rem solid #AAAAAA;
-      text-align: left;
-
-      .tpanswer {
-        color: $white;
+      .status{
+        flex: 1;
+      }
+      .hide-answer-wrapper{
+        font-size: 0;
+        i{
+            font-size: px2rem(30px);
+          }
+        label{
+          .hide-answer{
+            margin-right: px2rem(10px);
+            font-size: px2rem(28px);
+          }
+          i{
+            margin: 0 px2rem(10px);
+          }
+        }
       }
     }
   }

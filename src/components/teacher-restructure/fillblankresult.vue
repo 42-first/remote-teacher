@@ -11,7 +11,11 @@
         :newTime="newTime"
         :durationLeft="durationLeft"
         :total="total"
-        :members="members"
+        :members="members" 
+				:problemid="problemid" 
+				:lessonid="lessonid" 
+				:isTouping="isTouping"
+				:socket="socket" 
         @yanshi="yanshi"
         @shouti="shouti"
       ></Rolex>
@@ -552,7 +556,7 @@
 	      let self = this
 
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
-
+				this.isTouping = isTouping
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
