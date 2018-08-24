@@ -73,16 +73,8 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <!-- 主观题作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
-            <div class="paper-txt f18">
-              <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
-            </div>
-            <i class="iconfont icon-ykq_shiti f55"></i>
-        </router-link>
-        <!-- 客观题作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
+        <!-- 作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL" >
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
@@ -169,10 +161,22 @@
   export default {
     name: 'card-item',
     props: {
-      tabindex: 1,
-      index: 0,
-      lessonid: 0,
-      item: null
+      tabindex: {
+        type: Number,
+        default: 1
+      },
+      index: {
+        type: Number,
+        default: 0
+      },
+      lessonid: {
+        type: Number,
+        default: 0
+      },
+      item: {
+        type: Object,
+        default: null
+      }
     },
     data() {
       return {
