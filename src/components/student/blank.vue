@@ -221,16 +221,16 @@
             }
           })
 
-          setTimeout(()=>{
-            this.$el.querySelectorAll('textarea').forEach((ele) => {
-              ele.style.height = (ele.scrollHeight) + 'px';
-            })
-          }, 300)
-
           if (process.env.NODE_ENV !== 'production') {
             this.setTiming(data.limit)
           }
         }
+
+        setTimeout(()=>{
+          this.$el.querySelectorAll('textarea').forEach((ele) => {
+            ele.style.height = (ele.scrollHeight) + 'px';
+          })
+        }, 300)
 
         this.blanks = blanks;
 
@@ -650,7 +650,7 @@
       if(this.summary) {
         this.init(this.summary);
       } else {
-        // this.$router.back();
+        this.$router.back();
       }
     },
     mounted() {
