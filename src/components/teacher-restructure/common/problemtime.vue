@@ -1,7 +1,7 @@
 <!--发题选择时间面板 被父组件 home.vue 引用-->
 <template>
 	<div class="rc-mask">
-		<template v-if="problemType !== 'ShortAnswer'">
+		<template v-if="!['FillBlank', 'ShortAnswer'].includes(problemType)">
 			<section class="problemtime-box">
 	      <div class="block">
 	      	<div class="btn-box">
@@ -19,7 +19,7 @@
 		</template>
 		<template v-else>
 			<section class="problemtime-box shortanswer-mask">
-				<div class="tab-box" v-show="!isYanshi">
+				<div class="tab-box" v-show="!isYanshi && problemType !== 'FillBlank'">
 	        <v-touch :class="['tab','f14', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
 	        <v-touch :class="['tab','f14', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
 	      </div>

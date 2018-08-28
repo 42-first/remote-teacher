@@ -116,8 +116,21 @@ export default {
       // 主观题、普通题分别进入各自的页面
       // TODO 找出这里的 self.problemType 总是 ShortAnswer 的原因
       let pt = problemType
+      let name
+
+      switch (problemType) {
+        case 'ShortAnswer':
+          name = 'subjectiveresult'
+          break;
+        case 'FillBlank':
+          name = 'fillblankresult'
+          break;
+        default:
+        name = 'collumresult'
+          break;
+      }
       let to = {
-        name: problemType === 'ShortAnswer' ? 'subjectiveresult' : 'collumresult',
+        name,
         params: {
           problemid,
         },

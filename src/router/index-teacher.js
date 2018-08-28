@@ -7,6 +7,8 @@ const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const CollumresultDetail = () => import('@/components/teacher-restructure/collumresult-detail')
+const Fillblankresult = () => import('@/components/teacher-restructure/fillblankresult')
+const FillblankresultDetail = () => import('@/components/teacher-restructure/fillblankresult-detail')
 const Redpacket = () => import('@/components/teacher-restructure/redpacket')
 const Redpacketlist = () => import('@/components/teacher-restructure/redpacketlist')
 const Subjectiveresult = () => import('@/components/teacher-restructure/subjectiveresult')
@@ -44,6 +46,16 @@ const router = new Router({
       path: '/collumresult-detail/:problemid',
       name: 'collumresult-detail',
       component: CollumresultDetail
+    },
+    {
+      path: '/fillblankresult/:problemid',
+      name: 'fillblankresult',
+      component: Fillblankresult
+    },
+    {
+      path: '/fillblankresult-detail/:problemid',
+      name: 'fillblankresult-detail',
+      component: FillblankresultDetail
     },
     {
       // 解决微信确认支付路径的时候，ios 取 Landing Page， Android 取 Current Page 导致微信支付合法url认定不一致的问题

@@ -1,6 +1,6 @@
 {
   "name": "remote-teacher",
-  "version": "3.2.32",
+  "version": "3.2.33",
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,
@@ -10,6 +10,7 @@
     "build": "node build/build.js",
     "ws": "node build/dev-ws-server.js",
     "onthunder": "npm run build && ./bin/onthunder",
+    "onnewthunder": "npm run build && ./bin/onnewthunder",
     "on199": "npm run build && ./bin/on199",
     "ondocker": "npm install && npm run build && ./deploy/build_lesson_vue",
     "ondeploy": "./deploy/deploy_lesson_vue",

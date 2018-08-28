@@ -20,14 +20,8 @@ const Danmu = resolve => require(['@/components/student/danmu'], resolve)
 const SubmissionDetail = resolve => require(['@/components/student/submission-detail'], resolve)
 const SubjectiveShare = resolve => require(['@/components/student/subjective-share'], resolve)
 const MutualEvaluation = resolve => require(['@/components/student/mutual-evaluation'], resolve)
+const FillBlank = resolve => require(['@/components/student/blank'], resolve)
 
-
-// 国际化
-// import language from '@/util/language'
-// window.language = language;
-// setTimeout(() => {
-//   language.requireRes('zh_CN');
-// }, 0)
 
 Vue.use(Router)
 Vue.component('loadmore', Loadmore);
@@ -67,6 +61,11 @@ const studentRouter = new Router({
           path: 'subjective/:index',
           name: 'student-subjective-page',
           component: Subjective
+        },
+        {
+          path: 'blank/:index',
+          name: 'student-blank-page',
+          component: FillBlank
         },
         {
           path: 'subjective_share/:index',

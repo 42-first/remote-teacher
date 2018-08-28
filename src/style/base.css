@@ -72,6 +72,10 @@ textarea { outline: none; resize: none; }
   color: #fff;
 }
 
+.mb10 {
+  margin-bottom: 0.266667rem;
+}
+
 
 /*-----------------------------*\
     $ 基本字体大小
