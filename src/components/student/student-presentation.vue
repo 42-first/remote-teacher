@@ -165,8 +165,7 @@
 
   export default {
     name: 'student-page',
-    props: {
-    },
+
     data() {
       return {
         isResetSocket: false,
@@ -410,32 +409,8 @@
         this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
 
         this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:2, time: 1497431406048, presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:3, time: 1497431046048, presentationid: this.presentationID });
-        this.addPPT({ type: 2, pageIndex:3, time: 1497431446048, presentationid: this.presentationID });
-
-        this.addPaper({ type: 4, title:"xxx", total: 10, quiz: 1, time: 1497431446048 });
-        this.addPaper({ type: 4, title:"试卷测试数据", total: 12, quiz: 12, time: 1497431440048 });
 
         this.addProblem({ type: 3, pageIndex: 4, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
-        this.addProblem({ type: 3, pageIndex: 5, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
-
-        let event = {
-          "type": "redpacket",
-          "prob": 123,
-          "redpacket": "234",
-          "total": 500,
-          "count": 5,
-          "detail": [
-            {"uid": 45, "earning": 50, "dt": 1453348609053}, // earning以分为单位
-            {"uid": 46, "earning": 50, "dt": 1453358609053},
-            {"uid": 48, "earning": 50, "dt": 1453368609053},
-            {"uid": 41, "earning": 50, "dt": 1453378609053}
-          ],
-          "dt": 1453348609053  // Datetime 时间戳
-        };
-
-        this.addHongbao({ type: 5, redpacketID: 5, time: 1497431446048, count: 9, length: 6, event: event, userID: this.userID || 46 });
       },
 
       /*

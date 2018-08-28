@@ -23,22 +23,22 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="popup__paper">
-        <!-- 主观题作答链接 -->
-        <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']"  v-if="item.problemType==='ShortAnswer'" @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/'+lessonid+'/subjective/'+item.index" >
+        <!-- 作答链接 -->
+        <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" @click="handlelink(index, $event)">
+          <router-link class="paper-txt f17" :to="item.pageURL" >
             <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
             <p class="paper-name">{{ item.caption }}</p>
            </router-link>
           <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
         </div>
         <!-- 客观题作答链接 -->
-        <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" v-else @click="handlelink(index, $event)">
+        <!-- <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" v-else @click="handlelink(index, $event)">
           <router-link class="paper-txt f17" :to="'/'+lessonid+'/exercise/'+item.index" >
             <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
             <p class="paper-name">{{ item.caption }}</p>
           </router-link>
           <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
-        </div>
+        </div> -->
       </div>
     </template>
     <!-- 分组模板 -->
@@ -62,9 +62,18 @@
   export default {
     name: 'popup-item',
     props: {
-      index: 0,
-      lessonid: 0,
-      item: null
+      index: {
+        type: Number,
+        default: 0
+      },
+      lessonid: {
+        type: Number,
+        default: 0
+      },
+      item: {
+        type: Object,
+        default: null
+      }
     },
     data() {
       return {

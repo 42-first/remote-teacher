@@ -2,6 +2,10 @@
 <template>
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
+		<!-- 教师遥控器引导查看答案、续时 -->
+    <GuideDelay
+      v-show="!isGuideDelayHidden"
+    ></GuideDelay>
 
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
@@ -78,6 +82,8 @@
 	import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
+	// 教师遥控器引导查看答案、续时
+  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -99,7 +105,7 @@
 		'240': '4分钟',
 		'300': '5分钟',
 		'600': '10分钟',
-		'90': '15分钟',
+		'900': '15分钟',
 		'1200': '20分钟',
 		'-1': '不限时'
 	}
@@ -126,13 +132,15 @@
 	  computed: {
 	    ...mapGetters([
         'lessonid',
-        'socket',
+				'socket',
+				'isGuideDelayHidden',
       ])
 	  },
 	  components: {
       Problemtime,
 			Rolex,
 			FillblankBox,
+			GuideDelay,
 	  },
 	  created(){
 	  	this.init()
@@ -174,7 +182,16 @@
 	      self.problemOperation(postData)
 	      	.then(() => {
 	      		console.log(duration, timeList[duration])
-	      		let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+	      		// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+						let time = ''
+						if(duration > 30){
+							time = duration / 60 + '分钟'
+						}else if(duration == 30) {
+							time = duration + '秒'
+						} else {
+							time = '不限时'
+						}
+						let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
 	      		T_PUBSUB.publish('ykt-msg-toast', msg);
 	      	})
 	    },
@@ -468,10 +485,8 @@
 
 	      request.get(url)
 	      	.then(jsonData => {
-
-	      		let _answer = jsonData.answer
-
 	      		if(jsonData.success){
+							jsonData = jsonData.data
 	      		  self.setData({
 	      		    total: jsonData.total,
 	      		    members: jsonData.members,

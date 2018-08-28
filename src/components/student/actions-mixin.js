@@ -343,6 +343,24 @@ var actionsMixin = {
       // slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       // 问题类型
       let problemType = slideData['Problem']['Type'];
+      let pageURL = `/${this.lessonID}/`;
+
+      if(problemType) {
+        switch (problemType) {
+          // 主观题
+          case 'ShortAnswer':
+            pageURL += `subjective/${index}`;
+            break;
+          // 填空题
+          case 'FillBlank':
+            pageURL += `blank/${index}`;
+            break;
+          // 多选单选投票
+          default:
+            pageURL += `exercise/${index}`;
+            break;
+        }
+      }
 
       data = Object.assign(data, {
         pageIndex: data.pageIndex,
@@ -355,7 +373,8 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
-        index: index,
+        index,
+        pageURL,
         groupid: data.event['groupid']
       })
 
