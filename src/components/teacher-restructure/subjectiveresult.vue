@@ -87,18 +87,8 @@
 						</div>
 						<div class="gap"></div>
 					</template>
-
-          <div :class="['f18', 'yjy', 'text-right']">
-            <span class="hide-show-name">
-              <label @click="hideNameHandle" class="ver-middle inline-block">
-                <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
-                <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
-                <span class="info ver-middle">{{$t('projectionHideStuName')}}</span>
-              </label>
-              <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
-            </span>
-          </div>
-
+          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+          <div class="gap"></div>
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
             <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
@@ -227,11 +217,6 @@
         </div>
       </div>
     </section>
-    <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
-			<div slot="content">
-				<p>{{$t('toupingexplain')}}</p>
-			</div>
-		</explainbox>
   </div>
 </template>
 
@@ -248,13 +233,11 @@
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
   import HupingPanel from './common/huping-panel'
-  import axios from 'axios'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
   import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
-
-  import explainbox from "@/components/teacher-restructure/common/explainbox"
+  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -310,7 +293,7 @@
         isContLonger: false,          // 内容超过1屏
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
-        isHideName: false,                // 是否隐藏学生姓名
+        isHideName: false,               // 匿名投屏
         explainShow: false,         // 投屏帮助说明
         showTeamMember: false,         // 展示小组成员
         teamMemberList: [],						 // 小组成员列表
@@ -333,9 +316,7 @@
         'current',
         'pptData',
         'postingSubjectiveid',
-        'postingSubjectiveSent',
-        'userid',
-        'auth'
+        'postingSubjectiveSent'
       ])
 	  },
 	  components: {
@@ -345,12 +326,10 @@
       Problemtime,
       GuideDelay,
       HupingPanel,
-      explainbox
+      hideSomeInfo
 	  },
 	  created(){
       this.init()
-      // 获取投屏是否隐藏学生信息
-      this.getShowUserInfo()
 	  },
     mounted(){
       // 处理打分蒙版出现时，ios11+ 后面不要滚动
@@ -389,41 +368,7 @@
       }
     },
 	  methods: {
-      // 点击确定是否显示学生姓名
-      // hideNameHandle () {
-      //   this.isHideName = !this.isHideName;
-      //   this.socket.send(JSON.stringify({
-      //     "op": "protectprivacy",
-      //     "lessonid": this.lessonid,
-      //     "hide": this.isHideName
-      //     })
-      //   )
-      // },
-
-      // 点击确定是否显示学生姓名
-      hideNameHandle() {
-        this.isHideName = !this.isHideName;
-        axios.post('/pc/web_ppt_config',{
-          "op":"set_config",
-          "set_data": {
-            "show_user_profile": this.isHideName
-          }
-        })
-      },
-      getShowUserInfo() {
-        let self = this
-        axios.post('/api/lesson/get_show_user_profile_config/',{
-          "UserID": this.userid,
-          "Auth": this.auth,
-          "Language": this.$i18n.locale
-        }).then(e => {
-          try {
-            self.isHideName = !!e.data.Data.show_user_profile
-          } catch (err) {
-            console.log(err)
-          }
-        })
-      },
+      
       /**
        * 取消延时
        *
@@ -1228,7 +1173,15 @@
 				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
 				let newClassName = 'longtips'
 				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
-			}
+      },
+      /*
+      * 变更投屏状态
+      *
+      *
+      **/ 
+     showUserInfoChange(val) {
+       this.isHideName = val
+     }
 	  }
 	}
 </script>
@@ -1427,21 +1380,6 @@
 	  .gap {
       height: .133333rem;
 			background: #f8f8f8;
-    }
-
-    .hide-show-name{
-      color: #666;
-      font-size: 0;
-      padding: px2rem(30px);
-      overflow: hidden;
-      i{
-        font-size: px2rem(30px);
-        vertical-align: middle;
-      }
-      .info{
-        font-size: px2rem(28px);
-        margin: 0 px2rem(10px);
-      }
     }
 
 		/* 主观题内容区 */

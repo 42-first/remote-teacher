@@ -17,7 +17,7 @@
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
     </div>
     <div class="hideStu color3 back-f">
-      <span>{{$t('toupingshow')}}</span>
+      <span>{{$t('subjectiveshowanwer')}}</span>
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
@@ -67,10 +67,14 @@
           'op': 'get_config'
         }).then(e => {
           let data = e.data
+          let info = data.data
           if (data.success) {
-            this.show_presentation = data.data.show_presentation
+            this.show_presentation = info.show_presentation
+            this.showAnswer = info.problem_show_answer
+            this.isHideName = !info.show_user_profile
           }
         })
+        this.getShowUserInfo()
       },
       pptShowSetLink () {
         this.pptShowSet({
@@ -109,8 +113,9 @@
         axios.post('/pc/web_ppt_config',{
           "op": "set_config",
           "set_data": {
-            "show_user_profile": this.isHideName
-          }
+            "show_user_profile": !this.isHideName
+          },
+          "lessonid": this.lessonid
         })
       },
       showAnswerHandle() {
@@ -118,32 +123,23 @@
         axios.post('/pc/web_ppt_config', {
           "op": "set_config",
           "set_data": {
-            "show_user_profile": this.isHideName,
-            "lessonid": this.lessonid
-          }
+            "problem_show_answer": this.showAnswer,
+          },
+          "lessonid": this.lessonid
         })
       },
       // 获取是否投屏隐藏学生信息和习题是否显示答案
       getShowUserInfo() {
         const self = this
-        let params = {
-          "UserID": this.userid,
-          "Auth": this.auth,
-          "Language": this.$i18n.locale
-        }
-        axios.post('/api/lesson/get_show_user_profile_config/',params).then(e => {
-          try {
-            self.isHideName = !!e.data.Data.show_user_profile
-          } catch (err) {
-            console.log(err)
-          }
+        axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
+          let data = e.data.data
+          console.log(data)
+          self.isHideName = !data.show_user_profile
         })
-        axios.post('/api/lesson/get_problem_show_answer_config/',params).then(e => {
-          try {
-            self.showAnswer = !!e.data.Data.problem_show_answer
-          } catch (err) {
-            console.log(err)
-          }
+        axios.get('/v/lesson/get_problem_show_answer_config/').then(e => {
+          let data = e.data.data
+          console.log(data)
+          self.showAnswer = data.problem_show_answer
         })
       },
       urlMock (url) {

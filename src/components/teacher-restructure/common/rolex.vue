@@ -24,35 +24,18 @@
         <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
       </div>
     </div>
-    <div class="yjy">
-        <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
-        <div class="text-right hide-answer-wrapper">
-          <label @click="showAnswerHandle" class="ver-middle inline-block">
-            <i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
-            <i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
-            <span class="hide-answer ver-middle">{{$t("hideanswer")}}</span>
-          </label>
-          <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
-        </div>
-      </div>
-      <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
-        <div slot="content">
-          <p>{{$t('toupingexplain')}}</p>
-        </div>
-      </explainbox>
+    <hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members"></hide-some-info>
   </section>
 </template>
 
 <script>
-	import explainbox from "@/components/teacher-restructure/common/explainbox"
+	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
 	export default {
 	  name: 'Rolex',
-	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'problemid', 'lessonid', 'isTouping', 'socket'],
+	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'isTouping'],
 	  data () {
 	    return {
-        showAnswer: false,             // 隐藏答案
-        explainShow: false             // 投屏帮助说明
 	    }
 	  },
 	  created(){
@@ -80,21 +63,12 @@
 			*
 			*
 			*/
-			showAnswerHandle() {
-				this.showAnswer = !this.showAnswer
-				let str = JSON.stringify({
-	        'op': "problemresult",
-	        'lessonid': this.lessonid,
-					'problemid': this.problemid,
-					'showresult': this.showAnswer
-        })
-        console.log(str, this.socket, this.isTouping)
-        this.$emit('showresult', this.showAnswer)
-	      !this.isTouping && this.socket.send(str)
+			showAnswerChange(val) {
+        this.$emit('showresult', val)
 			}
     },
     components: {
-      explainbox
+      hideSomeInfo
     }
 	}
 </script>

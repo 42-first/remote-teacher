@@ -12,14 +12,7 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
-      <div class="hide-show-name" >
-        <label @click="hideNameHandle" class="inline-block ver-middle">
-          <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
-          <i class="iconfont icon-kuangxuanzhong ver-middle" v-show="isHideName"></i>
-          <span class="info ver-middle">{{$t('projectionHideStuInfo')}}</span>
-        </label>
-        <i class="iconfont icon-question ver-middle" @click="explainhandle"></i>
-      </div>
+      <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -95,11 +88,6 @@
     </div>
     <v-touch class="btn f18" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     <Scale></Scale>
-    <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
-			<div slot="content">
-				<p>{{$t('toupingexplain')}}</p>
-			</div>
-		</explainbox>
   </div>
 </template>
 
@@ -110,8 +98,7 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
   import Scale from './common/scale'
-  import explainbox from "@/components/teacher-restructure/common/explainbox"
-  import axios from 'axios'
+  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
   let FENYE_COUNT = 10
 
@@ -133,8 +120,7 @@
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
-        isHideName: false,               // 是否隐藏学生信息
-        explainShow: false            // 投屏帮助说明
+        isHideName: false,               // 匿名投屏
       }
     },
     computed: {
@@ -142,15 +128,13 @@
         'lessonid',
         'socket',
         'postingSubmissionid',
-        'postingSubmissionSent',
-        'userid',
-        'auth'
+        'postingSubmissionSent'
       ])
     },
     components: {
       Loadmore,
       Scale,
-      explainbox
+      hideSomeInfo
     },
     created () {
       let self = this
@@ -175,8 +159,6 @@
           boxDom.scrollTop = boxDom.scrollTop -2
         }
       })
-      // 获取投屏是否隐藏学生信息
-      this.getShowUserInfo()
     },
     beforeDestroy(){
       this.closeSubmissionmask()
@@ -408,7 +390,8 @@
 
         let postData = {
           'lesson_id': self.lessonid,
-          'tougao_id': submissionid
+          'tougao_id': submissionid,
+          'hide': self.isHideName
         }
 
         request.post(url, postData)
@@ -532,33 +515,14 @@
         }
 
       },
-      // 点击确定是否显示学生姓名
-      hideNameHandle() {
-        this.isHideName = !this.isHideName;
-        axios.post('/pc/web_ppt_config',{
-          "op":"set_config",
-          "set_data": {
-            "show_user_profile": this.isHideName
-          }
-        })
-      },
-      getShowUserInfo() {
-        let self = this
-        axios.post('/api/lesson/get_show_user_profile_config/',{
-          "UserID": this.userid,
-          "Auth": this.auth,
-          "Language": this.$i18n.locale
-        }).then(e => {
-          try {
-            self.isHideName = !!e.data.Data.show_user_profile
-          } catch (err) {
-            console.log(err)
-          }
-        })
-      },
-      explainhandle() {
-        this.explainShow = !this.explainShow
-      }
+      /*
+      * 变更投屏状态
+      *
+      *
+      **/ 
+     showUserInfoChange(val) {
+       this.isHideName = val
+     }
     }
   }
 </script>

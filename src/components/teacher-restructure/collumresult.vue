@@ -36,17 +36,7 @@
 		    <!-- <div :class="['f18', 'yjy']">
 		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
 		    </div> -->
-				<div class="yjy">
-					<div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
-					<div class="text-right hide-answer-wrapper">
-						<label @click="showAnswerHandle" class="ver-middle inline-block">
-							<i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
-							<i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
-							<span class="hide-answer ver-middle">{{$t("hideanswer")}}</span>
-						</label>
-						<i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
-					</div>
-				</div>
+				<hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members"></hide-some-info>
 	    </section>
 
 	    <!-- 中间柱状图 -->
@@ -124,11 +114,6 @@
 		  @cancelPublishProblem="cancelPublishProblem"
 		  @chooseProblemDuration="yanshiProblem"
 		></Problemtime>
-		<explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
-			<div slot="content">
-				<p>{{$t('toupingexplain')}}</p>
-			</div>
-		</explainbox>
 	</div>
 </template>
 
@@ -138,12 +123,13 @@
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
 	import config from '@/pages/teacher/config/config'
-	import explainbox from "@/components/teacher-restructure/common/explainbox"
 
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
 	// 教师遥控器引导查看答案、续时
-  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	
+	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -186,8 +172,7 @@
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 				isTouping: false,							 // 当前正在投屏
-				showAnswer: false,             // 隐藏答案
-				explainShow: false             // 投屏帮助说明
+				showAnswer: false,             // 投屏现实答案
 	    }
 	  },
 	  computed: {
@@ -200,7 +185,7 @@
 	  components: {
 	    Problemtime,
 			GuideDelay,
-			explainbox
+			hideSomeInfo
 	  },
 	  created(){
 	  	this.init()
@@ -480,13 +465,6 @@
 	    toggleTouping (status) {
 	    	let self = this
 				self.isTouping = status
-				let str = JSON.stringify({
-	        'op': "problemresult",
-	        'lessonid': this.lessonid,
-					'problemid': this.problemid,
-					'showresult': this.showAnswer
-	      })
-	      this.socket.send(str)
 	    	localStorage.setItem('posting-problem'+self.problemid, status)
 	    },
 	    /**
@@ -647,15 +625,18 @@
 	      let self = this
 				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
-
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
-	        'problemid': self.problemid
+					'problemid': self.problemid,
+					'showresult': this.showAnswer
 	      })
-
 	      self.socket.send(str)
-	    },
+			},
+			//  捕获 hidesomeinfo 组件的change事件改变 showanswer 状态
+			showAnswerChange(val) {
+				this.showAnswer = val
+			}, 
 	    /**
 	     * 关闭页面时关闭定时器、投屏等的总开关
 	     *
@@ -681,37 +662,7 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
-			},
-			/**
-			*
-			* 隐藏答案
-			*
-			*
-			*/
-			showAnswerHandle() {
-				this.showAnswer = !this.showAnswer
-				let str = JSON.stringify({
-	        'op': "problemresult",
-	        'lessonid': this.lessonid,
-					'problemid': this.problemid,
-					'showresult': this.showAnswer
-	      })
-	      !this.isTouping && this.socket.send(str)
-			},
-			getShowUserInfo() {
-        let self = this
-        axios.post('/api/lesson/get_problem_show_answer_config/',{
-          "UserID": this.userid,
-          "Auth": this.auth,
-          "Language": this.$i18n.locale
-        }).then(e => {
-          try {
-            self.showAnswer = !!e.data.Data.problem_show_answer
-          } catch (err) {
-            console.log(err)
-          }
-        })
-      }
+			}
 	  }
 	}
 </script>
@@ -797,32 +748,6 @@
 				margin-top: -0.186667rem;
 				width: 0.9rem;
 				vertical-align: middle;
-			}
-			.yjy {
-				margin-top: px2rem(32px);
-				padding-top: px2rem(20px);
-				height: px2rem(62px);
-				color: #fff;
-				font-size: px2rem(28px);
-				display: flex;
-				.status{
-					flex: 1;
-				}
-				.hide-answer-wrapper{
-					font-size: 0;
-					i{
-							font-size: px2rem(30px);
-						}
-					label{
-						.hide-answer{
-							margin-right: px2rem(10px);
-							font-size: px2rem(28px);
-						}
-						i{
-							margin: 0 px2rem(10px);
-						}
-					}
-				}
 			}
 	  }
 
