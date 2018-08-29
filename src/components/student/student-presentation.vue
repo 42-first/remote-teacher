@@ -82,6 +82,17 @@
       </div>
     </section>
 
+    <!-- 直播入口 -->
+    <section class="live">
+      <div class="live__audio">
+        <i class="iconfont icon-shengyinkai f30" v-if="playState" @click="handlestop"></i>
+        <i class="iconfont icon-shengyinguan f30" v-else @click="handleplay"></i>
+      </div>
+      <!-- live-player作为音频直播的容器 -->
+      <audio id="player" class="live__container" autobuffer :src="liveURL">
+      </audio>
+    </section>
+
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -155,6 +166,8 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
+
+   import livemixin from '@/components/student/live-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -254,7 +267,12 @@
         // 尝试拉取数据的次数
         fetchPresentationCount: 0,
         // 是否更新ppt开关
-        updatingPPT: false
+        updatingPPT: false,
+
+        // 直播地址
+        liveURL: 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
+        // 播放状态 1: 播放  0：停止
+        playState: 1,
       };
     },
     components: {
@@ -293,7 +311,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -326,17 +344,15 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-          // self.initws();
-
-          if (process.env.NODE_ENV !== 'production') {
-            // self.testTimeline();
-          }
 
           setTimeout(()=>{
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
               window.PhotoSwipe = PhotoSwipe;
               window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
             })
+
+            // 直播hls格式初始化
+            self.loadHLS();
           }, 1500)
 
           setTimeout(()=>{
@@ -1136,6 +1152,39 @@
         border-radius: 10px;
       }
     }
+  }
+
+
+  /*--------------------*\
+    $ 直播入口
+  \*--------------------*/
+
+
+  .live {
+    z-index: 2;
+    position: absolute;
+    top: 2.3rem;
+    right: 0.4rem;
+
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .live__audio {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .live__audio .iconfont {
+    color: #5096F5;
+    box-shadow: 0 0.026667rem 0.133333rem rgba(80, 150, 245, 0.5);
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .live__container {
+    opacity: 0;
   }
 
 
