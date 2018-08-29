@@ -16,8 +16,8 @@ let liveMixin = {
     loadHLS() {
       let self = this;
 
-      require(['hls.js',], function(hls) {
-        self.hls = hls;
+      require(['hls.js',], function(Hls) {
+        self.Hls = Hls;
 
         self.supportHLS(hls);
       })
@@ -37,6 +37,8 @@ let liveMixin = {
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
           audioEl && audioEl.play();
         });
+
+        this.handleerror(hls);
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -50,6 +52,34 @@ let liveMixin = {
         });
       }
 
+    },
+
+    /*
+    * @method 直播过程错误处理
+    * @params
+    */
+    handleerror(hls) {
+      let Hls = this.Hls;
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          switch(data.type) {
+          case Hls.ErrorTypes.NETWORK_ERROR:
+            // try to recover network error
+            console.log("fatal network error encountered, try to recover");
+            hls.startLoad();
+            break;
+          case Hls.ErrorTypes.MEDIA_ERROR:
+            console.log("fatal media error encountered, try to recover");
+            hls.recoverMediaError();
+            break;
+          default:
+            // cannot recover
+            hls.destroy();
+            break;
+          }
+        }
+      });
     },
 
     /*
