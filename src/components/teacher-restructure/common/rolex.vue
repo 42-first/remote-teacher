@@ -86,9 +86,10 @@
 	        'op': "problemresult",
 	        'lessonid': this.lessonid,
 					'problemid': this.problemid,
-					'showresult': !this.showAnswer
+					'showresult': this.showAnswer
         })
         console.log(str, this.socket, this.isTouping)
+        this.$emit('showresult', this.showAnswer)
 	      !this.isTouping && this.socket.send(str)
 			}
     },

@@ -479,7 +479,14 @@
 	     */
 	    toggleTouping (status) {
 	    	let self = this
-	    	self.isTouping = status
+				self.isTouping = status
+				let str = JSON.stringify({
+	        'op': "problemresult",
+	        'lessonid': this.lessonid,
+					'problemid': this.problemid,
+					'showresult': this.showAnswer
+	      })
+	      this.socket.send(str)
 	    	localStorage.setItem('posting-problem'+self.problemid, status)
 	    },
 	    /**
@@ -687,7 +694,7 @@
 	        'op': "problemresult",
 	        'lessonid': this.lessonid,
 					'problemid': this.problemid,
-					'showresult': !this.showAnswer
+					'showresult': this.showAnswer
 	      })
 	      !this.isTouping && this.socket.send(str)
 			},
