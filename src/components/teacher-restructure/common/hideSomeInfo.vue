@@ -14,8 +14,8 @@
     <div class="text-right w100">
       <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo">
         <label @click="hideNameHandle" class="ver-middle inline-block">
-          <i class="iconfont icon-kuang ver-middle" v-show="isHideName"></i>
-          <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="!isHideName"></i>
+          <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
+          <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
           <span class="info ver-middle">{{$t('HideStuInfo')}}</span>
         </label>
         <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
@@ -35,7 +35,7 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid'],
     computed: {
       ...mapGetters([
         'lessonid',
@@ -70,13 +70,13 @@
       // 点击是否显示学生姓名
       hideNameHandle() {
         this.isHideName = !this.isHideName;
-        axios.post('/pc/web_ppt_config',{
-          "op":"set_config",
-          "set_data": {
-            "show_user_profile": !this.isHideName
-          }
+        let str = JSON.stringify({
+          "op": "protectprivacy",
+          "lessonid": this.lessonid,
+          "hide": this.isHideName
         })
-        this.$emit('change', !this.isHideName)
+        this.socket.send(str)
+        this.$emit('change', this.isHideName)
       },
       // 是否显示答案
       getShowAnswer() {

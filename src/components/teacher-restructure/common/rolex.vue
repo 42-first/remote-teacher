@@ -24,7 +24,7 @@
         <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
       </div>
     </div>
-    <hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members"></hide-some-info>
+    <hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
   </section>
 </template>
 
@@ -33,7 +33,7 @@
 
 	export default {
 	  name: 'Rolex',
-	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'isTouping'],
+	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'isTouping', 'problemid'],
 	  data () {
 	    return {
 	    }

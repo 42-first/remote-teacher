@@ -305,7 +305,7 @@
 				gProportion: 100,							 // 默认互评占比
 				unfinished_count: 0,					// 未答题人数
 				unfinished_team_count: 0,				// 没有回答的组数
-				group_name: '',									// 分组名
+        group_name: '',									// 分组名
 	    }
 	  },
 	  computed: {
@@ -898,7 +898,6 @@
           'msgid': 1234,
           'hide': this.isHideName
         })
-
         self.socket.send(str)
       },
       /**

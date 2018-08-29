@@ -13,8 +13,8 @@
     </div>
     <div class="hideStu color3 back-f">
       <span>{{$t('projectionHideStuInfo')}}</span>
-      <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
-      <i class="iconfont icon-danmu-open color63 ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
+      <i class="iconfont icon-danmu-open color63 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
     </div>
     <div class="hideStu color3 back-f">
       <span>{{$t('subjectiveshowanwer')}}</span>
@@ -115,7 +115,7 @@
           "set_data": {
             "show_user_profile": !this.isHideName
           },
-          "lessonid": this.lessonid
+          "lesson_id": this.lessonid
         })
       },
       showAnswerHandle() {
@@ -125,7 +125,7 @@
           "set_data": {
             "problem_show_answer": this.showAnswer,
           },
-          "lessonid": this.lessonid
+          "lesson_id": this.lessonid
         })
       },
       // 获取是否投屏隐藏学生信息和习题是否显示答案

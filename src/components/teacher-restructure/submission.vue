@@ -393,7 +393,6 @@
           'tougao_id': submissionid,
           'hide': self.isHideName
         }
-
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
