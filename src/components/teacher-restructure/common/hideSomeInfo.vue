@@ -64,7 +64,6 @@
 					'problemid': this.problemid,
 					'showresult': this.showAnswer
         })
-        console.log(this.isTouping)
         this.isTouping && this.socket.send(str)
         this.$emit('change', this.showAnswer)
       },
@@ -83,7 +82,6 @@
       getShowAnswer() {
         axios.get('/v/lesson/get_problem_show_answer_config/').then(e => {
           let data = e.data.data
-
           this.showAnswer = !!data.problem_show_answer
           this.$emit('change', this.showAnswer)
         })
@@ -92,7 +90,6 @@
       getShowUserInfo() {
         axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
           let data = e.data.data
-
           this.isHideName = !data.show_user_profile
           this.$emit('change', this.isHideName)
         })
