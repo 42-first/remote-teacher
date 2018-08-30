@@ -391,7 +391,7 @@
         let postData = {
           'lesson_id': self.lessonid,
           'tougao_id': submissionid,
-          'hide': self.isHideName
+          // 'hide': self.isHideName
         }
         request.post(url, postData)
           .then(jsonData => {
