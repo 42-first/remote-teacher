@@ -896,7 +896,7 @@
           'lessonid': self.lessonid,
           'spid': id,
           'msgid': 1234,
-          'hide': this.isHideName
+          // 'hide': this.isHideName
         })
         self.socket.send(str)
       },

@@ -18,12 +18,13 @@
           <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
           <span class="info ver-middle">{{$t('HideStuInfo')}}</span>
         </label>
-        <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
+        <!-- <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i> -->
       </span>
     </div>
     <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
 			<div slot="content">
-				<p>{{$t('toupingexplain')}}</p>
+				<p v-if="!istougao">{{$t('toupingexplain')}}</p>
+        <p v-else>{{$t('toupingexplain1')}}</p>
 			</div>
 		</explainbox>
   </div>
@@ -35,14 +36,15 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'istougao'],
     computed: {
       ...mapGetters([
         'lessonid',
         'socket',
         'userid',
         'auth',
-        'addinversion'
+        'addinversion',
+        'istougao'
       ])
     },
     data () {
@@ -79,13 +81,23 @@
       // 点击是否显示学生姓名
       hideNameHandle() {
         this.isHideName = !this.isHideName;
-        let str = JSON.stringify({
-          "op": "protectprivacy",
-          "lessonid": this.lessonid,
-          "hide": this.isHideName
-        })
-        this.socket.send(str)
+        // let str = JSON.stringify({
+        //   "op": "protectprivacy",
+        //   "lessonid": this.lessonid,
+        //   "hide": this.isHideName
+        // })
+        // this.socket.send(str)
+        this.hideNameHandleConfig()
         this.$emit('change', this.isHideName)
+      },
+      hideNameHandleConfig () {
+        axios.post('/pc/web_ppt_config',{
+          "op": "set_config",
+          "set_data": {
+            "show_user_profile": !this.isHideName
+          },
+          "lesson_id": this.lessonid
+        })
       },
       // 是否显示答案
       getShowAnswer() {

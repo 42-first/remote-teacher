@@ -41,7 +41,7 @@
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
         <v-touch class="more-item" v-on:tap="goSet">
-          <i class="iconfont icon-ykq-yaokongqishezhi f24"></i>
+          <i class="iconfont icon-xuesheng f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
         </v-touch>
       </div>
