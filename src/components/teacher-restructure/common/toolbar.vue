@@ -2,21 +2,21 @@
 <template>
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
-      <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
+      <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:touchend="goHome">
         <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
         <div class="icondesc">{{ $t('remotectrl') }}</div>
       </v-touch>
-		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:touchend="showThumbnail" data-category="1" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
 		    <div class="icondesc">{{ $t('thumbnail') }}</div>
         <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:tap="showActivity" data-category="4" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:touchend="showActivity" data-category="4" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
 		    <div class="icondesc">{{ $t('classact') }}</div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:tap="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:touchend="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
 		    <i class="iconfont f28" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
 		    <div class="icondesc">{{ $t('readmore') }}</div>
 		  </v-touch>
@@ -26,23 +26,23 @@
     <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden">
       <div class="toolbar-more-box f14">
         <i class="iconfont icon-sanjiaoxing f24"></i>
-        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
+        <v-touch class="more-item" v-on:touchend="summonQrcodeMask">
           <i class="iconfont icon-ykq_erweima f24"></i>
           <span>{{ $t('qrcode') }}</span>
         </v-touch>
 
-        <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
+        <v-touch class="more-item J_ga" v-on:touchend="callWakeup" data-category="12" data-label="工具栏">
           <i class="iconfont icon-suijidianming1 f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
         </v-touch>
 
-        <v-touch class="more-item" v-on:tap="setEndShow">
+        <v-touch class="more-item" v-on:touchend="setEndShow">
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
-        <v-touch class="more-item" v-on:tap="goSet">
-          <i class="iconfont icon-xuesheng f24"></i>
-          <span style="margin-left: 32rpx;">{{ $t('set') }}</span>
+        <v-touch class="more-item" v-on:touchend="goSet">
+          <i class="iconfont icon-shezhi f24 ver-middle"></i>
+          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
       </div>
     </div>
@@ -114,7 +114,7 @@
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
        *
-       * @event tap
+       * @event touchend
        */
       toggleToolbarMoreBox () {
         let self = this
@@ -124,7 +124,7 @@
       /**
        * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
        *
-       * @event tap
+       * @event touchend
        */
       summonQrcodeMask () {
         let self = this
@@ -141,7 +141,7 @@
       /**
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
        *
-       * @event tap
+       * @event touchend
        * @param {object} evt event对象
        */
       callWakeup (evt) {
@@ -160,7 +160,7 @@
       /**
        * 点击更多->退出放映按钮，设置结束授课
        *
-       * @event bindtap
+       * @event bindtouchend
        */
       setEndShow () {
         let self = this
@@ -189,6 +189,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common";
   .toolbar-root {
     position: relative;
     color: #9b9b9b;
@@ -252,6 +253,7 @@
     left: 0;
     width: 100%;
     height: calc(100% - 1.706667rem);
+    z-index: 10000;
   }
   /*更多按钮打开的内容*/
   .toolbar-more-box {

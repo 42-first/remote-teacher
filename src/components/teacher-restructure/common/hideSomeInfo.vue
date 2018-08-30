@@ -23,8 +23,7 @@
     </div>
     <explainbox :title="$t('toupingexplaintitle')" v-show="explainShow" @close="explainShow = false">
 			<div slot="content">
-				<p v-if="!istougao">{{$t('toupingexplain')}}</p>
-        <p v-else>{{$t('toupingexplain1')}}</p>
+				<p>{{$t('toupingexplain')}}</p>
 			</div>
 		</explainbox>
   </div>
