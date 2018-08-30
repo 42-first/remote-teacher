@@ -8,7 +8,7 @@
   <!--  -->
   <section class="timeline-item" v-if="item">
 
-    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 -->
+    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享-->
     <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
@@ -30,6 +30,18 @@
             <p class="f24"><!-- 当前页面有动画 -->{{ $t('animatepage') }}</p>
             <p class="f32"><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
           </div>
+        </div>
+      </div>
+    </template>
+    <!-- 截图分享 -->
+    <template v-else-if="item.type==10">
+      <div class="timeline__ppt">
+        <span class="ppt--pageno f14" >截图分享</span>
+        <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
+          <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
+        </div>
+        <div class="ppt-footer">
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
         </div>
       </div>
     </template>
