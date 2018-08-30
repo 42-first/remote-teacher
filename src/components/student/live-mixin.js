@@ -10,6 +10,58 @@
 let liveMixin = {
   methods: {
     /*
+     * @method 直播列表
+     * @param  lessonID
+     */
+    getLiveList(lessonID) {
+      let self = this;
+      let URL = API.student.GET_LIVE_LIST;
+      let param = {
+        'lesson_id': lessonID
+      }
+
+      request.get(URL, param)
+      .then((res) => {
+        if(res && res.data) {
+          let data = res.data;
+
+          if(data.live_list && data.live_list.length) {
+            let oLive = data.live_list[0];
+
+            if(oLive.activating) {
+              this.getLiveURL(oLive.live_id);
+            }
+          }
+        }
+      });
+    },
+
+    /*
+     * @method 直播地址
+     * @param  liveID
+     */
+    getLiveURL(liveID) {
+      let self = this;
+      let URL = API.student.GET_LIVE_URL;
+      let param = {
+        'live_id': liveID
+      }
+
+      request.get(URL, param)
+      .then((res) => {
+        if(res && res.data) {
+          let data = res.data;
+
+          if(data.live_url && data.live_url.hls) {
+            this.liveURL = data.live_url.hls;
+
+            this.Hls && this.supportHLS(this.Hls);
+          }
+        }
+      });
+    },
+
+    /*
     * @method 加载hls库
     *
     */
@@ -19,7 +71,7 @@ let liveMixin = {
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        self.supportHLS(hls);
+        self.liveURL && self.supportHLS(Hls);
       })
     },
 

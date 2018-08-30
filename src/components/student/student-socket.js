@@ -312,11 +312,19 @@ var mixin = {
 
             break
 
-           // 主观题分享20171204
+          // 主观题分享20171204
           case 'sendsproblem':
             item = msg['problem'];
 
             this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
+
+            break
+
+          // 截屏分享20180830
+          case 'sendcapture':
+            item = msg['share'];
+
+            this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item });
 
             break
 

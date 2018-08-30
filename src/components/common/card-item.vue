@@ -36,9 +36,9 @@
     <!-- 截图分享 -->
     <template v-else-if="item.type==10">
       <div class="timeline__ppt">
-        <span class="ppt--pageno f14" >截图分享</span>
-        <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
-          <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
+        <span class="ppt--pageno f14">截图分享</span>
+        <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
+          <img class="screenshot--image" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)" alt="雨课堂,截图分享" />
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
@@ -214,7 +214,7 @@
         let cards = this.$parent.$parent.cards;
 
         cards.map((card)=>{
-          if(card.type === 2 && card.animation !== 1) {
+          if(card.type === 2 && card.animation !== 1 || card.type === 10) {
             items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
           }
         })
@@ -500,6 +500,21 @@
       }
     }
 
+  }
+
+
+  .screenshot {
+    position: relative;
+    background: #f8f8f8;
+  }
+
+  .screenshot--image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    max-width: 100%;
   }
 
 

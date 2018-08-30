@@ -83,7 +83,7 @@
     </section>
 
     <!-- 直播入口 -->
-    <section class="live">
+    <section class="live" v-if="liveURL">
       <div class="live__audio">
         <i class="iconfont icon-shengyinkai f30" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-shengyinguan f30" v-else @click="handleplay"></i>
@@ -269,8 +269,8 @@
         // 是否更新ppt开关
         updatingPPT: false,
 
-        // 直播地址
-        liveURL: 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8',
+        // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
+        liveURL: '',
         // 播放状态 1: 播放  0：停止
         playState: 1,
       };
@@ -324,6 +324,8 @@
 
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
+        // todo test
+        this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
