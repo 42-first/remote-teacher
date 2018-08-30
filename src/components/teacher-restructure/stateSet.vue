@@ -11,12 +11,12 @@
         <i class="iconfont icon-kejiankejianqiehuan color63 ver-middle"></i>
       </div>
     </div>
-    <div class="hideStu color3 back-f">
+    <div class="hideStu color3 back-f" v-if="addinversionRight">
       <span>{{$t('projectionHideStuInfo')}}</span>
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
     </div>
-    <div class="hideStu color3 back-f">
+    <div class="hideStu color3 back-f" v-if="addinversionRight">
       <span>{{$t('subjectiveshowanwer')}}</span>
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
@@ -39,7 +39,8 @@
       return {
         show_presentation: 'all',
         isHideName: true,
-        showAnswer: false
+        showAnswer: false,
+        addinversionRight: false
       }
     },
     mixins: [mixin],
@@ -52,10 +53,15 @@
         'lessonid',
         'socket',
         'userid',
-        'auth'
+        'auth',
+        'addinversion'
       ])
     },
     created () {
+      let num = Number(this.addinversion)
+      if (num && num >= 1.3) {
+        this.addinversionRight = true
+      }
       this.init()
     },
     beforeDestroy () {
@@ -74,7 +80,7 @@
             this.isHideName = !info.show_user_profile
           }
         })
-        this.getShowUserInfo()
+        this.addinversionRight && this.getShowUserInfo()
       },
       pptShowSetLink () {
         this.pptShowSet({

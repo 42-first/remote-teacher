@@ -172,8 +172,8 @@ let mixin = {
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
-            console.log(msg)
-
+            console.log(msg.addinversion, msg)
+            msg.addinversion && self.$store.commit('addinversion', msg.addinversion)
             self.socketProcessMessage(msg)
           }
 

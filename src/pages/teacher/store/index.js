@@ -55,8 +55,8 @@ const store = new Vuex.Store({
     toastCtrlMaskTpl: '',
     initiativeCtrlMaskTpl: '',
 
-    newToolBar: !1
-
+    newToolBar: !1,
+    addinversion: 0                        // 插件协议版本号
   },
 
   mutations: {
@@ -195,6 +195,9 @@ const store = new Vuex.Store({
     // 获取新功能通知是否显示
     set_newToolBar (state, newToolBar) {
       state.newToolBar = newToolBar
+    },
+    addinversion(state, addinversion) {
+      state.addinversion = addinversion
     }
   },
 
@@ -226,6 +229,9 @@ const store = new Vuex.Store({
       commit('set_newtougao', 0)
 
     },
+    addinversion({commit}, payload) {
+      commit('addinversion', payload)
+    }
   },
   getters
 })

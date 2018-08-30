@@ -2,7 +2,7 @@
 	<div class="w100">
     <div class="hide-show-answer w100" v-if="!isUserInfo">
       <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
-      <div class="text-right hide-answer-wrapper">
+      <div class="text-right hide-answer-wrapper" v-if="addinversionRight">
         <label @click="showAnswerHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
           <i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
@@ -11,7 +11,7 @@
         <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
       </div>
     </div>
-    <div class="text-right w100">
+    <div class="text-right w100" v-if="addinversionRight">
       <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo">
         <label @click="hideNameHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
@@ -41,18 +41,27 @@
         'lessonid',
         'socket',
         'userid',
-        'auth'
+        'auth',
+        'addinversion'
       ])
     },
     data () {
       return {
         showAnswer: true,
         isHideName: false,
-        explainShow: false
+        explainShow: false,
+        addinversionRight: false
       }
     },
     created () {
-      this.isUserInfo ? this.getShowUserInfo() : this.getShowAnswer()
+      let num = Number(this.addinversion)
+      console.log(num, this.addinversion)
+      if (num && num >= 1.3) {
+        this.addinversionRight = true
+      }
+      if (this.addinversionRight) {
+        this.isUserInfo ? this.getShowUserInfo() : this.getShowAnswer()
+      }
     },
     methods: {
       // 隐藏答案
