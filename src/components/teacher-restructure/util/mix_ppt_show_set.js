@@ -53,11 +53,11 @@ var mixin = {
           fontSize: '0.56rem'
         })
         $(this.picker.wheelEl).find('.wheel-scroll').css({
-          'margin-top': '0.9rem',
-          'line-height': '0.96rem'
+          'margin-top': '1rem',
+          'line-height': '1rem'
         })
         $(this.picker.wheelEl).find('.wheel-item').css({
-          'height': '0.96rem'
+          'height': '1rem'
         })
         pickCancel.style.padding = pickConfirm.style.padding = 0
         pickCancel.style.height = pickConfirm.style.height = '100%'
@@ -83,7 +83,7 @@ var mixin = {
         })
       }
       // stateSet 调用本函数，传入参数 show_presentation 设置
-      this.picker.selectedIndex = [data.show_presentation === 'all' ? 0 : 1]
+      this.picker.selectedIndex = data.show_presentation === 'all' ? 0 : 1
       this.picker && this.picker.show()
       console.log(this.picker)
     },

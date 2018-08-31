@@ -1,7 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="page">
-    <div class="ppt-show-set w100 color3 border-box" @click="pptShowSetLink">
+    <div class="ppt-show-set w100 color3 border-box" @click="pickerfn">
       <span class="text">
           <span>{{ $t('studentsVisible') }}</span><!--学生可见-->
       </span>
@@ -21,15 +21,16 @@
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
+    <picker :pickershow="pickerShow" :pickerindex="pickerindex" @yes="pickerend" @close="pickerclose" ></picker>
     <!-- <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar> -->
   </div>
 </template>
 
 <script>
   import axios from 'axios'
-  import {mixin} from './util/mix_ppt_show_set'
   import MessageBoxMin from './common/messagebox.vue'
   import {mapGetters} from 'vuex'
+  import picker from './common/picker.vue'
   // 工具栏
   import Toolbar from './common/toolbar'
 
@@ -40,13 +41,14 @@
         show_presentation: 'all',
         isHideName: true,
         showAnswer: false,
-        addinversionRight: false
+        addinversionRight: false,
+        pickerShow: false
       }
     },
-    mixins: [mixin],
     components: {
       MessageBoxMin,
-      Toolbar
+      Toolbar,
+      picker
     },
     computed: {
       ...mapGetters([
@@ -54,7 +56,8 @@
         'socket',
         'userid',
         'auth',
-        'addinversion'
+        'addinversion',
+        'presentationid'
       ])
     },
     created () {
@@ -62,7 +65,7 @@
       if (num && num >= 1.3) {
         this.addinversionRight = true
       }
-      this.init()
+      // this.init()
     },
     beforeDestroy () {
     },
@@ -81,11 +84,6 @@
           }
         })
         this.addinversionRight && this.getShowUserInfo()
-      },
-      pptShowSetLink () {
-        this.pptShowSet({
-          get_config: this.show_presentation
-        })
       },
       /**
        * 点击 遥控器 按钮
@@ -146,6 +144,37 @@
           let data = e.data.data
           console.log(data)
           self.showAnswer = data.problem_show_answer
+        })
+      },
+      pickerfn() {
+        this.pickerindex = this.show_presentation === 'all' ? 0 : 1
+        this.pickerShow = true
+        console.log(this.pickerindex)
+      },
+      pickerend(e) {
+        this.pickerShow = false
+        this.show_presentation = e? this.$t('visibleStu'): this.$t('visibleAll')
+        let name = e?'film': 'all'
+        this.pcSet(name)
+      },
+      pickerclose() {
+        this.pickerShow = false
+      },
+      // 设置ppt
+      pcSet (name) {
+        let url = 'pc/web_ppt_config'
+        axios.post(this.urlMock(url), {
+          'op': 'set_config',
+          'set_data': {
+            'show_presentation': name
+          }
+        })
+        let url1 = `v/lesson/config_presentation/${this.presentationid}/`;
+        axios.post(this.urlMock(url1), {
+          "op":"set_config",
+          "set_data": {
+            "show_presentation": name
+          }
         })
       },
       urlMock (url) {
