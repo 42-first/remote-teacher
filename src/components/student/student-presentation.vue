@@ -269,7 +269,8 @@
         fetchPresentationCount: 0,
         // 是否更新ppt开关
         updatingPPT: false,
-
+        // 直播信息
+        liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
@@ -325,8 +326,7 @@
 
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
-        // todo test
-        this.getLiveList(this.lessonID);
+        // this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -528,6 +528,7 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
               self.groupList = data.groupList;
+              self.liveInfo = data.liveList;
 
               // classroom
               self.classroom = data.classroom;
@@ -568,6 +569,12 @@
                 }, 5000)
 
                 return presentationData;
+              }
+
+              // 直播处理 1为直播中，2为已结束
+              if(self.liveInfo && self.liveInfo.status === 1) {
+                self.liveURL = self.liveInfo.live_url.hls;
+                self.Hls && self.supportHLS(self.Hls);
               }
 
               // 课程title
