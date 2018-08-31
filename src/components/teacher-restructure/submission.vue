@@ -12,7 +12,7 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
-      <hide-some-info :isUserInfo="true" @change="showUserInfoChange" :istougao="true"></hide-some-info>
+      <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -516,7 +516,7 @@
       },
       /*
       * 变更投屏状态
-      *
+      *  可能已废弃，以后删掉
       *
       **/ 
      showUserInfoChange(val) {

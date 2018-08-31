@@ -2,21 +2,21 @@
 <template>
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
-      <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:touchend="goHome">
+      <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
         <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
         <div class="icondesc">{{ $t('remotectrl') }}</div>
       </v-touch>
-		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:touchend="showThumbnail" data-category="1" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 1 ? 'icon-ykq_tab_active' : 'icon-ykq_tab_normal2' "></i>
 		    <div class="icondesc">{{ $t('thumbnail') }}</div>
         <span class="info suoluetu-info f12" v-show="newdoubt">{{newdoubt}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:touchend="showActivity" data-category="4" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 2}]" v-on:tap="showActivity" data-category="4" data-label="工具栏">
 		    <i class="iconfont f28" :class="activeIndex === 2 ? 'icon-ykq_tab_active1' : 'icon-ykq_tab_normal1' "></i>
 		    <div class="icondesc">{{ $t('classact') }}</div>
         <span class="info f12" v-show="newtougao">{{newtougao}}</span>
 		  </v-touch>
-		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:touchend="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
+		  <v-touch :class="['tool-item', 'last-item', 'J_ga']" v-on:tap="toggleToolbarMoreBox" data-category="11" data-label="工具栏">
 		    <i class="iconfont f28" :class="isToolbarMoreBoxHidden ? 'icon-ykq_tab_normal3' : 'icon-ykq_tab_normal3' "></i>
 		    <div class="icondesc">{{ $t('readmore') }}</div>
 		  </v-touch>
@@ -26,21 +26,21 @@
     <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden">
       <div class="toolbar-more-box f14">
         <i class="iconfont icon-sanjiaoxing f24"></i>
-        <v-touch class="more-item" v-on:touchend="summonQrcodeMask">
+        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
           <i class="iconfont icon-ykq_erweima f24"></i>
           <span>{{ $t('qrcode') }}</span>
         </v-touch>
 
-        <v-touch class="more-item J_ga" v-on:touchend="callWakeup" data-category="12" data-label="工具栏">
+        <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
           <i class="iconfont icon-suijidianming1 f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
         </v-touch>
 
-        <v-touch class="more-item" v-on:touchend="setEndShow">
+        <v-touch class="more-item" v-on:tap="setEndShow">
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
-        <v-touch class="more-item" v-on:touchend="goSet">
+        <v-touch class="more-item" v-on:tap="goSet">
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
@@ -48,10 +48,10 @@
     </div>
 
     <!-- 新功能提示 -->
-    <div class="tips" v-show="newToolBar && !activeIndex">
+    <!-- <div class="tips" v-show="newToolBar && !activeIndex">
       {{$t('toupingfanweitishi')}}
       <i class="iconfont icon-shiti_guanbitouping" @click="closeTips"></i>
-    </div>
+    </div> -->
 	</div>
 </template>
 
@@ -82,7 +82,7 @@
       let self = this
       // 主屏幕点击 缩略图、课堂动态 后，隐藏更多
       self.$on('hideToolbarMore', function () {
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       })
       let newToolBar = !localStorage.getItem('newToolBar')
       this.$store.commit('set_newToolBar', newToolBar)
@@ -114,7 +114,7 @@
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
        *
-       * @event touchend
+       * @event tap
        */
       toggleToolbarMoreBox () {
         let self = this
@@ -124,7 +124,7 @@
       /**
        * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
        *
-       * @event touchend
+       * @event tap
        */
       summonQrcodeMask () {
         let self = this
@@ -136,12 +136,12 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       },
       /**
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
        *
-       * @event touchend
+       * @event tap
        * @param {object} evt event对象
        */
       callWakeup (evt) {
@@ -153,14 +153,14 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
 
         typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课
        *
-       * @event bindtouchend
+       * @event bindtap
        */
       setEndShow () {
         let self = this
@@ -172,11 +172,18 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       },
       goSet () {
         this.$emit('stateSet', 1)
         this.$router.push({name: 'stateSet'})
+      },
+      // 延迟关闭当前浮窗
+      closeMore() {
+        let self = this
+        setTimeout(e=>{
+          self.isToolbarMoreBoxHidden = true
+        }, 200)
       },
     //  关闭新功能提示tips
       closeTips () {

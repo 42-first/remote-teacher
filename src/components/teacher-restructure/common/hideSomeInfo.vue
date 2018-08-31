@@ -35,15 +35,14 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'istougao'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid'],
     computed: {
       ...mapGetters([
         'lessonid',
         'socket',
         'userid',
         'auth',
-        'addinversion',
-        'istougao'
+        'addinversion'
       ])
     },
     data () {
@@ -87,7 +86,7 @@
         // })
         // this.socket.send(str)
         this.hideNameHandleConfig()
-        this.$emit('change', this.isHideName)
+        // this.$emit('change', this.isHideName)
       },
       hideNameHandleConfig () {
         axios.post('/pc/web_ppt_config',{
@@ -111,7 +110,7 @@
         axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
           let data = e.data.data
           this.isHideName = !data.show_user_profile
-          this.$emit('change', this.isHideName)
+          // this.$emit('change', this.isHideName)
         })
       }
     },
