@@ -349,6 +349,12 @@ var mixin = {
 
             break;
 
+          // 开始直播
+          case 'startlive':
+            this.startLive(msg['data']);
+
+            break;
+
           default:
             hasMsg = false;
             break
