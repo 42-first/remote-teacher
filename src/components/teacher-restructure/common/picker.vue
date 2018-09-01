@@ -29,23 +29,22 @@
         betterScroll: null
       }
     },
-    props: ['pickershow', 'pickerindex'],
+    props: ['pickershow'],
     methods: {
       close() {
         this.$emit('close', this.index)
       },
       confirm() {
         this.close()
-        this.$emit('yes', this.index)
-        console.log(this.index)
+        console.log(this.index, this.betterScroll)
+        this.$emit('yes', this.index || 0)
       },
       init() {
         let self = this
         let picker = this.$refs.picker || document.querySelector('#pickermm')
-        console.log(picker)
         this.betterScroll = new BScroll(picker, {
           wheel:{
-            selectedIndex: 0,
+            selectedIndex: this.index,
             rotate: 25,
             adjustTime: 400,
             wheelWrapperClass: 'picker-wheel-wrapper',
@@ -64,9 +63,6 @@
         if (n) {
           !this.betterScroll && this.init()
         }
-      },
-      pickerindex(n) {
-        this.index = n
       }
     }
   }

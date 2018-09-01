@@ -21,7 +21,7 @@
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
-    <picker :pickershow="pickerShow" :pickerindex="pickerindex" @yes="pickerend" @close="pickerclose" ></picker>
+    <picker :pickershow="pickerShow" @yes="pickerend" @close="pickerclose" ></picker>
     <!-- <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar> -->
   </div>
 </template>
@@ -65,7 +65,7 @@
       if (num && num >= 1.3) {
         this.addinversionRight = true
       }
-      // this.init()
+      this.init()
     },
     beforeDestroy () {
     },
@@ -153,7 +153,6 @@
       },
       pickerend(e) {
         this.pickerShow = false
-        this.show_presentation = e? this.$t('visibleStu'): this.$t('visibleAll')
         let name = e?'film': 'all'
         this.pcSet(name)
       },
@@ -162,19 +161,22 @@
       },
       // 设置ppt
       pcSet (name) {
+        this.show_presentation = name
         let url = 'pc/web_ppt_config'
         axios.post(this.urlMock(url), {
           'op': 'set_config',
           'set_data': {
             'show_presentation': name
-          }
+          },
+          'lesson_id': this.lessonid
         })
         let url1 = `v/lesson/config_presentation/${this.presentationid}/`;
         axios.post(this.urlMock(url1), {
           "op":"set_config",
           "set_data": {
             "show_presentation": name
-          }
+          },
+          'lesson_id': this.lessonid
         })
       },
       urlMock (url) {
