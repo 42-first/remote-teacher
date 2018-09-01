@@ -375,6 +375,7 @@ let pages = {
   "zhengque": "Correct",
   "cuowu": "Wrong",
   "weida": "Unanswerd",
+  "note": "备注",
 
   // 引导页
   guide: {

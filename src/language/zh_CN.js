@@ -376,6 +376,7 @@ let pages = {
   "cuowu": "错误",
   "weida": "未答",
   "close": "关闭",
+  "note": "备注",
 
   // 引导页
   guide: {

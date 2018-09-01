@@ -24,6 +24,7 @@
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
         	<img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
+					<div class="note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
         </div>
 
       </div>
@@ -102,7 +103,15 @@
     ></GuideDelay>
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
-
+		<div class="note-box" v-show="noteText">
+			<div class="note-box-content">
+				<div class="title">备注：</div>
+				<div class="text">{{noteText}}</div>
+				<div class="close">
+					<i class="icon-ykq-shiti-guanbi iconfont" @touchend.self="showNote('')"></i>
+				</div>
+			</div>
+		</div>
   </div>
 </template>
 
@@ -180,7 +189,8 @@
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
 	      cardWidth: 750,												// 大json中的ppt原始宽度
-	      cardHeight: 540,												// 大json中的ppt原始高度
+				cardHeight: 540,												// 大json中的ppt原始高度
+				noteText: "",
 	    }
 	  },
 	  computed: {
@@ -262,6 +272,9 @@
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
+			showNote(text) {
+				this.noteText = text
+			},
 	  	/**
 	     * 复用页面，需要watch route
 	     *
@@ -702,11 +715,58 @@
 </script>
 
 <style lang="scss">
-  @import "~@/style/_variables";
+	@import "~@/style/_variables";
+	@import "~@/style/common";
   @import "~@/style/_mixin";
   @include button;
 
-  .root {position: relative; height: 100%;}
+	.root {position: relative; height: 100%;}
+	.note-box{
+		position: fixed;
+		z-index: 10000;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, .7);
+		&-content{
+			width: px2rem(600px);
+			height: px2rem(960px);
+			padding: px2rem(30px);
+			border-radius: px2rem(12px);
+			background-color: #fff;
+			color: #333;
+			top: 50%;
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			.title{
+				height: px2rem(56px);
+				line-height: px2rem(56px);
+				margin: px2rem(10px) 0;
+				font-size: px2rem(34px);
+			}
+			.text{
+				font-size: px2rem(34px);
+				line-height: px2rem(40px);
+			}
+		}
+		.close{
+			position: absolute;
+			height: px2rem(80px);
+			line-height: px2rem(80px);
+			text-align: center;
+			width: px2rem(80px);
+			font-size: px2rem(80px);
+			bottom: -1.1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			i{
+				color: #fff;
+				font-size: px2rem(80px);
+			}
+		}
+	}
   .rc-home  {
     position: relative;
     display: flex;
@@ -779,7 +839,21 @@
       			bottom: 0.4rem;
       			text-align: center;
       		}
-      	}
+				}
+				.note{
+					position: absolute;
+					background-color: #639ef4;
+					border-radius: px2rem(35px) 0 0 px2rem(35px);
+					width: px2rem(93px);
+					height: px2rem(70px);
+					line-height: px2rem(70px);
+					text-align: center;
+					color: #fff;
+					font-size: px2rem(28px);
+					top: 50%;
+					right: 0;
+					transform: translateY(-50%);
+				}
       }
     }
     .downer {
