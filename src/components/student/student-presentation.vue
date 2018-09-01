@@ -82,6 +82,17 @@
       </div>
     </section>
 
+    <!-- 直播入口 -->
+    <section class="live" v-if="liveURL">
+      <div class="live__audio">
+        <i class="iconfont icon-quxiaojingyinx f32" v-if="playState" @click="handlestop"></i>
+        <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
+      </div>
+      <!-- live-player作为音频直播的容器 -->
+      <audio id="player" class="live__container" autobuffer :src="liveURL">
+      </audio>
+    </section>
+
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -156,9 +167,12 @@
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
 
+   import livemixin from '@/components/student/live-mixin'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
+  window.API = API;
   if (process.env.NODE_ENV !== 'production') {
     request.post = request.get
   }
@@ -254,7 +268,13 @@
         // 尝试拉取数据的次数
         fetchPresentationCount: 0,
         // 是否更新ppt开关
-        updatingPPT: false
+        updatingPPT: false,
+        // 直播信息
+        liveInfo: null,
+        // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
+        liveURL: '',
+        // 播放状态 1: 播放  0：停止
+        playState: 1,
       };
     },
     components: {
@@ -293,7 +313,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -306,6 +326,7 @@
 
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
+        // this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -326,17 +347,15 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-          // self.initws();
-
-          if (process.env.NODE_ENV !== 'production') {
-            // self.testTimeline();
-          }
 
           setTimeout(()=>{
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
               window.PhotoSwipe = PhotoSwipe;
               window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
             })
+
+            // 直播hls格式初始化
+            self.loadHLS();
           }, 1500)
 
           setTimeout(()=>{
@@ -509,6 +528,7 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
               self.groupList = data.groupList;
+              self.liveInfo = data.liveList || null;
 
               // classroom
               self.classroom = data.classroom;
@@ -549,6 +569,12 @@
                 }, 5000)
 
                 return presentationData;
+              }
+
+              // 直播处理 1为直播中，2为已结束
+              if(self.liveInfo && self.liveInfo.status === 1) {
+                self.liveURL = self.liveInfo.live_url.hls;
+                self.Hls && self.supportHLS(self.Hls);
               }
 
               // 课程title
@@ -1136,6 +1162,53 @@
         border-radius: 10px;
       }
     }
+  }
+
+
+  /*--------------------*\
+    $ 直播入口
+  \*--------------------*/
+
+
+  .live {
+    z-index: 2;
+    position: absolute;
+    bottom: 0.8rem;
+    right: 0.4rem;
+
+    width: 1.28rem;
+    height: 1.28rem;
+
+    background: rgba(51, 51, 51, 0.9);
+    border: 0.026667rem solid #333;
+    box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+
+  .live__audio {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 1.28rem;
+    height: 1.28rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .live__audio .iconfont {
+    padding-right: 0.066667rem;
+    padding-bottom: 0.026667rem;
+    color: #fff;
+  }
+
+  .live__container {
+    opacity: 0;
   }
 
 

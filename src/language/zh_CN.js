@@ -28,6 +28,7 @@ let pages = {
 
   "unknown": "不懂",
   "favorite": "收藏",
+  "screenshot": "截图分享",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
