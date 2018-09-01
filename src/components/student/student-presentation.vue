@@ -528,7 +528,7 @@
               self.quizList = data.quizList;
               self.presentationID = data.activePresentationID;
               self.groupList = data.groupList;
-              self.liveInfo = data.liveList;
+              self.liveInfo = data.liveList || null;
 
               // classroom
               self.classroom = data.classroom;
@@ -1173,8 +1173,8 @@
   .live {
     z-index: 2;
     position: absolute;
-    top: 2.3rem;
     bottom: 0.8rem;
+    right: 0.4rem;
 
     width: 1.28rem;
     height: 1.28rem;
