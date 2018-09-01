@@ -644,8 +644,8 @@ var actionsMixin = {
         }}
      */
     startLive(data) {
-      if(data && data.live_url) {
-        this.liveURL = data.live_url.hls;
+      if(data) {
+        this.liveURL = data.hls;
         this.Hls && this.supportHLS(this.Hls);
       }
     },

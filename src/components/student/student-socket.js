@@ -351,7 +351,7 @@ var mixin = {
 
           // 开始直播
           case 'startlive':
-            this.startLive(msg['data']);
+            this.startLive(msg['liveurl']);
 
             break;
 
