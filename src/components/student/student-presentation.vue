@@ -85,8 +85,8 @@
     <!-- 直播入口 -->
     <section class="live" v-if="liveURL">
       <div class="live__audio">
-        <i class="iconfont icon-shengyinkai f30" v-if="playState" @click="handlestop"></i>
-        <i class="iconfont icon-shengyinguan f30" v-else @click="handleplay"></i>
+        <i class="iconfont icon-quxiaojingyinx f32" v-if="playState" @click="handlestop"></i>
+        <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
       </div>
       <!-- live-player作为音频直播的容器 -->
       <audio id="player" class="live__container" autobuffer :src="liveURL">
@@ -1174,23 +1174,37 @@
     z-index: 2;
     position: absolute;
     top: 2.3rem;
-    right: 0.4rem;
+    bottom: 0.8rem;
 
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 1.28rem;
+    height: 1.28rem;
+
+    background: rgba(51, 51, 51, 0.9);
+    border: 0.026667rem solid #333;
+    box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    border-radius: 50%;
+    box-sizing: border-box;
   }
 
   .live__audio {
     position: absolute;
     top: 0;
+    left: 0;
+    bottom: 0;
     right: 0;
+    width: 1.28rem;
+    height: 1.28rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
   }
 
   .live__audio .iconfont {
-    color: #5096F5;
-    box-shadow: 0 0.026667rem 0.133333rem rgba(80, 150, 245, 0.5);
-    border-radius: 50%;
-    background: #fff;
+    padding-right: 0.066667rem;
+    padding-bottom: 0.026667rem;
+    color: #fff;
   }
 
   .live__container {
