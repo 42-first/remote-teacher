@@ -2,7 +2,7 @@
 	<div class="w100 show-wrapper">
     <div class="hide-show-answer w100" v-if="!isUserInfo">
       <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
-      <div class="text-right hide-answer-wrapper" v-if="addinversionRight">
+      <div class="text-right hide-answer-wrapper" v-if="showAnswerText">
         <label @click="showAnswerHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!showAnswer"></i>
           <i class="iconfont icon-kuangxuanzhong color-f ver-middle" v-show="showAnswer"></i>
@@ -11,7 +11,7 @@
         <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
       </div>
     </div>
-    <div class="text-right w100" v-if="addinversionRight">
+    <div class="text-right w100" v-if="pptversion >= 1.3">
       <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo">
         <label @click="hideNameHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
@@ -35,7 +35,7 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype'],
     computed: {
       ...mapGetters([
         'lessonid',
@@ -50,16 +50,17 @@
         showAnswer: true,
         isHideName: false,
         explainShow: false,
-        addinversionRight: false
+        showAnswerText: true,
+        pptversion: 0
       }
     },
     created () {
       let num = Number(this.addinversion)
-      console.log(num, this.addinversion)
-      if (num && num >= 1.3) {
-        this.addinversionRight = true
-      }
-      if (this.addinversionRight) {
+      let type = this.problemtype
+      console.log(num, this.addinversion, type)
+      this.pptversion = num
+      this.showAnswerText = num && num >= 1.3 && type!=='Polling'&& type!=='AnonymousPolling'
+      if (num >= 1.3) {
         this.isUserInfo ? this.getShowUserInfo() : this.getShowAnswer()
       }
     },

@@ -1,11 +1,11 @@
 <template>
-  <div class="masking">
-    <mt-picker :slots="arr" :item-height="height" @change="pickerend" :showToolbar="true" :defaultIndex="1">
-      <div slot>
-        <div class="picker-toolbar">
-          <div class="button">{{$t('cancel')}}</div>
-          <div class="picker-title">{{$t('studentsVisible')}}</div>
-          <div class="button color63">{{$t('confirm')}}</div>
+  <div class="masking" @click.self="close">
+    <mt-picker :slots="arr" :item-height="height" @change="pickerend" :showToolbar="true" :defaultIndex="[1]" ref="picker">
+      <div class="toolbar-wrapper" slot>
+        <div class="picker-toolbars">
+          <div class="button" @click="close">{{$t('cancel')}}</div>
+          <div class="picker-title text-center">{{$t('studentsVisible')}}</div>
+          <div class="button color63" @click="confirm">{{$t('confirm')}}</div>
         </div>
       </div>
     </mt-picker>
@@ -13,10 +13,12 @@
 </template>
 
 <script>
+  
   export default {
     name: 'picker',
     data () {
       return {
+        valuelist: [this.$t('visibleAll'), this.$t('visibleStu')],
         arr: [
           {
           flex: 1,
@@ -24,22 +26,49 @@
           className: 'slot1',
           textAlign: 'center'
         }],
-        height: 35
+        height: 36,
+        arrIndex: 0
       }
     },
     props: [],
     created(){
-      this.height = 35 * window.dpr || 70
+      this.height = 36 * window.dpr || 72
     },
     methods: {
-      pickerend(e) {
-        console.log(e)
+      pickerend(picker, values){
+				 let value = values[0];
+         this.arrIndex = this.valuelist.indexOf(value)
+         console.log(values)
+			 },
+      confirm(){
+        this.close()
+        this.$emit('change', this.arrIndex)
+      },
+      close() {
+        this.$emit('close')
       }
+    },
+    mounted(){
+      const picker = this.$refs.picker
+      console.log(picker)
+      picker.setValues([this.valuelist[1]])
     }
   }
 
 </script>
+<style lang="scss">
+  @import "~@/style/common";
+  @function px2rem($px) {
+    $rem: 75px;
+    @return ($px/$rem) + rem;
+  }
+  .picker-toolbar{
+    position: relative;
+    z-index: 100000;
+  }
+</style>
 <style scoped lang="scss">
+  @import "~@/style/common";
   @function px2rem($px) {
     $rem: 75px;
     @return ($px/$rem) + rem;
@@ -52,7 +81,11 @@
     top: 0;
     left: 0;
     overflow: hidden;
-    .picker-toolbar{
+    .toolbar-wrapper{
+      height: px2rem(88px);
+      line-height: px2rem(88px);
+    }
+    .picker-toolbars{
       height: px2rem(88px);
       line-height: px2rem(88px);
       padding: 0 px2rem(20px);

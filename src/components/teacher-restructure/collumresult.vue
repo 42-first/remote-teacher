@@ -36,7 +36,7 @@
 		    <!-- <div :class="['f18', 'yjy']">
 		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
 		    </div> -->
-				<hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
+				<hide-some-info :problemtype="problemType" :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
 	    </section>
 
 	    <!-- 中间柱状图 -->

@@ -20,7 +20,8 @@
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
-    <picker v-show="pickerShow" @change="pickerend"></picker>
+    <picker v-show="pickerShow" @close="pickerclose" @change="pickerend"></picker>
+
   </div>
 </template>
 
@@ -29,6 +30,7 @@
   import MessageBoxMin from './common/messagebox.vue'
   import {mapGetters} from 'vuex'
   import picker from './common/picker.vue'
+
   // 工具栏
   import Toolbar from './common/toolbar'
 
@@ -43,7 +45,8 @@
         pickerShow: false,
         visibleAll: this.$t('visibleAll'),
         visibleStu: this.$t('visibleStu'),
-        arr: [this.visibleAll, this.visibleStu]
+        arr: [this.visibleAll, this.visibleStu],
+        pickerIndex: this.show_presentation === 'all' ? 0 : 1
       }
     },
     components: {
@@ -105,10 +108,6 @@
       showActivity () {
         this.$emit('showActivity')
       },
-      // 设置
-      stateSetFn () {
-        this.$emit('stateSet')
-      },
       // 点击确定是否显示学生姓名
       hideNameHandle () {
         this.isHideName = !this.isHideName;
@@ -145,13 +144,12 @@
         })
       },
       pickerfn() {
-        this.pickerindex = this.show_presentation === 'all' ? 0 : 1
         this.pickerShow = true
-        console.log(this.pickerindex)
       },
       pickerend(e) {
         console.log(e)
-        let name = e?'film': 'all'
+        let name = e ? 'film' : 'all'
+        this.show_presentation = name
         this.pcSet(name)
         this.pickerclose()
       },

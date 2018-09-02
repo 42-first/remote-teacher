@@ -72,7 +72,7 @@
         <!-- 未答统计 -->
         <div class="choice-item" >
           <v-touch class="item-hd" v-on:tap="toggleChoiceItem(2)">
-            <i :class="['iconfont', 'f20', 'icon-weiwancheng']"></i>
+            <i :class="['iconfont', 'f20', 'icon-weiwancheng', 'color63']"></i>
 
             <span class="f18 asw"><!-- 未答 -->{{ $t('weida') }}</span>
             <span class="f14" style="color: #9B9B9B;">{{problemResultDetailData.not_answered.length}}{{ $t('ren') }}</span>
@@ -311,6 +311,9 @@
 
     .choice-list {
       padding-bottom: 1.466667rem;
+    }
+    .color63{
+      color: #639ef4 !important;
     }
 
     .choice-item {
