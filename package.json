@@ -1,6 +1,6 @@
 {
   "name": "remote-teacher",
-  "version": "3.2.32",
+  "version": "3.2.33",
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,
@@ -25,6 +25,7 @@
     "better-scroll": "^1.12.6",
     "bluebird": "^3.5.0",
     "clipboard-js": "^0.3.5",
+    "hls.js": "^0.11.0",
     "jquery": "^3.2.1",
     "mint-ui": "^2.2.7",
     "pubsub-js": "^1.5.7",

@@ -28,6 +28,7 @@ let pages = {
 
   "unknown": "Unclear",
   "favorite": "Favorite",
+  "screenshot": "screenshot",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',

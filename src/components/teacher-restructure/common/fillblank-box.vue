@@ -110,9 +110,8 @@
     }
   }
   
-  .backbar, .realdata {
+  .realdata {
     position: absolute;
-    z-index: 10;
     left: -0.23rem;
     top: 0.8rem;
     right: 0;
