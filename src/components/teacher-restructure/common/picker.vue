@@ -66,6 +66,9 @@
     position: relative;
     z-index: 100000;
   }
+  .picker-center-highlight::before,.picker-center-highlight::after{
+    background-color: transparent;
+  }
 </style>
 <style scoped lang="scss">
   @import "~@/style/common";
