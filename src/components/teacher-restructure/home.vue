@@ -24,7 +24,7 @@
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
         	<img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
-					<div class="note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
+					<div class="note" v-if="pptData.length && pptData[current - 1].Note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
         </div>
 
       </div>
@@ -749,6 +749,9 @@
 			.text{
 				font-size: px2rem(34px);
 				line-height: px2rem(40px);
+				height: px2rem(800px);
+				overflow-y: auto;
+				-webkit-overflow-scrolling: touch;
 			}
 		}
 		.close{
@@ -851,8 +854,9 @@
 					color: #fff;
 					font-size: px2rem(28px);
 					top: 50%;
-					right: 0;
+					right: -1px;
 					transform: translateY(-50%);
+					border: 1px solid rgba(255,255,255,.8);
 				}
       }
     }

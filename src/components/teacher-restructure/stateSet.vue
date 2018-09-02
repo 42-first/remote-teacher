@@ -1,28 +1,26 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="page">
-    <div class="ppt-show-set w100 color3 border-box" @click="pickerfn">
+    <div class="ppt-show-set w100 color3 border-box" @click="pickerfn"  v-if="addinversionRight >= 1.1">
       <span class="text">
           <span>{{ $t('studentsVisible') }}</span><!--学生可见-->
       </span>
       <div class="icon-span color-9b">
-        <span v-show="show_presentation === 'film'">{{ $t('visibleStu') }}</span><!--课上讲解的-->
-        <span v-show="show_presentation === 'all' || !show_presentation">{{ $t('visibleAll') }}</span><!--全部课件-->
+        <span>{{ show_presentation === 'film' ? visibleStu : visibleAll }}</span><!--课上讲解的 全部可见-->
         <i class="iconfont icon-kejiankejianqiehuan color63 ver-middle"></i>
       </div>
     </div>
-    <div class="hideStu color3 back-f" v-if="addinversionRight">
+    <div class="hideStu color3 back-f" v-if="addinversionRight >= 1.3">
       <span>{{$t('projectionHideStuInfo')}}</span>
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!isHideName" @click="hideNameHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="isHideName" @click="hideNameHandle"></i>
     </div>
-    <div class="hideStu color3 back-f" v-if="addinversionRight">
+    <div class="hideStu color3 back-f" v-if="addinversionRight >= 1.3">
       <span>{{$t('subjectiveshowanwer')}}</span>
       <i class="iconfont icon-danmu-close color-9b ver-middle" v-show="!showAnswer" @click="showAnswerHandle"></i>
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
-    <picker :pickershow="pickerShow" @yes="pickerend" @close="pickerclose" ></picker>
-    <!-- <Toolbar ref="Toolbar" class="state-set-tollbar" @goHome="goHome" @showThumbnail="showThumbnail" @showActivity="showActivity" @stateSet="stateSetFn"></Toolbar> -->
+    <picker v-show="pickerShow" @change="pickerend"></picker>
   </div>
 </template>
 
@@ -42,7 +40,10 @@
         isHideName: true,
         showAnswer: false,
         addinversionRight: false,
-        pickerShow: false
+        pickerShow: false,
+        visibleAll: this.$t('visibleAll'),
+        visibleStu: this.$t('visibleStu'),
+        arr: [this.visibleAll, this.visibleStu]
       }
     },
     components: {
@@ -61,10 +62,7 @@
       ])
     },
     created () {
-      let num = Number(this.addinversion)
-      if (num && num >= 1.3) {
-        this.addinversionRight = true
-      }
+      this.addinversionRight = Number(this.addinversion) || 0
       this.init()
     },
     beforeDestroy () {
@@ -137,12 +135,12 @@
         const self = this
         axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
           let data = e.data.data
-          console.log(data)
+          // console.log(data)
           self.isHideName = !data.show_user_profile
         })
         axios.get('/v/lesson/get_problem_show_answer_config/').then(e => {
           let data = e.data.data
-          console.log(data)
+          // console.log(data)
           self.showAnswer = data.problem_show_answer
         })
       },
@@ -152,9 +150,10 @@
         console.log(this.pickerindex)
       },
       pickerend(e) {
-        this.pickerShow = false
+        console.log(e)
         let name = e?'film': 'all'
         this.pcSet(name)
+        this.pickerclose()
       },
       pickerclose() {
         this.pickerShow = false

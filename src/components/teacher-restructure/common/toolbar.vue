@@ -40,7 +40,7 @@
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
-        <v-touch class="more-item" v-on:tap="goSet">
+        <v-touch class="more-item" v-on:tap="goSet" v-if="addinversionRight >= 1.1">
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
@@ -66,6 +66,7 @@
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
         isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
         isHideSet: false,           // 工具栏设置按钮的隐藏
+        addinversionRight: 0
       }
     },
     computed: {
@@ -75,7 +76,8 @@
         'socket',
         'newdoubt',
         'newtougao',
-        'newToolBar'
+        'newToolBar',
+        'addinversion'
       ])
     },
     created () {
@@ -87,6 +89,7 @@
       let newToolBar = !localStorage.getItem('newToolBar')
       this.$store.commit('set_newToolBar', newToolBar)
       this.isHideSet = this.$route.name === "stateSet"
+      this.addinversionRight = Number(this.addinversion) || 0
     },
     methods: {
       /**

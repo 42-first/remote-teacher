@@ -23,6 +23,10 @@ const Quizresultdetail = () => import('@/components/teacher-restructure/quizresu
 
 Vue.use(Router)
 
+let meta = {
+      keepAlive: true // 不需要缓存
+    }
+
 const router = new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/teacher' : '/',
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
@@ -30,32 +34,38 @@ const router = new Router({
     {
       path: '/',
       name: 'remote-list',
-      component: RemoteList
+      component: RemoteList,
+      meta
     },
     {
       path: '/:lessonid',
       name: 'home',
-      component: Home
+      component: Home,
+      meta
     },
     {
       path: '/collumresult/:problemid',
       name: 'collumresult',
-      component: Collumresult
+      component: Collumresult,
+      meta
     },
     {
       path: '/collumresult-detail/:problemid',
       name: 'collumresult-detail',
-      component: CollumresultDetail
+      component: CollumresultDetail,
+      meta
     },
     {
       path: '/fillblankresult/:problemid',
       name: 'fillblankresult',
-      component: Fillblankresult
+      component: Fillblankresult,
+      meta
     },
     {
       path: '/fillblankresult-detail/:problemid',
       name: 'fillblankresult-detail',
-      component: FillblankresultDetail
+      component: FillblankresultDetail,
+      meta
     },
     {
       // 解决微信确认支付路径的时候，ios 取 Landing Page， Android 取 Current Page 导致微信支付合法url认定不一致的问题
@@ -68,69 +78,84 @@ const router = new Router({
       // https://github.com/vuejs/vue-router/issues/481
       path: '/redpacketqueryproblemid',
       name: 'redpacket',
-      component: Redpacket
+      component: Redpacket,
+      meta
     },
     {
       path: '/redpacketlist/:problemid',
       name: 'redpacketlist',
-      component: Redpacketlist
+      component: Redpacketlist,
+      meta
     },
     {
       path: '/subjectiveresult/:problemid',
       name: 'subjectiveresult',
-      component: Subjectiveresult
+      component: Subjectiveresult,
+      meta
     },
     {
       // 随便加个后缀，避免刷新页面时“/member”匹配到 /:lessonid
       path: '/member/xxx',
       name: 'member',
-      component: Member
+      component: Member,
+      meta
     },
     {
       path: '/randomcall/xxx',
       name: 'randomcall',
-      component: Randomcall
+      component: Randomcall,
+      meta
     },
     {
       path: '/paper/xxx',
       name: 'paper',
-      component: Paper
+      component: Paper,
+      meta
     },
     {
       path: '/paperfolder/:folderid',
       name: 'paperfolder',
-      component: Paperfolder
+      component: Paperfolder,
+      meta
     },
     {
       path: '/danmu/xxx',
       name: 'danmu',
-      component: Danmu
+      component: Danmu,
+      meta
     },
     {
       path: '/submission/xxx',
       name: 'submission',
-      component: Submission
+      component: Submission,
+      meta
     },
     // 课堂动态设置
     {
       path: '/stateSet/xxx',
       name: 'stateSet',
-      component: StateSet
+      component: StateSet,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/quizresult/:quizid',
       name: 'quizresult',
-      component: Quizresult
+      component: Quizresult,
+      meta
     },
     {
       path: '/quizresultdetail/:quizid',
       name: 'quizresultdetail',
-      component: Quizresultdetail
+      component: Quizresultdetail,
+      meta
     },
     {
       path: '*',
       name: 'remote-fallback',
-      component: RemoteList
+      component: RemoteList,
+      meta
     }
   ]
 })

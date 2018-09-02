@@ -361,6 +361,7 @@ let pages = {
   "studentsVisible": "Visible to Students",
   "visibleAll": "All",
   "visibleStu": "Taught",
+  "studentsVisible": "Visible to Students",
   "areUV": "Are you sure to show “{text}” slides to students?",
   "nextDefault": "Remember this option",
   "setSuc": "OK",

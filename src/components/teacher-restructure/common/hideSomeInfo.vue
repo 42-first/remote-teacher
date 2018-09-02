@@ -1,5 +1,5 @@
 <template>
-	<div class="w100">
+	<div class="w100 show-wrapper">
     <div class="hide-show-answer w100" v-if="!isUserInfo">
       <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
       <div class="text-right hide-answer-wrapper" v-if="addinversionRight">
@@ -123,6 +123,9 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   @import "~@/style/common";
+  .show-wrapper{
+    height: px2rem(88px);
+  }
   .hide-show-name{
     width: 100%;
     height: px2rem(88px);

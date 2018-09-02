@@ -362,6 +362,7 @@ let pages = {
   "visibleAll": "全部课件",
   "visibleStu": "课上讲解的课件",
   "areUV": "确定学生可见”{text}”吗?",
+  "studentsVisible": "学生可见",
   "nextDefault": "下次授课默认使用该选择",
   "setSuc": "设置成功",
   "hasSubmit": "已提交",
