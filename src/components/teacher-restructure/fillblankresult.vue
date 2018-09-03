@@ -15,7 +15,10 @@
         :newTime="newTime"
         :durationLeft="durationLeft"
         :total="total"
-        :members="members"
+        :members="members" 
+				:problemid="problemid" 
+				:isTouping="isTouping"
+				@showresult = "showresult" 
         @yanshi="yanshi"
         @shouti="shouti"
       ></Rolex>
@@ -127,6 +130,7 @@
 				is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
 				result_graph: {},
 				correct_students: [],
+				showAnswer: !1
 	    }
 	  },
 	  computed: {
@@ -567,15 +571,14 @@
 	     */
 	    handlePostProblemresult (isTouping) {
 	      let self = this
-
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
-
+				this.isTouping = isTouping
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
-	        'problemid': self.problemid
+					'problemid': self.problemid,
+					'showresult': self.showAnswer
 	      })
-
 	      self.socket.send(str)
 	    },
 	    /**
@@ -603,7 +606,10 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
-	    },
+			},
+			showresult(e) {
+				this.showAnswer = !!e
+			}
 	  }
 	}
 </script>

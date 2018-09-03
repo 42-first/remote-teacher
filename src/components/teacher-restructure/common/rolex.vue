@@ -24,22 +24,16 @@
         <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
       </div>
     </div>
-    <div :class="['f18', 'yjy', 'yjyfb']">
-      <div class="f14">
-        {{ $t('submittotal2', { ss1: total, ss2: members }) }}
-      </div>
-      <div class="tpanswer f14">
-        <!-- <i class="iconfont f28" :class="true ? 'icon-kuang' : 'icon-kuangxuanzhong' "></i> -->
-        <!-- 投屏显示答案 --><!-- {{$t('tpxsda')}} -->
-      </div>
-    </div>
+    <hide-some-info :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
   </section>
 </template>
 
 <script>
+	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+
 	export default {
 	  name: 'Rolex',
-	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members'],
+	  props: ['limit', 'newTime', 'durationLeft', 'total', 'members', 'isTouping', 'problemid'],
 	  data () {
 	    return {
 	    }
@@ -62,13 +56,26 @@
 	     */
 	    shouti () {
 	      this.$emit('shouti')
-	    },
-	  }
+      },
+      	/**
+			*
+			* 隐藏答案
+			*
+			*
+			*/
+			showAnswerChange(val) {
+        this.$emit('showresult', val)
+			}
+    },
+    components: {
+      hideSomeInfo
+    }
 	}
 </script>
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  @import "~@/style/common";
   /* 上部 */
   .upper {
     margin: 0 auto;
@@ -135,19 +142,29 @@
       vertical-align: middle;
     }
     .yjy {
-      padding-top: 0.5rem;
-      color: #AAAAAA;
-    }
-    .yjyfb {
+      margin-top: px2rem(32px);
+      padding-top: px2rem(20px);
+      height: px2rem(62px);
+      color: #fff;
+      font-size: px2rem(28px);
       display: flex;
-      justify-content: space-between;
-      margin: 0.3rem 0.3rem;
-      padding-top: 0.2rem;
-      border-top: 0.0133rem solid #AAAAAA;
-      text-align: left;
-
-      .tpanswer {
-        color: $white;
+      .status{
+        flex: 1;
+      }
+      .hide-answer-wrapper{
+        font-size: 0;
+        i{
+            font-size: px2rem(30px);
+          }
+        label{
+          .hide-answer{
+            margin-right: px2rem(10px);
+            font-size: px2rem(28px);
+          }
+          i{
+            margin: 0 px2rem(10px);
+          }
+        }
       }
     }
   }

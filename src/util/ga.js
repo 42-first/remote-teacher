@@ -27,7 +27,8 @@ var category = {
     '14': '课堂动态--弹幕--返回',
     '15': '课堂动态--投稿--返回',
     '16': '课堂动态--试卷',
-    '17': '投稿列表--发送全班'
+    '17': '投稿列表--发送全班',
+    '18': '课堂动态--设置'
 };
 var handler = function(evt) {
     var $el = $(evt.currentTarget);
@@ -63,7 +64,7 @@ var gaue = {
             evt.currentTarget = $(evt.target).closest('.J_ga')
             handler(evt)
         }catch(e){}
-        
+
     }
 }
 

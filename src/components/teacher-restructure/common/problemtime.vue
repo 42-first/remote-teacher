@@ -214,13 +214,14 @@
        * @params
        */
       onValuesChange(picker, values) {
-        let team = values[0].id;
-				let index = values[0].index;
-				let active = values[0].active
-
-        this.team = team;
-				this.index = index;
-				this.isActive = active
+				if (values instanceof Array && values[0]) {
+					let team = values[0].id;
+					let index = values[0].index;
+					let active = values[0].active
+					this.team = team;
+					this.index = index;
+					this.isActive = active
+				}        
       },
       /*
        * @method picker操作
