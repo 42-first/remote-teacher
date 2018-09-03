@@ -358,11 +358,10 @@ let pages = {
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
   "weishezhixuehao": "No Student ID",
-  "set": "seting",
-  "studentsVisible": "Visible to Students",
-  "visibleAll": "All",
-  "visibleStu": "Taught",
-  "studentsVisible": "Visible to Students",
+  "set": "Setting",
+  "studentsVisible": "Visible after class",
+  "visibleAll": "All Slides",
+  "visibleStu": "In-class slides",
   "areUV": "Are you sure to show “{text}” slides to students?",
   "nextDefault": "Remember this option",
   "setSuc": "OK",
@@ -376,7 +375,7 @@ let pages = {
   "zhengque": "Correct",
   "cuowu": "Wrong",
   "weida": "Unanswerd",
-  "note": "remark",
+  "note": "Remark",
 
   // 引导页
   guide: {
