@@ -7,7 +7,7 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
-        <img v-for="item in participantList.slice(0, 10).reverse()" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+        <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
         <span class="dqxs">
           {{ $t('activeno', { activeno: participantList.length }) }}
           <i class="iconfont icon-dakai f15"></i>
@@ -67,6 +67,7 @@
       :active-index="2"
       @goHome="goHome"
       @showThumbnail="showThumbnail"
+      @stateSet="stateSetFn"
     ></Toolbar>
 
 
@@ -147,6 +148,10 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
+      },
+      // 设置
+      stateSetFn () {
+        this.$emit('stateSet')
       },
 
 			/*

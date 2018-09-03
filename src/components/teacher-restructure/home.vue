@@ -15,7 +15,7 @@
 
         <div class="img-wrapper">
         	<template v-if="pptData.length && pptData[current - 1].Shapes && pptData[current - 1].Shapes.length">
-        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
+        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" :key="btnItem.PPTShapeType" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
         			<div class="video-hint f12"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
         		</v-touch>
         	</template>
@@ -24,6 +24,7 @@
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
         	<img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
+					<div class="note" v-if="pptData.length && pptData[current - 1].Note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
         </div>
 
       </div>
@@ -59,8 +60,7 @@
           @showActivity="showActivity"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
-          @checkDoubt="checkDoubt"
-
+          @checkDoubt="checkDoubt" 
           :problem-type="problemType"
           :card-width="cardWidth"
           :card-height="cardHeight"
@@ -101,10 +101,17 @@
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
       @guideDelayNext="guideDelayNext"
     ></GuideDelay>
-
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
-
+		<div class="note-box" v-show="noteText">
+			<div class="note-box-content">
+				<div class="title">备注：</div>
+				<div class="text">{{noteText}}</div>
+				<div class="close">
+					<i class="icon-ykq-shiti-guanbi iconfont" @touchend.self="showNote('')"></i>
+				</div>
+			</div>
+		</div>
   </div>
 </template>
 
@@ -153,7 +160,6 @@
 	import socketService from './util/socket-service'
 	// 课堂试题相关
 	import problemRelated from './util/problem-related'
-
 	let pollingPresentationTagTimer = null // 轮询获取缩略图页 不懂 等标志的信息
 	let pollingTougaoTimer = null          // 轮询获取投稿数的信息
 	let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
@@ -182,8 +188,9 @@
 	      isPPTVersionAboveOne: false,            // ppt插件的版本大于1
 	      isUploadSlideCrash: false,              // 过了2秒
 	      idIndexMap: {},                         // slideid 和 slideindex 的对应关系
-	      cardWidth: 750,													// 大json中的ppt原始宽度
-	      cardHeight: 540,												// 大json中的ppt原始高度
+	      cardWidth: 750,												// 大json中的ppt原始宽度
+				cardHeight: 540,												// 大json中的ppt原始高度
+				noteText: "",
 	    }
 	  },
 	  computed: {
@@ -226,7 +233,6 @@
         'isPubCheckProblemBtnHidden',
         'isProblemPublished',
 
-
         'msgMaskTpl',
         'toastCtrlMaskTpl',
         'initiativeCtrlMaskTpl'
@@ -248,8 +254,8 @@
 	    this.init()
 	  },
 	  beforeDestroy () {
-	  	clearInterval(pollingPresentationTagTimer)
-	    clearInterval(pollingTougaoTimer)
+    clearInterval(pollingPresentationTagTimer)
+    clearInterval(pollingTougaoTimer)
 	  },
 	  mounted () {
 	    let self = this
@@ -266,6 +272,9 @@
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
+			showNote(text) {
+				this.noteText = text
+			},
 	  	/**
 	     * 复用页面，需要watch route
 	     *
@@ -339,8 +348,7 @@
 	        } else if (!opAction.isUpAndDown && !opAction.isTooShort) {
 	          op = opAction.isSwipeDown ? 'prev' : 'next'
 	        }
-
-	        self.sendSlideOp (op)
+            self.sendSlideOp (op)
 	      })
 	    },
 	    /**
@@ -387,13 +395,13 @@
 	      let self = this
 	      let url = API.userinfo
 
-	      return request.get(url,{'lesson_id': self.lessonid})
+	      return request.get(url, {'lesson_id': self.lessonid})
 	        .then(jsonData => {
-	        	window.USERID = jsonData.data.user.user_id
-	        	self.$store.dispatch('saveUserInfo', jsonData.data)
+          window.USERID = jsonData.data.user.user_id
+          self.$store.dispatch('saveUserInfo', jsonData.data)
 	        })
 	        .catch(() => {
-	        	console.error('获取用户信息失败')
+          console.error('获取用户信息失败')
 	        })
 	    },
 	    /**
@@ -484,12 +492,9 @@
 	     */
 	    showThumbnail () {
 	      let self = this
-
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Thumbnail')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
 	      self.$refs.Toolbar.$emit('hideToolbarMore')
-
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask.$emit('Thumbnail')
 	      })
@@ -503,7 +508,6 @@
 
 	      self.$store.commit('set_initiativeCtrlMaskTpl', 'Activity')
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
-
 	      Vue.nextTick(function () {
 	        self.$refs.InitiativeCtrlMask && self.$refs.InitiativeCtrlMask.$emit('Activity')
 	      })
@@ -515,7 +519,6 @@
 	     */
 	    goHome () {
 	      let self = this
-
 	      self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
 	      self.$store.commit('set_initiativeCtrlMaskTpl', '')
 	    },
@@ -712,11 +715,61 @@
 </script>
 
 <style lang="scss">
-  @import "~@/style/_variables";
+	@import "~@/style/_variables";
+	@import "~@/style/common";
   @import "~@/style/_mixin";
   @include button;
 
-  .root {position: relative; height: 100%;}
+	.root {position: relative; height: 100%;}
+	.note-box{
+		position: fixed;
+		z-index: 10000;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, .7);
+		&-content{
+			width: px2rem(600px);
+			height: px2rem(960px);
+			padding: px2rem(30px);
+			border-radius: px2rem(12px);
+			background-color: #fff;
+			color: #333;
+			top: 50%;
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			.title{
+				height: px2rem(56px);
+				line-height: px2rem(56px);
+				margin: px2rem(10px) 0;
+				font-size: px2rem(34px);
+			}
+			.text{
+				font-size: px2rem(34px);
+				line-height: px2rem(40px);
+				height: px2rem(800px);
+				overflow-y: auto;
+				-webkit-overflow-scrolling: touch;
+			}
+		}
+		.close{
+			position: absolute;
+			height: px2rem(80px);
+			line-height: px2rem(80px);
+			text-align: center;
+			width: px2rem(80px);
+			font-size: px2rem(80px);
+			bottom: -1.1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			i{
+				color: #fff;
+				font-size: px2rem(80px);
+			}
+		}
+	}
   .rc-home  {
     position: relative;
     display: flex;
@@ -789,7 +842,22 @@
       			bottom: 0.4rem;
       			text-align: center;
       		}
-      	}
+				}
+				.note{
+					position: absolute;
+					background-color: #639ef4;
+					border-radius: px2rem(35px) 0 0 px2rem(35px);
+					width: px2rem(93px);
+					height: px2rem(70px);
+					line-height: px2rem(70px);
+					text-align: center;
+					color: #fff;
+					font-size: px2rem(28px);
+					top: 50%;
+					right: -1px;
+					transform: translateY(-50%);
+					border: 1px solid rgba(255,255,255,.8);
+				}
       }
     }
     .downer {

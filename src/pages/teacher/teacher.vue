@@ -1,5 +1,5 @@
 <template>
-  <router-view keep-alive>
+  <router-view keep-alive="$route.meta.keepAlive">
     <template slot="ykt-msg">
       <ykt-toast></ykt-toast>
       <ykt-modal></ykt-modal>

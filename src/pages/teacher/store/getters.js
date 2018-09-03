@@ -44,5 +44,8 @@ const getters = {
   msgMaskTpl: state => state.msgMaskTpl,
   toastCtrlMaskTpl: state => state.toastCtrlMaskTpl,
   initiativeCtrlMaskTpl: state => state.initiativeCtrlMaskTpl,
+  stateSet: state => state.stateSet,
+  newToolBar: state => state.newToolBar,
+  addinversion: state => state.addinversion
 };
 export default getters

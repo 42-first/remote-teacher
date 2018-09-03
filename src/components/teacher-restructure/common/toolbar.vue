@@ -23,23 +23,35 @@
 		</div>
 
 		<!-- 更多的内容 -->
-		<div v-show="!isToolbarMoreBoxHidden" class="toolbar-more-box f14">
-      <i class="iconfont icon-sanjiaoxing f24"></i>
-		  <v-touch class="more-item" v-on:tap="summonQrcodeMask">
-		    <i class="iconfont icon-ykq_erweima f24"></i>
-		    <span>{{ $t('qrcode') }}</span>
-		  </v-touch>
+    <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden">
+      <div class="toolbar-more-box f14">
+        <i class="iconfont icon-sanjiaoxing f24"></i>
+        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
+          <i class="iconfont icon-ykq_erweima f24"></i>
+          <span>{{ $t('qrcode') }}</span>
+        </v-touch>
 
-		  <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
-		    <i class="iconfont icon-suijidianming1 f24"></i>
-		    <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
-		  </v-touch>
+        <v-touch class="more-item J_ga" v-on:tap="callWakeup" data-category="12" data-label="工具栏">
+          <i class="iconfont icon-suijidianming1 f24"></i>
+          <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
+        </v-touch>
 
-      <v-touch class="more-item" v-on:tap="setEndShow">
-        <i class="iconfont icon-ykq-tuichufangying f24"></i>
-        <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
-      </v-touch>
-		</div>
+        <v-touch class="more-item" v-on:tap="setEndShow">
+          <i class="iconfont icon-ykq-tuichufangying f24"></i>
+          <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
+        </v-touch>
+        <v-touch class="more-item" v-on:tap="goSet" v-if="addinversionRight >= 1.1">
+          <i class="iconfont icon-shezhi f24 ver-middle"></i>
+          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
+        </v-touch>
+      </div>
+    </div>
+
+    <!-- 新功能提示 -->
+    <!-- <div class="tips" v-show="newToolBar && !activeIndex">
+      {{$t('toupingfanweitishi')}}
+      <i class="iconfont icon-shiti_guanbitouping" @click="closeTips"></i>
+    </div> -->
 	</div>
 </template>
 
@@ -53,6 +65,8 @@
       return {
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
         isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
+        isHideSet: false,           // 工具栏设置按钮的隐藏
+        addinversionRight: 0
       }
     },
     computed: {
@@ -62,15 +76,20 @@
         'socket',
         'newdoubt',
         'newtougao',
+        'newToolBar',
+        'addinversion'
       ])
     },
     created () {
       let self = this
-
       // 主屏幕点击 缩略图、课堂动态 后，隐藏更多
       self.$on('hideToolbarMore', function () {
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       })
+      let newToolBar = !localStorage.getItem('newToolBar')
+      this.$store.commit('set_newToolBar', newToolBar)
+      this.isHideSet = this.$route.name === "stateSet"
+      this.addinversionRight = Number(this.addinversion) || 0
     },
     methods: {
       /**
@@ -102,9 +121,7 @@
        */
       toggleToolbarMoreBox () {
         let self = this
-
         self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
-
         // self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
       },
       /**
@@ -122,7 +139,7 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       },
       /**
        * 点击 随机点名 按钮，发送弹出 随机点名 控制面板的请求，收到回复后在回复中才打开面板
@@ -139,7 +156,7 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
 
         typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
@@ -158,16 +175,34 @@
 
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
-        self.isToolbarMoreBoxHidden = true
+        self.closeMore()
       },
+      goSet () {
+        this.$emit('stateSet', 1)
+        this.$router.push({name: 'stateSet'})
+      },
+      // 延迟关闭当前浮窗
+      closeMore() {
+        let self = this
+        setTimeout(e=>{
+          self.isToolbarMoreBoxHidden = true
+        }, 200)
+      },
+    //  关闭新功能提示tips
+      closeTips () {
+        this.$store.commit('set_newToolBar', false)
+        localStorage.setItem('newToolBar', 1)
+      }
     }
   }
 </script>
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common";
   .toolbar-root {
     position: relative;
+    color: #9b9b9b;
   }
 
   .rc-toolbar {
@@ -188,7 +223,7 @@
         width: 100%;
         text-align: center;
       }
-      
+
       .icondesc {
         margin-top: -0.133333rem;
       }
@@ -222,14 +257,21 @@
     }
   }
 
-
+  .toolbar-more-box-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 1.706667rem);
+    z-index: 10000;
+  }
   /*更多按钮打开的内容*/
   .toolbar-more-box {
     position: absolute;
     right: 0.133333rem;
-    bottom: 2.026667rem;
+    bottom: 0.24rem;
     width: 3.6rem;
-    height: 4.5rem;
+    /*height: 4.5rem;*/
 
     background: #333333;
     border-radius: 10px;
@@ -257,6 +299,26 @@
       &:last-child {
         border: 0;
       }
+    }
+  }
+
+  /* 新功能提示 */
+  .tips{
+    height: 1.067rem;
+    line-height: 1.067rem;
+    padding: 0 0.4rem;
+    color: #fff;
+    border-radius: 0.5333rem;
+    background-color: rgba(0,0,0,1);
+    position: absolute;
+    top: -1.1rem;
+    left: 50%;
+    margin-left: -40%;
+    overflow: hidden;
+    font-size: 0.373rem;
+    .iconfont{
+      font-size: 0.764rem;
+      vertical-align: middle;
     }
   }
 </style>

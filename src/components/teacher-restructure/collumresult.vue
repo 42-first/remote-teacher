@@ -33,9 +33,10 @@
 	    			<v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
 	    		</div>
 		    </div>
-		    <div :class="['f18', 'yjy']">
+		    <!-- <div :class="['f18', 'yjy']">
 		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
-		    </div>
+		    </div> -->
+				<hide-some-info :problemtype="problemType" :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
 	    </section>
 
 	    <!-- 中间柱状图 -->
@@ -64,7 +65,7 @@
   	          <span class="label f18">{{ma_right_count.label}}</span>
   	        </div>
   	      </div>
-  				<div class="histogram-item" v-for="item in graph">
+  				<div class="histogram-item" v-for="(item, index) in graph" :key="index">
   	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/total*100+'%'}">
   	          <span class="value f18">{{item.value}}</span>
   	          <span class="label f18">{{item.label}}</span>
@@ -113,7 +114,6 @@
 		  @cancelPublishProblem="cancelPublishProblem"
 		  @chooseProblemDuration="yanshiProblem"
 		></Problemtime>
-
 	</div>
 </template>
 
@@ -122,12 +122,14 @@
 	import {sec2str} from './util/util'
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
-  import config from '@/pages/teacher/config/config'
+	import config from '@/pages/teacher/config/config'
 
   // 试题延时
 	import Problemtime from '@/components/teacher-restructure/common/problemtime'
 	// 教师遥控器引导查看答案、续时
-  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	
+	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -169,7 +171,8 @@
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
-		    isTouping: false,							 // 当前正在投屏
+				isTouping: false,							 // 当前正在投屏
+				showAnswer: false,             // 投屏现实答案
 	    }
 	  },
 	  computed: {
@@ -181,7 +184,8 @@
 	  },
 	  components: {
 	    Problemtime,
-	    GuideDelay
+			GuideDelay,
+			hideSomeInfo
 	  },
 	  created(){
 	  	this.init()
@@ -460,7 +464,7 @@
 	     */
 	    toggleTouping (status) {
 	    	let self = this
-	    	self.isTouping = status
+				self.isTouping = status
 	    	localStorage.setItem('posting-problem'+self.problemid, status)
 	    },
 	    /**
@@ -619,17 +623,20 @@
 	     */
 	    handlePostProblemresult (isTouping) {
 	      let self = this
-
+				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
-
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
-	        'problemid': self.problemid
+					'problemid': self.problemid,
+					'showresult': this.showAnswer
 	      })
-
 	      self.socket.send(str)
-	    },
+			},
+			//  捕获 hidesomeinfo 组件的change事件改变 showanswer 状态
+			showAnswerChange(val) {
+				this.showAnswer = val
+			}, 
 	    /**
 	     * 关闭页面时关闭定时器、投屏等的总开关
 	     *
@@ -655,13 +662,14 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
-	    },
+			}
 	  }
 	}
 </script>
 <!-- TODO 柱状图滑动 icon图片？ -->
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+	@import "~@/style/common";
 	.problem-root {
 		height: 100%;
 		min-height: 100%;
@@ -740,10 +748,6 @@
 				margin-top: -0.186667rem;
 				width: 0.9rem;
 				vertical-align: middle;
-			}
-			.yjy {
-				padding-top: 0.5rem;
-				color: #AAAAAA;
 			}
 	  }
 

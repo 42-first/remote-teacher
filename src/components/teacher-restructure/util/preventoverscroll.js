@@ -226,6 +226,9 @@
                 addEvent(elem, 'touchstart', _oSelf.startMove);
                 addEvent(elem, 'touchmove', _oSelf.preventMove);
                 addEvent(elem, 'touchend', function(e){
+                    if (e.target.className.indexOf('note') > -1) {
+                        return
+                    }
                     _oSelf.endMove(e, this);
                 });
             }
