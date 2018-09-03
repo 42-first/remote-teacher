@@ -366,7 +366,6 @@ let pages = {
   "studentsVisible": "学生可见",
   "nextDefault": "下次授课默认使用该选择",
   "setSuc": "设置成功",
-  "hasSubmit": "已提交",
   "projectionHideStuInfo": "匿名投屏（主观题、投稿）",
   "HideStuInfo": "匿名投屏",
   "subjectiveshowanwer": "客观题投屏默认显示答案",
