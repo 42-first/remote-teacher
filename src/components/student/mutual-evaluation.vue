@@ -170,8 +170,8 @@
             confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
             cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
           };
-          let title = '已有人批改' || this.$i18n && this.$i18n.t('team.teamhasanswer');
-          let message = '提交后将会覆盖之前的评分' || this.$i18n && this.$i18n.t('team.teamanswercover');
+          let title = this.$i18n && this.$i18n.t('grading.gradedalready');
+          let message = this.$i18n && this.$i18n.t('grading.gradedoverwrite');
 
           this.$messagebox.confirm(message, title, msgOptions).
             then( action => {
