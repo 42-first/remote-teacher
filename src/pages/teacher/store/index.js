@@ -44,6 +44,7 @@ const store = new Vuex.Store({
     postingSubjectiveSent: false,           // 正在投屏的主观题已经发送全班
 
     isEnterEnded: false,                    // 遥控器进入是否结束
+    stateSet: false,                        // 课堂动态 '设置' 组件
     isMsgMaskHidden: false,                 // 蒙版隐藏，错误信息类
     isToastCtrlMaskHidden: true,            // 蒙版隐藏，被动弹出控制类，如夺权
     isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
@@ -54,6 +55,8 @@ const store = new Vuex.Store({
     toastCtrlMaskTpl: '',
     initiativeCtrlMaskTpl: '',
 
+    newToolBar: !1,
+    addinversion: 0                        // 插件协议版本号
   },
 
   mutations: {
@@ -161,6 +164,9 @@ const store = new Vuex.Store({
     set_isEnterEnded: (state, isEnterEnded) => {
       state.isEnterEnded = isEnterEnded
     },
+    set_stateSet (state, isstateSet) {
+      state.stateSet = isstateSet
+    },
     set_isMsgMaskHidden: (state, isMsgMaskHidden) => {
       state.isMsgMaskHidden = isMsgMaskHidden
     },
@@ -186,7 +192,13 @@ const store = new Vuex.Store({
     set_initiativeCtrlMaskTpl: (state, initiativeCtrlMaskTpl) => {
       state.initiativeCtrlMaskTpl = initiativeCtrlMaskTpl
     },
-
+    // 获取新功能通知是否显示
+    set_newToolBar (state, newToolBar) {
+      state.newToolBar = newToolBar
+    },
+    addinversion(state, addinversion) {
+      state.addinversion = addinversion
+    }
   },
 
   actions: {
@@ -217,6 +229,9 @@ const store = new Vuex.Store({
       commit('set_newtougao', 0)
 
     },
+    addinversion({commit}, payload) {
+      commit('addinversion', payload)
+    }
   },
   getters
 })

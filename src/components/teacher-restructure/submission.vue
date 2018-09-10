@@ -12,6 +12,7 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
+      <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -22,6 +23,7 @@
          :bottomDropText="$t('shifang')"
          :class="{'allLoaded': isAllLoaded}"
          >
+
         <section class="list">
 
           <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.id">
@@ -96,6 +98,7 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
   import Scale from './common/scale'
+  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
   let FENYE_COUNT = 10
 
@@ -117,6 +120,7 @@
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
+        isHideName: false,               // 匿名投屏
       }
     },
     computed: {
@@ -129,7 +133,8 @@
     },
     components: {
       Loadmore,
-      Scale
+      Scale,
+      hideSomeInfo
     },
     created () {
       let self = this
@@ -385,9 +390,9 @@
 
         let postData = {
           'lesson_id': self.lessonid,
-          'tougao_id': submissionid
+          'tougao_id': submissionid,
+          // 'hide': self.isHideName
         }
-
         request.post(url, postData)
           .then(jsonData => {
             // 不需要判断success，在request模块中判断如果success为false，会直接reject
@@ -509,13 +514,25 @@
         }
 
       },
-      
+      /*
+      * 变更投屏状态
+      *  可能已废弃，以后删掉
+      *
+      **/ 
+     showUserInfoChange(val) {
+       this.isHideName = val
+     }
     }
   }
 </script>
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common";
+  @function px2rem($px) {
+    $rem: 75px;
+    @return ($px/$rem) + rem;
+  }
   .submission-box {
     position: relative;
     height: 100%;
@@ -523,6 +540,31 @@
     color: #4A4A4A;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+
+    .hide-show-name{
+      width: 100%;
+      height: px2rem(88px);
+      line-height: px2rem(88px);
+      background-color: #fff;
+      box-sizing: border-box;
+      padding-left: px2rem(30px);
+      font-size: 0;
+      .iconfont{
+        font-size: px2rem(30px);
+        vertical-align: middle;
+      }
+      .icon-kuang{
+        color: #666;
+      }
+      .icon-kuangxuanzhong{
+        color: #639efc;
+      }
+      .info{
+        color: #666;
+        font-size: px2rem(28px);
+        margin: 0 px2rem(10px);
+      }
+    }
 
     .new-item-hint {
       position: fixed;
@@ -615,7 +657,7 @@
     }
 
     .gap {
-      height: 0.266667rem;
+      height: px2rem(20px);
       background: #EDF2F6;
     }
 

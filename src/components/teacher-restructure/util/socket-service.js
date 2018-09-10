@@ -10,7 +10,7 @@ import socketProcessMessage from './socket-process-message'
 import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'pro.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
@@ -172,8 +172,8 @@ let mixin = {
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
-            console.log(msg)
-
+            console.log(msg.addinversion, msg)
+            msg.addinversion && self.$store.commit('addinversion', msg.addinversion)
             self.socketProcessMessage(msg)
           }
 

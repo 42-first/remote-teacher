@@ -479,7 +479,7 @@ export default {
       let self = this
 
       let idIndexMap = {}
-      
+
       pptData.forEach(item => {
         idIndexMap[item.lessonSlideID] = item.Index
       })
@@ -648,7 +648,7 @@ export default {
      */
     checkTougao () {
       let self = this
-      
+
       self.newtougao = 0
     },
     /**
@@ -657,7 +657,7 @@ export default {
      */
     requirePhotoswipe () {
       let self = this
-      
+
       setTimeout(()=>{
         require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
           window.PhotoSwipe = PhotoSwipe;
@@ -691,11 +691,11 @@ export default {
      */
     setSentry() {
       if(typeof Raven !== 'undefined') {
-        Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+        Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
         Raven.setUserContext({ userid: this.userid });
       } else {
         setTimeout(() => {
-          Raven.config('http://206997a397544b479583a315450260e5@rain-sentry.xuetangx.com/6').install();
+          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userid });
         }, 1500)
       }

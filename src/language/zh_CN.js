@@ -28,6 +28,7 @@ let pages = {
 
   "unknown": "不懂",
   "favorite": "收藏",
+  "screenshot": "截图分享",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
@@ -113,6 +114,8 @@ let pages = {
   "receivertimeout": "作答时间结束",
   "receiverdone": "已完成",
   "collectprotip": "老师可能会随时结束答题",
+  "enteranswer": "输入答案",
+  "blanksnotanswer": "有空格未填写，确认提交吗？",
 
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
@@ -355,9 +358,26 @@ let pages = {
   "qiandaoafterfix": '',
   "weiqiandaoafterfix": "",
   "weishezhixuehao": "未设置学号",
+  "set": "设置",
+  "studentsVisible": "学生课后可见",
+  "visibleAll": "全部课件",
+  "visibleStu": "课上讲解的课件",
+  "areUV": "确定学生可见”{text}”吗?",
+  "studentsVisible": "学生可见",
+  "nextDefault": "下次授课默认使用该选择",
+  "setSuc": "设置成功",
+  "projectionHideStuInfo": "匿名投屏（主观题、投稿）",
+  "HideStuInfo": "匿名投屏",
+  "subjectiveshowanwer": "客观题投屏默认显示答案",
+  "showanwer": "投屏显示答案",
+  "toupingexplain": "此处修改仅对本次有效，可以在更多-设置中修改偏好设置。",
+  "toupingexplaintitle": "投屏帮助说明",
+  "toupingfanweitishi": "您可以设置学生课后查看课件的范围啦！",
   "zhengque": "正确",
   "cuowu": "错误",
   "weida": "未答",
+  "close": "关闭",
+  "note": "备注",
 
   // 引导页
   guide: {

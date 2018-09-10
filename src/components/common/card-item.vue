@@ -8,7 +8,7 @@
   <!--  -->
   <section class="timeline-item" v-if="item">
 
-    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 -->
+    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享-->
     <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
@@ -30,6 +30,18 @@
             <p class="f24"><!-- 当前页面有动画 -->{{ $t('animatepage') }}</p>
             <p class="f32"><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
           </div>
+        </div>
+      </div>
+    </template>
+    <!-- 截图分享 -->
+    <template v-else-if="item.type==10">
+      <div class="timeline__ppt">
+        <span class="ppt--pageno f14"><!-- 截图分享 -->{{ $t('screenshot') }}</span>
+        <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
+          <img class="screenshot--image" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)" alt="雨课堂,截图分享" />
+        </div>
+        <div class="ppt-footer">
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
         </div>
       </div>
     </template>
@@ -73,16 +85,8 @@
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
-        <!-- 主观题作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/subjective/'+index" v-if="item.problemType==='ShortAnswer'">
-            <div class="paper-txt f18">
-              <p class="paper-name">{{ item.caption }}</p>
-              <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
-            </div>
-            <i class="iconfont icon-ykq_shiti f55"></i>
-        </router-link>
-        <!-- 客观题作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/exercise/'+index" v-else>
+        <!-- 作答链接 -->
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL" >
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
@@ -187,10 +191,22 @@
   export default {
     name: 'card-item',
     props: {
-      tabindex: 1,
-      index: 0,
-      lessonid: 0,
-      item: null
+      tabindex: {
+        type: Number,
+        default: 1
+      },
+      index: {
+        type: Number,
+        default: 0
+      },
+      lessonid: {
+        type: Number,
+        default: 0
+      },
+      item: {
+        type: Object,
+        default: null
+      }
     },
     data() {
       return {
@@ -216,7 +232,7 @@
         let cards = this.$parent.$parent.cards;
 
         cards.map((card)=>{
-          if(card.type === 2 && card.animation !== 1) {
+          if(card.type === 2 && card.animation !== 1 || card.type === 10) {
             items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
           }
         })
@@ -502,6 +518,21 @@
       }
     }
 
+  }
+
+
+  .screenshot {
+    position: relative;
+    background: #f8f8f8;
+  }
+
+  .screenshot--image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    max-width: 100%;
   }
 
 

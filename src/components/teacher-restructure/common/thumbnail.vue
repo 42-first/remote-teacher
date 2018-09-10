@@ -50,6 +50,7 @@
       :is-socket-connected="isSocketConnected"
       @goHome="goHome"
       @showActivity="showActivity"
+      @stateSet="stateSetFn"
     ></Toolbar>
   </div>
 </template>
@@ -225,6 +226,10 @@
       showActivity () {
         this.$emit('showActivity')
       },
+      // 设置
+      stateSetFn () {
+        this.$emit('stateSet')
+      }
     }
   }
 </script>

@@ -60,6 +60,10 @@ if (process.env.NODE_ENV === 'production') {
             // (学生端)互评打分
             'SUBMIT_GROUP_REVIEW': '/v/lesson/submit_group_review_score/',
 
+            // 直播相关
+            'GET_LIVE_LIST': '/v/lesson/live/get_lesson_live_list/',
+            'GET_LIVE_URL': '/v/lesson/live/get_live_url/',
+
         },
 
         /*------------------*\
@@ -89,7 +93,7 @@ if (process.env.NODE_ENV === 'production') {
 
         student: {
             // 课件习题列表
-            'GET_PRESENTATION_LIST': 'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_info_v2',
+            'GET_PRESENTATION_LIST': 'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_info_v2/',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/static/mock/student/red_envelope_detail.json',
             // 习题提交

@@ -61,6 +61,8 @@ var actionsMixin = {
                 this.addSubmission({ type: 6, postid: item['postid'], time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'subjective') {
                 this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
+              } else if(item['cat'] === 'capture') {
+                this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
               }
 
               break;
@@ -349,6 +351,24 @@ var actionsMixin = {
       // slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       // 问题类型
       let problemType = slideData['Problem']['Type'];
+      let pageURL = `/${this.lessonID}/`;
+
+      if(problemType) {
+        switch (problemType) {
+          // 主观题
+          case 'ShortAnswer':
+            pageURL += `subjective/${index}`;
+            break;
+          // 填空题
+          case 'FillBlank':
+            pageURL += `blank/${index}`;
+            break;
+          // 多选单选投票
+          default:
+            pageURL += `exercise/${index}`;
+            break;
+        }
+      }
 
       data = Object.assign(data, {
         pageIndex: data.pageIndex,
@@ -361,7 +381,8 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
-        index: index,
+        index,
+        pageURL,
         groupid: data.event['groupid']
       })
 
@@ -611,6 +632,59 @@ var actionsMixin = {
       this.allEvents.push(data);
     },
 
+    /*
+     * @method 截图分享
+     * @param { type: 10, cat: 'capture', url: ‘’, event: all }
+     */
+    addCapture(data) {
+      let presentation = this.presentationMap.get(this.presentationID);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 10 && item.url === data.url && data.isFetch;
+      })
+
+      // 预加载图片
+      let oImg = new Image();
+      oImg.onload = (evt) => {
+        // 矫正宽高
+        let target = evt.target;
+        data.Width = target.naturalWidth || target.width;
+        data.Height = target.naturalHeight || target.height;
+      };
+
+      oImg.src = data.url;
+
+      let cardItem = {
+        src: data.url,
+        rate: presentation.Width / presentation.Height,
+        Width: presentation.Width,
+        Height: presentation.Height,
+      };
+
+      data = Object.assign(data, cardItem)
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 开始直播
+     * @param {
+        "lessonid": 298,
+        "type": 1,    //1音频 2视频
+        "code": "RainLive-8201d0bf-e0d441b3",
+        "liveurl": {
+          "flv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
+          "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
+          "rtmp": "rtmp://vdn-push.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3"
+        }}
+     */
+    startLive(data) {
+      if(data) {
+        this.liveURL = data.hls;
+        this.Hls && this.supportHLS(this.Hls);
+      }
+    },
 
   }
 }

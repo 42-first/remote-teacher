@@ -28,6 +28,7 @@ let pages = {
 
   "unknown": "Unclear",
   "favorite": "Favorite",
+  "screenshot": "screenshot",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
@@ -114,6 +115,8 @@ let pages = {
   "receivertimeout": "Time Out",
   "receiverdone": "Done",
   "collectprotip": "It may end at any time.",
+  "enteranswer": "Enter your answer",
+  "blanksnotanswer": "Not all of the blanks had been filled. Are you sure to submit?",
 
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
@@ -355,9 +358,24 @@ let pages = {
   "qiandaoafterfix": '-eng',
   "weiqiandaoafterfix": "-eng",
   "weishezhixuehao": "No Student ID",
+  "set": "Setting",
+  "studentsVisible": "Visible after class",
+  "visibleAll": "All Slides",
+  "visibleStu": "In-class slides",
+  "areUV": "Are you sure to show “{text}” slides to students?",
+  "nextDefault": "Remember this option",
+  "setSuc": "OK",
+  "projectionHideStuInfo": "Anonymous screen mode",
+  "HideStuInfo": "Anonymous screen code",
+  "subjectiveshowanwer": "Default display correct answer",
+  "showanwer": "Display correct answer",
+  "toupingexplain": "The setting is only effective this time. You can change your preference in More-Setting.",
+  "toupingexplaintitle": "Help",
+  "toupingfanweitishi": "您可以设置学生课后查看课件的范围啦！",
   "zhengque": "Correct",
   "cuowu": "Wrong",
   "weida": "Unanswerd",
+  "note": "Remark",
 
   // 引导页
   guide: {

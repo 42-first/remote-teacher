@@ -87,7 +87,8 @@
 						</div>
 						<div class="gap"></div>
 					</template>
-
+          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+          <div class="gap"></div>
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
             <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
@@ -216,7 +217,6 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -232,11 +232,12 @@
   import StarPanel from './common/score-panel-v2'
   import Scale from './common/scale'
   import Loadmore from 'mint-ui/lib/loadmore'
-	import HupingPanel from './common/huping-panel'
+  import HupingPanel from './common/huping-panel'
   // 试题延时
   import Problemtime from '@/components/teacher-restructure/common/problemtime'
   // 教师遥控器引导查看答案、续时
   import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -292,6 +293,8 @@
         isContLonger: false,          // 内容超过1屏
         newTime: 100,                  // 当前剩余时间，用于判读是否剩余5秒
         isProblemtimeHidden: true,     // 延时面板隐藏
+        isHideName: false,               // 匿名投屏
+        explainShow: false,         // 投屏帮助说明
         showTeamMember: false,         // 展示小组成员
         teamMemberList: [],						 // 小组成员列表
 				currentTeam: '',							 // 当前点击的小组名称
@@ -302,7 +305,7 @@
 				gProportion: 100,							 // 默认互评占比
 				unfinished_count: 0,					// 未答题人数
 				unfinished_team_count: 0,				// 没有回答的组数
-				group_name: '',									// 分组名
+        group_name: '',									// 分组名
 	    }
 	  },
 	  computed: {
@@ -313,7 +316,7 @@
         'current',
         'pptData',
         'postingSubjectiveid',
-        'postingSubjectiveSent',
+        'postingSubjectiveSent'
       ])
 	  },
 	  components: {
@@ -322,10 +325,11 @@
       Loadmore,
       Problemtime,
       GuideDelay,
-			HupingPanel
+      HupingPanel,
+      hideSomeInfo
 	  },
 	  created(){
-	  	this.init()
+      this.init()
 	  },
     mounted(){
       // 处理打分蒙版出现时，ios11+ 后面不要滚动
@@ -364,6 +368,7 @@
       }
     },
 	  methods: {
+      
       /**
        * 取消延时
        *
@@ -890,9 +895,9 @@
           'op': 'showsproblem',
           'lessonid': self.lessonid,
           'spid': id,
-          'msgid': 1234
+          'msgid': 1234,
+          // 'hide': this.isHideName
         })
-
         self.socket.send(str)
       },
       /**
@@ -1167,13 +1172,22 @@
 				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
 				let newClassName = 'longtips'
 				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
-			}
+      },
+      /*
+      * 变更投屏状态
+      * 可能已废弃，以后删掉
+      *
+      **/ 
+     showUserInfoChange(val) {
+       this.isHideName = val
+     }
 	  }
 	}
 </script>
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  @import "~@/style/common";
   .wai {
     height: 100%;
     width: 100%;
