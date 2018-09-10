@@ -50,7 +50,7 @@
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
           <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
-          <input class="input f30 c9b" type="tel" v-model="score" @focus="handlefocus" @blur="handleblur" />
+          <input class="input f30 c9b" placeholder="请打分" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" />
         </div>
         <div class="score__node">
           <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
@@ -94,7 +94,7 @@
         pptRate: 1,
         // 图片比例
         rate: 1,
-        score: 0,
+        score: '',
         // 互评ID
         reviewID: 0,
         // 问题ID
@@ -152,7 +152,7 @@
                 let resultInfo = data.problem_result_list[0];
                 this.result = resultInfo.result;
                 this.reviewScore = resultInfo.review_score;
-                this.score = this.reviewScore > 0 ? this.reviewScore : 0;
+                this.score = this.reviewScore > 0 ? this.reviewScore : '';
                 this.problemResultID = resultInfo.problem_result_id;
               }
 
@@ -275,6 +275,32 @@
           this.height = oImg.naturalHeight || oImg.height;
         };
         oImg.src = src;
+      },
+
+      /*
+       * @method 打分
+       * @param
+       */
+      oninput(evt){
+        let targetEl = evt.target;
+        let sValue = targetEl.value;
+        let index = sValue.indexOf('.');
+        let sourceScore = this.summary && this.summary.score || 0;
+
+        if(index !== -1 && index == sValue.length - 1) {
+          return ;
+        }
+        let iptValue = +sValue;
+
+        if(iptValue > sourceScore) {
+          this.score = sourceScore
+        } else if(iptValue < 0) {
+          this.score = 0;
+        } else {
+          if((this.score+'').indexOf('.') !== -1) {
+            this.score = +parseFloat(this.score).toFixed(1);
+          }
+        }
       },
 
     },

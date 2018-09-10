@@ -360,6 +360,12 @@ var mixin = {
 
             break;
 
+          // 结束直播
+          case 'endlive':
+            this.endLive();
+
+            break;
+
           default:
             hasMsg = false;
             break

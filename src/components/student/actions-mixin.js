@@ -686,6 +686,14 @@ var actionsMixin = {
       }
     },
 
+    /*
+     * @method 结束直播
+     * @param
+     */
+    endLive() {
+      this.liveURL = '';
+    },
+
   }
 }
 
