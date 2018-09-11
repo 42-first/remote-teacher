@@ -439,7 +439,7 @@ let pages = {
   grading: {
     "scoreofpeergrading": "Score of Peer Grading",
     "scoreofteachergrading": "Score of Teacher Grading",
-    "pointsofgrading": "Points for Grading",
+    "pointsofgrading": "Grading Criteria",
     "textareaplaceholder": "Please enter the key or points for students' reference.",
     "hupingguize": "Rules of Peer Grading",
     "rule1": "<i>＊</i>Groups can take part in peer grading only after answer submission. Each group will receive <span class='f15'>One</span> answer from other groups.",

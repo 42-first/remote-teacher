@@ -29,7 +29,7 @@
       <section class="evaluation__answer" v-if="result">
         <h3 class="answer__header">
           <p class="f21 c333"><!-- 答案 -->{{ $t('grading.answer') }}</p>
-          <p class="answer--points f14 blue" @click="handlenode"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
+          <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
           <img class="answer--pic" :src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" />
@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <p class="score--submit f18" @click="handlesubmit"><!-- 提交 -->{{ $t('submit') }}</p>
+        <p class="score--submit f18" :class="[ submitStatus === 1 ? 'active' : '' ]" @click="handlesubmit"><!-- 提交 -->{{ $t('submit') }}</p>
       </div>
     </section>
 
@@ -104,6 +104,8 @@
         slideData: null,
         // 互评要点
         declaration: '',
+        // 提交状态 0:不能提交 1：可以提交
+        submitStatus: 0,
 
         scoreVisible: false,
         nodeVisible: false,
@@ -118,6 +120,12 @@
     },
     watch: {
       score(newVal, oldVal) {
+        if(newVal !== '') {
+          this.submitStatus = 1;
+        } else {
+          this.submitStatus = 0;
+        }
+
         if(newVal > this.summary.score) {
           this.score = this.summary.score;
         }
@@ -194,8 +202,10 @@
           'score': this.score
         };
 
-        if(!this.score) {
+        if(!this.submitStatus) {
           return this;
+        } else {
+          this.submitStatus = 0;
         }
 
         return request.post(URL, param)
@@ -522,10 +532,15 @@
       line-height: 1.173333rem;
 
       color: #fff;
-      background: #5096F5;
+      // background: #5096F5;
+      background: #999999;
 
       border-radius: 0.6rem/50%;
       box-shadow: 0 0.106667rem 0.186667rem rgba(80, 150, 245, 0.4);
+    }
+
+    .score--submit.active {
+      background: #5096F5;
     }
   }
 
