@@ -461,6 +461,7 @@ let pages = {
     "close" : "关闭",
     "gradedalready" : "已有人批改",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
+    "pleasescore" : "请打分",
   },
 
   // 图片国际化

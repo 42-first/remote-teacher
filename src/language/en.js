@@ -459,6 +459,7 @@ let pages = {
     "close" : "Close",
     "gradedalready" : "Graded Already",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
+    "pleasescore" : "Please grading now",
   },
 
   // 图片国际化
