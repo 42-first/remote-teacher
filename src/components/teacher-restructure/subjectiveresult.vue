@@ -78,7 +78,7 @@
 								</template>
 							</div>
 
-							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+							<v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
 					<template v-if="group_name">
@@ -132,7 +132,7 @@
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score}}</span>
+                        <span v-show="item.score !== -1">{{item.score.toFixed(1)}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
