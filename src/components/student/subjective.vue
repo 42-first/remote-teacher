@@ -623,7 +623,7 @@
             if(res && res.data) {
               let data = res.data;
 
-              this.starCount = data.score / data.source_score * 5;
+              this.getScore = data.score;
 
               return data;
             }
