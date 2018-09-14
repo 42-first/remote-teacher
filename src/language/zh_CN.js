@@ -141,6 +141,8 @@ let pages = {
   "QUIZ_FINISH": "试卷 {0} 已收卷",
   "FREE_GROUP_CANCEL": "老师取消了自由分组",
   "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
+  "LIVE_ON": "老师开启了直播",
+  "LIVE_OFF": "老师结束了直播",
 
   // 个人信息完善
   "merealname": '真实姓名',

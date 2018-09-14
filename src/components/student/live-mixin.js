@@ -87,7 +87,7 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(audioEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          audioEl && audioEl.play();
+          // audioEl && audioEl.play();
         });
 
         this.handleerror(hls);
@@ -152,6 +152,11 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       audioEl.play();
       this.playState = 1;
+
+      // 避免音频没有加载不播放问题
+      setTimeout(()=>{
+        audioEl.play();
+      }, 500)
     },
 
   }

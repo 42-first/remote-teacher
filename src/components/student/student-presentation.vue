@@ -276,7 +276,7 @@
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
-        playState: 1,
+        playState: 0,
       };
     },
     components: {
