@@ -130,6 +130,7 @@ let pages = {
   "receiverbravo": "Bravo!",
   "networkerror" : "Failed，please try again",
   "networkerror2" : "Submit failed，please try again",
+  "livetip" : "Live On , click to play",
 
   // socket event
   "LESSON_START": "Start Class!",

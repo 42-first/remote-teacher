@@ -104,6 +104,7 @@ let liveMixin = {
         });
       }
 
+      this.setLiveTip();
     },
 
     /*
@@ -157,6 +158,26 @@ let liveMixin = {
       setTimeout(()=>{
         audioEl.play();
       }, 500)
+    },
+
+    /*
+     * @method 是否显示直播提示
+     * @params
+     */
+    setLiveTip() {
+      let lessonID = this.lessonID;
+      let key = 'live' + lessonID;
+      let hiddenLiveTip = +localStorage.getItem(key);
+
+      if(!hiddenLiveTip) {
+        this.showLiveTip = true;
+        localStorage.setItem(key, 1);
+
+        setTimeout(()=>{
+          this.showLiveTip = false;
+        }, 3000)
+      }
+
     },
 
   }

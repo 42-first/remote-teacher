@@ -129,6 +129,7 @@ let pages = {
   "receiverbravo": "真棒！答得又快又准！",
   "networkerror" : "网络不佳，图片上传失败，请重新上传",
   "networkerror2" : "网络不佳，答案提交失败，请重试",
+  "livetip" : "直播中，点击播放",
 
   // socket event
   "LESSON_START": "上课啦！",
