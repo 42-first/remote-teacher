@@ -91,6 +91,10 @@
       <!-- live-player作为音频直播的容器 -->
       <audio id="player" class="live__container" autobuffer :src="liveURL">
       </audio>
+      <!-- 直播提示 -->
+      <div class="live__tip f14" v-if="showLiveTip">
+        <p class="tip__text">{{ $t('livetip') }}</p>
+      </div>
     </section>
 
     <!-- 图片放大结构 -->
@@ -276,7 +280,9 @@
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
-        playState: 1,
+        playState: 0,
+        // 是否提示语音直播
+        showLiveTip: false
       };
     },
     components: {
@@ -1219,6 +1225,36 @@
 
   .live__container {
     opacity: 0;
+  }
+
+  .live__tip {
+    position: absolute;
+    top: -1.333333rem;
+    right: 0;
+
+    white-space: nowrap;
+    color: #fff;
+    // rgba(0,0,0,0.6);
+    background: #666;
+    border-radius: 0.106667rem;
+  }
+
+  .tip__text {
+    z-index: 1;
+    position: relative;
+    padding: 0.2rem 0.333333rem;
+  }
+
+  .live__tip:after {
+    content: '';
+    z-index: 0;
+    position: absolute;
+    bottom: -0.253333rem;
+    right: 0.64rem;
+    border-width: 0.25rem 0.4rem;
+    border-style: solid;
+    border-color: transparent #666 transparent transparent;
+
   }
 
 

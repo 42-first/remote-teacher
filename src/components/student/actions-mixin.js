@@ -683,6 +683,7 @@ var actionsMixin = {
       if(data) {
         this.liveURL = data.hls;
         this.Hls && this.supportHLS(this.Hls);
+        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
       }
     },
 
@@ -690,8 +691,10 @@ var actionsMixin = {
      * @method 结束直播
      * @param
      */
-    endLive() {
+    endLive(data) {
+      this.handlestop();
       this.liveURL = '';
+      this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
     },
 
   }

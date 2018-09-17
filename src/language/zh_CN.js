@@ -129,6 +129,7 @@ let pages = {
   "receiverbravo": "真棒！答得又快又准！",
   "networkerror" : "网络不佳，图片上传失败，请重新上传",
   "networkerror2" : "网络不佳，答案提交失败，请重试",
+  "livetip" : "直播中，点击播放",
 
   // socket event
   "LESSON_START": "上课啦！",
@@ -141,6 +142,8 @@ let pages = {
   "QUIZ_FINISH": "试卷 {0} 已收卷",
   "FREE_GROUP_CANCEL": "老师取消了自由分组",
   "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
+  "LIVE_ON": "老师开启了直播",
+  "LIVE_OFF": "老师结束了直播",
 
   // 个人信息完善
   "merealname": '真实姓名',

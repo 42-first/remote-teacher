@@ -362,7 +362,7 @@ var mixin = {
 
           // 结束直播
           case 'endlive':
-            this.endLive();
+            this.endLive(msg);
 
             break;
 
