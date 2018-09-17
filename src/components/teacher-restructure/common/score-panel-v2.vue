@@ -332,10 +332,10 @@
         let num = Number(self[score])
 
         if (num >= 0) {
-            if(score == 'teacherScore' && (num * self.teacherProportion + self.groupReviewScore * self.groupReviewProportion)  > self.scoreTotal){
+            if(score == 'teacherScore' && num  > self.scoreTotal){
               self.errorInfo1 = errorList[0]
               return false;
-            }else if( score == 'groupReviewScore' && (num * self.groupReviewProportion + self.teacherScore * self.teacherProportion) > self.scoreTotal) {
+            }else if( score == 'groupReviewScore' && num > self.scoreTotal) {
               self.errorInfo2 = errorList[0]
               return false;
             }

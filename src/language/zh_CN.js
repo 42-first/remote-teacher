@@ -435,7 +435,7 @@ let pages = {
   "finalscore": "最终得分",
   "teachergrading": '教师评分',
   "peergrading": "互评得分",
-  "noComment": "暂无凭语",
+  "noComment": "暂无评语",
 
   // 互评
   grading: {
