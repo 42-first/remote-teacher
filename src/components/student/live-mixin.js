@@ -104,7 +104,7 @@ let liveMixin = {
         });
       }
 
-      // this.setLiveTip();
+      this.setLiveTip();
     },
 
     /*
