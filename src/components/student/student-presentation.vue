@@ -278,11 +278,11 @@
         // 直播信息
         liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
-        liveURL: '',
+        liveURL: 'http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8',
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
-        showLiveTip: false
+        showLiveTip: true
       };
     },
     components: {
@@ -1235,7 +1235,7 @@
     white-space: nowrap;
     color: #fff;
     // rgba(0,0,0,0.6);
-    background: #666;
+    background: rgba(0,0,0,0.6);
     border-radius: 0.106667rem;
   }
 
@@ -1249,11 +1249,11 @@
     content: '';
     z-index: 0;
     position: absolute;
-    bottom: -0.253333rem;
+    bottom: -0.26rem;
     right: 0.64rem;
-    border-width: 0.25rem 0.4rem;
+    border-width: 0.13rem 0.2rem;
     border-style: solid;
-    border-color: transparent #666 transparent transparent;
+    border-color: rgba(0,0,0,0.6) rgba(0,0,0,0.6) transparent transparent;
 
   }
 
