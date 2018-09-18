@@ -1,80 +1,87 @@
 <!-- 打分的分值输入框弹出层 目前被父组件主观题 subjective.vue 引用 -->
 <template>
   <div class="mask hupingPanel" :class="{'animateMobileTextIn': !isHupingPanelHidden, 'animateMobileTextOut': isHupingPanelHidden, 'none': !isSummoned}">
-    <template v-if="!group_review_id">
-      <div class="proportion-box">
-        <div class="score-box">
-          <div class="score student">
-            <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
-            <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
+    <div class="container_box">
+      <header>
+        <v-touch tag="i" class="iconfont icon-shiti_guanbitouping f25" v-on:tap="leave"></v-touch>
+        <v-touch v-if="!group_review_id" class="btn-submit f18" v-on:tap="submit"><!-- 发起互评 -->{{$t('grading.faqihuping')}}</v-touch>
+      </header>
+      <template v-if="!group_review_id">
+        <div class="proportion-box">
+          <div class="score-box">
+            <div class="score student">
+              <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
+              <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
+            </div>
+            <div class="score teacher">
+              <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+              <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
+            </div>
           </div>
-          <div class="score teacher">
-            <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
-            <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
-          </div>
-        </div>
-        <div class="range-box">
-          <mt-range v-model="group_review_proportion" :min="0" :max="100" :step="1" :bar-height="8">
-            <div class="start" slot="start"> </div>
-            <div class="end" slot="end"> </div>
-          </mt-range>
-        </div>
-      </div>
-      <div class="gap"></div>
-      <div class="scale-of-marks">
-        <div class="score-point">
-          <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
-          <textarea class="textarea-place f15" v-model="review_declaration" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
-        </div>
-        <div class="score-rules">
-          <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
-          <ul>
-            <li class="f12" v-html="$t('grading.rule1')"></li>
-            <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
-            <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
-          </ul>
-        </div>
-        <v-touch class="btn-submit f18" v-on:tap="submit"><!-- 发起互评 -->{{$t('grading.faqihuping')}}</v-touch>
-        <v-touch class="btn-cancel f15" v-on:tap="leave"><!-- 取消 -->{{$t('grading.cancel')}}</v-touch>
-      </div>
-    </template>
-    <template v-else>
-      <div class="proportion-box edit-box">
-        <div class="score-box">
-          <div class="score student">
-            <p class="f16"><span class="f36">{{gProportion}}</span>%</p>
-            <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
-          </div>
-          <div class="score teacher">
-            <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
-            <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
+          <div class="range-box">
+            <mt-range v-model="group_review_proportion" :min="0" :max="100" :step="1" :bar-height="8">
+              <div class="start" slot="start"> </div>
+              <div class="end" slot="end"> </div>
+            </mt-range>
           </div>
         </div>
-        <div class="range-box">
-          <mt-range v-model="gProportion" :min="0" :max="100" :step="1" :bar-height="8">
-            <div class="start" slot="start"> </div>
-            <div class="end" slot="end"> </div>
-          </mt-range>
+        <div class="gap"></div>
+        <div class="scale-of-marks">
+          <div class="score-point">
+            <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
+            <textarea class="textarea-place f15" v-model="review_declaration" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          </div>
+          <div class="score-rules">
+            <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
+            <ul>
+              <li class="f12" v-html="$t('grading.rule1')"></li>
+              <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
+              <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
+            </ul>
+          </div>
+          <!-- <v-touch class="btn-submit f18" v-on:tap="submit">发起互评{{$t('grading.faqihuping')}}</v-touch> -->
+          <!-- <v-touch class="btn-cancel f15" v-on:tap="leave">取消{{$t('grading.cancel')}}</v-touch> -->
         </div>
-        <v-touch class="btn-submit f18" :class="group_review_id && changed ? 'disabled': ''" v-on:tap="save"><!-- 保存 -->{{$t('grading.save')}}</v-touch>
-        <v-touch class="btn-cancel f15" v-on:tap="leave"><!-- 取消 -->{{$t('grading.cancel')}}</v-touch>
-      </div>
-      <div class="gap"></div>
-      <div class="scale-of-marks">
-        <div class="score-point">
-          <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
-          <p class="f15 point">{{group_review_declaration}}</p>
+      </template>
+      <template v-else>
+        <div class="proportion-box">
+          <div class="score-box">
+            <div class="score student">
+              <p class="f16"><span class="f36">{{gProportion}}</span>%</p>
+              <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
+            </div>
+            <div class="score teacher">
+              <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+              <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
+            </div>
+          </div>
+          <div class="range-box">
+            <mt-range disabled v-model="gProportion" :min="0" :max="100" :step="1" :bar-height="8">
+              <div class="start" slot="start"> </div>
+              <div class="end" slot="end"> </div>
+            </mt-range>
+          </div>
+          <v-touch v-if="false" class="btn-submit f18" :class="group_review_id && changed ? 'disabled': ''" v-on:tap="save"><!-- 保存 -->{{$t('grading.save')}}</v-touch>
+          <v-touch v-if="false" class="btn-cancel f15" v-on:tap="leave"><!-- 取消 -->{{$t('grading.cancel')}}</v-touch>
         </div>
-        <div class="score-rules">
-          <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
-          <ul>
-            <li class="f12" v-html="$t('grading.rule1')"></li>
-            <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
-            <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
-          </ul>
+        <div class="gap"></div>
+        <div class="scale-of-marks">
+          <div class="score-point">
+            <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
+            <p class="f15 point">{{group_review_declaration}}</p>
+          </div>
+          <div class="score-rules">
+            <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
+            <ul>
+              <li class="f12" v-html="$t('grading.rule1')"></li>
+              <li class="f12"><i>＊</i> <!-- 各组之间相互匿名 -->{{$t('grading.rule2')}}</li>
+              <li class="f12"><i>＊</i> <!-- 教师可随时修改互评占比或者直接修改总得分 -->{{$t('grading.rule3')}}</li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
+    
 
 
   </div>
@@ -220,10 +227,38 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: rgba(0,0,0,.4);
     overflow: auto;
     z-index: 999;
+    
+    .container_box {
+      width: 100%;
+      height: 12.106667rem;
+      position: absolute;
+      background: #fff;
+      bottom: 0;
+      left: 0;
+      overflow: auto;
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.333333rem;
+        line-height: 1.333333rem;
+        padding: 0 0.4rem;
+        border-bottom: 1px solid #C8C8C8;
+        .iconfont {
+          color: #000000;
+        }
 
+        .blue {
+          color: $blue;
+          .iconfont {
+            color: $blue;
+          }
+        }
+      }
+    }
     .proportion-box {
       width: 100%;
       height: 4.6rem;
@@ -419,42 +454,44 @@
   }
 
 </style>
-<style>
-.mt-range {
-  height: 8px !important;
-  line-height: 8px !important;
+<style lang="scss">
+.container_box {
+  .mt-range {
+    height: 8px !important;
+    line-height: 8px !important;
+  }
+  .mt-range-progress {
+    background: #FEA300 !important;
+  }
+  .mt-range-runway {
+    border-top-color: #5096F5 !important;
+  }
+  .mt-range-thumb {
+    width: .933333rem !important;
+    height: .933333rem !important;
+    background: url(~images/teacher/range-thumb2.png)no-repeat 0 0/contain;
+    box-shadow: 0 .04rem .16rem 0 rgba(0,0,0,.3) !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+  .start {
+    width: .133333rem;
+    background: #FEA300;
+    border-top-left-radius: .053333rem !important;
+    border-bottom-left-radius: .053333rem !important;
+  }
+  .end {
+    width: .8rem;
+    background: #5096F5;
+    border-top-right-radius: .053333rem !important;
+    border-bottom-right-radius: .053333rem !important;
+  }
+
+  .score-rules i, .score-rules span {
+    color: #FEA300;
+    font-style: normal;
+  }
 }
 
-.mt-range-progress {
-  background: #FEA300 !important;
-}
-.mt-range-runway {
-  border-top-color: #5096F5 !important;
-}
-.mt-range-thumb {
-  width: .933333rem !important;
-  height: .933333rem !important;
-  background: url(~images/teacher/range-thumb2.png)no-repeat 0 0/contain;
-  box-shadow: 0 .04rem .16rem 0 rgba(0,0,0,.3) !important;
-  top: 50% !important;
-  transform: translateY(-50%);
-}
-.start {
-  width: .133333rem;
-  background: #FEA300;
-  border-top-left-radius: .053333rem !important;
-  border-bottom-left-radius: .053333rem !important;
-}
-.end {
-  width: .8rem;
-  background: #5096F5;
-  border-top-right-radius: .053333rem !important;
-  border-bottom-right-radius: .053333rem !important;
-}
-
-.score-rules i, .score-rules span {
-  color: #FEA300;
-  font-style: normal;
-}
 
 </style>
