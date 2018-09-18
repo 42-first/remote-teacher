@@ -152,7 +152,7 @@
 
               this.review = data;
               this.problemID = data.problem_id;
-              this.canSubmitScore = data.can_submit_score;
+              // this.canSubmitScore = data.can_submit_score;
               this.declaration = data.group_review_declaration;
 
               // 作答结果
@@ -162,6 +162,7 @@
                 this.reviewScore = resultInfo.review_score;
                 this.score = this.reviewScore > 0 ? this.reviewScore : '';
                 this.problemResultID = resultInfo.problem_result_id;
+                this.canSubmitScore = resultInfo.can_submit_score;
               }
 
               return data;
