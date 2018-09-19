@@ -20,7 +20,7 @@
         <div class="content_wrapper">
           <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
           <div class="cover__wrapper">
-            <img class="cover" :src="summary&&summary.cover" alt="雨课堂" />
+            <img class="cover" :src="summary&&summary.cover" :data-src="summary&&summary.cover" alt="雨课堂" @click="handleZoom" />
           </div>
         </div>
       </section>
@@ -32,7 +32,7 @@
           <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" />
+          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
@@ -152,7 +152,7 @@
 
               this.review = data;
               this.problemID = data.problem_id;
-              this.canSubmitScore = data.can_submit_score;
+              // this.canSubmitScore = data.can_submit_score;
               this.declaration = data.group_review_declaration;
 
               // 作答结果
@@ -162,6 +162,7 @@
                 this.reviewScore = resultInfo.review_score;
                 this.score = this.reviewScore > 0 ? this.reviewScore : '';
                 this.problemResultID = resultInfo.problem_result_id;
+                this.canSubmitScore = resultInfo.can_submit_score;
               }
 
               return data;
@@ -313,6 +314,23 @@
         }
       },
 
+      /*
+       * @method 图片放大
+       * @param
+       */
+      handleZoom(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        let targetEl = evt.target;
+        let src = targetEl.dataset.src || targetEl.src;
+
+        typeof wx !== 'undefined' && wx.previewImage({
+          current: src, // 当前显示图片的http链接
+          urls: [src] // 需要预览的图片http链接列表
+        });
+      },
+
     },
     created() {
       this.index = +this.$route.params.index;
@@ -436,6 +454,8 @@
 
     .answer--text {
       text-align: left;
+      word-wrap: break-word;
+      word-break: break-all;
     }
   }
 
