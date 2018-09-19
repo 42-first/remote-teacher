@@ -37,7 +37,7 @@
         </div>
       </section>
       <!-- 没有互评ID显示 -->
-      <section class="evaluation__empty f17" v-if="!reviewID">
+      <section class="evaluation__empty f17" v-if="!hasReview">
         <p>{{ $t('grading.noarticipate') }}</p>
       </section>
 
@@ -92,7 +92,7 @@
         opacity: 0,
         // 作答结果
         result: null,
-        reviewScore: 0,
+        reviewScore: -1,
         width: 0,
         height: 0,
         pptRate: 1,
@@ -115,7 +115,8 @@
         nodeVisible: false,
         canSubmitScore: false,
 
-        modalActive: false
+        modalActive: false,
+        hasReview: true,
       };
     },
     components: {
@@ -169,6 +170,9 @@
                 this.score = this.reviewScore > 0 ? this.reviewScore : '';
                 this.problemResultID = resultInfo.problem_result_id;
                 this.canSubmitScore = resultInfo.can_submit_score;
+              } else {
+                this.hasReview = false;
+                this.canSubmitScore = false;
               }
 
               return data;
@@ -469,10 +473,10 @@
   .evaluation__empty {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
     padding: 0 0.533333rem;
-    height: 2.666667rem;
+    height: 4.0rem;
     text-align: center;
     background: #fff;
   }
