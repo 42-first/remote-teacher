@@ -447,7 +447,7 @@ let pages = {
     "hupingguize": "Rules of Peer Grading",
     "rule1": "<i>＊</i>Groups can take part in peer grading only after answer submission. Each group will receive <span class='f15'>One</span> answer from other groups.",
     "rule2": "The peer grading is anonymous.",
-    "rule3": "The teacher can change the proportion of peer grading to teacher grading or edit the final score at any time.",
+    "rule3": "The teacher can create the proportion of peer grading in the beginning, the final score can be modified at any time.",
     "faqihuping": "Launch",
     "cancel": "Cancel",
     "save": "Save",

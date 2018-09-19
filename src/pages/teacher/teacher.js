@@ -44,6 +44,7 @@ window.STORE = store // 在 router 中判断是否刷新页面导致 socket 无�
 
 Vue.component('ykt-toast', () => import('@/components/teacher-restructure/common/toast'))
 Vue.component('ykt-modal', () => import('@/components/teacher-restructure/common/modal'))
+Vue.component('ykt-tips-modal', () => import('@/components/teacher-restructure/common/tipsModal'))
 
 /* eslint-disable no-new */
 new Vue({

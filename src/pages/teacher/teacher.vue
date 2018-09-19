@@ -3,6 +3,7 @@
     <template slot="ykt-msg">
       <ykt-toast></ykt-toast>
       <ykt-modal></ykt-modal>
+      <ykt-tips-modal></ykt-tips-modal>
     </template>
   </router-view>
 </template>

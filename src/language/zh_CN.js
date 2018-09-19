@@ -334,7 +334,7 @@ let pages = {
   "quizentercomment": "请输入评语",
   "invaildinput": "输入无效，请重新输入",
   "positivescore":"分数必须为正数",
-  "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
+  "exceedmaximumscore": "分数超过本题最大分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
 
   "tciate": "您即将结束本次授课",
@@ -449,7 +449,7 @@ let pages = {
     "hupingguize": "互评规则",
     "rule1": "<i>＊</i>已提交答案的各组才能参加互评，每个组将收到<span class='f15'>一份</span>非本组的作答内容",
     "rule2": "各组之间相互匿名",
-    "rule3": "教师可随时修改互评占比或者直接修改总得分",
+    "rule3": "教师在发起互评时可设置互评占比，最终得分可随时修改",
     "faqihuping": "发起互评",
     "cancel": "取消",
     "save": "保存",
