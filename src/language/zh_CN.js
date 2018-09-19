@@ -334,7 +334,7 @@ let pages = {
   "quizentercomment": "请输入评语",
   "invaildinput": "输入无效，请重新输入",
   "positivescore":"分数必须为正数",
-  "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
+  "exceedmaximumscore": "分数超过本题最大分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
 
   "tciate": "您即将结束本次授课",
