@@ -394,7 +394,7 @@ let pages = {
     "minunts5": "5mins ago",
     "howmarkppt": "You can marked Unclear and Save here",
     "unknownanonymous": "Unclear : sent anonymously <br> Save : Private",
-    "ok": "OK"
+    "ok": "OK",
   },
 
   // 分组
@@ -463,6 +463,7 @@ let pages = {
     "gradedalready" : "Graded Already",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading now",
+    "noarticipate": "Groups did not submit will not participate in the peer grading.",
   },
 
   // 图片国际化

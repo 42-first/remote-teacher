@@ -36,6 +36,10 @@
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
+      <!-- 没有互评ID显示 -->
+      <section class="evaluation__empty f17" v-if="!reviewID">
+        <p>{{ $t('grading.noarticipate') }}</p>
+      </section>
 
       <!-- 打分 -->
       <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
@@ -144,6 +148,8 @@
         let param = {
           'group_review_id': reviewID
         };
+
+        this.reviewID = reviewID;
 
         return request.get(URL, param)
           .then((res) => {
@@ -344,7 +350,8 @@
       }, 20)
 
       if(this.summary) {
-        this.getGroupReview(this.summary.reviewid);
+        let reviewID = this.summary.reviewid;
+        reviewID && this.getGroupReview(reviewID);
       } else {
         this.$router.back();
       }
@@ -457,6 +464,17 @@
       word-wrap: break-word;
       word-break: break-all;
     }
+  }
+
+  .evaluation__empty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 0.533333rem;
+    height: 2.666667rem;
+    text-align: center;
+    background: #fff;
   }
 
 

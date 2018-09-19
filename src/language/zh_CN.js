@@ -396,7 +396,7 @@ let pages = {
     "minunts5": "5分钟前",
     "howmarkppt": "可以点击不懂或收藏进行标注",
     "unknownanonymous": "不懂是匿名发送给老师的噢<br>收藏仅自己可见",
-    "ok": "好的"
+    "ok": "好的",
   },
 
   // 分组
@@ -465,6 +465,7 @@ let pages = {
     "gradedalready" : "已有人批改",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
+    "noarticipate": "未作答的小组不参与互评",
   },
 
   // 图片国际化
