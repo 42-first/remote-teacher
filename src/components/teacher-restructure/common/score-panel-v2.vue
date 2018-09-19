@@ -83,7 +83,7 @@
               <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">
                 <p class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：{{teacherScore}}<!-- 分 -->{{ $t('stutestscore') }}</p>
-                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{groupReviewScore ? groupReviewScore : '--'}}<!-- 分 -->{{ $t('stutestscore') }}</p>
+                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{typeof groupReviewScore == 'number' ? groupReviewScore : '--'}}<!-- 分 -->{{ $t('stutestscore') }}</p>
               </div>
             </div>
           </template>
