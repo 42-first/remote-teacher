@@ -454,6 +454,8 @@
 
     .answer--text {
       text-align: left;
+      word-wrap: break-word;
+      word-break: break-all;
     }
   }
 
