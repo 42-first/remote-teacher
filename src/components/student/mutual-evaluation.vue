@@ -20,7 +20,7 @@
         <div class="content_wrapper">
           <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
           <div class="cover__wrapper">
-            <img class="cover" :src="summary&&summary.cover" alt="雨课堂" />
+            <img class="cover" :src="summary&&summary.cover" :data-src="summary&&summary.cover" alt="雨课堂" @click="handleZoom" />
           </div>
         </div>
       </section>
@@ -32,7 +32,7 @@
           <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" />
+          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
@@ -312,6 +312,23 @@
             this.score = +parseFloat(this.score).toFixed(1);
           }
         }
+      },
+
+      /*
+       * @method 图片放大
+       * @param
+       */
+      handleZoom(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        let targetEl = evt.target;
+        let src = targetEl.dataset.src || targetEl.src;
+
+        typeof wx !== 'undefined' && wx.previewImage({
+          current: src, // 当前显示图片的http链接
+          urls: [src] // 需要预览的图片http链接列表
+        });
       },
 
     },
