@@ -338,10 +338,11 @@
       // 有2个 textarea-place 元素，其中一个隐藏的时候，其 offsetHeight scrollHeight 都是0
       let boxDom = document.querySelector('#scoreDom')
       let textDomList = boxDom.querySelectorAll('.textarea-place')
+      let popDom = document.querySelector('.pop')
       boxDom.addEventListener('touchmove', e => {
         // 评语部分再内容很多的时候能搓动
         let isNotOverflow = textDomList[0].scrollHeight ? (textDomList[0].scrollHeight <= textDomList[0].offsetHeight) : (textDomList[1].scrollHeight <= textDomList[1].offsetHeight)
-        if (!~e.target.className.indexOf('textarea-place') || isNotOverflow) {
+        if ((!~e.target.className.indexOf('textarea-place') || isNotOverflow) && (document.querySelector('.remark-box').offsetHeight || 0) < 318 || e.touches[0].clientY < popDom.offsetHeight) {
           e.preventDefault()
         }
       }, false)
@@ -1075,7 +1076,7 @@
 				let self = this
 				if(this.newTime > 0){
 					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
-					let msg = '收题后才可发起互评'
+					let msg = i18n.locale === 'zh_CN' ? '请先收题' : 'Stop answering required'
 					T_PUBSUB.publish('ykt-msg-toast', msg);
 				} else {
 					// 防止用户频繁点击
@@ -1170,9 +1171,11 @@
 				this.showTeamMember = false;
 			},
 			showTips(){
-				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
-				let newClassName = 'longtips'
-				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
+        let msg = {
+          title: i18n.locale === 'zh_CN' ? "未作答" : 'Unanwered',
+          content: i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
+        }
+				T_PUBSUB.publish('ykt-tips-modal', msg);
       },
       /*
       * 变更投屏状态

@@ -58,7 +58,8 @@
 
         <!-- 评语部分 -->
         <section class="remark-box f16">
-          <textarea class="textarea-place" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <span class="textarea-place normalStyle b9" v-show="isScored && !isEditting">{{remark}}</span>
           <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
             <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)"><!-- 写的不错 -->{{ $t('good') }}</v-touch>
             <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)"><!-- 继续加油 -->{{ $t('comeon') }}</v-touch>
@@ -88,7 +89,11 @@
           </template>
           <div class="gap"></div>
           <div class="remark-box">
-            <p v-if="remark" class="f17 c333">{{remark}}</p>
+            <template v-if="remark">
+              <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+                <!-- placeholder 请输入评语-->
+              <p class="textarea-place f17 c333 normalStyle" v-show="isScored && !isEditting">{{remark}}</p>
+            </template>
             <p v-else class="f17 c9b"><!-- 暂无评语 -->{{ $t('noComment') }}</p>
           </div>
         </section>
@@ -537,7 +542,8 @@
 
       .score-result {
         padding: 0 0.4rem;
-
+        height: calc(10rem - 1.3333rem);
+        overflow: auto;
         .hint {
           height: .4rem;
           line-height: .4rem;
@@ -605,6 +611,11 @@
 
           .c9b {
             color: #9b9b9b;
+          }
+          .normalStyle {
+            background: transparent;
+            padding: 0;
+            height: auto;
           }
         }
       }

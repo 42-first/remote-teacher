@@ -93,6 +93,23 @@
   import 'mint-ui/lib/range/style.css'
   import { Range } from 'mint-ui';
   Vue.component(Range.name, Range);
+
+  var ModalHelper = (function(bodyCls) {
+    var scrollTop;
+    return {
+      afterOpen: function() {
+        scrollTop = document.scrollingElement.scrollTop;
+        document.body.classList.add(bodyCls);
+        document.body.style.top = -scrollTop + 'px';
+      },
+      beforeClose: function() {
+        document.body.classList.remove(bodyCls);
+        // scrollTop lost after set position:fixed, restore it back.
+        document.scrollingElement.scrollTop = scrollTop;
+      }
+    };
+  })('modal-open');
+
   export default {
     name: 'HupingPanel',
     data () {
@@ -141,6 +158,13 @@
       gProportion(newVal, oldVal){
         if(newVal != this.$parent.gProportion){
           this.changed = false
+        }
+      },
+      isHupingPanelHidden(newVal){
+        if(!newVal){
+          this.openModal()
+        }else {
+          this.closeModal()
         }
       }
     },
@@ -204,7 +228,7 @@
       /**
        * 获取字节长度
        */
-       getLength(str) {
+        getLength(str) {
          let result = 0;
          let length = str.length;
          while (length--) {
@@ -216,7 +240,13 @@
          }
 
          return result;
-       }
+        },
+        openModal() {
+          ModalHelper.afterOpen();
+        },
+        closeModal() {
+          ModalHelper.beforeClose();
+        } 
     }
   }
 </script>
@@ -224,13 +254,13 @@
 <style lang="scss" scoped>
   @import "~@/style/_variables";
   .hupingPanel {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,.75);
-    overflow: auto;
+    overflow: hidden;
     z-index: 999;
     
     .container_box {
@@ -245,6 +275,7 @@
         max-height: 72.88%;
         .huping_content {
           max-height: 10.36rem;
+          overflow: auto;
         }
       }
       header {
@@ -388,7 +419,7 @@
 
           .score-rules {
             margin-top: 0.53333333rem;
-
+            padding-bottom: 0.26666667rem;
             ul {
               margin-top: .4rem;
 
@@ -516,5 +547,8 @@
   }
 }
 
-
+body.modal-open {
+    position: fixed;
+    width: 100%;
+}
 </style>
