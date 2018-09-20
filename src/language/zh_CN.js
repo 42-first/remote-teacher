@@ -48,7 +48,7 @@ let pages = {
 
   "newprob": "Hi,你有新的课堂习题",
   "newvote": "Hi,你有新的投票",
-  "recvbonus": "Hi，本题有课堂红包发送",
+  "recvbonus": "Hi,本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
 
@@ -453,7 +453,7 @@ let pages = {
     "faqihuping": "发起互评",
     "cancel": "取消",
     "save": "保存",
-    "launchedgrading" : "Hi，老师发起了互评",
+    "launchedgrading" : "Hi,老师发起了互评",
     "pointsgrading" : "评分要点",
     "grade" : "打分",
     "answer" : "答案",
