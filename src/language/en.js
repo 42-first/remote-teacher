@@ -427,7 +427,7 @@ let pages = {
     "weizuoda": "Unanswered",
     "yihuping": "Scored",
     "faqihuping": "Peer Grading",
-    "hupingguize": "Rules of Peer Grading",
+    "hupingguize": "Rules",
   },
 
   // 打分

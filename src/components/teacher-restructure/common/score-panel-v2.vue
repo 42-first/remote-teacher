@@ -161,7 +161,7 @@
           return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
         },
         get() {
-          if(this.groupReviewScore == -2 || (!this.groupReviewScore && !this.teacherScore)) {
+          if(this.groupReviewScore == -2 || (typeof this.groupReviewScore != 'number' && typeof this.teacherScore  != 'number')) {
             return '--'
           }else {
             return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
