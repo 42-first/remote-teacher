@@ -9,6 +9,7 @@
 <template>
   <section class="evaluation__page">
     <div :class="['evaluation__wrapper', 'animated', opacity ? 'zoomIn': '']">
+      <section class="evaluation__inner">
       <!-- 互评得分 修改入口 -->
       <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
         <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
@@ -46,6 +47,7 @@
         <p class="score--btn" @click="handlescore"><!-- 打分 -->{{ $t('grading.grade') }}</p>
       </section>
 
+      </section>
     </div>
 
     <!-- 打分弹层 -->
@@ -381,14 +383,25 @@
     height: 100%;
 
     background: #f8f8f8;
-    overflow-y: scroll;
+    // overflow-y: auto;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
   .evaluation__wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    // height: 100%;
-    min-height: 100vh;
+    height: 100%;
+  }
+
+  .evaluation__inner {
+    flex: 1;
+    width: 100%;
+
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
   }
 
   .evaluation__getscore {

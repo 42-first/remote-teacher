@@ -613,6 +613,7 @@ var actionsMixin = {
       let hasEvent = this.cards.find((item) => {
         return item.type === 9 && item.reviewid === data.reviewid && data.isFetch;
       })
+      let index = this.cards.length;
 
       // 互评题目信息
       let slideData = this.problemMap.get(data.prob);
@@ -622,7 +623,8 @@ var actionsMixin = {
         cover: slideData && slideData['Cover'],
         score: slideData && slideData['Problem'] && slideData['Problem']['Score'],
         status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
-        isComplete
+        isComplete,
+        index
       })
 
       // 消息box弹框
