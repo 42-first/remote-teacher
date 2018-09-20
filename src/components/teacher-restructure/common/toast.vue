@@ -1,8 +1,10 @@
 <!-- 全局弹层组件 -->
 <template>
-	<div class="toast-box f18" :class="[{'animateMobileTextIn': isShown, 'animateMobileTextOut': !isShown, 'none': !isSummoned}, newClassName]">
-		{{msg}}
-	</div>
+  <div class="toast_container" :class="[{'animateMobileTextIn': isShown, 'animateMobileTextOut': !isShown, 'none': !isSummoned}]">
+    <div class="toast-box f18" >
+      {{msg}}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -61,20 +63,25 @@
 </script>
 
 <style lang="scss" scoped>
+.toast_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 99999999;
+}
   .toast-box {
     position: fixed;
-    z-index: 1000;
-    left: 50%;
-    top: 50%;
-    margin-left: -2.0rem;
-    margin-top: -2.0rem;
-    width: 4.0rem;
-    height: 2.0rem;
     border-radius: 0.1rem;
     background: rgba(0,0,0,0.7);
+    line-height: 0.66666667rem;
     text-align: center;
-    line-height: 2.0rem;
     color: #FFFFFF;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 0.4rem 0.45333333rem;
   }
 
   .none {

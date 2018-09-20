@@ -408,7 +408,7 @@
               background-color: #fff;
               color: #333333;
               overflow: scroll;
-              word-break: break-all;
+              word-break: break-word;
             }
             .point {
               color: #333;
