@@ -462,7 +462,7 @@ let pages = {
     "close" : "Close",
     "gradedalready" : "Graded Already",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
-    "pleasescore" : "Please grading now",
+    "pleasescore" : "Please grading",
     "noarticipate": "Groups did not submit will not participate in the peer grading.",
   },
 
