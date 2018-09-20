@@ -383,7 +383,6 @@
     background: #f8f8f8;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-    -webkit-backface-visibility: hidden;
   }
 
   .evaluation__wrapper {
