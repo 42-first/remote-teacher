@@ -622,7 +622,8 @@
       height: 2.4rem;
       line-height: 2.4rem;
       background: #F8F8F8;
-      border-bottom: 1px solid #C8C8C8;
+      // border-bottom: 1px solid #C8C8C8;
+      border-radius: 0.106667rem 0.106667rem 0 0;
     }
 
     .node__content {
@@ -634,11 +635,13 @@
     }
 
     .node--footer {
-       width: 100%;
+      width: 100%;
       height: 1.333333rem;
       line-height: 1.333333rem;
-      background: #F8F8F8;
-      border-top: 1px solid #C8C8C8;
+      color: #5096f5;
+      // background: #F8F8F8;
+      border-top: 1px solid #eee;
+      border-radius: 0 0 0.106667rem 0.106667rem;
     }
   }
 
