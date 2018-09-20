@@ -67,7 +67,7 @@
           </div>
           <div class="gap"></div>
           <div class="scale-of-marks">
-            <div class="score-point">
+            <div class="score-point" v-if="group_review_declaration">
               <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
               <p class="f15 point">{{group_review_declaration}}</p>
             </div>
@@ -261,7 +261,7 @@
     height: 100%;
     background: rgba(0,0,0,.75);
     overflow: hidden;
-    z-index: 999;
+    z-index: 199;
     
     .container_box {
       width: 100%;
@@ -408,7 +408,7 @@
               background-color: #fff;
               color: #333333;
               overflow: scroll;
-              word-break: break-all;
+              word-break: break-word;
             }
             .point {
               color: #333;

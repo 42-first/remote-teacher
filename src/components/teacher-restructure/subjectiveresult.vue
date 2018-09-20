@@ -81,13 +81,13 @@
 							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
+          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
 					<template v-if="group_name">
+            <div class="gap"></div>
 						<div class="group_name f14">
 							<i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
 						</div>
-						<div class="gap"></div>
 					</template>
-          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
           <div class="gap"></div>
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
@@ -1118,6 +1118,7 @@
 						}
 
 	        }).catch(res => {
+            self.$refs.HupingPanel.$emit('leaveHuping')
 						let msg = res.msg
 						T_PUBSUB.publish('ykt-msg-toast', msg);
           });
