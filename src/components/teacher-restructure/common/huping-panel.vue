@@ -11,11 +11,11 @@
           <div class="proportion-box">
             <div class="score-box">
               <div class="score student">
-                <p class="f16"><span class="f36">{{group_review_proportion}}</span>%</p>
+                <p class="f16"><span class="f36">{{parseInt(group_review_proportion)}}</span>%</p>
                 <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
               </div>
               <div class="score teacher">
-                <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+                <p class="f16"><span class="f36">{{parseInt(teacher_score_proportion)}}</span>%</p>
                 <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
               </div>
             </div>
@@ -48,11 +48,11 @@
           <div class="proportion-box check_box">
             <div class="score-box">
               <div class="score student">
-                <p class="f16"><span class="f36">{{gProportion}}</span>%</p>
+                <p class="f16"><span class="f36">{{parseInt(gProportion)}}</span>%</p>
                 <p class="f14"><!-- 互评分数占比 -->{{$t('grading.scoreofpeergrading')}}</p>
               </div>
               <div class="score teacher">
-                <p class="f16"><span class="f36">{{teacher_score_proportion}}</span>%</p>
+                <p class="f16"><span class="f36">{{parseInt(teacher_score_proportion)}}</span>%</p>
                 <p class="f14"><!-- 教师分数占比 -->{{$t('grading.scoreofteachergrading')}}</p>
               </div>
             </div>

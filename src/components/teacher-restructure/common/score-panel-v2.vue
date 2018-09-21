@@ -32,7 +32,7 @@
           </template>
           <template v-else>
             <p class="hint f14">
-              <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}
+              <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: parseInt(groupReviewProportion * 100), teacherProportion: parseInt(teacherProportion * 100)}) }}
             </p>
             <p class="finally—score f18"><!-- 最终得分 -->{{ $t('finalscore') }}：{{finallyScore}}</p>
             <div class="score-input f18">
@@ -78,7 +78,7 @@
             <p class="defen f16"><span class="f40">{{teacherScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</p>
           </template>
           <template v-else>
-            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}</p>
+            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: parseInt(groupReviewProportion * 100), teacherProportion: parseInt(teacherProportion * 100)}) }}</p>
             <div class="result-info">
               <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">

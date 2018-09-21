@@ -1338,7 +1338,7 @@
 					align-items: center;
 					.yjy {
 						color: #666;
-						padding: 0 .186667rem;
+						padding: 0 0.16rem;
 						height: 1.333333rem;
 						display: flex;
 						flex-direction: column;
