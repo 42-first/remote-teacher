@@ -1174,7 +1174,8 @@
 			showTips(){
         let msg = {
           title: i18n.locale === 'zh_CN' ? "未作答" : 'Unanwered',
-          content: i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
+          content: i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.',
+          option: i18n.locale === 'zh_CN' ? "关闭" : 'Close'
         }
 				T_PUBSUB.publish('ykt-tips-modal', msg);
       },

@@ -3,12 +3,12 @@
 	<div class="tipsModal_container" v-if="isSummoned">
     <div class="tipsModal">
       <div class="modal_header f18">
-        {{title}}
+        {{msg.title}}
       </div>
       <div class="modal_content f15">
-        {{content}}
+        {{msg.content}}
       </div>
-      <div class="modal_footer f17" @click="closed">关闭</div>
+      <div class="modal_footer f17" @click="closed">{{msg.option}}</div>
     </div>
   </div>
 </template>
@@ -20,8 +20,7 @@
     data () {
       return {
         isSummoned: false,       // 标记本组件是用户点击呼出的，
-        title: '',
-        content: ''
+        msg: {}
       }
     },
     created () {
@@ -39,8 +38,7 @@
        */
       fire (msg) {
         let self = this
-        self.title = msg.title
-        self.content = msg.content
+        self.msg = msg
         self.isSummoned = true
       },
       closed(){
