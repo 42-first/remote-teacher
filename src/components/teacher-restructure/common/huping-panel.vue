@@ -412,8 +412,7 @@
             }
             .point {
               color: #333;
-              margin-top: .266667rem;
-              margin-bottom: 0.93333333rem;
+              margin-top: 0.266667rem;
             }
           }
 

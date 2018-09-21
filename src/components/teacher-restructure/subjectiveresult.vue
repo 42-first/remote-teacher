@@ -1525,7 +1525,7 @@
 
 	      .nomore {
 	        position: relative;
-	        height: 0.6rem;
+	        height: 1rem;
 	        margin: 0 0.6rem;
 	        text-align: center;
 	        color: $graybg;
@@ -1534,12 +1534,13 @@
 	          position: relative;
 	          margin: 0 auto;
 	          width: 2.093333rem;
-	          background: #fff;
+            background: #fff;
+            line-height: 1rem;
 	        }
 
 	        .bgline {
 	          position: absolute;
-	          top: 0.293333rem;
+	          top: 50%;
 	          width: 100%;
 	          height: 1px;
 	          background: #c8c8c8;
