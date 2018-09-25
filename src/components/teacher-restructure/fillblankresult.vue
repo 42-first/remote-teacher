@@ -45,7 +45,7 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
-	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
+	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && 0" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
