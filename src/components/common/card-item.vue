@@ -154,6 +154,24 @@
         </div>
       </div>
     </template>
+    <!-- 发起了互评 -->
+    <template v-else-if="item.type==9">
+      <div class="timeline__paper">
+        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/evaluation/'+index" >
+          <div class="paper-txt f18">
+            <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
+            <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
+          </div>
+          <i class="iconfont icon-huping f55"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
 
   </section>
 
@@ -569,9 +587,15 @@
       background: #71D2A5;
     }
 
+
+    .paper-info.evaluation {
+      background: rgba(239,175,79,0.7);
+    }
+
     .paper-info.complete,
     .paper-info.xt.complete,
-    .paper-info.submission.complete {
+    .paper-info.submission.complete,
+    .paper-info.evaluation.complete {
       background: #C8C8C8;
     }
 

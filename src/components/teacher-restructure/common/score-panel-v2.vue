@@ -32,7 +32,7 @@
           </template>
           <template v-else>
             <p class="hint f14">
-              <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}
+              <!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: parseInt(groupReviewProportion * 100), teacherProportion: parseInt(teacherProportion * 100)}) }}
             </p>
             <p class="finally—score f18"><!-- 最终得分 -->{{ $t('finalscore') }}：{{finallyScore}}</p>
             <div class="score-input f18">
@@ -58,7 +58,8 @@
 
         <!-- 评语部分 -->
         <section class="remark-box f16">
-          <textarea class="textarea-place" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+          <span class="textarea-place normalStyle b9" v-show="isScored && !isEditting">{{remark}}</span>
           <p class="remark-btns f14" v-show="!isScored || (isScored && isEditting)">
             <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(0)"><!-- 写的不错 -->{{ $t('good') }}</v-touch>
             <v-touch tag="span" class="remark-itm" v-on:tap="tapRe(1)"><!-- 继续加油 -->{{ $t('comeon') }}</v-touch>
@@ -77,18 +78,22 @@
             <p class="defen f16"><span class="f40">{{teacherScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</p>
           </template>
           <template v-else>
-            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: groupReviewProportion * 100, teacherProportion: teacherProportion * 100}) }}</p>
+            <p class="hint f14"><!-- 本题总分{{scoreTotal}}分，互评占比{{groupReviewProportion * 100 }}%，教师占比{{teacherProportion * 100}}% -->{{ $t('hupingtotalscore', {total: scoreTotal, groupReviewProportion: parseInt(groupReviewProportion * 100), teacherProportion: parseInt(teacherProportion * 100)}) }}</p>
             <div class="result-info">
               <div class="defen f16"><span class="f40">{{finallyScore}}</span><!-- 分 -->{{ $t('stutestscore') }}</div>
               <div class="">
                 <p class="f16"><!-- 教师评分 -->{{ $t('teachergrading') }}：{{teacherScore}}<!-- 分 -->{{ $t('stutestscore') }}</p>
-                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{groupReviewScore ? groupReviewScore : '--'}}<!-- 分 -->{{ $t('stutestscore') }}</p>
+                <p class="f16"><!-- 互评得分 -->{{ $t('peergrading') }}：{{typeof groupReviewScore == 'number' ? groupReviewScore : '--'}}<!-- 分 -->{{ $t('stutestscore') }}</p>
               </div>
             </div>
           </template>
           <div class="gap"></div>
           <div class="remark-box">
-            <p v-if="remark" class="f17 c333">{{remark}}</p>
+            <template v-if="remark">
+              <textarea class="textarea-place" v-show="!isScored || (isScored && isEditting)" v-model="remark" :placeholder="$t('quizentercomment')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+                <!-- placeholder 请输入评语-->
+              <p class="textarea-place f17 c333 normalStyle" v-show="isScored && !isEditting">{{remark}}</p>
+            </template>
             <p v-else class="f17 c9b"><!-- 暂无评语 -->{{ $t('noComment') }}</p>
           </div>
         </section>
@@ -156,7 +161,7 @@
           return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
         },
         get() {
-          if(this.groupReviewScore == -2 || (!this.groupReviewScore && !this.teacherScore)) {
+          if(this.groupReviewScore == -2 || (typeof this.groupReviewScore != 'number' && typeof this.teacherScore  != 'number')) {
             return '--'
           }else {
             return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
@@ -332,10 +337,10 @@
         let num = Number(self[score])
 
         if (num >= 0) {
-            if(score == 'teacherScore' && (num * self.teacherProportion + self.groupReviewScore * self.groupReviewProportion)  > self.scoreTotal){
+            if(score == 'teacherScore' && num  > self.scoreTotal){
               self.errorInfo1 = errorList[0]
               return false;
-            }else if( score == 'groupReviewScore' && (num * self.groupReviewProportion + self.teacherScore * self.teacherProportion) > self.scoreTotal) {
+            }else if( score == 'groupReviewScore' && num > self.scoreTotal) {
               self.errorInfo2 = errorList[0]
               return false;
             }
@@ -537,7 +542,8 @@
 
       .score-result {
         padding: 0 0.4rem;
-
+        height: calc(10rem - 1.3333rem);
+        overflow: auto;
         .hint {
           height: .4rem;
           line-height: .4rem;
@@ -605,6 +611,11 @@
 
           .c9b {
             color: #9b9b9b;
+          }
+          .normalStyle {
+            background: transparent;
+            padding: 0;
+            height: auto;
           }
         }
       }

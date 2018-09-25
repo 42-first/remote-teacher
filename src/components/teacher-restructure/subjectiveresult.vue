@@ -72,22 +72,22 @@
 								<template v-if="problem_group_review_id">
 									<div class="line"></div>
 									<div :class="['f12', 'yjy']">
-										<span class="f18">group_review_done_num</span>
+										<span class="f18">{{group_review_done_num}}</span>
 										{{ $t('team.yihuping') }}
 			            </div>
 								</template>
 							</div>
 
-							<!-- <v-touch v-if="problem_answer_type" :class="['faqihuping', 'f15', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? '发起互评' : '互评规则'}}</v-touch> -->
+							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
-					<template v-if="group_name">
-						<div class="group_name f14">
-							<i class="iconfont icon-fenzu f21"></i>{{group_name}}
-						</div>
-						<div class="gap"></div>
-					</template>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+					<template v-if="group_name">
+            <div class="gap"></div>
+						<div class="group_name f14">
+							<i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
+						</div>
+					</template>
           <div class="gap"></div>
           <!-- 中间主观题页面 -->
           <section class="subjective-box f18">
@@ -132,7 +132,7 @@
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score}}</span>
+                        <span v-show="item.score !== -1">{{item.score.toFixed(1)}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -306,6 +306,7 @@
 				unfinished_count: 0,					// 未答题人数
 				unfinished_team_count: 0,				// 没有回答的组数
         group_name: '',									// 分组名
+        group_review_done_num: 0,        // 已互评数
 	    }
 	  },
 	  computed: {
@@ -337,10 +338,11 @@
       // 有2个 textarea-place 元素，其中一个隐藏的时候，其 offsetHeight scrollHeight 都是0
       let boxDom = document.querySelector('#scoreDom')
       let textDomList = boxDom.querySelectorAll('.textarea-place')
+      let popDom = document.querySelector('.pop')
       boxDom.addEventListener('touchmove', e => {
         // 评语部分再内容很多的时候能搓动
         let isNotOverflow = textDomList[0].scrollHeight ? (textDomList[0].scrollHeight <= textDomList[0].offsetHeight) : (textDomList[1].scrollHeight <= textDomList[1].offsetHeight)
-        if (!~e.target.className.indexOf('textarea-place') || isNotOverflow) {
+        if ((!~e.target.className.indexOf('textarea-place') || isNotOverflow) && (document.querySelector('.remark-box').offsetHeight || 0) < 318 || e.touches[0].clientY < popDom.offsetHeight) {
           e.preventDefault()
         }
       }, false)
@@ -739,8 +741,8 @@
 							self.setData({
 								group_review_total_num: res.data.group_review_total_num,
 								group_review_done_num: res.data.group_review_done_num,
-				        tProportion: res.data.teacher_score_proportion * 100,
-				        gProportion: res.data.group_review_score_proportion * 100,
+				        tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
+				        gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
 				        group_review_declaration: res.data.group_review_declaration
 							})
 						})
@@ -814,8 +816,8 @@
 							self.setData({
 								group_review_total_num: res.data.group_review_total_num,
 								group_review_done_num: res.data.group_review_done_num,
-				        tProportion: res.data.teacher_score_proportion * 100,
-				        gProportion: res.data.group_review_score_proportion * 100,
+				        tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
+				        gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
 				        group_review_declaration: res.data.group_review_declaration
 							})
 						})
@@ -1011,7 +1013,7 @@
 
 	          // 关闭打分页面
 	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-						self.dataList[self.scoringIndex].score = ((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion)).toFixed(1)
+						self.dataList[self.scoringIndex].score = ((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))
 						self.dataList[self.scoringIndex].remark = remark
 
 
@@ -1074,7 +1076,7 @@
 				let self = this
 				if(this.newTime > 0){
 					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
-					let msg = '收题后才可发起互评'
+					let msg = i18n.locale === 'zh_CN' ? '请先收题' : 'Stop answering required'
 					T_PUBSUB.publish('ykt-msg-toast', msg);
 				} else {
 					// 防止用户频繁点击
@@ -1116,6 +1118,7 @@
 						}
 
 	        }).catch(res => {
+            self.$refs.HupingPanel.$emit('leaveHuping')
 						let msg = res.msg
 						T_PUBSUB.publish('ykt-msg-toast', msg);
           });
@@ -1169,18 +1172,35 @@
 				this.showTeamMember = false;
 			},
 			showTips(){
-				let msg = i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.'
-				let newClassName = 'longtips'
-				T_PUBSUB.publish('ykt-msg-toast', {msg: msg, newClassName: newClassName});
+        let msg = {
+          title: i18n.locale === 'zh_CN' ? "未作答" : 'Unanwered',
+          content: i18n.locale === 'zh_CN' ? "未作答数为“未作答的组数”和“已签到未进组的学生数”" : 'Unanwered = unanwered gruops + signed students but not in groups.',
+          option: i18n.locale === 'zh_CN' ? "关闭" : 'Close'
+        }
+				T_PUBSUB.publish('ykt-tips-modal', msg);
       },
       /*
       * 变更投屏状态
       * 可能已废弃，以后删掉
       *
       **/ 
-     showUserInfoChange(val) {
-       this.isHideName = val
-     }
+      showUserInfoChange(val) {
+        this.isHideName = val
+      },
+      // 处理小数问题
+      parsePriceValue (num) {
+        // 确保输入最多小数点后2位
+        if (num < 0.01){
+          return "0.0"
+        }else {
+          var hNum = num * 100
+          var hNumInt = parseInt(hNum)
+          if (hNum - hNumInt > 0.999999)
+            hNumInt++
+
+          return hNumInt / 100
+        }
+      }
 	  }
 	}
 </script>
@@ -1319,7 +1339,7 @@
 					align-items: center;
 					.yjy {
 						color: #666;
-						padding: 0 .186667rem;
+						padding: 0 0.16rem;
 						height: 1.333333rem;
 						display: flex;
 						flex-direction: column;
@@ -1505,7 +1525,7 @@
 
 	      .nomore {
 	        position: relative;
-	        height: 0.6rem;
+	        height: 1rem;
 	        margin: 0 0.6rem;
 	        text-align: center;
 	        color: $graybg;
@@ -1514,12 +1534,13 @@
 	          position: relative;
 	          margin: 0 auto;
 	          width: 2.093333rem;
-	          background: #fff;
+            background: #fff;
+            line-height: 1rem;
 	        }
 
 	        .bgline {
 	          position: absolute;
-	          top: 0.293333rem;
+	          top: 50%;
 	          width: 100%;
 	          height: 1px;
 	          background: #c8c8c8;
