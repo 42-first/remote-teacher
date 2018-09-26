@@ -21,7 +21,9 @@
       <i class="iconfont icon-danmu-open color63 ver-middle" v-show="showAnswer" @click="showAnswerHandle"></i>
     </div>
     <picker v-show="pickerShow" @close="pickerclose" @change="pickerend"></picker>
-
+    <div class="loading" v-if="!loaded">
+      <loading></loading>
+    </div>
   </div>
 </template>
 
@@ -33,6 +35,7 @@
 
   // 工具栏
   import Toolbar from './common/toolbar'
+  import loading from './common/loading'
 
   export default {
     name: 'StateSet',
@@ -46,13 +49,15 @@
         visibleAll: this.$t('visibleAll'),
         visibleStu: this.$t('visibleStu'),
         arr: [this.visibleAll, this.visibleStu],
-        pickerIndex: this.show_presentation === 'all' ? 0 : 1
+        pickerIndex: this.show_presentation === 'all' ? 0 : 1,
+        loaded: false
       }
     },
     components: {
       MessageBoxMin,
       Toolbar,
-      picker
+      picker,
+      loading
     },
     computed: {
       ...mapGetters([
@@ -83,6 +88,7 @@
             this.showAnswer = info.problem_show_answer
             this.isHideName = !info.show_user_profile
           }
+          this.loaded = true
         })
         this.addinversionRight && this.getShowUserInfo()
       },
@@ -147,7 +153,7 @@
         this.pickerShow = true
       },
       pickerend(e) {
-        console.log(e)
+        // console.log(e)
         let name = e ? 'film' : 'all'
         this.show_presentation = name
         this.pcSet(name)
@@ -182,6 +188,9 @@
         }
         return '/' + url
       }
+    },
+    mounted() {
+      
     }
 }
 </script>
@@ -236,6 +245,14 @@
       .iconfont{
         font-size: px2rem(110px);
       }
+    }
+    .loading{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .6);
     }
   }
 </style>

@@ -30,7 +30,7 @@
 
 	    		<!-- 收题相关 -->
 	    		<div v-show="newTime > 0" class="pro-rel f15">
-	    			<v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
+	    			<v-touch class="tbtn" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
 	    		</div>
 		    </div>
 		    <!-- <div :class="['f18', 'yjy']">
@@ -739,7 +739,8 @@
 	  			}
 	  			.red {
 	  				border-color: #F84F41;
-	  				background-color: rgba(248, 79, 65, 0.2)
+	  				background-color: rgba(248, 79, 65, 0.2);
+						color: #fff;
 	  			}
 	  		}
 	  	}
