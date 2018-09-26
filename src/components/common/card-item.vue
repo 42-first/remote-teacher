@@ -33,7 +33,7 @@
         </div>
       </div>
     </template>
-    <!-- 截图分享 -->
+    <!-- 截图分享 白板分享 -->
     <template v-else-if="item.type==10 || item.type==11">
       <div class="timeline__ppt">
         <span class="ppt--pageno f14"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
@@ -231,6 +231,7 @@
         // build items array
         let cards = this.$parent.$parent.cards;
 
+        // ppt 截图分享 白板分享
         cards.map((card)=>{
           if(card.type === 2 && card.animation !== 1 || card.type === 10 || card.type === 11) {
             items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
