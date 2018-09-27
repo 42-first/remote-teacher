@@ -349,9 +349,20 @@ var mixin = {
 
             break;
 
+          // 发起互评
+          case 'launchreview':
+            item = msg['review'];
+            this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item.dt, isPopup: true, event: item });
+
           // 开始直播
           case 'startlive':
             this.startLive(msg['liveurl']);
+
+            break;
+
+          // 结束直播
+          case 'endlive':
+            this.endLive(msg);
 
             break;
 

@@ -87,7 +87,7 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(audioEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          audioEl && audioEl.play();
+          // audioEl && audioEl.play();
         });
 
         this.handleerror(hls);
@@ -104,6 +104,7 @@ let liveMixin = {
         });
       }
 
+      this.setLiveTip();
     },
 
     /*
@@ -152,6 +153,31 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       audioEl.play();
       this.playState = 1;
+
+      // 避免音频没有加载不播放问题
+      setTimeout(()=>{
+        audioEl.play();
+      }, 500)
+    },
+
+    /*
+     * @method 是否显示直播提示
+     * @params
+     */
+    setLiveTip() {
+      let lessonID = this.lessonID;
+      let key = 'live' + lessonID;
+      let hiddenLiveTip = +localStorage.getItem(key);
+
+      if(!hiddenLiveTip) {
+        this.showLiveTip = true;
+        localStorage.setItem(key, 1);
+
+        setTimeout(()=>{
+          this.showLiveTip = false;
+        }, 3000)
+      }
+
     },
 
   }

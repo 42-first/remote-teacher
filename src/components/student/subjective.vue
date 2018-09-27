@@ -521,7 +521,7 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+              this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
 
               clearInterval(this.timer);
               this.timeOver = true;
@@ -536,7 +536,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+          this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
         }
       },
 
@@ -623,7 +623,7 @@
             if(res && res.data) {
               let data = res.data;
 
-              this.starCount = data.score / data.source_score * 5;
+              this.getScore = data.score;
 
               return data;
             }
