@@ -680,7 +680,7 @@ var actionsMixin = {
       let url = data.board && data.board.url;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 11 && item.url === url && data.isFetch;
+        return item.type === 11 && item.src === url && data.isFetch;
       })
 
       // 预加载图片
