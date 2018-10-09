@@ -63,6 +63,8 @@ var actionsMixin = {
                 this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'capture') {
                 this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
+              } else if(item['cat'] === 'board') {
+                this.addBoard({ type: 11, board: item, time: item['dt'], event: item, isFetch: isFetch });
               }
 
               break;
@@ -658,6 +660,42 @@ var actionsMixin = {
 
       let cardItem = {
         src: data.url,
+        rate: presentation.Width / presentation.Height,
+        Width: presentation.Width,
+        Height: presentation.Height,
+      };
+
+      data = Object.assign(data, cardItem)
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
+     * @method 板书分享
+     * @param { type: 11, board: { url: '', }, time: '', event: all }
+     */
+    addBoard(data) {
+      let presentation = this.presentationMap.get(this.presentationID);
+      let url = data.board && data.board.url;
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 11 && item.url === url && data.isFetch;
+      })
+
+      // 预加载图片
+      let oImg = new Image();
+      oImg.onload = (evt) => {
+        // 矫正宽高
+        let target = evt.target;
+        data.Width = target.naturalWidth || target.width;
+        data.Height = target.naturalHeight || target.height;
+      };
+
+      oImg.src = url;
+
+      let cardItem = {
+        src: url,
         rate: presentation.Width / presentation.Height,
         Width: presentation.Width,
         Height: presentation.Height,
