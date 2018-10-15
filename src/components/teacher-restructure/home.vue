@@ -36,6 +36,8 @@
         <img v-if="pptData.length && !pptData[current].Cover" class="img-error" :src="imgUploadingPath" />
         <img v-if="pptData.length && pptData[current].Cover" class="card" :src="pptData[current].Cover" />
       </div>
+			<!-- 停服务通知 -->
+    	<notice position="bottom" :style="{bottom: '1.706667rem'}"></notice>
       <!-- 工具栏 -->
       <!-- 当蒙版是缩略图时，底部的工具栏要露出来 -->
       <Toolbar
@@ -248,7 +250,8 @@
 	    Qrcode,
 	    Thumbnail,
 	    Activity,
-	    change_lang_dialog
+	    change_lang_dialog,
+			notice: () => import('@/components/common/service-notice.vue'),
 	  },
 	  created () {
 	    this.init()
