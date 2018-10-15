@@ -328,6 +328,14 @@ var mixin = {
 
             break
 
+          // 板书分享20180925
+          case 'shareboard':
+            item = msg['board'];
+
+            this.addBoard({ type: 11, board: item, time: item['dt'], event: item });
+
+            break
+
           // 分组创建分组
           case 'launchgroup':
             item = msg['group'];
