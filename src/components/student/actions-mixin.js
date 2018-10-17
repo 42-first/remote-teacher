@@ -737,6 +737,18 @@ var actionsMixin = {
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
     },
 
+    /*
+     * @method 设置课件title
+     * @param
+     */
+    setPresentationTitle(presentationID) {
+      let presentation = this.presentationMap.get(presentationID);
+
+      if(presentation && presentation.Title) {
+        this.title = presentation.Title;
+      }
+    },
+
   }
 }
 
