@@ -155,6 +155,9 @@
 
     <!-- 语言切换 -->
     <Lang-Component></Lang-Component>
+
+    <!-- 停服务通知 -->
+    <notice position="bottom"></notice>
   </section>
 </template>
 <script>
@@ -291,7 +294,8 @@
       information: () => import('@/components/common/information.vue'),
       guide: () => import('@/components/common/guide.vue'),
       LangComponent,
-      identity: () => import('@/components/student/identityBinding.vue')
+      identity: () => import('@/components/student/identityBinding.vue'),
+      notice: () => import('@/components/common/service-notice.vue'),
     },
     computed: {
     },
