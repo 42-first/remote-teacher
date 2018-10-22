@@ -120,6 +120,7 @@
 <script>
   import API from '@/util/api'
   import {compress} from '@/util/image'
+  import { isSupported } from '@/util/util'
 
   export default {
     name: 'subjective-page',
@@ -768,14 +769,15 @@
        */
       saveAnswer(data) {
         let key = 'answer_problem';
-        let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-        data.retry_times = data.retry_times + 1;
-        answerPostList.push(data);
+        if(isSupported(localStorage)) {
+          let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
+          data.retry_times = data.retry_times + 1;
+          answerPostList.push(data);
 
-        let value = JSON.stringify(answerPostList);
-
-        localStorage.setItem(key, value);
+          let value = JSON.stringify(answerPostList);
+          localStorage.setItem(key, value);
+        }
       },
 
       /*
