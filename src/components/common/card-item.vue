@@ -8,7 +8,7 @@
   <!--  -->
   <section class="timeline-item" v-if="item">
 
-    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享-->
+    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享 11白板分享 12白板绘制 -->
     <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
@@ -169,6 +169,18 @@
           <div class="f14" v-show="!observerMode">
             <span class="status">{{ item.status }}</span>
           </div>
+        </div>
+      </div>
+    </template>
+    <!-- 白板绘制 -->
+    <template v-else-if="item.type==12">
+      <div class="timeline__ppt">
+        <!-- 白板屏幕宽高 -->
+        <!-- <div class="" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
+        </div> -->
+        <canvas id="canvas" class="board__container" width="500" height="800"></canvas>
+        <div class="ppt-footer">
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
         </div>
       </div>
     </template>
