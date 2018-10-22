@@ -6,6 +6,8 @@
  *
  */
 
+ import { isSupported } from '@/util/util'
+
 
 let liveMixin = {
   methods: {
@@ -167,15 +169,19 @@ let liveMixin = {
     setLiveTip() {
       let lessonID = this.lessonID;
       let key = 'live' + lessonID;
-      let hiddenLiveTip = +localStorage.getItem(key);
+      let hiddenLiveTip = false;
 
-      if(!hiddenLiveTip) {
-        this.showLiveTip = true;
-        localStorage.setItem(key, 1);
+      if(isSupported(window.localStorage)) {
+        hiddenLiveTip = +localStorage.getItem(key);
 
-        setTimeout(()=>{
-          this.showLiveTip = false;
-        }, 3000)
+        if(!hiddenLiveTip) {
+          this.showLiveTip = true;
+          localStorage.setItem(key, 1);
+
+          setTimeout(()=>{
+            this.showLiveTip = false;
+          }, 3000)
+        }
       }
 
     },
