@@ -178,7 +178,7 @@
         <!-- 白板屏幕宽高 -->
         <!-- <div class="" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
         </div> -->
-        <canvas id="canvas" class="board__container" width="500" height="800"></canvas>
+        <canvas :id="'canvas'+item.id" class="board__container" width="500" height="800"></canvas>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
         </div>

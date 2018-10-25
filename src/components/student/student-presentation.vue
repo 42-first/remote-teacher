@@ -285,7 +285,12 @@
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
-        showLiveTip: false
+        showLiveTip: false,
+        // 版本基本信息 宽高
+        boardInfo: {
+          width: 0,
+          height: 0
+        },
       };
     },
     components: {

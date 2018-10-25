@@ -749,6 +749,55 @@ var actionsMixin = {
       }
     },
 
+    /*
+     * @method 设置白板基本信息
+     * @param  { type: 12, id: , devwidth: , devheight: '', lenunit: '', event: all }
+     */
+    setBoardInfo(data) {
+       // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 12 && item.id && data.isFetch;
+      })
+
+      if(data) {
+        Object.assign(this.boardInfo, data);
+
+        !hasEvent && this.cards.push(data);
+        this.allEvents.push(data);
+      }
+    },
+
+    /*
+     * @method 设置白板画笔颜色
+     * @param
+     */
+    setBoardPenColor(data) {
+      if(data) {
+        Object.assign(this.boardInfo, { data.color });
+      }
+    },
+
+    /*
+     * @method 设置白板画线
+     * @param
+     */
+    setBoardline(data) {
+      if(data) {
+        let isErase = data.type === 'erase' ? true : false;
+        this.drawLine(data.coords, isErase);
+      }
+    },
+
+    /*
+     * @method 白板清屏
+     * @param
+     */
+    clearBoard(data) {
+      if(data) {
+      }
+    },
+
+
   }
 }
 

@@ -61,7 +61,7 @@ let boardMixin = {
     },
 
     /*
-     * @method 直播音频播放
+     * @method 白板清屏
      * @params
      */
     handleplay() {
