@@ -18,20 +18,23 @@ let boardMixin = {
       // 创建canvas画板
       // 根据boardID 拿到canvas上下文
       let domID = `canvas_${boardInfo.id}`;
-      // let canvasEl = document.querySelector(domID);
+      let canvasEl = document.querySelector(domID);
+      // canvasEl.parentNode.getBoundingClientRect(); width
       // type webgl/2d
-      // let context = canvasEl.getContext('2d');
-      // this.canvasContext =
+      let context = canvasEl.getContext('2d');
+      this.canvasContext = context;
       // 缩放 原本画布宽高 设备宽 算出对应比例
+      // 计算宽高比
       // context.scale(0.75, 0.75);
+      // 缩放后如果不居中 可以计算后通过 translate() 移动位置
 
     },
 
     /*
      * @method 划线
-     * @param coords 轨迹点, isErase: 是否擦除
+     * @param id 白板的ID coords 轨迹点, isErase: 是否擦除
      */
-    drawLine(coords, isErase = false) {
+    drawLine(id, coords, isErase = false) {
       let context = this.canvasContext;
 
       // 线的颜色

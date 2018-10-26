@@ -291,6 +291,8 @@
           width: 0,
           height: 0
         },
+        // 白板map
+        boardMap: new Map(),
       };
     },
     components: {

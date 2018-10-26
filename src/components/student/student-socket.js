@@ -375,6 +375,24 @@ var mixin = {
 
             break;
 
+          // 白板信息
+          case 'boardinfo':
+            this.setBoardInfo(Object.assign(msg, { type: 12 }));
+
+            break;
+
+          // 开始一次连续轨迹
+          case 'pendown':
+            this.setBoardPenColor(msg);
+
+            break;
+
+          // 传输轨迹点
+          case 'touchdata':
+            this.setBoardline(msg);
+
+            break;
+
           default:
             hasMsg = false;
             break
