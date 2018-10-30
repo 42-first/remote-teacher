@@ -761,17 +761,17 @@ var actionsMixin = {
       })
 
       if(data) {
-        data = Object.assign(data, { rate: data.devwidth / data.devheight })
+        data = Object.assign(data, {
+          rate: data.devwidth / data.devheight,
+          time: +new Date()
+        });
+
         // 记录当前白板信息
         let boardInfo = Object.assign(this.boardInfo, data);
         this.boardMap.set(id, boardInfo);
 
         !hasEvent && this.cards.push(data);
         this.allEvents.push(data);
-
-        setTimeout(()=>{
-          this.createBoard(boardInfo);
-        }, 500)
       }
     },
 
@@ -797,9 +797,11 @@ var actionsMixin = {
       if(data) {
         let id = data.boardid || 1;
         let boardInfo = this.boardMap.get(id);
-        !boardInfo.lines && (boardInfo.lines = []);
-        boardInfo.lines.push(data);
-        this.boardMap.set(id, boardInfo);
+        if(boardInfo) {
+          !boardInfo.lines && (boardInfo.lines = []);
+          boardInfo.lines.push(data);
+          this.boardMap.set(id, boardInfo);
+        }
 
         // todo: 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
 
@@ -810,6 +812,13 @@ var actionsMixin = {
           this.drawLine(id, data.coords, isErase);
         }
 
+        // 更新最新时间
+        this.cards.forEach((item) => {
+          if(item.type === 12 && item.boardid === id) {
+            Object.assign(item, { time: data.dt })
+          }
+        })
+
       }
     },
 
@@ -819,6 +828,8 @@ var actionsMixin = {
      */
     clearBoard(data) {
       if(data) {
+        let id = data.boardid || 1;
+        this.clearScreen(id);
       }
     },
 

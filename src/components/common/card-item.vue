@@ -177,11 +177,11 @@
       <div class="timeline__ppt">
         <span class="ppt--pageno f14">板书</span>
         <!-- 白板屏幕宽高 -->
-        <div class="" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
+        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
           <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas"></canvas>
         </div>
         <div class="ppt-footer">
-          <!-- <p class="ppt__time f16">{{ item.time|getTimeago }}</p> -->
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
         </div>
       </div>
     </template>

@@ -66,7 +66,7 @@ let boardMixin = {
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
           context.lineTo(point.x, point.y);
-          context.fillRect(point.x, point.y, point.w, point.h);
+          // context.fillRect(point.x, point.y, point.w, point.h);
         }
 
         // 描边
@@ -111,7 +111,7 @@ let boardMixin = {
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
           context.lineTo(point.x, point.y);
-          context.fillRect(point.x, point.y, point.w, point.h);
+          // context.fillRect(point.x, point.y, point.w, point.h);
           context.clearRect(point.x, point.y, point.w, point.h);
         }
 
@@ -119,6 +119,17 @@ let boardMixin = {
         context.save();
       }
     },
+
+    /*
+     * @method 清屏
+     * @param
+     */
+    clearScreen(id) {
+      let context = this.getContext(id);
+      let boardInfo = this.boardMap.get(id);
+
+      context.clearRect(0, 0, boardInfo.devwidth, boardInfo.devheight);
+    }
 
   }
 }

@@ -381,8 +381,13 @@ var mixin = {
 
             break;
 
-          // 开始一次连续轨迹
-          case 'pendown':
+          // 清屏
+          case 'boardclear':
+            this.clearBoard(msg);
+
+            break;
+
+          case 'boardcolor':
             this.setBoardPenColor(msg);
 
             break;
