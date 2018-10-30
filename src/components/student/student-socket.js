@@ -201,6 +201,7 @@ var mixin = {
 
             // this.setTimeline(timeline, true);
             this.setTimeline(timeline);
+            this.setPresentationTitle(this.presentationID);
             break
 
           // 开始弹幕

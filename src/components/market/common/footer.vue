@@ -27,7 +27,8 @@
             </div>
             <div class="link-us-qq fr">
               <div class="link-us-qqgroup">
-                <p>QQ:661757223（推荐）</p>
+                <p>QQ:777287705（推荐）</p>
+                <p>QQ:661757223（已满）</p>
                 <p>QQ:577760819（已满）</p>
                 <p>QQ:487470016（已满）</p>
                 <p>QQ:470686527（已满）</p>
@@ -200,7 +201,8 @@
   .link-us-qcode img{ display: block; margin: auto; width: 160px; height: 160px; }
 
   .link-us-qqgroup {
-    top: -250px;
+    top: initial;
+    bottom: 48px;
     width: 213px;
     box-sizing: border-box;
     padding: 20px 10px;
