@@ -376,7 +376,7 @@ var mixin = {
             break;
 
           // 白板信息
-          case 'boardinfo':
+          case 'newboard':
             this.setBoardInfo(Object.assign(msg, { type: 12 }));
 
             break;

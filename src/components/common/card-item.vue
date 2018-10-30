@@ -175,12 +175,13 @@
     <!-- 白板绘制 -->
     <template v-else-if="item.type==12">
       <div class="timeline__ppt">
+        <span class="ppt--pageno f14">板书</span>
         <!-- 白板屏幕宽高 -->
-        <!-- <div class="" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
-        </div> -->
-        <canvas :id="'canvas'+item.id" class="board__container" width="500" height="800"></canvas>
+        <div class="" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
+          <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas"></canvas>
+        </div>
         <div class="ppt-footer">
-          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
+          <!-- <p class="ppt__time f16">{{ item.time|getTimeago }}</p> -->
         </div>
       </div>
     </template>
@@ -231,6 +232,10 @@
     filters: {
       getTimeago(time) {
         return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
+      },
+      scaleCanvas(item) {
+        let scaleValue = (window.innerWidth / 10 * (10 - 0.906667)) / item.devwidth;
+        return { transform: 'scale(' + scaleValue + ')' };
       }
     },
     methods: {
@@ -621,6 +626,11 @@
     .iconfont {
       line-height: 1.546667rem
     }
+  }
+
+  .board__container {
+    transform-origin: 0 0;
+    transform: scale(0.5);
   }
 
 

@@ -754,19 +754,24 @@ var actionsMixin = {
      * @param  { type: 12, id: , devwidth: , devheight: '', lenunit: '', event: all }
      */
     setBoardInfo(data) {
+      let id = data.boardid;
        // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 12 && item.id && data.isFetch;
+        return item.type === 12 && item.boardid === data.boardid && data.isFetch;
       })
-      let id = data.id;
 
       if(data) {
+        data = Object.assign(data, { rate: data.devwidth / data.devheight })
         // 记录当前白板信息
         let boardInfo = Object.assign(this.boardInfo, data);
         this.boardMap.set(id, boardInfo);
 
         !hasEvent && this.cards.push(data);
         this.allEvents.push(data);
+
+        setTimeout(()=>{
+          this.createBoard(boardInfo);
+        }, 500)
       }
     },
 
@@ -776,9 +781,9 @@ var actionsMixin = {
      */
     setBoardPenColor(data) {
       if(data) {
-        let id = item.id;
+        let id = item.boardid;
         let boardInfo = this.boardMap.get(id);
-        boardInfo = Object.assign(this.boardInfo, boardInfo, { data.color });
+        boardInfo = Object.assign({}, boardInfo, { color: data.color });
 
         this.boardMap.set(id, boardInfo);
       }
@@ -790,16 +795,21 @@ var actionsMixin = {
      */
     setBoardline(data) {
       if(data) {
-        let id = data.id;
+        let id = data.boardid || 1;
         let boardInfo = this.boardMap.get(id);
         !boardInfo.lines && (boardInfo.lines = []);
         boardInfo.lines.push(data);
         this.boardMap.set(id, boardInfo);
 
-        // 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
+        // todo: 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
 
         let isErase = data.type === 'erase' ? true : false;
-        this.drawLine(id, data.coords, isErase);
+        if(isErase) {
+          this.eraseLine(id, data.coords);
+        } else {
+          this.drawLine(id, data.coords, isErase);
+        }
+
       }
     },
 

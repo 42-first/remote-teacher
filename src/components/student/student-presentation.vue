@@ -174,7 +174,8 @@
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
 
-   import livemixin from '@/components/student/live-mixin'
+  import livemixin from '@/components/student/live-mixin'
+  import boardmixin from '@/components/common/board-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -332,7 +333,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin ],
     methods: {
       /*
        * @method 接收器初始化
