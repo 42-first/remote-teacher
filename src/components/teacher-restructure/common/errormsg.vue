@@ -5,7 +5,14 @@
     <!-- <div v-show="errType === 2">
       {{ $t('showended') }}<br>{{ $t('showconnecting') }}
     </div> -->
-  	<v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">{{ $t('endclass') }}</v-touch>
+    <div class="continiue-tips">
+      {{$t('jsskqzdnd')}}
+    </div>
+    <div class="close-tips" v-if="errType === 2 || errType === 3">
+      <span>{{$t('jsskq')}}</span>
+      <a @click="openModal">{{$t('djzl')}}</a>
+    </div>
+  	<!-- <v-touch v-if="errType === 2 || errType === 3" class="btn finish-btn" v-on:tap="openModal">{{ $t('endclass') }}</v-touch> -->
   	<div class="rc-mask close-modal" v-show="!isModalHidden">
   		<div class="pub-inner">
         <div class="title f20"><!-- 您即将结束本次授课 -->{{ $t('tciate') }}</div>
@@ -90,12 +97,37 @@
 
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+  @import "~@/style/common";
 	.finish-btn {
 		margin: 1rem auto;
 		width: 5.0rem;
 		background: none;
 		border: 1px solid $white;
 	}
+  .continiue-tips{
+    border: px2rem(1px) solid #fff;
+    padding: px2rem(40px);
+    border-radius: px2rem(8px);
+    line-height: px2rem(50px);
+    font-size: px2rem(30px);
+    color: #fff;
+    margin: px2rem(10px) auto;
+    width: px2rem(640px);
+    text-align: left;
+  }
+  .close-tips{
+    border: px2rem(1px) solid #fff;
+    padding: px2rem(30px) px2rem(10px);
+    color: #fff;
+    font-size: px2rem(30px);
+    border-radius: px2rem(8px);
+    width: px2rem(640px);
+    margin: 0 auto;
+    a{
+      color: #639ef4;
+      text-decoration: underline;
+    }
+  }
 	.close-modal {
     position: absolute;
     background: none;
