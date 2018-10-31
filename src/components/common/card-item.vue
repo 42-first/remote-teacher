@@ -213,7 +213,7 @@
         default: 0
       },
       lessonid: {
-        type: Number,
+        type: String,
         default: 0
       },
       item: {

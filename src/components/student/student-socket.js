@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'g.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -384,11 +384,6 @@ var mixin = {
           // 清屏
           case 'boardclear':
             this.clearBoard(msg);
-
-            break;
-
-          case 'boardcolor':
-            this.setBoardPenColor(msg);
 
             break;
 

@@ -776,20 +776,6 @@ var actionsMixin = {
     },
 
     /*
-     * @method 设置白板画笔颜色
-     * @param { id: , color:  }
-     */
-    setBoardPenColor(data) {
-      if(data) {
-        let id = item.boardid;
-        let boardInfo = this.boardMap.get(id);
-        boardInfo = Object.assign({}, boardInfo, { color: data.color });
-
-        this.boardMap.set(id, boardInfo);
-      }
-    },
-
-    /*
      * @method 设置白板画线
      * @param
      */
@@ -797,19 +783,22 @@ var actionsMixin = {
       if(data) {
         let id = data.boardid || 1;
         let boardInfo = this.boardMap.get(id);
+
         if(boardInfo) {
+          boardInfo = Object.assign({}, boardInfo, { color: data.color });
           !boardInfo.lines && (boardInfo.lines = []);
           boardInfo.lines.push(data);
           this.boardMap.set(id, boardInfo);
-        }
 
-        // todo: 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
 
-        let isErase = data.type === 'erase' ? true : false;
-        if(isErase) {
-          this.eraseLine(id, data.coords);
-        } else {
-          this.drawLine(id, data.coords, isErase);
+          // todo: 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
+
+          let isErase = data.type === 'erase' ? true : false;
+          if(isErase) {
+            this.eraseLine(id, data.coords, data.color);
+          } else {
+            this.drawLine(id, data.coords, isErase);
+          }
         }
 
         // 更新最新时间
@@ -818,7 +807,6 @@ var actionsMixin = {
             Object.assign(item, { time: data.dt })
           }
         })
-
       }
     },
 
