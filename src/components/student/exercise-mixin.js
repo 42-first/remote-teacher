@@ -7,6 +7,7 @@
  */
 
 import API from '@/util/api'
+import { isSupported } from '@/util/util'
 
 var exerciseMixin = {
   methods: {
@@ -16,14 +17,17 @@ var exerciseMixin = {
     */
     saveAnswer(data) {
       let key = 'answer_problem';
-      let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-      data.retry_times = data.retry_times + 1;
-      answerPostList.push(data);
+      if(isSupported(localStorage)) {
+        let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-      let value = JSON.stringify(answerPostList);
+        data.retry_times = data.retry_times + 1;
+        answerPostList.push(data);
 
-      localStorage.setItem(key, value);
+        let value = JSON.stringify(answerPostList);
+
+        localStorage.setItem(key, value);
+      }
     },
 
     /*
@@ -32,13 +36,20 @@ var exerciseMixin = {
     */
     getAnswer(key) {
       key = key || 'answer_problem';
-      let value = localStorage.getItem(key);
+      let value = [];
 
-      return JSON.parse(value);
+      if(isSupported(localStorage)) {
+        value = localStorage.getItem(key);
+        return JSON.parse(value);
+      } else {
+        return value;
+      }
     },
 
     removeAnswer(key) {
-      localStorage.removeItem(key);
+      if(isSupported(localStorage)) {
+        localStorage.removeItem(key);
+      }
     },
 
     /*

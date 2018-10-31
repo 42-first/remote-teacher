@@ -11,6 +11,9 @@ if (process.env.NODE_ENV === 'production') {
         // 软件版本号
         'GET_SOFT_VERSION': '/v/lesson/lesson_ppt_version',
 
+        // 停服务通知
+        'HOLD_SERVICE_NOTICE': '/pc/hole_service_notice/',
+
         /*------------------*\
            $ 接收器 start
         \*------------------*/
@@ -86,6 +89,9 @@ if (process.env.NODE_ENV === 'production') {
 
         // 用户权限
         'GET_USER_INFO': '/static/mock/user_info.json',
+
+        // 停服务通知
+        'HOLD_SERVICE_NOTICE': 'http://apimock.xuetangx.com/mock/115/pc/hole_service_notice/',
 
         /*------------------*\
            $ 接收器 start

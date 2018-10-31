@@ -10,7 +10,7 @@ import socketProcessMessage from './socket-process-message'
 import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'pro.yuketang.cn' : location.host
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
@@ -39,7 +39,7 @@ let mixin = {
         socket.onopen = null
         socket.onmessage = null
         socket.send = null
-        
+
         self.$store.commit('set_socket', null)
         self.socket = null
 
@@ -100,13 +100,13 @@ let mixin = {
         }
 
         // 雷上已经全部使用https了，本地调试也使用https
-        let wsProtocol = location.protocol === 'https:' || location.host.indexOf('192.168') !== -1 ? 'wss://' : 'ws://'
+        let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
         socket.socket_id = Date.now()
         self.$store.commit('set_socket', socket)
 
         // 上报连接 socket 动作
-        
+
         request.get(url, {
           'user_id': self.userid,
           'lesson_id': self.lessonid,
@@ -198,7 +198,7 @@ let mixin = {
     */
     sendXinTiao() {
       let self = this
-      
+
       clearInterval(xintiaoTimer)
       setInterval(()=>{
         self.socket.send(JSON.stringify({ op: 'xintiao', lessonid: self.lessonid }))
@@ -235,7 +235,7 @@ let mixin = {
      */
     triggerReconnect () {
       let self = this
-      
+
       clearTimeout(connectCountDownTimer)
       self.isConnectingHidden = false
       self.connectCountDown = 10

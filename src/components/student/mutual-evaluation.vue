@@ -9,19 +9,19 @@
 <template>
   <section class="evaluation__page">
     <div :class="['evaluation__wrapper', 'animated', opacity ? 'zoomIn': '']">
+      <section class="evaluation__inner">
       <!-- 互评得分 修改入口 -->
-      <section class="evaluation__getscore mb10" v-if="reviewScore">
-        <p class="f20 yellow">互评得分：{{ reviewScore }}分</p>
+      <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
+        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
         <p @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
       <!-- 主观题题干 -->
       <section class="subjective-content mb10" >
         <div class="content_wrapper">
-          <p class="page-no f12"><span>第8页</span></p>
-          <!-- :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }" -->
+          <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
           <div class="cover__wrapper">
-            <img class="cover J_preview_img" src="http://st0.ykt.io/FqOgxWJctO7pymHwWJQ0Db_2CPci" alt="雨课堂" />
+            <img class="cover" :src="summary&&summary.cover" :data-src="summary&&summary.cover" alt="雨课堂" @click="handleZoom" />
           </div>
         </div>
       </section>
@@ -29,52 +29,53 @@
       <!-- 主观题答案 -->
       <section class="evaluation__answer" v-if="result">
         <h3 class="answer__header">
-          <p class="f21 c333">答案</p>
-          <p class="answer--points f14 blue" @click="handlenode">评分要点</p>
+          <p class="f21 c333"><!-- 答案 -->{{ $t('grading.answer') }}</p>
+          <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].thumb" alt="雨课堂主观题" v-if="result.pics && result.pics[0]" />
+          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
-
-      <!-- 打分 -->
-      <section class="evaluation__score f18" v-if="canSubmitScore">
-        <p class="score--btn" @click="handlescore">打分</p>
+      <!-- 没有互评ID显示 -->
+      <section class="evaluation__empty f17" v-if="!hasReview">
+        <p>{{ $t('grading.noarticipate') }}</p>
       </section>
 
+      <!-- 打分 -->
+      <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
+        <p class="score--btn" @click="handlescore"><!-- 打分 -->{{ $t('grading.grade') }}</p>
+      </section>
+
+      </section>
     </div>
 
     <!-- 打分弹层 -->
     <section class="score__wrap" v-if="scoreVisible">
-      <div class="score__modal">
+      <div :class="[ 'score__modal', modalActive ? 'active' : '']" >
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
-          <p class="input--tip f14 c666">请输入互评分数（本题总分100分）</p>
-          <input class="input f30 c9b" type="tel" v-model="score" />
+          <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
+          <input class="input f30 c9b" :placeholder="$t('grading.pleasescore')" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" />
         </div>
         <div class="score__node">
-          <h3 class="f20 c333">注意</h3>
+          <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
           <div class="node__info">
             <span class="f18 yellow">*</span>
-            <p class="f12 c9b">本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主</p>
+            <p class="f12 c9b" v-html="$t('grading.noticecontent')">本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主</p>
           </div>
         </div>
 
-        <p class="score--submit f18" @click="handlesubmit">提交</p>
+        <p class="score--submit f18" :class="[ submitStatus === 1 ? 'active' : '' ]" @click="handlesubmit"><!-- 提交 -->{{ $t('submit') }}</p>
       </div>
     </section>
 
     <!-- 评分要点 -->
     <section class="node__wrap" v-show="nodeVisible">
       <div class="node__modal">
-        <header class="node--title f18 c333">评分要点</header>
-        <div class="node__content f14 c666">
-          <p>评论包含您所在的班级中，关于课件或话题的讨论，收到的评论或回复都将归为评论板块。</p>
-          <p>私信包含您所在的班级中所有联系人与您的私信。</p>
-          <p>通知均为雨课堂重要教学活动，会进行实时微信推送，不在此设置范围内。</p>
-        </div>
-        <footer class="node--footer f18" @click="handleclosedNode">关闭</footer>
+        <header class="node--title f18 c333"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</header>
+        <div class="node__content f14 c666">{{ declaration }}</div>
+        <footer class="node--footer f18" @click="handleclosedNode"><!-- 关闭 -->{{ $t('grading.close') }}</footer>
       </div>
     </section>
 
@@ -91,26 +92,33 @@
         lessonID: 0,
         index: 0,
         opacity: 0,
-        title: '',
         // 作答结果
         result: null,
-        reviewScore: 0,
+        reviewScore: -1,
         width: 0,
         height: 0,
         pptRate: 1,
         // 图片比例
         rate: 1,
-        score: 0,
+        score: '',
         // 互评ID
         reviewID: 0,
         // 问题ID
         problemID: 0,
         // 作答结果ID
         problemResultID: 0,
+        slideData: null,
+        // 互评要点
+        declaration: '',
+        // 提交状态 0:不能提交 1：可以提交
+        submitStatus: 0,
 
         scoreVisible: false,
         nodeVisible: false,
-        canSubmitScore: false
+        canSubmitScore: false,
+
+        modalActive: false,
+        hasReview: true,
       };
     },
     components: {
@@ -118,6 +126,17 @@
     computed: {
     },
     watch: {
+      score(newVal, oldVal) {
+        if(newVal !== '') {
+          this.submitStatus = 1;
+        } else {
+          this.submitStatus = 0;
+        }
+
+        if(newVal > this.summary.score) {
+          this.score = this.summary.score;
+        }
+      }
     },
     filters: {
     },
@@ -133,6 +152,8 @@
           'group_review_id': reviewID
         };
 
+        this.reviewID = reviewID;
+
         return request.get(URL, param)
           .then((res) => {
             if(res && res.data) {
@@ -140,15 +161,20 @@
 
               this.review = data;
               this.problemID = data.problem_id;
-              this.canSubmitScore = data.can_submit_score;
+              // this.canSubmitScore = data.can_submit_score;
+              this.declaration = data.group_review_declaration;
 
               // 作答结果
               if(data.problem_result_list && data.problem_result_list.length) {
                 let resultInfo = data.problem_result_list[0];
                 this.result = resultInfo.result;
                 this.reviewScore = resultInfo.review_score;
-                this.score = this.reviewScore;
-                this.problemResultID = resultInfo.review_score;
+                this.score = this.reviewScore > 0 ? this.reviewScore : '';
+                this.problemResultID = resultInfo.problem_result_id;
+                this.canSubmitScore = resultInfo.can_submit_score;
+              } else {
+                this.hasReview = false;
+                this.canSubmitScore = false;
               }
 
               return data;
@@ -156,40 +182,71 @@
           });
       },
 
-      /*
-       * @method 读取互评问题的基本信息
-       * @param
-       */
-      getProblem(problemID) {
-        // this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+      handlesubmit() {
+        // 第一次打分直接提交 第二次打分确认
+        if(this.reviewScore === -1) {
+          this.submitReview();
+        } else {
+          let msgOptions = {
+            confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
+            cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+          };
+          let title = this.$i18n && this.$i18n.t('grading.gradedalready');
+          let message = this.$i18n && this.$i18n.t('grading.gradedoverwrite');
+
+          this.$messagebox.confirm(message, title, msgOptions).
+            then( action => {
+              if(action === 'confirm') {
+                this.submitReview();
+              }
+          });
+        }
       },
 
       /*
        * @method 互评打分
        * @param
        */
-      handlesubmit() {
+      submitReview() {
         let URL = API.student.SUBMIT_GROUP_REVIEW;
         let param = {
-          'group_review_id': this.reviewID,
+          'group_review_id': this.summary.reviewid,
           'problem_result_id': this.problemResultID,
           'score': this.score
         };
 
-        if(!this.score) {
+        if(!this.submitStatus) {
           return this;
+        } else {
+          this.submitStatus = 0;
         }
 
         return request.post(URL, param)
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+              this.reviewScore = this.score;
+
+              this.summary = Object.assign(this.summary, {
+                status: this.$i18n.t('done') || '已完成',
+                isComplete: true
+              })
+              // 替换原来的数据
+              this.$parent.cards.splice(this.index, 1, this.summary);
+
+              this.$toast({
+                message: this.$i18n.t('sendsuccess') || '提交成功',
+                duration: 2000
+              });
+
+              setTimeout(() => {
+                this.$router.back();
+              }, 2000)
 
               return data;
             }
           });
       },
-
 
       /*
        * @method 显示打分弹层
@@ -213,6 +270,18 @@
         this.nodeVisible = false;
       },
 
+      /*
+       * @method 打分输入框focus
+       * @param
+       */
+      handlefocus() {
+        this.modalActive = true;
+      },
+
+      handleblur() {
+        this.modalActive = false;
+      },
+
       handlelaodImg(evt) {
         let target = evt.target;
         let src = target.dataset.src || target.src;
@@ -231,13 +300,51 @@
         oImg.src = src;
       },
 
-      handleBack() {
-        this.$router.back();
-      }
+      /*
+       * @method 打分
+       * @param
+       */
+      oninput(evt){
+        let targetEl = evt.target;
+        let sValue = targetEl.value;
+        let index = sValue.indexOf('.');
+        let sourceScore = this.summary && this.summary.score || 0;
+
+        if(index !== -1 && index == sValue.length - 1) {
+          return ;
+        }
+        let iptValue = +sValue;
+
+        if(iptValue > sourceScore) {
+          this.score = sourceScore
+        } else if(iptValue < 0) {
+          this.score = 0;
+        } else {
+          if((this.score+'').indexOf('.') !== -1) {
+            this.score = +parseFloat(this.score).toFixed(1);
+          }
+        }
+      },
+
+      /*
+       * @method 图片放大
+       * @param
+       */
+      handleZoom(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        let targetEl = evt.target;
+        let src = targetEl.dataset.src || targetEl.src;
+
+        typeof wx !== 'undefined' && wx.previewImage({
+          current: src, // 当前显示图片的http链接
+          urls: [src] // 需要预览的图片http链接列表
+        });
+      },
+
     },
     created() {
-      this.getGroupReview(10012);
-
       this.index = +this.$route.params.index;
 
       let cards = this.$parent.cards;
@@ -249,9 +356,10 @@
       }, 20)
 
       if(this.summary) {
-        this.getGroupReview(this.summary.spid);
+        let reviewID = this.summary.reviewid;
+        reviewID && this.getGroupReview(reviewID);
       } else {
-        // this.$router.back();
+        this.$router.back();
       }
     },
     mounted() {
@@ -275,15 +383,25 @@
     height: 100%;
 
     background: #f8f8f8;
-    overflow-y: scroll;
+    // overflow-y: auto;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
-    -webkit-backface-visibility: hidden;
   }
 
   .evaluation__wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    // height: 100%;
-    min-height: 100vh;
+    height: 100%;
+  }
+
+  .evaluation__inner {
+    flex: 1;
+    width: 100%;
+
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
   }
 
   .evaluation__getscore {
@@ -359,7 +477,20 @@
 
     .answer--text {
       text-align: left;
+      word-wrap: break-word;
+      word-break: break-all;
     }
+  }
+
+  .evaluation__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 0.533333rem;
+    height: 4.0rem;
+    text-align: center;
+    background: #fff;
   }
 
 
@@ -391,6 +522,7 @@
   .score__wrap:after {
     content: '';
     position: fixed;
+    // position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
@@ -402,6 +534,7 @@
   .score__modal {
     z-index: 1;
     position: fixed;
+    // position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
@@ -453,11 +586,21 @@
       line-height: 1.173333rem;
 
       color: #fff;
-      background: #5096F5;
+      // background: #5096F5;
+      background: #999999;
 
       border-radius: 0.6rem/50%;
       box-shadow: 0 0.106667rem 0.186667rem rgba(80, 150, 245, 0.4);
     }
+
+    .score--submit.active {
+      background: #5096F5;
+    }
+  }
+
+  .score__modal.active {
+    top: 0;
+    bottom: initial;
   }
 
   .node__wrap {
@@ -491,24 +634,28 @@
       height: 2.4rem;
       line-height: 2.4rem;
       background: #F8F8F8;
-      border-bottom: 1px solid #C8C8C8;
+      // border-bottom: 1px solid #C8C8C8;
+      border-radius: 0.106667rem 0.106667rem 0 0;
     }
 
     .node__content {
       flex: 1;
       padding: 0.4rem;
+      width: 100%;
       text-align: left;
+      white-space: pre-wrap;
     }
 
     .node--footer {
-       width: 100%;
+      width: 100%;
       height: 1.333333rem;
       line-height: 1.333333rem;
-      background: #F8F8F8;
-      border-top: 1px solid #C8C8C8;
+      color: #5096f5;
+      // background: #F8F8F8;
+      border-top: 1px solid #eee;
+      border-radius: 0 0 0.106667rem 0.106667rem;
     }
   }
-
 
 
 </style>

@@ -28,7 +28,8 @@ let pages = {
 
   "unknown": "Unclear",
   "favorite": "Favorite",
-  "screenshot": "screenshot",
+  "screenshot": "Screenshot",
+  "blackboard": "Blackboard writing",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
@@ -130,6 +131,7 @@ let pages = {
   "receiverbravo": "Bravo!",
   "networkerror" : "Failed，please try again",
   "networkerror2" : "Submit failed，please try again",
+  "livetip" : "Live On , click to play",
 
   // socket event
   "LESSON_START": "Start Class!",
@@ -142,6 +144,8 @@ let pages = {
   "QUIZ_FINISH": "The quiz has been collected.",
   "FREE_GROUP_CANCEL": "Free grouping has been cancelled",
   "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
+  "LIVE_ON": "Live On",
+  "LIVE_OFF": "Live Off",
 
   // 个人信息完善
   "merealname": "Name",
@@ -391,7 +395,7 @@ let pages = {
     "minunts5": "5mins ago",
     "howmarkppt": "You can marked Unclear and Save here",
     "unknownanonymous": "Unclear : sent anonymously <br> Save : Private",
-    "ok": "OK"
+    "ok": "OK",
   },
 
   // 分组
@@ -424,7 +428,7 @@ let pages = {
     "weizuoda": "Unanswered",
     "yihuping": "Scored",
     "faqihuping": "Peer Grading",
-    "hupingguize": "Rules of Peer Grading",
+    "hupingguize": "Rules",
   },
 
   // 打分
@@ -434,6 +438,34 @@ let pages = {
   "teachergrading": "Teacher grading",
   "peergrading": "Peer grading",
   "noComment": "No comment",
+
+  // 互评
+  grading: {
+    "scoreofpeergrading": "Score of Peer Grading",
+    "scoreofteachergrading": "Score of Teacher Grading",
+    "pointsofgrading": "Grading Criteria",
+    "textareaplaceholder": "Please enter the key or points for students' reference.",
+    "hupingguize": "Rules of Peer Grading",
+    "rule1": "<i>＊</i>Groups can take part in peer grading only after answer submission. Each group will receive <span class='f15'>One</span> answer from other groups.",
+    "rule2": "The peer grading is anonymous.",
+    "rule3": "The teacher can create the proportion of peer grading in the beginning, the final score can be modified at any time.",
+    "faqihuping": "Launch",
+    "cancel": "Cancel",
+    "save": "Save",
+    "launchedgrading" : "A peer grading is launched.",
+    "pointsgrading" : "Points for Grading",
+    "grade" : "Grade",
+    "answer" : "Answer",
+    "gradingscore" : "Peer grading score: {score} point(s)",
+    "gradingtotalscore" : "Enter the score (total score is {score} point(s))",
+    "notice" : "Notice",
+    "noticecontent" : "This question is graded by groups. Each student has only one chance to grade the question, and only the last submission in each group will be accepted as the final score.",
+    "close" : "Close",
+    "gradedalready" : "Graded Already",
+    "gradedoverwrite" : "Your submission will overwrite the present grading.",
+    "pleasescore" : "Please grading",
+    "noarticipate": "Groups did not submit will not participate in the peer grading.",
+  },
 
   // 图片国际化
   imgs: {

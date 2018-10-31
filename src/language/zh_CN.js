@@ -29,6 +29,7 @@ let pages = {
   "unknown": "不懂",
   "favorite": "收藏",
   "screenshot": "截图分享",
+  "blackboard": "板书分享",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
@@ -48,7 +49,7 @@ let pages = {
 
   "newprob": "Hi,你有新的课堂习题",
   "newvote": "Hi,你有新的投票",
-  "recvbonus": "Hi，本题有课堂红包发送",
+  "recvbonus": "Hi,本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
 
@@ -129,6 +130,7 @@ let pages = {
   "receiverbravo": "真棒！答得又快又准！",
   "networkerror" : "网络不佳，图片上传失败，请重新上传",
   "networkerror2" : "网络不佳，答案提交失败，请重试",
+  "livetip" : "直播中，点击播放",
 
   // socket event
   "LESSON_START": "上课啦！",
@@ -141,6 +143,8 @@ let pages = {
   "QUIZ_FINISH": "试卷 {0} 已收卷",
   "FREE_GROUP_CANCEL": "老师取消了自由分组",
   "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
+  "LIVE_ON": "老师开启了直播",
+  "LIVE_OFF": "老师结束了直播",
 
   // 个人信息完善
   "merealname": '真实姓名',
@@ -331,7 +335,7 @@ let pages = {
   "quizentercomment": "请输入评语",
   "invaildinput": "输入无效，请重新输入",
   "positivescore":"分数必须为正数",
-  "exceedmaximumscore": "分数超过最大本题分值，请重新输入",
+  "exceedmaximumscore": "分数超过本题最大分值，请重新输入",
   "keepadecimal": "分数最多保留一位小数，请重新输入",
 
   "tciate": "您即将结束本次授课",
@@ -393,7 +397,7 @@ let pages = {
     "minunts5": "5分钟前",
     "howmarkppt": "可以点击不懂或收藏进行标注",
     "unknownanonymous": "不懂是匿名发送给老师的噢<br>收藏仅自己可见",
-    "ok": "好的"
+    "ok": "好的",
   },
 
   // 分组
@@ -435,7 +439,35 @@ let pages = {
   "finalscore": "最终得分",
   "teachergrading": '教师评分',
   "peergrading": "互评得分",
-  "noComment": "暂无凭语",
+  "noComment": "暂无评语",
+
+  // 互评
+  grading: {
+    "scoreofpeergrading": "互评分数占比",
+    "scoreofteachergrading": "教师分数占比",
+    "pointsofgrading": "评分要点",
+    "textareaplaceholder": "请输入您的参考答案或评分要点，供学生参考",
+    "hupingguize": "互评规则",
+    "rule1": "<i>＊</i>已提交答案的各组才能参加互评，每个组将收到<span class='f15'>一份</span>非本组的作答内容",
+    "rule2": "各组之间相互匿名",
+    "rule3": "教师在发起互评时可设置互评占比，最终得分可随时修改",
+    "faqihuping": "发起互评",
+    "cancel": "取消",
+    "save": "保存",
+    "launchedgrading" : "Hi,老师发起了互评",
+    "pointsgrading" : "评分要点",
+    "grade" : "打分",
+    "answer" : "答案",
+    "gradingscore" : "互评得分：{score}分",
+    "gradingtotalscore" : "请输入互评分数（满分{score}分）",
+    "notice" : "注意",
+    "noticecontent" : "本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主",
+    "close" : "关闭",
+    "gradedalready" : "已有人批改",
+    "gradedoverwrite" : "提交后将会覆盖之前的评分",
+    "pleasescore" : "请打分",
+    "noarticipate": "未作答的小组不参与互评",
+  },
 
   // 图片国际化
   imgs: {

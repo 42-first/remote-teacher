@@ -106,6 +106,7 @@
 </template>
 <script>
   import API from '@/util/api'
+  import { isSupported } from '@/util/util'
 
   export default {
     name: 'exercise-page',
@@ -337,7 +338,7 @@
             this.sLeaveTime = minutes + ':' + seconds;
 
             if(this.leaveTime === 0) {
-              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+              this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
 
               clearInterval(this.timer);
               this.timeOver = true;
@@ -352,7 +353,7 @@
         } else {
           // 时间到
           this.timeOver = true;
-          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
+          this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
         }
       },
 
@@ -692,14 +693,17 @@
       */
       saveAnswer(data) {
         let key = 'answer_problem';
-        let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-        data.retry_times = data.retry_times + 1;
-        answerPostList.push(data);
+        if(isSupported(localStorage)) {
+          let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
 
-        let value = JSON.stringify(answerPostList);
+          data.retry_times = data.retry_times + 1;
+          answerPostList.push(data);
 
-        localStorage.setItem(key, value);
+          let value = JSON.stringify(answerPostList);
+
+          localStorage.setItem(key, value);
+        }
       }
     },
     created() {

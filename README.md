@@ -48,4 +48,7 @@ npm run dev 启动本地服务
 也可以随时修改本地json中的数据，可以直接变化本地开发时浏览器中展示的内容。
 
 现在由于ppt采用了指纹id，所以在本地点击翻页时，插件会翻页，但是回传回来的id和之前的老json的id不一样，本地不会翻页，只能替换 fetch_presentation_data.json 中的数据才能实现。
+
+如果还是连接不上，查看下src/components/teacher-restructure/util/socket-service.js 13行域名是否正确
+
 ```

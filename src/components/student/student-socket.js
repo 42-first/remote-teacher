@@ -201,6 +201,7 @@ var mixin = {
 
             // this.setTimeline(timeline, true);
             this.setTimeline(timeline);
+            this.setPresentationTitle(this.presentationID);
             break
 
           // 开始弹幕
@@ -328,6 +329,14 @@ var mixin = {
 
             break
 
+          // 板书分享20180925
+          case 'shareboard':
+            item = msg['board'];
+
+            this.addBoard({ type: 11, board: item, time: item['dt'], event: item });
+
+            break
+
           // 分组创建分组
           case 'launchgroup':
             item = msg['group'];
@@ -349,9 +358,20 @@ var mixin = {
 
             break;
 
+          // 发起互评
+          case 'launchreview':
+            item = msg['review'];
+            this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item.dt, isPopup: true, event: item });
+
           // 开始直播
           case 'startlive':
             this.startLive(msg['liveurl']);
+
+            break;
+
+          // 结束直播
+          case 'endlive':
+            this.endLive(msg);
 
             break;
 

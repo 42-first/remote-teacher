@@ -33,10 +33,10 @@
         </div>
       </div>
     </template>
-    <!-- 截图分享 -->
-    <template v-else-if="item.type==10">
+    <!-- 截图分享 白板分享 -->
+    <template v-else-if="item.type==10 || item.type==11">
       <div class="timeline__ppt">
-        <span class="ppt--pageno f14"><!-- 截图分享 -->{{ $t('screenshot') }}</span>
+        <span class="ppt--pageno f14"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
         <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="screenshot--image" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)" alt="雨课堂,截图分享" />
         </div>
@@ -154,6 +154,24 @@
         </div>
       </div>
     </template>
+    <!-- 发起了互评 -->
+    <template v-else-if="item.type==9">
+      <div class="timeline__paper">
+        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/evaluation/'+index" >
+          <div class="paper-txt f18">
+            <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
+            <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
+          </div>
+          <i class="iconfont icon-huping f55"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
 
   </section>
 
@@ -213,8 +231,9 @@
         // build items array
         let cards = this.$parent.$parent.cards;
 
+        // ppt 截图分享 白板分享
         cards.map((card)=>{
-          if(card.type === 2 && card.animation !== 1 || card.type === 10) {
+          if(card.type === 2 && card.animation !== 1 || card.type === 10 || card.type === 11) {
             items.unshift({ src: card.src, w: card.Width || 750, h: card.Height || 520 });
           }
         })
@@ -569,9 +588,15 @@
       background: #71D2A5;
     }
 
+
+    .paper-info.evaluation {
+      background: rgba(239,175,79,0.7);
+    }
+
     .paper-info.complete,
     .paper-info.xt.complete,
-    .paper-info.submission.complete {
+    .paper-info.submission.complete,
+    .paper-info.evaluation.complete {
       background: #C8C8C8;
     }
 

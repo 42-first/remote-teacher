@@ -63,6 +63,8 @@ var actionsMixin = {
                 this.addSubjective({ type: 7, spid: item.spid, time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'capture') {
                 this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
+              } else if(item['cat'] === 'board') {
+                this.addBoard({ type: 11, board: item, time: item['dt'], event: item, isFetch: isFetch });
               }
 
               break;
@@ -70,6 +72,12 @@ var actionsMixin = {
             // 分组创建分组
             case 'group':
               this.launchGroup({ type: 8, teamid: item['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
+            // 分组互评
+            case 'review':
+              this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
@@ -597,6 +605,38 @@ var actionsMixin = {
     },
 
     /*
+     * @method 发起互评
+     * @param { type: 9, reviewid: 2, prob: 1002, dt: 1510000, event: all }
+     */
+    launchReview(data) {
+      let oReview = this.groupReviewMap.get(data.reviewid);
+      let isComplete = oReview && oReview.finished || false;
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 9 && item.reviewid === data.reviewid && data.isFetch;
+      })
+      let index = this.cards.length;
+
+      // 互评题目信息
+      let slideData = this.problemMap.get(data.prob);
+
+      Object.assign(data, {
+        pageIndex: slideData && slideData.Index,
+        cover: slideData && slideData['Cover'],
+        score: slideData && slideData['Problem'] && slideData['Problem']['Score'],
+        status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
+        isComplete,
+        index
+      })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
      * @method 截图分享
      * @param { type: 10, cat: 'capture', url: ‘’, event: all }
      */
@@ -632,6 +672,42 @@ var actionsMixin = {
     },
 
     /*
+     * @method 板书分享
+     * @param { type: 11, board: { url: '', }, time: '', event: all }
+     */
+    addBoard(data) {
+      let presentation = this.presentationMap.get(this.presentationID);
+      let url = data.board && data.board.url;
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 11 && item.src === url && data.isFetch;
+      })
+
+      // 预加载图片
+      let oImg = new Image();
+      oImg.onload = (evt) => {
+        // 矫正宽高
+        let target = evt.target;
+        data.Width = target.naturalWidth || target.width;
+        data.Height = target.naturalHeight || target.height;
+      };
+
+      oImg.src = url;
+
+      let cardItem = {
+        src: url,
+        rate: presentation.Width / presentation.Height,
+        Width: presentation.Width,
+        Height: presentation.Height,
+      };
+
+      data = Object.assign(data, cardItem)
+
+      !hasEvent && this.cards.push(data);
+      this.allEvents.push(data);
+    },
+
+    /*
      * @method 开始直播
      * @param {
         "lessonid": 298,
@@ -647,9 +723,31 @@ var actionsMixin = {
       if(data) {
         this.liveURL = data.hls;
         this.Hls && this.supportHLS(this.Hls);
+        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
       }
     },
 
+    /*
+     * @method 结束直播
+     * @param
+     */
+    endLive(data) {
+      this.handlestop();
+      this.liveURL = '';
+      this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+    },
+
+    /*
+     * @method 设置课件title
+     * @param
+     */
+    setPresentationTitle(presentationID) {
+      let presentation = this.presentationMap.get(presentationID);
+
+      if(presentation && presentation.Title) {
+        this.title = presentation.Title;
+      }
+    },
 
   }
 }
