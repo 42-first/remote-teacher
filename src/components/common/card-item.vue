@@ -393,7 +393,7 @@
       // 时间动态显示 每分钟更新一次
       setInterval(() => {
         cards.forEach((item) => {
-          item.time = item.time - 1;
+          item.time && (item.time = item.time - 1);
         })
       }, 60000)
     },
