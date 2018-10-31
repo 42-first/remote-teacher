@@ -344,8 +344,8 @@
         border-radius: 0.106667rem;
 
         .left {
-          width: 7.166667rem;
-
+          // width: 7.166667rem;
+          flex: 1;
           .foldericon {
             width: 0.8rem;
             vertical-align: middle;
