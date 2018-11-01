@@ -5,6 +5,7 @@ import {setSize} from '@/components/teacher-restructure/util/util'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
+const Objectiveresult = () => import('@/components/teacher-restructure/objectiveresult')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const CollumresultDetail = () => import('@/components/teacher-restructure/collumresult-detail')
 const Fillblankresult = () => import('@/components/teacher-restructure/fillblankresult')
@@ -20,6 +21,7 @@ const Submission = () => import('@/components/teacher-restructure/submission')
 const StateSet = () => import('@/components/teacher-restructure/stateSet')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
+
 
 Vue.use(Router)
 
@@ -42,6 +44,13 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta
+    },
+    {
+      path: '/objectiveresult/:problemid',
+      name: 'objectiveresult',
+      component: Objectiveresult,
+      meta
+      
     },
     {
       path: '/collumresult/:problemid',
