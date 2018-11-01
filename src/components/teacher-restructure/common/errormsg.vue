@@ -1,11 +1,11 @@
 <!--组合错误信息面板 被父组件 home.vue 引用 -->
 <template>
-  <div class="mask-content f20">
-  	<div v-html="errMsgList[errType]"></div>
+  <div class="err-wrapper">
+  	<div v-html="errMsgList[errType]" class="err-tips"></div>
     <!-- <div v-show="errType === 2">
       {{ $t('showended') }}<br>{{ $t('showconnecting') }}
     </div> -->
-    <div class="continiue-tips">
+    <div class="continiue-tips" v-if="errType === 2 || errType === 3">
       {{$t('jsskqzdnd')}}
     </div>
     <div class="close-tips" v-if="errType === 2 || errType === 3">
@@ -16,11 +16,11 @@
   	<div class="rc-mask close-modal" v-show="!isModalHidden">
   		<div class="pub-inner">
         <div class="title f20"><!-- 您即将结束本次授课 -->{{ $t('tciate') }}</div>
-        <div class="paper-title f18"><!-- 电脑端将会同步结束授课 -->{{ $t('tsswes') }}</div>
+        <div class="paper-title f16"><!-- 电脑端将会同步结束授课 -->{{ $t('tsswes') }}</div>
         <div class="pub-btns f18">
           <v-touch class="cancel" v-on:tap="closeModal">{{ $t('cancel') }}</v-touch>
           <div class="bar"></div>
-          <v-touch class="confirm" v-on:tap="endLesson">{{ $t('endclass') }}</v-touch>
+          <v-touch class="confirm" v-on:tap="endLesson">{{ $t('confirm') }} <!-- $t('endclass') --></v-touch>
         </div>
       </div>
   	</div>
@@ -98,6 +98,16 @@
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
   @import "~@/style/common";
+  .err-wrapper{
+    margin: px2rem(440px) auto 0 auto;
+  }
+  .err-tips{
+    font-size: px2rem(42px);
+    color: #fff;
+    line-height: px2rem(52px);
+    margin: 0 auto;
+    text-align: center;
+  }
 	.finish-btn {
 		margin: 1rem auto;
 		width: 5.0rem;
@@ -105,24 +115,25 @@
 		border: 1px solid $white;
 	}
   .continiue-tips{
-    border: px2rem(1px) solid #fff;
-    padding: px2rem(40px);
-    border-radius: px2rem(8px);
-    line-height: px2rem(50px);
+    border: px2rem(2px) solid rgba(255,255,255,.2);
+    padding: px2rem(38px) px2rem(52px);
+    line-height: px2rem(42px);
     font-size: px2rem(30px);
     color: #fff;
-    margin: px2rem(10px) auto;
-    width: px2rem(640px);
+    margin: px2rem(250px) auto 0 auto;
+    width: px2rem(670px);
     text-align: left;
+    background-color: rgba(255,255,255,.05);
   }
   .close-tips{
-    border: px2rem(1px) solid #fff;
-    padding: px2rem(30px) px2rem(10px);
+    border: px2rem(1px) solid rgba(255,255,255,.2);
+    background-color: rgba(255,255,255,.05);
+    padding: px2rem(32px) px2rem(52px);
     color: #fff;
+    line-height: px2rem(42px);
     font-size: px2rem(30px);
-    border-radius: px2rem(8px);
-    width: px2rem(640px);
-    margin: 0 auto;
+    width: px2rem(670px);
+    margin: px2rem(40px) auto;
     a{
       color: #639ef4;
       text-decoration: underline;
@@ -140,7 +151,7 @@
       right: 1.066667rem;
       top: 50%;
       transform: translateY(-50%);
-      height: 100%;
+      height: 4.5rem;
       text-align: center;
       background: $white;
       border-radius: 0.08rem;
@@ -148,11 +159,11 @@
       .title {
         height: 1.63333rem;
         line-height: 1.973333rem;
-        color: $graybg;
+        color: #333;
       }
 
       .paper-title {
-        color: #333333;
+        color: $graybg;
       }
 
       .pub-btns {
@@ -172,7 +183,7 @@
           color: $graybg;
         }
         .confirm {
-          color: #F40;
+          color: #63c852;
         }
         .bar {
           width: 0.013333rem;
