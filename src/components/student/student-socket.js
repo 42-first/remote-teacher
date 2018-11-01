@@ -377,7 +377,7 @@ var mixin = {
 
           // 白板信息
           case 'newboard':
-            this.setBoardInfo(Object.assign(msg, { type: 12 }));
+            this.setBoardInfo(Object.assign(msg.board, { type: 12 }));
 
             break;
 
@@ -389,7 +389,7 @@ var mixin = {
 
           // 传输轨迹点
           case 'touchdata':
-            this.setBoardline(msg);
+            this.setBoardline(msg.draw);
 
             break;
 

@@ -81,6 +81,18 @@ var actionsMixin = {
 
               break;
 
+            // 白板创建
+            case 'board':
+              this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
+
+              break;
+
+            // 白板绘制
+            case 'draw':
+              this.setBoardline(Object.assign(item, { isFetch: isFetch }));
+
+              break;
+
             default: break;
           }
         });
@@ -751,19 +763,19 @@ var actionsMixin = {
 
     /*
      * @method 设置白板基本信息
-     * @param  { type: 12, id: , devwidth: , devheight: '', lenunit: '', event: all }
+     * @param  { type: 12, board: , lenunit: '', event: all }
      */
     setBoardInfo(data) {
       let id = data.boardid;
        // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 12 && item.boardid === data.boardid && data.isFetch;
+        return item.type === 12 && item.boardid === id && data.isFetch;
       })
 
       if(data) {
         data = Object.assign(data, {
           rate: data.devwidth / data.devheight,
-          time: +new Date()
+          time: data.dt
         });
 
         // 记录当前白板信息
