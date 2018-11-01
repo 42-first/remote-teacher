@@ -29,7 +29,7 @@ let boardMixin = {
 
     /*
      * @method 划线
-     * @param id 白板的ID coords 轨迹点, color:
+     * @param context画板上下文 coords 轨迹点, color: id 白板的ID
      */
     drawLine(context, coords, color, id) {
       context = context || this.getContext(id);
@@ -72,7 +72,7 @@ let boardMixin = {
 
     /*
      * @method 擦除
-     * @param id 白板的ID coords 轨迹点, isErase: 是否擦除
+     * @param context画板上下文 coords 轨迹点, id:板子ID
      */
     eraseLine(context, coords, id) {
       context = context || this.getContext(id);

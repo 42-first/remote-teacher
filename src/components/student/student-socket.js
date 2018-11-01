@@ -391,7 +391,6 @@ var mixin = {
           case 'touchdata':
             this.setBoardline(msg);
 
-            hasMsg = false;
             break;
 
           default:

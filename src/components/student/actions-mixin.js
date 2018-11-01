@@ -822,7 +822,7 @@ var actionsMixin = {
      */
     clearBoard(data) {
       if(data) {
-        let id = data.boardid || this.boardInfo.boardid;;
+        let id = data.boardid || this.boardInfo.boardid;
         this.clearScreen(id);
       }
     },
