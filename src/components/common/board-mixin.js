@@ -29,18 +29,17 @@ let boardMixin = {
 
     /*
      * @method 划线
-     * @param id 白板的ID coords 轨迹点, isErase: 是否擦除
+     * @param id 白板的ID coords 轨迹点, color:
      */
-    drawLine(id, coords, isErase = false) {
-      let context = this.getContext(id);
-      let boardInfo = this.boardMap.get(id);
+    drawLine(context, coords, color, id) {
+      context = context || this.getContext(id);
 
       if(!context) {
         return null;
       }
 
       // 线的颜色
-      let color = boardInfo.color || '#000000';
+      color = color || '#000000';
       context.fillStyle = color;
       context.strokeStyle = color;
       // 线的类型
@@ -75,8 +74,8 @@ let boardMixin = {
      * @method 擦除
      * @param id 白板的ID coords 轨迹点, isErase: 是否擦除
      */
-    eraseLine(id, coords) {
-      let context = this.getContext(id);
+    eraseLine(context, coords, id) {
+      context = context || this.getContext(id);
 
       if(!context) {
         return null;
@@ -106,6 +105,66 @@ let boardMixin = {
         // 状态继续存储 方便后面回退
         context.save();
       }
+    },
+
+    /*
+     * @method 滚动到白板
+     * @param
+     */
+    scrollIntoBoard(boardid) {
+      let domID = `#canvas_${boardid}`;
+      let canvasEl = document.querySelector(domID);
+
+      if(canvasEl) {
+        canvasEl.scrollIntoView();
+        this.hasMsg = false;
+      }
+    },
+
+    /*
+     * @method 白板置顶
+     * @param
+     */
+    setTopping(boardInfo) {
+      let id = boardInfo.boardid;
+      // 找到之前的板子
+      let targetIndex = this.cards.findIndex((item) => {
+        return item.type === 12 && item.boardid === id;
+      })
+
+      // 删除之前的白板
+      targetIndex && this.cards.splice(targetIndex, 1);
+
+      // 新建白板
+      this.cards.push(boardInfo);
+
+      // todo 这里有个大坑 就是当前位置以上的canvas都会更新DOM导致canvas数据丢失
+
+      setTimeout(()=>{
+        // 将原来的所有线重新复原
+        this.restore(boardInfo);
+      }, 1000)
+
+    },
+
+    /*
+     * @method 清屏
+     * @param
+     */
+    restore(boardInfo, context) {
+      let id = boardInfo.boardid;
+
+      if(boardInfo.lines) {
+        boardInfo.lines.forEach((line) => {
+          let isErase = line.type === 'erase' ? true : false;
+          if(isErase) {
+            this.eraseLine(context, line.coords, id);
+          } else {
+            this.drawLine(context, line.coords, line.color, id);
+          }
+        })
+      }
+
     },
 
     /*

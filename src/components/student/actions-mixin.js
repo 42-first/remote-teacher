@@ -767,8 +767,8 @@ var actionsMixin = {
         });
 
         // 记录当前白板信息
-        let boardInfo = Object.assign(this.boardInfo, data);
-        this.boardMap.set(id, boardInfo);
+        this.boardMap.set(id, data);
+        this.boardInfo = data;
 
         !hasEvent && this.cards.push(data);
         this.allEvents.push(data);
@@ -781,7 +781,7 @@ var actionsMixin = {
      */
     setBoardline(data) {
       if(data) {
-        let id = data.boardid || 1;
+        let id = data.boardid || this.boardInfo.boardid;
         let boardInfo = this.boardMap.get(id);
 
         if(boardInfo) {
@@ -790,23 +790,29 @@ var actionsMixin = {
           boardInfo.lines.push(data);
           this.boardMap.set(id, boardInfo);
 
+          // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
+          let lastCards = this.cards.slice(-2);
+          let cardBoard = lastCards.find((item) => {
+            // return item.type === 12 && item.boardid === id && data.isFetch;
+            return item.type === 12 && item.boardid === id;
+          })
 
-          // todo: 判断当前画板是不是在最上面 将白板数据插入到最上面/或者滚动到对应画板位置
+          if(cardBoard) {
+            let isErase = data.type === 'erase' ? true : false;
+            if(isErase) {
+              this.eraseLine(null, data.coords, id);
+            } else {
+              this.drawLine(null, data.coords, data.color, id);
+            }
 
-          let isErase = data.type === 'erase' ? true : false;
-          if(isErase) {
-            this.eraseLine(id, data.coords, data.color);
+            // 更新最新时间
+            Object.assign(cardBoard, boardInfo, { time: data.dt })
           } else {
-            this.drawLine(id, data.coords, isErase);
+            // 置顶操作
+            this.setTopping(boardInfo);
           }
         }
 
-        // 更新最新时间
-        this.cards.forEach((item) => {
-          if(item.type === 12 && item.boardid === id) {
-            Object.assign(item, { time: data.dt })
-          }
-        })
       }
     },
 
@@ -816,7 +822,7 @@ var actionsMixin = {
      */
     clearBoard(data) {
       if(data) {
-        let id = data.boardid || 1;
+        let id = data.boardid || this.boardInfo.boardid;;
         this.clearScreen(id);
       }
     },

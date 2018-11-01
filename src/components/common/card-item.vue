@@ -176,9 +176,9 @@
     <template v-else-if="item.type==12">
       <div class="timeline__ppt">
         <span class="ppt--pageno f14">板书</span>
-        <!-- 白板屏幕宽高 -->
-        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }">
-          <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas"></canvas>
+        <!-- 白板屏幕宽高 增加自定义指令解决数据改变canvas被清空大坑 -->
+        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }" >
+          <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas" v-canvas="item"></canvas>
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
@@ -382,7 +382,7 @@
         }
 
         return true;
-      }
+      },
     },
     created() {
       let cards = this.$parent.$parent.cards;
@@ -398,7 +398,6 @@
       }, 60000)
     },
     mounted() {
-      let self = this;
     },
     beforeDestroy() {
     }

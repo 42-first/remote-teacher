@@ -166,6 +166,8 @@
   import '@/util/util'
   import { configWX } from '@/util/wx-util'
 
+  import '@/util/directive-util'
+
   import CardItemComponent from '@/components/common/card-item.vue'
   import PopupComponent from '@/components/common/popup-box.vue'
   import LangComponent from '@/components/common/change_lang_dialog.vue'
