@@ -38,7 +38,7 @@
 <script>
 	export default {
 	  name: 'CollumBox',
-	  props: ['problemType', 'graph', 'total'],
+	  props: ['problemType', 'graph', 'total', 'ma_right_count'],
 	  data () {
 	    return {
 	    }

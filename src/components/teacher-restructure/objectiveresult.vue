@@ -37,6 +37,7 @@
           :total="total"
           :problemType="problemType"
           :graph="graph"
+					:ma_right_count="ma_right_count"
         ></CollumBox>
       </template>
 	    
