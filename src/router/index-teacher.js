@@ -192,8 +192,8 @@ router.beforeEach((to, from, next) => {
   }
 
   // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
-  let isCollumresultClose = from.name === 'collumresult' && to.name !== 'collumresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  let isFillblankresultClose = from.name === 'fillblankresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+  let isCollumresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+  let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
   if (isCollumresultClose || isFillblankresultClose) {
     let str = JSON.stringify({
       'op': 'closeproblemresult',
