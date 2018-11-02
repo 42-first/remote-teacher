@@ -222,15 +222,16 @@ var actionsMixin = {
         let oImg = new Image();
         oImg.onload = (evt) => {
           if(index !== -1) {
-            let data = self.cards[index - 1];
-            data.src = slideData['Cover'];
+            // 暂时去掉 因为目前很多使用 splice 导致顺序短时间内错乱
+            // let data = self.cards[index - 1];
+            // data.src = slideData['Cover'];
           }
         };
 
         oImg.src = slideData['Cover'];
 
         let cardItem = {
-          src: slideData['Thumbnail'],
+          src: slideData['Cover'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
           hasStore: slideData['store'] == 1 ? true : false,
@@ -792,7 +793,7 @@ var actionsMixin = {
      * @param
      */
     setBoardline(data) {
-      if(data) {
+      if(data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
         let boardInfo = this.boardMap.get(id);
 

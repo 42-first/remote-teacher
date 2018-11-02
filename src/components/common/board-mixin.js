@@ -138,8 +138,6 @@ let boardMixin = {
       // 新建白板
       this.cards.push(boardInfo);
 
-      // todo 这里有个大坑 就是当前位置以上的canvas都会更新DOM导致canvas数据丢失
-
       setTimeout(()=>{
         // 将原来的所有线重新复原
         this.restore(boardInfo);
