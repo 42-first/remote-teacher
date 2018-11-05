@@ -89,7 +89,7 @@ var actionsMixin = {
 
             // 白板绘制
             case 'draw':
-              this.setBoardline(Object.assign(item, { isFetch: isFetch }));
+              this.setBoardline(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
 
               break;
 
@@ -810,11 +810,8 @@ var actionsMixin = {
           })
 
           if(cardBoard) {
-            let isErase = data.type === 'erase' ? true : false;
-            if(isErase) {
-              this.eraseLine(null, data.coords, id);
-            } else {
-              this.drawLine(null, data.coords, data.color, id);
+            if(data.from !== 'timeline') {
+              this.simulationDrawing(null, data);
             }
 
             // 更新最新时间

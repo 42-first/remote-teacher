@@ -12,7 +12,7 @@ import boardmixin from '@/components/common/board-mixin'
 
 let methods = boardmixin.methods;
 
-console.info('boardmixin methods', methods);
+// console.info('boardmixin methods', methods);
 
 Vue.directive('canvas', {
   bind: function(el, binding) {

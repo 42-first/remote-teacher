@@ -28,6 +28,95 @@ let boardMixin = {
     },
 
     /*
+     * @method 根据绘制时间分段绘制
+     * @param
+     */
+    simulationDrawing(context, drawInfo) {
+      let {coords, duration, boardid, color, action} = drawInfo;
+      let isErase = action === 'erase' ? true : false;
+      let onceTime = 100;
+      let count = Math.round(duration/onceTime);
+
+      if(isErase) {
+        this.eraseLine(context, coords, boardid);
+      } else {
+        this.drawLineLive(context, drawInfo);
+      }
+
+      // 人的感知是时间层面的 所以时间段来绘制线段比较合理 暂时默认没100ms作为一个时间段
+      // if(count > 1) {
+      //   let sliceLen = Math.floor(coords/count);
+
+      //   if(isErase) {
+      //     this.eraseLine(context, coords, boardid);
+      //   } else {
+      //     for(let i = 0; i < count; i++) {
+      //       // coords/count 不能整除的问题 如何合理分到分段数据中(均分)
+      //       let sliceCoords = coords.slice(i*sliceLen, sliceLen);
+      //       setTimeout(()=>{
+      //         // this.drawLineLive(context, sliceCoords, color, boardid);
+      //         this.drawLine(context, sliceCoords, color, boardid);
+      //       }, i*onceTime)
+      //     }
+      //   }
+      // } else {
+      //   if(isErase) {
+      //     this.eraseLine(context, coords, boardid);
+      //   } else {
+      //     this.drawLineLive(context, coords, color, boardid);
+      //   }
+      // }
+
+    },
+
+    /*
+     * @method 带动画的划线
+     * @param context画板上下文 drawInfo
+     */
+    drawLineLive(context, drawInfo) {
+      let index = 0;
+      let {coords, boardid, color} = drawInfo;
+
+      context = context || this.getContext(boardid);
+      if(!context) {
+        return null;
+      }
+
+      // 线的颜色
+      context.fillStyle = color;
+      context.strokeStyle = color;
+      // 线的类型
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+
+      // 动画回调函数
+      function drawAnimate() {
+        if (index < coords.length - 2) {
+          requestAnimationFrame(drawAnimate);
+        }
+
+        let point = coords[index];
+
+        if(coords.length > 1) {
+          // draw a line segment from the last coords
+          // to the current coords
+          context.lineWidth = point.w;
+          context.beginPath();
+          context.moveTo(point.x, point.y);
+          context.lineTo(coords[index + 1].x, coords[index + 1].y);
+          context.stroke();
+          // increment "index" to get the next coords
+          index++;
+        } else {
+          context.fillRect(point.x, point.y, point.w, point.h);
+        }
+
+      }
+
+      drawAnimate();
+    },
+
+    /*
      * @method 划线
      * @param context画板上下文 coords 轨迹点, color: id 白板的ID
      */
@@ -59,7 +148,6 @@ let boardMixin = {
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
           context.lineTo(point.x, point.y);
-          // context.fillRect(point.x, point.y, point.w, point.h);
         }
 
         // 描边
