@@ -138,10 +138,12 @@ let boardMixin = {
       // 新建白板
       this.cards.push(boardInfo);
 
-      setTimeout(()=>{
-        // 将原来的所有线重新复原
-        this.restore(boardInfo);
-      }, 1000)
+      // 将原来的所有线重新复原
+      this.restore(boardInfo);
+      // setTimeout(()=>{
+      //   // 将原来的所有线重新复原
+      //   this.restore(boardInfo);
+      // }, 1000)
 
     },
 

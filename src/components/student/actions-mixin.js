@@ -798,7 +798,7 @@ var actionsMixin = {
         let boardInfo = this.boardMap.get(id);
 
         if(boardInfo) {
-          boardInfo = Object.assign({}, boardInfo, { color: data.color });
+          boardInfo = Object.assign({}, boardInfo);
           !boardInfo.lines && (boardInfo.lines = []);
           boardInfo.lines.push(data);
           this.boardMap.set(id, boardInfo);
@@ -806,7 +806,6 @@ var actionsMixin = {
           // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
           let lastCards = this.cards.slice(-2);
           let cardBoard = lastCards.find((item) => {
-            // return item.type === 12 && item.boardid === id && data.isFetch;
             return item.type === 12 && item.boardid === id;
           })
 
