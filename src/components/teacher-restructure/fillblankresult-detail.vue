@@ -174,7 +174,7 @@
        */
       refreshProblemResultDetail() {
         let self = this
-        let url = API.fill_blank_problem_statistics
+        let url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
 
         if (process.env.NODE_ENV === 'production') {
           url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
