@@ -297,7 +297,7 @@ let pages = {
   "keeprolling": "继续滚动",
   "selhim": "就是Ta了",
   "endclass": "结束本次授课",
-  "showended": "您已退出全屏放映",
+  "showended": "已退出全屏放映",
   "showconnecting": "或放映正在连接中",
   "otherslogin": "其他老师已登录",
   "forcelogout": "您已被迫下线",
