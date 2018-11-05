@@ -79,8 +79,8 @@ if (process.env.NODE_ENV === 'production') {
     teaching_lesson_participant_list:   'http://apimock.xuetangx.com/mock/115/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
     lesson_not_participant_list:        'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
     publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
-    problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
-    fill_blank_problem_statistics:      'http://apimock.xuetangx.com/mock/115/v/lesson/fill_blank_problem_statistics/{problem_id}/',         // 填空题条形图数据
+    problem_statistics:                 'http://apimock.xuetangx.com/mock/115/v/lesson/problem_statistics',         // 试题柱状图数据
+    fill_blank_problem_statistics:      'http://apimock.xuetangx.com/mock/115/v/lesson/fill_blank_problem_statistics',         // 填空题条形图数据
     problem_result_detail:              'http://apimock.xuetangx.com/mock/115/v/lesson/problem_result_detail/{{problem_id}}/',      // 试题详情数据
     delay_problem:                      '/static/lesson/mock/delay_problem.json',              // 试题收题
     publish_lesson_paper:               '/static/lesson/mock/publish_lesson_paper.json',       // 发布试卷
