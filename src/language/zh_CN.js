@@ -171,7 +171,7 @@ let pages = {
   "startclass": "开始上课 | 继续上课",
   "curslide": "当前幻灯片",
   "nextslide": "下一幻灯片",
-  "sendprob": "发送此题 | 查看答案",
+  "sendprob": "发送此题 | 作答情况",
   "timelimit": "限时发送",
   "sec": "秒",
   "min": "分钟",
