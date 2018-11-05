@@ -693,75 +693,10 @@
 	  color: $white;
 	  background: #000000;
 
-		/* 上部 */
-	  .upper {
-	  	margin: 0 auto;
-	  	width: 9.6rem;
-	  	height: 4.0rem;
-	  	padding-top: 0.8rem;
-
-	  	.xitixushi {
-	  		display: flex;
-	  		justify-content: space-between;
-	  		align-items: center;
-	  		height: 1.866667rem;
-	  		padding: 0 0.3rem;
-	  		background: #212121;
-
-	  		.sjd {
-	  			padding-right: 1.333333rem;
-	  			color: #F84F41;
-	  		}
-
-	  		.rolex .time {
-	  			display: inline-block;
-	  			width: 2.666667rem;
-	  		}
-
-	  		.rolex.warn {
-	  			color: #F84F41;
-	  			.iconfont {
-	  				color: #F84F41;
-	  			}
-	  		}
-
-	  		.time-rel, .pro-rel {
-	  			align-self: center;
-	  			color: $white;
-
-	  			.tbtn {
-	  				width: 1.733333rem;
-	  				height: 0.8rem;
-	  				line-height: 0.8rem;
-	  				border: 1px solid #CCCCCC;
-	  				border-radius: 0.4rem;
-	  			}
-	  			.nobtn {
-	  				border: none;
-	  				border-radius: 0.4rem;
-	  				background-color: #282828;
-	  				color: #08BC72;
-	  			}
-	  			.green {
-	  				border-color: #08BC72;
-	  				background-color: rgba(8, 188, 114, 0.2)
-	  			}
-	  			.red {
-	  				border-color: #F84F41;
-	  				background-color: rgba(248, 79, 65, 0.2);
-						color: #fff;
-	  			}
-	  		}
-	  	}
-
-			.jishi {
-				margin-top: -0.186667rem;
-				width: 0.9rem;
-				vertical-align: middle;
-			}
-	  }
-
-	  
+	  /* 调整中间条形头的高度 */
+		.FillblankBox {
+			flex: 1;
+		}
 
 		/* 下方按钮 */
 		.group-btns {
