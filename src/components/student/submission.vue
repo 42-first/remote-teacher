@@ -16,7 +16,7 @@
         <div class="submission__textarea--wrapper f17">
           <textarea class="submission-textarea J_feed_content" maxlength="140" :placeholder="$t('isempty')" v-model="text"></textarea>
           <div class="submission-footer">
-            <p class="">(<span class="">{{ count }}</span>/140)</p>
+            <p class="">(<span class="">{{ count }}</span>/1000)</p>
           </div>
         </div>
       </section>
