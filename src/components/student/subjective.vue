@@ -193,7 +193,7 @@
           return this;
         }
 
-        let value = newValue && newValue.substr(0, 140);
+        let value = newValue && newValue.substr(0, 1000);
 
         this.count = value && value.length || 0;
         this.text = value;

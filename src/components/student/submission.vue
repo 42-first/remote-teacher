@@ -130,7 +130,7 @@
         }
 
         // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 140);
-        let value = newValue && newValue.substr(0, 140);
+        let value = newValue && newValue.substr(0, 1000);
 
         this.count = value && value.length || 0;
         this.text = value;
