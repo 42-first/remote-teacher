@@ -112,15 +112,13 @@
     $ 白板列表
   \*--------------------*/
 
-  .board__wrap {
-
-  }
-
 
   .timeline__ppt {
     position: relative;
     margin: 0.266667rem auto 0.4rem;
+    padding-bottom: 0.4rem;
     width: calc(100% - 0.533333rem);
+    border-bottom: 1px solid #C8C8C8;
 
     .ppt__cover--wrapper {
       margin: 0 auto 0.32rem;
