@@ -24,15 +24,29 @@
     </div>
 
     <!-- 不懂 类型 -->
-    <div v-show="tab === 2" class="scroll-box scroll-box2 allowscrollcallback">
-      <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
+    <section class="scroll-box scroll-box2 allowscrollcallback" v-show="tab === 2">
+      <!-- 新增白板不懂入口 有数据显示没数据不显示  -->
+      <router-link tag="section" :to="{ name: 'boardlist', params: { lessonid: lessonid } }" class="board__box" v-if="boardTags && boardTags.board_track_doubt_count">
+        <div class="board__left">
+          <img class="board--image" alt="雨课堂,白板" src="http://sfe.ykt.io/o_1cs602ntrk81rnejl2im1n3s9.png" />
+          <span class="board--title f14"><!-- 白板不懂 -->{{ $t('boardunknow') }}</span>
+        </div>
+        <p class="board__right">
+          <span class="board--unknow f15">{{ boardTags.board_track_doubt_count }}</span>
+          <i class="iconfont icon-jinrucopy f25"></i>
+        </p>
+      </router-link>
+
+      <div class="">
+        <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
         <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]" :style="{height: realHeight + 'rem'}"></span>
         <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
         <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">{{ $t('unknown') }}: {{item.val}}</div>
-      </v-touch>
-    </div>
+        </v-touch>
+      </div>
+    </section>
 
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
@@ -72,6 +86,8 @@
         doubtList: [],  // 不懂人员分布
         imgHolder: [],  // 图片加载成功前占位符, 1表示显示占位符
 				realHeight: null,
+        // 白板不懂数据
+        boardTags: null
       }
     },
     computed: {
@@ -209,6 +225,7 @@
         request.get(url)
           .then(jsonData => {
             self.doubtList = jsonData.data.doubt
+            self.boardTags = jsonData.data.board_track_tags
           })
       },
       /**
@@ -367,4 +384,47 @@
       }
     }
   }
+
+
+  /*--------------------*\
+    $ 白板不懂
+  \*--------------------*/
+
+  .board__box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 0.4rem;
+    width: 100%;
+    height: 1.066667rem;
+    border-radius: 0.16rem;
+
+    color: #333;
+    background: #fff;
+  }
+
+  .board__left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .board--title {
+    padding-left: 0.133333rem;
+  }
+
+  .board__right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    padding-right: 0.266667rem;
+  }
+
+  .board--image {
+    width: 1.413333rem;
+    height: 1.066667rem;
+  }
+
 </style>

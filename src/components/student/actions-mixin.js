@@ -771,13 +771,16 @@ var actionsMixin = {
        // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 12 && item.boardid === id && data.isFetch;
-      })
+      });
+      let boardInfo = this.boardMap.get(id);
 
       if(data) {
         data = Object.assign(data, {
           rate: data.devwidth / data.devheight,
-          time: data.dt
-        });
+          time: data.dt,
+          doubt: false,
+          emphasis: false
+        }, boardInfo);
 
         // 记录当前白板信息
         this.boardMap.set(id, data);

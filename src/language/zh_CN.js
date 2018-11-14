@@ -30,6 +30,7 @@ let pages = {
   "favorite": "收藏",
   "screenshot": "截图分享",
   "blackboard": "板书分享",
+  "board": "板书",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
@@ -382,6 +383,7 @@ let pages = {
   "weida": "未答",
   "close": "关闭",
   "note": "备注",
+  "boardunknow": "白板不懂",
 
   // 引导页
   guide: {

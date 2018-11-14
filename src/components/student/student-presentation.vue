@@ -296,6 +296,8 @@
         },
         // 白板map
         boardMap: new Map(),
+        // 白板不懂收藏
+        boardList: null
       };
     },
     components: {
@@ -395,6 +397,14 @@
 
           // sentry 配置
           this.setSentry();
+
+          // 时间动态显示 每分钟更新一次
+          setInterval(() => {
+            this.cards.forEach((item) => {
+              item.time && (item.time = item.time - 1);
+            })
+          }, 60000)
+
         });
       },
 
@@ -552,6 +562,8 @@
               self.groupList = data.groupList;
               self.groupReviewList = data.groupReviewList;
               self.liveInfo = data.liveList || null;
+              // 白板不懂收藏
+              self.boardList = data.share_board_track || null;
 
               // classroom
               self.classroom = data.classroom;
@@ -583,6 +595,13 @@
               if(self.groupReviewList && self.groupReviewList.length) {
                 self.groupReviewList.forEach( (review) => {
                   self.groupReviewMap.set(review.group_review_id, review);
+                });
+              }
+
+              // set boardMap
+              if(self.boardList && self.boardList.length) {
+                self.boardList.forEach( (board) => {
+                  self.boardMap.set(board.board_id, board);
                 });
               }
 
