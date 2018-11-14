@@ -375,7 +375,7 @@
        * boardid 白板ID tag 1 不懂 2 收藏
        */
       handleBoardTag(tag, boardid, value) {
-        let URL = API.student.GET_BOARD_TAG;
+        let URL = API.student.SET_BOARD_TAG;
         let params = {
           'lesson_id': this.lessonid,
           'sharing_file_id': boardid,
