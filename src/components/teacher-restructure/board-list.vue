@@ -26,7 +26,7 @@
 </template>
 <script>
   import '@/util/directive-util'
-  import {mapGetters} from 'vuex'
+  // import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
 
