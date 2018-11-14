@@ -158,9 +158,9 @@ var mixin = {
 
             if(timeline && timeline.length === 0) {
               // 服务端没有此presetationID,重新链接发送
-              setTimeout(()=>{
-                this.initws(true);
-              }, 10000)
+              // setTimeout(()=>{
+              //   this.initws(true);
+              // }, 10000)
             } else if(timeline && timeline.length) {
               this.cards = [];
               this.setTimeline(timeline)
