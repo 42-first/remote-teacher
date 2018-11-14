@@ -183,7 +183,7 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.dount ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.dount)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
             <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(2, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
           </div>
         </div>
@@ -383,7 +383,7 @@
           'tag_type': value ? 'cancel' : 'add'
         };
         let cards = this.$parent.$parent.cards;
-        let boardMap = this.$parent.$parent.boardMap.get(boardid);
+        let boardMap = this.$parent.$parent.boardMap;
 
         // 同步白板信息 更新cards信息
         let boardInfo = cards.find((card, index)=>{
@@ -393,7 +393,7 @@
         request.post(URL, params).
         then( (res) => {
           if(res && res.success) {
-            tag === 1 && (boardInfo.dount = !boardInfo.dount);
+            tag === 1 && (boardInfo.doubt = !boardInfo.doubt);
             tag === 2 && (boardInfo.emphasis = !boardInfo.emphasis);
 
             boardMap.set(boardid, boardInfo);

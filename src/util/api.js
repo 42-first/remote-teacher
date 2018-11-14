@@ -68,7 +68,7 @@ if (process.env.NODE_ENV === 'production') {
             'GET_LIVE_URL': '/v/lesson/live/get_live_url/',
 
             // 白板收藏不懂
-            'GET_BOARD_TAG': '/v/lesson/file_sharing/sharing_file_click_tag',
+            'SET_BOARD_TAG': '/v/lesson/file_sharing/sharing_file_click_tag',
 
         },
 
