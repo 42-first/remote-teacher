@@ -829,6 +829,20 @@ var actionsMixin = {
     },
 
     /*
+     * @method 白板翻页
+     * @param { "type": "board", "action": "nav", "boardid": 1 }
+     */
+    boardNav(data) {
+      if(data && data.boardid) {
+        let id = data.boardid;
+        let boardInfo = this.boardMap.get(id);
+
+        // 置顶操作
+        this.setTopping(boardInfo);
+      }
+    },
+
+    /*
      * @method 白板清屏
      * @param
      */

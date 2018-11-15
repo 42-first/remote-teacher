@@ -393,6 +393,12 @@ var mixin = {
 
             break;
 
+          // 白板翻页
+          case 'boardnav':
+            this.boardNav(msg.board);
+
+            break;
+
           default:
             hasMsg = false;
             break
