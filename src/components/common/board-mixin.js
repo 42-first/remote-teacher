@@ -213,7 +213,7 @@ let boardMixin = {
      * @method 白板置顶
      * @param
      */
-    setTopping(boardInfo) {
+    setTopping(boardInfo, isRender) {
       let id = boardInfo.boardid;
       // 找到之前的板子
       let targetIndex = this.cards.findIndex((item) => {
@@ -227,11 +227,11 @@ let boardMixin = {
       this.cards.push(boardInfo);
 
       // 将原来的所有线重新复原
-      this.restore(boardInfo);
-      // setTimeout(()=>{
-      //   // 将原来的所有线重新复原
-      //   this.restore(boardInfo);
-      // }, 1000)
+      // this.restore(boardInfo);
+      isRender && setTimeout(()=>{
+        // 将原来的所有线重新复原
+        this.restoreAll(boardInfo);
+      }, 50)
 
     },
 
@@ -253,6 +253,21 @@ let boardMixin = {
         })
       }
 
+    },
+
+    /*
+     * @method 恢复所有板子
+     * @param
+     */
+    restoreAll() {
+      let boardMap = this.boardMap;
+
+      boardMap.forEach((boardInfo) => {
+        // 避免重新画覆盖问题
+        this.clearScreen(boardInfo.boardid);
+        // 将原来的所有线重新复原
+        this.restore(boardInfo);
+      });
     },
 
     /*

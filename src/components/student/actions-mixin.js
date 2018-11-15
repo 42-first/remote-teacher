@@ -83,7 +83,11 @@ var actionsMixin = {
 
             // 白板创建
             case 'board':
-              this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
+              if(item.action === 'new') {
+                this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
+              } else if(item.action === 'nav') {
+                this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+              }
 
               break;
 
@@ -821,7 +825,7 @@ var actionsMixin = {
             Object.assign(cardBoard, boardInfo, { time: data.dt })
           } else {
             // 置顶操作
-            this.setTopping(boardInfo);
+            // this.setTopping(boardInfo);
           }
         }
 
@@ -833,12 +837,12 @@ var actionsMixin = {
      * @param { "type": "board", "action": "nav", "boardid": 1 }
      */
     boardNav(data) {
-      if(data && data.boardid) {
+      if(data && !data.isFetch) {
         let id = data.boardid;
         let boardInfo = this.boardMap.get(id);
 
         // 置顶操作
-        this.setTopping(boardInfo);
+        this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
       }
     },
 
