@@ -126,6 +126,7 @@
 
       border: 1px solid #C8C8C8;
       overflow: hidden;
+      background: #fff;
     }
 
     .ppt-footer {
