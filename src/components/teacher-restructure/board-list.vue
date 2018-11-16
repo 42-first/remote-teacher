@@ -11,7 +11,7 @@
     <div class="timeline__ppt" v-for="board in boards">
       <!-- 白板屏幕宽高 -->
       <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/board.rate + 'rem' }" >
-        <canvas :id="'canvas_'+board.board_id" class="board__container" :width="board.content.width" :height="board.content.height" :style="board|scaleCanvas" v-canvas="board"></canvas>
+        <canvas :id="'canvas_'+board.board_id" class="board__container" :width="board.content.width" :height="board.content.height" :style="board.content|scaleCanvas" v-canvas="board"></canvas>
       </div>
       <div class="ppt-footer">
         <p class="ppt__time f16 c9b">{{ $t('pno', { number: board.index }) }}</p>
