@@ -376,15 +376,18 @@ var actionsMixin = {
         switch (problemType) {
           // 主观题
           case 'ShortAnswer':
-            pageURL += `subjective/${index}`;
+            // pageURL += `subjective/${index}`;
+            pageURL += 'subjective/';
             break;
           // 填空题
           case 'FillBlank':
-            pageURL += `blank/${index}`;
+            // pageURL += `blank/${index}`;
+            pageURL += 'blank/';
             break;
           // 多选单选投票
           default:
-            pageURL += `exercise/${index}`;
+            // pageURL += `exercise/${index}`;
+            pageURL += 'exercise/';
             break;
         }
       }

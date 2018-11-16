@@ -86,7 +86,7 @@
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
         <!-- 作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL" >
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL+index" >
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
