@@ -30,6 +30,7 @@ let pages = {
   "favorite": "Favorite",
   "screenshot": "Screenshot",
   "blackboard": "Blackboard writing",
+  "board": "Board",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
@@ -383,6 +384,7 @@ let pages = {
   "cuowu": "Wrong",
   "weida": "Unanswerd",
   "note": "Remark",
+  "boardunknow": "Unclear(board)",
 
   // 引导页
   guide: {

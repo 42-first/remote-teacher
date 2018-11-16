@@ -158,9 +158,9 @@ var mixin = {
 
             if(timeline && timeline.length === 0) {
               // 服务端没有此presetationID,重新链接发送
-              setTimeout(()=>{
-                this.initws(true);
-              }, 10000)
+              // setTimeout(()=>{
+              //   this.initws(true);
+              // }, 10000)
             } else if(timeline && timeline.length) {
               this.cards = [];
               this.setTimeline(timeline)
@@ -372,6 +372,30 @@ var mixin = {
           // 结束直播
           case 'endlive':
             this.endLive(msg);
+
+            break;
+
+          // 白板信息
+          case 'newboard':
+            this.setBoardInfo(Object.assign(msg.board, { type: 12 }));
+
+            break;
+
+          // 清屏
+          case 'boardclear':
+            this.clearBoard(msg);
+
+            break;
+
+          // 传输轨迹点
+          case 'touchdata':
+            this.setBoardline(msg.draw);
+
+            break;
+
+          // 白板翻页
+          case 'boardnav':
+            this.boardNav(msg.board);
 
             break;
 

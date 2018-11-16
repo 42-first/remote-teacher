@@ -62,7 +62,7 @@
           @showActivity="showActivity"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
-          @checkDoubt="checkDoubt" 
+          @checkDoubt="checkDoubt"
           :problem-type="problemType"
           :card-width="cardWidth"
           :card-height="cardHeight"
@@ -556,10 +556,16 @@
 	        .then(jsonData => {
 	          let doubt = jsonData.data.doubt
 	          doubtTotalSum = 0
+            let boardTags = jsonData.data.board_track_tags
 
 	          doubt.forEach(item => {
 	            doubtTotalSum += item
 	          })
+
+            // 加上不懂的数据
+            if(boardTags) {
+              doubtTotalSum += boardTags.board_track_doubt_count;
+            }
 
 	          // 学生能取消不懂的，有可能减成负数
 	          if (doubtTotalSum < oldDoubt) {

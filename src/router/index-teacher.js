@@ -21,6 +21,8 @@ const Submission = () => import('@/components/teacher-restructure/submission')
 const StateSet = () => import('@/components/teacher-restructure/stateSet')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
+// 白板列表
+const BoardList = () => import('@/components/teacher-restructure/board-list')
 
 
 Vue.use(Router)
@@ -158,6 +160,12 @@ const router = new Router({
       path: '/quizresultdetail/:quizid',
       name: 'quizresultdetail',
       component: Quizresultdetail,
+      meta
+    },
+    {
+      path: '/boardlist/:lessonid',
+      name: 'boardlist',
+      component: BoardList,
       meta
     },
     {
