@@ -4,9 +4,9 @@
     <div class="problem-root" v-scroll="onScroll">
       <slot name="ykt-msg"></slot>
       <!-- 教师遥控器引导查看答案、续时 -->
-      <GuideDelay
+      <!-- <GuideDelay
         v-show="!isGuideDelayHidden"
-      ></GuideDelay>
+      ></GuideDelay> -->
 
       <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newans') }}</v-touch>
 
@@ -118,14 +118,17 @@
 										</div>
 
                     <div class="cont f18">
-                      <div class="cont-title">
+                      <div class="cont-title" :class="{'fold': item.fold}">
                       	{{item.subj_result.content}}
                       </div>
-
+                      <div class="show-all" v-if="item.subj_result && item.subj_result.content" @click="foldClick(index)">
+                        <span v-show="item.fold">{{$t('showall')}}</span>
+                        <span v-show="!item.fold">{{$t('foldall')}}</span>
+                        <span v-show="item.fold" class="show-all-count">({{item.subj_result.content.length}})</span>
+                      </div>
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
-
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
                     <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
@@ -152,14 +155,11 @@
                         <span class="fsqb-innerline"></span>
                         <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
                       </v-touch>
-
                     </div>
-
                   </div>
                 </div>
                 <div class="gap"></div>
               </div>
-
               <div v-show="isAllLoaded && isContLonger" class="nomore f15">
                 <div class="bgline"></div>
                 <div class="wenan">end</div>
@@ -793,6 +793,9 @@
           let headIndex = newList.findIndex(item => item.problem_result_id === headNow)
 
           let isAllLoaded = self.isAllLoaded
+          newList.map( e => {
+            e.fold = true
+          })
           if (response_num === 0) {
             isAllLoaded = true
           } else {
@@ -1200,6 +1203,13 @@
 
           return hNumInt / 100
         }
+      },
+      foldClick(index) {
+        this.dataList.map((e, i) => {
+          if (index === i) {
+            e.fold = !e.fold
+          }
+        })
       }
 	  }
 	}
@@ -1460,7 +1470,21 @@
 								margin: .266667rem 0 .266667rem .093333rem;
 								color: #333;
 							}
-
+              .fold{
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+              }
+              .show-all{
+                color: #639ef4;
+                text-align: right;
+                font-size: px2rem(36px);
+                .show-all-count{
+                  font-size: px2rem(24px);
+                }
+              }
 	            .pic {
 	              max-width: 100%;
 	              max-height: 5.68rem;
