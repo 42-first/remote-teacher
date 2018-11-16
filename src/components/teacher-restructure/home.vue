@@ -856,7 +856,6 @@
 					position: absolute;
 					background-color: #639ef4;
 					border-radius: px2rem(35px) 0 0 px2rem(35px);
-					width: px2rem(93px);
 					height: px2rem(70px);
 					line-height: px2rem(70px);
 					text-align: center;
@@ -866,6 +865,7 @@
 					right: -1px;
 					transform: translateY(-50%);
 					border: 1px solid rgba(255,255,255,.8);
+					padding: 0 px2rem(10px);
 				}
       }
     }

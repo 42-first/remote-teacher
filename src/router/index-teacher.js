@@ -5,6 +5,7 @@ import {setSize} from '@/components/teacher-restructure/util/util'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
+const Objectiveresult = () => import('@/components/teacher-restructure/objectiveresult')
 const Collumresult = () => import('@/components/teacher-restructure/collumresult')
 const CollumresultDetail = () => import('@/components/teacher-restructure/collumresult-detail')
 const Fillblankresult = () => import('@/components/teacher-restructure/fillblankresult')
@@ -22,6 +23,7 @@ const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
 // 白板列表
 const BoardList = () => import('@/components/teacher-restructure/board-list')
+
 
 Vue.use(Router)
 
@@ -44,6 +46,13 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta
+    },
+    {
+      path: '/objectiveresult/:problemid',
+      name: 'objectiveresult',
+      component: Objectiveresult,
+      meta
+      
     },
     {
       path: '/collumresult/:problemid',
@@ -191,9 +200,9 @@ router.beforeEach((to, from, next) => {
   }
 
   // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
-  let isCollumresultClose = from.name === 'collumresult' && to.name !== 'collumresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  let isFillblankresultClose = from.name === 'fillblankresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  if (isCollumresultClose || isFillblankresultClose) {
+  let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+  // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+  if (isObjectiveresultClose) {
     let str = JSON.stringify({
       'op': 'closeproblemresult',
       'lessonid': STORE.state.lessonid,

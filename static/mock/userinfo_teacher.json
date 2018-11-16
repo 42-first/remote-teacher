@@ -1,24 +1,23 @@
 
 {
-    "msg": "",
-    "data": {
-        "classroom": {
-            "classroomid": 9539
-        },
-        "course": {
-            "coursename": "白板绘制",
-            "courseid": 5277
-        },
-        "lesson": {
-            "is_lesson_end": false,
-            "user_role": 1,
-            "invite_code": "HCV57"
-        },
-        "user": {
-            "user_id": 6492,
-            "avatar": "http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg",
-            "user_auth": "51f87154-c9bf-4a1a-8cc2-006902ceea35"
-        }
-    },
-    "success": true
+  "success": true,
+  "msg": "",
+  "data":{
+    "user":{
+        "user_id": 50018,
+        "avatar": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJtSuT42LVNRpL97xU1XpYXribIPCROYLVibmUyOwTQAwHxqkYhylQdagpPf6LH22zsiaXqJS9Otx17Q/64",
+        "user_auth": "ca11ed1e-c6fe-440c-84fe-4bc7aec6e422"
+     },
+     "lesson":{
+        "invite_code": "A94NS",
+        "user_auth": "885c6f91-52dc-4b89-9b8f-ab177ea7f064"
+     },
+     "classroom":{
+         "classroomid": 9448
+     },
+     "course":{
+         "coursename": "八三六九等发拉斯加对方拉束带结发",
+         "courseid": 5120
+     }
+  }
 }

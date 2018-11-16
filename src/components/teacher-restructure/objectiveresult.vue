@@ -1,4 +1,4 @@
-<!--填空题条形图页-->
+<!--试题柱状图页-->
 <template>
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
@@ -10,7 +10,7 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
-      <Rolex
+			<Rolex
         :limit="limit"
         :newTime="newTime"
         :durationLeft="durationLeft"
@@ -18,19 +18,34 @@
         :members="members" 
 				:problemid="problemid" 
 				:isTouping="isTouping"
+				:problemtype="problemType"
 				@showresult = "showresult" 
         @yanshi="yanshi"
         @shouti="shouti"
       ></Rolex>
+      <!-- 填空题条形图 -->
+      <template v-if="problemType === 'FillBlank'"> 
+        <FillblankBox class="FillblankBox"
+          :total="total"
+          :correctNum="correct_students.length"
+          :result_graph="result_graph"
+        ></FillblankBox>
+      </template>
 
-	    <FillblankBox class="FillblankBox"
-				:total="total"
-				:correctNum="correct_students.length"
-				:result_graph="result_graph"
-      ></FillblankBox>
+	    <!-- 单选多选 中间柱状图 -->
+      <template v-else>
+        <CollumBox class="CollumBox"
+          :total="total"
+          :problemType="problemType"
+          :graph="graph"
+					:ma_right_count="ma_right_count"
+        ></CollumBox>
+      </template>
+	    
+
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns']">
+	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -38,14 +53,21 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-	      <router-link tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
+				<router-link v-if="problemType === 'FillBlank'" tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
-				<!-- 隐藏红包 0 -->
-	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && 0" class="btn-item">
+
+	      <router-link v-else tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+	        <div class="iconbox" style="background: #EEBC28;">
+	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+	      	</div>
+	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
+	      </router-link>
+
+	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
@@ -68,7 +90,6 @@
 		  @cancelPublishProblem="cancelPublishProblem"
 		  @chooseProblemDuration="yanshiProblem"
 		></Problemtime>
-
 	</div>
 </template>
 
@@ -77,16 +98,21 @@
 	import {sec2str} from './util/util'
 	import request from '@/util/request'
 	import API from '@/pages/teacher/config/api'
-  import config from '@/pages/teacher/config/config'
+	import config from '@/pages/teacher/config/config'
 
-  // 时钟组件
+	// 时钟组件
 	import Rolex from '@/components/teacher-restructure/common/rolex'
-	// 中间条形图
-	import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
   // 试题延时
-	import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  // 中间条形图
+  import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
+  // 中间柱状图
+	import CollumBox from '@/components/teacher-restructure/common/collum-box'
+  
 	// 教师遥控器引导查看答案、续时
-  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	
+	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -114,7 +140,7 @@
 	}
 
 	export default {
-	  name: 'Fillblankresult',
+	  name: 'Collumresult',
 	  data () {
 	    return {
 	    	problemid: -1,
@@ -122,29 +148,32 @@
 		    durationLeft: '--:--',         // 题目的倒计时剩余时间
 		    total: '--',                   // 提交的人数
 		    members: '--',                 // 参与上课的人数
+		    graph: [],                     // 柱状图数据
+		    ma_right_count: {},            // 多选题答案及人数
 		    limit: '',                     // 设置的限时 -1 为未限时 单位 秒
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 				isTouping: false,							 // 当前正在投屏
-				is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
+        showAnswer: false,             // 投屏现实答案
+        is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
 				result_graph: {},
 				correct_students: [],
-				showAnswer: !1
 	    }
 	  },
 	  computed: {
 	    ...mapGetters([
         'lessonid',
-				'socket',
-				'isGuideDelayHidden',
+        'socket',
+        'isGuideDelayHidden',
       ])
 	  },
 	  components: {
-      Problemtime,
-			Rolex,
-			FillblankBox,
+	    Problemtime,
 			GuideDelay,
+      FillblankBox,
+      CollumBox,
+			Rolex
 	  },
 	  created(){
 	  	this.init()
@@ -152,6 +181,11 @@
 	  beforeDestroy(){
 	    this.endTimers()
 	    T_PUBSUB.unsubscribe('pro-msg')
+	  },
+	  watch: {
+	  	'$route' () {
+	  		this.init()
+	  	}
 	  },
 	  methods: {
 	  	/**
@@ -418,7 +452,7 @@
 	     */
 	    toggleTouping (status) {
 	    	let self = this
-	    	self.isTouping = status
+				self.isTouping = status
 	    	localStorage.setItem('posting-problem'+self.problemid, status)
 	    },
 	    /**
@@ -480,17 +514,23 @@
 		   */
 		  getProblemResult(){
 		    let self = this
+        
+        let url = ''
 
-		    let url = API.fill_blank_problem_statistics
+        if(self.problemType === 'FillBlank') {
+          url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
+        }else {
+          url = API.problem_statistics + '/' + self.problemid + '/'
+        }
 
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
-	      }
+	      // if (process.env.NODE_ENV === 'production') {
+	      //   url = url + '/' + self.problemid + '/'
+	      // }
 
 	      request.get(url)
 	      	.then(jsonData => {
-	      		if(jsonData.success){
-							jsonData = jsonData.data
+            if(self.problemType === 'FillBlank'){
+              jsonData = jsonData.data
 	      		  self.setData({
 	      		    total: jsonData.total,
 	      		    members: jsonData.members,
@@ -499,7 +539,25 @@
 								result_graph: jsonData.result_graph,
 								correct_students: jsonData.correct_students,
 	      		  })
-	      		}
+            }else {
+              let _answer = jsonData.answer
+              let _graph = jsonData.graph.data
+              _graph.forEach(item => {
+                item.isRight = new RegExp(item.label).test(_answer)
+                return item
+              })
+
+              if(jsonData.success){
+                self.setData({
+                  total: jsonData.total,
+                  members: jsonData.members,
+                  graph: _graph,
+                  ma_right_count: jsonData.graph.ma_right_count,
+                  RedEnvelopeID: jsonData.RedEnvelopeID || -1
+                })
+              }
+            }
+	      		
 	      	}).catch(error => {
 	      		console.error('error', error)
 	      	})
@@ -571,16 +629,20 @@
 	     */
 	    handlePostProblemresult (isTouping) {
 	      let self = this
-	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
 				this.isTouping = isTouping
+	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
 					'problemid': self.problemid,
-					'showresult': self.showAnswer
+					'showresult': this.showAnswer
 	      })
 	      self.socket.send(str)
-	    },
+			},
+			//  捕获 hidesomeinfo 组件的change事件改变 showanswer 状态
+			showAnswerChange(val) {
+				this.showAnswer = val
+			}, 
 	    /**
 	     * 关闭页面时关闭定时器、投屏等的总开关
 	     *
@@ -613,9 +675,10 @@
 	  }
 	}
 </script>
-
+<!-- TODO 柱状图滑动 icon图片？ -->
 <style lang="scss" scoped>
 	@import "~@/style/_variables";
+	@import "~@/style/common";
 	.problem-root {
 		height: 100%;
 		min-height: 100%;
@@ -630,7 +693,7 @@
 	  color: $white;
 	  background: #000000;
 
-		/* 调整中间条形头的高度 */
+	  /* 调整中间条形头的高度 */
 		.FillblankBox {
 			flex: 1;
 		}
@@ -642,7 +705,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 0.2rem 0 0.5rem;
+		  padding: 1.2rem 0 0.5rem;
 
 		  .btn-item {
 			  width: 1.8rem;
