@@ -1,1 +1,332 @@
-{"msg":"ok","presentationData":{"Language":"zh-CN","Title":"ceshi","Height":540,"Slides":[{"Shapes":[],"Index":1,"Cover":"http://st0.ykt.io/FqR8dZdZUuMyEa1zFxv59YsvMI1K","Thumbnail":"http://st0.ykt.io/FmyUB9d95zdtSYCZdhK09PY7sCBb","lessonSlideID":170541},{"Index":2,"lessonSlideID":170542,"Cover":"http://st0.ykt.io/FkBOS7Y-DgUxYn3Yh35RUR38RO7b","Shapes":[],"Answer":"CD","Problem":{"HalfScore":0.5,"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":291.937469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":359.437469,"Height":40.5,"Label":"C","Left":123.75},{"Width":40.5,"Top":426.937469,"Height":40.5,"Label":"D","Left":123.75}],"HasRemark":false,"ProblemID":50554,"Type":"FillBlank"},"Thumbnail":"http://st0.ykt.io/FhrBmY1hMPmj5ZfNDq9PXxUuGpOo"},{"Index":3,"lessonSlideID":170543,"Cover":"http://st0.ykt.io/Fgecf9wJOyD2fmWRH-kQcmZpCaY-","Shapes":[],"Answer":"C","Problem":{"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":314.437469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":404.437469,"Height":40.5,"Label":"C","Left":123.75}],"HasRemark":false,"ProblemID":50555,"Type":"MultipleChoice"},"Thumbnail":"http://st0.ykt.io/Fhab2XzHcPdlLjk_Udd-GBRNQDT_"},{"Index":4,"lessonSlideID":170544,"Cover":"http://st0.ykt.io/FggTQUX-8dYXxAGSu1vEhoKCpiYJ","Shapes":[],"Answer":"","Problem":{"VoiceAllowed":false,"Score":10,"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"SQM":null,"ProblemID":50556,"Type":"ShortAnswer","HasRemark":false},"Thumbnail":"http://st0.ykt.io/FtqEiq-Z2lRm2MH1JQ4jzcQGvcZU"},{"Index":5,"lessonSlideID":170545,"Cover":"http://st0.ykt.io/Fnm6E09kM2NxnQgdKF7cWy-QfBg9","Shapes":[],"Answer":"2","Problem":{"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":291.937469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":359.437469,"Height":40.5,"Label":"C","Left":123.75},{"Width":40.5,"Top":426.937469,"Height":40.5,"Label":"D","Left":123.75}],"HasRemark":false,"ProblemID":50557,"Answer":"2","Type":"AnonymousPolling"},"Thumbnail":"http://st0.ykt.io/Fs0Xvs3HIMtdADTtwiWXKAfsUcxn"},{"Shapes":[],"Index":6,"Cover":"http://st0.ykt.io/Fp8s4Za46ok8NDOAnGFBxP3wdPP8","Thumbnail":"http://st0.ykt.io/FgUhZaAaIU1yEZzILuMGY3WOfAqX","lessonSlideID":170546}],"Width":960,"Version":"1.2","DataCompleted":true,"LessonID":9128,"config":{"show_presentation":"all"}},"data":{"presentation_data":{"Language":"zh-CN","Title":"ceshi","Height":540,"Slides":[{"Shapes":[],"Index":1,"Cover":"http://st0.ykt.io/FqR8dZdZUuMyEa1zFxv59YsvMI1K","Thumbnail":"http://st0.ykt.io/FmyUB9d95zdtSYCZdhK09PY7sCBb","lessonSlideID":170541},{"Index":2,"lessonSlideID":170542,"Cover":"http://st0.ykt.io/FkBOS7Y-DgUxYn3Yh35RUR38RO7b","Shapes":[],"Answer":"CD","Problem":{"HalfScore":0.5,"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":291.937469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":359.437469,"Height":40.5,"Label":"C","Left":123.75},{"Width":40.5,"Top":426.937469,"Height":40.5,"Label":"D","Left":123.75}],"HasRemark":false,"ProblemID":50554,"Type":"MultipleChoiceMA"},"Thumbnail":"http://st0.ykt.io/FhrBmY1hMPmj5ZfNDq9PXxUuGpOo"},{"Index":3,"lessonSlideID":170543,"Cover":"http://st0.ykt.io/Fgecf9wJOyD2fmWRH-kQcmZpCaY-","Shapes":[],"Answer":"C","Problem":{"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":314.437469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":404.437469,"Height":40.5,"Label":"C","Left":123.75}],"HasRemark":false,"ProblemID":50555,"Type":"MultipleChoice"},"Thumbnail":"http://st0.ykt.io/Fhab2XzHcPdlLjk_Udd-GBRNQDT_"},{"Index":4,"lessonSlideID":170544,"Cover":"http://st0.ykt.io/FggTQUX-8dYXxAGSu1vEhoKCpiYJ","Shapes":[],"Answer":"","Problem":{"VoiceAllowed":false,"Score":10,"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"SQM":null,"ProblemID":50556,"Type":"ShortAnswer","HasRemark":false},"Thumbnail":"http://st0.ykt.io/FtqEiq-Z2lRm2MH1JQ4jzcQGvcZU"},{"Index":5,"lessonSlideID":170545,"Cover":"http://st0.ykt.io/Fnm6E09kM2NxnQgdKF7cWy-QfBg9","Shapes":[],"Answer":"2","Problem":{"Submit":{"Width":121.5,"Top":489.375031,"Height":32.4,"Left":702},"Score":1,"Bullets":[{"Width":40.5,"Top":224.437485,"Height":40.5,"Label":"A","Left":123.75},{"Width":40.5,"Top":291.937469,"Height":40.5,"Label":"B","Left":123.75},{"Width":40.5,"Top":359.437469,"Height":40.5,"Label":"C","Left":123.75},{"Width":40.5,"Top":426.937469,"Height":40.5,"Label":"D","Left":123.75}],"HasRemark":false,"ProblemID":50557,"Answer":"2","Type":"AnonymousPolling"},"Thumbnail":"http://st0.ykt.io/Fs0Xvs3HIMtdADTtwiWXKAfsUcxn"},{"Shapes":[],"Index":6,"Cover":"http://st0.ykt.io/Fp8s4Za46ok8NDOAnGFBxP3wdPP8","Thumbnail":"http://st0.ykt.io/FgUhZaAaIU1yEZzILuMGY3WOfAqX","lessonSlideID":170546}],"Width":960,"Version":"1.2","DataCompleted":true,"LessonID":9128,"config":{"show_presentation":"all"}}},"success":true}
+{
+    "msg": "数据更新完成!",
+    "presentationData": {
+        "Language": "zh-CN",
+        "Title": "雨课堂新版本发布",
+        "Height": 540,
+        "Slides": [
+            {
+                "Shapes": [],
+                "Index": 1,
+                "Cover": "http://st0.ykt.io/FtMI6GRbysge0EIt_9U2117SxmK8",
+                "Thumbnail": "http://st0.ykt.io/FhOJDZWNkR3YSYEceIeL7uoNmgtU",
+                "lessonSlideID": 195265
+            },
+            {
+                "Shapes": [],
+                "Index": 2,
+                "Cover": "http://st0.ykt.io/FqByLNj-QtBmn9ziiqAYXcNo7Zb0",
+                "Thumbnail": "http://st0.ykt.io/Fk0jE27GFYgJjxeN-4FAjvZsY2Vh",
+                "lessonSlideID": 195266
+            },
+            {
+                "Shapes": [],
+                "Index": 3,
+                "Cover": "http://st0.ykt.io/FhgKfBnmL49lZmk1VJ-mMZ_IncBg",
+                "Thumbnail": "http://st0.ykt.io/Fg6l1gtS3wuI3rMPz-8-wmNvK_JU",
+                "lessonSlideID": 195267
+            },
+            {
+                "Shapes": [],
+                "Index": 4,
+                "Cover": "http://st0.ykt.io/Fl04jvpfe_miMl6HNuK-FwxL4PXV",
+                "Thumbnail": "http://st0.ykt.io/FkoyCT25WE0UUvJiluBwOJCWzCl9",
+                "lessonSlideID": 195268
+            },
+            {
+                "Shapes": [],
+                "Index": 5,
+                "Cover": "http://st0.ykt.io/FiBKEDJVNH68N05e4HNITHu8HdIA",
+                "Thumbnail": "http://st0.ykt.io/FmKryLsVaD8u7HClOM3Rm49ZV673",
+                "lessonSlideID": 195269
+            },
+            {
+                "Shapes": [],
+                "Index": 6,
+                "Cover": "http://st0.ykt.io/FsiF8dX0cJiU2u1JMUnlb5BrZKP8",
+                "Thumbnail": "http://st0.ykt.io/FhNuCnSWSeoiplUnAJnNx7s5NlJQ",
+                "lessonSlideID": 195270
+            },
+            {
+                "Shapes": [],
+                "Index": 7,
+                "Cover": "http://st0.ykt.io/Fgs7r0j0EOKyvhBIcrnNjeDS68pj",
+                "Thumbnail": "http://st0.ykt.io/FsJpgiYs6A0H6ht76cA_Uehpt3_-",
+                "lessonSlideID": 195271
+            },
+            {
+                "Shapes": [],
+                "Index": 8,
+                "Cover": "http://st0.ykt.io/FkKfTKS4oBazlnfMqjS0yHguCUzn",
+                "Thumbnail": "http://st0.ykt.io/FhIAUo8v9m7tSbaAC2jpDNZaEADI",
+                "lessonSlideID": 195272
+            },
+            {
+                "Shapes": [],
+                "Index": 9,
+                "Cover": "http://st0.ykt.io/FtseQxydexpqXcQX8KYiWADptYKJ",
+                "Thumbnail": "http://st0.ykt.io/FgRpaoOnkSNOhqJ5TLsQfSVUniew",
+                "lessonSlideID": 195273
+            },
+            {
+                "Shapes": [],
+                "Index": 10,
+                "Cover": "http://st0.ykt.io/FgM_WNKa88iZcF15eBLRylkFdaKe",
+                "Thumbnail": "http://st0.ykt.io/Fu4lBrXjawbinCyguC5GbPdVBe0L",
+                "lessonSlideID": 195274
+            },
+            {
+                "Shapes": [],
+                "Index": 11,
+                "Cover": "http://st0.ykt.io/FtWizFcZWlgA0JIBRUYY3RE4wgUx",
+                "Thumbnail": "http://st0.ykt.io/FiQggJuoPxQfuJ60v0_q6tWNDu8Q",
+                "lessonSlideID": 195275
+            },
+            {
+                "Shapes": [],
+                "Index": 12,
+                "Cover": "http://st0.ykt.io/FtFNAA0jeKMJ4kQB2_K0iDTbW1TC",
+                "Thumbnail": "http://st0.ykt.io/FpOXJ0umyTyYdDfkSJrOfxKRrHt7",
+                "lessonSlideID": 195276
+            },
+            {
+                "Shapes": [],
+                "Index": 13,
+                "Cover": "http://st0.ykt.io/FoiHtHeQ0C-4AP_CN7dwpfXAUi9G",
+                "Thumbnail": "http://st0.ykt.io/Fu2OvwvkrJgNrWq-HMEUbxT_lJ-N",
+                "lessonSlideID": 195277
+            },
+            {
+                "Shapes": [],
+                "Index": 14,
+                "Cover": "http://st0.ykt.io/FiqRGuPZvXby3I_kQvbakeAKaiuC",
+                "Thumbnail": "http://st0.ykt.io/FpTUGaKIWD-QpRgpTcMfrYDELdHL",
+                "lessonSlideID": 195278
+            },
+            {
+                "Shapes": [],
+                "Index": 15,
+                "Cover": "http://st0.ykt.io/FiekhDN6JIIWclWrVxPD7ZscZUpD",
+                "Thumbnail": "http://st0.ykt.io/FkAKs6j9pIBBh5kFhzcQlyPOh_oq",
+                "lessonSlideID": 195279
+            },
+            {
+                "Shapes": [],
+                "Index": 16,
+                "Cover": "http://st0.ykt.io/FgdrVj9miLEcKPuwa22BGUrgKi2_",
+                "Thumbnail": "http://st0.ykt.io/FluYuwBD-f7Kfp-Lx-pRlKHRVVqj",
+                "lessonSlideID": 195280
+            },
+            {
+                "Shapes": [],
+                "Index": 17,
+                "Cover": "http://st0.ykt.io/Fsa0jnKbG-bV0v7fa2jOGC2D0jQn",
+                "Thumbnail": "http://st0.ykt.io/FvKfLg3FMy3Qne93cpykebmm0RzV",
+                "lessonSlideID": 195281
+            },
+            {
+                "Shapes": [],
+                "Index": 18,
+                "Cover": "http://st0.ykt.io/FuneoOt6jS8Z5VQKuZ82IE5buXw6",
+                "Thumbnail": "http://st0.ykt.io/FiaeaYdwldJQflhpE1cxLxuakY1R",
+                "lessonSlideID": 195282
+            },
+            {
+                "Shapes": [],
+                "Index": 19,
+                "Cover": "http://st0.ykt.io/FlvkT8gfave119Q8LUzSGK9RWSMa",
+                "Thumbnail": "http://st0.ykt.io/FmaLl5f72aWkrO3fOJ-3sopMwvOh",
+                "lessonSlideID": 195283
+            },
+            {
+                "Shapes": [],
+                "Index": 20,
+                "Cover": "http://st0.ykt.io/Fs0j-Ni1LbJ8UT5sDg69mhyouEEj",
+                "Thumbnail": "http://st0.ykt.io/FvFkVKfvkPrYCDfPiG4f3DitBXRU",
+                "lessonSlideID": 195284
+            },
+            {
+                "Shapes": [],
+                "Index": 21,
+                "Cover": "http://st0.ykt.io/Fn2O-F2w8uOd4ztsUzR4G7USPwKs",
+                "Thumbnail": "http://st0.ykt.io/FimQbKLI9Gu1l1mx88fh7OaPLCGd",
+                "lessonSlideID": 195285
+            }
+        ],
+        "Width": 960,
+        "Version": "1.3",
+        "DataCompleted": true,
+        "LessonID": 10457,
+        "config": {
+            "show_user_profile": true,
+            "show_presentation": "film",
+            "problem_show_answer": false
+        }
+    },
+    "data": {
+        "presentation_data": {
+            "Language": "zh-CN",
+            "Title": "雨课堂新版本发布",
+            "Height": 540,
+            "Slides": [
+                {
+                    "Shapes": [],
+                    "Index": 1,
+                    "Cover": "http://st0.ykt.io/FtMI6GRbysge0EIt_9U2117SxmK8",
+                    "Thumbnail": "http://st0.ykt.io/FhOJDZWNkR3YSYEceIeL7uoNmgtU",
+                    "lessonSlideID": 195265
+                },
+                {
+                    "Shapes": [],
+                    "Index": 2,
+                    "Cover": "http://st0.ykt.io/FqByLNj-QtBmn9ziiqAYXcNo7Zb0",
+                    "Thumbnail": "http://st0.ykt.io/Fk0jE27GFYgJjxeN-4FAjvZsY2Vh",
+                    "lessonSlideID": 195266
+                },
+                {
+                    "Shapes": [],
+                    "Index": 3,
+                    "Cover": "http://st0.ykt.io/FhgKfBnmL49lZmk1VJ-mMZ_IncBg",
+                    "Thumbnail": "http://st0.ykt.io/Fg6l1gtS3wuI3rMPz-8-wmNvK_JU",
+                    "lessonSlideID": 195267
+                },
+                {
+                    "Shapes": [],
+                    "Index": 4,
+                    "Cover": "http://st0.ykt.io/Fl04jvpfe_miMl6HNuK-FwxL4PXV",
+                    "Thumbnail": "http://st0.ykt.io/FkoyCT25WE0UUvJiluBwOJCWzCl9",
+                    "lessonSlideID": 195268
+                },
+                {
+                    "Shapes": [],
+                    "Index": 5,
+                    "Cover": "http://st0.ykt.io/FiBKEDJVNH68N05e4HNITHu8HdIA",
+                    "Thumbnail": "http://st0.ykt.io/FmKryLsVaD8u7HClOM3Rm49ZV673",
+                    "lessonSlideID": 195269
+                },
+                {
+                    "Shapes": [],
+                    "Index": 6,
+                    "Cover": "http://st0.ykt.io/FsiF8dX0cJiU2u1JMUnlb5BrZKP8",
+                    "Thumbnail": "http://st0.ykt.io/FhNuCnSWSeoiplUnAJnNx7s5NlJQ",
+                    "lessonSlideID": 195270
+                },
+                {
+                    "Shapes": [],
+                    "Index": 7,
+                    "Cover": "http://st0.ykt.io/Fgs7r0j0EOKyvhBIcrnNjeDS68pj",
+                    "Thumbnail": "http://st0.ykt.io/FsJpgiYs6A0H6ht76cA_Uehpt3_-",
+                    "lessonSlideID": 195271
+                },
+                {
+                    "Shapes": [],
+                    "Index": 8,
+                    "Cover": "http://st0.ykt.io/FkKfTKS4oBazlnfMqjS0yHguCUzn",
+                    "Thumbnail": "http://st0.ykt.io/FhIAUo8v9m7tSbaAC2jpDNZaEADI",
+                    "lessonSlideID": 195272
+                },
+                {
+                    "Shapes": [],
+                    "Index": 9,
+                    "Cover": "http://st0.ykt.io/FtseQxydexpqXcQX8KYiWADptYKJ",
+                    "Thumbnail": "http://st0.ykt.io/FgRpaoOnkSNOhqJ5TLsQfSVUniew",
+                    "lessonSlideID": 195273
+                },
+                {
+                    "Shapes": [],
+                    "Index": 10,
+                    "Cover": "http://st0.ykt.io/FgM_WNKa88iZcF15eBLRylkFdaKe",
+                    "Thumbnail": "http://st0.ykt.io/Fu4lBrXjawbinCyguC5GbPdVBe0L",
+                    "lessonSlideID": 195274
+                },
+                {
+                    "Shapes": [],
+                    "Index": 11,
+                    "Cover": "http://st0.ykt.io/FtWizFcZWlgA0JIBRUYY3RE4wgUx",
+                    "Thumbnail": "http://st0.ykt.io/FiQggJuoPxQfuJ60v0_q6tWNDu8Q",
+                    "lessonSlideID": 195275
+                },
+                {
+                    "Shapes": [],
+                    "Index": 12,
+                    "Cover": "http://st0.ykt.io/FtFNAA0jeKMJ4kQB2_K0iDTbW1TC",
+                    "Thumbnail": "http://st0.ykt.io/FpOXJ0umyTyYdDfkSJrOfxKRrHt7",
+                    "lessonSlideID": 195276
+                },
+                {
+                    "Shapes": [],
+                    "Index": 13,
+                    "Cover": "http://st0.ykt.io/FoiHtHeQ0C-4AP_CN7dwpfXAUi9G",
+                    "Thumbnail": "http://st0.ykt.io/Fu2OvwvkrJgNrWq-HMEUbxT_lJ-N",
+                    "lessonSlideID": 195277
+                },
+                {
+                    "Shapes": [],
+                    "Index": 14,
+                    "Cover": "http://st0.ykt.io/FiqRGuPZvXby3I_kQvbakeAKaiuC",
+                    "Thumbnail": "http://st0.ykt.io/FpTUGaKIWD-QpRgpTcMfrYDELdHL",
+                    "lessonSlideID": 195278
+                },
+                {
+                    "Shapes": [],
+                    "Index": 15,
+                    "Cover": "http://st0.ykt.io/FiekhDN6JIIWclWrVxPD7ZscZUpD",
+                    "Thumbnail": "http://st0.ykt.io/FkAKs6j9pIBBh5kFhzcQlyPOh_oq",
+                    "lessonSlideID": 195279
+                },
+                {
+                    "Shapes": [],
+                    "Index": 16,
+                    "Cover": "http://st0.ykt.io/FgdrVj9miLEcKPuwa22BGUrgKi2_",
+                    "Thumbnail": "http://st0.ykt.io/FluYuwBD-f7Kfp-Lx-pRlKHRVVqj",
+                    "lessonSlideID": 195280
+                },
+                {
+                    "Shapes": [],
+                    "Index": 17,
+                    "Cover": "http://st0.ykt.io/Fsa0jnKbG-bV0v7fa2jOGC2D0jQn",
+                    "Thumbnail": "http://st0.ykt.io/FvKfLg3FMy3Qne93cpykebmm0RzV",
+                    "lessonSlideID": 195281
+                },
+                {
+                    "Shapes": [],
+                    "Index": 18,
+                    "Cover": "http://st0.ykt.io/FuneoOt6jS8Z5VQKuZ82IE5buXw6",
+                    "Thumbnail": "http://st0.ykt.io/FiaeaYdwldJQflhpE1cxLxuakY1R",
+                    "lessonSlideID": 195282
+                },
+                {
+                    "Shapes": [],
+                    "Index": 19,
+                    "Cover": "http://st0.ykt.io/FlvkT8gfave119Q8LUzSGK9RWSMa",
+                    "Thumbnail": "http://st0.ykt.io/FmaLl5f72aWkrO3fOJ-3sopMwvOh",
+                    "lessonSlideID": 195283
+                },
+                {
+                    "Shapes": [],
+                    "Index": 20,
+                    "Cover": "http://st0.ykt.io/Fs0j-Ni1LbJ8UT5sDg69mhyouEEj",
+                    "Thumbnail": "http://st0.ykt.io/FvFkVKfvkPrYCDfPiG4f3DitBXRU",
+                    "lessonSlideID": 195284
+                },
+                {
+                    "Shapes": [],
+                    "Index": 21,
+                    "Cover": "http://st0.ykt.io/Fn2O-F2w8uOd4ztsUzR4G7USPwKs",
+                    "Thumbnail": "http://st0.ykt.io/FimQbKLI9Gu1l1mx88fh7OaPLCGd",
+                    "lessonSlideID": 195285
+                }
+            ],
+            "Width": 960,
+            "Version": "1.3",
+            "DataCompleted": true,
+            "LessonID": 10457,
+            "config": {
+                "show_user_profile": true,
+                "show_presentation": "film",
+                "problem_show_answer": false
+            }
+        }
+    },
+    "success": true
+}

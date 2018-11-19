@@ -30,6 +30,7 @@ let pages = {
   "favorite": "收藏",
   "screenshot": "截图分享",
   "blackboard": "板书分享",
+  "board": "板书",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
@@ -171,7 +172,7 @@ let pages = {
   "startclass": "开始上课 | 继续上课",
   "curslide": "当前幻灯片",
   "nextslide": "下一幻灯片",
-  "sendprob": "发送此题 | 查看答案",
+  "sendprob": "发送此题 | 作答情况",
   "timelimit": "限时发送",
   "sec": "秒",
   "min": "分钟",
@@ -318,7 +319,9 @@ let pages = {
   "Officalaccount": "微信公众号",
   "miniprogram": "微信小程序",
   "scancode": "扫二维码",
-
+  "jsskqzdnd": "继续授课，请在电脑端点击放映幻灯片，并耐心等待，学生无需二次扫码",
+  "jsskq": "结束授课，请",
+  "djzl": "点击这里",
   "nybcykq": "您已在别处进入遥控器",
   "dqquit": "退出",
   "dqlssk": "当前有老师正在上课<br>您希望",
@@ -382,6 +385,7 @@ let pages = {
   "weida": "未答",
   "close": "关闭",
   "note": "备注",
+  "boardunknow": "白板不懂",
 
   // 引导页
   guide: {

@@ -81,6 +81,22 @@ var actionsMixin = {
 
               break;
 
+            // 白板创建
+            case 'board':
+              if(item.action === 'new') {
+                this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
+              } else if(item.action === 'nav') {
+                this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+              }
+
+              break;
+
+            // 白板绘制
+            case 'draw':
+              this.setBoardline(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+
+              break;
+
             default: break;
           }
         });
@@ -210,15 +226,16 @@ var actionsMixin = {
         let oImg = new Image();
         oImg.onload = (evt) => {
           if(index !== -1) {
-            let data = self.cards[index - 1];
-            data.src = slideData['Cover'];
+            // 暂时去掉 因为目前很多使用 splice 导致顺序短时间内错乱
+            // let data = self.cards[index - 1];
+            // data.src = slideData['Cover'];
           }
         };
 
         oImg.src = slideData['Cover'];
 
         let cardItem = {
-          src: slideData['Thumbnail'],
+          src: slideData['Cover'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
           hasStore: slideData['store'] == 1 ? true : false,
@@ -359,15 +376,18 @@ var actionsMixin = {
         switch (problemType) {
           // 主观题
           case 'ShortAnswer':
-            pageURL += `subjective/${index}`;
+            // pageURL += `subjective/${index}`;
+            pageURL += 'subjective/';
             break;
           // 填空题
           case 'FillBlank':
-            pageURL += `blank/${index}`;
+            // pageURL += `blank/${index}`;
+            pageURL += 'blank/';
             break;
           // 多选单选投票
           default:
-            pageURL += `exercise/${index}`;
+            // pageURL += `exercise/${index}`;
+            pageURL += 'exercise/';
             break;
         }
       }
@@ -748,6 +768,98 @@ var actionsMixin = {
         this.title = presentation.Title;
       }
     },
+
+    /*
+     * @method 设置白板基本信息
+     * @param  { type: 12, board: , lenunit: '', event: all }
+     */
+    setBoardInfo(data) {
+      let id = data.boardid;
+       // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 12 && item.boardid === id && data.isFetch;
+      });
+      let boardInfo = this.boardMap.get(id);
+
+      if(data) {
+        data = Object.assign(data, {
+          rate: data.devwidth / data.devheight,
+          time: data.dt,
+          doubt: false,
+          emphasis: false
+        }, boardInfo);
+
+        // 记录当前白板信息
+        this.boardMap.set(id, data);
+        this.boardInfo = data;
+
+        !hasEvent && this.cards.push(data);
+        this.allEvents.push(data);
+      }
+    },
+
+    /*
+     * @method 设置白板画线
+     * @param
+     */
+    setBoardline(data) {
+      if(data && !data.isFetch) {
+        let id = data.boardid || this.boardInfo.boardid;
+        let boardInfo = this.boardMap.get(id);
+
+        if(boardInfo) {
+          boardInfo = Object.assign({}, boardInfo);
+          !boardInfo.lines && (boardInfo.lines = []);
+          boardInfo.lines.push(data);
+          this.boardMap.set(id, boardInfo);
+
+          // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
+          let lastCards = this.cards.slice(-2);
+          let cardBoard = lastCards.find((item) => {
+            return item.type === 12 && item.boardid === id;
+          })
+
+          if(cardBoard) {
+            if(data.from !== 'timeline') {
+              this.simulationDrawing(null, data);
+            }
+
+            // 更新最新时间
+            Object.assign(cardBoard, boardInfo, { time: data.dt })
+          } else {
+            // 置顶操作
+            // this.setTopping(boardInfo);
+          }
+        }
+
+      }
+    },
+
+    /*
+     * @method 白板翻页
+     * @param { "type": "board", "action": "nav", "boardid": 1 }
+     */
+    boardNav(data) {
+      if(data && !data.isFetch) {
+        let id = data.boardid;
+        let boardInfo = this.boardMap.get(id);
+
+        // 置顶操作
+        this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
+      }
+    },
+
+    /*
+     * @method 白板清屏
+     * @param
+     */
+    clearBoard(data) {
+      if(data) {
+        let id = data.boardid || this.boardInfo.boardid;
+        this.clearScreen(id);
+      }
+    },
+
 
   }
 }

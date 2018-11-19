@@ -2,6 +2,10 @@
   "success": true,
   "msg": "",
   "data": {
+    "board_track_tags": {
+    "board_track_emphasis_count": 0,
+    "board_track_doubt_count": 1
+    },
     "emphasis": [
       0,
       0,

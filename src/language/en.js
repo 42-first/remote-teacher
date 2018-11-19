@@ -30,6 +30,7 @@ let pages = {
   "favorite": "Favorite",
   "screenshot": "Screenshot",
   "blackboard": "Blackboard writing",
+  "board": "Board",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
@@ -299,6 +300,9 @@ let pages = {
   "selhim": "Bingo!",
   "endclass": "End Class",
   "showended": "End",
+  "jsskqzdnd": 'Continue the class, please click "Slide Show" on your computer and students do not need to scan the QR code again.',
+  "jsskq": "End class, please",
+  "djzl": "Click Here",
   "showconnecting": "or connecting",
   "otherslogin": "Your account has been logged in by others",
   "forcelogout": "You have been force logged out",
@@ -380,6 +384,7 @@ let pages = {
   "cuowu": "Wrong",
   "weida": "Unanswerd",
   "note": "Remark",
+  "boardunknow": "Unclear(board)",
 
   // 引导页
   guide: {

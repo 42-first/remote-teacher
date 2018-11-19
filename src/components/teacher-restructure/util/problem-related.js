@@ -122,11 +122,14 @@ export default {
         case 'ShortAnswer':
           name = 'subjectiveresult'
           break;
-        case 'FillBlank':
-          name = 'fillblankresult'
-          break;
-        default:
-        name = 'collumresult'
+        // case 'FillBlank':
+        //   name = 'fillblankresult'
+        //   break;
+        // default:
+        // name = 'collumresult'
+        //   break;
+        default: 
+          name = 'objectiveresult'
           break;
       }
       let to = {
