@@ -851,7 +851,7 @@ var actionsMixin = {
     clearBoard(data) {
       if(data) {
         let id = data.boardid || this.boardInfo.boardid;
-        this.clearScreen(id);
+        this.clearScreen(id, true);
       }
     },
 

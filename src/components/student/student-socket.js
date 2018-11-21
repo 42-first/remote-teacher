@@ -383,7 +383,7 @@ var mixin = {
 
           // 清屏
           case 'boardclear':
-            this.clearBoard(msg);
+            this.clearBoard(msg.board);
 
             break;
 
