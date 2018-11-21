@@ -824,7 +824,7 @@ var actionsMixin = {
           }
 
           // 更新最新时间
-          Object.assign(cardBoard, boardInfo, { time: data.dt })
+          cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
         }
 
       }
