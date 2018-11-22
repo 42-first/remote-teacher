@@ -166,6 +166,8 @@
   import '@/util/util'
   import { configWX } from '@/util/wx-util'
 
+  import '@/util/directive-util'
+
   import CardItemComponent from '@/components/common/card-item.vue'
   import PopupComponent from '@/components/common/popup-box.vue'
   import LangComponent from '@/components/common/change_lang_dialog.vue'
@@ -174,7 +176,8 @@
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
 
-   import livemixin from '@/components/student/live-mixin'
+  import livemixin from '@/components/student/live-mixin'
+  import boardmixin from '@/components/common/board-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -285,7 +288,16 @@
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
-        showLiveTip: false
+        showLiveTip: false,
+        // 版本基本信息 宽高
+        boardInfo: {
+          width: 0,
+          height: 0
+        },
+        // 白板map
+        boardMap: new Map(),
+        // 白板不懂收藏
+        boardList: null
       };
     },
     components: {
@@ -325,7 +337,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -385,6 +397,14 @@
 
           // sentry 配置
           this.setSentry();
+
+          // 时间动态显示 每分钟更新一次
+          setInterval(() => {
+            this.cards.forEach((item) => {
+              item.time && (item.time = item.time - 1);
+            })
+          }, 60000)
+
         });
       },
 
@@ -542,6 +562,8 @@
               self.groupList = data.groupList;
               self.groupReviewList = data.groupReviewList;
               self.liveInfo = data.liveList || null;
+              // 白板不懂收藏
+              self.boardList = data.share_board_track || null;
 
               // classroom
               self.classroom = data.classroom;
@@ -573,6 +595,13 @@
               if(self.groupReviewList && self.groupReviewList.length) {
                 self.groupReviewList.forEach( (review) => {
                   self.groupReviewMap.set(review.group_review_id, review);
+                });
+              }
+
+              // set boardMap
+              if(self.boardList && self.boardList.length) {
+                self.boardList.forEach( (board) => {
+                  self.boardMap.set(board.board_id, board);
                 });
               }
 

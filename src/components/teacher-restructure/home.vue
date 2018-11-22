@@ -62,7 +62,7 @@
           @showActivity="showActivity"
           @cancelPublishProblem="cancelPublishProblem"
           @chooseProblemDuration="unlockProblem"
-          @checkDoubt="checkDoubt" 
+          @checkDoubt="checkDoubt"
           :problem-type="problemType"
           :card-width="cardWidth"
           :card-height="cardHeight"
@@ -556,10 +556,16 @@
 	        .then(jsonData => {
 	          let doubt = jsonData.data.doubt
 	          doubtTotalSum = 0
+            let boardTags = jsonData.data.board_track_tags
 
 	          doubt.forEach(item => {
 	            doubtTotalSum += item
 	          })
+
+            // 加上不懂的数据
+            if(boardTags) {
+              doubtTotalSum += boardTags.board_track_doubt_count;
+            }
 
 	          // 学生能取消不懂的，有可能减成负数
 	          if (doubtTotalSum < oldDoubt) {
@@ -850,7 +856,6 @@
 					position: absolute;
 					background-color: #639ef4;
 					border-radius: px2rem(35px) 0 0 px2rem(35px);
-					width: px2rem(93px);
 					height: px2rem(70px);
 					line-height: px2rem(70px);
 					text-align: center;
@@ -860,6 +865,7 @@
 					right: -1px;
 					transform: translateY(-50%);
 					border: 1px solid rgba(255,255,255,.8);
+					padding: 0 px2rem(10px);
 				}
       }
     }
