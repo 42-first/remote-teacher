@@ -120,6 +120,13 @@ let pages = {
   "enteranswer": "Enter your answer",
   "blanksnotanswer": "Not all of the blanks had been filled. Are you sure to submit?",
 
+  'fulltext': "Full text",
+  'fold': "Fold",
+  'recall': "Recall",
+  'recallconfirm': "Are you sure to recall the post?",
+  'recallresult': "The teacher won’t receive your post if you recall it",
+  'posttip': "Tips: Your post may be sent to the class by the teacher",
+
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
   "receiverwonderful": "Wonderful!",

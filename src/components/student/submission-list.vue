@@ -1,7 +1,7 @@
 /*
  * @page：学生接收器我的投稿页面
  * @author: chenzhou
- * @update: 2017.6.16
+ * @update: 2018.11.26
  * @desc
  *
  */
@@ -9,37 +9,33 @@
 <template>
   <section class="page-submissionlist">
     <div :class="['page-wrapper', 'animated', opacity ? 'zoomIn': '']" v-if="!isEmpty">
-      <!-- header 批量操作 删除等 -->
-      <section class="header ">
-        <!-- 全选 v-model="selectAll"-->
-        <div class="header-selectall f16" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="selectAll" @change="handleCheckedAll" value="all" /><label for="all"><!-- 全选 -->{{ $t('selall') }}</label></div>
-        <div class="header-inner f16">
-          <p class="action" v-show="!canSelect" @click="handleSetSelected"><!-- 批量操作 -->{{ $t('batchoperation') }}</p>
-          <p class="action delete" v-show="canSelect" @click="handleDelete"><!-- 删除 -->{{ $t('del') }}</p>
-        </div>
-      </section>
 
       <!-- 我的投稿列表 -->
       <section class="submission-mine">
         <ul class="submission-list">
           <li class="item" v-for="(item, index) in submissionlist">
-            <!-- 选择控件 -->
-            <div class="item-checkbox" v-show="canSelect"><input class="selected-box" type="checkbox" :checked="item.checked" @change="handleSelect" :data-id="item.id" :data-index="index" /></div>
-
             <!-- 投稿时间 -->
             <div class="item-date">
-              <p class="">
-                <span class="date-day f25">{{ item.create_time|formatTime('DD') }}</span>
-                <span class="date-month f14">{{ item.create_time|formatTime('MMM') }}</span>
-              </p>
-              <p class="date-time f14">{{ item.create_time|formatTime('HH:mm') }}</p>
+              <p class="date-time f15">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
 
             <!-- 投稿内容 -->
             <div class="item-content">
-              <p class="f15">{{ item.content }}</p>
-              <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
+              <div class="content__wrap">
+                <p class="f15">{{ item.text }}</p>
+                <template v-if="item.hasMore">
+                  <p class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse"><!-- 全文 -->{{ $t('fulltext') }}<span class="f12">({{ item.content.length }})</span></p>
+                  <p class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
+                    <i class="iconfont icon-zhankai f21"></i><!-- 收起 -->{{ $t('fold') }}</p>
+                </template>
+              </div>
+              <div class="image__wrap">
+                <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
+              </div>
             </div>
+
+            <!-- 更多删除入口 -->
+            <p class="item--more blue f20" @click="handleVisibleSheet(index)" >...</p>
           </li>
         </ul>
       </section>
@@ -90,10 +86,19 @@
       <p class="page-empty-btn f18" @click="handleBack"><!-- 返回 -->{{ $t('back') }}</p>
     </section>
 
+    <!-- actionsheet -->
+    <mt-actionsheet :actions="actions" :cancel-text="cancelText" v-model="sheetVisible"></mt-actionsheet>
+
   </section>
 </template>
 <script>
+  import 'mint-ui/lib/actionsheet/style.css'
+
+  import Vue from 'vue'
+  import { Actionsheet } from 'mint-ui';
   import API from '@/util/api'
+
+  Vue.component(Actionsheet.name, Actionsheet);
 
   export default {
     name: 'submission-list-page',
@@ -104,10 +109,17 @@
         title: '我的投稿',
         selectedCount: 0,
         submissionlist: null,
-        canSelect: false,
-        optionsSet: new Set(),
-        selectAll: false,
-        scaleImages: []
+        scaleImages: [],
+        sheetVisible: false,
+        cancelText: this.$i18n.t('cancel') || '取消',
+        actions: [{
+          name: this.$i18n.t('recall'),
+          method: ()=>{
+            this.sheetVisible = false;
+            this.handleWithdraw();
+            console.log('撤回');
+          }
+        }]
       };
     },
     components: {
@@ -141,14 +153,62 @@
             if(res && res.data) {
               let data = res.data;
 
-              self.submissionlist = data.tougao_list || data.tougou_list;
+              self.submissionlist = self.formatData(data.tougao_list);
 
               if(!self.submissionlist.length) {
                 self.isEmpty = true;
               }
+
               return data;
             }
           });
+      },
+
+      /*
+       * @method 格式化投稿控制文字收起展开
+       * @param
+       */
+      formatData(data) {
+        data.forEach((item)=>{
+          if(item.content && item.content.length > 60) {
+            item.text = item.content.substr(0, 50) + '…';
+            item.isCollapse = true;
+            item.hasMore = true;
+          } else {
+            item.text = item.content;
+          }
+
+        })
+
+        return data;
+      },
+
+      /*
+       * @method 删除投稿
+       * @param
+       */
+      handleCollapse(index, isCollapse) {
+        let submission = this.submissionlist[index];
+
+        if(submission) {
+          submission.isCollapse = isCollapse
+
+          if(isCollapse) {
+            submission.text = submission.content.substr(0, 50) + '…';
+          } else {
+            submission.text = submission.content;
+          }
+        }
+
+      },
+
+      /*
+       * @method 显示撤回操作
+       * @param
+       */
+      handleVisibleSheet(index) {
+        this.activeIndex = index;
+        this.sheetVisible = true;
       },
 
       /*
@@ -262,86 +322,27 @@
       },
 
       /*
-      * @method 批量删除
+      * @method 撤回
       * @param
       */
-      handleDelete() {
-        let self = this;
-        // 批量删除
-        let options = [...this.optionsSet];
-        // 国际化confirm options改造
+      handleWithdraw(index) {
         let msgOptions = {
-          confirmButtonText: this.$i18n.t('confirm'),
+          confirmButtonText: this.$i18n.t('recall'),
           cancelButtonText: this.$i18n.t('cancel')
-        }
+        };
+        let title = this.$i18n.t('recallconfirm') || '确定要撤回本条投稿吗？';
+        let content = this.$i18n.t('recallresult') || '撤回后老师端将同时消失';
+        let submission = this.submissionlist[index];
+        let id = submission && submission.id;
 
-        this.$messagebox.confirm(this.$i18n.t('delselectedpost')||'确定删除所选投稿?', msgOptions).then(action => {
-          if(action === 'confirm' && options.length) {
-            options.forEach( (id, index) => {
-              self.deleteSubmission(+id);
-            });
+        this.$messagebox.confirm(content, title, msgOptions).then(action => {
+          if(action === 'confirm' && id) {
+            this.deleteSubmission(+id);
           }
         });
 
       },
 
-      /*
-      * @method 全部选中或者取消
-      * @param
-      */
-      handleCheckedAll(evt) {
-        let target =  typeof event !== 'undefined' && event.target || evt.target;
-
-        this.optionsSet.clear();
-        if(target.checked) {
-          this.submissionlist.forEach( (item, index) => {
-            item.checked = true;
-            this.optionsSet.add(item.id);
-          });
-        } else {
-          this.submissionlist.forEach( (item, index) => {
-            item.checked = false;
-            this.optionsSet.has(item.id) && this.optionsSet.delete(item.id);
-          });
-        }
-
-        this.selectAll = target.checked;
-        this.submissionlist = this.submissionlist.slice(0);
-      },
-
-      /*
-      * @method 选中
-      * @param
-      */
-      handleSelect() {
-        let target = event.target;
-        let id = +target.dataset.id;
-        let index = +target.dataset.index;
-
-        if(target.checked) {
-          this.selectedCount++;
-          this.optionsSet.add(id);
-        } else {
-          this.selectedCount--;
-
-          this.optionsSet.has(id) && this.optionsSet.delete(id);
-          this.selectAll = false;
-        }
-
-        this.submissionlist[index].checked = target.checked;
-        this.optionsSet.size === this.submissionlist.length && (this.selectAll = true);
-      },
-
-      /*
-      * @method 批量设置
-      * @param
-      */
-      handleSetSelected() {
-        this.canSelect = true;
-      },
-      handleResize() {
-
-      },
       handleBack() {
         this.$router.back();
       }
@@ -357,12 +358,10 @@
       this.lessonID = +this.$route.params.lessonID;
       this.getMySubmission();
 
-      window.addEventListener('resize', this.handleResize);
     },
     mounted() {
     },
     beforeDestroy() {
-      window.removeEventListener('resize', this.handleResize);
     }
   };
 </script>
@@ -428,51 +427,6 @@
 
 
 
-  /*------------------*\
-    $ 投稿列表操作区域
-  \*------------------*/
-
-  .header {
-    width: 100%;
-    height: 1.173333rem;
-    line-height: 1.173333rem;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    padding: 0 0.45rem;
-
-    background: #fff;
-
-    border-bottom: 1px solid #979797;
-
-    .header-selectall {
-      label {
-        padding-left: 0.106667rem;
-        vertical-align: 0.026667rem;
-      }
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-
-      flex: 1;
-
-      .action {
-        padding-left: 0.133333rem;
-      }
-
-      .action.delete {
-        color: #D0011B;
-      }
-
-    }
-  }
-
-
 
   /*------------------*\
     $ 我的投稿列表
@@ -482,7 +436,7 @@
   .submission-mine {
     flex: 1;
     width: 100%;
-    padding: 0 0.453333rem;
+    padding: 0 0.4rem 0.4rem;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -504,17 +458,18 @@
         }
 
         .item-date {
-          width: 1.92rem;
+          width: 1.2rem;
+          text-align: left;
           color: #000000;
 
           .date-time {
-            color: #666666;
+            color: #000;
           }
         }
 
         .item-content {
           flex: 1;
-          padding-left: 0.51rem;
+          // padding-left: 0.51rem;
           text-align: justify;
 
           word-break: break-all;
@@ -522,11 +477,22 @@
           color: #333333;
 
           .item-image {
+            display: absolute;
             display: block;
-            width: 3.466667rem;
+            width: 1.6rem;
             max-width: 100%;
             max-height: 7.04rem;
           }
+        }
+
+        .image__wrap {
+          position: relative;
+          margin-top: 0.133333rem;
+          width: 1.6rem;
+          height: 1.6rem;
+
+          border-radius: 0.106667rem;
+          overflow: hidden;
         }
 
       }
@@ -535,25 +501,32 @@
   }
 
 
+  .content__wrap {
+    position: relative;
+  }
+
+  .content__expand {
+    position: relative;
+    text-align: right;
+  }
+
+  .item--more {
+    position: relative;
+    bottom: 0.2rem;
+    padding-left: 0.4rem;
+  }
+
+
 </style>
+<style >
+  .mint-actionsheet-listitem,
+  .mint-actionsheet-button {
+    height: 1.2rem !important;
+    line-height: 1.2rem !important;
+    font-size: 0.48rem !important;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</style>
 
 
 

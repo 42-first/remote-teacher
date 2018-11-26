@@ -119,6 +119,13 @@ let pages = {
   "enteranswer": "输入答案",
   "blanksnotanswer": "有空格未填写，确认提交吗？",
 
+  'fulltext': "全文",
+  'fold': "收起",
+  'recall': "撤回",
+  'recallconfirm': "确定要撤回本条投稿吗？",
+  'recallresult': "撤回后老师端将同时消失",
+  'posttip': "温馨提示：投稿可能会被老师公开发送给全班",
+
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
   "receiverwonderful": "答得漂亮~再接再厉~",
