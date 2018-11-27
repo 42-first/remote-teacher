@@ -184,7 +184,7 @@
       },
 
       /*
-       * @method 删除投稿
+       * @method 展开收起投稿
        * @param
        */
       handleCollapse(index, isCollapse) {

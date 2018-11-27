@@ -121,7 +121,7 @@ let pages = {
   "blanksnotanswer": "Not all of the blanks had been filled. Are you sure to submit?",
 
   'fulltext': "Full text",
-  'fold': "Fold",
+  'fold': "Collapse",
   'recall': "Recall",
   'recallconfirm': "Are you sure to recall the post?",
   'recallresult': "The teacher won’t receive your post if you recall it",
