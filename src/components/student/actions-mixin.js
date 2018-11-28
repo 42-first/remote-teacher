@@ -87,6 +87,8 @@ var actionsMixin = {
                 this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
               } else if(item.action === 'nav') {
                 this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+              } else if(item.action === 'clear') {
+                this.clearBoard(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
               }
 
               break;
@@ -814,22 +816,17 @@ var actionsMixin = {
           this.boardMap.set(id, boardInfo);
 
           // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
-          let lastCards = this.cards.slice(-2);
+          let lastCards = this.cards.slice(-3);
           let cardBoard = lastCards.find((item) => {
             return item.type === 12 && item.boardid === id;
           })
 
-          if(cardBoard) {
-            if(data.from !== 'timeline') {
-              this.simulationDrawing(null, data);
-            }
-
-            // 更新最新时间
-            Object.assign(cardBoard, boardInfo, { time: data.dt })
-          } else {
-            // 置顶操作
-            // this.setTopping(boardInfo);
+          if(data.from !== 'timeline') {
+            this.simulationDrawing(null, data);
           }
+
+          // 更新最新时间
+          cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
         }
 
       }
@@ -854,9 +851,9 @@ var actionsMixin = {
      * @param
      */
     clearBoard(data) {
-      if(data) {
+      if(data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
-        this.clearScreen(id);
+        this.clearScreen(id, true);
       }
     },
 

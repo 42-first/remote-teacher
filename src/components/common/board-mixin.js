@@ -244,7 +244,7 @@ let boardMixin = {
 
       if(boardInfo.lines) {
         boardInfo.lines.forEach((line) => {
-          let isErase = line.type === 'erase' ? true : false;
+          let isErase = line.action === 'erase' ? true : false;
           if(isErase) {
             this.eraseLine(context, line.coords, id);
           } else {
@@ -274,9 +274,15 @@ let boardMixin = {
      * @method 清屏
      * @param
      */
-    clearScreen(id) {
+    clearScreen(id, isClear) {
       let context = this.getContext(id);
-      let boardInfo = this.boardMap.get(id);
+      let boardMap = this.boardMap;
+      let boardInfo = boardMap.get(id);
+
+      if(isClear) {
+        boardInfo.lines = [];
+        boardMap.set(id, boardInfo);
+      }
 
       if(!context) {
         return null;
