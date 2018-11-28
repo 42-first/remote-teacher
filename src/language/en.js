@@ -99,7 +99,7 @@ let pages = {
   "reuploadpiconly" : "We only support picture formats, please try again.",
   "subjectivepro" : "Subjective Question",
   "answerarea" : "Answer here (Please write your answer here.)",
-  "contentsizelimit" : "Maximum 140 characters and one picture",
+  "contentsizelimit" : "Maximum 1000 characters and one picture",
   "myanswer" : "My Answer",
   "subjectivepro" : "Answer Subjective Question",
   "classbonus" : "Class Bonus",
