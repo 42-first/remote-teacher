@@ -31,9 +31,15 @@
               <div class="detail">
                 <img :src="item.user_avatar" class="avatar" alt="">
                 <div class="cont f18">
-                  <span class="author f15">{{item.user_name}}</span><br>
-                  {{item.content}}<br>
-
+                  <span class="author f15">{{item.user_name}}</span>
+                  <div :class="{'fold': item.fold}">
+                    {{item.content}}
+                  </div>
+                  <div class="show-all" v-if="item.content" @click="foldClick(index)">
+                    <span v-show="item.fold">{{$t('showall')}}</span>
+                    <span v-show="!item.fold">{{$t('foldall')}}</span>
+                    <span v-show="item.fold" class="show-all-count">({{item.content.length}})</span>
+                  </div>
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
               </div>
@@ -226,7 +232,7 @@
             self.isAllLoaded = true
             return
           }
-          self.dataList = self.dataList.concat(jsonData.data.tougao_list)
+          self.dataList = self.foldListFn(self.dataList.concat(jsonData.data.tougao_list))
 
           // this.$refs.Loadmore.onBottomLoaded()
           self.onBottomLoaded()
@@ -341,7 +347,7 @@
             isAllLoaded = true
           } else if (headNow === 0) {
             self.setData({
-              dataList: newList
+              dataList: self.foldListFn(newList)
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
@@ -349,11 +355,11 @@
             // 包含
             let _list = newList.slice(0, headIndex).concat(self.dataList)
             self.setData({
-              dataList: _list
+              dataList: self.foldListFn(_list)
             })
           } else {
             self.setData({
-              dataList: newList
+              dataList: self.foldListFn(newList)
             })
             isAllLoaded = false
           }
@@ -521,7 +527,24 @@
       **/ 
      showUserInfoChange(val) {
        this.isHideName = val
-     }
+     },
+    // 给投稿列表添加fold 属性，方便折叠
+    foldListFn(list) {
+      if (!list) {
+        return []
+      }
+      list.map( e => {
+        e.fold = true
+      })
+      return list
+    },
+    foldClick(index) {
+      this.dataList.map((e, i) => {
+        if (index === i) {
+          e.fold = !e.fold
+        }
+      })
+    }
     }
   }
 </script>
@@ -683,7 +706,7 @@
           .cont {
             flex: 1;
             word-break: break-word;
-
+            text-align: justify;
             .author {
               color: $blue;
             }
@@ -691,6 +714,21 @@
             .pic {
               max-width: 7.573333rem;
               max-height: 7.04rem;
+            }
+            .fold{
+              display: -webkit-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+            }
+            .show-all{
+              color: #639ef4;
+              text-align: right;
+              font-size: px2rem(36px);
+              .show-all-count{
+                font-size: px2rem(24px);
+              }
             }
           }
         }

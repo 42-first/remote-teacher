@@ -1469,6 +1469,7 @@
 							.cont-title {
 								margin: .266667rem 0 .266667rem .093333rem;
 								color: #333;
+                text-align: justify;
 							}
               .fold{
                 display: -webkit-box;
