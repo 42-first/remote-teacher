@@ -1331,8 +1331,8 @@
     .submission__pic--add {
       position: relative;
       margin: 0 auto;
-      width: 3.493333rem;
-      height: 3.493333rem;
+      width: 1.92rem;
+      height: 1.92rem;
 
       border: 2px solid #C8C8C8;
       border-radius: 0.106667rem;
@@ -1353,7 +1353,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1.8rem;
+      width: 0.986667rem;
       height: 2px;
 
       transform: translate(-50%, -50%);
@@ -1363,7 +1363,7 @@
 
     .submission__pic--add:after {
       width: 2px;
-      height: 1.8rem;
+      height: 0.986667rem;
     }
 
     .submission__pic--remark {
