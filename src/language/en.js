@@ -392,6 +392,8 @@ let pages = {
   "weida": "Unanswerd",
   "note": "Remark",
   "boardunknow": "Unclear(board)",
+  "showall": "全文",
+  "foldall": "fold",
 
   // 引导页
   guide: {

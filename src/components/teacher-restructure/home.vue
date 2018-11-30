@@ -99,10 +99,10 @@
     ></Guide>
 
     <!-- 教师遥控器引导查看答案、续时 -->
-    <GuideDelay
+    <!-- <GuideDelay
       v-show="isMsgMaskHidden && isToastCtrlMaskHidden && initiativeCtrlMaskTpl !== 'Qrcode' && isGuideHidden && !isGuideDelayHidden && isProblemPublished"
       @guideDelayNext="guideDelayNext"
-    ></GuideDelay>
+    ></GuideDelay> -->
     <!-- 切换语言弹窗 -->
     <change_lang_dialog></change_lang_dialog>
 		<div class="note-box" v-show="noteText">

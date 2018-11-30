@@ -31,8 +31,15 @@
               <div class="detail">
                 <img :src="item.user_avatar" class="avatar" alt="">
                 <div class="cont f18">
-                  <span class="author f15">{{item.user_name}}</span><br>
-                  {{item.content}}<br>
+                  <span class="author f15">{{item.user_name}}</span>
+                  <div :class="{'fold': item.fold}">
+                    {{item.content}}
+                  </div>
+                  <div class="show-all" v-if="item.content" @click="foldClick(index)">
+                    <span v-show="item.fold">{{$t('showall')}}</span>
+                    <span v-show="!item.fold">{{$t('foldall')}}</span>
+                    <span v-show="item.fold" class="show-all-count">({{item.subj_result.content.length}})</span>
+                  </div>
                   <!-- <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="showBigpic(item.pic, item.id)"></v-touch> -->
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
@@ -199,7 +206,7 @@
               self.allLoaded = true
               return
             }
-            self.submissionList = self.submissionList.concat(jsonData.data.tougao_list)
+            self.submissionList = this.foldListFn(self.submissionList.concat(jsonData.data.tougao_list))
           })
       },
       /**
@@ -277,13 +284,13 @@
             if (response_num === 0) {
               self.allLoaded = true
             } else if (headNow === 0) {
-              self.submissionList = newList
+              self.submissionList = this.foldListFn(newList)
               self.allLoaded = newList.length < FENYE_COUNT
             } else if (~headIndex) {
               // 包含
-              self.submissionList = newList.slice(0, headIndex).concat(self.submissionList)
+              self.submissionList = this.foldListFn(newList.slice(0, headIndex).concat(self.submissionList))
             } else {
-              self.submissionList = newList
+              self.submissionList = this.foldListFn(newList)
               self.allLoaded = false
             }
 
@@ -483,6 +490,20 @@
             self.isShowNewHint = jsonData.data.response_num
           })
       },
+      // 给投稿列表添加fold 属性，方便折叠
+      foldListFn(list) {
+        let l = list.map( e => {
+          e.fold = true
+        })
+        return l
+      },
+      foldClick(index) {
+        this.submissionList.map((e, i) => {
+          if (index === i) {
+            e.fold = !e.fold
+          }
+        })
+      }
     }
   }
 </script>
@@ -625,6 +646,14 @@
             .pic {
               max-width: 7.573333rem;
               max-height: 7.04rem;
+            }
+
+            .fold{
+              display: -webkit-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
             }
           }
         }

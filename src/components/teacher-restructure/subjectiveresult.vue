@@ -4,9 +4,9 @@
     <div class="problem-root" v-scroll="onScroll">
       <slot name="ykt-msg"></slot>
       <!-- 教师遥控器引导查看答案、续时 -->
-      <GuideDelay
+      <!-- <GuideDelay
         v-show="!isGuideDelayHidden"
-      ></GuideDelay>
+      ></GuideDelay> -->
 
       <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newans') }}</v-touch>
 
@@ -119,13 +119,22 @@
 
                     <div class="cont f18">
                       <div class="cont-title">
-                      	{{item.subj_result.content}}
+                        {{item.fold ? item.foldContent : item.subj_result.content}}
+                        <span v-show="!item.hideFold">
+                            <span v-show="item.fold" @click="item.fold = false">
+                                <span>...</span>
+                                <span class="color16">{{$t('showall')}}</span>
+                                <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                            </span>
+                            <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                                <i class="iconfont icon-shouqi"></i>
+                                {{$t('foldall')}}
+                            </span>
+                        </span>
                       </div>
-
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
-
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
                     <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
@@ -152,14 +161,11 @@
                         <span class="fsqb-innerline"></span>
                         <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
                       </v-touch>
-
                     </div>
-
                   </div>
                 </div>
                 <div class="gap"></div>
               </div>
-
               <div v-show="isAllLoaded && isContLonger" class="nomore f15">
                 <div class="bgline"></div>
                 <div class="wenan">end</div>
@@ -650,7 +656,7 @@
             self.isAllLoaded = true
             return
           }
-          self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+          self.dataList = self.addFold(self.dataList.concat(jsonData.data.problem_results_list))
 
           this.$refs.Loadmore.onBottomLoaded()
         })
@@ -797,7 +803,7 @@
             isAllLoaded = true
           } else {
             self.setData({
-              dataList: newList
+              dataList: self.addFold(newList)
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
@@ -1200,6 +1206,24 @@
 
           return hNumInt / 100
         }
+      },
+      // 增加fold 属性
+      addFold(list) {
+          list.map(e => {
+              if(e.subj_result.content && this.getLength(e.subj_result.content)> 200) {
+                  e.fold = true
+              } else {
+                  e.fold = false
+                  e.hideFold = true
+              }
+              e.foldContent = e.subj_result.content.slice(0, 100)
+          })
+          return list
+      },
+      getLength(str) {
+          let s = str + ''
+          var result = s.replace(/[^\x00-\xff]/g, '**')
+          return result.length
       }
 	  }
 	}
@@ -1459,8 +1483,20 @@
 							.cont-title {
 								margin: .266667rem 0 .266667rem .093333rem;
 								color: #333;
+                text-align: justify;
 							}
-
+              .color16{
+                font-size: px2rem(32px);
+                color: #639ef4;
+                .iconfont{
+                  font-size: px2rem(32px);
+                  vertical-align: middle;
+                }
+              }
+              .color12{
+                font-size: px2rem(24px);
+                color: #639ef4;
+              }
 	            .pic {
 	              max-width: 100%;
 	              max-height: 5.68rem;

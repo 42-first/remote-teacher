@@ -393,6 +393,8 @@ let pages = {
   "close": "关闭",
   "note": "备注",
   "boardunknow": "白板不懂",
+  "showall": "全文",
+  "foldall": "收起",
 
   // 引导页
   guide: {
