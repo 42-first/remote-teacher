@@ -19,23 +19,27 @@
               <p class="date-time f15">{{ item.create_time|formatTime('HH:mm') }}</p>
             </div>
 
+            <div class="item__right">
             <!-- 投稿内容 -->
             <div class="item-content">
               <div class="content__wrap">
-                <p class="f15">{{ item.text }}</p>
-                <template v-if="item.hasMore">
-                  <p class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse"><!-- 全文 -->{{ $t('fulltext') }}<span class="f12">({{ item.content.length }})</span></p>
-                  <p class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
-                    <i class="iconfont icon-zhankai f21"></i><!-- 收起 -->{{ $t('fold') }}</p>
-                </template>
+                <div class="f15">{{ item.text }}
+                  <template v-if="item.hasMore">
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse"><!-- 全文 -->{{ $t('fulltext') }}<span class="f12">({{ item.content.length }})</span></span>
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else><i class="iconfont icon-zhankai f21"></i><!-- 收起 -->{{ $t('fold') }}</span>
+                  </template>
+                </div>
               </div>
-              <div class="image__wrap">
-                <img v-if="item.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
+              <div class="image__wrap" v-if="item.pic" >
+                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
               </div>
             </div>
 
             <!-- 更多删除入口 -->
             <p class="item--more blue f20" @click="handleVisibleSheet(index)" >...</p>
+
+            </div>
+
           </li>
         </ul>
       </section>
@@ -171,7 +175,7 @@
       formatData(data) {
         data.forEach((item)=>{
           if(item.content && item.content.length > 60) {
-            item.text = item.content.substr(0, 50) + '…';
+            item.text = item.content.substr(0, 45) + '…';
             item.isCollapse = true;
             item.hasMore = true;
           } else {
@@ -194,7 +198,7 @@
           submission.isCollapse = isCollapse
 
           if(isCollapse) {
-            submission.text = submission.content.substr(0, 50) + '…';
+            submission.text = submission.content.substr(0, 45) + '…';
           } else {
             submission.text = submission.content;
           }
@@ -436,7 +440,7 @@
   .submission-mine {
     flex: 1;
     width: 100%;
-    padding: 0 0.4rem 0.4rem;
+    padding: 0 0 0.4rem 0.4rem;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -469,7 +473,6 @@
 
         .item-content {
           flex: 1;
-          // padding-left: 0.51rem;
           text-align: justify;
 
           word-break: break-all;
@@ -501,6 +504,19 @@
       }
 
     }
+  }
+
+  .item__right {
+    flex: 1;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding-right: 0.4rem;
+    padding-bottom: 0.4rem;
+
+    border-bottom: 1px solid #C8C8C8;
   }
 
 
