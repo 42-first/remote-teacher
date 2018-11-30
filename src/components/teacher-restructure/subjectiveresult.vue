@@ -118,13 +118,19 @@
 										</div>
 
                     <div class="cont f18">
-                      <div class="cont-title" :class="{'fold': item.fold}">
-                      	{{item.subj_result.content}}
-                      </div>
-                      <div class="show-all" v-if="item.subj_result && item.subj_result.content" @click="foldClick(index)">
-                        <span v-show="item.fold">{{$t('showall')}}</span>
-                        <span v-show="!item.fold">{{$t('foldall')}}</span>
-                        <span v-show="item.fold" class="show-all-count">({{item.subj_result.content.length}})</span>
+                      <div class="cont-title">
+                        {{item.fold ? item.foldContent : item.subj_result.content}}
+                        <span v-show="!item.hideFold">
+                            <span v-show="item.fold" @click="item.fold = false">
+                                <span>...</span>
+                                <span class="color16">{{$t('showall')}}</span>
+                                <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                            </span>
+                            <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                                <i class="iconfont icon-shouqi"></i>
+                                {{$t('foldall')}}
+                            </span>
+                        </span>
                       </div>
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
@@ -650,7 +656,7 @@
             self.isAllLoaded = true
             return
           }
-          self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+          self.dataList = self.addFold(self.dataList.concat(jsonData.data.problem_results_list))
 
           this.$refs.Loadmore.onBottomLoaded()
         })
@@ -793,14 +799,11 @@
           let headIndex = newList.findIndex(item => item.problem_result_id === headNow)
 
           let isAllLoaded = self.isAllLoaded
-          newList.map( e => {
-            e.fold = true
-          })
           if (response_num === 0) {
             isAllLoaded = true
           } else {
             self.setData({
-              dataList: newList
+              dataList: self.addFold(newList)
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
@@ -1204,12 +1207,23 @@
           return hNumInt / 100
         }
       },
-      foldClick(index) {
-        this.dataList.map((e, i) => {
-          if (index === i) {
-            e.fold = !e.fold
-          }
-        })
+      // 增加fold 属性
+      addFold(list) {
+          list.map(e => {
+              if(e.subj_result.content && this.getLength(e.subj_result.content)> 200) {
+                  e.fold = true
+              } else {
+                  e.fold = false
+                  e.hideFold = true
+              }
+              e.foldContent = e.subj_result.content.slice(0, 100)
+          })
+          return list
+      },
+      getLength(str) {
+          let s = str + ''
+          var result = s.replace(/[^\x00-\xff]/g, '**')
+          return result.length
       }
 	  }
 	}
@@ -1471,20 +1485,17 @@
 								color: #333;
                 text-align: justify;
 							}
-              .fold{
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-              }
-              .show-all{
+              .color16{
+                font-size: px2rem(32px);
                 color: #639ef4;
-                text-align: right;
-                font-size: px2rem(36px);
-                .show-all-count{
-                  font-size: px2rem(24px);
+                .iconfont{
+                  font-size: px2rem(32px);
+                  vertical-align: middle;
                 }
+              }
+              .color12{
+                font-size: px2rem(24px);
+                color: #639ef4;
               }
 	            .pic {
 	              max-width: 100%;

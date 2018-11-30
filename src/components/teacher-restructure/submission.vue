@@ -32,13 +32,19 @@
                 <img :src="item.user_avatar" class="avatar" alt="">
                 <div class="cont f18">
                   <span class="author f15">{{item.user_name}}</span>
-                  <div :class="{'fold': item.fold}">
-                    {{item.content}}
-                  </div>
-                  <div class="show-all" v-if="item.content" @click="foldClick(index)">
-                    <span v-show="item.fold">{{$t('showall')}}</span>
-                    <span v-show="!item.fold">{{$t('foldall')}}</span>
-                    <span v-show="item.fold" class="show-all-count">({{item.content.length}})</span>
+                  <div>
+                    {{item.fold ? item.foldContent : item.content}}
+                    <span v-show="!item.hideFold">
+                        <span v-show="item.fold" @click="item.fold = false">
+                            <span>...</span>
+                            <span class="color16">{{$t('showall')}}</span>
+                            <span class="color12">({{item.content ? item.content.length : 0}})</span>
+                        </span>
+                        <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                            <i class="iconfont icon-shouqi"></i>
+                            {{$t('foldall')}}
+                        </span>
+                    </span>
                   </div>
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
@@ -232,7 +238,7 @@
             self.isAllLoaded = true
             return
           }
-          self.dataList = self.foldListFn(self.dataList.concat(jsonData.data.tougao_list))
+          self.dataList = self.addFold(self.dataList.concat(jsonData.data.tougao_list))
 
           // this.$refs.Loadmore.onBottomLoaded()
           self.onBottomLoaded()
@@ -347,7 +353,7 @@
             isAllLoaded = true
           } else if (headNow === 0) {
             self.setData({
-              dataList: self.foldListFn(newList)
+              dataList: self.addFold(newList)
             })
 
             isAllLoaded = newList.length < FENYE_COUNT
@@ -355,11 +361,11 @@
             // 包含
             let _list = newList.slice(0, headIndex).concat(self.dataList)
             self.setData({
-              dataList: self.foldListFn(_list)
+              dataList: self.addFold(_list)
             })
           } else {
             self.setData({
-              dataList: self.foldListFn(newList)
+              dataList: self.addFold(newList)
             })
             isAllLoaded = false
           }
@@ -528,22 +534,23 @@
      showUserInfoChange(val) {
        this.isHideName = val
      },
-    // 给投稿列表添加fold 属性，方便折叠
-    foldListFn(list) {
-      if (!list) {
-        return []
-      }
-      list.map( e => {
-        e.fold = true
-      })
-      return list
+    // 增加fold 属性
+    addFold(list) {
+        list.map(e => {
+            if(e.content && this.getLength(e.content)> 200) {
+                e.fold = true
+            } else {
+                e.fold = false
+                e.hideFold = true
+            }
+            e.foldContent = e.content.slice(0, 100)
+        })
+        return list
     },
-    foldClick(index) {
-      this.dataList.map((e, i) => {
-        if (index === i) {
-          e.fold = !e.fold
-        }
-      })
+    getLength(str) {
+        let s = str + ''
+        var result = s.replace(/[^\x00-\xff]/g, '**')
+        return result.length
     }
     }
   }
@@ -715,20 +722,17 @@
               max-width: 7.573333rem;
               max-height: 7.04rem;
             }
-            .fold{
-              display: -webkit-box;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              -webkit-line-clamp: 3;
-              -webkit-box-orient: vertical;
-            }
-            .show-all{
+            .color16{
+              font-size: px2rem(32px);
               color: #639ef4;
-              text-align: right;
-              font-size: px2rem(36px);
-              .show-all-count{
-                font-size: px2rem(24px);
+              .iconfont{
+                font-size: px2rem(32px);
+                vertical-align: middle;
               }
+            }
+            .color12{
+              font-size: px2rem(24px);
+              color: #639ef4;
             }
           }
         }
