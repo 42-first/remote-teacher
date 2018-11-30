@@ -45,7 +45,7 @@
 
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
+	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling') || ~problemType.indexOf('FillBlank')}]">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
