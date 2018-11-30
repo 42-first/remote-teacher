@@ -477,7 +477,10 @@
           color: #333333;
 
           .item-image {
-            display: absolute;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: block;
             width: 1.6rem;
             max-width: 100%;
