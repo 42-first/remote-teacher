@@ -13,12 +13,12 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <li class="danmu__item" v-for="danmu in danmus">{{ danmu.danmu }}</li>
+        <li class="danmu__item f12" v-for="danmu in danmus">{{ danmu.danmu }}</li>
       </ul>
     </section>
 
     <!-- 弹幕标识 开关 -->
-    <button class="danmu__btn">
+    <button class="danmu__btn f14">
       <!-- <i class="iconfont icon-shiti_guanbitouping f21 c666" @click="handleClose"></i> -->
       <span>弹</span>
     </button>
@@ -49,9 +49,16 @@
   }
 
   .danmu__btn {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0.2rem;
+
+    width: 0.8rem;
+    height: 0.8rem;
+
+    color: #fff;
+    background: rgba(0,0,0, 0.6);
+    border-radius: 0.106667rem;
   }
 
   .danmu__wrap {
@@ -112,7 +119,7 @@
       },
       danmuStatus: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
     data() {
@@ -137,6 +144,7 @@
        * @method 初始化状态
        */
       init(data) {
+        this.visible = true;
         this.danmus = [{
           "danmu": "一条弹幕",
           "danmuid": 1122
