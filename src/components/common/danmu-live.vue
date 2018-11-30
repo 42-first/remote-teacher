@@ -13,7 +13,9 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <li class="danmu__item f12" v-for="danmu in danmus">{{ danmu.danmu }}</li>
+        <li class="danmu__item f12" v-for="danmu in danmus">
+          <p class="danmu--text">{{ danmu.danmu }}</p>
+        </li>
       </ul>
     </section>
 
