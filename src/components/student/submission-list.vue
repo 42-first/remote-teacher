@@ -476,6 +476,7 @@
           text-align: justify;
 
           word-break: break-all;
+          word-break: break-word;
 
           color: #333333;
 
@@ -516,7 +517,7 @@
     padding-right: 0.4rem;
     padding-bottom: 0.4rem;
 
-    border-bottom: 1px solid #C8C8C8;
+    border-bottom: 1px solid #eee;
   }
 
 
@@ -538,6 +539,10 @@
 
 </style>
 <style >
+  .mint-actionsheet {
+    background: #eee !important;
+  }
+
   .mint-actionsheet-listitem,
   .mint-actionsheet-button {
     height: 1.2rem !important;
