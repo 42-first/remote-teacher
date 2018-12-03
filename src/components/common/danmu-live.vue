@@ -223,14 +223,8 @@
        * @method 计算弹幕长度
        */
       calcDanmus() {
-        // let danmus = this.formatData(this.danmus.slice(-5));
-        // this.danmuList = danmus;
-
-        // if(danmus && danmus.length > 5) {
-        //   this.danmuList.shift();
-        // }
-
         let danmus = this.danmus;
+
         if(danmus && danmus.length) {
           this.getOneDanmu(danmus);
         }
@@ -275,9 +269,6 @@
       },
     },
     created() {
-      // setTimeout(()=>{
-      //   this.init();
-      // }, 500)
     },
   }
 </script>
