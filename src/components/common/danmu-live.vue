@@ -13,8 +13,9 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <li class="danmu__item f12" v-for="danmu in danmus">
-          <p class="danmu--text">{{ danmu.danmu }}</p>
+        <!-- :class="[ danmu.status===1? 'enter' : '']"  -->
+        <li class="danmu__item f12 J_danmu" :class="[ danmu.status===1? 'enter' : '']" v-for="danmu in danmuList">
+          <p class="danmu--text " >{{ danmu.danmu }}</p>
         </li>
       </ul>
     </section>
@@ -38,15 +39,6 @@
     bottom: 0.533333rem;
     left: 0.453333rem;
 
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
-
-    // padding: 0 0.4rem;
-    // height: 0.8rem;
-    // width: 100vw;
-    // line-height: 0.8rem;
-
     box-sizing: border-box;
   }
 
@@ -56,11 +48,24 @@
     left: 0.2rem;
 
     width: 0.8rem;
-    height: 0.8rem;
+    height: 0.666667rem;
 
     color: #fff;
-    background: rgba(0,0,0, 0.6);
+    background: #333;
     border-radius: 0.106667rem;
+  }
+
+  .danmu__btn:before {
+    content: '';
+    position: absolute;
+    top: -0.213333rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0.106667rem;
+    border-color: transparent transparent #333 transparent;
   }
 
   .danmu__wrap {
@@ -69,44 +74,58 @@
     left: 0;
 
     max-height: 6.0rem;
-    max-width: 6.36rem;
+    // max-width: 6.36rem;
+    width: 6.36rem;
     overflow: hidden;
   }
 
+  .danmu__list {
+    transition: all 1s ease-out;
+  }
+
   .danmu__item {
+    display: flex;
+    align-items: flex-start;
+
     margin-top: 0.133333rem;
-    padding: 0 0.4rem;
+    width: 100%;
+  }
+
+  .danmu--text {
+    box-sizing: border-box;
+    position: relative;
+    padding: 0.066667rem 0.4rem;
     min-height: 0.64rem;
     line-height: 1.5;
+    text-align: justify;
 
     color: #fff;
     background: rgba(0,0,0, 0.6);
     border-radius: 0.32rem;
   }
 
-  .notice--text {
-    white-space: nowrap;
-    animation: maquee infinite 8s 0.3s linear;
+  .enter {
+    animation: gradient 0.6s 0s linear;
+    transition: opacify ease-in 0.3s;
+  }
+
+  .out {
+    animation: gradient 0.4s 0s linear;
     transition: opacify ease-out 0.3s;
   }
 
-
-  @keyframes maquee {
+  @keyframes gradient {
     0% {
-      opacity: 0.2;
-      transform: translateX(95%);
+      opacity: 0.1;
     }
-    5% {
-      opacity: 1;
-    }
-    95% {
-      opacity: 0.95;
+    50% {
+      opacity: 0.35;
     }
     100% {
-      opacity: 0.1;
-      transform: translateX(-100%);
+      opacity: 1;
     }
   }
+
 </style>
 <script>
   import request from '@/util/request'
@@ -128,17 +147,17 @@
       return {
         // 是否显示弹幕列表
         visible: false,
+        // 格式化后的弹幕列表
+        danmuList: [],
       }
     },
     filters: {
-      setStyle(position, offset = 0) {
-        let oStyle = {};
-
-        if(position) {
-          oStyle[position] = offset + 'rem';
+    },
+    watch: {
+      danmus(newVal, oldVal) {
+        if(newVal && newVal.length) {
+          this.calcDanmus();
         }
-
-        return oStyle;
       }
     },
     methods: {
@@ -147,13 +166,83 @@
        */
       init(data) {
         this.visible = true;
-        this.danmus = [{
+        let danmus = [{
           "danmu": "一条弹幕",
           "danmuid": 1122
         }, {
           "danmu": "第二条弹幕",
           "danmuid": 1123
+        }, {
+          "danmu": "第三条弹幕第三条弹幕第三条弹幕第",
+          "danmuid": 1123
+        }, {
+          "danmu": "第四条弹幕第四条弹幕第四条弹幕第四条弹幕",
+          "danmuid": 1123
+        }, {
+          "danmu": "第二条弹幕",
+          "danmuid": 1123
+        }, {
+          "danmu": "第三条弹幕第三条弹幕第三条弹幕第三条弹幕第三条弹幕第三条弹幕",
+          "danmuid": 1123
+        }, {
+          "danmu": "第四条弹幕第四条弹幕第四条弹幕第四条弹幕",
+          "danmuid": 1123
         }];
+
+        setInterval(()=>{
+          let index = parseInt(Math.random() * 7);
+          this.danmus.push(danmus[index]);
+        }, 2000)
+
+        this.danmus = danmus.slice(-5);
+      },
+
+      /**
+       * @method 计算弹幕长度
+       */
+      calcDanmus() {
+        // let danmus = this.formatData(this.danmus.slice(-5));
+        // this.danmuList = danmus;
+
+        // if(danmus && danmus.length > 5) {
+        //   this.danmuList.shift();
+        // }
+
+        let danmus = this.danmus;
+        if(danmus && danmus.length) {
+          this.getOneDanmu(danmus);
+        }
+      },
+
+      /**
+       * @method 取出一条弹幕
+       */
+      getOneDanmu(danmus) {
+        let danmu = danmus.shift();
+
+        if(danmu) {
+          let newDanmu = Object.assign({}, danmu, { status: 1 })
+          this.danmuList.push(newDanmu);
+
+          setInterval(()=>{
+            this.$el.querySelector('.J_danmu:last-child').scrollIntoView();
+          }, 50)
+        }
+      },
+
+      /**
+       * @method 格式化弹幕列表
+       */
+      formatData(list) {
+        let count = list.length - 1;
+        return list.map((danmu, index) => {
+          // status 弹幕状态 1：进入视图 2:已进入 3：离开视图 方便扩展使用数字
+          if(index < count) {
+            return Object.assign({}, danmu, { status: 2 })
+          } else {
+            return Object.assign({}, danmu, { status: 1 })
+          }
+        });
       },
 
       /**
