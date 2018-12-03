@@ -46,7 +46,7 @@
                         </span>
                     </span>
                   </div>
-                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
+                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                 </div>
               </div>
               <div class="action-box">
@@ -701,7 +701,7 @@
 
         .detail {
           display: flex;
-          margin-bottom: 0.4rem;
+          // margin-bottom: 0.4rem;
           padding-top: 0.266667rem;
 
           .avatar {
