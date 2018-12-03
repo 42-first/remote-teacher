@@ -399,6 +399,12 @@ var mixin = {
 
             break;
 
+          // 接收弹幕
+          case 'newdanmu':
+            this.receiveDanmu(msg);
+
+            break;
+
           default:
             hasMsg = false;
             break

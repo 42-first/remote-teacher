@@ -159,8 +159,8 @@
     <!-- 停服务通知 -->
     <notice position="bottom"></notice>
 
-    <!-- 弹幕直播 :danmu-status="danmuStatus" -->
-    <danmu-live></danmu-live>
+    <!-- 弹幕直播 -->
+    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus"></danmu-live>
 
   </section>
 </template>
@@ -301,7 +301,9 @@
         // 白板map
         boardMap: new Map(),
         // 白板不懂收藏
-        boardList: null
+        boardList: null,
+        // 弹幕直播
+        danmus: [],
       };
     },
     components: {

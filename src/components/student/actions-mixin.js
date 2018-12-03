@@ -857,6 +857,15 @@ var actionsMixin = {
       }
     },
 
+    /*
+     * @method 弹幕接收
+     * @param
+     */
+    receiveDanmu(data) {
+      if(data && !data.isFetch) {
+        this.danmus.push(data);
+      }
+    },
 
   }
 }

@@ -3,7 +3,7 @@
  * @author: chenzhou
  * @update: 2018.11.30
  * @desc 接收器中实时弹幕列表
- * @demo <notice-cmp position="bottom" offset="50"></notice-cmp>
+ * @demo
  */
 
 
@@ -13,7 +13,6 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <!-- :class="[ danmu.status===1? 'enter' : '']"  -->
         <li class="danmu__item f12 J_danmu" :class="[ danmu.status===1? 'enter' : '']" v-for="danmu in danmuList">
           <p class="danmu--text " >{{ danmu.danmu }}</p>
         </li>
@@ -21,9 +20,8 @@
     </section>
 
     <!-- 弹幕标识 开关 -->
-    <button class="danmu__btn f14">
-      <!-- <i class="iconfont icon-shiti_guanbitouping f21 c666" @click="handleClose"></i> -->
-      <span>弹</span>
+    <button class="danmu__btn f14" @click="handleClose">
+      <p :class="[ visible ? '' : 'danmu--close']">弹</p>
     </button>
 
   </section>
@@ -34,7 +32,7 @@
   }
 
   .danmu__cmp {
-    z-index: 2;
+    // z-index: 2;
     position: fixed;
     bottom: 0.533333rem;
     left: 0.453333rem;
@@ -53,12 +51,15 @@
     color: #fff;
     background: #333;
     border-radius: 0.106667rem;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
   }
 
   .danmu__btn:before {
     content: '';
     position: absolute;
-    top: -0.213333rem;
+    top: -0.186667rem;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
@@ -66,6 +67,27 @@
     border-style: solid;
     border-width: 0.106667rem;
     border-color: transparent transparent #333 transparent;
+  }
+
+  .danmu--close {
+    position: relative;
+    margin: auto;
+    width: 0.533333rem;
+    height: 0.533333rem;
+
+    border-radius: 50%;
+    border: 1px solid #fff;
+  }
+
+  .danmu--close:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+
+    background: #fff;
+
+    transform: translateY(-0.28rem) rotate(45deg);
   }
 
   .danmu__wrap {
@@ -140,13 +162,13 @@
       },
       danmuStatus: {
         type: Boolean,
-        default: true
+        default: false
       }
     },
     data() {
       return {
         // 是否显示弹幕列表
-        visible: false,
+        visible: true,
         // 格式化后的弹幕列表
         danmuList: [],
       }
@@ -224,9 +246,9 @@
           let newDanmu = Object.assign({}, danmu, { status: 1 })
           this.danmuList.push(newDanmu);
 
-          setInterval(()=>{
+          Promise.resolve().then(()=>{
             this.$el.querySelector('.J_danmu:last-child').scrollIntoView();
-          }, 50)
+          });
         }
       },
 
@@ -246,24 +268,16 @@
       },
 
       /**
-       * @method 关闭通知
+       * @method 关闭弹幕直播
        */
       handleClose(evt) {
-        // 可能会点透 需要特殊处理下
-        let id = this.noticeID;
-        let key = 'service-notice-closed-' + id;
-
-        if(isSupported(window.localStorage)) {
-          localStorage.setItem(key, true);
-        }
-
-        this.visible = false;
+        this.visible = !this.visible;
       },
     },
     created() {
-      setTimeout(()=>{
-        this.init();
-      }, 500)
+      // setTimeout(()=>{
+      //   this.init();
+      // }, 500)
     },
   }
 </script>
