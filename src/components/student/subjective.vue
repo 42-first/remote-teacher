@@ -377,6 +377,8 @@
               if(problemResult) {
                 let result = problemResult.team_result_data;
                 this.text = result.content;
+                // 计数
+                this.text && (this.count = this.text.length);
                 // 是否有图片
                 if(result.pics && result.pics.length && result.pics[0].pic) {
                   this.hasImage = true;
