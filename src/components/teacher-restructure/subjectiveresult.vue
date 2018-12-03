@@ -119,15 +119,18 @@
 
                     <div class="cont f18">
                       <div class="cont-title">
-                        {{item.fold ? item.foldContent : item.subj_result.content}}
+                        {{item.fold ? item.subj_result.foldContent : item.subj_result.content}}
+                        <!-- {{item.subj_result.content}} -->
                         <span v-show="!item.hideFold">
                             <span v-show="item.fold" @click="item.fold = false">
                                 <span>...</span>
-                                <span class="color16">{{$t('showall')}}</span>
-                                <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                                <span class="font16">
+                                  <span>{{$t('showall')}}</span>
+                                  <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                                </span>
                             </span>
                             <span v-show="!item.fold" @click="item.fold = true" class="color16">
-                                <i class="iconfont icon-shouqi"></i>
+                                <i class="iconfont icon-zhankai"></i>
                                 {{$t('foldall')}}
                             </span>
                         </span>
@@ -139,7 +142,7 @@
                     <!-- 投屏时不能打分 -->
                     <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
                       <div class="gray">
-                        <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
+                        <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
                         <span v-show="item.score !== -1">{{item.score.toFixed(1)}}</span>
                       </div>
@@ -148,10 +151,10 @@
 
                     <div class="action f14">
                       <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
-                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                        <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
                         <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                       </v-touch>
-                      <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
                         <!-- 发送全班 -->{{ $t('postpublic') }}
                       </v-touch>
                       <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
@@ -657,6 +660,7 @@
             return
           }
           self.dataList = self.addFold(self.dataList.concat(jsonData.data.problem_results_list))
+          // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
 
           this.$refs.Loadmore.onBottomLoaded()
         })
@@ -804,8 +808,13 @@
           } else {
             self.setData({
               dataList: self.addFold(newList)
+              // dataList: newList
             })
-
+            setTimeout(() => {
+              this.dataList.map(e => {
+                e.fold = e.subj_result.content && this.getLength(e.subj_result.content) > 200
+              })
+            }, 3e2)
             isAllLoaded = newList.length < FENYE_COUNT
           }
           self.setData({
@@ -1211,12 +1220,12 @@
       addFold(list) {
           list.map(e => {
               if(e.subj_result.content && this.getLength(e.subj_result.content)> 200) {
-                  e.fold = true
+                  e.fold = false
               } else {
                   e.fold = false
                   e.hideFold = true
               }
-              e.foldContent = e.subj_result.content.slice(0, 100)
+              e.subj_result.foldContent = e.subj_result.content.slice(0, 100)
           })
           return list
       },
@@ -1489,7 +1498,7 @@
                 font-size: px2rem(32px);
                 color: #639ef4;
                 .iconfont{
-                  font-size: px2rem(32px);
+                  font-size: px2rem(40px);
                   vertical-align: middle;
                 }
               }
@@ -1515,8 +1524,8 @@
 	          display: flex;
 	          justify-content: space-between;
 	          align-items: center;
-	          padding: .533333rem 0;
-
+	          padding: px2rem(40px) 0;
+            height: px2rem(50px);
 	          .gray {
 	            color: $graybg;
 	          }

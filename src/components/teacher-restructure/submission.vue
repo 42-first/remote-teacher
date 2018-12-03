@@ -37,11 +37,13 @@
                     <span v-show="!item.hideFold">
                         <span v-show="item.fold" @click="item.fold = false">
                             <span>...</span>
-                            <span class="color16">{{$t('showall')}}</span>
-                            <span class="color12">({{item.content ? item.content.length : 0}})</span>
+                            <span class="color16">
+                              <span>{{$t('showall')}}</span>
+                              <span class="color12">({{item.content ? item.content.length : 0}})</span>
+                            </span>
                         </span>
                         <span v-show="!item.fold" @click="item.fold = true" class="color16">
-                            <i class="iconfont icon-shouqi"></i>
+                            <i class="iconfont icon-zhankai"></i>
                             {{$t('foldall')}}
                         </span>
                     </span>
@@ -725,8 +727,9 @@
             .color16{
               font-size: px2rem(32px);
               color: #639ef4;
+              display: inline-block;
               .iconfont{
-                font-size: px2rem(32px);
+                font-size: px2rem(40px);
                 vertical-align: middle;
               }
             }
