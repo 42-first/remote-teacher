@@ -1481,7 +1481,7 @@
 
 	          .cont {
 							.cont-title {
-								margin: .266667rem 0 .266667rem .093333rem;
+								margin: .266667rem 0 0 .093333rem;
 								color: #333;
                 text-align: justify;
 							}
