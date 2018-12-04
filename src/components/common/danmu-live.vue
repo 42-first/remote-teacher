@@ -13,14 +13,14 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <li class="danmu__item f12 J_danmu" :class="[ danmu.status===1? 'enter' : '']" v-for="danmu in danmuList">
-          <p class="danmu--text " >{{ danmu.danmu }}</p>
+        <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : '']" v-for="danmu in danmuList">
+          <p class="danmu--text f14" >{{ danmu.danmu }}</p>
         </li>
       </ul>
     </section>
 
     <!-- 弹幕标识 开关 -->
-    <button class="danmu__btn f14" @click="handleClose">
+    <button class="danmu__btn f18" @click="handleClose">
       <p :class="[ visible ? '' : 'danmu--close']">弹</p>
     </button>
 
@@ -45,12 +45,13 @@
     bottom: 0;
     left: 0.2rem;
 
-    width: 0.8rem;
-    height: 0.666667rem;
+    width: 1.2rem;
+    height: 1.0rem;
 
     color: #fff;
-    background: #333;
-    border-radius: 0.106667rem;
+    background: rgba(0,0,0,0.7);
+    // box-shadow: 0 0.04rem 0.24rem rgba(0,0,0,0.6);
+    border-radius: 0.16rem;
     border: none;
     outline: none;
     box-sizing: border-box;
@@ -59,31 +60,33 @@
   .danmu__btn:before {
     content: '';
     position: absolute;
-    top: -0.186667rem;
+    top: -0.266667rem;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 0.106667rem;
-    border-color: transparent transparent #333 transparent;
+    border-width: 0.16rem;
+    border-color: transparent transparent rgba(0,0,0,0.7) transparent;
   }
 
   .danmu--close {
     position: relative;
     margin: auto;
-    width: 0.533333rem;
-    height: 0.533333rem;
+    padding: 0.066667rem 0;
+    width: 0.8rem;
+    height: 0.8rem;
 
     border-radius: 50%;
-    border: 1px solid #fff;
+    border: 0.026667rem solid #fff;
+    box-sizing: border-box;
   }
 
   .danmu--close:after {
     content: '';
     display: block;
     width: 100%;
-    height: 1px;
+    height: 0.026667rem;
 
     background: #fff;
 
@@ -92,7 +95,7 @@
 
   .danmu__wrap {
     position: absolute;
-    bottom: 1.066667rem;
+    bottom: 1.266667rem;
     left: 0;
 
     max-height: 6.0rem;
@@ -116,7 +119,7 @@
   .danmu--text {
     box-sizing: border-box;
     position: relative;
-    padding: 0.066667rem 0.4rem;
+    padding: 0.066667rem 0.4rem 0;
     min-height: 0.64rem;
     line-height: 1.5;
     text-align: justify;
@@ -163,6 +166,9 @@
       danmuStatus: {
         type: Boolean,
         default: false
+      },
+      clearDanmus: {
+        type: Function
       }
     },
     data() {
@@ -171,6 +177,8 @@
         visible: true,
         // 格式化后的弹幕列表
         danmuList: [],
+        // 定时清理屏幕弹幕 十秒内没有弹幕清理屏幕
+        timer: null,
       }
     },
     filters: {
@@ -186,8 +194,10 @@
       /**
        * @method 初始化状态
        */
-      init(data) {
+      init() {
+        this.danmuStatus = true;
         this.visible = true;
+
         let danmus = [{
           "danmu": "一条弹幕",
           "danmuid": 1122
@@ -225,9 +235,21 @@
       calcDanmus() {
         let danmus = this.danmus;
 
+        // 清理定时器
+        this.timer && clearInterval(this.timer);
+
         if(danmus && danmus.length) {
           this.getOneDanmu(danmus);
         }
+
+        // 十秒内没有收到新弹幕清空弹幕列表
+        this.timer = setInterval(()=>{
+          // 清理弹幕列表源头
+          if(typeof this.clearDanmus === 'function') {
+            this.clearDanmus();
+            this.danmuList = [];
+          }
+        }, 1000*10)
       },
 
       /**
@@ -241,7 +263,8 @@
           this.danmuList.push(newDanmu);
 
           Promise.resolve().then(()=>{
-            this.$el.querySelector('.J_danmu:last-child').scrollIntoView();
+            let lastDanmuEl = this.$el.querySelector('.J_danmu:last-child');
+            lastDanmuEl && lastDanmuEl.scrollIntoView();
           });
         }
       },
@@ -269,6 +292,10 @@
       },
     },
     created() {
+      this.init();
     },
+    beforeDestroy() {
+      clearInterval(this.timer);
+    }
   }
 </script>

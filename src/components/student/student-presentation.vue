@@ -160,7 +160,7 @@
     <notice position="bottom"></notice>
 
     <!-- 弹幕直播 -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus"></danmu-live>
+    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus"></danmu-live>
 
   </section>
 </template>
@@ -288,7 +288,7 @@
         // 直播信息
         liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
-        liveURL: '',
+        liveURL: 'ddd',
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
@@ -1229,15 +1229,16 @@
   .live {
     z-index: 2;
     position: absolute;
-    bottom: 0.8rem;
+    bottom: 0.4rem;
     right: 0.4rem;
 
     width: 1.28rem;
     height: 1.28rem;
 
-    background: rgba(51, 51, 51, 0.9);
-    border: 0.026667rem solid #333;
-    box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    // border: 0.026667rem solid #333;
+    // box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    box-shadow: 0 0.04rem 0.24rem rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
   }

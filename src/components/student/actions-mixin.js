@@ -867,6 +867,16 @@ var actionsMixin = {
       }
     },
 
+    /*
+     * @method 十秒内没有新弹幕清理弹幕列表
+     * @param
+     */
+    clearDanmus(data) {
+      if(this.danmus && this.danmus.length) {
+        this.danmus = [];
+      }
+    },
+
   }
 }
 
