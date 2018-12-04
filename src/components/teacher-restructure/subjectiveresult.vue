@@ -124,7 +124,7 @@
                         <span v-show="!item.hideFold">
                             <span v-show="item.fold" @click="item.fold = false">
                                 <span>...</span>
-                                <span class="font16">
+                                <span class="color16">
                                   <span>{{$t('showall')}}</span>
                                   <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
                                 </span>
@@ -1497,8 +1497,9 @@
               .color16{
                 font-size: px2rem(32px);
                 color: #639ef4;
+                display: inline-block;
                 .iconfont{
-                  font-size: px2rem(40px);
+                  font-size: px2rem(60px);
                   vertical-align: middle;
                 }
               }
