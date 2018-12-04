@@ -729,7 +729,7 @@
               color: #639ef4;
               display: inline-block;
               .iconfont{
-                font-size: px2rem(40px);
+                font-size: px2rem(60px);
                 vertical-align: middle;
               }
             }
