@@ -329,11 +329,12 @@
       * @method 撤回
       * @param
       */
-      handleWithdraw(index) {
+      handleWithdraw() {
         let msgOptions = {
           confirmButtonText: this.$i18n.t('recall'),
           cancelButtonText: this.$i18n.t('cancel')
         };
+        let index = this.activeIndex;
         let title = this.$i18n.t('recallconfirm') || '确定要撤回本条投稿吗？';
         let content = this.$i18n.t('recallresult') || '撤回后老师端将同时消失';
         let submission = this.submissionlist[index];
