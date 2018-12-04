@@ -160,7 +160,7 @@
     <notice position="bottom"></notice>
 
     <!-- 弹幕直播 -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus"></danmu-live>
+    <danmu-live :danmu-status="danmuStatus&&liveURL" :danmus.sync="danmus" :clear-danmus="clearDanmus"></danmu-live>
 
   </section>
 </template>

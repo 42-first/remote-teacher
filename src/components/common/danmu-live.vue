@@ -230,11 +230,11 @@
         this.danmus = danmus.slice(-5);
         */
 
-        let key = 'danmu-live-switch';
+        let key = 'danmu-live-switchoff';
         if(isSupported(window.localStorage)) {
           let visible = localStorage.getItem(key);
 
-          // this.visible =
+          this.visible = !visible;
         }
 
       },
@@ -301,9 +301,9 @@
       handleClose(evt) {
         this.visible = !this.visible;
 
-        let key = 'danmu-live-switch';
+        let key = 'danmu-live-switchoff';
         if(isSupported(window.localStorage)) {
-          localStorage.setItem(key, this.visible);
+          localStorage.setItem(key, this.visible ? '' : true);
         }
       },
     },
