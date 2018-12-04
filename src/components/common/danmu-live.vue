@@ -195,6 +195,7 @@
        * @method 初始化状态
        */
       init() {
+        /*
         this.danmuStatus = true;
         this.visible = true;
 
@@ -227,6 +228,15 @@
         }, 2000)
 
         this.danmus = danmus.slice(-5);
+        */
+
+        let key = 'danmu-live-switch';
+        if(isSupported(window.localStorage)) {
+          let visible = localStorage.getItem(key);
+
+          // this.visible =
+        }
+
       },
 
       /**
@@ -236,14 +246,15 @@
         let danmus = this.danmus;
 
         // 清理定时器
-        this.timer && clearInterval(this.timer);
+        this.timer && clearTimeout(this.timer);
 
         if(danmus && danmus.length) {
           this.getOneDanmu(danmus);
         }
 
         // 十秒内没有收到新弹幕清空弹幕列表
-        this.timer = setInterval(()=>{
+        this.timer = setTimeout(()=>{
+          clearTimeout(this.timer);
           // 清理弹幕列表源头
           if(typeof this.clearDanmus === 'function') {
             this.clearDanmus();
@@ -289,6 +300,11 @@
        */
       handleClose(evt) {
         this.visible = !this.visible;
+
+        let key = 'danmu-live-switch';
+        if(isSupported(window.localStorage)) {
+          localStorage.setItem(key, this.visible);
+        }
       },
     },
     created() {
