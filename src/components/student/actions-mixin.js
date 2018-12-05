@@ -125,6 +125,11 @@ var actionsMixin = {
         let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
 
         data.message = sMsg;
+
+        // 标记这是一堂直播远程课 方便后面对直播远程课处理
+        if(code === 'LIVE_ON') {
+          !this.isLive && (this.isLive = true);
+        }
       }
 
       !hasEvent && this.cards.push(data);
@@ -746,6 +751,9 @@ var actionsMixin = {
         this.liveURL = data.hls;
         this.Hls && this.supportHLS(this.Hls);
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+
+        // 标记这是一堂远程课
+        !this.isLive && this.liveURL && (this.isLive = true);
       }
     },
 
