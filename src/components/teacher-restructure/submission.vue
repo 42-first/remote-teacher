@@ -573,31 +573,6 @@
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
-    .hide-show-name{
-      width: 100%;
-      height: px2rem(88px);
-      line-height: px2rem(88px);
-      background-color: #fff;
-      box-sizing: border-box;
-      padding-left: px2rem(30px);
-      font-size: 0;
-      .iconfont{
-        font-size: px2rem(30px);
-        vertical-align: middle;
-      }
-      .icon-kuang{
-        color: #666;
-      }
-      .icon-kuangxuanzhong{
-        color: #639efc;
-      }
-      .info{
-        color: #666;
-        font-size: px2rem(28px);
-        margin: 0 px2rem(10px);
-      }
-    }
-
     .new-item-hint {
       position: fixed;
       z-index: 10;
