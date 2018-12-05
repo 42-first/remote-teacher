@@ -67,6 +67,9 @@ if (process.env.NODE_ENV === 'production') {
             'GET_LIVE_LIST': '/v/lesson/live/get_lesson_live_list/',
             'GET_LIVE_URL': '/v/lesson/live/get_live_url/',
 
+            // 白板收藏不懂
+            'SET_BOARD_TAG': '/v/lesson/file_sharing/sharing_file_click_tag',
+
         },
 
         /*------------------*\
@@ -115,7 +118,7 @@ if (process.env.NODE_ENV === 'production') {
             // 发送投稿
             'SEND_SUBMISSION': '/v/tougao/create',
             // 我的投稿列表
-            'GET_SUBMISSION_LIST': '/static/mock/student/tougao_list.json',
+            'GET_SUBMISSION_LIST': 'http://apimock.xuetangx.com/mock/115/v/api/tougao/student/list',
             // 删除投稿
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
@@ -139,6 +142,9 @@ if (process.env.NODE_ENV === 'production') {
             'GET_PROBLEM_RESULT': 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_result_info',
             // (学生端)互评打分
             'SUBMIT_GROUP_REVIEW': 'http://apimock.xuetangx.com/mock/115/v/lesson/submit_group_review_score/',
+
+            // 白板收藏不懂
+            'GET_BOARD_TAG': 'http://apimock.xuetangx.com/mock/115/file_sharing/sharing_file_click_tag',
         },
 
         /*------------------*\

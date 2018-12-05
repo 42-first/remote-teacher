@@ -8,7 +8,7 @@
   <!--  -->
   <section class="timeline-item" v-if="item">
 
-    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享-->
+    <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享 11白板分享 12白板绘制 -->
     <template v-if="item.type==1"><div class="timeline__msg f15">{{ item.message }}</div></template>
     <!-- ppt模板 -->
     <template v-else-if="item.type==2">
@@ -86,7 +86,7 @@
     <template v-else-if="item.type==3">
      <div class="timeline__paper">
         <!-- 作答链接 -->
-        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL" >
+        <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL+index" >
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.caption }}</p>
               <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
@@ -172,6 +172,23 @@
         </div>
       </div>
     </template>
+    <!-- 白板绘制 -->
+    <template v-else-if="item.type==12">
+      <div class="timeline__ppt">
+        <span class="ppt--pageno f14"><!-- 板书 -->{{ $t('board') }}</span>
+        <!-- 白板屏幕宽高 增加自定义指令解决数据改变canvas被清空大坑 -->
+        <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }" >
+          <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas" v-canvas="item"></canvas>
+        </div>
+        <div class="ppt-footer">
+          <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
+          <div class="ppt__opt f15" v-show="!observerMode">
+            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(2, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
+          </div>
+        </div>
+      </div>
+    </template>
 
   </section>
 
@@ -200,7 +217,7 @@
         default: 0
       },
       lessonid: {
-        type: Number,
+        type: String,
         default: 0
       },
       item: {
@@ -219,6 +236,10 @@
     filters: {
       getTimeago(time) {
         return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
+      },
+      scaleCanvas(item) {
+        let scaleValue = (window.innerWidth / 10 * (10 - 0.906667)) / item.devwidth;
+        return { transform: 'scale(' + scaleValue + ')' };
       }
     },
     methods: {
@@ -297,10 +318,11 @@
 
         this.$parent.$parent.gallery = gallery;
       },
+
       /*
-      * @method ppt不懂,收藏
-      * tag 1 不懂 2 收藏
-      */
+       * @method ppt不懂,收藏
+       * tag 1 不懂 2 收藏
+       */
       handleTag(tag, slideID, presentationid) {
         let self = this;
         let URL = API.student.SET_LEESON_SILDE_TAG;
@@ -349,6 +371,37 @@
       },
 
       /*
+       * @method 白板不懂,收藏
+       * boardid 白板ID tag 1 不懂 2 收藏
+       */
+      handleBoardTag(tag, boardid, value) {
+        let URL = API.student.SET_BOARD_TAG;
+        let params = {
+          'lesson_id': this.lessonid,
+          'sharing_file_id': boardid,
+          'tag': tag,
+          'tag_type': value ? 'cancel' : 'add'
+        };
+        let cards = this.$parent.$parent.cards;
+        let boardMap = this.$parent.$parent.boardMap;
+
+        // 同步白板信息 更新cards信息
+        let boardInfo = cards.find((card, index)=>{
+          return card.boardid === boardid;
+        })
+
+        request.post(URL, params).
+        then( (res) => {
+          if(res && res.success) {
+            tag === 1 && (boardInfo.doubt = !boardInfo.doubt);
+            tag === 2 && (boardInfo.emphasis = !boardInfo.emphasis);
+
+            boardMap.set(boardid, boardInfo);
+          }
+        });
+      },
+
+      /*
       * @method 是否可以加入小组
       */
       handlecanJoin(evt) {
@@ -365,23 +418,13 @@
         }
 
         return true;
-      }
+      },
     },
     created() {
-      let cards = this.$parent.$parent.cards;
-
       // 观看者
       this.observerMode = this.$parent.$parent.observerMode;
-
-      // 时间动态显示 每分钟更新一次
-      setInterval(() => {
-        cards.forEach((item) => {
-          item.time = item.time - 1;
-        })
-      }, 60000)
     },
     mounted() {
-      let self = this;
     },
     beforeDestroy() {
     }
@@ -457,7 +500,7 @@
     }
 
     .ppt--pageno {
-      z-index: 1;
+      // z-index: 1;
       position: absolute;
       top: 0;
       right: 0;
@@ -609,6 +652,11 @@
     .iconfont {
       line-height: 1.546667rem
     }
+  }
+
+  .board__container {
+    transform-origin: 0 0;
+    transform: scale(0.5);
   }
 
 

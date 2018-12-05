@@ -10,73 +10,42 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
-	    <section class="upper">
-	    	<div class="xitixushi">
-	    		<!-- 延时相关 -->
-	    		<div class="time-rel f15">
-	    			<v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
-	    			<div v-else class="tbtn nobtn"><!-- 不限时 -->{{ $t('bxs') }}</div>
-	    		</div>
+			<Rolex
+        :limit="limit"
+        :newTime="newTime"
+        :durationLeft="durationLeft"
+        :total="total"
+        :members="members" 
+				:problemid="problemid" 
+				:isTouping="isTouping"
+				:problemtype="problemType"
+				@showresult = "showresult" 
+        @yanshi="yanshi"
+        @shouti="shouti"
+      ></Rolex>
+      <!-- 填空题条形图 -->
+      <template v-if="problemType === 'FillBlank'"> 
+        <FillblankBox class="FillblankBox"
+          :total="total"
+          :correctNum="correct_students.length"
+          :result_graph="result_graph"
+        ></FillblankBox>
+      </template>
 
-	    		<div class="sjd f24" v-show="newTime <= 0"><!-- 作答时间结束 -->{{ $t('receivertimeout') }}</div>
-
-	    		<!-- 中间秒表 -->
-	    		<div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
-	    			<img v-show="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-	    			<img v-show="~limit && newTime > 10" class="jishi" src="~images/teacher/jishi-dao-w.png" alt="">
-	    			<img v-show="~limit && newTime <= 10" class="jishi" src="~images/teacher/jishi-dao-r.png" alt="">
-	    			<span class="time">{{durationLeft}}</span>
-	    		</div>
-
-	    		<!-- 收题相关 -->
-	    		<div v-show="newTime > 0" class="pro-rel f15">
-	    			<v-touch class="tbtn" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
-	    		</div>
-		    </div>
-		    <!-- <div :class="['f18', 'yjy']">
-		      {{ $t('submittotal', { ss1: total, ss2: members }) }}
-		    </div> -->
-				<hide-some-info :problemtype="problemType" :isUserInfo="false" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
-	    </section>
-
-	    <!-- 中间柱状图 -->
-	    <section class="histogram-with-mahint">
-	    	<section class="mahint" v-if="problemType === 'MultipleChoiceMA'">
-	    		<div class="mahint-item f12">
-	    			<i style="background: #F5A623;"></i>
-	    			{{ $t('standardans') }}
-	    		</div>
-
-	    		<div class="mahint-item f12">
-	    			<i style="background: #639EF4;"></i>
-	    			{{ $t('correctopt') }}
-	    		</div>
-
-	    		<div class="mahint-item f12">
-	    			<i style="background: #C8C8C8;"></i>
-	    			{{ $t('wrongopt') }}
-	    		</div>
-	    	</section>
-
-  	    <section class="histogram-box">
-  	    	<div class="histogram-item" v-if="problemType === 'MultipleChoiceMA'">
-  	        <div class="bar maright" :style="{height: ma_right_count.value/total*100+'%'}">
-  	          <span class="value f18">{{ma_right_count.value}}</span>
-  	          <span class="label f18">{{ma_right_count.label}}</span>
-  	        </div>
-  	      </div>
-  				<div class="histogram-item" v-for="(item, index) in graph" :key="index">
-  	        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/total*100+'%'}">
-  	          <span class="value f18">{{item.value}}</span>
-  	          <span class="label f18">{{item.label}}</span>
-  	        </div>
-  	      </div>
-  	    </section>
-	    </section>
+	    <!-- 单选多选 中间柱状图 -->
+      <template v-else>
+        <CollumBox class="CollumBox"
+          :total="total"
+          :problemType="problemType"
+          :graph="graph"
+					:ma_right_count="ma_right_count"
+        ></CollumBox>
+      </template>
+	    
 
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
+	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling') || ~problemType.indexOf('FillBlank')}]">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -84,14 +53,21 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-	      <router-link tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+				<router-link v-if="problemType === 'FillBlank'" tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
-	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID" class="btn-item">
+	      <router-link v-else tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+	        <div class="iconbox" style="background: #EEBC28;">
+	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+	      	</div>
+	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
+	      </router-link>
+
+	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
@@ -124,8 +100,15 @@
 	import API from '@/pages/teacher/config/api'
 	import config from '@/pages/teacher/config/config'
 
+	// 时钟组件
+	import Rolex from '@/components/teacher-restructure/common/rolex'
   // 试题延时
-	import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  // 中间条形图
+  import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
+  // 中间柱状图
+	import CollumBox from '@/components/teacher-restructure/common/collum-box'
+  
 	// 教师遥控器引导查看答案、续时
 	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
 	
@@ -172,7 +155,10 @@
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
 		    isProblemtimeHidden: true, 		 // 延时面板隐藏
 				isTouping: false,							 // 当前正在投屏
-				showAnswer: false,             // 投屏现实答案
+        showAnswer: false,             // 投屏现实答案
+        is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
+				result_graph: {},
+				correct_students: [],
 	    }
 	  },
 	  computed: {
@@ -185,7 +171,9 @@
 	  components: {
 	    Problemtime,
 			GuideDelay,
-			hideSomeInfo
+      FillblankBox,
+      CollumBox,
+			Rolex
 	  },
 	  created(){
 	  	this.init()
@@ -526,32 +514,50 @@
 		   */
 		  getProblemResult(){
 		    let self = this
+        
+        let url = ''
 
-		    let url = API.problem_statistics
+        if(self.problemType === 'FillBlank') {
+          url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
+        }else {
+          url = API.problem_statistics + '/' + self.problemid + '/'
+        }
 
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.problem_statistics + '/' + self.problemid + '/'
-	      }
+	      // if (process.env.NODE_ENV === 'production') {
+	      //   url = url + '/' + self.problemid + '/'
+	      // }
 
 	      request.get(url)
 	      	.then(jsonData => {
-
-	      		let _answer = jsonData.answer
-	      		let _graph = jsonData.graph.data
-	      		_graph.forEach(item => {
-	      		  item.isRight = new RegExp(item.label).test(_answer)
-	      		  return item
-	      		})
-
-	      		if(jsonData.success){
+            if(self.problemType === 'FillBlank'){
+              jsonData = jsonData.data
 	      		  self.setData({
 	      		    total: jsonData.total,
 	      		    members: jsonData.members,
-	      		    graph: _graph,
-	      		    ma_right_count: jsonData.graph.ma_right_count,
-	      		    RedEnvelopeID: jsonData.RedEnvelopeID || -1
+								RedEnvelopeID: jsonData.RedEnvelopeID || -1,
+								is_sensitive: jsonData.is_sensitive,
+								result_graph: jsonData.result_graph,
+								correct_students: jsonData.correct_students,
 	      		  })
-	      		}
+            }else {
+              let _answer = jsonData.answer
+              let _graph = jsonData.graph.data
+              _graph.forEach(item => {
+                item.isRight = new RegExp(item.label).test(_answer)
+                return item
+              })
+
+              if(jsonData.success){
+                self.setData({
+                  total: jsonData.total,
+                  members: jsonData.members,
+                  graph: _graph,
+                  ma_right_count: jsonData.graph.ma_right_count,
+                  RedEnvelopeID: jsonData.RedEnvelopeID || -1
+                })
+              }
+            }
+	      		
 	      	}).catch(error => {
 	      		console.error('error', error)
 	      	})
@@ -662,6 +668,9 @@
 	      clearInterval(refProblemTimer)
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
+			},
+			showresult(e) {
+				this.showAnswer = !!e
 			}
 	  }
 	}
@@ -684,144 +693,9 @@
 	  color: $white;
 	  background: #000000;
 
-		/* 上部 */
-	  .upper {
-	  	margin: 0 auto;
-	  	width: 9.6rem;
-	  	height: 4.0rem;
-	  	padding-top: 0.8rem;
-
-	  	.xitixushi {
-	  		display: flex;
-	  		justify-content: space-between;
-	  		align-items: center;
-	  		height: 1.866667rem;
-	  		padding: 0 0.3rem;
-	  		background: #212121;
-
-	  		.sjd {
-	  			padding-right: 1.333333rem;
-	  			color: #F84F41;
-	  		}
-
-	  		.rolex .time {
-	  			display: inline-block;
-	  			width: 2.666667rem;
-	  		}
-
-	  		.rolex.warn {
-	  			color: #F84F41;
-	  			.iconfont {
-	  				color: #F84F41;
-	  			}
-	  		}
-
-	  		.time-rel, .pro-rel {
-	  			align-self: center;
-	  			color: $white;
-
-	  			.tbtn {
-	  				width: 1.733333rem;
-	  				height: 0.8rem;
-	  				line-height: 0.8rem;
-	  				border: 1px solid #CCCCCC;
-	  				border-radius: 0.4rem;
-	  			}
-	  			.nobtn {
-	  				border: none;
-	  				border-radius: 0.4rem;
-	  				background-color: #282828;
-	  				color: #08BC72;
-	  			}
-	  			.green {
-	  				border-color: #08BC72;
-	  				background-color: rgba(8, 188, 114, 0.2)
-	  			}
-	  			.red {
-	  				border-color: #F84F41;
-	  				background-color: rgba(248, 79, 65, 0.2);
-						color: #fff;
-	  			}
-	  		}
-	  	}
-
-			.jishi {
-				margin-top: -0.186667rem;
-				width: 0.9rem;
-				vertical-align: middle;
-			}
-	  }
-
-	  /* 中间柱状图 */
-	  .histogram-with-mahint {
-	  	margin: 1.0rem auto;
-	  	width: 8.8rem;
-	  	height: 5.0rem;
-	  	border-top: 1px solid #cccccc;
-	  }
-	  .mahint {
-	  	display: flex;
-	  	align-items: center;
-	  	padding-left: 0.266667rem;
-	  	height: 0.693333rem;
-	  	background: linear-gradient(rgba(255,255,255,0.12) 10%, rgba(255,255,255,0.03));
-
-	  	.mahint-item {
-	  		margin-right: 0.666667rem;
-
-	  		i {
-	  			display: inline-block;
-	  			width: 0.266667rem;
-	  			height: 0.266667rem;
-	  		}
-	  	}
-	  }
-	  .histogram-box {
-	  	margin: 0 auto;
-	  	padding-top: 1rem;
-	  	width: 8.8rem;
-	  	height: 100%;
-		  display: flex;
-		  justify-content: space-between;
-		  align-items: bottom;
-
-		  .histogram-item {
-			  flex: 1;
-			  position: relative;
-			  border-bottom: 1px solid $white;
-
-			  .bar {
-				  position: absolute;
-				  left: 50%;
-				  bottom: 0.173333rem;
-				  transform: translateX(-50%);
-				  width: 0.8rem;
-				  background-color: #C8C8C8;
-
-					span {
-					  position: absolute;
-					  width: 100%;
-					  left: 0;
-					  text-align: center;
-					  color: #fff;
-					}
-					.value {
-					  top: -0.746667rem;
-					}
-					.label {
-					  bottom: -1.0rem;
-					}
-				}
-				.right {
-				  background-color: $blue;
-				}
-				.maright {
-				  background-color: #F5A623;
-				  span {
-				  	color: #F5A623;
-				  }
-				}
-			}
+	  /* 调整中间条形头的高度 */
+		.FillblankBox {
+			flex: 1;
 		}
 
 		/* 下方按钮 */

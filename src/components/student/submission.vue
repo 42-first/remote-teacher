@@ -14,9 +14,9 @@
       <!-- 文字编辑 -->
       <section class="submission__text">
         <div class="submission__textarea--wrapper f17">
-          <textarea class="submission-textarea J_feed_content" maxlength="140" :placeholder="$t('isempty')" v-model="text"></textarea>
+          <textarea class="submission-textarea J_feed_content" maxlength="1000" :placeholder="$t('isempty')" v-model="text"></textarea>
           <div class="submission-footer">
-            <p class="">(<span class="">{{ count }}</span>/140)</p>
+            <p class="">(<span class="">{{ count }}</span>/1000)</p>
           </div>
         </div>
       </section>
@@ -36,6 +36,9 @@
       </section>
 
       </div>
+
+      <!-- 提示 -->
+      <p class="submission--tip f14"><!-- 温馨提示：投稿可能会被老师公开发送给全班 -->{{ $t('posttip') }}</p>
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
@@ -130,7 +133,7 @@
         }
 
         // let value = newValue && newValue.replace(/^\s+|\s+$/g, '').substr(0, 140);
-        let value = newValue && newValue.substr(0, 140);
+        let value = newValue && newValue.substr(0, 1000);
 
         this.count = value && value.length || 0;
         this.text = value;
@@ -473,7 +476,8 @@
     width: 100%;
     height: 100%;
 
-    background: #EDF2F6;
+    // background: #EDF2F6;
+    background: #fff;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -532,8 +536,8 @@
     .submission__pic--add {
       position: relative;
       margin: 0 auto;
-      width: 3.493333rem;
-      height: 3.493333rem;
+      width: 1.92rem;
+      height: 1.92rem;
 
       border: 2px solid #C8C8C8;
       border-radius: 0.106667rem;
@@ -554,7 +558,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1.8rem;
+      width: 0.986667rem;
       height: 2px;
 
       transform: translate(-50%, -50%);
@@ -564,7 +568,7 @@
 
     .submission__pic--add:after {
       width: 2px;
-      height: 1.8rem;
+      height: 0.986667rem;
     }
 
     .submission__pic--remark {
@@ -655,6 +659,17 @@
 
       opacity: 0;
     }
+  }
+
+
+  .submission--tip {
+    padding: 0.266667rem 0;
+    color: #C7C7C7;
+  }
+
+  .submission-mine-link {
+    color: #639EF4;
+    text-decoration: underline;
   }
 
 

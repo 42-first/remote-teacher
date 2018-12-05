@@ -1,3 +1,4 @@
+
 {
   "success": true,
   "msg": "",
@@ -5,10 +6,10 @@
     "user":{
         "user_id": 50018,
         "avatar": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJtSuT42LVNRpL97xU1XpYXribIPCROYLVibmUyOwTQAwHxqkYhylQdagpPf6LH22zsiaXqJS9Otx17Q/64",
-        "user_auth": "b6153fc7-3450-48f4-96a3-ef1cd52c7d8c"
+        "user_auth": "ca11ed1e-c6fe-440c-84fe-4bc7aec6e422"
      },
      "lesson":{
-        "invite_code": "UGZMS",
+        "invite_code": "A94NS",
         "user_auth": "885c6f91-52dc-4b89-9b8f-ab177ea7f064"
      },
      "classroom":{

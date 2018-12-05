@@ -30,6 +30,7 @@ let pages = {
   "favorite": "Favorite",
   "screenshot": "Screenshot",
   "blackboard": "Blackboard writing",
+  "board": "Board",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',
@@ -98,7 +99,7 @@ let pages = {
   "reuploadpiconly" : "We only support picture formats, please try again.",
   "subjectivepro" : "Subjective Question",
   "answerarea" : "Answer here (Please write your answer here.)",
-  "contentsizelimit" : "Maximum 140 characters and one picture",
+  "contentsizelimit" : "Maximum 1000 characters and one picture",
   "myanswer" : "My Answer",
   "subjectivepro" : "Answer Subjective Question",
   "classbonus" : "Class Bonus",
@@ -118,6 +119,13 @@ let pages = {
   "collectprotip": "It may end at any time.",
   "enteranswer": "Enter your answer",
   "blanksnotanswer": "Not all of the blanks had been filled. Are you sure to submit?",
+
+  'fulltext': "Full text",
+  'fold': "Collapse",
+  'recall': "Recall",
+  'recallconfirm': "Are you sure to recall the post?",
+  'recallresult': "The teacher won’t receive your post if you recall it",
+  'posttip': "Tips: Your post may be sent to the class by the teacher",
 
   "receiverexcellent": "Excellent!",
   "receiverthumbsup": "Thumbs Up",
@@ -299,6 +307,9 @@ let pages = {
   "selhim": "Bingo!",
   "endclass": "End Class",
   "showended": "End",
+  "jsskqzdnd": 'Continue the class, please click "Slide Show" on your computer and students do not need to scan the QR code again.',
+  "jsskq": "End class, please",
+  "djzl": "Click Here",
   "showconnecting": "or connecting",
   "otherslogin": "Your account has been logged in by others",
   "forcelogout": "You have been force logged out",
@@ -380,6 +391,9 @@ let pages = {
   "cuowu": "Wrong",
   "weida": "Unanswerd",
   "note": "Remark",
+  "boardunknow": "Unclear(board)",
+  "showall": "Full text",
+  "foldall": "fold",
 
   // 引导页
   guide: {
