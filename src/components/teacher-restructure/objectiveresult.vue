@@ -3,9 +3,9 @@
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
 		<!-- 教师遥控器引导查看答案、续时 -->
-    <GuideDelay
+    <!-- <GuideDelay
       v-show="!isGuideDelayHidden"
-    ></GuideDelay>
+    ></GuideDelay> -->
 
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
@@ -45,7 +45,7 @@
 
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling')}]">
+	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling') || ~problemType.indexOf('FillBlank')}]">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>

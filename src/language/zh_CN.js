@@ -98,7 +98,7 @@ let pages = {
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,
-  "contentsizelimit" : "内容限制140字可插入1张图片",
+  "contentsizelimit" : "内容限制1000字可插入1张图片",
   "myanswer" : "我的回答",
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
@@ -118,6 +118,13 @@ let pages = {
   "collectprotip": "老师可能会随时结束答题",
   "enteranswer": "输入答案",
   "blanksnotanswer": "有空格未填写，确认提交吗？",
+
+  'fulltext': "全文",
+  'fold': "收起",
+  'recall': "撤回",
+  'recallconfirm': "确定要撤回本条投稿吗？",
+  'recallresult': "撤回后老师端将同时消失",
+  'posttip': "温馨提示：投稿可能会被老师公开发送给全班",
 
   "receiverexcellent": "答对了！你真棒！",
   "receiverthumbsup": "答对了！赞一个！",
@@ -386,6 +393,8 @@ let pages = {
   "close": "关闭",
   "note": "备注",
   "boardunknow": "白板不懂",
+  "showall": "全文",
+  "foldall": "收起",
 
   // 引导页
   guide: {

@@ -118,7 +118,7 @@ if (process.env.NODE_ENV === 'production') {
             // 发送投稿
             'SEND_SUBMISSION': '/v/tougao/create',
             // 我的投稿列表
-            'GET_SUBMISSION_LIST': '/static/mock/student/tougao_list.json',
+            'GET_SUBMISSION_LIST': 'http://apimock.xuetangx.com/mock/115/v/api/tougao/student/list',
             // 删除投稿
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片

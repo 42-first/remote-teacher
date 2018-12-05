@@ -4,9 +4,9 @@
     <div class="problem-root" v-scroll="onScroll">
       <slot name="ykt-msg"></slot>
       <!-- 教师遥控器引导查看答案、续时 -->
-      <GuideDelay
+      <!-- <GuideDelay
         v-show="!isGuideDelayHidden"
-      ></GuideDelay>
+      ></GuideDelay> -->
 
       <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newans') }}</v-touch>
 
@@ -119,18 +119,30 @@
 
                     <div class="cont f18">
                       <div class="cont-title">
-                      	{{item.subj_result.content}}
+                        {{item.fold ? item.subj_result.foldContent : item.subj_result.content}}
+                        <!-- {{item.subj_result.content}} -->
+                        <span v-show="!item.hideFold">
+                            <span v-show="item.fold" @click="item.fold = false">
+                                <span>...</span>
+                                <span class="color16">
+                                  <span>{{$t('showall')}}</span>
+                                  <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                                </span>
+                            </span>
+                            <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                                <i class="iconfont icon-zhankai"></i>
+                                {{$t('foldall')}}
+                            </span>
+                        </span>
                       </div>
-
                       <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
-
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
                     <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
                       <div class="gray">
-                        <i class="iconfont icon-ykq_dafen f20" style="color: #639EF4;"></i>
+                        <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
                         <span v-show="item.score !== -1">{{item.score.toFixed(1)}}</span>
                       </div>
@@ -139,10 +151,10 @@
 
                     <div class="action f14">
                       <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
-                        <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                        <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
                         <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                       </v-touch>
-                      <v-touch class="cancel-post-btn f14" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
                         <!-- 发送全班 -->{{ $t('postpublic') }}
                       </v-touch>
                       <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
@@ -152,14 +164,11 @@
                         <span class="fsqb-innerline"></span>
                         <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
                       </v-touch>
-
                     </div>
-
                   </div>
                 </div>
                 <div class="gap"></div>
               </div>
-
               <div v-show="isAllLoaded && isContLonger" class="nomore f15">
                 <div class="bgline"></div>
                 <div class="wenan">end</div>
@@ -650,7 +659,8 @@
             self.isAllLoaded = true
             return
           }
-          self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+          self.dataList = self.addFold(self.dataList.concat(jsonData.data.problem_results_list))
+          // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
 
           this.$refs.Loadmore.onBottomLoaded()
         })
@@ -797,9 +807,14 @@
             isAllLoaded = true
           } else {
             self.setData({
-              dataList: newList
+              dataList: self.addFold(newList)
+              // dataList: newList
             })
-
+            setTimeout(() => {
+              this.dataList.map(e => {
+                e.fold = e.subj_result.content && this.getLength(e.subj_result.content) > 200
+              })
+            }, 3e2)
             isAllLoaded = newList.length < FENYE_COUNT
           }
           self.setData({
@@ -1200,6 +1215,24 @@
 
           return hNumInt / 100
         }
+      },
+      // 增加fold 属性
+      addFold(list) {
+          list.map(e => {
+              if(e.subj_result.content && this.getLength(e.subj_result.content)> 200) {
+                  e.fold = false
+              } else {
+                  e.fold = false
+                  e.hideFold = true
+              }
+              e.subj_result.foldContent = e.subj_result.content.slice(0, 100)
+          })
+          return list
+      },
+      getLength(str) {
+          let s = str + ''
+          var result = s.replace(/[^\x00-\xff]/g, '**')
+          return result.length
       }
 	  }
 	}
@@ -1457,10 +1490,23 @@
 
 	          .cont {
 							.cont-title {
-								margin: .266667rem 0 .266667rem .093333rem;
+								margin: .266667rem 0 0 .093333rem;
 								color: #333;
+                text-align: justify;
 							}
-
+              .color16{
+                font-size: px2rem(32px);
+                color: #639ef4;
+                display: inline-block;
+                .iconfont{
+                  font-size: px2rem(60px);
+                  vertical-align: middle;
+                }
+              }
+              .color12{
+                font-size: px2rem(24px);
+                color: #639ef4;
+              }
 	            .pic {
 	              max-width: 100%;
 	              max-height: 5.68rem;
@@ -1479,8 +1525,8 @@
 	          display: flex;
 	          justify-content: space-between;
 	          align-items: center;
-	          padding: .533333rem 0;
-
+	          padding: px2rem(40px) 0;
+            height: px2rem(50px);
 	          .gray {
 	            color: $graybg;
 	          }

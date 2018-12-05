@@ -1035,10 +1035,12 @@
     }
 
     .student__header--more {
+      z-index: 2;
       position: relative;
       width: 1.2rem;
 
       .more-actions {
+        z-index: 2;
         position: absolute;
         top: 1.33rem;
         right: 0.1rem;
