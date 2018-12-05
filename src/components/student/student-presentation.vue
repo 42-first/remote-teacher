@@ -159,7 +159,7 @@
     <!-- 停服务通知 -->
     <notice position="bottom"></notice>
 
-    <!-- 弹幕直播 -->
+    <!-- 弹幕直播 v-if="isLive" -->
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live>
 
   </section>

@@ -13,7 +13,7 @@
     <!-- 弹幕列表 -->
     <section class="danmu__wrap" v-show="visible">
       <ul class="danmu__list">
-        <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : '']" v-for="danmu in danmuList">
+        <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
           <p class="danmu--text f14" >{{ danmu.danmu }}</p>
         </li>
       </ul>
@@ -130,13 +130,12 @@
   }
 
   .enter {
-    animation: gradient 0.6s 0s linear;
+    animation: gradient 0.75s linear;
     transition: opacify ease-in 0.3s;
   }
 
   .out {
-    animation: gradient 0.4s 0s linear;
-    transition: opacify ease-out 0.3s;
+    animation: fadeOut 1.15s ease-out;
   }
 
   @keyframes gradient {
@@ -148,6 +147,16 @@
     }
     100% {
       opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
     }
   }
 
@@ -252,15 +261,21 @@
           this.getOneDanmu(danmus);
         }
 
-        // 十秒内没有收到新弹幕清空弹幕列表
+        // 30秒内没有收到新弹幕清空弹幕列表
         this.timer = setTimeout(()=>{
           clearTimeout(this.timer);
+
+          // 增加消失动画
+          this.fadeOutDanmus(this.danmuList.slice(-7));
+
           // 清理弹幕列表源头
           if(typeof this.clearDanmus === 'function') {
-            this.clearDanmus();
-            this.danmuList = [];
+            setTimeout(()=>{
+              this.clearDanmus();
+              this.danmuList = [];
+            }, 1200)
           }
-        }, 1000*10)
+        }, 1000*30)
       },
 
       /**
@@ -281,17 +296,12 @@
       },
 
       /**
-       * @method 格式化弹幕列表
+       * @method 增加消失动画
        */
-      formatData(list) {
-        let count = list.length - 1;
-        return list.map((danmu, index) => {
+      fadeOutDanmus(list) {
+        this.danmuList = list.map((danmu) => {
           // status 弹幕状态 1：进入视图 2:已进入 3：离开视图 方便扩展使用数字
-          if(index < count) {
-            return Object.assign({}, danmu, { status: 2 })
-          } else {
-            return Object.assign({}, danmu, { status: 1 })
-          }
+          return Object.assign({}, danmu, { status: 3 })
         });
       },
 
