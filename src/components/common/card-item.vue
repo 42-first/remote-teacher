@@ -500,7 +500,7 @@
     }
 
     .ppt--pageno {
-      z-index: 1;
+      // z-index: 1;
       position: absolute;
       top: 0;
       right: 0;

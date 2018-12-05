@@ -279,13 +279,13 @@ let boardMixin = {
       let boardMap = this.boardMap;
       let boardInfo = boardMap.get(id);
 
-      if(!context) {
-        return null;
-      }
-
       if(isClear) {
         boardInfo.lines = [];
         boardMap.set(id, boardInfo);
+      }
+
+      if(!context) {
+        return null;
       }
 
       context.clearRect(0, 0, boardInfo.devwidth, boardInfo.devheight);

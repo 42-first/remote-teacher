@@ -87,6 +87,8 @@ var actionsMixin = {
                 this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
               } else if(item.action === 'nav') {
                 this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+              } else if(item.action === 'clear') {
+                this.clearBoard(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
               }
 
               break;
@@ -849,7 +851,7 @@ var actionsMixin = {
      * @param
      */
     clearBoard(data) {
-      if(data) {
+      if(data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
         this.clearScreen(id, true);
       }

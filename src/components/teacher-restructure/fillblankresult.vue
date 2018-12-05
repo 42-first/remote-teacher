@@ -3,9 +3,9 @@
 	<div class="problem-root">
 		<slot name="ykt-msg"></slot>
 		<!-- 教师遥控器引导查看答案、续时 -->
-    <GuideDelay
+    <!-- <GuideDelay
       v-show="!isGuideDelayHidden"
-    ></GuideDelay>
+    ></GuideDelay> -->
 
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">

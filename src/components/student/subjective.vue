@@ -47,9 +47,9 @@
         <!-- 文字编辑 -->
         <section class="submission__text">
           <div class="submission__textarea--wrapper f17">
-            <textarea class="submission-textarea J_feed_content" maxlength="140" :placeholder="$t('subjectivetext')" v-model="text"></textarea>
+            <textarea class="submission-textarea J_feed_content" maxlength="1000" :placeholder="$t('subjectivetext')" v-model="text"></textarea>
             <div class="submission-footer">
-              <p class="">(<span class="">{{ count }}</span>/140)</p>
+              <p class="">(<span class="">{{ count }}</span>/1000)</p>
             </div>
           </div>
         </section>
@@ -193,7 +193,7 @@
           return this;
         }
 
-        let value = newValue && newValue.substr(0, 140);
+        let value = newValue && newValue.substr(0, 1000);
 
         this.count = value && value.length || 0;
         this.text = value;
@@ -377,6 +377,8 @@
               if(problemResult) {
                 let result = problemResult.team_result_data;
                 this.text = result.content;
+                // 计数
+                this.text && (this.count = this.text.length);
                 // 是否有图片
                 if(result.pics && result.pics.length && result.pics[0].pic) {
                   this.hasImage = true;
@@ -1331,8 +1333,8 @@
     .submission__pic--add {
       position: relative;
       margin: 0 auto;
-      width: 3.493333rem;
-      height: 3.493333rem;
+      width: 1.92rem;
+      height: 1.92rem;
 
       border: 2px solid #C8C8C8;
       border-radius: 0.106667rem;
@@ -1353,7 +1355,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1.8rem;
+      width: 0.986667rem;
       height: 2px;
 
       transform: translate(-50%, -50%);
@@ -1363,7 +1365,7 @@
 
     .submission__pic--add:after {
       width: 2px;
-      height: 1.8rem;
+      height: 0.986667rem;
     }
 
     .submission__pic--remark {
