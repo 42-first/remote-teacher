@@ -124,6 +124,8 @@
     line-height: 1.5;
     text-align: justify;
 
+    word-break: break-word;
+
     color: #fff;
     background: rgba(0,0,0, 0.6);
     border-radius: 0.32rem;
