@@ -218,7 +218,7 @@
       },
       goUrl: function () {
         if (this.miniprogram) {
-            location.href = location.origin + '/v/index/bindGuidance'
+            location.href = `//${location.host}/v/index/bindGuidance`
         } else {
             location.href = this.url
         }
