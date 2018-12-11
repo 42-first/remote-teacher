@@ -158,6 +158,10 @@
 
     <!-- 停服务通知 -->
     <notice position="bottom"></notice>
+
+    <!-- 弹幕直播 v-if="isLive" -->
+    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live>
+
   </section>
 </template>
 <script>
@@ -297,7 +301,11 @@
         // 白板map
         boardMap: new Map(),
         // 白板不懂收藏
-        boardList: null
+        boardList: null,
+        // 弹幕直播
+        danmus: [],
+        // 是否直播课
+        isLive: false
       };
     },
     components: {
@@ -308,6 +316,7 @@
       LangComponent,
       identity: () => import('@/components/student/identityBinding.vue'),
       notice: () => import('@/components/common/service-notice.vue'),
+      danmuLive: () => import('@/components/common/danmu-live.vue'),
     },
     computed: {
     },
@@ -1224,15 +1233,16 @@
   .live {
     z-index: 2;
     position: absolute;
-    bottom: 0.8rem;
+    bottom: 0.4rem;
     right: 0.4rem;
 
     width: 1.28rem;
     height: 1.28rem;
 
-    background: rgba(51, 51, 51, 0.9);
-    border: 0.026667rem solid #333;
-    box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    // border: 0.026667rem solid #333;
+    // box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
+    box-shadow: 0 0.04rem 0.24rem rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
   }

@@ -145,6 +145,8 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       audioEl.pause();
       this.playState = 0;
+
+      this.saveLiveStatus(this.playState);
     },
 
     /*
@@ -160,6 +162,8 @@ let liveMixin = {
       setTimeout(()=>{
         audioEl.play();
       }, 500)
+
+      this.saveLiveStatus(this.playState);
     },
 
     /*
@@ -169,6 +173,7 @@ let liveMixin = {
     setLiveTip() {
       let lessonID = this.lessonID;
       let key = 'live' + lessonID;
+      let statusKey = 'live-status-' + lessonID;
       let hiddenLiveTip = false;
 
       if(isSupported(window.localStorage)) {
@@ -182,8 +187,34 @@ let liveMixin = {
             this.showLiveTip = false;
           }, 3000)
         }
+
+        // 是否播放 静音
+        let status = localStorage.getItem(statusKey);
+        if(status) {
+          status = +status;
+
+          if(status === 1) {
+            this.handleplay();
+          } else if(status === 0) {
+            this.handlestop();
+          }
+
+        }
       }
 
+    },
+
+    /*
+     * @method 本地存储直播状态
+     * @params
+     */
+    saveLiveStatus(status) {
+      let lessonID = this.lessonID;
+      let key = 'live-status-' + lessonID;
+
+      if(isSupported(window.localStorage)) {
+        localStorage.setItem(key, status);
+      }
     },
 
   }

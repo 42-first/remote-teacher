@@ -125,6 +125,11 @@ var actionsMixin = {
         let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
 
         data.message = sMsg;
+
+        // 标记这是一堂直播远程课 方便后面对直播远程课处理
+        if(code === 'LIVE_ON') {
+          !this.isLive && (this.isLive = true);
+        }
       }
 
       !hasEvent && this.cards.push(data);
@@ -746,6 +751,9 @@ var actionsMixin = {
         this.liveURL = data.hls;
         this.Hls && this.supportHLS(this.Hls);
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+
+        // 标记这是一堂远程课
+        !this.isLive && this.liveURL && (this.isLive = true);
       }
     },
 
@@ -754,7 +762,7 @@ var actionsMixin = {
      * @param
      */
     endLive(data) {
-      this.handlestop();
+      // this.handlestop();
       this.liveURL = '';
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
     },
@@ -857,6 +865,25 @@ var actionsMixin = {
       }
     },
 
+    /*
+     * @method 弹幕接收
+     * @param
+     */
+    receiveDanmu(data) {
+      if(data && !data.isFetch) {
+        this.danmus.push(data);
+      }
+    },
+
+    /*
+     * @method 十秒内没有新弹幕清理弹幕列表
+     * @param
+     */
+    clearDanmus(data) {
+      if(this.danmus && this.danmus.length) {
+        this.danmus = [];
+      }
+    },
 
   }
 }
