@@ -29,6 +29,9 @@
         </ul>
       </section>
 
+      <!-- 有解析显示解析入口 -->
+      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis">答案解析</p>
+
       <section class="choice-list">
         <!-- 正确统计 -->
         <div class="choice-item" >
@@ -91,6 +94,9 @@
         <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
       </v-touch>
     </template>
+
+    <!-- 解析弹层 -->
+    <analysis :problem.sync="problem" :hide-analysis="hideAnalysis" v-if="visibleAnalysis"></analysis>
   </div>
 </template>
 
@@ -115,6 +121,8 @@
     data() {
       return {
         problemid: 0,
+        problem: null,
+        visibleAnalysis: false,
         problemResultDetailData: null, // 试题柱状图详情页数据
         showingIndex: 0, // 正在展示的类型的序号 0正确 1错误 2未答
         answer: {},
@@ -128,6 +136,9 @@
         'lessonid',
         'pptData'
       ])
+    },
+    components: {
+      analysis: () => import('@/components/common/analysis.vue'),
     },
     created() {
       this.init()
@@ -158,6 +169,8 @@
 
         self.problemid = +self.$route.params.problemid
         self.refreshProblemResultDetail()
+
+        this.getProlemById(this.problemid);
       },
       /**
        * 展示隐藏答案选项人名单
@@ -205,7 +218,40 @@
         let self = this
         // console.log(type);
         self.activeTab = type
+      },
+
+      /**
+       * method 读取问题详情
+       * params id
+       */
+      getProlemById(id) {
+        if(this.pptData && this.pptData.length) {
+          let card = this.pptData.find( (silde) => {
+            return silde && silde.Problem && id === silde.Problem.ProblemID;
+          });
+
+          this.problem = card.Problem;
+
+          console.info(this.problem);
+        }
+      },
+
+      /**
+       * method 显示答案解析弹层
+       * params id
+       */
+      handleVisibleAnalysis() {
+        this.visibleAnalysis = true;
+      },
+
+      /**
+       * method 关闭答案解析弹层
+       * params id
+       */
+      hideAnalysis() {
+        this.visibleAnalysis = false;
       }
+
     }
   }
 </script>
@@ -439,5 +485,18 @@
     .abs {
       position: absolute;
     }
+  }
+
+  .analysis--btn {
+    margin: 0.533333rem auto;
+    width: 7.733333rem;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
+    color: #5096F5;
+    cursor: pointer;
+    border: 0.026667rem solid #639EF4;
+    border-radius: 0.106667rem;
+
   }
 </style>
