@@ -7,7 +7,22 @@
  */
 
 
+import {mapGetters} from 'vuex'
+
+
 let analysisMixin = {
+  data() {
+    return {
+      problem: null,
+      visibleAnalysis: false
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'lessonid',
+      'pptData'
+    ])
+  },
   methods: {
     /**
      * method 读取问题详情

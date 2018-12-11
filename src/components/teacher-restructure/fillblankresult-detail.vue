@@ -112,17 +112,15 @@
   // # 匿名投票Anonymous
   // PROBLEM_TYPE_ANONYMOUS_POLLING = 8
 
-  import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
+  import analysismixin from '@/components/common/analysis-mixin'
 
   export default {
     name: 'FillblankresultDetail',
     data() {
       return {
         problemid: 0,
-        problem: null,
-        visibleAnalysis: false,
         problemResultDetailData: null, // 试题柱状图详情页数据
         showingIndex: 0, // 正在展示的类型的序号 0正确 1错误 2未答
         answer: {},
@@ -131,15 +129,10 @@
         activeTab: -1, // 全部 填空1 ...
       }
     },
-    computed: {
-      ...mapGetters([
-        'lessonid',
-        'pptData'
-      ])
-    },
     components: {
-      analysis: () => import('@/components/common/analysis.vue'),
+      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
     },
+    mixins: [ analysismixin ],
     created() {
       this.init()
     },
@@ -219,38 +212,6 @@
         // console.log(type);
         self.activeTab = type
       },
-
-      /**
-       * method 读取问题详情
-       * params id
-       */
-      getProlemById(id) {
-        if(this.pptData && this.pptData.length) {
-          let card = this.pptData.find( (silde) => {
-            return silde && silde.Problem && id === silde.Problem.ProblemID;
-          });
-
-          this.problem = card.Problem;
-
-          console.info(this.problem);
-        }
-      },
-
-      /**
-       * method 显示答案解析弹层
-       * params id
-       */
-      handleVisibleAnalysis() {
-        this.visibleAnalysis = true;
-      },
-
-      /**
-       * method 关闭答案解析弹层
-       * params id
-       */
-      hideAnalysis() {
-        this.visibleAnalysis = false;
-      }
 
     }
   }
