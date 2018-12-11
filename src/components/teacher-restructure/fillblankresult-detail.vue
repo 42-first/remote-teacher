@@ -12,9 +12,9 @@
           <v-touch v-for="(value, key) in answer" :key="key" :class="['tab-item', activeTab == key ? 'active f20' : 'f18']" v-on:tap="toggleTab(key)">
             填空{{key}}
           </v-touch>
-          
+
         </header>
-        
+
       </div> -->
       <section class="correct-box">
         <header class="header f18"><!-- 正确答案 -->{{ $t('correctanswer') }}</header>
@@ -106,6 +106,7 @@
   // # 匿名投票Anonymous
   // PROBLEM_TYPE_ANONYMOUS_POLLING = 8
 
+  import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
 
@@ -121,6 +122,12 @@
         isFetching: true,
         activeTab: -1, // 全部 填空1 ...
       }
+    },
+    computed: {
+      ...mapGetters([
+        'lessonid',
+        'pptData'
+      ])
     },
     created() {
       this.init()
@@ -292,7 +299,7 @@
           border-radius: 0.1067rem 0 0 0.1067rem;
           text-align: center;
           color: #5096F5;
-          
+
           .wenzi {
             position: relative;
             top: 50%;

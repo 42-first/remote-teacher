@@ -419,7 +419,9 @@
 	      // 在这不会立即反映到 self.presentationid 上，所以干脆这里直接使用 store 上的值
 	      if (process.env.NODE_ENV === 'production') {
 	        url = API.fetch_presentation_data + '/' + self.$store.state.presentationid + '/'
-	      }
+	      } else {
+          url = API.fetch_presentation_data + '/' + self.$store.state.presentationid + '/'
+        }
 
 	      request.get(url)
 	        .then(jsonData => {
@@ -550,7 +552,9 @@
 	      let url = API.presentation_tag
 	      if (process.env.NODE_ENV === 'production') {
 	        url = API.presentation_tag + '/' + self.presentationid + '/'
-	      }
+	      } else {
+          url = API.presentation_tag + '/' + self.presentationid + '/'
+        }
 
 	      request.get(url)
 	        .then(jsonData => {
