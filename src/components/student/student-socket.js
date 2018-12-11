@@ -227,6 +227,11 @@ var mixin = {
             this.addMessage({ type: 1, message: item['title'], event: item });
             // 产品确认 幻灯片切换不处理弹幕状态
             // this.danmuStatus = false;
+            // 结束放映 老版本大屏是无法展示弹幕 所以这里需要根据版本处理下
+            if(this.version < 1.3) {
+              this.danmuStatus = false;
+            }
+
             break
 
           // ppt更新
