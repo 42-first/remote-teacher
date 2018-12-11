@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="text-right w100" v-if="pptversion >= 1.3">
-      <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo">
+      <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo" :class="{'no-border': !problemtype}">
         <label @click="hideNameHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
           <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
@@ -160,6 +160,9 @@
     transform: translateX(-50%);
     width: calc(100% - 0.4rem);
     border-top: 1px solid #aaa;
+  }
+  .no-border::before{
+    border-top: none;
   }
   .hide-show-answer{
     margin-top: px2rem(32px);
