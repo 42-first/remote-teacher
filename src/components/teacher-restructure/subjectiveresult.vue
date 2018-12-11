@@ -135,7 +135,7 @@
                             </span>
                         </span>
                       </div>
-                      <v-touch v-show="item.subj_result.pics[0].thumb" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
+                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
                   <div class="action-box f14">
@@ -1233,6 +1233,11 @@
           let s = str + ''
           var result = s.replace(/[^\x00-\xff]/g, '**')
           return result.length
+      },
+      // 是否有缩略图
+      hasThumb(item) {
+        let sub = item.subj_result
+        return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb)
       }
 	  }
 	}
