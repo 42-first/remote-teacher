@@ -36,7 +36,7 @@
     <!-- 截图分享 白板分享 -->
     <template v-else-if="item.type==10 || item.type==11">
       <div class="timeline__ppt">
-        <span class="ppt--pageno f14"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
+        <span class="ppt--pageno z1 f14"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
         <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="screenshot--image" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)" alt="雨课堂,截图分享" />
         </div>
@@ -432,6 +432,10 @@
 </script>
 
 <style lang="scss">
+
+  .z1 {
+    z-index: 1;
+  }
 
   .timeline-item {
     margin: 0 auto;
