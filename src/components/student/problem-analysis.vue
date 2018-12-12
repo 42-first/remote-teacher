@@ -7,25 +7,61 @@
  */
 
 <template>
-  <section class="page-exercise">
-    <div :class="['animated', opacity ? 'zoomIn': '']">
+  <section class="analysis__page">
+    <!-- 问题内容 -->
+    <section class="problem__content" v-if="slide" >
+      <p class="page-no f12"><span>{{ $t('pno', { number: slide.Index }) }}</span></p>
+      <img class="cover" :src="slide.Cover" :data-src="slide.Cove" @click="handlePreviewImage" alt="雨课堂,习题解析" />
+    </section>
 
-      <!-- 问题内容 -->
-      <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
-        <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
+    <!-- 客观题 问题选项 -->
+    <section class="analysis__answer" v-if="problemType === 'MultipleChoice' || problemType === 'MultipleChoiceMA' || problemType === 'Polling'">
+      <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
+      <ul class="exercise__options" >
+        <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="item in options">
+          <p :class="['options-label', item.selected ? 'selected' : '' ]" :data-option="item.Label">{{ item.Label }}</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 填空题 选项 -->
+    <section class="analysis__answer" v-if="problemType === 'FillBlank'">
+      <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
+      <ul class="blanks__options">
+        <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
+          <div class="blank__order">{{ index + 1 }}</div>
+          <p class="blank__input f17">{{ result[index + 1] }}</p>
+        </li>
+       </ul>
+    </section>
+
+    <!-- 主观题内容 -->
+    <section class="analysis__answer" v-if="problemType === 'ShortAnswer'">
+      <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
+      <div class="subjective__answer" v-if="result">
+        <div class="answer__inner">
+          <p class="answer--text f17">{{ result.content }}</p>
+          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
+            <img class="" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="主观题作答图片" @click="handlePreviewImage" />
+          </div>
+        </div>
+        <!-- 打分显示 -->
+        <div class="answer-score" v-if="getScore !== -1">
+          <i class="iconfont blue icon-ykq_dafen f18"></i>
+          <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 解析内容 -->
+     <section class="analysis__answer" >
+      <header class="answer__header f20">答案解析</header>
+      <!--  -->
+      <section class="analysis__wrap">
+        <analysis :problem.sync="oProblem"></analysis>
       </section>
-
-      <!-- 问题选项 -->
-      <section class="" v-if="isShowOption">
-        <ul class="exercise-options" v-if="summary">
-          <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="(item, index) in options">
-            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.Label, $event)" :data-option="item.Label">{{ item.Label }}</p>
-          </li>
-        </ul>
-      </section>
-
-    </div>
+    </section>
 
   </section>
 </template>
@@ -41,17 +77,22 @@
         opacity: 0,
         problemID: 0,
         title: '习题',
-        summary: null,
-        options: null,
-        // 选择的答案
-        optionsSet: new Set(),
-        // 问题类型 单选 多选tougip
+        card: null,
+        slide: null,
+        // 问题类型 单选 多选 投票 填空 主观题
         problemType: '',
         rate: 1.33,
-
+        options: null,
+        // 填空题填空列表
+        blanks: [],
+        // 作答结果
+        result: {},
+        // 主观题得分
+        getScore: -1,
       };
     },
     components: {
+      analysis: () => import('@/components/common/analysis.vue'),
     },
     computed: {
     },
@@ -65,42 +106,67 @@
       * @method 初始化习题页面
       * @param problemID 问题ID
       */
-      init(data) {
-        let problemID = data.problemID;
-        this.title = this.$parent.title;
-
-        if(!problemID) {
-          return ;
-        }
+      init(problemID) {
+        console.info(this.$parent.problemMap);
 
         this.problemID = problemID;
-
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.slide = this.$parent.problemMap.get(problemID);
+        this.oProblem = this.slide && this.slide['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
-        // 选项
-        this.options = data.options;
 
-        // 是否完成
-        if(data.isComplete) {
-          let result = this.oProblem['Result'];
+        // 根据问题类型组织对应的数据结构
+        this.formatData(this.oProblem);
 
-          result && result.split('').forEach((option) => {
-            this.setOptions(option, true, true);
-          });
-        }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
       },
 
       /*
-      * @method 设置答案选项是否选中
-      * @param option: 选项
-      *        isSelected: 是否选中
-      *        multi: 是否多选
-      */
+       * @method 根据问题类型整理数据结构
+       * @param problem
+       */
+      formatData(problem) {
+        let problemType = problem['Type'];
+        this.result = problem['Result'];
+
+        if(problemType) {
+
+          switch (problemType) {
+            case 'ShortAnswer':
+              console.info('主观题')
+
+              this.getScore = problem.getScore;
+              break;
+            case 'FillBlank':
+              console.info('填空题')
+              this.blanks = problem['Blanks'];
+              break;
+            case 'MultipleChoice':
+            case 'MultipleChoiceMA':
+            case 'Polling':
+              console.info('客观题')
+              problemType === 'Polling' && (this.pollingCount = parseInt(problem['Answer'], 10));
+              this.options = problem['Bullets'];
+
+              this.result && this.result.split('').forEach((option) => {
+                this.setOptions(option, true, true);
+              });
+
+              break;
+            default:
+              // statements_def
+              break;
+          }
+
+        }
+
+      },
+
+      /*
+       * @method 设置答案选项是否选中
+       * @param option: 选项
+       *        isSelected: 是否选中
+       *        multi: 是否多选
+       */
       setOptions(option, isSelected, multi) {
         let options = this.options;
 
@@ -129,171 +195,62 @@
       },
 
       /*
-      * @method 设置答案选项
+      * @method 提交答案
       */
-      handleSetOption(option, evt) {
-        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
-
-        // 提交中或者已完成
-        if(this.canSubmit === 2 || this.summary.isComplete || this.timeOver) {
-          return this;
+      getProblemD() {
+        let self = this;
+        let problemID = this.problemID;
+        let URL = API.student.ANSWER_LESSON_PROBLEM;
+        let param = {
+          'problem_id': problemID
         }
 
-        if(this.optionsSet.has(option)) {
-          this.setOptions(option, false);
-          this.optionsSet.delete(option);
-
-          if(this.problemType && this.problemType.indexOf('Polling') > -1) {
-            this.selectedPollingCount++;
+        request.post(URL, param)
+        .then((res) => {
+          if(res && res.data) {
+            let data = res.data;
+            // problem = Object.assign(problem, {
+            //   'Problem': self.oProblem
+            // })
           }
-        } else if(this.problemType) {
-          // 是否多选
-          if(this.problemType === 'MultipleChoiceMA') {
-            this.setOptions(option, true, true);
-            this.optionsSet.add(option);
-          } else if(this.problemType === 'MultipleChoice') {
-            this.setOptions(option, true, false);
-            this.optionsSet.clear();
-            this.optionsSet.add(option);
-          } else if(this.problemType.indexOf('Polling') > -1 && this.selectedPollingCount && this.pollingCount > 1) {
-            this.selectedPollingCount--;
-            this.setOptions(option, true, true);
-            this.optionsSet.add(option);
-          } else if(this.problemType.indexOf('Polling') > -1 && this.pollingCount === 1) {
-            this.setOptions(option, true, false);
-            this.optionsSet.clear();
-            this.optionsSet.add(option);
-            this.selectedPollingCount > 0 && this.selectedPollingCount--;
-          }
-        }
+        })
+        .catch(error => {
+        });
 
-        // 是否可以提交
-        if(this.optionsSet.size) {
-          this.canSubmit = 1;
-          console.log([...this.optionsSet].sort().join(''));
-        } else {
-          this.canSubmit = 0;
-        }
       },
 
       /*
-      * @method 提交答案
+       * @method 预览图片
       */
-      handleSubmit() {
-        let self = this;
-        let problemID = this.summary.problemID;
-        let URL = API.student.ANSWER_LESSON_PROBLEM;
+      handlePreviewImage(evt) {
+        let targetEl = evt.target;
+        let src = targetEl.dataset.src || targetEl.src;
 
-        // 是否可以提交
-        if(this.canSubmit === 1) {
-          // 是否超时
-          if(this.timeOver) {
-            this.$toast({
-              message: this.$i18n.t('timeoutnosubmit') || '时间已过，不能再提交啦～',
-              duration: 3000
-            });
-            this.canSubmit = 0;
-            return this;
-          }
+        typeof wx !== 'undefined' && wx.previewImage({
+          current: src, // 当前显示图片的http链接
+          urls: [ src ] // 需要预览的图片http链接列表
+        });
 
-          this.canSubmit = 2;
-
-          const startTime = Math.ceil(this.summary.time/1000);
-          const endTime = Math.ceil(+new Date()/1000);
-          // 持续多少秒
-          const duration = endTime - startTime;
-          const retryTimes = 0;
-
-          let param = {
-            'duration': duration,
-            'startTime': startTime,
-            'submit_time': endTime,
-            'lesson_problem_id': problemID,
-            'result': [...this.optionsSet].sort().join(''),
-            'retry_times': retryTimes
-          }
-
-          this.oProblem['Result'] = param['result'];
-          let problem = self.$parent.problemMap.get(problemID)
-
-          return request.post(URL, param)
-            .then((res) => {
-              if(res && res.data) {
-                let data = res.data;
-
-                self.summary = Object.assign(self.summary, {
-                  status: this.$i18n.t('done') || '已完成',
-                  isComplete: true
-                })
-
-                // 替换原来的数据
-                self.$parent.cards.splice(self.index, 1, self.summary);
-
-                problem = Object.assign(problem, {
-                  'Problem': self.oProblem
-                })
-                self.$parent.problemMap.set(problemID, problem);
-
-                self.canSubmit = 3;
-                clearInterval(self.timer);
-                this.sLeaveTime = this.$i18n.t('done') || '已完成';
-                this.isComplete = true;
-
-                // 是否重复提交了
-                if(data.status_code === 4) {
-                  // 此题已经作答过
-                  this.$toast({
-                    message: '此题已经作答过',
-                    duration: 2000
-                  });
-                } else {
-                  this.$toast({
-                    message: this.$i18n.t('sendsuccess') || '提交成功',
-                    duration: 2000
-                  });
-                }
-
-                // this.$toast({
-                //   message: this.$i18n.t('sendsuccess') || '提交成功',
-                //   duration: 2000
-                // });
-
-                setTimeout(() => {
-                  self.$router.back();
-                }, 2000)
-
-                return data;
-              }
-            })
-            .catch(error => {
-              // 提交失败保存本地
-              self.saveAnswer(param);
-              self.$toast({
-                message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
-                duration: 3000
-              });
-
-              self.isComplete = true;
-
-              setTimeout(() => {
-                self.$router.back();
-              }, 3000)
-            });
-
-          clearInterval(this.timer);
-        }
       },
 
     },
     created() {
       this.index = +this.$route.params.index;
       let cards = this.$parent.cards;
-      this.summary = cards[this.index];
+      this.card = cards[this.index];
 
-      if(this.summary) {
-        this.init(this.summary);
+      if(this.card) {
+        let problemID = this.card.problemID;
+        this.init(problemID);
       } else {
-        this.$router.back();
+        // this.$router.back();
+
+        setTimeout(()=>{
+          let cards = this.$parent.cards;
+          this.card = cards[this.index];
+          let problemID = this.card.problemID;
+          this.init(problemID);
+        }, 500)
       }
     },
     mounted() {
@@ -303,13 +260,13 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
   /*------------------*\
     $ 习题详情页
   \*------------------*/
 
-  .page-exercise {
+  .analysis__page {
     z-index: 2;
     position: fixed;
     top: 0;
@@ -317,7 +274,7 @@
     width: 100%;
     height: 100%;
 
-    background: #fff;
+    background: #eee;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -329,14 +286,13 @@
     $ 习题内容
   \*------------------*/
 
-  .exercise-content {
+  .problem__content {
     position: relative;
-    margin: 0.4rem 0.453333rem 0;
-    padding-bottom: 0.4rem;
+    margin: 0.4rem 0 0;
+    // padding-bottom: 0.4rem;
 
 
     border-top: 1px solid #C8C8C8;
-    border-bottom: 1px solid #C8C8C8;
     overflow: hidden;
     .page-no {
       position: absolute;
@@ -362,10 +318,10 @@
 
 
   /*------------------*\
-    $ 习题选项
+    $ 客观题选项
   \*------------------*/
 
-  .exercise-options {
+  .exercise__options {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -400,6 +356,115 @@
     .options-item.MultipleChoice .options-label {
       border-radius: 50%;
     }
+  }
+
+
+  /*------------------*\
+    $ 填空选项
+  \*------------------*/
+
+  .analysis__answer {
+    margin-top: 0.266667rem;
+    padding: 0.533333rem 0;
+
+    background: #fff;
+  }
+
+  .answer__header {
+    padding-left: 0.293333rem;
+    height: 0.746667rem;
+    border-left: 0.16rem solid #639EF4;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .blanks__options {
+    padding: 0.533333rem;
+  }
+
+  .blank__item {
+    display: flex;
+    min-height: 1.066667rem;
+  }
+
+  .blank__order {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 1.066667rem;
+    min-height: 1.066667rem;
+    font-weight: bold;
+    color: #5096F5;
+    border: 2px solid #5096F5;
+    border-radius: 0.106667rem 0 0 0.106667rem;
+  }
+
+  .blank__input {
+    flex: 1;
+    padding: 0.133333rem;
+    min-height: 1.066667rem;
+    line-height: 1.5;
+    text-align: left;
+    box-sizing: border-box;
+    border: 2px solid #eee;
+    border-left: none;
+    border-radius: 0 0.106667rem 0.106667rem 0;
+  }
+
+  .analysis__wrap {
+    padding-left: 0.533333rem;
+  }
+
+
+
+  /*------------------*\
+    $ 作答完成预览
+  \*------------------*/
+
+  .subjective__answer {
+    margin-bottom: 1.066667rem;
+    padding: 0.333333rem 0.4rem;
+    color: #333;
+    background: #fff;
+
+    .answer__inner {
+      padding: 0 0.2rem 0.4rem;
+      border-bottom: 1px solid #C8C8C8;
+    }
+
+    .answer--text {
+      text-align: left;
+      word-wrap: break-word;
+    }
+
+    .answer--image {
+      padding-top: 0.266667rem;
+      img {
+        display: block;
+        width: 6.933333rem;
+        max-width: 100%;
+      }
+    }
+
+    .answer-score {
+      padding: 0.266667rem 0.2rem 0;
+      color: #9B9B9B;
+      text-align: left;
+
+      .lable {
+        vertical-align: 0.066667rem;
+      }
+
+      .iconfont {
+        color: #F5A623;
+      }
+
+      .iconfont.blue {
+        color: #639EF4;
+      }
+    }
+
   }
 
 
