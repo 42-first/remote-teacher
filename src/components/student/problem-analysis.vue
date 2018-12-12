@@ -55,7 +55,7 @@
 
 
     <!-- 解析内容 -->
-     <section class="analysis__answer" >
+     <section class="analysis__answer" v-if="hasRemark">
       <header class="answer__header f20">答案解析</header>
       <!--  -->
       <section class="analysis__wrap">
@@ -81,7 +81,7 @@
         slide: null,
         // 问题类型 单选 多选 投票 填空 主观题
         problemType: '',
-        rate: 1.33,
+        hasRemark: true,
         options: null,
         // 填空题填空列表
         blanks: [],
@@ -127,6 +127,7 @@
       formatData(problem) {
         let problemType = problem['Type'];
         this.result = problem['Result'];
+        this.hasRemark = problem['HasRemark']
 
         if(problemType) {
 
