@@ -117,7 +117,6 @@
 
         // 根据问题类型组织对应的数据结构
         this.formatData(this.oProblem);
-
       },
 
       /*
@@ -244,8 +243,6 @@
         let problemID = this.card.problemID;
         this.init(problemID);
       } else {
-        // this.$router.back();
-
         setTimeout(()=>{
           let cards = this.$parent.cards;
           this.card = cards[this.index];

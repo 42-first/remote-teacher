@@ -18,9 +18,10 @@
     </article>
 
     <!-- 底部操作 -->
-    <footer class="">
+    <footer class="analysis__footer">
       <!-- 关闭按钮 -->
       <p class="analysis--closed f17" @click="handleclosed">关闭</p>
+      <p class="analysis--closed f17" @click="handleSendToStu">发送给学生</p>
     </footer>
   </section>
 
@@ -39,18 +40,26 @@
     background: rgba(0, 0, 0, 0.7);
   }
 
-  .analysis--closed {
+  .analysis__footer {
     z-index: 1001;
     position: absolute;
     bottom: 0.666667rem;
     left: 0.533333rem;
     right: 0.533333rem;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
     height: 1.306667rem;
     line-height: 1.306667rem;
+
     text-align: center;
     color: #639EF4;
     background-color: #fff;
-    border-radius: 0.106667rem;
+  }
+
+  .analysis--closed {
   }
 
   .analysis-content {
@@ -75,7 +84,12 @@
 
 </style>
 <script>
-    export default {
+  import {mapGetters} from 'vuex'
+  import request from '@/util/request'
+  import API from '@/pages/teacher/config/api'
+
+
+  export default {
     props: {
       problem: {
         type: Object,
@@ -87,7 +101,15 @@
     },
     data() {
       return {
+        // 锁定发送
+        lockSending: false,
+        // 是否已经发送
       }
+    },
+    computed: {
+      ...mapGetters([
+        'lessonid'
+      ])
     },
     components: {
       analysis: () => import('@/components/common/analysis.vue'),
@@ -95,12 +117,36 @@
     methods: {
       /**
        * @method 关闭答案解析页面
-       *
        */
       handleclosed() {
         if(typeof this.hideAnalysis === 'function') {
           this.hideAnalysis();
         }
+      },
+
+      /**
+       * @method 发送给全班
+       */
+      handleSendToStu() {
+        let url = API.publish_remark;
+        let params = {
+          'problem_id': this.problem.ProblemID,
+          'lesson_id': this.lessonid
+        };
+
+        // 禁止重复发送
+        this.lockSending = true;
+
+        request.post(url, params)
+        .then(res => {
+          if(res && res.success) {
+            // 发送成功
+            console.log(res)
+
+            this.lockSending = false;
+          }
+
+        })
       }
 
     },

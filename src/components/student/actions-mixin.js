@@ -441,6 +441,17 @@ var actionsMixin = {
       !hasEvent && this.hideAnimationMask();
     },
 
+    /**
+     * @method 分享答案解析
+     * { type: 13, remark, event: item }
+     */
+    addAnalysis(data) {
+      // 找到对应问题
+      let remark = data.remark;
+      let slideData = this.problemMap.get(remark.prob);
+
+    },
+
     /*
      * @method 新增分享投稿20170823
      * { type: 6, postid: 123, isFetch: false }

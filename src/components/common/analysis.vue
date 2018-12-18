@@ -82,6 +82,9 @@
       }
     },
     watch: {
+      problem(newVal, oldVal) {
+
+      }
     },
     filters: {
       setShapeStyle(shape) {
@@ -124,6 +127,16 @@
       }
     },
     methods: {
+      /**
+       * @method 完善结构信息
+       */
+      init(problem) {
+        // 结构中是否有Answer字段
+        let type = problem.Type;
+        if(type === 'FillBlank' && !problem.Answer) {
+
+        }
+      }
     },
     created() {
     }

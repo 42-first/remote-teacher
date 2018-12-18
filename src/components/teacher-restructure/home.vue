@@ -127,7 +127,7 @@
 	import API from '@/pages/teacher/config/api'
 
 	if (process.env.NODE_ENV !== 'production') {
-	  request.post = request.get
+	  // request.post = request.get
 	}
 
 	// 页面组件

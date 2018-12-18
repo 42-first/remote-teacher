@@ -337,6 +337,14 @@ var mixin = {
 
             break
 
+          // 答案解析
+          case 'problemremark':
+            item = msg['remark'];
+
+            // this.addBoard({ type: 11, board: item, time: item['dt'], event: item });
+
+            break
+
           // 分组创建分组
           case 'launchgroup':
             item = msg['group'];
