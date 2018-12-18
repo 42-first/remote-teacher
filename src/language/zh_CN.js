@@ -156,19 +156,19 @@ let pages = {
 
   // 个人信息完善
   "merealname": '真实姓名',
-  "nameeg": "如：李明",
+  "nameeg": "请输入姓名",
   "merole": "社会身份",
   "meteacher": "教师",
   "meothers": "其他",
   "student": "学生",
   "meschoolbelongs": "所属学校",
-  "schooleg": "如：清华大学",
+  "schooleg": "请输入学校",
   "mestudentid": "在校学号",
   "infocosttime": "花30秒完善你的信息",
   "infogood": "方便老师快速认识你",
   "infoorg": "组织/机构",
   "infoorgtip": "可以为空",
-  "infonumbereg": "如：123456",
+  "infonumbereg": "学生身份请输入学号",
   "infotip": "* 你可以在“我的主页”中随时修改个人信息",
 
 
