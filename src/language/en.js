@@ -157,19 +157,19 @@ let pages = {
 
   // 个人信息完善
   "merealname": "Name",
-  "nameeg": "e.g. Li Ming",
+  "nameeg": "Enter your name",
   "merole": "Role",
   "meteacher": "Instructor",
   "meothers": "Others",
   "student": "Student",
   "meschoolbelongs": "School",
-  "schooleg": "e.g. Tsinghua University",
+  "schooleg": "Enter your school",
   "mestudentid": "Student ID",
   "infocosttime": "Fill in your personal information in 30sec",
   "infogood": "",
   "infoorg": "Organ.",
   "infoorgtip": "Not required",
-  "infonumbereg": "eg.123456",
+  "infonumbereg": "Please write down your Student ID",
   "infotip": 'You can change the information at any time in "My Homepage"',
 
 
