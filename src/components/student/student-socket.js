@@ -341,7 +341,7 @@ var mixin = {
           case 'problemremark':
             item = msg['remark'];
 
-            // this.addBoard({ type: 11, board: item, time: item['dt'], event: item });
+            this.addAnalysis({ type: 13, remark: item, time: item['dt'], event: item });
 
             break
 

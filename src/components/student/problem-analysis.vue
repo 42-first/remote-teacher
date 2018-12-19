@@ -27,10 +27,11 @@
     <!-- 填空题 选项 -->
     <section class="analysis__answer" v-if="problemType === 'FillBlank'">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
-      <ul class="blanks__options">
+      <ul class="blanks__options" >
         <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
           <div class="blank__order">{{ index + 1 }}</div>
-          <p class="blank__input f17">{{ result[index + 1] }}</p>
+          <p class="blank__input f17" v-if="result">{{ result[index + 1] }}</p>
+          <p class="blank__input f17" v-else>未作答</p>
         </li>
        </ul>
     </section>
@@ -51,11 +52,11 @@
           <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
         </div>
       </div>
+      <div class="f17" v-else>未作答</div>
     </section>
 
-
     <!-- 解析内容 -->
-     <section class="analysis__answer" v-if="hasRemark">
+    <section class="analysis__answer" v-if="hasRemark">
       <header class="answer__header f20">答案解析</header>
       <!--  -->
       <section class="analysis__wrap">
@@ -82,6 +83,7 @@
         // 问题类型 单选 多选 投票 填空 主观题
         problemType: '',
         hasRemark: true,
+        oProblem: null,
         options: null,
         // 填空题填空列表
         blanks: [],
@@ -117,6 +119,9 @@
 
         // 根据问题类型组织对应的数据结构
         this.formatData(this.oProblem);
+
+        // 作答结果
+        this.getProblemResult();
       },
 
       /*
@@ -129,7 +134,6 @@
         this.hasRemark = problem['HasRemark']
 
         if(problemType) {
-
           switch (problemType) {
             case 'ShortAnswer':
               console.info('主观题')
@@ -195,23 +199,31 @@
       },
 
       /*
-      * @method 提交答案
-      */
-      getProblemD() {
-        let self = this;
+       * @method 作答解析详情
+       */
+      getProblemResult() {
         let problemID = this.problemID;
-        let URL = API.student.ANSWER_LESSON_PROBLEM;
+        let URL = API.student.GET_PROBLEM_RESULT;
         let param = {
-          'problem_id': problemID
+          'problem_id': problemID,
+          'lesson_id': this.lessonID
         }
 
-        request.post(URL, param)
+        request.get(URL, param)
         .then((res) => {
           if(res && res.data) {
             let data = res.data;
-            // problem = Object.assign(problem, {
-            //   'Problem': self.oProblem
-            // })
+
+            console.log(data)
+
+            // 问题类型
+            data.problem_type
+            // 客观题
+            data.answer
+            // 填空题
+            this.result = data.result
+            // 主观题
+            this.result = data.subj_result
           }
         })
         .catch(error => {
@@ -236,6 +248,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
+      this.lessonID = +this.$route.params.lessonID;
       let cards = this.$parent.cards;
       this.card = cards[this.index];
 
@@ -248,7 +261,7 @@
           this.card = cards[this.index];
           let problemID = this.card.problemID;
           this.init(problemID);
-        }, 500)
+        }, 1500)
       }
     },
     mounted() {

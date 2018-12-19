@@ -67,6 +67,8 @@ if (process.env.NODE_ENV === 'production') {
     get_subj_problem_group_review:      prefix + '/v/lesson/get_subj_problem_group_review',
     // 白板列表
     get_board_list: prefix + '/v/lesson/file_sharing/get_doubt_share_board_list/',
+    // 向班级发送答案解析
+    publish_remark: prefix + '/v/lesson/publish_problem_remark2classroom/',
   }
 } else {
   api = {
@@ -119,6 +121,8 @@ if (process.env.NODE_ENV === 'production') {
     get_subj_problem_group_review:      'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_problem_group_review',
     // 白板列表
     get_board_list: 'http://apimock.xuetangx.com/mock/115/v/lesson/file_sharing/get_doubt_share_board_list/',
+    // 向班级发送答案解析
+    publish_remark: prefix + 'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem_remark2classroom/',
   }
 }
 

@@ -93,6 +93,9 @@
         <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
       </v-touch>
     </div>
+
+    <!-- 解析弹层 -->
+    <analysis :problem.sync="problem" :hide-analysis="hideAnalysis" v-if="visibleAnalysis"></analysis>
   </div>
 </template>
 
@@ -161,7 +164,7 @@
         self.problemid = +self.$route.params.problemid
         self.refreshProblemResultDetail()
 
-        this.getProlemById(self.problemid);
+        this.getProlemById(this.problemid);
       },
       /**
        * 展示隐藏答案选项人名单

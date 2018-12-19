@@ -21,7 +21,8 @@
     <footer class="analysis__footer">
       <!-- 关闭按钮 -->
       <p class="analysis--closed f17" @click="handleclosed">关闭</p>
-      <p class="analysis--closed f17" @click="handleSendToStu">发送给学生</p>
+      <p v-if="sendStatus<1" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu">发送给学生</p>
+      <p v-else class="analysis--closed f17 c9b" >已发给学生</p>
     </footer>
   </section>
 
@@ -29,7 +30,7 @@
 
 <style lang="scss" scoped>
   .analysis__page {
-    z-index: 2;
+    z-index: 1000;
     position: fixed;
     top: 0;
     left: 0;
@@ -87,6 +88,7 @@
   import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
+  import { isSupported } from '@/util/util'
 
 
   export default {
@@ -101,10 +103,13 @@
     },
     data() {
       return {
-        // 锁定发送
-        lockSending: false,
-        // 是否已经发送
+        // 锁定发送 发送状态 0：未发送 1：发送中 2：已发送 3：发送失败
+        sendStatus: 0,
       }
+    },
+    watch: {
+      // problem(newVal, oldVal) {
+      // }
     },
     computed: {
       ...mapGetters([
@@ -115,6 +120,16 @@
       analysis: () => import('@/components/common/analysis.vue'),
     },
     methods: {
+      /**
+       * @method 组件初始化
+       */
+      init() {
+        let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+        if(isSupported(window.localStorage)) {
+          this.sendStatus = +localStorage.getItem(key);
+        }
+      },
+
       /**
        * @method 关闭答案解析页面
        */
@@ -134,16 +149,24 @@
           'lesson_id': this.lessonid
         };
 
+        if(this.sendStatus > 0) {
+          return this;
+        }
+
         // 禁止重复发送
-        this.lockSending = true;
+        this.sendStatus = 1;
 
         request.post(url, params)
         .then(res => {
           if(res && res.success) {
             // 发送成功
-            console.log(res)
+            this.sendStatus = 2;
 
-            this.lockSending = false;
+            // 这里记录是否发送
+            let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+            if(isSupported(window.localStorage)) {
+              localStorage.setItem(key, this.sendStatus);
+            }
           }
 
         })
@@ -151,6 +174,7 @@
 
     },
     created() {
+      this.init();
     }
   }
 </script>

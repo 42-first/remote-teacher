@@ -83,7 +83,7 @@
     },
     watch: {
       problem(newVal, oldVal) {
-
+        newVal && this.init(newVal);
       }
     },
     filters: {
@@ -135,8 +135,17 @@
         let type = problem.Type;
         if(type === 'FillBlank' && !problem.Answer) {
 
+          problem.Blanks.forEach( (blank) =>{
+            problem.Answer += ' ' +blank.Answers.join('/');
+          });
+
+          console.log(problem.Answer);
+          this.problem.Answer = problem.Answer;
         }
       }
+    },
+    mounted() {
+      this.problem && this.init(this.problem);
     },
     created() {
     }

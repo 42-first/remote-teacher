@@ -82,6 +82,8 @@
 						</div>
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+          <!-- 有解析显示解析入口 -->
+          <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis">答案解析</p>
 					<template v-if="group_name">
             <div class="gap"></div>
 						<div class="group_name f14">
@@ -226,6 +228,9 @@
         </div>
       </div>
     </section>
+
+    <!-- 解析弹层 -->
+    <analysis :problem.sync="problem" :hide-analysis="hideAnalysis" v-if="visibleAnalysis"></analysis>
   </div>
 </template>
 
@@ -247,6 +252,8 @@
   // 教师遥控器引导查看答案、续时
   import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
   import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+  // 答案解析
+  import analysismixin from '@/components/common/analysis-mixin'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -318,6 +325,7 @@
         group_review_done_num: 0,        // 已互评数
 	    }
 	  },
+    mixins: [ analysismixin ],
 	  computed: {
       ...mapGetters([
         'lessonid',
@@ -336,7 +344,8 @@
       Problemtime,
       GuideDelay,
       HupingPanel,
-      hideSomeInfo
+      hideSomeInfo,
+      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
 	  },
 	  created(){
       this.init()
@@ -379,7 +388,7 @@
       }
     },
 	  methods: {
-      
+
       /**
        * 取消延时
        *
@@ -474,6 +483,8 @@
         self.cleanDurInfoStorage()
         self.handleDuration()
         self.handlePubSub()
+
+        this.getProlemById(this.problemid);
       },
       /**
        * 处理计时
@@ -1198,7 +1209,7 @@
       * 变更投屏状态
       * 可能已废弃，以后删掉
       *
-      **/ 
+      **/
       showUserInfoChange(val) {
         this.isHideName = val
       },
@@ -1709,4 +1720,17 @@
 		padding: .4rem .453333rem;
 		line-height: .666667rem;
 	}
+
+  .analysis--btn {
+    margin: 0.533333rem auto;
+    width: 7.733333rem;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
+    color: #5096F5;
+    text-align: center;;
+    cursor: pointer;
+    border: 0.026667rem solid #639EF4;
+    border-radius: 0.106667rem;
+  }
 </style>
