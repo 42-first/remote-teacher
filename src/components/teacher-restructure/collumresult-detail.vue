@@ -15,7 +15,7 @@
       <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
 
       <!-- 有解析显示解析入口 -->
-      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis">答案解析</p>
+      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 
       <div class="tab">
         <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">

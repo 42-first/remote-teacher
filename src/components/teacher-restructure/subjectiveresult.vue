@@ -83,7 +83,7 @@
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
           <!-- 有解析显示解析入口 -->
-          <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis">答案解析</p>
+          <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 					<template v-if="group_name">
             <div class="gap"></div>
 						<div class="group_name f14">

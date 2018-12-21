@@ -172,6 +172,13 @@ let pages = {
   "infonumbereg": "eg.123456",
   "infotip": 'You can change the information at any time in "My Homepage"',
 
+  // 答案解析
+  "answerkey": "Answer Key",
+  'viewanswer': 'Answer Key',
+  'answerpublished': 'The Answer Key has been sent',
+  'sendtoclass': 'Send to the class',
+  'hasbeensend': 'Has been sent',
+
 
   // 遥控器
   "classsignal": "Class Code",

@@ -30,7 +30,7 @@
       </section>
 
       <!-- 有解析显示解析入口 -->
-      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis">答案解析</p>
+      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 
       <section class="choice-list">
         <!-- 正确统计 -->

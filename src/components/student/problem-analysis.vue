@@ -31,7 +31,7 @@
         <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
           <div class="blank__order">{{ index + 1 }}</div>
           <p class="blank__input f17" v-if="result">{{ result[index + 1] }}</p>
-          <p class="blank__input f17" v-else>未作答</p>
+          <p class="blank__input f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</p>
         </li>
        </ul>
     </section>
@@ -39,7 +39,7 @@
     <!-- 主观题内容 -->
     <section class="analysis__answer" v-if="problemType === 'ShortAnswer'">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
-      <div class="subjective__answer" v-if="result">
+      <div class="subjective__answer" v-if="result&&(result.content || result.pics&&result.pics.length)">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
           <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
@@ -52,12 +52,12 @@
           <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
         </div>
       </div>
-      <div class="f17" v-else>未作答</div>
+      <div class="f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</div>
     </section>
 
     <!-- 解析内容 -->
     <section class="analysis__answer" v-if="hasRemark">
-      <header class="answer__header f20">答案解析</header>
+      <header class="answer__header f20"><!-- 答案解析 -->{{ $t('answerkey') }}</header>
       <!--  -->
       <section class="analysis__wrap">
         <analysis :problem.sync="oProblem"></analysis>
@@ -75,7 +75,6 @@
     data() {
       return {
         index: 0,
-        opacity: 0,
         problemID: 0,
         title: '习题',
         card: null,
@@ -224,6 +223,7 @@
             this.result = data.result
             // 主观题
             this.result = data.subj_result
+            this.getScore = data.result_score;
           }
         })
         .catch(error => {

@@ -463,7 +463,7 @@ var actionsMixin = {
           pageIndex: slideData.Index,
           problemID: slideData['Problem']['ProblemID'],
           pageURL,
-          caption: '老师公布了习题的答案解析' || this.$i18n.t('newvote')
+          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
         })
 
         // 是否含有重复数据
