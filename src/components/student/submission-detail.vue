@@ -83,10 +83,9 @@
 
               this.result = data;
 
-              // this.summary = Object.assign(this.summary, {
-              //   status: '已读',
-              //   isComplete: true
-              // })
+              // 匿名
+              // http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg
+              // "anonymous": "匿名",  "Anonymous"
 
               return data;
             }
