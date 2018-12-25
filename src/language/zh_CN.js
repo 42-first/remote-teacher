@@ -88,6 +88,7 @@ let pages = {
   "minilaunchpush" : "雨课堂小程序上线啦",
   "entermini" : "长按识别图中小程序码开始体验",
   "anonymous" : "(匿名)",
+  "anonymous2" : "匿名",
   "timeout" : "时间到",
   "timeoutnosubmit" : "时间已过，不能再提交啦～",
   "neterrorpush" : "当前网络不畅，请检查系统已保存并将自动重复提交",

@@ -87,13 +87,21 @@
 
               this.result = data;
 
-              if(data.group_answer) {
-                this.name = data.team_name;
-                // 后面使用小组头像 暂时使用个人头像
-                this.avatar = this.teamAvatar;
+              // 是否匿名
+              let anon = this.summary.anon;
+
+              if(anon) {
+                this.avatar = 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
+                this.name = this.$i18n.t('anonymous2') || '匿名';
               } else {
-                this.name = data.users[0].user_name;
-                this.avatar = data.users[0].user_avatar;
+                if(data.group_answer) {
+                  this.name = data.team_name;
+                  // 后面使用小组头像 暂时使用个人头像
+                  this.avatar = this.teamAvatar;
+                } else {
+                  this.name = data.users[0].user_name;
+                  this.avatar = data.users[0].user_avatar;
+                }
               }
 
               return data;

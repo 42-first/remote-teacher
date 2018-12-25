@@ -314,7 +314,7 @@ var mixin = {
           case 'sendpost':
             item = msg['post'];
 
-            this.addSubmission({ type: 6, postid: item.postid, time: item.dt, event: item });
+            this.addSubmission({ type: 6, postid: item.postid, anon: item.anon, time: item.dt, event: item });
 
             break
 
@@ -322,7 +322,7 @@ var mixin = {
           case 'sendsproblem':
             item = msg['problem'];
 
-            this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
+            this.addSubjective({ type: 7, spid: item.spid, anon: item.anon, time: item.dt, event: item });
 
             break
 
