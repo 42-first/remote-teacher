@@ -765,6 +765,9 @@ var actionsMixin = {
       // this.handlestop();
       this.liveURL = '';
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+
+      // 关闭弹幕直播
+      this.isLive && (this.isLive = false);
     },
 
     /*
