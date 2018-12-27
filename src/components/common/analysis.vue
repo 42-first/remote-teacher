@@ -140,7 +140,7 @@
           });
 
           console.log(problem.Answer);
-          this.problem.Answer = problem.Answer;
+          this.problem = problem;
         }
       }
     },

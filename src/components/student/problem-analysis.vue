@@ -219,7 +219,7 @@
             // 问题类型
             data.problem_type
             // 客观题
-            this.oProblem.Answer = data.answer
+            data.answer && (this.oProblem.Answer = data.answer);
             // 填空题
             this.result = data.result
             // 主观题
