@@ -406,7 +406,7 @@ var mixin = {
 
           // 接收弹幕
           case 'newdanmu':
-            this.receiveDanmu(msg);
+            this.isLive && this.receiveDanmu(msg);
 
             break;
 
