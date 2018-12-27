@@ -175,7 +175,7 @@ let pages = {
   "answerkey": "答案解析",
   'viewanswer': '看解析',
   'answerpublished': '老师公布了习题的答案解析',
-  'sendtoclass': '发送给学生',
+  'sendtostus': '发送给学生',
   'hasbeensend': '已发给学生',
 
 

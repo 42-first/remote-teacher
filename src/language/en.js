@@ -176,7 +176,7 @@ let pages = {
   "answerkey": "Answer Key",
   'viewanswer': 'Answer Key',
   'answerpublished': 'The Answer Key has been sent',
-  'sendtoclass': 'Send to the class',
+  'sendtostus': 'Send to the class',
   'hasbeensend': 'Has been sent',
 
 

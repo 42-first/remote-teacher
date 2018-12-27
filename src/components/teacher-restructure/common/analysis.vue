@@ -21,7 +21,7 @@
     <footer class="analysis__footer">
       <!-- 关闭按钮 -->
       <p class="analysis--closed f17" @click="handleclosed"><!-- 关闭 -->{{ $t('close') }}</p>
-      <p v-if="sendStatus<1" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu"><!-- 发送给学生 -->{{ $t('sendtoclass') }}</p>
+      <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu"><!-- 发送给学生 -->{{ $t('sendtostus') }}</p>
       <p v-else class="analysis--closed f17 c9b" ><!-- 已发给学生 -->{{ $t('hasbeensend') }}</p>
     </footer>
   </section>

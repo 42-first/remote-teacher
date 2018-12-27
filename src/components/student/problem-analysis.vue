@@ -17,11 +17,12 @@
     <!-- 客观题 问题选项 -->
     <section class="analysis__answer" v-if="problemType === 'MultipleChoice' || problemType === 'MultipleChoiceMA' || problemType === 'Polling'">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
-      <ul class="exercise__options" >
+      <ul class="exercise__options" v-if="result">
         <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="item in options">
           <p :class="['options-label', item.selected ? 'selected' : '' ]" :data-option="item.Label">{{ item.Label }}</p>
         </li>
       </ul>
+      <div class="noanswered f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</div>
     </section>
 
     <!-- 填空题 选项 -->
@@ -52,7 +53,7 @@
           <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
         </div>
       </div>
-      <div class="f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</div>
+      <div class="noanswered f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</div>
     </section>
 
     <!-- 解析内容 -->
@@ -218,11 +219,13 @@
             // 问题类型
             data.problem_type
             // 客观题
-            data.answer
+            this.oProblem.Answer = data.answer
             // 填空题
             this.result = data.result
             // 主观题
-            this.result = data.subj_result
+            if(this.problemType === 'ShortAnswer') {
+              this.result = data.subj_result
+            }
             this.getScore = data.result_score;
           }
         })
@@ -476,6 +479,10 @@
       }
     }
 
+  }
+
+  .noanswered {
+    padding: 0.333333rem 0;
   }
 
 
