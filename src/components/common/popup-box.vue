@@ -25,7 +25,7 @@
      <div class="popup__paper">
         <!-- 作答链接 -->
         <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="item.pageURL+index">
+          <router-link class="paper-txt f17" :to="item.pageURL+item.index">
             <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
             <p class="paper-name">{{ item.caption }}</p>
            </router-link>
