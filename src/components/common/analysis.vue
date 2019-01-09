@@ -134,9 +134,10 @@
         // 结构中是否有Answer字段
         let type = problem.Type;
         if(type === 'FillBlank' && !problem.Answer) {
+          problem.Answer = '';
 
           problem.Blanks.forEach( (blank) =>{
-            problem.Answer += ' ' +blank.Answers.join('/');
+            problem.Answer += ' ' + blank.Answers.join('/');
           });
 
           console.log(problem.Answer);
@@ -145,9 +146,9 @@
       }
     },
     mounted() {
-      this.problem && this.init(this.problem);
     },
     created() {
+      this.problem && this.init(this.problem);
     }
   }
 </script>

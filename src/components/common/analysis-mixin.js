@@ -35,6 +35,10 @@ let analysisMixin = {
         });
 
         this.problem = card.Problem;
+        // 统一将 Answer 放在Problem下
+        if(card.Answer) {
+          this.problem.Answer = card.Answer;
+        }
 
         console.info(this.problem);
       }
