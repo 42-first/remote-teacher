@@ -21,15 +21,15 @@
             </section>
             <section class="card__text">
               <h4 class="card--title font16 color3">{{item.title}}</h4>
-              <p class="card__desc font12 color-9b">
+              <p class="card__desc font12 ">
                 <span>{{ item.school }}</span>
                 <span>{{ item.author }}</span>
               </p>
             </section>
             <section class="card__buy text-center">
               <div class="front">
-                <p class="card--price font24">¥ {{item.discount_price}}</p>
-                <p class="font12">¥ {{item.price}}</p>
+                <p class="card--price font24">¥ {{item.discount_price|formatPrice}}</p>
+                <p class="card--price2 font12">¥ {{item.price|formatPrice}}</p>
               </div>
               <div class="back">
                 <a class="buy-btn font14" :href="item.buy_link">立即购买</a>
@@ -87,6 +87,15 @@
         request.post = request.get
       }
       this.init()
+    },
+    filters: {
+      formatPrice(price) {
+        if(price) {
+          return parseFloat(price).toFixed(2)
+        } else {
+          return '0.00'
+        }
+      }
     },
     methods: {
       init: function () {
@@ -220,12 +229,17 @@
 
     background: #fff;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 2px;
   }
 
   .item__intro {
     box-sizing: border-box;
     padding: 30px 24px;
     color: #9b9b9b;
+    background: #F5F5F5;
+    box-shadow: none;
+    border: 1px solid #D8D8D8;
+    box-shadow: 0 0 -20px rgba(0,0,0,0.5);
   }
 
   .cover__wrap {
@@ -235,7 +249,9 @@
   }
 
   .card--cover {
+   display: block;
     width: 100%;
+    border-radius: 2px 2px 0 0;
   }
 
   .card__text {
@@ -245,6 +261,10 @@
   .card--title {
     padding-bottom: 5px;
     color: #000;
+  }
+
+  .card__desc {
+    color: #aaa;
   }
 
   .card__buy {
@@ -266,6 +286,10 @@
   .card--price {
     color: #F84F41;
     font-weight: bold;
+  }
+
+  .card--price2 {
+    text-decoration: line-through;
   }
 
   .front,
@@ -304,7 +328,7 @@
 
     .logo--line {
       margin: 0 auto;
-      padding-top: 25px;
+      padding-top: 15px;
       width: 212px;
       border-bottom: 1px solid #D8D8D8;
     }
@@ -316,11 +340,11 @@
       transform: translateX(-50%);
 
       padding: 0 20px;
-      background: #fff;
+      background: #F5F5F5;
     }
     .iconfont {
-      font-size: 46px;
-      color: #9b9b9b;
+      font-size: 34px;
+      color: #c8c8c8;
     }
   }
 
