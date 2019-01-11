@@ -1,68 +1,64 @@
 <template>
-  <div class="back">
-    <banner :type="2"></banner>
-    <div class="detail over">
-      <div class="con-width over market-title">
-        <div class="font26 title">
-          雨课件市场
+  <section class="courseware__page">
+    <!-- 雨课件 banner -->
+    <section class="banner__wrap">
+      <img class="banner--img" src="http://sfe.ykt.io/o_1d0tmhi961p0n13q91bg81336e19.png" alt="雨课堂,雨课件" />
+    </section>
+    <!-- 雨课件列表 -->
+    <section class="courseware__info">
+      <header class="courseware__header" >
+        <h3 class="font24">雨课件市场</h3>
+        <div class="actions font16">
+          <button class="action" type="" @click="goLogin('verification')" >激活</button>
+          <button class="action active" type="" @click="goLogin('index')" >我的雨课件</button>
         </div>
-        <div class="text-right btn-con">
-          <!--<router-link :to="{name: 'verification',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn">激活</router-link>
-          <router-link :to="{name: 'market',query: {date: timestamp()}}" class="inline-block btn-blue font16 text-center btn mine">我的雨课件</router-link>-->
-          <a @click="goLogin('verification')" class="inline-block btn-blue font16 text-center pointer btn">激活</a>
-          <a @click="goLogin('index')" class="inline-block btn-blue font16 text-center btn pointer mine">我的雨课件</a>
-        </div>
-      </div>
-      <ul class="con-width">
-        <li class="over text-center inline-block" v-for="i in list">
-          <div class="img over">
-            <img :src="i.cover"/>
-          </div>
-          <div class="font18 color0 text-left over name">
-            {{i.title}}
-          </div>
-          <div class="font18 color9b text-left author">
-            {{i.school}} {{i.author}}
-          </div>
-          <div class="color4a font20 describe">
-            <!--{{i.introduce}}-->
-          </div>
-          <div class="actions-box">
-            <div class="actions-item">
-              <div class="free font14">免费</div>
-              <a :href="i.example_link" class="download_courseware inline-block font16">下载样章</a>
-            </div>
-            <div class="actions-item">
-              <div class="font20 price">
-                ¥ {{i.discount_price}}
+      </header>
+      <ul class="courseware__list">
+        <li class="item__wrap" v-for="item in list" >
+          <article class="card__item">
+            <section class="cover__wrap">
+              <img class="card--cover" :src="item.cover" :alt="item.title" >
+            </section>
+            <section class="card__text">
+              <h4 class="card--title font16 color3">{{item.title}}</h4>
+              <p class="card__desc font12 color-9b">
+                <span>{{ item.school }}</span>
+                <span>{{ item.author }}</span>
+              </p>
+            </section>
+            <section class="card__buy text-center">
+              <div class="front">
+                <p class="card--price font24">¥ {{item.discount_price}}</p>
+                <p class="font12">¥ {{item.price}}</p>
               </div>
-              <div class="font14 old-price">
-                ¥ {{i.price}}
+              <div class="back">
+                <a class="buy-btn font14" :href="item.buy_link">立即购买</a>
+                <a class="font12 color63" :href="item.example_link">免费下载样章</a>
               </div>
-              <a :href="i.buy_link" class="inline-block font16 buy" target = _blank>立即购买</a>
-            </div>
-          </div>
+            </section>
+          </article>
 
         </li>
-        <li class="inline-block expect">
-          <div>
-            <div class="over text-center img-con">
-              <i class="iconfont icon-logo-book"></i>
-              <div class="font22">
-                更多雨课件，敬请期待……
-              </div>
-            </div>
-            <div class="font12 colora text-left text">
-              <p>雨课堂盼望熟练使用雨课堂，在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系。请联系客服获取更多相关信息。</p>
-              <p>&nbsp;</p>
+        <!-- 联系介绍 -->
+        <li class="item__wrap">
+          <article class="card__item item__intro">
+            <section class="font14 ">
+              <p>雨课堂非常希望熟练使用雨课堂、在各学科领域具有丰富教学经验的老师出品自己的雨课件，以共建共享更加完善的教学方案体系</p>
               <p>请联系客服获取更多相关信息。</p>
-              <p >客服邮箱：<span class="color6">yuketang@xuetangx.com</span></p>
-            </div>
-          </div>
+            </section>
+            <section class="logo__wrap" >
+              <div class="logo--line" ></div>
+              <i class="logo iconfont icon-logo-book"></i>
+            </section>
+            <section class="text-center font16">
+              <p class="">客服邮箱：</p>
+              <p class="blue">yuketang@xuetangx.com</p>
+            </section>
+          </article>
         </li>
       </ul>
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script>
@@ -140,178 +136,192 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss">
+  @import "~@/style/base.css";
   @import "~@/style/market/common";
 
-  .back {
+  button {
+    border: none;
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  .courseware__page {
+    min-height: calc(100vh - 180px);
+    padding-top: 74px;
     background-color: #F5F5F5;
-    margin-top: 60px;
-    .con-width{
-      width: 840px;
-    }
-    .detail {
-      background-color: #F5F5F5;
-      padding: 20px 0 50px 0;
-      .market-title{
-        margin: 0 auto;
-        border-bottom:1px solid #d8d8d8;
-        padding-left: 4px;
-        display: flex;
-        padding-bottom: 10px;
-        .title{
-          width: 300px;
-          padding-top: 10px;
-        }
-        .btn-con{
-          width: 100%;
-          .btn{
-            height: 38px;
-            color:#639EF4;
-            border:1px solid #639EF4;
-            border-radius: 19px;
-            line-height: 38px;
-            margin-top: 6px;
-            text-align: center;
-            width: 90px;
-          }
-          .mine{
-            width: 130px;
-            margin-left: 30px;
-          }
-        }
-      }
-      ul {
-        font-size: 0px;
-        li {
-          width: 380px;
-          height: 424px;
-          background-color: #fff;
-          border: 1px solid #c8c8c8;
-          margin: 20px 34px 0 0;
-          .img {
-            width: 100%;
-            height: 204px;
-            img {
-              width: 100%;
-            }
-          }
-          .name {
-            width: 100%;
-            text-overflow: ellipsis;
-            padding-left: 20px;
-            padding-top: 10px;
-            line-height: 22px;
-            max-height: 55px;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-          }
-          .author {
-            height: 30px;
-            width: 360px;
-            border-bottom: 1px solid #c8c8c8;
-            margin: 0 auto;
-            padding: 0px 0px 38px 10px;
-            line-height: 30px;
-          }
-          .describe {
-            height: 20px;
-            line-height: 20px;
-          }
-          .actions-box {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 44px;
-            align-items: flex-end;
+  }
 
-            .price {
-              height: 30px;
-              line-height: 30px;
-              color: #F5A623;
-            }
-            .old-price{
-              height: 20px;
-              line-height: 20px;
-              color: #9b9b9b;
-              text-decoration: line-through;
-              text-decoration-color: #979797;
-            }
-            a {
-              background-color: #F5A623;
-              color: #fff;
-              width: 128px;
-              height: 38px;
-              border-radius: 19px;
-              line-height: 38px;
-              margin: 10px auto;
-            }
-            .download_courseware {
-              width: 128px;
-              height: 38px;
-              border-radius: 19px;
-              border: 1px solid #639EF4;
-              background: #fff;
-              color: #639EF4;
-              box-sizing: border-box;
-              cursor: pointer;
-            }
-            .download_courseware:visited {
-              background: #639EF4;
-              color: #fff;
-              opacity: .5;
-            }
-            .download_courseware:hover {
-              background: #639EF4;
-              color: #fff;
-            }
-            .download_courseware:active {
-              background: #639EF4;
-              color: #fff;
-              opacity: .5;
-            }
+  .banner__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-            .free {
-              height: 20px;
-              line-height: 20px;
-              color: #9b9b9b;
-            }
-          }
+    height: 396px;
+    background: #fff;
+  }
 
-        }
-        li:nth-child(even){
-          margin-left: 34px;
-          margin-right: 0;
-        }
-        li.expect{
-          background-color: #f8f8f8;
-          .img-con{
-            width: 100%;
-            height: 274px;
-            margin-bottom: 20px;
-            background-color: #B1CEF9;
-            line-height: 274px;
-            position: relative;
-            i.icon-logo-book{
-              font-size: 140px;
-              color: rgba(255,255,255,.3);
-              position: relative;
-            }
-            div{
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              color: #fff;
-              z-index: 5;
-              top:0;
-              left:0;
-            }
-          }
-          .text{
-            padding:0 20px;
-          }
-        }
-      }
+  .courseware__info {
+    margin: 0 auto;
+    padding: 40px 0;
+    width: 960px;
+  }
+
+  .courseware__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 8px;
+    border-bottom: 1px solid #D8D8D8;
+  }
+
+  .action {
+    margin-left: 15px;
+    padding: 5px 30px;
+    color: #639EF4;
+    font-size: 16px;
+
+    cursor: pointer;
+
+    border: 1px solid #639EF4;
+    border-radius: 18px/50%;
+  }
+
+  .action.active {
+    color: #fff;
+    background: #639EF4;
+  }
+
+
+
+
+  .courseware__list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    width: 100%;
+  }
+
+  .item__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px 0 10px;
+    width: 33.33%;
+  }
+
+  .card__item {
+    width: 300px;
+    height: 320px;
+
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .item__intro {
+    box-sizing: border-box;
+    padding: 30px 24px;
+    color: #9b9b9b;
+  }
+
+  .cover__wrap {
+    width: 100%;
+    height: 168px;
+    overflow: hidden;
+  }
+
+  .card--cover {
+    width: 100%;
+  }
+
+  .card__text {
+    padding: 10px 20px;
+  }
+
+  .card--title {
+    padding-bottom: 5px;
+    color: #000;
+  }
+
+  .card__buy {
+    position: relative;
+    padding: 5px 0;
+    height: 90px;
+
+    cursor: pointer;
+
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: all 300ms;
+  }
+
+  .card__item:hover .card__buy {
+     transform: rotateX(180deg);
+  }
+
+  .card--price {
+    color: #F84F41;
+    font-weight: bold;
+  }
+
+  .front,
+  .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    backface-visibility: hidden;
+  }
+
+  .back {
+    transform: rotateX(180deg);
+
+    a {
+      display: block;
     }
   }
+
+  .buy-btn {
+    margin: 15px auto 5px;
+    width: 150px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    color: #fff;
+    background: #F84F41;
+    border-radius: 16px/50%;
+  }
+
+
+  .logo__wrap {
+    position: relative;
+    padding: 50px 0 35px;
+    text-align: center;
+
+    .logo--line {
+      margin: 0 auto;
+      padding-top: 25px;
+      width: 212px;
+      border-bottom: 1px solid #D8D8D8;
+    }
+
+    .logo {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      padding: 0 20px;
+      background: #fff;
+    }
+    .iconfont {
+      font-size: 46px;
+      color: #9b9b9b;
+    }
+  }
+
 </style>
