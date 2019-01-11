@@ -2,7 +2,7 @@
   <section class="courseware__page">
     <!-- 雨课件 banner -->
     <section class="banner__wrap">
-      <img class="banner--img" src="http://sfe.ykt.io/o_1d0tmhi961p0n13q91bg81336e19.png" alt="雨课堂,雨课件" />
+      <!-- <img class="banner--img" src="http://sfe.ykt.io/o_1d0tmhi961p0n13q91bg81336e19.png" alt="雨课堂,雨课件" /> -->
     </section>
     <!-- 雨课件列表 -->
     <section class="courseware__info">
@@ -162,24 +162,34 @@
   }
 
   .banner__wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    width: 100%;
     height: 396px;
-    background: #fff;
+
+    background-color: #fff;
+    background-image: url(http://sfe.ykt.io/o_1d0u41np22kr57usaj99t1p09.png);
+    background-attachment: initial;
+    background-size: auto 100%;
+    background-origin: initial;
+    background-clip: initial;
+    background-position: center top;
+    background-repeat: no-repeat;
   }
 
   .courseware__info {
     margin: 0 auto;
     padding: 40px 0;
-    width: 960px;
+    width: 990px;
   }
 
   .courseware__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    margin: 0 15px;
 
     padding-bottom: 8px;
     border-bottom: 1px solid #D8D8D8;
@@ -197,7 +207,7 @@
     border-radius: 18px/50%;
   }
 
-  .action.active {
+  .action:hover {
     color: #fff;
     background: #639EF4;
   }
@@ -232,15 +242,23 @@
     border-radius: 2px;
   }
 
+  .card__item:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
   .item__intro {
     box-sizing: border-box;
     padding: 30px 24px;
     color: #9b9b9b;
     background: #F5F5F5;
-    box-shadow: none;
     border: 1px solid #D8D8D8;
-    box-shadow: 0 0 -20px rgba(0,0,0,0.5);
   }
+
+  .item__intro,
+  .item__intro:hover {
+    box-shadow: 0 0px 20px rgba(0,0,0,0.05) inset;
+  }
+
 
   .cover__wrap {
     width: 100%;
@@ -280,7 +298,13 @@
   }
 
   .card__item:hover .card__buy {
-     transform: rotateX(180deg);
+    // transform: rotateX(180deg);
+    .front {
+      display: none;
+    }
+    .back {
+      display: block;
+    }
   }
 
   .card--price {
@@ -298,11 +322,16 @@
     width: 100%;
     height: 100%;
 
-    backface-visibility: hidden;
+    // backface-visibility: hidden;
+  }
+
+  .front {
+    display: block;
   }
 
   .back {
-    transform: rotateX(180deg);
+    // transform: rotateX(180deg);
+    display: none;
 
     a {
       display: block;
