@@ -70,6 +70,9 @@ if (process.env.NODE_ENV === 'production') {
             // 白板收藏不懂
             'SET_BOARD_TAG': '/v/lesson/file_sharing/sharing_file_click_tag',
 
+            // 作答结果
+            'GET_PROBLEM_RESULT': '/v/lesson/get_lesson_problem_remark/',
+
         },
 
         /*------------------*\
@@ -145,6 +148,9 @@ if (process.env.NODE_ENV === 'production') {
 
             // 白板收藏不懂
             'GET_BOARD_TAG': 'http://apimock.xuetangx.com/mock/115/file_sharing/sharing_file_click_tag',
+
+            // 作答结果
+            'GET_PROBLEM_RESULT': 'http://apimock.xuetangx.com/mock/115/v/lesson/get_lesson_problem_remark/',
         },
 
         /*------------------*\
