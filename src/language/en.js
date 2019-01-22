@@ -173,6 +173,13 @@ let pages = {
   "infonumbereg": "Please write down your Student ID",
   "infotip": 'You can change the information at any time in "My Homepage"',
 
+  // 答案解析
+  "answerkey": "Answer Key",
+  'viewanswer': 'Answer Key',
+  'answerpublished': 'The Answer Key has been sent',
+  'sendtostus': 'Send to the class',
+  'hasbeensend': 'Has been sent',
+
 
   // 遥控器
   "classsignal": "Class Code",

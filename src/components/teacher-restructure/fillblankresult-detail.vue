@@ -12,9 +12,9 @@
           <v-touch v-for="(value, key) in answer" :key="key" :class="['tab-item', activeTab == key ? 'active f20' : 'f18']" v-on:tap="toggleTab(key)">
             填空{{key}}
           </v-touch>
-          
+
         </header>
-        
+
       </div> -->
       <section class="correct-box">
         <header class="header f18"><!-- 正确答案 -->{{ $t('correctanswer') }}</header>
@@ -28,6 +28,9 @@
 
         </ul>
       </section>
+
+      <!-- 有解析显示解析入口 -->
+      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 
       <section class="choice-list">
         <!-- 正确统计 -->
@@ -91,6 +94,9 @@
         <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
       </v-touch>
     </template>
+
+    <!-- 解析弹层 -->
+    <analysis :problem.sync="problem" :hide-analysis="hideAnalysis" v-if="visibleAnalysis"></analysis>
   </div>
 </template>
 
@@ -108,6 +114,7 @@
 
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
+  import analysismixin from '@/components/common/analysis-mixin'
 
   export default {
     name: 'FillblankresultDetail',
@@ -122,6 +129,10 @@
         activeTab: -1, // 全部 填空1 ...
       }
     },
+    components: {
+      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
+    },
+    mixins: [ analysismixin ],
     created() {
       this.init()
     },
@@ -151,6 +162,8 @@
 
         self.problemid = +self.$route.params.problemid
         self.refreshProblemResultDetail()
+
+        this.getProlemById(this.problemid);
       },
       /**
        * 展示隐藏答案选项人名单
@@ -198,7 +211,8 @@
         let self = this
         // console.log(type);
         self.activeTab = type
-      }
+      },
+
     }
   }
 </script>
@@ -292,7 +306,7 @@
           border-radius: 0.1067rem 0 0 0.1067rem;
           text-align: center;
           color: #5096F5;
-          
+
           .wenzi {
             position: relative;
             top: 50%;
@@ -432,5 +446,18 @@
     .abs {
       position: absolute;
     }
+  }
+
+  .analysis--btn {
+    margin: 0.533333rem auto;
+    width: 7.733333rem;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
+    color: #5096F5;
+    cursor: pointer;
+    border: 0.026667rem solid #639EF4;
+    border-radius: 0.106667rem;
+
   }
 </style>
