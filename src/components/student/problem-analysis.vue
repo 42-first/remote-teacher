@@ -214,16 +214,12 @@
           if(res && res.data) {
             let data = res.data;
 
-            console.log(data)
-
-            // 问题类型
-            data.problem_type
             // 客观题
             data.answer && (this.oProblem.Answer = data.answer);
             // 填空题
             this.result = data.result
             // 主观题
-            if(this.problemType === 'ShortAnswer') {
+            if(this.problemType === 'ShortAnswer' || this.problemType === 'FillBlank') {
               this.result = data.subj_result
             }
             this.getScore = data.result_score;
