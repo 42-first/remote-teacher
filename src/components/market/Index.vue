@@ -93,7 +93,9 @@
   .back {
     min-width: 960px;
     background-color: #fff;
-    margin-top: 60px;
+    // margin-top: 60px;
+    min-height: calc(100vh - 180px);
+    padding-top: 74px;
     .no-courseware{
       height: 208px;
       background-color: #f8f8f8;
