@@ -31,7 +31,7 @@
       <ul class="blanks__options" >
         <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
           <div class="blank__order">{{ index + 1 }}</div>
-          <p class="blank__input f17" v-if="result">{{ result[index + 1] }}</p>
+          <p class="blank__input f17" v-if="result && result[index + 1]">{{ result[index + 1] }}</p>
           <p class="blank__input f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</p>
         </li>
        </ul>
