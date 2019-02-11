@@ -133,12 +133,15 @@
       init(problem) {
         // 结构中是否有Answer字段
         let type = problem.Type;
+        let answers = [];
         if(type === 'FillBlank' && !problem.Answer) {
           problem.Answer = '';
 
           problem.Blanks.forEach( (blank) =>{
-            problem.Answer += ' ' + blank.Answers.join('/');
+            answers.push(blank.Answers.join('/'));
+            // problem.Answer += ' ' + blank.Answers.join('/');
           });
+          problem.Answer = answers.join(';');
 
           console.log(problem.Answer);
           this.problem = problem;
