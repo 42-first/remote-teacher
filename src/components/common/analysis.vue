@@ -69,6 +69,15 @@
     height: 100%;
   }
 </style>
+<style lang="scss">
+  .paragragh__line {
+    white-space: nowrap;
+    p {
+      display: inline-block;
+    }
+  }
+</style>
+
 <script>
     export default {
     props: {
@@ -115,12 +124,14 @@
         let px2rem = window.lib && window.lib['flexible'] && window.lib['flexible']['px2rem'];
         if(remarkRich) {
           let winWidth = window.innerWidth - 80;
-          let width = remarkRich.Width*window.dpr;
-          let height = remarkRich.Height*window.dpr;
+          // let width = remarkRich.Width*window.dpr;
+          // let height = remarkRich.Height*window.dpr;
+          let width = remarkRich.Width;
+          let height = remarkRich.Height;
           let scaleRate = winWidth/width;
-          height = height * scaleRate;
-          // sCss = `width: ${width}px; height: ${height}px; transform: scale(${scaleRate});`;
-          sCss = `width: ${px2rem(width)}rem; height: ${px2rem(height)}rem; transform: scale(${scaleRate});`;
+          // height = height * scaleRate;
+          sCss = `width: ${width}px; height: ${height}px; transform: scale(${scaleRate});`;
+          // sCss = `width: ${px2rem(width)}rem; height: ${px2rem(height)}rem; transform: scale(${scaleRate});`;
         }
 
         return sCss;
