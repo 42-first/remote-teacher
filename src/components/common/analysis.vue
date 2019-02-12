@@ -123,7 +123,7 @@
         let sCss = '';
         let px2rem = window.lib && window.lib['flexible'] && window.lib['flexible']['px2rem'];
         if(remarkRich) {
-          let winWidth = window.innerWidth - 80;
+          let winWidth = window.innerWidth - 100;
           // let width = remarkRich.Width*window.dpr;
           // let height = remarkRich.Height*window.dpr;
           let width = remarkRich.Width;
