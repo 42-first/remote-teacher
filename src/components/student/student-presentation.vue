@@ -77,7 +77,7 @@
 
     <!-- 习题试卷弹框 -->
     <section class="student__msgbox">
-      <div class="" v-for="(item, index) in msgBoxs">
+      <div class="" v-for="(item, index) in msgBoxs" :key="index">
         <Popup-Component :item="item" :index="index" :lessonid="lessonID" ></Popup-Component>
       </div>
     </section>
@@ -145,7 +145,7 @@
     </section>
 
     <router-view></router-view>
-    <identity :type="pro_perm_info.no_perm_type" :is_can_audit="pro_perm_info.is_can_audit" :university_name="pro_perm_info.university_name" :url="pro_perm_info.bind_number_url" v-if="pro_perm_info && pro_perm_info.no_perm_type"></identity>
+    <auditor-tips :info="pro_perm_info" v-if="pro_perm_info && pro_perm_info.no_perm_type"></auditor-tips>
 
     <!-- 填写个人信息 -->
     <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>
@@ -314,7 +314,7 @@
       information: () => import('@/components/common/information.vue'),
       guide: () => import('@/components/common/guide.vue'),
       LangComponent,
-      identity: () => import('@/components/student/identityBinding.vue'),
+      auditorTips: () => import('@/components/student/auditor_tips.vue'),
       notice: () => import('@/components/common/service-notice.vue'),
       danmuLive: () => import('@/components/common/danmu-live.vue'),
     },
