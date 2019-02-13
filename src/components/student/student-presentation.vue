@@ -145,7 +145,7 @@
     </section>
 
     <router-view></router-view>
-    <auditor-tips :info="pro_perm_info" v-if="pro_perm_info && pro_perm_info.no_perm_type"></auditor-tips>
+    <auditor-tips v-if="pro_perm_info && pro_perm_info.is_can_audit"></auditor-tips>
 
     <!-- 填写个人信息 -->
     <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>

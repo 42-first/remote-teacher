@@ -89,12 +89,6 @@
                 miniprogram: false
             }
         },
-        props:{
-            info: {
-                type: Object,
-                default: () => {}
-            }
-        },
         created(){
             // 检测是否在小程序中
             typeof wx !== 'undefined' && wx.miniProgram.getEnv((res)=>{
@@ -104,7 +98,17 @@
         },
         methods: {
             init() {
-
+                let today = this.todayTime()
+                if (localStorage) {
+                    // 缓存 auditToday ，如果auditToday 和今天的getTime() 相等则认为已经展示过 旁听生提示
+                    let auditToday = localStorage.getItem('auditToday')
+                    this.showMasking = auditToday !== today
+                    localStorage.setItem('auditToday', today)
+                }
+            },
+            todayTime(){
+                let date = new Date()
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() + ''
             }
         }
     }
