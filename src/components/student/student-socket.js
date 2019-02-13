@@ -227,6 +227,11 @@ var mixin = {
             this.addMessage({ type: 1, message: item['title'], event: item });
             // 产品确认 幻灯片切换不处理弹幕状态
             // this.danmuStatus = false;
+            // 结束放映 老版本大屏是无法展示弹幕 所以这里需要根据版本处理下
+            if(this.version < 1.3) {
+              this.danmuStatus = false;
+            }
+
             break
 
           // ppt更新
@@ -309,7 +314,7 @@ var mixin = {
           case 'sendpost':
             item = msg['post'];
 
-            this.addSubmission({ type: 6, postid: item.postid, time: item.dt, event: item });
+            this.addSubmission({ type: 6, postid: item.postid, anon: item.anon, time: item.dt, event: item });
 
             break
 
@@ -317,7 +322,7 @@ var mixin = {
           case 'sendsproblem':
             item = msg['problem'];
 
-            this.addSubjective({ type: 7, spid: item.spid, time: item.dt, event: item });
+            this.addSubjective({ type: 7, spid: item.spid, anon: item.anon, time: item.dt, event: item });
 
             break
 
@@ -401,7 +406,7 @@ var mixin = {
 
           // 接收弹幕
           case 'newdanmu':
-            this.receiveDanmu(msg);
+            this.isLive && this.receiveDanmu(msg);
 
             break;
 

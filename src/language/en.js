@@ -88,7 +88,8 @@ let pages = {
   "sharesubjective" : "Hi, the instructor posts an answer.",
   "minilaunchpush" : "Rain Classroom Mini Program has been released！",
   "entermini" : "Press and hold MiniProgram Code to start experience.",
-  "anonymous " : "(Anonymous)",
+  "anonymous" : "(Anonymous)",
+  "anonymous2" : "Anonymous",
   "timeout" : "Time Out",
   "timeoutnosubmit" : "Time out, you can't sumbit.",
   "neterrorpush" : "Network unavailable, please check the system.",
@@ -157,19 +158,19 @@ let pages = {
 
   // 个人信息完善
   "merealname": "Name",
-  "nameeg": "e.g. Li Ming",
+  "nameeg": "Enter your name",
   "merole": "Role",
   "meteacher": "Instructor",
   "meothers": "Others",
   "student": "Student",
   "meschoolbelongs": "School",
-  "schooleg": "e.g. Tsinghua University",
+  "schooleg": "Enter your school",
   "mestudentid": "Student ID",
   "infocosttime": "Fill in your personal information in 30sec",
   "infogood": "",
   "infoorg": "Organ.",
   "infoorgtip": "Not required",
-  "infonumbereg": "eg.123456",
+  "infonumbereg": "Please write down your Student ID",
   "infotip": 'You can change the information at any time in "My Homepage"',
 
 
