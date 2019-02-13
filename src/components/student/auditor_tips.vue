@@ -79,15 +79,10 @@
         name: "auditorTips",
         data(){
             return {
-                showMasking: true,
-                miniprogram: false
+                showMasking: true
             }
         },
         created(){
-            // 检测是否在小程序中
-            typeof wx !== 'undefined' && wx.miniProgram.getEnv((res)=>{
-                this.miniprogram = res.miniprogram
-            })
             this.init()
         },
         methods: {
