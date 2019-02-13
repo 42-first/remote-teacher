@@ -23,15 +23,8 @@
         </div>
     </div>
 </template>
-<style lang="sass" scoped>
-    @import "~style/common";
-    @function px2rem($px) {
-        $rem: 75px;
-        @return ($px/$rem) + rem;
-    }
-    *{
-        box-sizing: border-box;
-    }
+<style lang="scss" scoped>
+    @import "~@/style/common";
     .masking{
         position: fixed;
         top: 0;
@@ -49,12 +42,13 @@
             .back-header{
                 width: 100%;
                 height: px2rem(268px);
-                background-image: url(~images/binding.min.png);
+                background-image: url(~images/student/binding.min.png);
                 background-size: 100%;
                 background-position: center center;
             }
             .tips-wrapper{
                 padding: px2rem(60px);
+                box-sizing: border-box;
                 .title{
                     line-height: px2rem(48px);
                     margin-bottom: px2rem(40px);
@@ -74,7 +68,7 @@
                     height: px2rem(88px);
                     line-height: px2rem(88px);
                     border-radius: px2rem(8px);
-                    margin: px2rem(10px); auto;
+                    margin: px2rem(10px) auto;
                 }
             }
         }
