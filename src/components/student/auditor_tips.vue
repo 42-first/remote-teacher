@@ -69,6 +69,7 @@
                     line-height: px2rem(88px);
                     border-radius: px2rem(8px);
                     margin: px2rem(10px) auto;
+                    font-size: px2rem(34px);
                 }
             }
         }
