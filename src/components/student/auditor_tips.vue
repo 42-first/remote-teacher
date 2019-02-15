@@ -24,7 +24,7 @@
     </div>
 </template>
 <style lang="scss" scoped>
-    @import "~@/style/common";
+    @import "~@/style/common_rem";
     .masking{
         position: fixed;
         top: 0;
