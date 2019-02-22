@@ -101,7 +101,7 @@ let boardMixin = {
           // draw a line segment from the last coords
           // to the current coords
           let point2 = coords[index + 1];
-          context.lineWidth = point2.w;
+          context.lineWidth = point2.w || 1;
           // context.lineWidth = point.w;
           context.beginPath();
           context.moveTo(point.x, point.y);
@@ -141,7 +141,7 @@ let boardMixin = {
         // 方案一 正常划线
         let start = coords[0];
         // 线的宽度
-        context.lineWidth = start.w;
+        // context.lineWidth = start.w;
 
         context.beginPath();
         // 先移动到第一个点
@@ -149,14 +149,14 @@ let boardMixin = {
         // 然后lineTo绘制线
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
-          context.lineWidth = point.w;
+          context.lineWidth = point.w || 1;
           context.lineTo(point.x, point.y);
         }
 
         // 描边
         context.stroke();
         // 状态继续存储 方便后面回退
-        context.save();
+        // context.save();
       }
 
     },
@@ -180,7 +180,7 @@ let boardMixin = {
         // 方案一 正常划线
         let start = coords[0];
         // 线的宽度
-        context.lineWidth = start.w;
+        // context.lineWidth = start.w;
 
         context.beginPath();
         // 先移动到第一个点
@@ -195,7 +195,7 @@ let boardMixin = {
         }
 
         // 状态继续存储 方便后面回退
-        context.save();
+        // context.save();
       }
     },
 
