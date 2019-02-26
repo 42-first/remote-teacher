@@ -8,7 +8,7 @@
             <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
           </p>
           <div class="footer-cr">
-            <p>©2018 清华大学&学堂在线</p>
+            <p>©2019 清华大学&学堂在线</p>
             <p>京ICP证140571号 | 京公网安备 11010802017721</p>
           </div>
           <!-- <p>京公网安备 11010802017721</p> -->
@@ -27,12 +27,7 @@
             </div>
             <div class="link-us-qq fr">
               <div class="link-us-qqgroup">
-                <p>QQ:777287705（推荐）</p>
-                <p>QQ:661757223（已满）</p>
-                <p>QQ:577760819（已满）</p>
-                <p>QQ:487470016（已满）</p>
-                <p>QQ:470686527（已满）</p>
-                <p>QQ:314940327（已满）</p>
+                <p>QQ:529448617（用户八群）</p>
                 <p class="remark">雨课堂官方QQ群</p>
               </div>
               <img class="link-img" src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
@@ -203,7 +198,7 @@
   .link-us-qqgroup {
     top: initial;
     bottom: 48px;
-    width: 213px;
+    width: 230px;
     box-sizing: border-box;
     padding: 20px 10px;
     margin-left: -105px;

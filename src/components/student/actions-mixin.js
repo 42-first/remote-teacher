@@ -99,6 +99,12 @@ var actionsMixin = {
 
               break;
 
+            // 问题解析
+            case 'remark':
+              this.addAnalysis({ type: 13, remark: item, time: item['dt'], event: item, isFetch: isFetch });
+
+              break;
+
             default: break;
           }
         });
@@ -439,6 +445,36 @@ var actionsMixin = {
 
       // 之前有动画隐藏蒙版
       !hasEvent && this.hideAnimationMask();
+    },
+
+    /**
+     * @method 分享答案解析
+     * { type: 13, remark, event: item }
+     */
+    addAnalysis(data) {
+      // 找到对应问题
+      let remark = data.remark;
+      let slideData = this.problemMap.get(remark.prob);
+
+      if(slideData) {
+        // 组织解析数据
+        let pageURL = `/${this.lessonID}/analysis/`;
+        Object.assign(data, {
+          pageIndex: slideData.Index,
+          problemID: slideData['Problem']['ProblemID'],
+          pageURL,
+          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
+        })
+
+        // 是否含有重复数据
+        let hasEvent = this.cards.find((item) => {
+          return item.type === 13 && item.problemID === data.problemID && data.isFetch;
+        })
+
+        !hasEvent && this.cards.push(data);
+        this.allEvents.push(data);
+      }
+
     },
 
     /*
@@ -837,7 +873,9 @@ var actionsMixin = {
           }
 
           // 更新最新时间
-          cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+          if(data.dt > 0) {
+            cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+          }
         }
 
       }

@@ -7,7 +7,7 @@
       </a>
       <a href="/web" target="_blank" class="right loginweb">登录网页版</a>
       <a href="/help" class="right">帮助中心</a>
-      <a href="/training/index" class="right">培训服务</a> 
+      <a href="/training/index" class="right">培训服务</a>
       <a href="/lesson/market/courseware" id="rainMarket" class="right active">雨课件</a>
       <a href="/presenter" class="right">翻页笔</a>
       <a href="/download" class="right">下载</a>
@@ -59,6 +59,7 @@
   .nav .box {
     position: relative;
     max-width: 1170px;
+    min-width: 1170px;
     margin: 0 auto;
     height: 74px;
     width: 100%;
