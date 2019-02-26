@@ -1,0 +1,162 @@
+@function px2rem($px) {
+    $rem: 75px;
+    @return ($px/$rem) + rem;
+}
+.color4a{
+    color: #4a4a4a;
+}
+.color3{
+    color: #333;
+}
+.color63{
+    color: #639ef4;
+}
+.color-f{
+    color: #fff;
+}
+.color6{
+    color: #666;
+}
+.color-a{
+    color: #aaa;
+}
+.color-9b{
+    color:#9b9b9b;
+}
+.color-c8{
+    color: #c8c8c8;
+}
+.color-e6{
+    color: #E64340;
+}
+.color-fb{
+    color: #FB4E3A;
+}
+.font10{
+    font-size: px2rem(20px);
+}
+.font11{
+    font-size: px2rem(22px);
+}
+.font12{
+    font-size: px2rem(24px);
+}
+.font14{
+    font-size: px2rem(28px);
+}
+.font15{
+    font-size: px2rem(30px);
+}
+.font16{
+    font-size: px2rem(32px);
+}
+.font17{
+    font-size: px2rem(34px);
+}
+.font18{
+    font-size: px2rem(36px);
+}
+.font20{
+    font-size: px2rem(40px);
+}
+.font22{
+    font-size: px2rem(44px);
+}
+.font24{
+    font-size: px2rem(48px);
+}
+.font30{
+    font-size: px2rem(60px);
+}
+.font32{
+    font-size: px2rem(64px);
+}
+.font50{
+    font-size: px2rem(100px);
+}
+.font60{
+    font-size: px2rem(120px);
+}
+.w100{
+    width: 100%;
+}
+.radius50{
+    border-radius: 50%;
+}
+.font-weight-400{
+    font-weight: 400;
+}
+.font-weight-500{
+    font-weight: 500;
+}
+.font-weight-600{
+    font-weight: 600;
+}
+.font-weight-700{
+    font-weight: 700;
+}
+.font-weight-900{
+    font-weight: 900;
+}
+.font-weight-bold{
+    font-weight: bold;
+}
+.f-right{
+    float: right;
+    vertical-align: middle;
+}
+.f-left{
+    float: left;
+    vertical-align: middle;
+}
+.top10{
+    margin-top: px2rem(20px);
+}
+.top30{
+    margin-top: px2rem(60px);
+}
+.w100{
+    width: 100%;
+}
+.back-f{
+    background-color: #fff;
+}
+.clear-fix{
+    clear: both;
+    overflow: hidden;
+}
+.pointer{
+    cursor: pointer;
+}
+.inline-block{
+    display: inline-block;
+}
+.hide{
+    display: none !important;
+}
+.h20{
+    height: px2rem(40px);
+}
+input{
+    outline: none;
+}
+.text-center{
+    text-align: center
+}
+.text-right{
+    text-align: right;
+}
+.text-left{
+    text-align: left;
+}
+.border-box{
+    box-sizing: border-box;
+}
+.text-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.ver-middle{
+    vertical-align: middle;
+}

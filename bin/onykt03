@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+var process = require('child_process');
+var staticPath = __dirname.replace('bin', 'dist/');
+// ykt03:/home/node/fe/rainvue/rainvue/static';
+var order = 'rsync -avz '+ staticPath +' ykt03:/home/node/fe/lesson/remote-teacher/dist';
+process.exec(order,
+  function (error, stdout, stderr) {
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
+
+
