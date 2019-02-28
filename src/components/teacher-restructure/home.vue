@@ -868,8 +868,9 @@
 					top: 50%;
 					right: -1px;
 					transform: translateY(-50%);
-					border: 1px solid rgba(255,255,255,.8);
+					border: 1px solid #639ef4;
 					padding: 0 px2rem(10px);
+					z-index: 11;
 				}
       }
     }
@@ -908,7 +909,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10;
+    z-index: 101;
   }
 
   .rc-mask {
@@ -919,6 +920,7 @@
     right: 0;
     background: rgba(0,0,0,0.9);
     overflow: auto;
+		z-index: 101;
 
     .mask-content {
       position: absolute;
