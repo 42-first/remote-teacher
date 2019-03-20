@@ -100,7 +100,9 @@ var mixin = {
             'role': 'student',
             'auth': self.userAuth,
             'lessonid': self.lessonID,
-            'presentation': self.presentationID
+            'presentation': self.presentationID,
+            // 白板兼容老数据
+            'ver': 1
           }))
 
           // 记录socket打开
