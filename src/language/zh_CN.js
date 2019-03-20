@@ -404,6 +404,34 @@ let pages = {
   "showall": "全文",
   "foldall": "收起",
 
+  // 给学生增加备注需求增加
+  behavior: {
+    "dfygdd": "得分由高到低",
+    "dfyddg": "得分由低到高",
+    "qdsjpx": "签到时间排序",
+    "dyzgtwpgs": "当有主观题未批改时，此排名可能不是最终排名",
+    "bonuspoint": "课堂加分",
+    "addpoints": "+{count}分",
+    "howtoaddpoints": "如何加分？",
+    "backtoclass": "继续上课",
+    "remarks": "加备注",
+    "entername": "输入学生姓名",
+    "points": "分",
+    "changethestate1": "修改为已签到",
+    "changethestate2": "修改为未签到",
+    "nobonuspoint": "暂无加分",
+    "tag": "标签",
+    "save": "保存",
+    "edittag": "编辑标签",
+    "addtag": "添加标签",
+    "afterclasstips": "此备注课下可在课后小结中查看",
+    "entercontent": "请输入标签内容",
+    "noquizzes": "本节课没有发布习题",
+    "noeligiblestudents": "没有符合的学生"
+  },
+  
+
+
   // 引导页
   guide: {
     "welcome": "欢迎来到雨课堂",

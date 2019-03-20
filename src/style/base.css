@@ -141,6 +141,16 @@ textarea { outline: none; resize: none; }
   font-size: 54px;
 }
 
+[data-dpr="1"] .f19 {
+  font-size: 19px;
+}
+[data-dpr="2"] .f19 {
+    font-size: 38px;
+}
+[data-dpr="3"] .f19 {
+  font-size: 57px;
+}
+
 [data-dpr="1"] .f20 {
   font-size: 20px;
 }

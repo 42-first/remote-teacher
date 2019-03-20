@@ -2,7 +2,10 @@
 <template>
 	<div class="random-roll-box">
     <slot name="ykt-msg"></slot>
-
+    <div class="returnLesson f18" v-if="calledlist.length || nowchosen.name" @click="returnLesson">
+      <!-- 继续上课 -->{{$t('behavior.backtoclass')}}
+      <i class="iconfont icon-dakai f16"></i>
+    </div>
     <div class="upper">
       <div class="desc f24" v-show="step === 0" v-html="$t('attendingno', {attendingno: signInCount})">
       </div>
@@ -23,15 +26,27 @@
       <div v-show="step !== 1 && nowchosen.sid" class="now ellipsis f24">
         {{nowchosen.name}}<br>
         {{nowchosen.sid}}
+        <div class="addRemark" @click="goStudentDetail(nowchosen.uid)">
+          <i class="iconfont icon-bianji f24"></i>
+          <span class="f12"><!-- 加备注 -->{{$t('behavior.remarks')}}</span>
+        </div>
       </div>
       <div v-show="step !== 1 && !nowchosen.sid" class="now single ellipsis f24">
         {{nowchosen.name}}
+        <div class="addRemark" v-if="step !== 0" @click="goStudentDetail(nowchosen.uid)">
+          <i class="iconfont icon-bianji f24"></i>
+          <span class="f12"><!-- 加备注 -->{{$t('behavior.remarks')}}</span>
+        </div>
       </div>
       <div v-show="step === 1" class="now ellipsis f24"></div>
+      <div class="gap"></div>
       <ul class="list allowscrollcallback">
-        <li class="f16" v-for="item in calledlist">
+        <li class="f16" v-for="(item,index) in calledlist" :class="[selectStudentIndex === index ? 'active' : '', item.sid ? '' : 'center']" @click="chooseThisStudent(index)">
           <div class="left ellipsis">{{item.name}}</div>
-          <div class="right ellipsis">{{item.sid}}</div>
+          <div v-if="item.sid" class="right ellipsis">{{item.sid}}</div>
+          <div class="addRemark2" v-if="selectStudentIndex === index" @click="goStudentDetail(item.uid)">
+            <i class="iconfont icon-bianji f20"></i>
+          </div>
         </li>
       </ul>
     </div>
@@ -53,8 +68,10 @@
         isNostuhintHidden: true,  // 当前没有学生可以点名的提示文案
         nowchosen: {
           name: '',
-          num: ''
-        }
+          num: '',
+          uid: ''
+        },
+        selectStudentIndex: null
       }
     },
     computed: {
@@ -73,6 +90,7 @@
       },
       ...mapGetters([
         'lessonid',
+        'classroomid',
         'socket',
       ])
     },
@@ -123,7 +141,8 @@
           self.step = 2
           self.nowchosen = {
             name: msg.name,
-            sid: msg.sid
+            sid: msg.sid,
+            uid: msg.uid
           }
         })
       },
@@ -186,12 +205,29 @@
         if (self.nowchosen.name) {
           self.calledlist.unshift({
             name: self.nowchosen.name,
-            sid: self.nowchosen.sid
+            sid: self.nowchosen.sid,
+            uid: self.nowchosen.uid
           })
 
-          self.nowchosen = {name: '', sid: ''}
+          self.nowchosen = {name: '', sid: '', uid: ''}
         }
       },
+      returnLesson(){
+        this.$router.back()
+      },
+      goStudentDetail(id){
+        this.$router.push({
+          name: 'stuexpression',
+					params: {
+						'classroomid': this.classroomid,
+						'lessonid': this.lessonid,
+						'userid': id
+					}
+        })
+      },
+      chooseThisStudent(index){
+        this.selectStudentIndex = index
+      }
     }
   }
 </script>
@@ -210,7 +246,12 @@
     color: $white;
     text-align: center;
     overflow: hidden;
-
+    .returnLesson {
+      position: absolute;
+      top: 0.53333333rem;
+      right: 0.53333333rem;
+      color: #639EF4;
+    }
     .upper {
       .desc {
         padding-top: 2.346667rem;
@@ -251,22 +292,59 @@
       .now {
         height: 2.0rem;
         line-height: 1.0rem;
+        position: relative;
+        .addRemark {
+          position: absolute;
+          right: 0.4rem;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 1.12rem;
+          display: flex;
+          flex-direction: column;
+          line-height: 0.44rem;
+          .iconfont {
+            line-height: 0.64rem;
+            margin-bottom: 0.04rem;
+          }
+        }
       }
       .single {
         line-height: 2.0rem;
       }
-
+      .gap {
+        margin: 0 0.4rem;
+        height: 1px;
+        background: #496596;
+      }
       .list {
         flex: 1;
-        margin: 0 0.6rem;
         box-sizing: border-box;
         overflow: scroll;
-        border-top: 1px solid #496596;
 
         li {
+          padding: 0.26666667rem;
           display: flex;
-          margin: 0.4rem 0;
-          color: $blue;
+          color: #aaa;
+          position: relative;
+
+          &.center {
+            .left {
+              text-align: center;
+              margin-right: 0;
+            }
+          }
+
+          &.active {
+            background: rgba(255,255,255,.1);
+            // padding: 0.13333333rem 0;
+          }
+          .addRemark2 {
+            position: absolute;
+            right: 0.4rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+          }
 
           .left {
             flex: 1;

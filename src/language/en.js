@@ -403,6 +403,31 @@ let pages = {
   "showall": "Full text",
   "foldall": "fold",
 
+  // 给学生增加备注需求增加
+  behavior: {
+    "dfygdd": "Score (Descending)",
+    "dfyddg": "Score (Ascending)",
+    "qdsjpx": "Sign-In Time (Ascending)",
+    "dyzgtwpgs": "The ranking may not be the final version if open questions have not been revised.",
+    "bonuspoint": "Bonus Point",
+    "addpoints": "+{count} Point",
+    "howtoaddpoints": "How to add Bonus Point?",
+    "backtoclass": "Back to Class",
+    "remarks": "Remarks",
+    "entername": "Enter student's name",
+    "points": "Point",
+    "changethestate1": "Change the State",
+    "changethestate2": "Change the State",
+    "nobonuspoint": "No Bonus Point",
+    "tag": "Tag",
+    "save": "Save",
+    "edittag": "Edit Tag",
+    "addtag": "Add tag",
+    "afterclasstips": "You can find this in your Class Report",
+    "entercontent": "Please enter the content",
+    "noquizzes": "No quizzes in this class",
+    "noeligiblestudents": "No Eligible Students"
+  },
   // 引导页
   guide: {
     "welcome": "Welcome to RainClassroom",
