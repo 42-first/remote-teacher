@@ -9,7 +9,7 @@
 			</div>
 			<span class="cancel f16 color6" @click="goback"><!-- 取消 -->{{$t('cancel')}}</span>
 		</div>
-		<template v-if="search">
+		<template v-if="search && searched">
 			<template v-if="studentList.length">
 				<ul class="studentList">
 					<template v-for="item in studentList">
@@ -65,7 +65,8 @@
 				lessonid: '',
 				classroomid: -1,
 				search: '',
-				studentList: []
+				studentList: [],
+				searched: false
 	    }
 	  },
 	  computed: {
@@ -88,6 +89,8 @@
 			},
 			handleDelete(){
 				this.search = ''
+				this.searched = false
+				this.studentList = []
 			},
 			goback(){
 				window.history.back();
@@ -104,7 +107,12 @@
 					if(res.success){
 						res.data.forEach((item,index) => {
 							let result = []
-							let nameArr = item.profile.name.split('')
+							let nameArr = []
+							if (item.profile.name.match(/\ud83c[\udf00-\udfff]|\ud83d[\udc00-\ude4f]|\ud83d[\ude80-\udeff]/g) != null){
+								nameArr = [...item.profile.name]
+							}else {
+								nameArr = item.profile.name.split('')
+							}
 							nameArr.forEach((item, index) => {
 								result.push({
 									name: item,
@@ -114,6 +122,7 @@
 							item.profile.nameArr = result
 						})
 						self.studentList = res.data
+						self.searched = true
 					}
 				})
 			}	
