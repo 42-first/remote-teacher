@@ -410,7 +410,7 @@ let pages = {
     "qdsjpx": "Sign-In Time (Ascending)",
     "dyzgtwpgs": "The ranking may not be the final version if open questions have not been revised.",
     "bonuspoint": "Bonus Point",
-    "addpoints": "+{count} Point",
+    "addpoints": "+{count}",
     "howtoaddpoints": "How to add Bonus Point?",
     "backtoclass": "Back to Class",
     "remarks": "Remarks",
