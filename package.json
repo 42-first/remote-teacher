@@ -1,6 +1,6 @@
 {
   "name": "remote-teacher",
-  "version": "3.3.16",
+  "version": "3.3.21",
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,
@@ -12,6 +12,7 @@
     "onoldthunder": "npm run build && ./bin/onthunder",
     "onthunder": "npm run build && ./bin/onnewthunder",
     "on199": "npm run build && ./bin/on199",
+    "onykt03": "npm run build && ./bin/onykt03",
     "ondocker": "npm install && npm run build && ./deploy/build_lesson_vue",
     "ondeploy": "./deploy/deploy_lesson_vue",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",

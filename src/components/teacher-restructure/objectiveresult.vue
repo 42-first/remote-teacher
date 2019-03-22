@@ -15,16 +15,16 @@
         :newTime="newTime"
         :durationLeft="durationLeft"
         :total="total"
-        :members="members" 
-				:problemid="problemid" 
+        :members="members"
+				:problemid="problemid"
 				:isTouping="isTouping"
 				:problemtype="problemType"
-				@showresult = "showresult" 
+				@showresult = "showresult"
         @yanshi="yanshi"
         @shouti="shouti"
       ></Rolex>
       <!-- 填空题条形图 -->
-      <template v-if="problemType === 'FillBlank'"> 
+      <template v-if="problemType === 'FillBlank'">
         <FillblankBox class="FillblankBox"
           :total="total"
           :correctNum="correct_students.length"
@@ -41,7 +41,7 @@
 					:ma_right_count="ma_right_count"
         ></CollumBox>
       </template>
-	    
+
 
 
 	    <!-- 下方按钮 -->
@@ -56,6 +56,8 @@
 				<router-link v-if="problemType === 'FillBlank'" tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+            <!-- 是否有解析提示 -->
+            <p class="analysis--tip" v-if="problem && problem.HasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
@@ -63,6 +65,8 @@
 	      <router-link v-else tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+            <!-- 是否有解析提示 -->
+            <p class="analysis--tip" v-if="problem && problem.HasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
@@ -108,10 +112,10 @@
   import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
   // 中间柱状图
 	import CollumBox from '@/components/teacher-restructure/common/collum-box'
-  
+
 	// 教师遥控器引导查看答案、续时
 	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
-	
+
 	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
 
 	let durationTimer = null 			// 处理计时的定时器
@@ -159,6 +163,8 @@
         is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
 				result_graph: {},
 				correct_students: [],
+        // 问题详细信息
+        problem: null
 	    }
 	  },
 	  computed: {
@@ -166,6 +172,7 @@
         'lessonid',
         'socket',
         'isGuideDelayHidden',
+        'pptData'
       ])
 	  },
 	  components: {
@@ -294,6 +301,9 @@
 	    	self.cleanDurInfoStorage()
 	    	self.handleDuration()
 	    	self.handlePubSub()
+
+        // 读取问题信息
+        this.getProlemById(this.problemid);
 	    },
 	    /**
        * 处理计时
@@ -514,7 +524,7 @@
 		   */
 		  getProblemResult(){
 		    let self = this
-        
+
         let url = ''
 
         if(self.problemType === 'FillBlank') {
@@ -557,7 +567,7 @@
                 })
               }
             }
-	      		
+
 	      	}).catch(error => {
 	      		console.error('error', error)
 	      	})
@@ -642,7 +652,7 @@
 			//  捕获 hidesomeinfo 组件的change事件改变 showanswer 状态
 			showAnswerChange(val) {
 				this.showAnswer = val
-			}, 
+			},
 	    /**
 	     * 关闭页面时关闭定时器、投屏等的总开关
 	     *
@@ -671,7 +681,21 @@
 			},
 			showresult(e) {
 				this.showAnswer = !!e
-			}
+			},
+
+      /**
+       * method 读取问题详情
+       * params id
+       */
+      getProlemById(id) {
+        if(this.pptData && this.pptData.length) {
+          let card = this.pptData.find( (silde) => {
+            return silde && silde.Problem && id === silde.Problem.ProblemID;
+          });
+
+          this.problem = card.Problem;
+        }
+      },
 	  }
 	}
 </script>
@@ -713,6 +737,7 @@
 			  color: #fff;
 
 			  .iconbox {
+          position: relative;
 			  	margin: 0 auto 0.4rem;
 			  	width: 1.493333rem;
 			  	height: 1.493333rem;
@@ -748,5 +773,39 @@
       transform: translate(-50%, -50%);
       color: $white;
     }
+  }
+
+  .analysis--tip {
+    position: absolute;
+    top: -0.6rem;
+    right: -60%;
+
+    padding: 0 0.066667rem;
+    height: 0.666667rem;
+    line-height: 0.666667rem;
+
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid #fff;
+  }
+
+  .analysis--tip:before,
+  .analysis--tip:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -0.12rem;
+    left: 0.066667rem;
+
+    border-width: 0.093333rem;
+    border-style: solid;
+    border-color: #333 transparent transparent #333;
+  }
+
+  .analysis--tip:before {
+    bottom: -0.16rem;
+    left: 0.04rem;
+    border-width: 0.093333rem;
+    border-color: #fff transparent transparent #fff;
   }
 </style>

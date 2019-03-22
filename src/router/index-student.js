@@ -21,6 +21,8 @@ const SubmissionDetail = resolve => require(['@/components/student/submission-de
 const SubjectiveShare = resolve => require(['@/components/student/subjective-share'], resolve)
 const MutualEvaluation = resolve => require(['@/components/student/mutual-evaluation'], resolve)
 const FillBlank = resolve => require(['@/components/student/blank'], resolve)
+// 问题解析
+const ProblemAnalysis = resolve => require(['@/components/student/problem-analysis'], resolve)
 
 
 Vue.use(Router)
@@ -96,7 +98,12 @@ const studentRouter = new Router({
           path: 'evaluation/:index',
           name: 'mutual-evaluation-page',
           component: MutualEvaluation
-        }
+        },
+        {
+          path: 'analysis/:index',
+          name: 'analysis-page',
+          component: ProblemAnalysis
+        },
       ]
     }
   ]

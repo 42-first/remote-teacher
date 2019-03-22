@@ -172,6 +172,13 @@ let pages = {
   "infonumbereg": "学生身份请输入学号",
   "infotip": "* 你可以在“我的主页”中随时修改个人信息",
 
+  // 答案解析
+  "answerkey": "答案解析",
+  'viewanswer': '看解析',
+  'answerpublished': '老师公布了习题的答案解析',
+  'sendtostus': '发送给学生',
+  'hasbeensend': '已发给学生',
+
 
   // 遥控器
   "classsignal": "课堂暗号",

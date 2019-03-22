@@ -84,7 +84,7 @@
     </template>
     <!-- 习题模板 -->
     <template v-else-if="item.type==3">
-     <div class="timeline__paper">
+      <div class="timeline__paper">
         <!-- 作答链接 -->
         <router-link :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" :to="item.pageURL+index" >
             <div class="paper-txt f18">
@@ -185,6 +185,25 @@
           <div class="ppt__opt f15" v-show="!observerMode">
             <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
             <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(2, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- 问题解析 -->
+    <template v-else-if="item.type==13">
+      <div class="timeline__paper">
+        <!-- 作答链接 -->
+        <router-link class="paper-info xt" :to="item.pageURL+index" >
+          <div class="paper-txt f18">
+            <p class="paper-name">{{ item.caption }}</p>
+            <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
+          </div>
+          <i class="iconfont icon-ykq_shiti f55"></i>
+        </router-link>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14">
+            <!-- <span class="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>

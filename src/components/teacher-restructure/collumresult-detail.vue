@@ -13,6 +13,10 @@
         <div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
       </div>
       <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
+
+      <!-- 有解析显示解析入口 -->
+      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+
       <div class="tab">
         <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">
           {{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('yitoupiao') : $t('yizuoda')}}
@@ -89,6 +93,9 @@
         <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
       </v-touch>
     </div>
+
+    <!-- 解析弹层 -->
+    <analysis :problem.sync="problem" :hide-analysis="hideAnalysis" v-if="visibleAnalysis"></analysis>
   </div>
 </template>
 
@@ -106,6 +113,7 @@
 
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
+  import analysismixin from '@/components/common/analysis-mixin'
 
   export default {
     name: 'CollumresultDetail',
@@ -122,6 +130,10 @@
         answeredNum: 0    //已作答人数
       }
     },
+    components: {
+      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
+    },
+    mixins: [ analysismixin ],
     created() {
       this.init()
     },
@@ -151,6 +163,8 @@
 
         self.problemid = +self.$route.params.problemid
         self.refreshProblemResultDetail()
+
+        this.getProlemById(this.problemid);
       },
       /**
        * 展示隐藏答案选项人名单
@@ -174,7 +188,7 @@
        */
       refreshProblemResultDetail() {
         let self = this
-        let url = API.problem_result_detail
+        let url = API.problem_result_detail + '/' + self.problemid + '/'
 
         if (process.env.NODE_ENV === 'production') {
           url = API.problem_result_detail + '/' + self.problemid + '/'
@@ -479,5 +493,17 @@
     .abs {
       position: absolute;
     }
+  }
+
+  .analysis--btn {
+    margin: 0.533333rem auto;
+    width: 7.733333rem;
+    height: 1.173333rem;
+    line-height: 1.173333rem;
+
+    color: #5096F5;
+    cursor: pointer;
+    border: 0.026667rem solid #639EF4;
+    border-radius: 0.106667rem;
   }
 </style>
