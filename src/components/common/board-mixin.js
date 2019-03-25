@@ -107,6 +107,7 @@ let boardMixin = {
           context.moveTo(point.x, point.y);
           context.lineTo(point2.x, point2.y);
           context.stroke();
+          context.closePath();
           // increment "index" to get the next coords
           index++;
         } else {
@@ -155,6 +156,7 @@ let boardMixin = {
 
         // 描边
         context.stroke();
+        context.closePath();
         // 状态继续存储 方便后面回退
         // context.save();
       }
@@ -172,7 +174,7 @@ let boardMixin = {
         return null;
       }
 
-      let color = '#ffffff';
+      let color = '#FFFFFF';
       context.fillStyle = color;
       context.strokeStyle = color;
 
@@ -190,9 +192,13 @@ let boardMixin = {
           let point = coords[i];
           context.lineWidth = point.w;
           context.lineTo(point.x, point.y);
-          context.fillRect(point.x, point.y, point.w, point.h);
-          context.clearRect(point.x, point.y, point.w, point.h);
+          // context.fillRect(point.x, point.y, point.w, point.h);
+          // context.clearRect(point.x, point.y, point.w, point.h);
         }
+
+        // 描边
+        context.stroke();
+        context.closePath();
 
         // 状态继续存储 方便后面回退
         // context.save();
