@@ -79,7 +79,7 @@
           <div class="edit-content">
             <p class="f14"><!-- 添加标签 -->{{$t('behavior.addtag')}}</p>
             <div class="input-box">
-              <input class="f17" type="text" :placeholder="$t('behavior.entercontent')" v-model="tagText" @blur="handleBlur">
+              <input class="f17" type="text" maxlength="40" :placeholder="$t('behavior.entercontent')" v-model="tagText" @blur="handleBlur">
             </div>
           </div>
         </div>
@@ -93,6 +93,7 @@
 	
   import {mapGetters} from 'vuex'
   import request from '@/util/request'
+  import { getLength, substr } from '@/util/util'
   import API from '@/pages/teacher/config/api'
 	export default {
 	  name: 'Expression',
@@ -125,6 +126,16 @@
     },
     mounted() {
       
+    },
+    watch: {
+      tagText(newVal){
+        if(newVal && newVal.length > 20) {
+           let len = getLength(newVal);
+           if(len > 40) {
+             this.tagText = substr(newVal, 20);
+           }
+         }
+      }
     },
 	  methods: {
       init(){
@@ -414,7 +425,7 @@
           line-height: 0.53333333rem;
         }
         .participant-box {
-          margin-top: 60px;
+          margin-top: 0.8rem;
           .participant-info {
             .status {
               margin-left: 12px;
@@ -426,7 +437,7 @@
           }
           .participant-option {
             padding: 0 0.32rem;
-            width: 2.58666667rem;
+            min-width: 2.58666667rem;
             box-sizing: border-box;
             height: 0.69333333rem;
             line-height: 0.69333333rem;
