@@ -29,7 +29,7 @@
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
-  import livemixin from '@/components/student/live-mixin'
+  import livemixin from '@/components/fullscreen/live-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -136,7 +136,7 @@
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
-        currSlide: '',
+        currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
       };
     },
@@ -158,6 +158,11 @@
         if(slide && slide.src) {
           this.currSlide = slide;
         }
+      },
+      liveURL(newVal, oldVal) {
+        setTimeout(()=>{
+          newVal && this.supportFLV();
+        }, 500)
       }
     },
     filters: {
@@ -202,16 +207,6 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-
-          setTimeout(()=>{
-            // 直播hls格式初始化
-            self.loadHLS();
-
-            setTimeout(()=>{
-              this.liveURL && this.handleplay();
-            }, 5000)
-          }, 1500)
-
           // sentry 配置
           this.setSentry();
         });
@@ -372,8 +367,10 @@
 
               // 直播处理 1为直播中，2为已结束
               if(self.liveInfo && self.liveInfo.status === 1) {
-                self.liveURL = self.liveInfo.live_url.hls;
-                self.Hls && self.supportHLS(self.Hls);
+                // self.liveURL = self.liveInfo.live_url.hls;
+                // self.Hls && self.supportHLS(self.Hls);
+                self.liveURL = self.liveInfo.live_url.httpflv;
+                // this.liveURL && this.supportFLV();
               }
 
               // 课程title
