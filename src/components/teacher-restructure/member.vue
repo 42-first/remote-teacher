@@ -26,7 +26,7 @@
 				<div class="order-box">
 					<v-touch class="title f14" v-on:tap="openOrder">
 						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : $t('behavior.qdsjpx'))}}
-						<div :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
+						<div v-if="has_problems" :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
 					</v-touch>
 					<ul class="choose-list" v-show="isOrderOpen">
 						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)"><!-- 得分由高到低 -->{{ $t('behavior.dfygdd') }}</v-touch>
@@ -479,6 +479,8 @@
 					display: flex;
 					flex-wrap: wrap;
 					margin-left: 1.30666667rem;
+					max-height: 1.92rem;
+					overflow: hidden;
 					span {
 						padding: 0 0.34666667rem;
 						height: 0.69333333rem;
@@ -550,6 +552,8 @@
 				.tag-box {
 					display: flex;
 					flex-wrap: wrap;
+					max-height: 1.92rem;
+					overflow: hidden;
 					span {
 						padding: 0 0.34666667rem;
 						height: 0.69333333rem;

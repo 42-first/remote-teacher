@@ -424,7 +424,7 @@ let pages = {
     "edittag": "Edit Tag",
     "addtag": "Add tag",
     "afterclasstips": "You can find this in your Class Report",
-    "entercontent": "Please enter the content",
+    "entercontent": "Please enter the content(Less than 20 characters)",
     "noquizzes": "No quizzes in this class",
     "noeligiblestudents": "No Eligible Students"
   },

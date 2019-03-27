@@ -316,6 +316,7 @@
     top: 0;
     left: 0;
     z-index: 200;
+    overflow: auto;
     .banner {
       width: 100%;
       height: 4.76rem;
@@ -483,6 +484,7 @@
       }
       .tag-box {
         margin-top: 0.66666667rem;
+        min-height: 8rem;
         .tag-title {
           color: #9b9b9b;
           .iconfont {
@@ -516,7 +518,7 @@
             line-height: 0.69333333rem;
             color: #9B9B9B;
             border-radius: 0.34666667rem;
-            border: 0.01333333rem solid #EEEEEE;
+            border: 1px solid #EEEEEE;
             &.active {
               color: #FEA300;
               border-color: #FEA300;
@@ -526,10 +528,8 @@
       }
       .tips {
         color: #9b9b9b;
-        position: absolute;
-        bottom: 0.53333333rem;
-        left: 50%;
-        transform: translateX(-50%);
+        text-align: center;
+        margin: 0.26666667rem 0;
         white-space: nowrap;
       }
     }
