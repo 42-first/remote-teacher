@@ -308,7 +308,7 @@
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 	.expression-wrapper {
     width: 100%;
     height: 100%;
@@ -388,7 +388,7 @@
       padding: 1.64rem 0.53333333rem 0;
       .user-box {
         width: 100%;
-        height: 6.04rem;
+        min-height: 6.04rem;
         padding: 0 0.4rem;
         box-sizing: border-box;
         border-radius: 0.26666667rem;
@@ -428,8 +428,9 @@
         .participant-box {
           margin-top: 0.8rem;
           .participant-info {
+            flex-wrap: wrap;
             .status {
-              margin-left: 12px;
+              margin-left: 0.16rem;
             }
             .source {
               color: #9b9b9b;
@@ -437,7 +438,7 @@
             }
           }
           .participant-option {
-            padding: 0 0.32rem;
+            text-align: center;
             min-width: 2.58666667rem;
             box-sizing: border-box;
             height: 0.69333333rem;
@@ -529,7 +530,8 @@
       .tips {
         color: #9b9b9b;
         text-align: center;
-        margin: 0.26666667rem 0;
+        margin-top: 0.26666667rem;
+        padding-bottom: 0.26666667rem;
         white-space: nowrap;
       }
     }
@@ -581,6 +583,19 @@
           
         }
       }
+    }
+  }
+  @media screen and (max-width: 360px) and (-webkit-min-device-pixel-ratio: 2) {
+    .participant-info {
+      .source {
+        margin-left: 0.8rem !important;
+      }
+    }
+    .participant-box {
+      align-items: flex-start !important;
+    }
+    .user-box {
+      padding-bottom: 0.53333333rem !important;
     }
   }
 </style>

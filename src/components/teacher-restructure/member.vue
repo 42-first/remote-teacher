@@ -19,7 +19,7 @@
 			<div class="search" @click="goSearch"><i class="iconfont icon-sousuo f19"></i></div>
 		</div>
 		<div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
-			* <!-- 当有主观题未批改时，此排名可能不是最终排名 -->{{ $t('dyzgtwpgs') }}
+			* <!-- 当有主观题未批改时，此排名可能不是最终排名 -->{{ $t('behavior.dyzgtwpgs') }}
 		</div>
     <section v-show="activeTab == 1" class="participantList">
 			<template v-if="participantList.length">
@@ -205,7 +205,7 @@
 				let self = this
 				if (orderType === 3) {
 					let data3 = this.oData[3]
-					data3 ? (this.participantList = data3) : this.fetchList(2)
+					data3 ? (this.participantList = data3) : this.fetchList(3)
 				} else {
 					orderType === 1 && (this.participantList = this.oData[1])
 					orderType === 2 && (this.participantList = this.oData[1].filter(() => true).reverse())
@@ -450,6 +450,10 @@
 						}
 						.user_schoolnumber {
 							color: #666;
+							width: 3.69333333rem;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
 							margin-top: 0.26666667rem;
 							line-height: 0.53333333rem;
 						}

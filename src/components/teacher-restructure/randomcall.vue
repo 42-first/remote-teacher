@@ -293,6 +293,7 @@
         height: 2.0rem;
         line-height: 1.0rem;
         position: relative;
+        padding: 0 1.41333333rem;
         .addRemark {
           position: absolute;
           right: 0.4rem;
@@ -322,7 +323,7 @@
         overflow: scroll;
 
         li {
-          padding: 0.26666667rem;
+          padding: 0.26666667rem 0.53333333rem;
           display: flex;
           color: #aaa;
           position: relative;
