@@ -146,7 +146,7 @@
 						self.$store.commit('set_participantList', jsonData.data.students)
 						self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
-						if(jsonData.data.has_problems){
+						if(jsonData.data.has_problems && sort_type == 1){
 							self.orderType = 1
 						}else {
 							self.orderType = 3
