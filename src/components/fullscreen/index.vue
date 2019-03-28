@@ -171,20 +171,21 @@
 
         let innerHeight = window.innerHeight - 40;
         let innerWidth = window.innerWidth - 40;
+        let screenRate = innerWidth/innerHeight;
         let width = slide.Width;
         let height = slide.Height;
         let rate = slide.rate;
 
-        // 正常宽比较大
-        if(rate > 1) {
-          oStyle['widht'] = innerWidth + 'px';
+        // 正常宽高比屏幕的宽高
+        if(rate > screenRate) {
+          oStyle['width'] = innerWidth + 'px';
           oStyle['height'] = innerWidth/rate + 'px';
         } else {
-          oStyle['widht'] = innerWidth*rate + 'px';
-          oStyle['height'] = innerWidth + 'px';
+          oStyle['width'] = innerHeight*rate + 'px';
+          oStyle['height'] = innerHeight + 'px';
         }
 
-        return {};
+        return oStyle;
       }
     },
     mixins: [ wsmixin, actionsmixin, livemixin ],
@@ -533,11 +534,12 @@
 
         this.isFullscreen = !this.isFullscreen;
 
-        let silde = this.currSlide;
-        if(silde) {
-          silde.time = +new Date();
-          this.currSlide = silde;
-        }
+        setTimeout(()=>{
+          let silde = this.currSlide;
+          if(silde) {
+            this.currSlide = Object.assign({}, silde, { time: +new Date() } );
+          }
+        }, 300)
 
         this.liveURL && this.handleplay();
       },
