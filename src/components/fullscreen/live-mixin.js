@@ -6,8 +6,10 @@
  *
  */
 
- import { isSupported } from '@/util/util'
- import flvjs from 'flv.js'
+import { isSupported } from '@/util/util'
+// import flvjs from 'flv.js'
+import flvjs from 'flv.js/dist/flv.min'
+
 
 let liveMixin = {
   methods: {
