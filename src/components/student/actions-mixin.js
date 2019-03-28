@@ -873,7 +873,9 @@ var actionsMixin = {
           }
 
           // 更新最新时间
-          cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+          if(data.dt > 0) {
+            cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+          }
         }
 
       }
