@@ -48,7 +48,7 @@
           </div>
           <div class="tag-list" v-if="!isEdit">
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" @click="handleSelect(index)">
+              <div class="tag-item" :class="item.name.length >= 20 ? 'nomargin' : ''" @click="handleSelect(index)">
                 <span class="tag-label" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
               </div>
             </template>
@@ -58,7 +58,7 @@
           </div>
           <div class="tag-list" v-else>
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" @click="handleDelete(index)">
+              <div class="tag-item" :class="item.name.length >= 20 ? 'nomargin' : ''" @click="handleDelete(index)">
                 <span class="tag-label" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
                 <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.is_default"></i>
               </div>
@@ -320,7 +320,7 @@
     .banner {
       width: 100%;
       height: 4.76rem;
-      border-radius: 0.01333333rem;
+      border-radius: 1px;
       background: #5096F5;
       position: absolute;
       top: 0;
@@ -445,7 +445,7 @@
             line-height: 0.69333333rem;
             color: #666;
             border-radius: 0.34666667rem;
-            border: 0.01333333rem solid #e5e5e5;
+            border: 1px solid #e5e5e5;
           }
         }
         .points-box {
@@ -471,7 +471,7 @@
               width: 0.69333333rem;
               height: 0.69333333rem;
               border-radius: 50%;
-              border: 0.01333333rem solid #E5E5E5;
+              border: 1px solid #E5E5E5;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -511,6 +511,9 @@
               right: -0.13333333rem;
               color: #666;
             }
+            &.nomargin {
+							margin-right: 0;
+						}
           }
           .tag-label {
             display: block;
@@ -552,7 +555,7 @@
         .edit-title {
           padding: 0 0.4rem;
           height:  1.33333333rem;
-          border-bottom: 0.01333333rem solid #eee;
+          border-bottom: 1px solid #eee;
           color: #333;
           span {
             color: #5096F5;
@@ -570,7 +573,7 @@
             margin-bottom: 0.4rem;
           }
           .input-box {
-            border-bottom: 0.01333333rem solid #eee;
+            border-bottom: 1px solid #eee;
             margin-left: 0.13333333rem;
             input {
               padding: 0.4rem 0;
@@ -585,17 +588,12 @@
       }
     }
   }
-  @media screen and (max-width: 360px) and (-webkit-min-device-pixel-ratio: 2) {
-    .participant-info {
-      .source {
-        margin-left: 0.8rem !important;
-      }
+  @media screen and (max-width: 720px) and (-webkit-min-device-pixel-ratio: 2) {
+    [data-dpr="2"] .f14 {
+      font-size: 26px;
     }
-    .participant-box {
-      align-items: flex-start !important;
-    }
-    .user-box {
-      padding-bottom: 0.53333333rem !important;
+    [data-dpr="2"] .f12 {
+      font-size: 20px;
     }
   }
 </style>

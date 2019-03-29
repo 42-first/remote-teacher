@@ -56,7 +56,7 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag"  v-for="tag in item.behavior_tags">{{tag}}</span>
+							<span class="tag" :class="tag.length >= 20 ? 'nomargin' : ''" v-for="tag in item.behavior_tags">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -80,7 +80,7 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag"  v-for="tag in item.behavior_tags">{{tag}}</span>
+							<span class="tag" :class="tag.length >= 20 ? 'nomargin' : ''" v-for="tag in item.behavior_tags">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -486,7 +486,7 @@
 					max-height: 1.92rem;
 					overflow: hidden;
 					span {
-						padding: 0 0.34666667rem;
+						padding: 0 0.26666667rem;
 						height: 0.69333333rem;
 						line-height: 0.69333333rem;
 						border-radius: 0.34666667rem;
@@ -500,6 +500,9 @@
 						&.score {
 							border-color: #F84F41;
 							color: #F84F41;
+						}
+						&.nomargin {
+							margin-right: 0;
 						}
 					}
 				}
@@ -559,7 +562,7 @@
 					max-height: 1.92rem;
 					overflow: hidden;
 					span {
-						padding: 0 0.34666667rem;
+						padding: 0 0.26666667rem;
 						height: 0.69333333rem;
 						line-height: 0.69333333rem;
 						border-radius: 0.34666667rem;
@@ -573,6 +576,9 @@
 						&.score {
 							border-color: #F84F41;
 							color: #F84F41;
+						}
+						&.nomargin {
+							margin-right: 0;
 						}
 					}
 				}
