@@ -48,24 +48,29 @@
           </div>
           <div class="tag-list" v-if="!isEdit">
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 ? 'nomargin' : ''" @click="handleSelect(index)">
-                <span class="tag-label" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
+              <div class="tag-item" :class="item.name.length >= 20 && (tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)">
+                <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
               </div>
             </template>
-            <span class="tag-label" @click="addTagFlag = true">
-              + <!-- 添加标签 -->{{$t('behavior.addtag')}}
-            </span>
+            <div class="tag-item" @click="addTagFlag = true">
+              <span class="tag-label f12">
+                + <!-- 添加标签 -->{{$t('behavior.addtag')}}
+              </span>
+            </div>
           </div>
           <div class="tag-list" v-else>
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 ? 'nomargin' : ''" @click="handleDelete(index)">
-                <span class="tag-label" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
+              <div class="tag-item" :class="item.name.length >= 20 && (tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)">
+                <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
                 <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.is_default"></i>
               </div>
             </template>
-            <span class="tag-label" @click="addTagFlag = true">
-              + <!-- 添加标签 -->{{$t('behavior.addtag')}}
-            </span>
+            <div class="tag-item" @click="addTagFlag = true">
+              <span class="tag-label f12">
+                + <!-- 添加标签 -->{{$t('behavior.addtag')}}
+              </span>
+            </div>
+            
           </div>
         </div>
         <div class="tips f12"><span class="corange">*</span> <!-- 此备注课下可在课后小结中查看 -->{{$t('behavior.afterclasstips')}}</div>
