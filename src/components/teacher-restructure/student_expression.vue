@@ -18,10 +18,16 @@
             <div class="participant-info flexcenter">
               <i class="icon" :class="participate.has_joined ? 'icon-sign' : 'icon-unsign'"></i>
               <span class="status f14" :class="participate.has_joined ? 'cblue' : 'cred'">{{ participate.has_joined ? $t('yiqiandao') : $t('weiqiandao')}}</span>
-              <span class="source f12" v-if="participate.has_joined">{{participate.source_name}}{{participate.time}}</span>
+              <span class="source f12" v-if="participate.has_joined && attendance_status !== 0 ">{{participate.source_name}}{{participate.time}}</span>
+              <span class="source cred f12" v-else-if="participate.has_joined && attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</span>
+              <span class="source cblue f12" v-else-if="!participate.has_joined && attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</span>
             </div>
             <div class="participant-option f12" @click="handleChangeStatus">
-              {{ participate.has_joined ? $t('behavior.changethestate2') : $t('behavior.changethestate1')}}
+              <template v-if="participate.has_joined && attendance_status == -1 || attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.absent')}}</template>
+              <template v-else-if="participate.has_joined && attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.present')}}</template>
+              <template v-else-if="!participate.has_joined && attendance_status == -1 || attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.present')}}</template>
+              <template v-else-if="!participate.has_joined && attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.absent')}}</template>
+              
             </div>
           </div>
           <div class="points-box flexbetween">
@@ -48,7 +54,7 @@
           </div>
           <div class="tag-list" v-if="!isEdit">
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 && (tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)">
+              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)">
                 <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
               </div>
             </template>
@@ -60,7 +66,7 @@
           </div>
           <div class="tag-list" v-else>
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 && (tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)">
+              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)">
                 <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
                 <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.is_default"></i>
               </div>
@@ -117,7 +123,8 @@
         behavior_score: 0,
         participate: {},
         isloaded: false,
-        delete_ids: []
+        delete_ids: [],
+        attendance_status: -1
 	    }
 	  },
 	  computed: {
@@ -163,6 +170,7 @@
             self.tagListTemp = res.data.tags
             self.behavior_score = res.data.behavior_score
             self.participate = res.data.participate
+            self.attendance_status = res.data.attendance_status
             self.isloaded = true
           }
         })
@@ -199,15 +207,21 @@
 	  	handleChangeStatus(){
         let self = this
         let URL = API.behavior_tag.change_participate
+        let status = null
+        if((this.participate.has_joined && (this.attendance_status == -1 || this.attendance_status == 1))|| (!this.participate.has_joined && this.attendance_status == 1)){
+          status = 0
+        }else if((this.participate.has_joined && this.attendance_status == 0) || (!this.participate.has_joined && (this.attendance_status == -1 || this.attendance_status == 0))){
+          status = 1
+        }
         let params = {
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
           student_id: this.userid,
-          status: this.participate.has_joined ? 0 : 1
+          status: status
         }
         request.post(URL, params).then(res => {
           if(res.success){
-            self.participate = res.data
+            self.attendance_status = res.data.attendance_status
           }
         })
       },

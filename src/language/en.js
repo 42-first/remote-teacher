@@ -426,7 +426,9 @@ let pages = {
     "afterclasstips": "You can find this in your Class Report",
     "entercontent": "Please enter the content(Less than 20 characters)",
     "noquizzes": "No quizzes in this class",
-    "noeligiblestudents": "No Eligible Students"
+    "noeligiblestudents": "No Eligible Students",
+    "present": "present",
+    "absent": "absent"
   },
   // 引导页
   guide: {

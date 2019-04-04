@@ -427,7 +427,9 @@ let pages = {
     "afterclasstips": "此备注课下可在课后小结中查看",
     "entercontent": "请输入标签内容(20字以内)",
     "noquizzes": "本节课没有发布习题",
-    "noeligiblestudents": "没有符合的学生"
+    "noeligiblestudents": "没有符合的学生",
+    "present": "已出勤",
+    "absent": "未出勤"
   },
   
 

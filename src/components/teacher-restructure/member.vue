@@ -48,7 +48,8 @@
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
-								{{item.time}}
+								<template v-if="item.attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</template>
+								<template v-else>{{item.time}}</template>
 								<i class="iconfont icon-jinrucopy f25"></i>
 							</div>
 						</div>
@@ -75,7 +76,11 @@
 							<span class="name ellipsis-2line f17">{{item.profile.name}}</span>
 							<span class="stuid f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
 						</div>
-						<i class="iconfont icon-jinrucopy f25"></i>
+						<div class="time-box f14">
+							<template v-if="item.attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</template>
+							<i class="iconfont icon-jinrucopy f25"></i>
+						</div>
+						
 					</div>
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
@@ -551,6 +556,11 @@
 						color: #666;
 						line-height: 0.533333rem;
 					}
+				}
+				.time-box {
+					color: #9b9b9b;
+					display: flex;
+					align-items: center;
 				}
 				
 				.iconfont {
