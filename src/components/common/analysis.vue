@@ -11,9 +11,9 @@
   <!-- 解析内容 -->
   <section class="analysis-inner J_analysis_inner">
     <section class="analysis-anwser f16" v-if="problem.Type!=='ShortAnswer'"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
-    <section class="analysis__images" :style="problem.RemarkRich|setScale">
+    <section class="analysis__images" :style="problem.RemarkRich|setScale" v-if="problem.RemarkRich && problem.RemarkRich.Shapes">
       <!-- 新的解析处理 -->
-      <div v-for="shape in problem.RemarkRich.Shapes" v-if="problem.RemarkRich && problem.RemarkRich.Shapes">
+      <div v-for="shape in problem.RemarkRich.Shapes">
         <!-- 文字提取方式 新版 -->
         <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.Paragraphs" />
         <div class="analysis__shape" :style="shape|setShapeStyle" v-else>
@@ -27,9 +27,9 @@
         </div>
       </div>
 
-      <!-- 兼容老的解析处理 -->
-      <section class="remark f17" v-if="!problem.RemarkRich&&problem.Remark">{{ problem.Remark }}</section>
     </section>
+    <!-- 兼容老的解析处理 -->
+    <section class="remark f17" v-if="!problem.RemarkRich&&problem.Remark">{{ problem.Remark }}</section>
 
   </section>
 
