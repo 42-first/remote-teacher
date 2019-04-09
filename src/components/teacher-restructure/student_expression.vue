@@ -84,7 +84,7 @@
       <section class="add-tag-wrapper" v-if="addTagFlag">
         <div class="edit-box">
           <div class="edit-title flexbetween">
-            <i class="iconfont icon-shiti_guanbitouping f16" @click="addTagFlag = false"></i>
+            <i class="iconfont icon-shiti_guanbitouping f16" @click="handleCancel"></i>
             <span class="save f18" @click="handleAddTag"><!-- 保存 -->{{$t('behavior.save')}}</span>
           </div>
           <div class="edit-content">
@@ -322,6 +322,10 @@
             behavior: "smooth" 
         });
         e.preventDefault()
+      },
+      handleCancel(){
+        this.addTagFlag = false
+        this.tagText = ''
       }          
 	  }
 	}
