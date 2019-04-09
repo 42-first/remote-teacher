@@ -23,10 +23,10 @@
               <span class="source cblue f12" v-else-if="!participate.has_joined && attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</span>
             </div>
             <div class="participant-option f12" @click="handleChangeStatus">
-              <template v-if="participate.has_joined && attendance_status == -1 || attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.absent')}}</template>
-              <template v-else-if="participate.has_joined && attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.present')}}</template>
-              <template v-else-if="!participate.has_joined && attendance_status == -1 || attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.present')}}</template>
-              <template v-else-if="!participate.has_joined && attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.absent')}}</template>
+              <template v-if="participate.has_joined && attendance_status == -1 || attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.changethestate2')}}</template>
+              <template v-else-if="participate.has_joined && attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
+              <template v-else-if="!participate.has_joined && attendance_status == -1 || attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
+              <template v-else-if="!participate.has_joined && attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.changethestate2')}}</template>
               
             </div>
           </div>
@@ -391,13 +391,13 @@
       align-items: center;
     }
     .cred {
-      color: #F84F41;
+      color: #F84F41 !important;
     }
     .cblue {
-      color: #5096f5;
+      color: #5096f5 !important;
     }
     .corange {
-      color: #FEA300;
+      color: #FEA300 !important;
     }
     .expression-container {
       position: relative;

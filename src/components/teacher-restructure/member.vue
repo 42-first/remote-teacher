@@ -555,6 +555,10 @@
 						margin-top: 0.28rem;
 						color: #666;
 						line-height: 0.533333rem;
+						max-width: 3.69333333rem;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 				}
 				.time-box {

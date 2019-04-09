@@ -416,8 +416,8 @@ let pages = {
     "remarks": "Remarks",
     "entername": "Enter student's name",
     "points": "Point",
-    "changethestate1": "Change the State",
-    "changethestate2": "Change the State",
+    "changethestate1": "Present",
+    "changethestate2": "Absent",
     "nobonuspoint": "No Bonus Point",
     "tag": "Tag",
     "save": "Save",
@@ -427,8 +427,8 @@ let pages = {
     "entercontent": "Please enter the content(Less than 20 characters)",
     "noquizzes": "No quizzes in this class",
     "noeligiblestudents": "No Eligible Students",
-    "present": "present",
-    "absent": "absent"
+    "present": "Present",
+    "absent": "Absent"
   },
   // 引导页
   guide: {

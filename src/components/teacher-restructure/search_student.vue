@@ -26,9 +26,11 @@
 								<div class="user-score f14 cblue" v-if="item.score" v-html="$t('behavior.points', {count: item.score})">
 									<!-- <span class="score font30">{{item.score}}</span>分 -->
 								</div>
-								<div class="time color-9b">
-									<span class="mb10" v-if="item.time">{{item.time}}</span>
-									<i class="iconfont icon-dakai f14"></i>
+								<div class="time color-9b f14">
+									<span v-if="item.time && item.attendance_status !== 0">{{item.time}}</span>
+									<span v-else-if="item.attendance_status === 0">{{ $t('behavior.absent') }}</span>
+									<span v-else-if="!item.time && item.attendance_status === 1">{{ $t('behavior.present') }}</span>
+									<i class="iconfont icon-jinrucopy f25"></i>
 								</div>
 							</div>
 							<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
@@ -210,6 +212,12 @@
 							font-weight: bold;
 							width: 3.69333333rem;
 						}
+						.school_number {
+							width: 3.69333333rem;
+							overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+						}
 					}
 					.user-score {
 						flex-direction: row;
@@ -220,6 +228,7 @@
 					.time {
 						min-width: 0.93333333rem;
 						align-items: center;
+						flex-direction: row;
 					}
 				}
 				.tag-box {
