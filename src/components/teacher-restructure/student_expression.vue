@@ -16,7 +16,7 @@
           <p class="school-number f14">{{user_profile.school_number ? user_profile.school_number : $t('weishezhixuehao')}}</p>
           <div class="participant-box flexbetween">
             <div class="participant-info flexcenter">
-              <i class="icon" :class="participate.has_joined ? 'icon-sign' : 'icon-unsign'"></i>
+              <i class="icon mt-1" :class="participate.has_joined ? 'icon-sign' : 'icon-unsign'"></i>
               <span class="status f14" :class="participate.has_joined ? 'cblue' : 'cred'">{{ participate.has_joined ? $t('yiqiandao') : $t('weiqiandao')}}</span>
               <span class="source f12" v-if="participate.has_joined && attendance_status !== 0 ">{{participate.source_name}}{{participate.time}}</span>
               <span class="source cred f12" v-else-if="participate.has_joined && attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</span>
@@ -384,6 +384,9 @@
       &.icon-unpoints {
         background-image: url('http://sfe.ykt.io/o_1d60d5hgmhj1ioadg5ea31gp2e.png');
       }
+      &.mt-2 {
+        margin-top: -0.05333333rem;
+      }
     }
     .flexbetween {
       display: flex;
@@ -546,6 +549,7 @@
             color: #9B9B9B;
             border-radius: 0.34666667rem;
             border: 1px solid #EEEEEE;
+            white-space: nowrap;
             &.active {
               color: #FEA300;
               border-color: #FEA300;

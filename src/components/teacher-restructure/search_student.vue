@@ -18,13 +18,13 @@
 								<div class="user-info">
 									<span class="name f15 color3 mb10">
 										<template v-for="str in item.profile.nameArr">
-											<template v-if="str.name == search"><span class="cblue">{{str.name}}</span></template><template v-else>{{str.name}}</template>
+											<template v-if="search.indexOf(str.name) >= 0"><span class="cblue">{{str.name}}</span></template><template v-else>{{str.name}}</template>
 										</template>
 									</span>
 									<span class="school_number f14 color6">{{item.profile.school_number ? item.profile.school_number : $t('cards.wszxh')}}</span>
 								</div>
-								<div class="user-score f14 cblue" v-if="item.score" v-html="$t('behavior.points', {count: item.score})">
-									<!-- <span class="score font30">{{item.score}}</span>分 -->
+								<div class="user-score f14 cblue" v-if="item.score">
+									<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
 								</div>
 								<div class="time color-9b f14">
 									<span v-if="item.time && item.attendance_status !== 0">{{item.time}}</span>
@@ -133,6 +133,8 @@
 			search(newVal){
 				if(newVal){
 					this.getStudentS()
+				}else {
+					this.studentList = []
 				}
 			}
 		},
@@ -160,18 +162,19 @@
 			padding: 0 0.4rem;
 			height: 1.30666667rem;
 			box-sizing: border-box;
-			border-bottom: 1px solid #f8f8f8;
+			border-bottom: 1px solid #eee;
 			.search-box {
 				position: relative;
 				width: 8rem;
 				display: flex;
 				height: 0.93333333rem;
+				background: #eee;
+				border-radius: 0.48rem;
 				input {
 					width: 100%;
 					height: 100%;
 					padding: 0 0.8rem 0 1.2rem;
-					background: #f8f8f8;
-					border-radius: 0.48rem;
+					background: transparent;
 					color: #333;
 					border: none;
 					outline: none;
@@ -234,6 +237,8 @@
 				.tag-box {
 					display: flex;
 					flex-wrap: wrap;
+					max-height: 1.92rem;
+					overflow: hidden;
 					span {
 						padding: 0 0.34666667rem;
 						height: 0.69333333rem;

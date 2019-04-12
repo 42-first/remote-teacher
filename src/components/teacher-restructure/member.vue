@@ -55,9 +55,9 @@
 						</div>
 					</div>
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
-						<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
+						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -83,9 +83,9 @@
 						
 					</div>
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
-						<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
+						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -359,7 +359,7 @@
 					z-index: 50;
 					min-width: 3.46666667rem;
 					background: #FFFFFF;
-					border-radius: 0.02666667rem;
+					border-radius: 0.05333333rem;
 					box-shadow: 0 0.02666667rem 0.16rem rgba(0,0,0, 0.1);
 					&::before, &::after {
 						position: absolute;
@@ -401,7 +401,7 @@
 				&::after {
 					position: absolute;
 					content: "";
-					width: 8.8rem;
+					width: 8.93333333rem;
 					height: 0.026667rem;
 					background: #e5e5e5;
 					bottom: 0;
@@ -413,7 +413,7 @@
 				}
 
 				.xuhao {
-					width: 1.306667rem;
+					width: 1.06666667rem;
 					line-height: 0.56rem;
 					color: #9b9b9b;
 					text-align: center;
@@ -449,13 +449,13 @@
 						flex-direction: column;
 						.user_name {
 							color: #333;
-							width: 3.69333333rem;
+							width: 4rem;
 							font-weight: bold;
 							line-height: 0.56rem;
 						}
 						.user_schoolnumber {
 							color: #666;
-							width: 3.69333333rem;
+							width: 4rem;
 							overflow: hidden;
 							text-overflow: ellipsis;
 							white-space: nowrap;
@@ -487,23 +487,26 @@
 				.tag-box {
 					display: flex;
 					flex-wrap: wrap;
-					margin-left: 1.30666667rem;
+					margin-left: 1.06666667rem;
 					max-height: 1.92rem;
 					overflow: hidden;
 					span {
-						padding: 0 0.26666667rem;
+						padding: 0.13333333rem 0.26666667rem;
 						height: 0.69333333rem;
-						line-height: 0.69333333rem;
+						line-height: 0.42666667rem;
 						border-radius: 0.34666667rem;
 						color: #FEA300;
-						border: 1px solid #FEA300;
+						border: 1px solid rgba(254,163,0,.5);
 						margin-top: 0.26666667rem;
 						box-sizing: border-box;
+						max-width: 100%;
+						overflow: hidden;
+
 						&:not(:last-of-type){
 							margin-right: 0.26666667rem;
 						}
 						&.score {
-							border-color: #F84F41;
+							border-color: rgba(248,79,65,.5);
 							color: #F84F41;
 						}
 						&.nomargin {
@@ -544,7 +547,7 @@
 					display: flex;
 					flex-direction: column;
 					span:first-child {
-						width: 3.69333333rem;
+						width: 4rem;
 						color: #333;
 						font-weight: bold;
 						line-height: .56rem;
@@ -555,7 +558,7 @@
 						margin-top: 0.28rem;
 						color: #666;
 						line-height: 0.533333rem;
-						max-width: 3.69333333rem;
+						max-width: 4rem;
 						overflow: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;
@@ -576,12 +579,12 @@
 					max-height: 1.92rem;
 					overflow: hidden;
 					span {
-						padding: 0 0.26666667rem;
+						padding: 0.13333333rem 0.26666667rem;
 						height: 0.69333333rem;
-						line-height: 0.69333333rem;
+						line-height: 0.42666667rem;
 						border-radius: 0.34666667rem;
 						color: #FEA300;
-						border: 1px solid #FEA300;
+						border: 1px solid rgba(254,163,0,.5);
 						margin-top: 0.26666667rem;
 						box-sizing: border-box;
 						&:not(:last-of-type){
@@ -610,6 +613,12 @@
 				display: block;
 				margin: 3.973333rem auto 0;
 				width: 6.826667rem;
+			}
+		}
+		@media screen and (max-width: 720px) and (-webkit-min-device-pixel-ratio: 2) {
+
+			[data-dpr="2"] .f12 {
+				font-size: 20px;
 			}
 		}
   }
