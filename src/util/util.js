@@ -109,4 +109,56 @@ export function isSupported(storage) {
     return false;
   }
 }
+/**
+ * 字符串字符数量 汉字等是两个字符
+ * @param str
+ */
+export function getLength(str) {
+  let result = 0;
+  let length = str.length;
+  while (length--) {
+    if (/^[\u0000-\u00ff]$/.test(str.charAt(length))) {
+      result += 1;
+    } else {
+      result += 2;
+    }
+  }
 
+  return result;
+}
+
+/**
+ * 字符串截取 英文*2
+ * @param str maxLength
+ */
+export function substr(str, maxLength) {
+  let re = new RegExp("^[a-zA-Z]|[0-9]+$");
+  let length = str.length;
+  let result = 0;
+  let index = 0;
+
+  for(let i = 0; i < str.length; i++){
+    if (/^[\u0000-\u00ff]$/.test(str.charAt(i))) {
+      result += 1;
+    } else {
+      result += 2;
+    }
+    if(result >= maxLength * 2){
+      index = i + 1
+      break
+    }
+  }
+
+  /**
+   * 如果是开头英文最后是中文的正则检测为true
+   * 此时字符串截取就出错了
+   * 所以改为上面的方法
+
+   if (re.test(str)) {
+     maxLength = maxLength * 2;
+   }
+   *
+   */
+
+  return str.substr(0, index);
+}
