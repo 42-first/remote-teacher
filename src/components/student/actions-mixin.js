@@ -287,8 +287,11 @@ var actionsMixin = {
               // targetIndex && this.cards.splice(targetIndex, 1, data);
 
               if(targetIndex > 0 && !data.isFetch) {
-                Object.assign(data, cardItem, { animation: 2, isRepeat: false })
-                this.cards.push(data);
+                // 克隆版单独处理 上一个是重复ppt就不处理了
+                if(targetIndex < this.cards.length - 1) {
+                  Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                  this.cards.push(data);
+                }
               }
             } else {
               // 如果直接收到动画结束
