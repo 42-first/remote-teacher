@@ -6,13 +6,19 @@
         <!-- <img :src="avatar" alt=""> -->
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
-      <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
-        <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-        <span class="dqxs">
-          {{ $t('activeno', { activeno: participantList.length }) }}
-          <i class="iconfont icon-dakai f15"></i>
-        </span>
-      </router-link>
+      <div class="head-link-wrap">
+        <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+          <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+          <span class="dqxs">
+            {{ $t('activeno', { activeno: participantList.length }) }}
+            <i class="iconfont icon-dakai f15"></i>
+          </span>
+        </router-link>
+        <v-touch class="radomrollcall-btn f16" v-on:tap="radomrollcall">
+          <!-- 随机点名 -->{{$t('radomrollcall')}}
+        </v-touch>
+      </div>
+      
     </section>
     <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
@@ -161,7 +167,13 @@
 				let self = this;
 				console.log(self.classroomid + '--' + self.lessonid);
 				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
-			}
+      },
+      /** 
+       * 新增随机点名入口
+      */
+      radomrollcall(e){
+        this.$refs.Toolbar.callWakeup(e)
+      }
     }
   }
 </script>
@@ -177,7 +189,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: #EDF2F6;
+    background: #fff;
 
     .activity-tollbar {
       position: absolute;
@@ -189,14 +201,15 @@
 
     .head {
       box-sizing: border-box;
-      height: 3.68rem;
-      padding: 0.733333rem 0.533333rem 0;
-      margin-bottom: 0.386667rem;
-      background: #1C1B20;
-      color: $white;
-
+      height: 3.46666667rem;
+      padding: 0.6rem 0.4rem 0.53333333rem;
+      margin-bottom: 0.09333333rem;
+      background: #f8f8f8;
+      color: #333;
+      box-sizing: border-box;
       .teacher {
-        margin-bottom: 0.653333rem;
+        margin-bottom: 0.65333333rem;
+        height: 0.74666667rem;
         img {
           float: left;
           width: 1.0rem;
@@ -209,27 +222,40 @@
         .coursename {
           float: left;
           width: 7.333333rem;
-          margin-top: 0.146667rem;
-          // margin-left: 0.133333rem;
+          font-weight: bold;
         }
+      }
+      .head-link-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .student {
+        display: flex;
+        align-items: center;
         img {
           float: left;
-          width: 0.56rem;
-          height: 0.56rem;
+          width: 0.53333333rem;
+          height: 0.53333333rem;
           border: 1px solid $white;
           border-radius: 50%;
-          margin-top: 0.133333rem;
-          margin-right: -0.133333rem;
+          margin-right: -0.13333333rem;
         }
         .dqxs {
           float: left;
-          margin-top: 0.04rem;
           margin-left: 0.333333rem;
-          color: $white;
+          color: #333;
+          line-height: 0.64rem;
         }
+      }
+      .radomrollcall-btn {
+        padding: 0 0.34666667rem;
+        border: 1px solid #333;
+        border-radius: 0.10666667rem;
+        height: 0.93333333rem;
+        line-height: 0.93333333rem;
+        box-sizing: border-box;
       }
     }
 
@@ -237,11 +263,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 1.666667rem;
-      padding: 0 0.533333rem;
-      margin-bottom: 0.266667rem;
+      height: 1.86666667rem;
+      padding: 0 0.4rem;
       background: $white;
       color: #333333;
+      border-bottom: 1px solid #eee;
 
       .iconbox {
         display: inline-block;
@@ -258,23 +284,27 @@
       }
 
       .dakai-box {
-        margin-top: 0.186667rem;
+        // margin-top: 0.186667rem;
+        display: flex;
+        align-items: center;
       }
 
       .kg {
         float: left;
-        margin-top: 0.053333rem;
+        // margin-top: 0.053333rem;
         margin-right: 0.1rem;
         color: #cccccc;
       }
 
       .info {
         float: left;
-        margin-top: 0.173333rem;
+        // margin-top: 0.173333rem;
         margin-right: 0.16rem;
-        min-width: 0.45rem;
-        padding: 0 0.1rem;
+        min-width: 0.6rem;
         text-align: center;
+        padding: 0 0.10666667rem;
+        text-align: center;
+        line-height: 0.37333333rem;
         background: #D0021B;
         border-radius: 0.25rem;
         color: $white;

@@ -322,6 +322,11 @@
 		    	window.gaue = gaue;
 		      gaue.default.registerEl();
 		    })
+				let goHomeFlag = localStorage.getItem('gohome')
+				if(goHomeFlag){
+					localStorage.removeItem('gohome')
+					this.goHome()
+				}
 	    },
 	    /**
 	     * 模仿微信小程序的 setData 用法，简易设置data
