@@ -414,6 +414,10 @@
             })
           }, 60000)
 
+          // 订阅发布重置
+          let pubSub = window.parent && window.parent.PubSub || null;
+          pubSub && pubSub.publish('fullscreen', { msg: 'fullscreen', lessonID: this.lessonID });
+
         });
       },
 

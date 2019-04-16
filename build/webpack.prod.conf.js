@@ -85,6 +85,22 @@ var webpackConfig = merge(baseWebpackConfig, {
       chunksSortMode: 'dependency'
     }),
     new HtmlWebpackPlugin({
+      filename: 'fullscreen.html',
+      template: './src/pages/fullscreen/fullscreen.html',
+      chunks: ['fullscreen'],
+      inject: true,
+      // inject: 'head',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
+    new HtmlWebpackPlugin({
       filename: 'market.html',
       template: './src/pages/market/market.html',
       chunks: ['market'],

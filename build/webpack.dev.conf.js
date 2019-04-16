@@ -38,6 +38,13 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['student'],
       inject: true
     }),
+    // 学生接收器大屏
+    new HtmlWebpackPlugin({
+      filename: 'fullscreen.html',
+      template: './src/pages/fullscreen/fullscreen.html',
+      chunks: ['fullscreen'],
+      inject: true
+    }),
     //
     new HtmlWebpackPlugin({
       filename: 'market.html',
