@@ -213,6 +213,7 @@
         }
       },
       returnLesson(){
+        localStorage.setItem('gohome', true)
         this.$router.back()
       },
       goStudentDetail(id){
