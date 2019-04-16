@@ -718,7 +718,9 @@
               self.socket.send(JSON.stringify({
                 'op': 'fetchtimeline',
                 'lessonid': self.lessonID,
-                'msgid': self.msgid++
+                'msgid': self.msgid++,
+                // 白板兼容老数据
+                'ver': 1
               }));
 
               // 更新完成
