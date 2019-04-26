@@ -8,10 +8,12 @@
       </div>
       <div class="head-link-wrap">
         <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
-          <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-          <span class="dqxs">
+          <div class="avatar-box">
+            <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+          </div>
+          <span class="dqxs f14">
             {{ $t('activeno', { activeno: participantList.length }) }}
-            <i class="iconfont icon-dakai f15"></i>
+            <i class="iconfont icon-dakai f14"></i>
           </span>
         </router-link>
         <v-touch class="radomrollcall-btn f16" v-on:tap="radomrollcall">
@@ -208,7 +210,7 @@
       color: #333;
       box-sizing: border-box;
       .teacher {
-        margin-bottom: 0.65333333rem;
+        margin-bottom: 0.4rem;
         height: 0.74666667rem;
         img {
           float: left;
@@ -227,13 +229,18 @@
       }
       .head-link-wrap {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
+        .avatar-box {
+          overflow: hidden;
+          margin-bottom: 0.13333333rem;
+        }
       }
 
       .student {
-        display: flex;
-        align-items: center;
+        // display: flex;
+        // align-items: center;
+        flex: 1;
         img {
           float: left;
           width: 0.53333333rem;
@@ -243,19 +250,21 @@
           margin-right: -0.13333333rem;
         }
         .dqxs {
-          float: left;
-          margin-left: 0.333333rem;
+          // float: left;
+          // margin-left: 0.333333rem;
           color: #333;
           line-height: 0.64rem;
         }
       }
       .radomrollcall-btn {
-        padding: 0 0.34666667rem;
-        border: 1px solid #333;
+        padding:0.16rem 0.34666667rem;
+        border:1px solid #639ef4;
         border-radius: 0.10666667rem;
-        height: 0.93333333rem;
-        line-height: 0.93333333rem;
+        height: 0.85333333rem;
+        line-height: 0.53333333rem;
         box-sizing: border-box;
+        color:#639ef4;
+        background:rgba(99,158,244,.1); 
       }
     }
 
