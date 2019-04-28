@@ -254,7 +254,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
+        return timeagoInstance.format(time - 1000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
       },
       scaleCanvas(item) {
         let scaleValue = (window.innerWidth / 10 * (10 - 0.906667)) / item.devwidth;
