@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'g.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -100,7 +100,9 @@ var mixin = {
             'role': 'student',
             'auth': self.userAuth,
             'lessonid': self.lessonID,
-            'presentation': self.presentationID
+            'presentation': self.presentationID,
+            // 白板兼容老数据
+            'ver': 1
           }))
 
           // 记录socket打开

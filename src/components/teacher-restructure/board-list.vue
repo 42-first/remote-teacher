@@ -9,8 +9,12 @@
 
     <!-- 白板绘制 -->
     <div class="timeline__ppt" v-for="board in boards">
+      <!-- 如果是图片 -->
+      <div class="ppt__cover--wrapper" v-if="board.type==='cover'">
+        <img class="border--cover" :src="board.cover" />
+      </div>
       <!-- 白板屏幕宽高 -->
-      <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/board.rate + 'rem' }" >
+      <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/board.rate + 'rem' }" v-else >
         <canvas :id="'canvas_'+board.board_id" class="board__container" :width="board.content.width" :height="board.content.height" :style="board.content|scaleCanvas" v-canvas="board"></canvas>
       </div>
       <div class="ppt-footer">
@@ -80,11 +84,22 @@
 
         if(list) {
           list.forEach((board) => {
-            board.content.width = board.content.width || width;
-            board.content.height = board.content.height || height;
+            // 白板是否已生成图片
+            if(board.type === 'cover') {
+              board.cover = board.content && board.content.cover;
+            } else if(board.type === 'track') {
+              board.content.width = board.content.width || width;
+              board.content.height = board.content.height || height;
 
-            board.rate = board.content.width/board.content.height;
-            board.lines = board.content && board.content.track_history;
+              board.rate = board.content.width/board.content.height;
+              board.lines = board.content && board.content.track_history;
+            }
+
+            // board.content.width = board.content.width || width;
+            // board.content.height = board.content.height || height;
+
+            // board.rate = board.content.width/board.content.height;
+            // board.lines = board.content && board.content.track_history;
           })
         }
 
@@ -127,6 +142,11 @@
       border: 1px solid #C8C8C8;
       overflow: hidden;
       background: #fff;
+    }
+
+    .border--cover {
+      display: block;
+      width: 100%;
     }
 
     .ppt-footer {

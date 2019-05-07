@@ -23,7 +23,8 @@ const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
 // 白板列表
 const BoardList = () => import('@/components/teacher-restructure/board-list')
-
+const StudentExpression = () => import('@/components/teacher-restructure/student_expression')
+const SearchStudent = () => import('@/components/teacher-restructure/search_student')
 
 Vue.use(Router)
 
@@ -166,6 +167,18 @@ const router = new Router({
       path: '/boardlist/:lessonid',
       name: 'boardlist',
       component: BoardList,
+      meta
+    },
+    {
+      path: '/stuexpression/:classroomid/:lessonid/:userid',
+      name: 'stuexpression',
+      component: StudentExpression,
+      meta
+    },
+    {
+      path: '/search/:classroomid/:lessonid',
+      name: 'search',
+      component: SearchStudent,
       meta
     },
     {

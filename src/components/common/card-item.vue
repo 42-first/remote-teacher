@@ -175,7 +175,7 @@
     <!-- 白板绘制 -->
     <template v-else-if="item.type==12">
       <div class="timeline__ppt">
-        <span class="ppt--pageno f14"><!-- 板书 -->{{ $t('board') }}</span>
+        <span class="ppt--pageno f14 z1"><!-- 板书 -->{{ $t('board') }}</span>
         <!-- 白板屏幕宽高 增加自定义指令解决数据改变canvas被清空大坑 -->
         <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/item.rate + 'rem' }" >
           <canvas :id="'canvas_'+item.boardid" class="board__container" :width="item.devwidth" :height="item.devheight" :style="item|scaleCanvas" v-canvas="item"></canvas>
@@ -254,7 +254,7 @@
     },
     filters: {
       getTimeago(time) {
-        return timeagoInstance.format(time - 5000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
+        return timeagoInstance.format(time - 1000, window.i18n && window.i18n.locale === 'en' ? 'en': 'zh_CN');
       },
       scaleCanvas(item) {
         let scaleValue = (window.innerWidth / 10 * (10 - 0.906667)) / item.devwidth;
