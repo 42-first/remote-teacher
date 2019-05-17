@@ -97,12 +97,12 @@ let boardMixin = {
 
         let point = coords[index];
 
-        if(coords.length > 1) {
+        if(coords.length > 1 && index < coords.length - 1) {
           // draw a line segment from the last coords
           // to the current coords
           let point2 = coords[index + 1];
-          context.lineWidth = point2.w || 1;
-          // context.lineWidth = point.w;
+          let lineWidth = +point2.w;
+          context.lineWidth = lineWidth || 1;
           context.beginPath();
           context.moveTo(point.x, point.y);
           context.lineTo(point2.x, point2.y);
@@ -111,7 +111,7 @@ let boardMixin = {
           // increment "index" to get the next coords
           index++;
         } else {
-          context.fillRect(point.x, point.y, point.w, point.h);
+          point && context.fillRect(point.x, point.y, point.w, point.h);
         }
 
       }
@@ -146,11 +146,12 @@ let boardMixin = {
 
         context.beginPath();
         // 先移动到第一个点
-        context.moveTo(start.x, start.y);
+        start && context.moveTo(start.x, start.y);
         // 然后lineTo绘制线
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
-          context.lineWidth = point.w || 1;
+          let lineWidth = +point.w;
+          context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
         }
 
@@ -186,14 +187,17 @@ let boardMixin = {
 
         context.beginPath();
         // 先移动到第一个点
-        context.moveTo(start.x, start.y);
+        start && context.moveTo(start.x, start.y);
         // 然后lineTo绘制线
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
-          context.lineWidth = point.w;
+          /*
+          let lineWidth = +point.w;
+          context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
-          // context.fillRect(point.x, point.y, point.w, point.h);
-          // context.clearRect(point.x, point.y, point.w, point.h);
+          */
+
+          this.clearRect(point, context);
         }
 
         // 描边
@@ -203,6 +207,16 @@ let boardMixin = {
         // 状态继续存储 方便后面回退
         // context.save();
       }
+    },
+
+    /*
+     * @method 清除板擦的矩形
+     * @param
+     */
+    clearRect(point, context) {
+      let h = +point.h;
+      let w = +point.w;
+      context.fillRect(point.x - w/2, point.y - h/2, point.w, point.h);
     },
 
     /*
