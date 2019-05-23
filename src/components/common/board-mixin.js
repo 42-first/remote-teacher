@@ -97,20 +97,21 @@ let boardMixin = {
 
         let point = coords[index];
 
-        if(coords.length > 1) {
+        if(coords.length > 1 && index < coords.length - 1) {
           // draw a line segment from the last coords
           // to the current coords
           let point2 = coords[index + 1];
-          context.lineWidth = point2.w || 1;
-          // context.lineWidth = point.w;
+          let lineWidth = +point2.w;
+          context.lineWidth = lineWidth || 1;
           context.beginPath();
           context.moveTo(point.x, point.y);
           context.lineTo(point2.x, point2.y);
           context.stroke();
+          context.closePath();
           // increment "index" to get the next coords
           index++;
         } else {
-          context.fillRect(point.x, point.y, point.w, point.h);
+          point && context.fillRect(point.x, point.y, point.w, point.h);
         }
 
       }
@@ -145,16 +146,18 @@ let boardMixin = {
 
         context.beginPath();
         // 先移动到第一个点
-        context.moveTo(start.x, start.y);
+        start && context.moveTo(start.x, start.y);
         // 然后lineTo绘制线
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
-          context.lineWidth = point.w || 1;
+          let lineWidth = +point.w;
+          context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
         }
 
         // 描边
         context.stroke();
+        context.closePath();
         // 状态继续存储 方便后面回退
         // context.save();
       }
@@ -172,7 +175,7 @@ let boardMixin = {
         return null;
       }
 
-      let color = '#ffffff';
+      let color = '#FFFFFF';
       context.fillStyle = color;
       context.strokeStyle = color;
 
@@ -184,19 +187,36 @@ let boardMixin = {
 
         context.beginPath();
         // 先移动到第一个点
-        context.moveTo(start.x, start.y);
+        start && context.moveTo(start.x, start.y);
         // 然后lineTo绘制线
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
-          context.lineWidth = point.w;
+          /*
+          let lineWidth = +point.w;
+          context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
-          context.fillRect(point.x, point.y, point.w, point.h);
-          context.clearRect(point.x, point.y, point.w, point.h);
+          */
+
+          this.clearRect(point, context);
         }
+
+        // 描边
+        context.stroke();
+        context.closePath();
 
         // 状态继续存储 方便后面回退
         // context.save();
       }
+    },
+
+    /*
+     * @method 清除板擦的矩形
+     * @param
+     */
+    clearRect(point, context) {
+      let h = +point.h;
+      let w = +point.w;
+      context.fillRect(point.x - w/2, point.y - h/2, point.w, point.h);
     },
 
     /*
@@ -236,7 +256,6 @@ let boardMixin = {
         // 将原来的所有线重新复原
         this.restoreAll(boardInfo);
       }, 50)
-
     },
 
     /*
@@ -245,16 +264,27 @@ let boardMixin = {
      */
     restore(boardInfo, context) {
       let id = boardInfo.boardid;
+      let drawFn = () => {
+        if(boardInfo.lines) {
+          boardInfo.lines.forEach((line) => {
+            let isErase = line.action === 'erase' ? true : false;
+            if(isErase) {
+              this.eraseLine(context, line.coords, id);
+            } else {
+              this.drawLine(context, line.coords, line.color, id);
+            }
+          })
+        }
+      }
 
-      if(boardInfo.lines) {
-        boardInfo.lines.forEach((line) => {
-          let isErase = line.action === 'erase' ? true : false;
-          if(isErase) {
-            this.eraseLine(context, line.coords, id);
-          } else {
-            this.drawLine(context, line.coords, line.color, id);
-          }
+      // 先判断 当前有没有图片存在 有先渲染图片 再把后面的线绘制上去
+      if(boardInfo.url) {
+        this.drawImage(boardInfo).
+        then(()=>{
+          drawFn();
         })
+      } else {
+        drawFn();
       }
 
     },
@@ -293,7 +323,39 @@ let boardMixin = {
       }
 
       context.clearRect(0, 0, boardInfo.devwidth, boardInfo.devheight);
-    }
+    },
+
+    /*
+     * @method canvas绘制图片
+     * @param
+     */
+    drawImage(boardInfo) {
+      let id = boardInfo.boardid;
+      let img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+
+      return new Promise((resolve, reject) => {
+        img.onload = (evt)=>{
+          let context = this.getContext(id);
+          if(!context) {
+            reject('没有上下文');
+          } else {
+            // 将图片画到canvas上面上去！
+            context.drawImage(img, 0, 0, boardInfo.devwidth, boardInfo.devheight);
+            setTimeout(()=>{
+              resolve('绘制图片完成');
+            }, 0)
+          }
+        }
+
+        img.onerror = (evt)=>{
+          reject('图片加载失败');
+        }
+
+        img.src = boardInfo.url;
+      });
+
+    },
 
   }
 }

@@ -89,6 +89,8 @@ var actionsMixin = {
                 this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
               } else if(item.action === 'clear') {
                 this.clearBoard(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
+              } else if(item.action === 'autosave') {
+                this.setBoardCover(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
               }
 
               break;
@@ -285,8 +287,11 @@ var actionsMixin = {
               // targetIndex && this.cards.splice(targetIndex, 1, data);
 
               if(targetIndex > 0 && !data.isFetch) {
-                Object.assign(data, cardItem, { animation: 2, isRepeat: false })
-                this.cards.push(data);
+                // 克隆版单独处理 上一个是重复ppt就不处理了
+                if(targetIndex < this.cards.length - 1) {
+                  Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                  this.cards.push(data);
+                }
               }
             } else {
               // 如果直接收到动画结束
@@ -903,6 +908,25 @@ var actionsMixin = {
       if(data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
         this.clearScreen(id, true);
+      }
+    },
+
+    /**
+     * @method 设置board当前状态的图片URL
+     * @param { "type": "board", "action": "nav", "boardid": 1, "url": "" }
+     */
+    setBoardCover(data) {
+      if(data && !data.isFetch) {
+        let id = data.boardid;
+        let boardInfo = this.boardMap.get(id);
+
+        if(boardInfo) {
+          boardInfo = Object.assign({}, boardInfo, { url: data.url, lines: [] })
+          this.boardMap.set(id, boardInfo);
+
+          // 将白板线路图改成图片
+          this.drawImage(boardInfo);
+        }
       }
     },
 

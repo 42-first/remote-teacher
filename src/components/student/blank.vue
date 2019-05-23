@@ -499,6 +499,12 @@
                     message: '此题已经作答过',
                     duration: 2000
                   });
+                } else if(data.status_code === 2) {
+                  // 用户由于接口时间太长超时了
+                  this.$toast({
+                    message: `提交失败(错误码：${data.status_code})`,
+                    duration: 2000
+                  });
                 } else {
                   this.$toast({
                     message: this.$i18n.t('sendsuccess') || '提交成功',
