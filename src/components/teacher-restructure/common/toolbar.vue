@@ -129,7 +129,7 @@
         const $target = e.target
         if ($target) {
           const className = $target.getAttribute('class')
-          if (className && className.indexOf('toolbar-more-box-wrapper')) {
+          if (className && className.indexOf('toolbar-more-box-wrapper')>-1) {
             this.isToolbarMoreBoxHidden = !this.isToolbarMoreBoxHidden
           }
         }
