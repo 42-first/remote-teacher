@@ -23,7 +23,7 @@
 		</div>
 
 		<!-- 更多的内容 -->
-    <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden">
+    <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden" @click="touchCloseToolbarMoreBox">
       <div class="toolbar-more-box f14">
         <i class="iconfont icon-sanjiaoxing f24"></i>
         <v-touch class="more-item" v-on:tap="summonQrcodeMask">
@@ -123,6 +123,16 @@
         let self = this
         self.isToolbarMoreBoxHidden = !self.isToolbarMoreBoxHidden
         // self.$emit('update:isToolbarMoreBoxHidden', !self.isToolbarMoreBoxHidden)
+      },
+      /* 点击外部蒙层关闭更多菜单栏 */
+      touchCloseToolbarMoreBox(e) {
+        const $target = e.target
+        if ($$target) {
+          const className = $target.getAttribute('class')
+          if (className && className.indexOf('toolbar-more-box-wrapper')) {
+            this.isToolbarMoreBoxHidden = !this.isToolbarMoreBoxHidden
+          }
+        }
       },
       /**
        * 点击二维码按钮，发送弹出二维码控制面板的请求，收到回复后在回复中才打开面板
