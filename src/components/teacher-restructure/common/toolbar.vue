@@ -127,7 +127,7 @@
       /* 点击外部蒙层关闭更多菜单栏 */
       touchCloseToolbarMoreBox(e) {
         const $target = e.target
-        if ($$target) {
+        if ($target) {
           const className = $target.getAttribute('class')
           if (className && className.indexOf('toolbar-more-box-wrapper')) {
             this.isToolbarMoreBoxHidden = !this.isToolbarMoreBoxHidden
