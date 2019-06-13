@@ -28,6 +28,10 @@
           <p class="user-name f15">{{ result.user_name }}</p>
           <p class="f15">{{ result.content }}</p>
           <img v-if="result.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
+          <!-- 视频展示 -->
+          <div class="video__preview" v-if="result.video && result.video.url">
+            <video :src="result.video.url" :style="result.video|setStyle" controls ></video>
+          </div>
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
         </div>
 
@@ -62,6 +66,13 @@
     filters: {
       formatTime(time, format) {
         return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
+      },
+      setStyle(video) {
+        let width = 3.466;
+        let height = width/video.width * video.height;
+        let sCss = `width: ${width}rem; height: ${height}rem;`;
+
+        return sCss;
       }
     },
     mixins: [],
@@ -279,5 +290,9 @@
       }
     }
 
+  }
+
+  .video__preview video {
+    background: #000;
   }
 </style>

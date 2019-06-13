@@ -49,6 +49,10 @@
                     </span>
                   </div>
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
+                  <!-- 视频展示 -->
+                  <div class="video__preview" v-if="item.video && item.video.url">
+                    <video :src="item.video.url" :style="item.video|setStyle" controls ></video>
+                  </div>
                 </div>
               </div>
               <div class="action-box">
@@ -191,6 +195,15 @@
           let wh = window.innerHeight
           this.isContLonger = sbh >= wh
         }, 100)
+      }
+    },
+    filters: {
+      setStyle(video) {
+        let width = 3.466;
+        let height = width/video.width * video.height;
+        let sCss = `width: ${width}rem; height: ${height}rem;`;
+
+        return sCss;
       }
     },
     methods: {
@@ -845,5 +858,9 @@
     background: #5096F5;
     box-shadow: 0 0.08rem 0.266667rem rgba(80, 150, 245, 0.3);
     border-radius: 50%;
+  }
+
+  .video__preview video {
+    background: #000;
   }
 </style>
