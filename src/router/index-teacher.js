@@ -1,5 +1,11 @@
+import 'mint-ui/lib/toast/style.css'
+import 'mint-ui/lib/message-box/style.css'
+
 import Vue from 'vue'
 import Router from 'vue-router'
+import Toast from 'mint-ui/lib/toast'
+import MessageBox from 'mint-ui/lib/message-box'
+
 import Home from '@/components/teacher-restructure/home'
 import {setSize} from '@/components/teacher-restructure/util/util'
 
@@ -18,6 +24,8 @@ const Paper = () => import('@/components/teacher-restructure/paper2')
 const Paperfolder = () => import('@/components/teacher-restructure/paper-folder')
 const Danmu = () => import('@/components/teacher-restructure/danmu')
 const Submission = () => import('@/components/teacher-restructure/submission')
+const PostSubmission = () => import('@/components/student/submission')
+const SubmissionList = () => import('@/components/student/submission-list')
 const StateSet = () => import('@/components/teacher-restructure/stateSet')
 const Quizresult = () => import('@/components/teacher-restructure/quizresult')
 const Quizresultdetail = () => import('@/components/teacher-restructure/quizresultdetail')
@@ -27,6 +35,9 @@ const StudentExpression = () => import('@/components/teacher-restructure/student
 const SearchStudent = () => import('@/components/teacher-restructure/search_student')
 
 Vue.use(Router)
+Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
+Vue.$toast = Vue.prototype.$toast = Toast;
+
 
 let meta = {
       keepAlive: true // 不需要缓存
@@ -53,7 +64,7 @@ const router = new Router({
       name: 'objectiveresult',
       component: Objectiveresult,
       meta
-      
+
     },
     {
       path: '/collumresult/:problemid',
@@ -141,6 +152,17 @@ const router = new Router({
       name: 'submission',
       component: Submission,
       meta
+    },
+    {
+      path: '/postsubmission/:lessonID',
+      name: 'postsubmission',
+      component: PostSubmission,
+      meta
+    },
+    {
+      path: '/:lessonID/submission_list',
+      name: 'student-submissionlist-page',
+      component: SubmissionList
     },
     // 课堂动态设置
     {
