@@ -77,8 +77,8 @@
 			            </div>
 								</template>
 							</div>
-
-							<v-touch v-if="problem_answer_type" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+              <!-- v-if="problem_answer_type"  -->
+							<v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
