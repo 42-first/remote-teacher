@@ -510,7 +510,7 @@ let pages = {
     "notice" : "Notice",
     "noticecontent" : "Please mark carefully according to the scoring points, and only the last submission will be accepted as the final score.",
     "close" : "Close",
-    "gradedalready" : "Graded Already",
+    "gradedalready" : "Tips",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading",
     "noarticipate": "Groups did not submit will not participate in the peer grading.",

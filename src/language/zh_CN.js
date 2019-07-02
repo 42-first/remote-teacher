@@ -514,7 +514,7 @@ let pages = {
     "notice" : "注意",
     "noticecontent" : "请认真根据评分要点进行打分<br>成绩以最后一次提交为主",
     "close" : "关闭",
-    "gradedalready" : "已有人批改",
+    "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
     "noarticipate": "未作答的小组不参与互评",
