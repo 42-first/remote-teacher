@@ -153,10 +153,13 @@ let boardMixin = {
           let lineWidth = +point.w;
           context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
+
+          // 描边
+          context.stroke();
         }
 
-        // 描边
-        context.stroke();
+        // 这里描边 会使用最后一次的宽度显示
+        // context.stroke();
         context.closePath();
         // 状态继续存储 方便后面回退
         // context.save();
