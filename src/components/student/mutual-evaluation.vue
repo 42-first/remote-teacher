@@ -607,8 +607,10 @@
   }
 
   .score__modal.active {
+    /*
     top: 0;
     bottom: initial;
+    */
   }
 
   .node__wrap {

@@ -358,6 +358,11 @@
       let textDomList = boxDom.querySelectorAll('.textarea-place')
       let popDom = document.querySelector('.pop')
       boxDom.addEventListener('touchmove', e => {
+        var target = e.target;
+        if (target && target.tagName.toUpperCase() === 'TEXTAREA') {
+          return this;
+        }
+
         // 评语部分再内容很多的时候能搓动
         let isNotOverflow = textDomList[0].scrollHeight ? (textDomList[0].scrollHeight <= textDomList[0].offsetHeight) : (textDomList[1].scrollHeight <= textDomList[1].offsetHeight)
         if ((!~e.target.className.indexOf('textarea-place') || isNotOverflow) && (document.querySelector('.remark-box').offsetHeight || 0) < 318 || e.touches[0].clientY < popDom.offsetHeight) {
