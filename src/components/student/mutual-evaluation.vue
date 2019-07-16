@@ -358,6 +358,14 @@
       if(this.summary) {
         let reviewID = this.summary.reviewid;
         reviewID && this.getGroupReview(reviewID);
+
+        // 处理弹出的消息
+        let msgBoxs = this.$parent.msgBoxs;
+        msgBoxs && msgBoxs.forEach((item, index) => {
+          if(item.type === 9) {
+            msgBoxs.splice(index, 1);
+          }
+        })
       } else {
         this.$router.back();
       }
