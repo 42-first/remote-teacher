@@ -8,7 +8,14 @@
 
 <template>
   <section class="page-submission">
-    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['submission-wrapper', 'h100', 'animated', opacity ? 'zoomIn': '']">
+      <div class="text-left contributor-wrapper">
+        <div class="title">投稿人</div>
+        <div class="handler-wrapper">
+          <span>个人</span>
+          <i class="iconfont icon-dakai ver-middle font20"></i>
+        </div>
+      </div>
       <div class="submission-inner">
 
       <!-- 文字编辑 -->
@@ -90,11 +97,15 @@
 
     </section>
 
+
+    <!-- picker -->
+    <picker></picker>
   </section>
 </template>
 <script>
   import API from '@/util/api'
   import {compress} from '@/util/image'
+  import picker from '@/components/common/picker.vue'
 
   export default {
     name: 'submission-page',
@@ -122,6 +133,7 @@
       };
     },
     components: {
+      picker
     },
     computed: {
     },
@@ -463,7 +475,27 @@
 </script>
 
 <style lang="scss">
+  @import "~@/style/common_rem";
+  /* 
+    设置投稿人
+  */
+  .contributor-wrapper{
+    height: px2rem(98px);
+    line-height: px2rem(98px);
+    background-color: #f8f8f8;
+    color: #979797;
+    color: #666;
+    font-size: px2rem(34px);
+    border-bottom: px2rem(1px) solid #979797;
+    display: flex;
+    padding: 0 px2rem(30px);
+    .title{
+      flex: 1;
+    }
+    .handler-wrapper{
 
+    }
+  }
   /*------------------*\
     $ 文字编辑
   \*------------------*/
