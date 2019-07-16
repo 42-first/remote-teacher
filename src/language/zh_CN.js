@@ -512,7 +512,7 @@ let pages = {
     "gradingscore" : "互评得分：{score}分",
     "gradingtotalscore" : "请输入互评分数（满分{score}分）",
     "notice" : "注意",
-    "noticecontent" : "请认真根据评分要点进行打分<br>成绩以最后一次提交为主",
+    "noticecontent" : "请认真根据评分要点进行打分<br>成绩以最后一次提交为准",
     "close" : "关闭",
     "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
