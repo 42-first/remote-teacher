@@ -43,7 +43,7 @@
 
     <!-- 视频直播 -->
     <section v-if="liveURL && liveType === 2">
-      <video id="player" autobuffer controls ></video>
+      <video id="player" autobuffer controls src="" ></video>
       <!-- 展开收起 -->
     </section>
 
@@ -1146,6 +1146,28 @@
   .live__view {
     display: flex;
     flex-flow: column;
+
+    .live__wrap {
+      position: relative;
+      padding: 1.0rem 0 0.253333rem;
+
+      .video__live {
+        width: 100%;
+        height: 7.5rem;
+      }
+
+      .live__fold {
+        height: 0.64rem;
+      }
+    }
+
+    .student__timeline-wrapper {
+      flex: 1;
+      overflow-y: auto;
+
+      position: relative;
+      top: 0;
+    }
   }
 
   /*-------------------*\
