@@ -18,24 +18,22 @@ export default {
       let arr = [
         {
           value: 0,
-          result: 0,
           text: '默认数据1'
         },
         {
           value: 1,
-          result: 1,
           text: '默认数据2'
         },
         {
           value: 2,
-          result: 2,
           text: '默认数据2'
         },
       ]
       if (!this.picker) {
         this.picker = new Picker({
           data: [arr],
-          title: '标题'
+          title: '标题',
+          selectedIndex: 0
         })
         $(this.picker.confirmEl).text('确定')
         $(this.picker.cancelEl).text('取消')
@@ -90,7 +88,6 @@ export default {
           'line-height': 'normal'
         })
       }
-      this.picker.selectedIndex = 0
       this.picker && this.picker.show()
     },
     // 像素转rem 
