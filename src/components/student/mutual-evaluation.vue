@@ -278,8 +278,16 @@
         this.modalActive = true;
       },
 
-      handleblur() {
+      handleblur(evt) {
         this.modalActive = false;
+
+        let target = evt.currentTarget;
+        setTimeout(() => {
+          target.scrollIntoView({
+            block: 'start',
+            behavior: 'smooth'
+          });
+        }, 100);
       },
 
       handlelaodImg(evt) {
