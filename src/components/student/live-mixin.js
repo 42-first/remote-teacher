@@ -217,6 +217,15 @@ let liveMixin = {
       }
     },
 
+
+    /*
+     * @method 设置直播展开收起
+     * @params
+     */
+    handleLiveVisible(visible) {
+      this.liveVisible = visible;
+    },
+
   }
 }
 

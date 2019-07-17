@@ -41,10 +41,18 @@
       </ul>
     </section>
 
-    <!-- 视频直播 -->
-    <section v-if="liveURL && liveType === 2">
-      <video id="player" autobuffer controls src="" ></video>
+    <!-- 视频直播 liveURL && liveType === 2 -->
+    <section class="live__wrap" v-if="liveURL && liveType === 2">
+      <video id="player" class="video__live" autobuffer controls :src="liveURL" v-show="liveVisible" ></video>
       <!-- 展开收起 -->
+      <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
+        <i class="iconfont icon-fold f14"></i>
+        <span class="f12 fold-text">收起</span>
+      </section>
+      <section class="live__fold c9b" v-else @click="handleLiveVisible(true)">
+        <i class="iconfont icon-unfold f14"></i>
+        <span class="f12 fold-text">直播中 点击观看</span>
+      </section>
     </section>
 
 
@@ -294,7 +302,7 @@
         // 直播信息
         liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
-        liveURL: '',
+        liveURL: 'https://storage.xuetangx.com/public_assets/xuetangx/site/special/RainClassroom.mp4',
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
@@ -314,6 +322,7 @@
         isLive: false,
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 2,
+        liveVisible: true,
       };
     },
     components: {
@@ -1149,15 +1158,20 @@
 
     .live__wrap {
       position: relative;
-      padding: 1.0rem 0 0.253333rem;
+      padding: 2.33rem 0 0.253333rem;
 
       .video__live {
         width: 100%;
-        height: 7.5rem;
+        // height: 7.5rem;
+        min-height: 5rem;
+        background: rgba(0,0,0,0.45);
       }
 
       .live__fold {
         height: 0.64rem;
+        .fold-text {
+          padding-left: 5px;
+        }
       }
     }
 
