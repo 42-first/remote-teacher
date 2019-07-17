@@ -789,10 +789,12 @@ var actionsMixin = {
      */
     startLive(data) {
       if(data && data.liveurl) {
+        this.liveurl = data.liveurl;
         // 直播类型
         this.liveType = data.type;
         this.liveURL = data.liveurl.hls;
-        this.Hls && this.supportHLS(this.Hls);
+        // this.Hls && this.supportHLS(this.Hls);
+        this.supportFLV();
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
         // 标记这是一堂远程课

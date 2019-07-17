@@ -320,6 +320,7 @@
         danmus: [],
         // 是否直播课
         isLive: false,
+        liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 2,
         liveVisible: true,
@@ -652,8 +653,10 @@
 
               // 直播处理 1为直播中，2为已结束
               if(self.liveInfo && self.liveInfo.status === 1) {
+                self.liveurl = self.liveInfo.live_url;
                 self.liveURL = self.liveInfo.live_url.hls;
-                self.Hls && self.supportHLS(self.Hls);
+                // self.Hls && self.supportHLS(self.Hls);
+                self.supportFLV();
               }
 
               // 课程title
