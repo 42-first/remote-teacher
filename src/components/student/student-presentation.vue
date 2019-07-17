@@ -7,7 +7,7 @@
  */
 
 <template>
-  <section class="page" @click="handleFilter">
+  <section class="page" :class="[ liveType === 2 ? 'live__view' : '' ]" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
@@ -39,6 +39,12 @@
         <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob2') }}</li>
         <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz2') }}</li>
       </ul>
+    </section>
+
+    <!-- 视频直播 -->
+    <section v-if="liveURL && liveType === 2">
+      <video id="player" autobuffer controls ></video>
+      <!-- 展开收起 -->
     </section>
 
 
@@ -83,7 +89,7 @@
     </section>
 
     <!-- 直播入口 -->
-    <section class="live" v-if="liveURL">
+    <section class="live" v-if="liveURL && liveType === 1">
       <div class="live__audio">
         <i class="iconfont icon-quxiaojingyinx f32" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
@@ -305,7 +311,9 @@
         // 弹幕直播
         danmus: [],
         // 是否直播课
-        isLive: false
+        isLive: false,
+        // 直播类型 0：默认值 1:audio  2:video
+        liveType: 2,
       };
     },
     components: {
@@ -1135,6 +1143,10 @@
   }
 
 
+  .live__view {
+    display: flex;
+    flex-flow: column;
+  }
 
   /*-------------------*\
     $ 时间轴 列表

@@ -788,8 +788,10 @@ var actionsMixin = {
         }}
      */
     startLive(data) {
-      if(data) {
-        this.liveURL = data.hls;
+      if(data && data.liveurl) {
+        // 直播类型
+        this.liveType = data.type;
+        this.liveURL = data.liveurl.hls;
         this.Hls && this.supportHLS(this.Hls);
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
@@ -805,6 +807,7 @@ var actionsMixin = {
     endLive(data) {
       // this.handlestop();
       this.liveURL = '';
+      this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       // 关闭弹幕直播

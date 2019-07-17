@@ -380,7 +380,8 @@ var mixin = {
 
           // 开始直播
           case 'startlive':
-            this.startLive(msg['liveurl']);
+            // this.startLive(msg['liveurl']);
+            this.startLive(msg);
 
             break;
 
