@@ -11,7 +11,7 @@
     <div :class="['submission-wrapper', 'h100', 'animated', opacity ? 'zoomIn': '']">
       <div class="text-left contributor-wrapper">
         <div class="title">投稿人</div>
-        <div class="handler-wrapper">
+        <div class="handler-wrapper" @click="showPicker">
           <span>个人</span>
           <i class="iconfont icon-dakai ver-middle font20"></i>
         </div>
@@ -97,15 +97,14 @@
 
     </section>
 
-
     <!-- picker -->
-    <picker></picker>
+    <picker :list="groupList" :selectedindex="selectedIndex" :text="pickerText" @close="pickerClose" v-if="isShowPicker"></picker>
   </section>
 </template>
 <script>
   import API from '@/util/api'
   import {compress} from '@/util/image'
-  import picker from '@/components/common/picker.vue'
+  import picker from '@/components/common/picker/index.vue'
 
   export default {
     name: 'submission-page',
@@ -130,6 +129,15 @@
         // 图片比例
         rate: 1,
         retryTimes: 0,
+        selectedIndex: [0], // 选择的分组
+        groupList: [], // 分组列表
+        pickerText: {
+            title: '选择分组/个人',
+            cancel: '取消',
+            confirm: '确定'
+        },
+        selectedVal: '',
+        isShowPicker: false
       };
     },
     components: {
@@ -458,18 +466,53 @@
       },
       handleBack() {
         this.$router.back();
+      },
+      /**
+       * picker: 分组列表数据展示
+       */
+      pickerDataInit() {
+        this.groupList = [
+          {
+            text: '六张算数的分组',
+            value: 0
+          },
+          {
+            text: '洗牌呼拉分组',
+            value: 1
+          },
+          {
+            text: '军长分组',
+            value: 2
+          },
+          {
+            text: '王炸分组',
+            value: 3
+          }
+        ]
+      },
+      /**
+       * 展示picker
+       */
+      showPicker() {
+        this.isShowPicker = true
+      },
+      /**
+       * 关闭 picker
+       */
+      pickerClose(data) {
+        if (data) {
+          console.log(data)
+        }
+        this.isShowPicker = false
+        return null
       }
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
       document.title = this.$i18n.t('post') || '投稿';
-
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
-    },
-    mounted() {
-    },
-    beforeDestroy() {
+      this.pickerDataInit()
     }
   };
 </script>
