@@ -1,6 +1,6 @@
 @function px2rem($px) {
   $rem: 75px;
-  @return ($px/$rem) + rem;
+  @return (($px*2)/$rem) + rem;
 }
 .picker {
   display: none;

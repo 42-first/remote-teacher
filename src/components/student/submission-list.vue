@@ -13,7 +13,7 @@
       <!-- 我的投稿列表 -->
       <section class="submission-mine">
         <ul class="submission-list">
-          <li class="item" v-for="(item, index) in submissionlist">
+          <li class="item" v-for="(item, index) in submissionlist" :key="index">
             <!-- 投稿时间 -->
             <div class="item-date">
               <p class="date-time f15">{{ item.create_time|formatTime('HH:mm') }}</p>
@@ -25,14 +25,21 @@
               <div class="content__wrap">
                 <div class="f15">{{ item.text }}
                   <template v-if="item.hasMore">
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse"><!-- 全文 -->{{ $t('fulltext') }}<span class="f12">({{ item.content.length }})</span></span>
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else><i class="iconfont icon-zhankai f21"></i><!-- 收起 -->{{ $t('fold') }}</span>
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse">
+                      <!-- 全文 -->{{ $t('fulltext') }}
+                      <span class="f12">({{ item.content.length }})</span>
+                    </span>
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
+                      <i class="iconfont icon-zhankai f21"></i>
+                      <!-- 收起 -->{{ $t('fold') }}
+                    </span>
                   </template>
                 </div>
               </div>
               <div class="image__wrap" v-if="item.pic" >
                 <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
               </div>
+              <img-group v-if="item.is_group" :groupdata="item.team_info" @click="showCurGroupList(index)"></img-group>
             </div>
 
             <!-- 更多删除入口 -->
@@ -93,6 +100,8 @@
     <!-- actionsheet -->
     <mt-actionsheet :actions="actions" :cancel-text="cancelText" v-model="sheetVisible"></mt-actionsheet>
 
+    <!-- 组列表 -->
+    <group-list v-if="curGroupInfo" @close="hideGroupList"></group-list>
   </section>
 </template>
 <script>
@@ -101,6 +110,8 @@
   import Vue from 'vue'
   import { Actionsheet } from 'mint-ui';
   import API from '@/util/api'
+  import groupList from '@/components/common/groupMembers/group-list.vue'
+  import imgGroup from '@/components/common/groupMembers/img-group.vue'
 
   Vue.component(Actionsheet.name, Actionsheet);
 
@@ -123,10 +134,13 @@
             this.handleWithdraw();
             console.log('撤回');
           }
-        }]
+        }],
+        curGroupInfo: null
       };
     },
     components: {
+      groupList,
+      imgGroup
     },
     computed: {
     },
@@ -153,21 +167,50 @@
         }
 
         return request.get(URL, params)
-          .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+        .then(function (res) {
+          if(res && res.data) {
+            let data = res.data;
 
-              self.submissionlist = self.formatData(data.tougao_list);
+            self.submissionlist = self.formatData(data.tougao_list);
 
-              if(!self.submissionlist.length) {
-                self.isEmpty = true;
-              }
-
-              return data;
+            if(!self.submissionlist.length) {
+              self.isEmpty = true;
             }
-          });
-      },
 
+            return data;
+          }
+        });
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      showCurGroupList(index) {
+        this.curGroupInfo = this.submissionlist[index]
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      hideGroupList() {
+        this.curGroupInfo = null
+      },
+      // 临：分组成员列表
+      getMembersName() {
+        let str = '始皇三十四年置酒咸阳宫博士仆射周青臣等颂始皇威德齐人淳于越进谏曰“臣闻之殷周之王千馀岁封子弟功臣自为支辅今陛下有海内而子弟为匹夫卒'
+        let start = Math.floor(Math.random() * str.length)
+        start = start >= 0 ? start : 0
+        return str.substr(start, 4)
+      },
+      getGroupList() {
+        let url = 'http://qn-sx.yuketang.cn/tougao_pic_6n8uLqGL4GK.png'
+        let list = []
+        for (let i =0;i<18;i++) {
+          list.push({
+            "user_id": 123,
+            "name": this.getMembersName(),
+            "avatar": url
+          })
+        }
+      },
       /*
        * @method 格式化投稿控制文字收起展开
        * @param
@@ -181,9 +224,15 @@
           } else {
             item.text = item.content;
           }
-
+          // 临时: 页面增加的分组数据
+          item = Object.assign(item, {
+            "is_group": Math.random() > 0.5,
+            "team_info": {
+              "team_name": "佩奇组",
+              "members": this.getGroupList()
+            }
+          })
         })
-
         return data;
       },
 

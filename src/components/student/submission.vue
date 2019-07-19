@@ -12,7 +12,7 @@
       <div class="text-left contributor-wrapper">
         <div class="title">投稿人</div>
         <div class="handler-wrapper" @click="showPicker">
-          <span>个人</span>
+          <span>{{ selectedVal }}</span>
           <i class="iconfont icon-dakai ver-middle font20"></i>
         </div>
       </div>
@@ -132,9 +132,9 @@
         selectedIndex: [0], // 选择的分组
         groupList: [], // 分组列表
         pickerText: {
-            title: '选择分组/个人',
-            cancel: '取消',
-            confirm: '确定'
+          title: '选择分组/个人',
+          cancel: '取消',
+          confirm: '确定'
         },
         selectedVal: '',
         isShowPicker: false
@@ -471,7 +471,7 @@
        * picker: 分组列表数据展示
        */
       pickerDataInit() {
-        this.groupList = [
+        let list = [
           {
             text: '六张算数的分组',
             value: 0
@@ -489,6 +489,7 @@
             value: 3
           }
         ]
+        this.groupList = [list]
       },
       /**
        * 展示picker
@@ -501,7 +502,11 @@
        */
       pickerClose(data) {
         if (data) {
-          console.log(data)
+          let index = 0
+          if (data.selectedIndex) {
+            index = data.selectedIndex[0]
+          }
+          this.selectedVal = this.groupList[0][index]
         }
         this.isShowPicker = false
         return null
