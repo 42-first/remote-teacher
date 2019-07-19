@@ -129,6 +129,7 @@
         // 图片比例
         rate: 1,
         retryTimes: 0,
+        classroomid: 0,
         selectedIndex: [0], // 选择的分组
         groupList: [], // 分组列表
         pickerText: {
@@ -137,6 +138,8 @@
           confirm: '确定'
         },
         selectedVal: '',
+        group_id: 0,
+        team_id: 0,
         isShowPicker: false
       };
     },
@@ -197,7 +200,9 @@
           'content': content,
           'pic': this.imageURL,
           'thumb': this.imageThumbURL,
-          'lesson_id': this.lessonID
+          'lesson_id': this.lessonID,
+          'team_id': this.team_id,
+          'group_id': this.group_id
         }
 
         // 发送中
@@ -468,28 +473,37 @@
         this.$router.back();
       },
       /**
+       * 获取 学生班级的分组列表
+       */
+      getGroupList() {
+        let url = API.student.GET_ALL_GROUP_LIST
+        return request.get(url, {
+          classroom_id: this.classroomid
+        }).then(e => {
+          if (e.success) {
+            return e.data.team_list || []
+          }
+        })
+      },
+      /**
        * picker: 分组列表数据展示
        */
       pickerDataInit() {
-        let list = [
-          {
-            text: '六张算数的分组',
-            value: 0
-          },
-          {
-            text: '洗牌呼拉分组',
-            value: 1
-          },
-          {
-            text: '军长分组',
-            value: 2
-          },
-          {
-            text: '王炸分组',
-            value: 3
-          }
-        ]
-        this.groupList = [list]
+        this.getGroupList().then(list => {
+          list.map(item => {
+            item = Object.assign(item, {
+              value: item.group_id,
+              text: item.group_name
+            })
+            return item
+          })
+          list.unshift({
+            value: 0,
+            text: '个人'
+          })
+          this.selectedVal = list[0].text
+          this.groupList = [list]
+        })
       },
       /**
        * 展示picker
@@ -506,7 +520,16 @@
           if (data.selectedIndex) {
             index = data.selectedIndex[0]
           }
-          this.selectedVal = this.groupList[0][index]
+          let item = this.groupList[0][index]
+          if(item) {
+            if (item.team_info) {
+              this.group_id = item.group_id
+              this.team_id = item.team_info.team_id
+            } else {
+              this.group_id = this.team_id = 0
+            }
+          }
+          this.selectedVal = item.text
         }
         this.isShowPicker = false
         return null
@@ -515,8 +538,10 @@
     created() {
       this.lessonID = +this.$route.params.lessonID;
       document.title = this.$i18n.t('post') || '投稿';
+      this.classroomid = this.$route.query.classroomid
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
+      // 获取学生分组列表
       this.pickerDataInit()
     }
   };

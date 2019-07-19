@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="img-group-wrapper">
+        <div :class="{'img-group-wrapper': !big, 'img-group-big-wrapper': big}">
             <div class="img-wrapper">
                 <img v-for="(item, index) in list" :src="item.avatar" :key="index" :class="{'img-right': index > 0}" />
             </div>
@@ -13,7 +13,7 @@
 <script>
     export default {
         name: 'imgGroup',
-        props: [ 'groupdata' ],
+        props: [ 'groupdata', 'big' ],
         data() {
             return {
                 list: []
@@ -34,6 +34,7 @@
 <style lang="scss" scoped>
     @import "~@/style/common_rem";
     .img-group-wrapper{
+        margin-top: px2rem(28px);
         height: px2rem(32px);
         line-height: px2rem(32px);
         color: #639ef4;
@@ -52,6 +53,27 @@
         }
         .group-name{
             padding-left: px2rem(14px);
+        }
+    }
+    .img-group-big-wrapper{
+        height: px2rem(50px);
+        line-height: px2rem(50px);
+        color: #639ef4;
+        font-size: px2rem(32px);
+        display: flex;
+        cursor: pointer;
+        .img-wrapper{
+            img{
+                height: px2rem(50px);
+                width: px2rem(50px);
+                border-radius: 50%;
+            }
+            .img-right{
+                margin-left: px2rem(-16px);
+            }
+        }
+        .group-name{
+            padding-left: px2rem(30px);
         }
     }
 </style>

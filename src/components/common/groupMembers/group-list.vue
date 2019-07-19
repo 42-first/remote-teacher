@@ -28,11 +28,9 @@
         props: [ 'groupdata' ],
         data() {
             return {
-                list: []
             }
         },
         created() {
-            this.init()
         },
         methods: {
             init() {
@@ -71,7 +69,7 @@
                 height: px2rem(100px);
                 line-height: px2rem(100px);
                 display: flex;
-                border-bottom: px2rem(2px) solid #9b9b9b;
+                border-bottom: px2rem(1px) solid #9b9b9b;
                 padding: 0 px2rem(30px);
                 .icon-wrapper{
                     .iconfont{
@@ -122,7 +120,7 @@
                         padding-left: px2rem(20px);
                         color: #666;
                         font-size: px2rem(32px);
-                        border-bottom: px2rem(2px) solid #d8d8d8;
+                        border-bottom: px2rem(1px) solid #d8d8d8;
                     }
                 }
             }

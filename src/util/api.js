@@ -54,6 +54,8 @@ if (process.env.NODE_ENV === 'production') {
             'SET_GUIDE': '/v/lesson/set_guide',
             // 学生答题时获取分组作答主观题状态
             'GET_GROUP_STATUS': '/v/lesson/student_group_subj_problem_status/',
+            // 获取小组列表
+            'GET_ALL_GROUP_LIST': '/group/student/get_all_group_list/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
             // (学生端)获取互评的详情
@@ -137,6 +139,8 @@ if (process.env.NODE_ENV === 'production') {
             'SET_GUIDE': '/v/lesson/set_guide',
             // 学生答题时获取分组作答主观题状态
             'GET_GROUP_STATUS': 'http://apimock.xuetangx.com/mock/115/v/lesson/student_group_subj_problem_status/',
+            // 获取小组列表
+            'GET_ALL_GROUP_LIST': 'http://apimock.xuetangx.com/mock/115/group/student/get_all_group_list/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': 'http://apimock.xuetangx.com/mock/115/group/student/get_team_detail/',
             // (学生端)获取互评的详情

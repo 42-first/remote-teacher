@@ -37,9 +37,11 @@
                 </div>
               </div>
               <div class="image__wrap" v-if="item.pic" >
-                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
+                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" />
               </div>
-              <img-group v-if="item.is_group" :groupdata="item.team_info" @click="showCurGroupList(index)"></img-group>
+              <div v-if="item.is_group" @click="showCurGroupList(index)">
+                <img-group :groupdata="item.team_info"></img-group>
+              </div>
             </div>
 
             <!-- 更多删除入口 -->
@@ -101,7 +103,7 @@
     <mt-actionsheet :actions="actions" :cancel-text="cancelText" v-model="sheetVisible"></mt-actionsheet>
 
     <!-- 组列表 -->
-    <group-list v-if="curGroupInfo" @close="hideGroupList"></group-list>
+    <group-list v-if="curGroupInfo" @close="hideGroupList" :groupdata="curGroupInfo"></group-list>
   </section>
 </template>
 <script>
@@ -185,31 +187,16 @@
        *  展示本条投稿的分组成员列表
        */
       showCurGroupList(index) {
-        this.curGroupInfo = this.submissionlist[index]
+        let item = this.submissionlist[index]
+        if (item) {
+          this.curGroupInfo = item.team_info
+        }
       },
       /**
        *  展示本条投稿的分组成员列表
        */
       hideGroupList() {
         this.curGroupInfo = null
-      },
-      // 临：分组成员列表
-      getMembersName() {
-        let str = '始皇三十四年置酒咸阳宫博士仆射周青臣等颂始皇威德齐人淳于越进谏曰“臣闻之殷周之王千馀岁封子弟功臣自为支辅今陛下有海内而子弟为匹夫卒'
-        let start = Math.floor(Math.random() * str.length)
-        start = start >= 0 ? start : 0
-        return str.substr(start, 4)
-      },
-      getGroupList() {
-        let url = 'http://qn-sx.yuketang.cn/tougao_pic_6n8uLqGL4GK.png'
-        let list = []
-        for (let i =0;i<18;i++) {
-          list.push({
-            "user_id": 123,
-            "name": this.getMembersName(),
-            "avatar": url
-          })
-        }
       },
       /*
        * @method 格式化投稿控制文字收起展开
@@ -224,14 +211,6 @@
           } else {
             item.text = item.content;
           }
-          // 临时: 页面增加的分组数据
-          item = Object.assign(item, {
-            "is_group": Math.random() > 0.5,
-            "team_info": {
-              "team_name": "佩奇组",
-              "members": this.getGroupList()
-            }
-          })
         })
         return data;
       },
