@@ -283,7 +283,6 @@
 	     *
 	     */
 	    init () {
-
 		  	let self = this
 
 		    let lessonid = +self.$route.params.lessonid
@@ -300,9 +299,7 @@
 
 		    // 获取本地不懂、投稿已读数
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
-
-		    self.fetchUserInfo()
-		    		.then(self.initws.bind(self))
+		    self.fetchUserInfo().then(self.initws.bind(self))
 
 		    self.pollingPresentationTag()
 
@@ -402,15 +399,14 @@
 	    fetchUserInfo () {
 	      let self = this
 	      let url = API.userinfo
-
 	      return request.get(url, {'lesson_id': self.lessonid})
-	        .then(jsonData => {
-          window.USERID = jsonData.data.user.user_id
-          self.$store.dispatch('saveUserInfo', jsonData.data)
-	        })
-	        .catch(() => {
-          console.error('获取用户信息失败')
-	        })
+				.then(jsonData => {
+					window.USERID = jsonData.data.user.user_id
+					self.$store.dispatch('saveUserInfo', jsonData.data)
+				})
+				.catch(() => {
+					console.error('获取用户信息失败')
+				})
 	    },
 	    /**
 	     * 获取ppt数据
@@ -560,7 +556,6 @@
 	      } else {
           url = API.presentation_tag + '/' + self.presentationid + '/'
         }
-
 	      request.get(url)
 	        .then(jsonData => {
 	          let doubt = jsonData.data.doubt

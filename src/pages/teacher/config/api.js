@@ -90,21 +90,21 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   api = {
-    // reporter:                           '/reporter/collect',
+    reporter:                          '/reporter/collect',
     lesson_ppt_version:                '/static/lesson/mock/lesson_ppt_version.json',
     lesson_status:                      '/static/lesson/mock/lesson_status.json',
-    userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
-    // userinfo:                           '/v/lesson/lesson_user_info',
+    // userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
+    userinfo:                           '/v/lesson/lesson_user_info',
     remote_control_list:                '/static/lesson/mock/remote_control_list.json',        // 遥控器列表
-    fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
-    // fetch_presentation_data:            '/v/lesson/fetch_presentation_data',    // ppt数据
+    // fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
+    fetch_presentation_data:            '/v/lesson/fetch_presentation_data',    // ppt数据
     lesson_quiz_list:                   '/static/lesson/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
     lesson_paper_quiz:                  '/static/lesson/mock/lesson_paper_quiz.json',          // 试卷数据（分文件夹，已发布、未发布）
     lesson_one_directory_paper:         '/static/lesson/mock/lesson_one_directory_paper.json', // 试卷数据（单个文件夹内的试卷）
-    presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
+    // presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   'http://apimock.xuetangx.com/mock/115/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
     lesson_not_participant_list:        'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
-    // presentation_tag:                   '/v/lesson/presentation_tag',           // 获取缩略图页 不懂 等标志的信息
+    presentation_tag:                   '/v/lesson/presentation_tag',           // 获取缩略图页 不懂 等标志的信息
     // teaching_lesson_participant_list:   '/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
     // lesson_not_participant_list:        '/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
     publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
@@ -123,7 +123,8 @@ if (process.env.NODE_ENV === 'production') {
     red_envelope_detail:                '/static/lesson/mock/red_envelope_detail.json',        // 获取某个红包的详情
     danmulist:                          '/static/lesson/mock/danmulist.json',                  // 弹幕列表
     danmulist2:                         '/static/lesson/mock/danmulist2.json',                 // 弹幕列表 2.0版（分页）
-    submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
+    // submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
+    submissionlist:                     prefix + '/v/api/tougao/teacher/list',        // 投稿列表
     submission_unread_num:              '/static/lesson/mock/submission_unread_num.json',      // 未读的新增投稿的数目
     tougaostatus:                       '/static/lesson/mock/tougaostatus.json',               // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
@@ -134,7 +135,8 @@ if (process.env.NODE_ENV === 'production') {
     subjective_problem_teacher_scorev2: 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_teacher_scorev2/',   // 主观题老师给答案打分
 
     // 获取用户当前语言设置
-    get_current_language:  'http://apimock.xuetangx.com/mock/115/v/user/get_current_language',
+    // get_current_language:  'http://apimock.xuetangx.com/mock/115/v/user/get_current_language',
+    get_current_language: "/v/user/get_current_language",
     // 设置语言
     set_lang_en: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/en',
     set_lang_zh_cn: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn',

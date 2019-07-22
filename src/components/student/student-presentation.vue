@@ -188,7 +188,7 @@
   window.request = request;
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
-    request.post = request.get
+    // request.post = request.get
   }
 
   export default {
@@ -354,7 +354,6 @@
        */
       init() {
         let self = this;
-
         this.lessonID = this.$route.params.lessonID || 3049;
         this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 

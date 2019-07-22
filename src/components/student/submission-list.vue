@@ -181,6 +181,13 @@
 
             return data;
           }
+        }).catch(e => {
+          console.log(e)
+          this.$toast({
+            message: e.msg,
+            duration: 3000
+          });
+          self.submissionlist = []
         });
       },
       /**
@@ -189,7 +196,9 @@
       showCurGroupList(index) {
         let item = this.submissionlist[index]
         if (item) {
-          this.curGroupInfo = item.team_info
+          this.curGroupInfo = Object.assign(item.team_info, {
+            group_name: item.group_name
+          })
         }
       },
       /**
@@ -385,7 +394,9 @@
 
       !window.moment && require(['moment'], function(moment) {
         window.moment = moment;
-        self.submissionlist = self.submissionlist.slice(0);
+        if (self.submissionlist instanceof Array) {
+          self.submissionlist = self.submissionlist.slice(0);
+        }
       })
 
       this.lessonID = +this.$route.params.lessonID;

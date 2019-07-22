@@ -570,7 +570,9 @@
       showCurGroupList(index) {
         let item = this.dataList[index]
         if (item) {
-          this.curGroupInfo = item.team_info
+          this.curGroupInfo = Object.assign(item.team_info, {
+            group_name: item.group_name
+          })
         }
       },
       /**

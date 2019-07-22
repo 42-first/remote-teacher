@@ -5,7 +5,7 @@
                 <div class="icon-wrapper" @click="close">
                     <i class="iconfont icon-shiti_guanbitouping"></i>
                 </div>
-                <div class="ellipsis title"> {{ groupdata.team_name }} </div>
+                <div class="ellipsis title"> {{ groupdata.group_name || '' }} </div>
             </div>
             <div class="group-title">
                 <div class="title">{{ groupdata.team_name }}</div>
@@ -16,7 +16,7 @@
             <div class="item-wrapper">
                 <div class="group-item" v-for="(item, index) in groupdata.members" :key="index">
                     <img :src="item.avatar" />
-                    <div class="ellipsis name-wrapper">{{item.name}}</div>
+                    <div class="ellipsis text-left name-wrapper">{{item.name}}</div>
                 </div>
             </div>
         </div>
