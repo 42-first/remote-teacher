@@ -278,8 +278,16 @@
         this.modalActive = true;
       },
 
-      handleblur() {
+      handleblur(evt) {
         this.modalActive = false;
+
+        let target = evt.currentTarget;
+        setTimeout(() => {
+          target.scrollIntoView({
+            block: 'start',
+            behavior: 'smooth'
+          });
+        }, 100);
       },
 
       handlelaodImg(evt) {
@@ -358,6 +366,14 @@
       if(this.summary) {
         let reviewID = this.summary.reviewid;
         reviewID && this.getGroupReview(reviewID);
+
+        // 处理弹出的消息
+        let msgBoxs = this.$parent.msgBoxs;
+        msgBoxs && msgBoxs.forEach((item, index) => {
+          if(item.type === 9) {
+            msgBoxs.splice(index, 1);
+          }
+        })
       } else {
         this.$router.back();
       }
