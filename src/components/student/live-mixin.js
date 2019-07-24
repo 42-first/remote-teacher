@@ -32,7 +32,7 @@ let liveMixin = {
      */
     supportFLV() {
       let liveEl = document.getElementById('player');
-      if (flvjs.isSupported() && liveEl) {
+      if (flvjs.isSupported() && liveEl && false) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv
@@ -67,7 +67,7 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          liveEl && liveEl.play();
+          this.liveType === 2 && liveEl.play();
         });
 
         this.handleerror(hls);

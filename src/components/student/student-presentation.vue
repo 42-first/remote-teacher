@@ -50,7 +50,7 @@
         <span class="f12 fold-text">收起</span>
       </section>
       <section class="live__fold c9b" v-else @click="handleLiveVisible(true)">
-        <i class="iconfont icon-unfold f14"></i>
+        <i class="iconfont icon-zhibo f20 red pr15"></i>
         <span class="f12 fold-text">直播中 点击观看</span>
       </section>
     </section>
@@ -1036,6 +1036,10 @@
     padding-bottom: 0.2rem;
   }
 
+  .pr15 {
+    padding-right: 0.2rem;
+  }
+
   .qr-code {
     width: 5rem;
   }
@@ -1173,6 +1177,10 @@
       }
 
       .live__fold {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         height: 0.64rem;
         .fold-text {
           padding-left: 5px;
