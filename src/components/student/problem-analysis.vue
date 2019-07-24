@@ -215,7 +215,11 @@
             let data = res.data;
 
             // 客观题
-            data.answer && (this.oProblem.Answer = data.answer);
+            // data.answer && (this.oProblem.Answer = data.answer);
+            if(data.answer) {
+              this.$set(this.oProblem, 'Answer', data.answer);
+            }
+
             // 填空题
             this.result = data.result
             // 主观题
