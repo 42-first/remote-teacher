@@ -22,7 +22,7 @@ let liveMixin = {
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        self.liveURL && self.supportHLS(Hls);
+        // self.liveURL && self.supportHLS(Hls);
       })
     },
 
@@ -41,7 +41,7 @@ let liveMixin = {
         try {
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
-          // flvPlayer.play();
+          flvPlayer.play();
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -67,7 +67,7 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          // liveEl && liveEl.play();
+          liveEl && liveEl.play();
         });
 
         this.handleerror(hls);

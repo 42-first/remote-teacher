@@ -42,7 +42,7 @@
     </section>
 
     <!-- 视频直播 liveURL && liveType === 2 -->
-    <section class="live__wrap" v-if="liveURL && liveType === 2">
+    <section class="live__wrap" v-if="liveType === 2">
       <video id="player" class="video__live" autobuffer controls :src="liveURL" v-show="liveVisible" ></video>
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
@@ -302,7 +302,7 @@
         // 直播信息
         liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
-        liveURL: 'https://storage.xuetangx.com/public_assets/xuetangx/site/special/RainClassroom.mp4',
+        liveURL: 'https://vdn-flv.xuetangx.com/xuetanglive/ThunderLive-13358-9503ddf5.flv',
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
@@ -656,7 +656,9 @@
                 self.liveurl = self.liveInfo.live_url;
                 self.liveURL = self.liveInfo.live_url.hls;
                 // self.Hls && self.supportHLS(self.Hls);
-                self.supportFLV();
+                setTimeout(()=>{
+                  self.supportFLV();
+                }, 3000)
               }
 
               // 课程title
