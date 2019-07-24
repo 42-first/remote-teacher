@@ -556,7 +556,6 @@
     height: px2rem(98px);
     line-height: px2rem(98px);
     background-color: #f8f8f8;
-    color: #979797;
     color: #666;
     font-size: px2rem(34px);
     display: flex;
