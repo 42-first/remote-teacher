@@ -3,9 +3,10 @@
         <div class="group-list-wrapper">
             <div class="title-wrapper">
                 <div class="icon-wrapper" @click="close">
-                    <i class="iconfont icon-shiti_guanbitouping"></i>
+                    <i class="iconfont icon-qingchuguanbi"></i>
                 </div>
                 <div class="ellipsis title"> {{ groupdata.group_name || '' }} </div>
+                <div class="right"></div>
             </div>
             <div class="group-title">
                 <div class="title">{{ groupdata.team_name }}</div>
@@ -66,10 +67,10 @@
             flex-direction: column;
             .title-wrapper{
                 width: 100%;
-                height: px2rem(100px);
-                line-height: px2rem(100px);
+                height: px2rem(98px);
+                line-height: px2rem(98px);
                 display: flex;
-                border-bottom: px2rem(1px) solid #9b9b9b;
+                border-bottom: px2rem(1px) solid #eee;
                 padding: 0 px2rem(30px);
                 .icon-wrapper{
                     .iconfont{
@@ -83,9 +84,12 @@
                     color: #9b9b9b;
                     font-size: px2rem(30px);
                 }
+                .right{
+                    width: px2rem(64px);
+                }
             }
             .group-title{
-                padding: px2rem(40px) px2rem(30px) px2rem(20px) px2rem(30px);
+                padding: px2rem(40px) px2rem(40px) px2rem(20px) px2rem(40px);
                 line-height: px2rem(56px);
                 font-size: px2rem(40px);
                 font-weight: 500;
@@ -117,7 +121,7 @@
                     }
                     .name-wrapper{
                         flex: 1;
-                        padding-left: px2rem(20px);
+                        padding-left: px2rem(30px);
                         color: #666;
                         font-size: px2rem(32px);
                         border-bottom: px2rem(1px) solid #d8d8d8;

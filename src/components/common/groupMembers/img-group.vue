@@ -27,6 +27,7 @@
                 if( this.groupdata && this.groupdata.members ) {
                     this.list = this.groupdata.members.slice(0, 3)
                 }
+                console.log(this.groupdata)
             }
         }
     }
@@ -62,6 +63,7 @@
         font-size: px2rem(32px);
         display: flex;
         cursor: pointer;
+        margin-bottom: px2rem(24px);
         .img-wrapper{
             img{
                 height: px2rem(50px);
@@ -73,7 +75,7 @@
             }
         }
         .group-name{
-            padding-left: px2rem(30px);
+            padding-left: px2rem(12px);
         }
     }
 </style>

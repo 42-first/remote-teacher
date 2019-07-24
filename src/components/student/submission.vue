@@ -10,7 +10,7 @@
   <section class="page-submission">
     <div :class="['submission-wrapper', 'h100', 'animated', opacity ? 'zoomIn': '']">
       <div class="text-left contributor-wrapper">
-        <div class="title">投稿人</div>
+        <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
           <i class="iconfont icon-dakai ver-middle font20"></i>
@@ -559,11 +559,13 @@
     color: #979797;
     color: #666;
     font-size: px2rem(34px);
-    border-bottom: px2rem(1px) solid #979797;
     display: flex;
     padding: 0 px2rem(30px);
     .title{
       flex: 1;
+    }
+    .handler-wrapper{
+      color: #333;
     }
   }
   /*------------------*\
