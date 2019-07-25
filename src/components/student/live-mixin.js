@@ -32,7 +32,7 @@ let liveMixin = {
      */
     supportFLV() {
       let liveEl = document.getElementById('player');
-      if (flvjs.isSupported() && liveEl && false) {
+      if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv
@@ -82,6 +82,8 @@ let liveMixin = {
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
+
+        console.log('loadedmetadata hls supportHLS');
       }
 
       this.setLiveTip();

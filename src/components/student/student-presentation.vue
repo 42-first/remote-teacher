@@ -323,7 +323,7 @@
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 2,
-        liveVisible: true,
+        liveVisible: false,
       };
     },
     components: {
@@ -658,7 +658,7 @@
                 // self.Hls && self.supportHLS(self.Hls);
                 setTimeout(()=>{
                   self.supportFLV();
-                }, 3000)
+                }, 2000)
               }
 
               // 课程title
