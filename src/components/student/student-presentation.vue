@@ -302,7 +302,7 @@
         // 直播信息
         liveInfo: null,
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
-        liveURL: 'https://vdn-flv.xuetangx.com/xuetanglive/ThunderLive-13358-9503ddf5.flv',
+        liveURL: '',
         // 播放状态 1: 播放  0：停止
         playState: 0,
         // 是否提示语音直播
@@ -322,7 +322,7 @@
         isLive: false,
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
-        liveType: 2,
+        liveType: 0,
         liveVisible: false,
       };
     },
@@ -656,6 +656,7 @@
                 self.liveurl = self.liveInfo.live_url;
                 self.liveURL = self.liveInfo.live_url.hls;
                 // self.Hls && self.supportHLS(self.Hls);
+                self.liveType = self.liveInfo.type;
                 setTimeout(()=>{
                   self.supportFLV();
                 }, 2000)
