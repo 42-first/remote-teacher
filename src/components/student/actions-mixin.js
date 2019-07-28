@@ -793,8 +793,15 @@ var actionsMixin = {
         // 直播类型
         this.liveType = data.type;
         this.liveURL = data.liveurl.hls;
-        this.Hls && this.supportHLS(this.Hls);
-        // this.supportFLV();
+
+        if(this.liveType === 1) {
+          this.Hls && this.supportHLS(this.Hls);
+        } else if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.supportFLV();
+          }, 2000)
+        }
+
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
         // 标记这是一堂远程课

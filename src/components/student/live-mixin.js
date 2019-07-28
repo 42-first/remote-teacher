@@ -22,7 +22,7 @@ let liveMixin = {
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        // self.liveURL && self.supportHLS(Hls);
+        self.liveType === 1 && self.supportHLS(Hls);
       })
     },
 
@@ -197,13 +197,18 @@ let liveMixin = {
       }
     },
 
-
     /*
      * @method 设置直播展开收起
      * @params
      */
     handleLiveVisible(visible) {
       this.liveVisible = visible;
+
+      if(visible) {
+        this.handleplay();
+      } else {
+        this.handlestop();
+      }
     },
 
   }

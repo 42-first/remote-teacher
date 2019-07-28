@@ -655,11 +655,15 @@
               if(self.liveInfo && self.liveInfo.status === 1) {
                 self.liveurl = self.liveInfo.live_url;
                 self.liveURL = self.liveInfo.live_url.hls;
-                // self.Hls && self.supportHLS(self.Hls);
-                self.liveType = self.liveInfo.type;
-                setTimeout(()=>{
-                  self.supportFLV();
-                }, 2000)
+
+                self.liveType = self.liveInfo.type || 1;
+                if(self.liveType === 1) {
+                  self.Hls && self.supportHLS(self.Hls);
+                } else if(self.liveType === 2) {
+                  setTimeout(()=>{
+                    self.supportFLV();
+                  }, 2000)
+                }
               }
 
               // 课程title
