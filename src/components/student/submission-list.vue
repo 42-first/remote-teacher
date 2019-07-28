@@ -35,7 +35,7 @@
               </div>
               <!-- 视频展示 -->
               <div class="video__preview" v-if="item.video && item.video.url">
-                <video :src="item.video.url" :style="item.video|setStyle" controls ></video>
+                <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
               </div>
             </div>
 

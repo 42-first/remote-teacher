@@ -51,7 +51,7 @@
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                   <!-- 视频展示 -->
                   <div class="video__preview" v-if="item.video && item.video.url">
-                    <video :src="item.video.url" :style="item.video|setStyle" controls ></video>
+                    <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
                   </div>
                 </div>
               </div>
