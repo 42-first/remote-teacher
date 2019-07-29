@@ -270,10 +270,12 @@ var actionsMixin = {
             // 之前没有播放过这个ppt
             if(!hasPPT) {
               data = Object.assign(data, cardItem, { animation: 1 })
-              !data.isFetch && this.cards.push(data);
             } else {
-              Object.assign(hasPPT, data, cardItem, { animation: 1 })
+              // 之前播放了这一页 再次播放就不用蒙版了
+              data = Object.assign(data, cardItem, { animation: 0 })
             }
+
+            !data.isFetch && this.cards.push(data);
           } else if(data.event.step === -1 || data.event.step === data.event.total) {
             // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
             if(hasPPT) {
