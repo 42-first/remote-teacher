@@ -41,9 +41,9 @@
       </ul>
     </section>
 
-    <!-- 视频直播 liveURL && liveType === 2 -->
+    <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
-      <video id="player" class="video__live" autobuffer controls :src="liveURL" v-show="liveVisible" ></video>
+      <video id="player" class="video__live" autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -1374,5 +1374,8 @@
 
   }
 
+  video::-webkit-media-controls-timeline {
+    visibility: hidden;
+  }
 
 </style>
