@@ -272,8 +272,20 @@ var actionsMixin = {
             let step = data.event.step - 1;
             if(step <= Shapes.length) {
               let shape = Shapes[step];
+
+              // 之前播放过的动画展示全部 最新两条数据不是当前PPT就认为之前播放过
               if(hasPPT) {
-                Object.assign(hasPPT, data, cardItem, { src: shape.url })
+                let lastCards = this.cards.slice(-2);
+                let oldppt = lastCards.find((item) => {
+                  return item.type === 2 && item.slideID === cardItem.slideID;
+                })
+
+                if(oldppt) {
+                  shape && Object.assign(oldppt, data, cardItem, { src: shape.url })
+                } else {
+                  Object.assign(data, cardItem);
+                  this.cards.push(data);
+                }
               } else {
                 Object.assign(data, cardItem, { src: shape.url })
                 this.cards.push(data);
