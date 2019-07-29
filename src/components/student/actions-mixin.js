@@ -259,43 +259,59 @@ var actionsMixin = {
           slideID: slideData['lessonSlideID'],
           isRepeat: hasPPT ? true : false
         };
+        // 是否web开课的动画 Shapes里面有动画步骤
+        let Shapes = slideData.Shapes;
+        let isWebLesson = Shapes && Shapes.length ? true : false;
 
         // 之前有动画隐藏蒙版
         this.hideAnimationMask();
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
-          // step === 0 开始动画 正常插入
-          if(data.event.step >= 0 && data.event.step < data.event.total) {
-            // 之前没有播放过这个ppt
-            if(!hasPPT) {
-              data = Object.assign(data, cardItem, { animation: 1 })
-              !data.isFetch && this.cards.push(data);
-            } else {
-              Object.assign(hasPPT, data, cardItem, { animation: 1 })
-            }
-          } else if(data.event.step === -1 || data.event.step === data.event.total) {
-            // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
+          if(isWebLesson) {
+            let step = data.event.step;
+            let shape = Shapes[step - 1]
+
             if(hasPPT) {
-              // 需要替换的index
-              let targetIndex = this.cards.findIndex((item, i) => {
-                return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
-              })
-
-              Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
-              // targetIndex && this.cards.splice(targetIndex, 1, data);
-
-              if(targetIndex > 0 && !data.isFetch) {
-                // 克隆版单独处理 上一个是重复ppt就不处理了
-                if(targetIndex < this.cards.length - 1) {
-                  Object.assign(data, cardItem, { animation: 2, isRepeat: false })
-                  this.cards.push(data);
-                }
-              }
+              // Object.assign(hasPPT, data, cardItem, { animation: 1 })
             } else {
-              // 如果直接收到动画结束
-              data = Object.assign(data, cardItem, { animation: 2 })
+
+            }
+          } else {
+            // step === 0 开始动画 正常插入
+            if(data.event.step >= 0 && data.event.step < data.event.total) {
+              // 之前没有播放过这个ppt
+              if(!hasPPT) {
+                data = Object.assign(data, cardItem, { animation: 1 })
+              } else {
+                // 之前播放了这一页 再次播放就不用蒙版了
+                data = Object.assign(data, cardItem, { animation: 0 })
+              }
+
               !data.isFetch && this.cards.push(data);
+            } else if(data.event.step === -1 || data.event.step === data.event.total) {
+              // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
+              if(hasPPT) {
+                // 需要替换的index
+                let targetIndex = this.cards.findIndex((item, i) => {
+                  return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
+                })
+
+                Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
+                // targetIndex && this.cards.splice(targetIndex, 1, data);
+
+                if(targetIndex > 0 && !data.isFetch) {
+                  // 克隆版单独处理 上一个是重复ppt就不处理了
+                  if(targetIndex < this.cards.length - 1) {
+                    Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                    this.cards.push(data);
+                  }
+                }
+              } else {
+                // 如果直接收到动画结束
+                data = Object.assign(data, cardItem, { animation: 2 })
+                !data.isFetch && this.cards.push(data);
+              }
             }
           }
         } else {
