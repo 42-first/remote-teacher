@@ -151,7 +151,8 @@
         'lessonid',
         'socket',
         'postingSubmissionid',
-        'postingSubmissionSent'
+        'postingSubmissionSent',
+        'addinversion',
       ])
     },
     components: {
@@ -417,6 +418,17 @@
           // TODO 订阅投稿投屏咨询状态
           // self.isAskingItemStatus = true
         },800)
+
+        let info = this.dataList.find((item)=>{
+          return item.id === submissionid;
+        })
+
+        // 协议版本号>=1.5 支持播放投稿视频
+        if(this.addinversion && info && info.video && info.video.url) {
+          let title = this.$i18n.t('tips');
+          let message = this.$i18n.t('tougaowarn');
+          this.$messagebox.alert(message, title)
+        }
 
         let url = API.tougaostatus
 

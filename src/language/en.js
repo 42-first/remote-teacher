@@ -402,6 +402,7 @@ let pages = {
   "boardunknow": "Unclear(board)",
   "showall": "Full text",
   "foldall": "fold",
+  "tougaowarn": "The current version does not support short video, please upgrade to the latest version",
 
   // 给学生增加备注需求增加
   behavior: {
