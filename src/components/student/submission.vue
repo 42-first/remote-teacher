@@ -31,11 +31,12 @@
       <!-- 图片 -->
       <section class="submission__pic">
         <div v-if="!hasImage">
-          <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
+          <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
+          <div class="submission__pic--add" v-else><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
           <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
-          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
+          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
           <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
@@ -105,6 +106,11 @@
   import API from '@/util/api'
   import {compress} from '@/util/image'
   import picker from '@/components/common/picker/index.vue'
+  import { configWX } from '@/util/wx-util'
+  import imagemixin from '@/components/common/image-mixin'
+  // 是否华为特殊手机 P20 P20-pro
+  const ua = navigator.userAgent.toLowerCase();
+  const huawei = ua.match(/huaweiclt|huaweieml/i);
 
   export default {
     name: 'submission-page',
@@ -140,7 +146,9 @@
         selectedVal: '',
         group_id: 0,
         team_id: 0,
-        isShowPicker: false
+        isShowPicker: false,
+        // 是否华为特殊手机
+        huawei: !!huawei
       };
     },
     components: {
@@ -186,7 +194,7 @@
         return moment && moment(time).format('hh:mm:ss') || time;
       }
     },
-    mixins: [],
+    mixins: [ imagemixin ],
     methods: {
       /*
       * @method 发送投稿
@@ -543,6 +551,14 @@
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
       // 获取学生分组列表
       this.pickerDataInit()
+      // huawei 使用微信自己的图片选择
+      if(this.huawei) {
+        configWX();
+      }
+    },
+    mounted() {
+    },
+    beforeDestroy() {
     }
   };
 </script>
