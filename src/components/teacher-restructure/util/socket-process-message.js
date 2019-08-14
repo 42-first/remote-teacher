@@ -416,6 +416,16 @@ function socketProcessMessage(msg){
       self.$store.commit('set_postingSubjectiveid', -1)
       return
     }
+
+    // 退出弹幕词云投屏
+    if (msg.type == 'danmuwc') {
+      T_PUBSUB.publish('danmu-msg.closedanmuwc', msg)
+    }
+
+    // 退出投稿词云投屏
+    if (msg.type == 'postwc') {
+      T_PUBSUB.publish('submission-msg.closepostwc', msg)
+    }
     
   }
 
@@ -446,6 +456,15 @@ function socketProcessMessage(msg){
   if (msg.op == 'closequizresult') {
     T_PUBSUB.publish('quiz-msg.closequizresult', {quizid: +msg.quizid});
     return
+  }
+
+  // 词云投屏了
+  if (msg.op == 'wordcloudshown') {
+    if(msg.cat == 'tougao'){
+      T_PUBSUB.publish('submission-msg.wordcloudshown', msg)
+    }else {
+      T_PUBSUB.publish('danmu-msg.wordcloudshown', msg)
+    }
   }
 
 }

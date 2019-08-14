@@ -162,6 +162,14 @@
           clearTimeout(toastTimer)
           toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
         })
+
+        T_PUBSUB.subscribe('danmu-msg.wordcloudshown', (_name, msg) => {
+          self.isWordCloudOpen = true
+        })
+
+        T_PUBSUB.subscribe('danmu-msg.closedanmuwc', (_name, msg) => {
+          self.isWordCloudOpen = false
+        })
       },
       /**
        * 模仿微信小程序的 setData 用法，简易设置data
@@ -389,7 +397,24 @@
        * 
       */
       setWordCloudStatus(){
-        
+        let self = this
+        let str = ''
+        if(!self.isWordCloudOpen){
+          str = JSON.stringify({
+            'op': 'showwordcloud',
+            'lessonid': self.lessonid,
+            'cat': 'danmu',
+            'msgid': 1234
+          })
+        }else {
+          str = JSON.stringify({
+            'op': 'closemask',
+            'lessonid': self.lessonid,
+            'type': 'danmuwc',
+            'msgid': 1234
+          })
+        }
+        self.socket.send(str)
       }
     }
   }
