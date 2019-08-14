@@ -4,9 +4,13 @@
     <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
-      <span>{{ $t('bullet') }}</span>
-      <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
-        {{ $tc('turnonoff', !isDanmuOpen) }}
+      <div class="left">
+        <span>{{ $t('bullet') }}</span>
+        <v-touch :class="['set-btn', 'f36', 'iconfont', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus">
+        </v-touch>
+      </div>
+      <v-touch class="wordcloud-btn f16" v-on:tap="setWordCloudStatus">
+        {{ isWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}
       </v-touch>
     </div>
     <div class="gap"></div>
@@ -84,6 +88,7 @@
         isToastSwitch: false,       // 显示弹幕开启关闭提示
         nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
         nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
+        isWordCloudOpen: false,
       }
     },
     computed: {
@@ -378,6 +383,14 @@
 
         self.socket.send(str)
       },
+
+      /** 
+       * @method 词云投屏控制
+       * 
+      */
+      setWordCloudStatus(){
+        
+      }
     }
   }
 </script>
@@ -468,14 +481,23 @@
       height: 1.466667rem;
       line-height: 1.466667rem;
       background: $white;
-      
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
       span {
         color: $blue;
       }
 
+      .left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .set-btn {
-        float: right;
-        margin-top: 0.28rem;
+        // float: left;
+        // margin-top: 0.28rem;
         text-align: center;
         width: 1.706667rem;
         height: 0.906667rem;
@@ -495,14 +517,17 @@
       }
 
       .iconfont {
-        float: right;
-        margin-top: 0.1rem;
+        // float: right;
+        // margin-top: 0.1rem;
         vertical-align: middle;
       }
       .icon-danmu-close {
         color: $graybg;
       }
       .icon-danmu-open {
+        color: $blue;
+      }
+      .wordcloud-btn {
         color: $blue;
       }
     }

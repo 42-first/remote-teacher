@@ -12,7 +12,8 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
-      <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+      <hide-some-info :isUserInfo="true" position="left" @change="showUserInfoChange"></hide-some-info>
+      <span class="wordcloud-btn f16" @click="setWordCloudStatus">{{ isWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}</span>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -553,7 +554,14 @@
         let s = str + ''
         var result = s.replace(/[^\x00-\xff]/g, '**')
         return result.length
-    }
+    },
+    /** 
+       * @method 词云投屏控制
+       * 
+      */
+      setWordCloudStatus(){
+        
+      }
     }
   }
 </script>
@@ -813,5 +821,12 @@
       line-height: 1.466667rem;
       box-shadow: none;
     }
+
+    .wordcloud-btn {
+      color: $blue;
+      position: absolute;
+      top: 0.26666667rem;
+      right: 0.4rem;
+    } 
   }
 </style>

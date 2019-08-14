@@ -11,7 +11,7 @@
         <i class="iconfont icon-question ver-middle" @click="explainShow = true"></i>
       </div>
     </div>
-    <div class="text-right w100" v-if="pptversion >= 1.3">
+    <div class="w100" :class="position == 'left' ? 'text-left' : 'text-right'" v-if="pptversion >= 1.3">
       <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo" :class="{'no-border': !problemtype}">
         <label @click="hideNameHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
@@ -35,7 +35,7 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype', 'position'],
     computed: {
       ...mapGetters([
         'lessonid',
