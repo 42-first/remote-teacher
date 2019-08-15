@@ -417,16 +417,12 @@ function socketProcessMessage(msg){
       return
     }
 
-    // 退出弹幕词云投屏
-    if (msg.type == 'danmuwc') {
+    // 退出弹幕投稿词云投屏
+    if (msg.type == 'wordcloud') {
       T_PUBSUB.publish('danmu-msg.closedanmuwc', msg)
-    }
-
-    // 退出投稿词云投屏
-    if (msg.type == 'postwc') {
       T_PUBSUB.publish('submission-msg.closepostwc', msg)
     }
-    
+
   }
 
   // 获取随机点名名单列表
@@ -460,9 +456,9 @@ function socketProcessMessage(msg){
 
   // 词云投屏了
   if (msg.op == 'wordcloudshown') {
-    if(msg.cat == 'tougao'){
+    if(msg.cat == 'post'){
       T_PUBSUB.publish('submission-msg.wordcloudshown', msg)
-    }else {
+    }else if(msg.cat == 'danmu') {
       T_PUBSUB.publish('danmu-msg.wordcloudshown', msg)
     }
   }

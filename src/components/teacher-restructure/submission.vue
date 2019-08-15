@@ -574,14 +574,14 @@
           str = JSON.stringify({
             'op': 'showwordcloud',
             'lessonid': self.lessonid,
-            'cat': 'tougao',
+            'cat': 'post',
             'msgid': 1234
           })
         }else {
           str = JSON.stringify({
             'op': 'closemask',
             'lessonid': self.lessonid,
-            'type': 'postwc',
+            'type': 'wordcloud',
             'msgid': 1234
           })
         }
