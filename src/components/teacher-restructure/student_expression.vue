@@ -38,9 +38,8 @@
                 <template v-else><!-- 暂无加分 -->{{$t('behavior.nobonuspoint')}}</template>
               </span>
             </div>
-            <div class="points-option flexbetween">
-              <span><i class="iconfont icon-jiafenjianhao f14 reduce" :class="!behavior_score ? 'disabled' : ''" @click="handleReduce"></i></span>
-              <span><i class="iconfont icon-jiafenjiahao f14 increase" :class="behavior_score == 100 ? 'disabled' : ''" @click="handleIncrease"></i></span>
+            <div class="points-option f12" @click="addScoreFlag = true">
+              加分
             </div>
           </div>
         </div>
@@ -95,6 +94,32 @@
           </div>
         </div>
       </section>
+      <section class="add-score-wrapper" v-if="addScoreFlag">
+        <div class="score-box">
+          <div class="box-title flexbetween">
+            <i class="iconfont icon-shiti_guanbitouping f16" @click="handleHideScore"></i>
+            <span class="save f18" @click="handleAddScore"><!-- 保存 -->{{$t('behavior.save')}}</span>
+          </div>
+          <div class="box-content">
+            <span class="current-score f14">当前已有加分：<span class="c666">{{behavior_score}}分</span></span>
+            <div class="add-score">
+              <span>本次加分</span>
+              <div class="box-center f14">
+                <div class="input-box">
+                  <input class="f24 c333" type="number" v-model="behavior_score_temp" @blur="handleScoreBlur">
+                </div>
+                分
+              </div>
+            </div>
+            <div class="score flexcenter f14">
+              <span class="score-item" @click="changeScore(1)">1分</span>
+              <span class="score-item" @click="changeScore(2)">2分</span>
+              <span class="score-item" @click="changeScore(5)">5分</span>
+              <span class="score-item" @click="changeScore(10)">10分</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </template>
     
   </section>
@@ -124,7 +149,9 @@
         participate: {},
         isloaded: false,
         delete_ids: [],
-        attendance_status: -1
+        attendance_status: -1,
+        addScoreFlag: false,
+        behavior_score_temp: 0
 	    }
 	  },
 	  computed: {
@@ -147,6 +174,11 @@
              this.tagText = substr(newVal, 20);
            }
          }
+      },
+      behavior_score_temp(newVal){
+        if(newVal > 100){
+          this.behavior_score_temp = 100
+        }
       }
     },
 	  methods: {
@@ -225,40 +257,6 @@
           }
         })
       },
-      handleReduce(){
-        if(this.behavior_score == 0) return false
-        this.behavior_score--
-        let self = this
-        let URL = API.behavior_tag.change_score
-        let params = {
-          lesson_id: this.lessonid,
-          classroom_id: this.classroomid,
-          student_id: this.userid,
-          score: this.behavior_score
-        }
-        request.post(URL, params).then(res => {
-          if(res.success){
-            self.behavior_score = res.data.score
-          }
-        })
-      },
-      handleIncrease(){
-        if(this.behavior_score === 100) return false
-        this.behavior_score++
-        let self = this
-        let URL = API.behavior_tag.change_score
-        let params = {
-          lesson_id: this.lessonid,
-          classroom_id: this.classroomid,
-          student_id: this.userid,
-          score: this.behavior_score
-        }
-        request.post(URL, params).then(res => {
-          if(res.success){
-            self.behavior_score = res.data.score
-          }
-        })
-      },
       handleDelete(index){
         if(this.tagList[index].is_default) return false;
         this.delete_ids.push(this.tagList[index].id)
@@ -326,7 +324,37 @@
       handleCancel(){
         this.addTagFlag = false
         this.tagText = ''
-      }          
+      },
+      changeScore(score){
+        this.behavior_score_temp = score
+      },
+      handleAddScore(){
+        let self = this
+        let URL = API.behavior_tag.change_score
+        let params = {
+          lesson_id: this.lessonid,
+          classroom_id: this.classroomid,
+          student_id: this.userid,
+          score: this.behavior_score_temp
+        }
+        request.post(URL, params).then(res => {
+          if(res.success){
+            self.behavior_score = res.data.score
+            self.addScoreFlag = false
+            self.behavior_score_temp = 0
+          }
+        })
+      },
+      handleScoreBlur(){
+        setTimeout(() => {
+          document.body.scrollIntoView(false)
+        },80)
+      },
+      handleHideScore(){
+        this.addScoreFlag = false
+        this.behavior_score_temp = 0
+      }
+
 	  }
 	}
 </script>
@@ -396,6 +424,11 @@
     .flexcenter {
       display: flex;
       align-items: center;
+    }
+    .box-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .cred {
       color: #F84F41 !important;
@@ -493,19 +526,13 @@
           }
           .points-option {
             width: 2.58666667rem;
-            span {
-              width: 0.69333333rem;
-              height: 0.69333333rem;
-              border-radius: 50%;
-              border: 1px solid #E5E5E5;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .disabled {
-              color: #9b9b9b;
-            }
-
+            text-align: center;
+            box-sizing: border-box;
+            height: 0.69333333rem;
+            line-height: 0.69333333rem;
+            color: #666;
+            border-radius: 0.34666667rem;
+            border: 1px solid #e5e5e5;
           }
         }
       }
@@ -609,6 +636,69 @@
               outline: none;
             }
             
+          }
+          
+        }
+      }
+    }
+    .add-score-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.5);
+      .score-box {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #fff;
+        .box-title  {
+          padding: 0 0.4rem;
+          height:  1.33333333rem;
+          border-bottom: 1px solid #eee;
+          color: #333;
+          span {
+            color: #5096F5;
+            width: 30%;
+            text-align: right;
+          }
+        }
+        .box-content {
+          padding: 0.53333333rem 0.53333333rem 1.06666667rem;
+
+          .add-score {
+            margin: 0.53333333rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .input-box {
+              width: 6.4rem;
+              padding: 0.2rem 0 0.24rem;
+              margin-right: 0.24rem;
+              border-bottom: 1px solid #eee;
+              input {
+                text-align: center;
+                width: 100%;
+                border: none;
+                outline: none;
+              }
+            }
+            
+          }
+          .score {
+            justify-content: space-around;
+          }
+          .score-item {
+            width: 1.6rem;
+            height: 0.85333333rem;
+            padding: 0.16rem 0;
+            text-align: center;
+            border: 1px solid rgba(80,150,245,.5);
+            border-radius: 0.42666667rem;
+            color: #5096F5;
           }
           
         }
