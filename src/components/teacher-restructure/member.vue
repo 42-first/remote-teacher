@@ -25,13 +25,14 @@
 			<template v-if="participantList.length">
 				<div class="order-box">
 					<v-touch class="title f14" v-on:tap="openOrder">
-						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : $t('behavior.qdsjpx'))}}
-						<div v-if="has_problems" :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
+						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : (orderType === 3 ? $t('behavior.qdsjpx') : '按学号排序'))}}
+						<div :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
 					</v-touch>
 					<ul class="choose-list" v-show="isOrderOpen">
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)"><!-- 得分由高到低 -->{{ $t('behavior.dfygdd') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)"><!-- 得分由低到高 -->{{ $t('behavior.dfyddg') }}</v-touch>
+						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)"><!-- 得分由高到低 -->{{ $t('behavior.dfygdd') }}</v-touch>
+						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)"><!-- 得分由低到高 -->{{ $t('behavior.dfyddg') }}</v-touch>
 						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 3}]" v-on:tap="setOrder(3)"><!-- 签到时间排序 -->{{ $t('behavior.qdsjpx') }}</v-touch>
+						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)">按学号排序</v-touch>
 					</ul>
 				</div>
 				<div class="item" v-for="(item,index) in participantList" :key="item.id" @click="goStudentDetail(item.id)">
@@ -151,11 +152,8 @@
 						self.$store.commit('set_participantList', jsonData.data.students)
 						self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
-						if(jsonData.data.has_problems && sort_type == 1){
-							self.orderType = 1
-						}else {
-							self.orderType = 3
-						}
+						
+						self.orderType = jsonData.data.has_problems && sort_type == 1 ? 1 : (!jsonData.data.has_problems && sort_type == 1 ? 3 : sort_type)
 						if(sort_type == 1){
 							self.oData[1] = jsonData.data.students
 							self.oData[1].forEach((item, index) => {
@@ -163,12 +161,18 @@
 							})
 							self.participantList = self.oData[1]
 							
-						}else {
+						}else if(sort_type == 3) {
 							this.oData[3] = jsonData.data.students
 							self.oData[3].forEach((item, index) => {
 								item.index = index + 1
 							})
             	self.participantList = this.oData[3]
+						}else {
+							this.oData[4] = jsonData.data.students
+							self.oData[4].forEach((item, index) => {
+								item.index = index + 1
+							})
+            	self.participantList = this.oData[4]
 						}
           })
       },
@@ -211,9 +215,12 @@
 				if (orderType === 3) {
 					let data3 = this.oData[3]
 					data3 ? (this.participantList = data3) : this.fetchList(3)
-				} else {
+				} else if(orderType !== 4){
 					orderType === 1 && (this.participantList = this.oData[1])
 					orderType === 2 && (this.participantList = this.oData[1].filter(() => true).reverse())
+				}else {
+					let data4 = this.oData[4]
+					data4 ? (this.participantList = data4) : this.fetchList(4)
 				}
 
 				this.orderType = orderType
@@ -224,7 +231,7 @@
 				
 			},
 			openOrder(){
-				if(!this.has_problems) return false
+				// if(!this.has_problems) return false
 				this.isOrderOpen = !this.isOrderOpen
 			},
 			goStudentDetail(userid){
