@@ -25,14 +25,14 @@
 			<template v-if="participantList.length">
 				<div class="order-box">
 					<v-touch class="title f14" v-on:tap="openOrder">
-						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : (orderType === 3 ? $t('behavior.qdsjpx') : '按学号排序'))}}
+						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : (orderType === 3 ? $t('behavior.qdsjpx') : $t('behavior.studentId')))}}
 						<div :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
 					</v-touch>
 					<ul class="choose-list" v-show="isOrderOpen">
 						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)"><!-- 得分由高到低 -->{{ $t('behavior.dfygdd') }}</v-touch>
 						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)"><!-- 得分由低到高 -->{{ $t('behavior.dfyddg') }}</v-touch>
 						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 3}]" v-on:tap="setOrder(3)"><!-- 签到时间排序 -->{{ $t('behavior.qdsjpx') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)">按学号排序</v-touch>
+						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)"><!-- 按学号排序 -->{{ $t('behavior.studentId') }}</v-touch>
 					</ul>
 				</div>
 				<div class="item" v-for="(item,index) in participantList" :key="item.id" @click="goStudentDetail(item.id)">
@@ -152,7 +152,7 @@
 						self.$store.commit('set_participantList', jsonData.data.students)
 						self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
-						
+
 						self.orderType = jsonData.data.has_problems && sort_type == 1 ? 1 : (!jsonData.data.has_problems && sort_type == 1 ? 3 : sort_type)
 						if(sort_type == 1){
 							self.oData[1] = jsonData.data.students

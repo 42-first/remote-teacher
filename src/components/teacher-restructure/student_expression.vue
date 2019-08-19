@@ -39,7 +39,7 @@
               </span>
             </div>
             <div class="points-option f12" @click="addScoreFlag = true">
-              加分
+              <!-- 加分 -->{{$t('behavior.bonus')}}
             </div>
           </div>
         </div>
@@ -101,21 +101,21 @@
             <span class="save f18" @click="handleAddScore"><!-- 保存 -->{{$t('behavior.save')}}</span>
           </div>
           <div class="box-content">
-            <span class="current-score f14">当前已有加分：<span class="c666">{{behavior_score}}分</span></span>
+            <span class="current-score f14"><!-- 当前已有加分 -->{{$t('behavior.currentbonuspoints')}}：<span class="c666">{{behavior_score}}{{$t('behavior.points')}}</span></span>
             <div class="add-score">
-              <span>本次加分</span>
+              <span><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
               <div class="box-center f14">
                 <div class="input-box">
                   <input class="f24 c333" type="number" v-model="behavior_score_temp" @blur="handleScoreBlur">
                 </div>
-                分
+                <!-- 分 -->{{$t('behavior.points')}}
               </div>
             </div>
             <div class="score flexcenter f14">
-              <span class="score-item" @click="changeScore(1)">1分</span>
-              <span class="score-item" @click="changeScore(2)">2分</span>
-              <span class="score-item" @click="changeScore(5)">5分</span>
-              <span class="score-item" @click="changeScore(10)">10分</span>
+              <span class="score-item" @click="changeScore(1)">1<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(2)">2<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(5)">5<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(10)">10<!-- 分 -->{{$t('behavior.points')}}</span>
             </div>
           </div>
         </div>

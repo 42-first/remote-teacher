@@ -429,7 +429,11 @@ let pages = {
     "noquizzes": "本节课没有发布习题",
     "noeligiblestudents": "没有符合的学生",
     "present": "已出勤",
-    "absent": "未出勤"
+    "absent": "未出勤",
+    "bonus": "加分",
+    "currentbonuspoints": "当前已有加分",
+    "thepoints": "本次加分",
+    "studentId": "按学号排序"
   },
 
 
