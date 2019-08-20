@@ -423,8 +423,9 @@
           return item.id === submissionid;
         })
 
+        let addinversion = Number(this.addinversion)
         // 协议版本号>=1.5 支持播放投稿视频
-        if(this.addinversion && info && info.video && info.video.url) {
+        if(addinversion < 1.5 && info && info.video && info.video.url) {
           let title = this.$i18n.t('tips');
           let message = this.$i18n.t('tougaowarn');
           this.$messagebox.alert(message, title)
