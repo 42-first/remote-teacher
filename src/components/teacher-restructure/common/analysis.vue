@@ -19,8 +19,11 @@
 
     <!-- 底部操作 -->
     <footer class="analysis__footer">
-      <!-- 关闭按钮 -->
-      <p class="analysis--closed f17" @click="handleclosed"><!-- 关闭 -->{{ $t('close') }}</p>
+      <!-- 投屏/取消投屏 -->
+      <p class="analysis--closed f17" @click="handleScreen">
+        <template>{{ $t('screenmode') }}</template>
+        <template>{{ $t('screenmodeoff') }}</template>
+      </p>
       <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu"><!-- 发送给学生 -->{{ $t('sendtostus') }}</p>
       <p v-else class="analysis--closed f17 c9b" ><!-- 已发给学生 -->{{ $t('hasbeensend') }}</p>
     </footer>
@@ -138,7 +141,12 @@
           this.hideAnalysis();
         }
       },
-
+      /**
+       * @method 投屏和取消投屏
+       */
+      handleScreen() {
+        console.log(this.problem)
+      },
       /**
        * @method 发送给全班
        */
