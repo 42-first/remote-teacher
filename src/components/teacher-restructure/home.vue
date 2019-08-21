@@ -402,8 +402,6 @@
 	    fetchUserInfo () {
 	      let self = this
 				let url = API.userinfo
-				url = "/v/lesson/lesson_user_info"
-
 	      return request.get(url, {'lesson_id': self.lessonid})
 	        .then(jsonData => {
           window.USERID = jsonData.data.user.user_id

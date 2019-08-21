@@ -90,23 +90,23 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   api = {
-    // reporter:                           '/reporter/collect',
+    reporter:                           '/reporter/collect',
     lesson_ppt_version:                '/static/lesson/mock/lesson_ppt_version.json',
     lesson_status:                      '/static/lesson/mock/lesson_status.json',
-    userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
-    // userinfo:                           '/v/lesson/lesson_user_info',
+    // userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
+    userinfo:                           '/v/lesson/lesson_user_info',
     remote_control_list:                '/static/lesson/mock/remote_control_list.json',        // 遥控器列表
-    fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
-    // fetch_presentation_data:            '/v/lesson/fetch_presentation_data',    // ppt数据
+    // fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
+    fetch_presentation_data:            '/v/lesson/fetch_presentation_data',    // ppt数据
     lesson_quiz_list:                   '/static/lesson/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
     lesson_paper_quiz:                  '/static/lesson/mock/lesson_paper_quiz.json',          // 试卷数据（分文件夹，已发布、未发布）
     lesson_one_directory_paper:         '/static/lesson/mock/lesson_one_directory_paper.json', // 试卷数据（单个文件夹内的试卷）
-    presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
-    teaching_lesson_participant_list:   'http://apimock.xuetangx.com/mock/115/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
-    lesson_not_participant_list:        'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
-    // presentation_tag:                   '/v/lesson/presentation_tag',           // 获取缩略图页 不懂 等标志的信息
-    // teaching_lesson_participant_list:   '/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
-    // lesson_not_participant_list:        '/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
+    // presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
+    // teaching_lesson_participant_list:   'http://apimock.xuetangx.com/mock/115/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
+    // lesson_not_participant_list:        'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
+    presentation_tag:                   '/v/lesson/presentation_tag',           // 获取缩略图页 不懂 等标志的信息
+    teaching_lesson_participant_list:   '/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
+    lesson_not_participant_list:        '/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
     publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
     problem_statistics:                 'http://apimock.xuetangx.com/mock/115/v/lesson/problem_statistics',         // 试题柱状图数据
     fill_blank_problem_statistics:      'http://apimock.xuetangx.com/mock/115/v/lesson/fill_blank_problem_statistics',         // 填空题条形图数据

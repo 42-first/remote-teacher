@@ -16,7 +16,6 @@ function goHome () {
 function socketProcessMessage(msg){
   let self = this
   // 没有在上课则直接跳走
-  debugger
   if (msg.op === 'hello' && !msg.isAlive) {
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return

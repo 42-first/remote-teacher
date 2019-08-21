@@ -12,7 +12,10 @@
   <section class="analysis__page mask-analysis">
 
     <article class="analysis-content">
-      <h3 class="title f18"><!-- 答案解析 -->{{ $t('answerkey') }}</h3>
+      <h3 class="title f18">
+        <span class="title-content">{{ $t('answerkey') }}</span>
+        <i class="iconfont icon-guanbi1 color6" @click="handleclosed"></i>
+      </h3>
       <!-- 解析内容 -->
       <analysis :problem.sync="problem"></analysis>
     </article>
@@ -28,10 +31,10 @@
       <p v-else class="analysis--closed f17 c9b" ><!-- 已发给学生 -->{{ $t('hasbeensend') }}</p>
     </footer>
   </section>
-
 </template>
 
 <style lang="scss" scoped>
+  @import "~@/style/common_rem";
   .analysis__page {
     z-index: 1000;
     position: fixed;
@@ -63,26 +66,35 @@
     background-color: #fff;
   }
 
-  .analysis--closed {
-  }
-
   .analysis-content {
     position: absolute;
     top: 0.533333rem;
     left: 0.533333rem;
     right: 0.533333rem;
     bottom: 1.866667rem;
-    padding: 0.32rem 0.453333rem 0;
     background-color: #fff;
     border-radius: 0.106667rem;
     box-shadow: 0 0.106667rem 0.16rem rgba(0,0,0,0.2);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-
     .title {
       font-weight: normal;
       color: #333;
       text-align: center;
+      display: flex;
+      align-items: center;
+      height: px2rem(100px);
+      padding: 0 px2rem(24px);
+      background-color: #f8f8f8;
+      .title-content{
+        flex: 1;
+      }
+      .iconfont{
+        font-size: px2rem(48px);
+      }
+    }
+    .analysis-inner .analysis-anwser{
+      padding: 0 px2rem(35px);
     }
   }
 
@@ -116,7 +128,8 @@
     },
     computed: {
       ...mapGetters([
-        'lessonid'
+        'lessonid',
+        'socket'
       ])
     },
     components: {
@@ -132,7 +145,6 @@
           this.sendStatus = +localStorage.getItem(key);
         }
       },
-
       /**
        * @method 关闭答案解析页面
        */
@@ -145,7 +157,8 @@
        * @method 投屏和取消投屏
        */
       handleScreen() {
-        console.log(this.problem)
+        console.log(this.problem, this.socket)
+
       },
       /**
        * @method 发送给全班
@@ -156,30 +169,24 @@
           'problem_id': this.problem.ProblemID,
           'lesson_id': this.lessonid
         };
-
         if(this.sendStatus > 0) {
           return this;
         }
-
         // 禁止重复发送
         this.sendStatus = 1;
-
         request.post(url, params)
         .then(res => {
           if(res && res.success) {
             // 发送成功
             this.sendStatus = 2;
-
             // 这里记录是否发送
             let key = 'analysis-sendstatus-' + this.problem.ProblemID;
             if(isSupported(window.localStorage)) {
               localStorage.setItem(key, this.sendStatus);
             }
           }
-
         })
       }
-
     },
     created() {
       this.init();
