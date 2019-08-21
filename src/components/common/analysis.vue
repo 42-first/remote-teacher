@@ -13,16 +13,22 @@
     <section class="analysis-anwser f16" v-if="problem.Type!=='ShortAnswer'"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
     <section class="analysis__images" :style="problem.RemarkRich|setScale" v-if="problem.RemarkRich && problem.RemarkRich.Shapes">
       <!-- 新的解析处理 -->
-      <div v-for="shape in problem.RemarkRich.Shapes">
+      <div v-for="(shape, index) in problem.RemarkRich.Shapes" :key="index">
         <!-- 文字提取方式 新版 -->
         <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.Paragraphs" />
         <div class="analysis__shape" :style="shape|setShapeStyle" v-else>
-          <template v-for="paragraph in shape.Paragraphs" v-if="shape.Paragraphs">
-            <ol class="paragraph__wrap J_paragraph" :start="paragraph.Number">
-              <li class="analysis__shape shape__text" :style="paragraph.Bound|setShapeStyle">
-                <div class="analysis__shape paragragh__line" :style="line.Bound|setShapeStyle" v-html="line.Html" v-for="line in paragraph.Lines" v-if="paragraph.Lines"></div>
-              </li>
-            </ol>
+          <template v-if="shape.Paragraphs">
+            <template v-for="(paragraph, pIndex) in shape.Paragraphs">
+              <ol class="paragraph__wrap J_paragraph" :start="paragraph.Number" :key="pIndex">
+                <li class="analysis__shape shape__text" :style="paragraph.Bound|setShapeStyle">
+                  <template v-if="paragraph.Lines">
+                    <template v-for="(line, lIndex) in paragraph.Lines">
+                      <div class="analysis__shape paragragh__line" :style="line.Bound|setShapeStyle" v-html="line.Html" :key="lIndex"></div>
+                    </template>
+                  </template>
+                </li>
+              </ol>
+            </template>
           </template>
         </div>
       </div>
