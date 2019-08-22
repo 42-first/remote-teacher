@@ -50,6 +50,7 @@
   .analysis-anwser {
     text-align: left;
     color: #9B9B9B;
+    padding: 0 0.46667rem;
   }
 
   .remark {

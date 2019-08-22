@@ -110,7 +110,7 @@ const store = new Vuex.Store({
       state.total = total
     },
     set_pptData: (state, pptData) => {
-      console.log('====store.set_pptData', pptData)
+      // console.log('====store.set_pptData', pptData)
       // state.pptData = pptData
       // state.pptData = Array.from(pptData)
 

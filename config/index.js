@@ -30,6 +30,7 @@ module.exports = {
     proxyTable: {
       '/pc/debug_login': proxyUrl,
       '/reporter/collect': proxyUrl,
+      '/group': proxyUrl,
       '/v': proxyUrl,
       '/group': proxyUrl
     },

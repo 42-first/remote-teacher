@@ -16,16 +16,18 @@
         <span class="title-content">{{ $t('answerkey') }}</span>
         <i class="iconfont icon-guanbi1 color6" @click="handleclosed"></i>
       </h3>
-      <!-- 解析内容 -->
-      <analysis :problem.sync="problem"></analysis>
+      <div class="analysis-wrapper">
+         <!-- 解析内容 -->
+        <analysis :problem.sync="problem"></analysis>
+      </div>
     </article>
 
     <!-- 底部操作 -->
     <footer class="analysis__footer">
       <!-- 投屏/取消投屏 -->
       <p class="analysis--closed f17" @click="handleScreen">
-        <template>{{ $t('screenmode') }}</template>
-        <template>{{ $t('screenmodeoff') }}</template>
+        <template v-if="!goScreen">{{ $t('screenmode') }}</template>
+        <template v-else>{{ $t('screenmodeoff') }}</template>
       </p>
       <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu"><!-- 发送给学生 -->{{ $t('sendtostus') }}</p>
       <p v-else class="analysis--closed f17 c9b" ><!-- 已发给学生 -->{{ $t('hasbeensend') }}</p>
@@ -77,6 +79,9 @@
     box-shadow: 0 0.106667rem 0.16rem rgba(0,0,0,0.2);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-flow: column nowrap;
+    -webkit-overflow-scrolling: touch;
     .title {
       font-weight: normal;
       color: #333;
@@ -93,8 +98,10 @@
         font-size: px2rem(48px);
       }
     }
-    .analysis-inner .analysis-anwser{
-      padding: 0 px2rem(35px);
+    .analysis-wrapper{
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
     }
   }
 
@@ -120,6 +127,7 @@
       return {
         // 锁定发送 发送状态 0：未发送 1：发送中 2：已发送 3：发送失败
         sendStatus: 0,
+        goScreen: false
       }
     },
     watch: {
@@ -130,7 +138,10 @@
       ...mapGetters([
         'lessonid',
         'socket'
-      ])
+      ]),
+      problemid() {
+        return typeof this.problem === "object" && this.problem.ProblemID
+      }
     },
     components: {
       analysis: () => import('@/components/common/analysis.vue'),
@@ -144,6 +155,7 @@
         if(isSupported(window.localStorage)) {
           this.sendStatus = +localStorage.getItem(key);
         }
+        this.msgHandle()
       },
       /**
        * @method 关闭答案解析页面
@@ -154,11 +166,30 @@
         }
       },
       /**
-       * @method 投屏和取消投屏
+       * @method 答案解析投屏和取消投屏
        */
       handleScreen() {
-        console.log(this.problem, this.socket)
-
+        const params = {
+          op: "showproblemremark",
+          lessonid: this.lessonid,
+          prob: this.problemid,
+          msgid: 1
+        }
+        this.socket.send(JSON.stringify(params))
+      },
+      /**
+       * 状态消息接收
+       */
+      msgHandle() {
+        this.socket.onmessage = e => {
+          try {
+            const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data
+            console.log(data)
+            this.goScreen = !this.goScreen
+          } catch (error) {
+            console.log(error)
+          }
+        }
       },
       /**
        * @method 发送给全班

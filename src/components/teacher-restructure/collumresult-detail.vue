@@ -188,11 +188,7 @@
        */
       refreshProblemResultDetail() {
         let self = this
-        let url = API.problem_result_detail + '/' + self.problemid + '/'
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.problem_result_detail + '/' + self.problemid + '/'
-        }
+        let url = `${API.problem_result_detail}/${this.problemid}/`
 
         // 单次刷新
         request.get(url)

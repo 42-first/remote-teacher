@@ -107,10 +107,10 @@ if (process.env.NODE_ENV === 'production') {
     presentation_tag:                   '/v/lesson/presentation_tag',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/v/lesson/teaching_lesson_participant_list',    // 获取签到学生名单
     lesson_not_participant_list:        '/v/lesson/lesson_not_participant_list',       // 获取未签到学生名单
-    publish_problem:                    'http://apimock.xuetangx.com/mock/115/v/lesson/publish_problem/',            // 发布试题
-    problem_statistics:                 'http://apimock.xuetangx.com/mock/115/v/lesson/problem_statistics',         // 试题柱状图数据
-    fill_blank_problem_statistics:      'http://apimock.xuetangx.com/mock/115/v/lesson/fill_blank_problem_statistics',         // 填空题条形图数据
-    problem_result_detail:              'http://apimock.xuetangx.com/mock/115/v/lesson/problem_result_detail/{{problem_id}}/',      // 试题详情数据
+    publish_problem:                    '/v/lesson/publish_problem/',            // 发布试题
+    problem_statistics:                 '/v/lesson/problem_statistics',         // 试题柱状图数据
+    fill_blank_problem_statistics:      '/v/lesson/fill_blank_problem_statistics',         // 填空题条形图数据
+    problem_result_detail:              '/v/lesson/problem_result_detail',      // 试题详情数据
     delay_problem:                      '/static/lesson/mock/delay_problem.json',              // 试题收题
     publish_lesson_paper:               '/static/lesson/mock/publish_lesson_paper.json',       // 发布试卷
     quiz_results_statistics:            '/static/lesson/mock/quiz_results_statistics.json',    // 获取试卷饼图数据
@@ -138,7 +138,8 @@ if (process.env.NODE_ENV === 'production') {
     // 设置语言
     set_lang_en: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/en',
     set_lang_zh_cn: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn',
-    get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    // get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    get_classroom_group_list:           '/group/get_classroom_group_list/',
     publish_subj_problem_group_review:  'http://apimock.xuetangx.com/mock/115/v/lesson/publish_subj_problem_group_review/',
     get_subj_result_score_detail:       'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_result_score_detail/',
     edit_subj_problem_score_proportion: 'http://apimock.xuetangx.com/mock/115/v/lesson/edit_subj_problem_score_proportion',

@@ -18,7 +18,7 @@ function configWX () {
 	request.post(url, {'url': location.href})
     .then(jsonData => {
     	// 不需要判断success，在request模块中判断如果success为false，会直接reject
-    	console.log('weixin configing', jsonData)
+    	// console.log('weixin configing', jsonData)
     	let data = jsonData.data.js_config;
 
       wx.config({
