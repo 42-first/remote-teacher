@@ -108,7 +108,7 @@
 		<div class="note-box" v-show="noteText">
 			<div class="note-box-content">
 				<div class="title">备注：</div>
-				<div class="text">{{noteText}}</div>
+				<div class="text" v-html="noteText"></div>
 				<div class="close">
 					<i class="icon-ykq-shiti-guanbi iconfont" @touchend.self="showNote('')"></i>
 				</div>
@@ -276,7 +276,7 @@
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
 			showNote(text) {
-				this.noteText = text
+				this.noteText = text.split(/\r\n/).join("<br/>")
 			},
 	  	/**
 	     * 复用页面，需要watch route
