@@ -200,7 +200,7 @@
     },
     filters: {
       setStyle(video) {
-        let width = 3.466;
+        let width = 6.9;
         let height = width/video.width * video.height;
         let sCss = `width: ${width}rem; height: ${height}rem;`;
 

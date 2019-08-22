@@ -141,7 +141,7 @@
         return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
       },
       setStyle(video) {
-        let width = 5;
+        let width = 6.9;
         let height = width/video.width * video.height;
         let sCss = `width: ${width}rem; height: ${height}rem;`;
 
