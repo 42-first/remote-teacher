@@ -271,6 +271,17 @@
           lesson_id: this.lessonid,
           student_id: this.userid
         }
+        let canSubmit = true
+        this.tagList.forEach(item => {
+          if(item.name === this.tagText){
+            canSubmit = false
+          }
+        })
+        if(!canSubmit){
+          let msg = i18n.locale === 'zh_CN' ? '已存在相同标签' : 'The same tag already exists'
+          T_PUBSUB.publish('ykt-msg-toast', msg);
+          return
+        }
         request.post(URL, params).then(res => {
           if(res.success){
             this.tagList.push(res.data)
