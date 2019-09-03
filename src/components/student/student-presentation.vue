@@ -47,11 +47,11 @@
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
-        <span class="f12 fold-text">收起</span>
+        <span class="f12 fold-text"><!-- 收起 -->{{ $t('fold') }}</span>
       </section>
       <section class="live__fold c9b" v-else @click="handleLiveVisible(true)">
         <i class="iconfont icon-zhibo f20 red pr15"></i>
-        <span class="f12 fold-text">直播中 点击观看</span>
+        <span class="f12 fold-text"><!-- 直播中 点击观看 -->{{ $t('liveunfold') }}</span>
       </section>
     </section>
 
@@ -323,7 +323,7 @@
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 0,
-        liveVisible: false,
+        liveVisible: true,
       };
     },
     components: {
