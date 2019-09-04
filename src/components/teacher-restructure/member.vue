@@ -45,7 +45,7 @@
 								<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
 								<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
 							</div>
-							<div v-if="has_problems" class="score-box f14" :class="index < 3 ? 'orange' : ''">
+							<div v-if="has_problems" class="score-box f14" :class="item.index < 3 ? 'orange' : ''">
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
