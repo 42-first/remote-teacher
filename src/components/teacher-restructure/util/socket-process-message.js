@@ -75,6 +75,14 @@ function socketProcessMessage(msg){
         self.$store.commit('set_isMsgMaskHidden', true)
 
         self.showQrcodeMask()
+      } else if(msg.mask && msg.mask.type === 'wordcloud'){
+        if(msg.mask.cat == 'danmu'){
+          self.$store.commit('set_postWordCloudOpen', false)
+          self.$store.commit('set_danmuWordCloudOpen', true)
+        }else {
+          self.$store.commit('set_postWordCloudOpen', true)
+          self.$store.commit('set_danmuWordCloudOpen', false)
+        }
       } else {
         // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
         self.showEscMask()
@@ -458,8 +466,10 @@ function socketProcessMessage(msg){
   if (msg.op == 'wordcloudshown') {
     if(msg.cat == 'post'){
       T_PUBSUB.publish('submission-msg.wordcloudshown', msg)
+      self.$store.commit('set_danmuWordCloudOpen', false)
     }else if(msg.cat == 'danmu') {
       T_PUBSUB.publish('danmu-msg.wordcloudshown', msg)
+      self.$store.commit('set_postWordCloudOpen', false)
     }
   }
 

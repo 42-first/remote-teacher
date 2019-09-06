@@ -10,7 +10,7 @@
         </v-touch>
       </div>
       <v-touch class="wordcloud-btn f16" v-on:tap="setWordCloudStatus">
-        {{ isWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}
+        {{ danmuWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}
       </v-touch>
     </div>
     <div class="gap"></div>
@@ -88,7 +88,6 @@
         isToastSwitch: false,       // 显示弹幕开启关闭提示
         nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
         nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
-        isWordCloudOpen: false,
       }
     },
     computed: {
@@ -97,6 +96,7 @@
         'socket',
         'isDanmuOpen',
         'postingDanmuid',
+        'danmuWordCloudOpen'
       ])
     },
     components: {
@@ -164,11 +164,11 @@
         })
 
         T_PUBSUB.subscribe('danmu-msg.wordcloudshown', (_name, msg) => {
-          self.isWordCloudOpen = true
+          self.$store.commit('set_danmuWordCloudOpen', true)
         })
 
         T_PUBSUB.subscribe('danmu-msg.closedanmuwc', (_name, msg) => {
-          self.isWordCloudOpen = false
+          self.$store.commit('set_danmuWordCloudOpen', false)
         })
       },
       /**
@@ -399,7 +399,7 @@
       setWordCloudStatus(){
         let self = this
         let str = ''
-        if(!self.isWordCloudOpen){
+        if(!self.danmuWordCloudOpen){
           str = JSON.stringify({
             'op': 'showwordcloud',
             'lessonid': self.lessonid,
@@ -410,7 +410,7 @@
           str = JSON.stringify({
             'op': 'closemask',
             'lessonid': self.lessonid,
-            'type': 'danmuwc',
+            'type': 'wordcloud',
             'msgid': 1234
           })
         }

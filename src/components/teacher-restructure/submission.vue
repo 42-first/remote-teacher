@@ -13,7 +13,7 @@
     </div>
     <div v-show="!isFetching && dataList.length">
       <hide-some-info :isUserInfo="true" position="left" @change="showUserInfoChange"></hide-some-info>
-      <span class="wordcloud-btn f16" @click="setWordCloudStatus">{{ isWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}</span>
+      <span class="wordcloud-btn f16" @click="setWordCloudStatus">{{ postWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}</span>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -143,7 +143,8 @@
         'lessonid',
         'socket',
         'postingSubmissionid',
-        'postingSubmissionSent'
+        'postingSubmissionSent',
+        'postWordCloudOpen'
       ])
     },
     components: {
@@ -207,11 +208,11 @@
         })
 
         T_PUBSUB.subscribe('submission-msg.wordcloudshown', (_name, msg) => {
-          self.isWordCloudOpen = true
+          self.$store.commit('set_postWordCloudOpen', true)
         })
         
         T_PUBSUB.subscribe('submission-msg.closepostwc', (_name, msg) => {
-          self.isWordCloudOpen = false
+          self.$store.commit('set_postWordCloudOpen', false)
         })
       },
       /**
@@ -570,7 +571,7 @@
       setWordCloudStatus(){
         let self = this
         let str = ''
-        if(!self.isWordCloudOpen){
+        if(!self.postWordCloudOpen){
           str = JSON.stringify({
             'op': 'showwordcloud',
             'lessonid': self.lessonid,
