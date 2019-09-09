@@ -271,6 +271,7 @@ var actionsMixin = {
             if(!hasPPT) {
               data = Object.assign(data, cardItem, { animation: 1 })
             } else {
+              // 之前播放了这一页 再次播放就不用蒙版了
               data = Object.assign(data, cardItem, { animation: 0 })
             }
 

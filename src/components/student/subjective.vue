@@ -57,7 +57,8 @@
         <!-- 图片 -->
         <section class="submission__pic">
           <div v-if="!hasImage&&!loading">
-            <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
+            <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
+            <div class="submission__pic--add" v-else ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
@@ -121,6 +122,11 @@
   import API from '@/util/api'
   import {compress} from '@/util/image'
   import { isSupported } from '@/util/util'
+  import { configWX } from '@/util/wx-util'
+  import imagemixin from '@/components/common/image-mixin'
+  // 是否华为特殊手机 P20 P20-pro
+  const ua = navigator.userAgent.toLowerCase();
+  const huawei = ua.match(/huaweiclt|huaweieml/i);
 
   export default {
     name: 'subjective-page',
@@ -180,6 +186,8 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
+        // 是否华为特殊手机
+        huawei: !!huawei
       };
     },
     components: {
@@ -221,7 +229,7 @@
     },
     filters: {
     },
-    mixins: [],
+    mixins: [ imagemixin ],
     methods: {
       /*
       * @method 初始化习题页面
@@ -315,6 +323,11 @@
         // 预加载图片
         let oImg = new Image();
         oImg.src = '/vue_images/images/loading-3.gif';
+
+        // huawei 使用微信自己的图片选择
+        if(this.huawei) {
+          configWX();
+        }
       },
 
       /*
