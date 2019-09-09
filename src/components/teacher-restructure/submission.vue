@@ -49,6 +49,10 @@
                     </span>
                   </div>
                   <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
+                  <!-- 视频展示 -->
+                  <div class="video__preview" v-if="item.video && item.video.url">
+                    <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+                  </div>
                 </div>
               </div>
               <div class="action-box">
@@ -78,7 +82,7 @@
                     <span class="fsqb-innerline"></span>
                     {{ $t('screenmodeoff') }}
                   </v-touch>
-                  
+
                 </div>
               </div>
             </div>
@@ -90,18 +94,23 @@
             <div class="wenan">end</div>
           </div>
 
-        </section> 
+        </section>
       </Loadmore>
       <div class="gap"></div>
-      
+
     </div>
-    
+
     <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
       <span v-show="isAskingItemStatus">{{ $t('onscreenmode') }}...</span>
       <span v-show="isItemDeleted">{{ $t('postdeleted') }}</span>
     </div>
     <v-touch class="btn f18" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     <Scale></Scale>
+
+    <!-- 教师投稿入口 -->
+    <div class="publish-btn" @click="handlePublish">
+      <i class="iconfont icon-ykq_tab_tougao f24"></i>
+    </div>
   </div>
 </template>
 
@@ -142,7 +151,8 @@
         'lessonid',
         'socket',
         'postingSubmissionid',
-        'postingSubmissionSent'
+        'postingSubmissionSent',
+        'addinversion',
       ])
     },
     components: {
@@ -186,6 +196,15 @@
           let wh = window.innerHeight
           this.isContLonger = sbh >= wh
         }, 100)
+      }
+    },
+    filters: {
+      setStyle(video) {
+        let width = 6.9;
+        let height = width/video.width * video.height;
+        let sCss = `width: ${width}rem; height: ${height}rem;`;
+
+        return sCss;
       }
     },
     methods: {
@@ -327,7 +346,7 @@
         self.fetchList(-1, 0, 1).then(jsonData => {
           // 只要点击刷新按钮就去掉上方的有新弹幕的提示
           self.isShowNewHint = false
-          
+
           setTimeout(() => {
             self.isShowBtnBox = true
           },500)
@@ -342,7 +361,7 @@
           // 假如没有新条目的话，显示没有新条目的提示
           // 无论显示提示与否，2秒后不再显示提示
           self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
-          
+
           setTimeout(() => {
             self.isShowNoNewItem = false
           }, 2000)
@@ -399,7 +418,19 @@
           // TODO 订阅投稿投屏咨询状态
           // self.isAskingItemStatus = true
         },800)
-        
+
+        let info = this.dataList.find((item)=>{
+          return item.id === submissionid;
+        })
+
+        let addinversion = Number(this.addinversion)
+        // 协议版本号>=1.5 支持播放投稿视频
+        if(addinversion < 1.5 && info && info.video && info.video.url) {
+          let title = this.$i18n.t('tips');
+          let message = this.$i18n.t('tougaowarn');
+          this.$messagebox.alert(message, title)
+        }
+
         let url = API.tougaostatus
 
         let postData = {
@@ -510,7 +541,7 @@
 
           tapToClose: true,
           // 解决消息点击问题
-          // history: false,       
+          // history: false,
         };
 
         // Initializes and opens PhotoSwipe
@@ -532,12 +563,12 @@
       * 变更投屏状态
       *  可能已废弃，以后删掉
       *
-      **/ 
+      **/
      showUserInfoChange(val) {
        this.isHideName = val
      },
-    // 增加fold 属性
-    addFold(list) {
+      // 增加fold 属性
+      addFold(list) {
         list.map(e => {
             if(e.content && this.getLength(e.content)> 200) {
                 e.fold = true
@@ -548,12 +579,22 @@
             e.foldContent = e.content.slice(0, 100)
         })
         return list
-    },
-    getLength(str) {
+      },
+      getLength(str) {
         let s = str + ''
         var result = s.replace(/[^\x00-\xff]/g, '**')
         return result.length
-    }
+      },
+
+      // 进入发布投稿页面
+      handlePublish(evt) {
+        this.$router.push({
+          name: 'postsubmission',
+          params: {
+            'lessonID': this.lessonid
+          }
+        })
+      }
     }
   }
 </script>
@@ -636,7 +677,7 @@
         height: 100%;
       }
     }
-    
+
     .isFetching {
       position: relative;
       z-index: 10;
@@ -648,7 +689,7 @@
       height: 100%;
       // background: $white;
       text-align: center;
-      
+
       img {
         display: inline-block;
         width: 5.5rem;
@@ -671,7 +712,7 @@
     .list {
       padding-bottom: 2.1rem;
       -webkit-overflow-scrolling: touch;
-      
+
       .item {
         padding: 0 0.4rem;
         background: $white;
@@ -721,7 +762,7 @@
           align-items: center;
           height: 1rem;
           margin-left: 1.386667rem;
-          
+
           .gray {
             color: $graybg;
           }
@@ -789,7 +830,7 @@
         }
       }
     }
-    
+
     .toast-box {
       position: fixed;
       left: 50%;
@@ -813,5 +854,26 @@
       line-height: 1.466667rem;
       box-shadow: none;
     }
+  }
+
+  .publish-btn {
+    position: fixed;
+    bottom: 1.8rem;
+    right: 0.533333rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 1.173333rem;
+    height: 1.173333rem;
+    color: #fff;
+    background: #5096F5;
+    box-shadow: 0 0.08rem 0.266667rem rgba(80, 150, 245, 0.3);
+    border-radius: 50%;
+  }
+
+  .video__preview video {
+    background: #000;
   }
 </style>
