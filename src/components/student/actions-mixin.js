@@ -261,7 +261,7 @@ var actionsMixin = {
         };
         // 是否web开课的动画 Shapes里面有动画步骤
         let Shapes = slideData.Shapes;
-        let isWebLesson = Shapes && Shapes.length ? true : false;
+        let isWebLesson = this.isWebLesson;
 
         // 之前有动画隐藏蒙版
         this.hideAnimationMask();
@@ -287,7 +287,7 @@ var actionsMixin = {
                   this.cards.push(data);
                 }
               } else {
-                Object.assign(data, cardItem, { src: shape.url })
+                shape && Object.assign(data, cardItem, { src: shape.url })
                 this.cards.push(data);
               }
             }
