@@ -403,6 +403,7 @@ let pages = {
   "boardunknow": "Unclear(board)",
   "showall": "Full text",
   "foldall": "fold",
+  "tougaowarn": "The current version does not support short video, please upgrade to the latest version",
 
   // 给学生增加备注需求增加
   behavior: {
@@ -496,7 +497,7 @@ let pages = {
     "pointsofgrading": "Grading Criteria",
     "textareaplaceholder": "Please enter the key or points for students' reference.",
     "hupingguize": "Rules of Peer Grading",
-    "rule1": "<i>＊</i>Groups can take part in peer grading only after answer submission. Each group will receive <span class='f15'>One</span> answer from other groups.",
+    "rule1": "<i>＊</i>Students can take part in peer grading only after answer submission. Each person/group will receive <span class='f15'>One</span> answer from other person/groups.",
     "rule2": "The peer grading is anonymous.",
     "rule3": "The teacher can create the proportion of peer grading in the beginning, the final score can be modified at any time.",
     "faqihuping": "Launch",
@@ -509,9 +510,9 @@ let pages = {
     "gradingscore" : "Peer grading score: {score} point(s)",
     "gradingtotalscore" : "Enter the score (total score is {score} point(s))",
     "notice" : "Notice",
-    "noticecontent" : "This question is graded by groups. Each student has only one chance to grade the question, and only the last submission in each group will be accepted as the final score.",
+    "noticecontent" : "Please mark carefully according to the scoring points, and only the last submission will be accepted as the final score.",
     "close" : "Close",
-    "gradedalready" : "Graded Already",
+    "gradedalready" : "Tips",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading",
     "noarticipate": "Groups did not submit will not participate in the peer grading.",

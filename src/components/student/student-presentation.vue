@@ -324,6 +324,8 @@
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 0,
         liveVisible: true,
+        // 是否web开课
+        isWebLesson: false,
       };
     },
     components: {
@@ -598,6 +600,8 @@
 
               // classroom
               self.classroom = data.classroom;
+              // 是否web版开课
+              self.isWebLesson = data.is_web || false;
 
               // set presentation map
               if(self.presentationList.length) {
