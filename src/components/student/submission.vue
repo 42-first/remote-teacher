@@ -494,6 +494,7 @@
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+    text-align: center;
   }
 
   .submission-inner {
