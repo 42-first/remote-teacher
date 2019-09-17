@@ -25,12 +25,20 @@
     <!-- 底部操作 -->
     <footer class="analysis__footer">
       <!-- 投屏/取消投屏 -->
-      <p class="analysis--closed f17" @click="handleScreen">
-        <template v-if="!goScreen">{{ $t('screenmode') }}</template>
-        <template v-else>{{ $t('screenmodeoff') }}</template>
-      </p>
-      <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu"><!-- 发送给学生 -->{{ $t('sendtostus') }}</p>
-      <p v-else class="analysis--closed f17 c9b" ><!-- 已发给学生 -->{{ $t('hasbeensend') }}</p>
+      <div class="item">
+        <p class="analysis--closed f17" @click="handleScreen">
+          <template v-if="!goScreen">{{ $t('screenmode') }}</template>
+          <template v-else>{{ $t('screenmodeoff') }}</template>
+        </p>
+      </div>
+      <div class="item">
+        <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu">
+          <!-- 发送给学生 -->{{ $t('sendtostus') }}
+        </p>
+        <p v-else class="analysis--closed f17 c9b" >
+          <!-- 已发给学生 -->{{ $t('hasbeensend') }}
+        </p>
+      </div>
     </footer>
   </section>
 </template>
@@ -55,17 +63,35 @@
     bottom: 0.666667rem;
     left: 0.533333rem;
     right: 0.533333rem;
-
     display: flex;
-    justify-content: space-around;
     align-items: center;
-
-    height: 1.306667rem;
-    line-height: 1.306667rem;
-
+    height: px2rem(98px);
+    line-height: px2rem(98px);
     text-align: center;
     color: #639EF4;
     background-color: #fff;
+    .item{
+      width: 50%;
+      position: relative;
+    }
+    .item:nth-of-type(2n)::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-left: px2rem(2px) solid #eee;
+      transform: scaleX(0.5);
+    }
+  }
+  .analysis__footer::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-top: px2rem(2px) solid #eee;
+    transform: scaleY(0.5);
   }
 
   .analysis-content {
