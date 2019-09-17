@@ -306,7 +306,9 @@
         // 弹幕直播
         danmus: [],
         // 是否直播课
-        isLive: false
+        isLive: false,
+        // 是否web开课
+        isWebLesson: false,
       };
     },
     components: {
@@ -580,6 +582,8 @@
 
               // classroom
               self.classroom = data.classroom;
+              // 是否web版开课
+              self.isWebLesson = data.is_web || false;
 
               // set presentation map
               if(self.presentationList.length) {

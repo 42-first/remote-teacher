@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/pc/debug_login': proxyUrl,
-      // '/v/api': proxyUrl,
+      '/v/api': proxyUrl,
       '/v': proxyUrl,
       '/group': proxyUrl
     },

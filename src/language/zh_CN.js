@@ -403,6 +403,7 @@ let pages = {
   "boardunknow": "白板不懂",
   "showall": "全文",
   "foldall": "收起",
+  "tougaowarn": "当前插件版本不支持播放小视频，请将电脑端雨课堂升级至最新版本",
 
   // 给学生增加备注需求增加
   behavior: {

@@ -42,6 +42,10 @@
               <div v-if="item.is_group" @click="showCurGroupList(index)">
                 <img-group :groupdata="item.team_info"></img-group>
               </div>
+              <!-- 视频展示 -->
+              <div class="video__preview" v-if="item.video && item.video.url">
+                <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+              </div>
             </div>
 
             <!-- 更多删除入口 -->
@@ -151,6 +155,13 @@
     filters: {
       formatTime(time, format) {
         return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
+      },
+      setStyle(video) {
+        let width = 6.9;
+        let height = width/video.width * video.height;
+        let sCss = `width: ${width}rem; height: ${height}rem;`;
+
+        return sCss;
       }
     },
     methods: {
@@ -574,6 +585,10 @@
     position: relative;
     bottom: 0.2rem;
     padding-left: 0.4rem;
+  }
+
+  .video__preview video {
+    background: #000;
   }
 
 
