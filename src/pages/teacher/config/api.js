@@ -9,7 +9,7 @@ let prefix = ''
 
 /* eslint-disable key-spacing, comma-dangle */
 // if (process.env.NODE_ENV === 'production') {
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || 1) {
   api = {
     reporter:                           prefix + '/reporter/collect',
     lesson_ppt_version:                 prefix + '/v/lesson/lesson_ppt_version',

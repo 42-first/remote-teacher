@@ -177,10 +177,10 @@
        * @method 组件初始化
        */
       init() {
-        let key = 'analysis-sendstatus-' + this.problem.ProblemID;
-        if(isSupported(window.localStorage)) {
-          this.sendStatus = +localStorage.getItem(key);
-        }
+        // let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+        // if(isSupported(window.localStorage)) {
+        //   this.sendStatus = +localStorage.getItem(key);
+        // }
         this.msgHandle()
       },
       /**
@@ -210,8 +210,16 @@
         this.socket.onmessage = e => {
           try {
             const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data
+            if (data.op === 'showproblemremark' || data.op === 'problemremarkshown') {
+              this.goScreen = !this.goScreen
+            }
+            if(data.op === 'problemremark') {
+              const { remark } = data
+              if (remark.prob === this.problemid) {
+                this.sendStatus = 2
+              }
+            }
             console.log(data)
-            this.goScreen = !this.goScreen
           } catch (error) {
             console.log(error)
           }
@@ -235,12 +243,12 @@
         .then(res => {
           if(res && res.success) {
             // 发送成功
-            this.sendStatus = 2;
+            // this.sendStatus = 2;
             // 这里记录是否发送
-            let key = 'analysis-sendstatus-' + this.problem.ProblemID;
-            if(isSupported(window.localStorage)) {
-              localStorage.setItem(key, this.sendStatus);
-            }
+            // let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+            // if(isSupported(window.localStorage)) {
+            //   localStorage.setItem(key, this.sendStatus);
+            // }
           }
         })
       }

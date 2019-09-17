@@ -137,6 +137,10 @@ function socketProcessMessage(msg){
     return
   }
 
+  // todo: 针对首次进入页面，已经有在投屏的答案解析的习题存储
+  if (msg.op === 'hello') {
+    console.log(msg.op)
+  }
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
