@@ -239,7 +239,8 @@
 
         'msgMaskTpl',
         'toastCtrlMaskTpl',
-        'initiativeCtrlMaskTpl'
+				'initiativeCtrlMaskTpl',
+				'toupinginfo'
       ])
 	  },
 	  components: {

@@ -172,7 +172,8 @@
         'lessonid',
         'socket',
         'isGuideDelayHidden',
-        'pptData'
+				'pptData',
+				'toupinginfo'
       ])
 	  },
 	  components: {
@@ -192,7 +193,7 @@
 	  watch: {
 	  	'$route' () {
 	  		this.init()
-	  	}
+			}
 	  },
 	  methods: {
 	  	/**
@@ -303,7 +304,11 @@
 	    	self.handlePubSub()
 
         // 读取问题信息
-        this.getProlemById(this.problemid);
+				this.getProlemById(this.problemid);
+				// 插件或web端投屏，接收到id 与当前problemid 一致，显示投屏状态
+				if (this.problemid === this.toupinginfo.id) { 
+					this.toggleTouping(!!this.toupinginfo.status)
+				}
 	    },
 	    /**
        * 处理计时

@@ -1,3 +1,4 @@
+
 const getters = {
   userid: state => state.userid,
   avatar: state => state.avatar,
@@ -46,6 +47,7 @@ const getters = {
   initiativeCtrlMaskTpl: state => state.initiativeCtrlMaskTpl,
   stateSet: state => state.stateSet,
   newToolBar: state => state.newToolBar,
-  addinversion: state => state.addinversion
+  addinversion: state => state.addinversion,
+  toupinginfo: state => state.toupinginfo
 };
 export default getters

@@ -56,7 +56,8 @@ const store = new Vuex.Store({
     initiativeCtrlMaskTpl: '',
 
     newToolBar: !1,
-    addinversion: 0                        // 插件协议版本号
+    addinversion: 0,                        // 插件协议版本号
+    toupinginfo: 0,                          // 记录当前投屏的problemid
   },
 
   mutations: {
@@ -198,6 +199,9 @@ const store = new Vuex.Store({
     },
     addinversion(state, addinversion) {
       state.addinversion = addinversion
+    },
+    set_toupinginfo(state, toupinginfo) {
+      state.toupinginfo = toupinginfo
     }
   },
 
@@ -231,6 +235,9 @@ const store = new Vuex.Store({
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
+    },
+    toupinginfo({ commit }, payload) {
+      commit('set_toupinginfo', payload)
     }
   },
   getters

@@ -253,12 +253,20 @@ function socketProcessMessage(msg){
   //习题柱状图投屏了
   if (msg.op == 'postproblemresult') {
     T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: +msg.problemid});
+    this.$store.dispatch('toupinginfo', {
+      id: msg.problemid,
+      status: true
+    })
     return
   }
   //习题柱状图取消投屏了
   if (msg.op == 'closeproblemresult') {
     T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: +msg.problemid});
     localStorage.removeItem('posting-problem'+msg.problemid)
+    this.$store.dispatch('toupinginfo', {
+      id: msg.problemid,
+      status: false
+    })
     return
   }
 
