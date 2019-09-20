@@ -570,6 +570,7 @@
        * 
       */
       setWordCloudStatus(){
+        if(!this.dataList.length) return false;
         let self = this
         let str = ''
         if(!self.postWordCloudOpen){

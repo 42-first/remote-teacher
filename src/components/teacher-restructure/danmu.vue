@@ -9,7 +9,7 @@
         <v-touch :class="['set-btn', 'f36', 'iconfont', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus">
         </v-touch>
       </div>
-      <v-touch v-if="addinversion >= 1.5 && dataList.length" class="wordcloud-btn f16" v-on:tap="setWordCloudStatus">
+      <v-touch v-if="addinversion >= 1.5" class="wordcloud-btn f16" :class="dataList.length ? '' : 'disabled'" v-on:tap="setWordCloudStatus">
         {{ danmuWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}
       </v-touch>
     </div>
@@ -398,6 +398,7 @@
        * 
       */
       setWordCloudStatus(){
+        if(!this.dataList.length) return false;
         let self = this
         let str = ''
         if(!self.danmuWordCloudOpen){
@@ -555,6 +556,9 @@
       }
       .wordcloud-btn {
         color: $blue;
+        &.disabled {
+          color: $graybg;
+        }
       }
     }
 
