@@ -521,6 +521,9 @@ let pages = {
     "noarticipate": "未作答的小组不参与互评",
   },
 
+  "openwordcloud": "生成词云并投屏",
+  "closewordcloud": "关闭词云",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

@@ -13,7 +13,7 @@
     </div>
     <div v-show="!isFetching && dataList.length">
       <hide-some-info :isUserInfo="true" position="left" @change="showUserInfoChange"></hide-some-info>
-      <span v-if="addinversion >= 1.5" class="wordcloud-btn f16" @click="setWordCloudStatus">{{ postWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}</span>
+      <span v-if="addinversion >= 1.5" class="wordcloud-btn f16" @click="setWordCloudStatus">{{ postWordCloudOpen ? $t('closewordcloud') : $t('openwordcloud')}}</span>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore

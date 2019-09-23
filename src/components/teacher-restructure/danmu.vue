@@ -10,7 +10,7 @@
         </v-touch>
       </div>
       <v-touch v-if="addinversion >= 1.5" class="wordcloud-btn f16" :class="dataList.length ? '' : 'disabled'" v-on:tap="setWordCloudStatus">
-        {{ danmuWordCloudOpen ? '关闭词云' : '生成词云并投屏'}}
+        {{ danmuWordCloudOpen ? $t('closewordcloud') : $t('openwordcloud')}}
       </v-touch>
     </div>
     <div class="gap"></div>
