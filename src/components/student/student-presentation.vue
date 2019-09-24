@@ -49,7 +49,7 @@
         <i class="iconfont icon-fold f14"></i>
         <span class="f12 fold-text"><!-- 收起 -->{{ $t('fold') }}</span>
       </section>
-      <section class="live__fold c9b" v-else @click="handleLiveVisible(true)">
+      <section class="live__fold c9b pt15" v-else @click="handleLiveVisible(true)">
         <i class="iconfont icon-zhibo f20 red pr15"></i>
         <span class="f12 fold-text"><!-- 直播中 点击观看 -->{{ $t('liveunfold') }}</span>
       </section>
@@ -1039,6 +1039,10 @@
     top: 0;
     left: 0;
     width: 100%;
+  }
+
+  .pt15 {
+    padding-top: 0.2rem;
   }
 
   .pb15 {
