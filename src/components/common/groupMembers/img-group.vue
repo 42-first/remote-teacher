@@ -1,12 +1,13 @@
 <template>
-    <div>
-        <div :class="{'img-group-wrapper': !big, 'img-group-big-wrapper': big}">
-            <div class="img-wrapper">
-                <img v-for="(item, index) in list" :src="item.avatar" :key="index" :class="{'img-right': index > 0}" />
-            </div>
-            <div class="group-name">
-                {{ groupdata.team_name }}
-            </div>
+    <div :class="{'img-group-wrapper': !big, 'img-group-big-wrapper': big}" :style="{width: width}">
+        <div class="img-wrapper">
+            <img v-for="(item, index) in list" :src="item.avatar" :key="index" :class="{'img-right': index > 0}" />
+        </div>
+        <div class="group-name" :class="{
+            'group-name-2': list.length === 2,
+            'group-name-3': list.length === 3
+        }">
+            <div class="group-name-text">{{ name }}</div>
         </div>
     </div>
 </template>
@@ -16,7 +17,8 @@
         props: [ 'groupdata', 'big' ],
         data() {
             return {
-                list: []
+                list: [],
+                width: null
             }
         },
         created() {
@@ -25,9 +27,18 @@
         methods: {
             init() {
                 if( this.groupdata && this.groupdata.members ) {
-                    this.list = this.groupdata.members.slice(0, 3)
+                    const members = this.groupdata.members
+                    this.list = members.slice(0, 3)
                 }
-                console.log(this.groupdata)
+            }
+        },
+        computed: {
+            name() {
+                const name = this.groupdata.team_name
+                if(name) {
+                    return name.slice(0)
+                }
+                return ""
             }
         }
     }
@@ -40,9 +51,10 @@
         line-height: px2rem(32px);
         color: #639ef4;
         font-size: px2rem(28px);
-        display: flex;
+        clear: both;
         cursor: pointer;
         .img-wrapper{
+            float: left;
             img{
                 height: px2rem(32px);
                 width: px2rem(32px);
@@ -53,7 +65,21 @@
             }
         }
         .group-name{
-            padding-left: px2rem(14px);
+            padding-left: px2rem(46px);
+            height: px2rem(32px);
+            .group-name-text{
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+            }
+        }
+        .group-name-2{
+            padding-left: px2rem(68px);
+        }
+        .group-name-3{
+            padding-left: px2rem(90px);
         }
     }
     .img-group-big-wrapper{
@@ -61,10 +87,11 @@
         line-height: px2rem(50px);
         color: #639ef4;
         font-size: px2rem(32px);
-        display: flex;
+        clear: both;
         cursor: pointer;
         margin-bottom: px2rem(24px);
         .img-wrapper{
+            float: left;
             img{
                 height: px2rem(50px);
                 width: px2rem(50px);
@@ -75,7 +102,21 @@
             }
         }
         .group-name{
-            padding-left: px2rem(12px);
+            padding-left: px2rem(62px);
+            height: px2rem(50px);
+            .group-name-text{
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+            }
+        }
+        .group-name-2{
+            padding-left: px2rem(102px);
+        }
+        .group-name-3{
+            padding-left: px2rem(132px);
         }
     }
 </style>
