@@ -1385,5 +1385,8 @@
   video::-webkit-media-controls-timeline {
     visibility: hidden;
   }
+  video::-webkit-media-controls-current-time-display {
+    visibility: hidden;
+  }
 
 </style>
