@@ -666,7 +666,7 @@
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
-                  }, 2000)
+                  }, 3000)
                 }
               }
 

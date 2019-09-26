@@ -30,7 +30,7 @@ let liveMixin = {
      * @method 检测是否支持httpflv
      * @params
      */
-    supportFLV() {
+    supportFLV(isStart) {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
@@ -50,7 +50,14 @@ let liveMixin = {
 
         return true;
       } else {
-        this.Hls && this.supportHLS(this.Hls);
+        if(isStart) {
+          setTimeout(()=>{
+            this.supportHLS(this.Hls)
+          }, 1000*10)
+        } else {
+          this.Hls && this.supportHLS(this.Hls);
+        }
+
         return false;
       }
     },
@@ -81,6 +88,13 @@ let liveMixin = {
         liveEl.src = this.liveURL;
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
+        });
+
+        // 检测404
+        liveEl.addEventListener('error', ()=>{
+          setTimeout(()=>{
+            this.supportHLS(this.Hls)
+          }, 1000*5)
         });
 
         // iOS不能直接play

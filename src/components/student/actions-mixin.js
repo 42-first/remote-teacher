@@ -827,8 +827,8 @@ var actionsMixin = {
           this.Hls && this.supportHLS(this.Hls);
         } else if(this.liveType === 2) {
           setTimeout(()=>{
-            this.supportFLV();
-          }, 2000)
+            this.supportFLV(true);
+          }, 3000)
         }
 
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
