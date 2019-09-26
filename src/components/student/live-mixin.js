@@ -83,6 +83,13 @@ let liveMixin = {
           liveEl.play();
         });
 
+        // iOS不能直接play
+        this.liveType === 2 && wx.getNetworkType({
+          success: (res)=> {
+            liveEl.play();
+          }
+        });
+
         console.log('loadedmetadata hls supportHLS');
       }
 
