@@ -497,13 +497,17 @@
        * picker: 分组列表数据展示
        */
       pickerDataInit() {
-        this.getGroupList().then(list => {
-          list.map(item => {
-            item = Object.assign(item, {
-              value: item.group_id,
-              text: item.group_name
-            })
+        this.getGroupList().then(data => {
+          const list = data.filter(item => {
+            const { team_info } = item
+            if (team_info.joined) {
+              item = Object.assign(item, {
+                value: team_info.team_id,
+                text: team_info.team_name
+              })
             return item
+            }
+            return false
           })
           list.unshift({
             value: 0,
