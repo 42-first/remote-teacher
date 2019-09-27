@@ -421,7 +421,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .page-submissionlist {
     z-index: 2;
     position: fixed;

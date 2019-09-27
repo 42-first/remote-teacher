@@ -229,7 +229,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .submission__detail {
     z-index: 1;
     position: fixed;

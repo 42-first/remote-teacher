@@ -8,7 +8,7 @@
 
 <template>
   <section class="page-submission">
-    <div :class="['submission-wrapper', 'h100', 'animated', opacity ? 'zoomIn': '']">
+    <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
       <div class="text-left contributor-wrapper">
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
@@ -567,7 +567,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import "~@/style/common_rem";
   /* 
     设置投稿人
