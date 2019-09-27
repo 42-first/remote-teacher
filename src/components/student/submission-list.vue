@@ -39,12 +39,12 @@
               <div class="image__wrap" v-if="item.pic" >
                 <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" />
               </div>
-              <div v-if="item.is_group" @click="showCurGroupList(index)">
-                <img-group :groupdata="item.team_info"></img-group>
-              </div>
               <!-- 视频展示 -->
               <div class="video__preview" v-if="item.video && item.video.url">
                 <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+              </div>
+              <div v-if="item.is_group" @click="showCurGroupList(index)">
+                <img-group :groupdata="item.team_info"></img-group>
               </div>
             </div>
 
