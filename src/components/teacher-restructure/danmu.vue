@@ -4,9 +4,13 @@
     <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
-      <span>{{ $t('bullet') }}</span>
-      <v-touch :class="['set-btn', 'f16', isDanmuOpen ? 'is-closed' : 'is-open']" v-on:tap="setDanmuStatus">
-        {{ $tc('turnonoff', !isDanmuOpen) }}
+      <div class="left">
+        <span>{{ $t('bullet') }}</span>
+        <v-touch :class="['set-btn', 'f36', 'iconfont', isDanmuOpen ? 'icon-danmu-open' : 'icon-danmu-close']" v-on:tap="setDanmuStatus">
+        </v-touch>
+      </div>
+      <v-touch v-if="addinversion >= 1.5" class="wordcloud-btn f16" :class="dataList.length ? '' : 'disabled'" v-on:tap="setWordCloudStatus">
+        {{ danmuWordCloudOpen ? $t('closewordcloud') : $t('openwordcloud')}}
       </v-touch>
     </div>
     <div class="gap"></div>
@@ -92,6 +96,8 @@
         'socket',
         'isDanmuOpen',
         'postingDanmuid',
+        'danmuWordCloudOpen',
+        'addinversion'
       ])
     },
     components: {
@@ -156,6 +162,14 @@
           self.isToastSwitch = true
           clearTimeout(toastTimer)
           toastTimer = setTimeout(() => {self.isToastSwitch = false}, 2000)
+        })
+
+        T_PUBSUB.subscribe('danmu-msg.wordcloudshown', (_name, msg) => {
+          self.$store.commit('set_danmuWordCloudOpen', true)
+        })
+
+        T_PUBSUB.subscribe('danmu-msg.closedanmuwc', (_name, msg) => {
+          self.$store.commit('set_danmuWordCloudOpen', false)
         })
       },
       /**
@@ -378,6 +392,32 @@
 
         self.socket.send(str)
       },
+
+      /** 
+       * @method 词云投屏控制
+       * 
+      */
+      setWordCloudStatus(){
+        if(!this.dataList.length) return false;
+        let self = this
+        let str = ''
+        if(!self.danmuWordCloudOpen){
+          str = JSON.stringify({
+            'op': 'showwordcloud',
+            'lessonid': self.lessonid,
+            'cat': 'danmu',
+            'msgid': 1234
+          })
+        }else {
+          str = JSON.stringify({
+            'op': 'closemask',
+            'lessonid': self.lessonid,
+            'type': 'wordcloud',
+            'msgid': 1234
+          })
+        }
+        self.socket.send(str)
+      }
     }
   }
 </script>
@@ -468,14 +508,23 @@
       height: 1.466667rem;
       line-height: 1.466667rem;
       background: $white;
-      
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
       span {
         color: $blue;
       }
 
+      .left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .set-btn {
-        float: right;
-        margin-top: 0.28rem;
+        // float: left;
+        // margin-top: 0.28rem;
         text-align: center;
         width: 1.706667rem;
         height: 0.906667rem;
@@ -495,8 +544,8 @@
       }
 
       .iconfont {
-        float: right;
-        margin-top: 0.1rem;
+        // float: right;
+        // margin-top: 0.1rem;
         vertical-align: middle;
       }
       .icon-danmu-close {
@@ -504,6 +553,12 @@
       }
       .icon-danmu-open {
         color: $blue;
+      }
+      .wordcloud-btn {
+        color: $blue;
+        &.disabled {
+          color: $graybg;
+        }
       }
     }
 

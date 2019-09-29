@@ -12,7 +12,8 @@
       <div class="hint f12" v-html="$t('posttips')"></div>
     </div>
     <div v-show="!isFetching && dataList.length">
-      <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+      <hide-some-info :isUserInfo="true" position="left" @change="showUserInfoChange"></hide-some-info>
+      <span v-if="addinversion >= 1.5" class="wordcloud-btn f16" @click="setWordCloudStatus">{{ postWordCloudOpen ? $t('closewordcloud') : $t('openwordcloud')}}</span>
       <div class="gap"></div>
       <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
       <Loadmore
@@ -161,7 +162,8 @@
         'socket',
         'postingSubmissionid',
         'postingSubmissionSent',
-        'addinversion',
+        'postWordCloudOpen',
+        'addinversion'
       ])
     },
     components: {
@@ -233,6 +235,14 @@
           // socket通知投稿投屏了，要隐藏投屏中的提示
           clearTimeout(postingTimer)
           self.isAskingItemStatus = false
+        })
+
+        T_PUBSUB.subscribe('submission-msg.wordcloudshown', (_name, msg) => {
+          self.$store.commit('set_postWordCloudOpen', true)
+        })
+        
+        T_PUBSUB.subscribe('submission-msg.closepostwc', (_name, msg) => {
+          self.$store.commit('set_postWordCloudOpen', false)
         })
       },
       /**
@@ -607,6 +617,31 @@
         let s = str + ''
         var result = s.replace(/[^\x00-\xff]/g, '**')
         return result.length
+    },
+    /** 
+       * @method 词云投屏控制
+       * 
+      */
+      setWordCloudStatus(){
+        if(!this.dataList.length) return false;
+        let self = this
+        let str = ''
+        if(!self.postWordCloudOpen){
+          str = JSON.stringify({
+            'op': 'showwordcloud',
+            'lessonid': self.lessonid,
+            'cat': 'post',
+            'msgid': 1234
+          })
+        }else {
+          str = JSON.stringify({
+            'op': 'closemask',
+            'lessonid': self.lessonid,
+            'type': 'wordcloud',
+            'msgid': 1234
+          })
+        }
+        self.socket.send(str)
       },
       /**
        *  展示本条投稿的分组成员列表
@@ -899,6 +934,13 @@
       line-height: 1.466667rem;
       box-shadow: none;
     }
+
+    .wordcloud-btn {
+      color: $blue;
+      position: absolute;
+      top: 0.26666667rem;
+      right: 0.4rem;
+    } 
   }
 
   .publish-btn {

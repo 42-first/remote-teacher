@@ -7,7 +7,7 @@
  */
 
 <template>
-  <section class="page" @click="handleFilter">
+  <section class="page" :class="[ liveType === 2 ? 'live__view' : '' ]" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
@@ -39,6 +39,20 @@
         <li :class="['tab-item', currTabIndex == 3 ? 'curr' : '']" data-index="3">{{ $t('prob2') }}</li>
         <li :class="['tab-item', currTabIndex == 4 ? 'curr' : '']" data-index="4">{{ $t('quiz2') }}</li>
       </ul>
+    </section>
+
+    <!-- 视频直播 liveURL && liveType === 2 controls -->
+    <section class="live__wrap" v-if="liveType === 2">
+      <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
+      <!-- 展开收起 -->
+      <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
+        <i class="iconfont icon-fold f14"></i>
+        <span class="f12 fold-text"><!-- 收起 -->{{ $t('fold') }}</span>
+      </section>
+      <section class="live__fold c9b pt15" v-else @click="handleLiveVisible(true)">
+        <i class="iconfont icon-zhibo f20 red pr15"></i>
+        <span class="f12 fold-text"><!-- 直播中 点击观看 -->{{ $t('liveunfold') }}</span>
+      </section>
     </section>
 
 
@@ -83,7 +97,7 @@
     </section>
 
     <!-- 直播入口 -->
-    <section class="live" v-if="liveURL">
+    <section class="live" v-if="liveURL && liveType === 1">
       <div class="live__audio">
         <i class="iconfont icon-quxiaojingyinx f32" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
@@ -307,6 +321,10 @@
         danmus: [],
         // 是否直播课
         isLive: false,
+        liveurl: null,
+        // 直播类型 0：默认值 1:audio  2:video
+        liveType: 0,
+        liveVisible: true,
         // 是否web开课
         isWebLesson: false,
       };
@@ -639,8 +657,17 @@
 
               // 直播处理 1为直播中，2为已结束
               if(self.liveInfo && self.liveInfo.status === 1) {
+                self.liveurl = self.liveInfo.live_url;
                 self.liveURL = self.liveInfo.live_url.hls;
-                self.Hls && self.supportHLS(self.Hls);
+
+                self.liveType = self.liveInfo.type || 1;
+                if(self.liveType === 1) {
+                  self.Hls && self.supportHLS(self.Hls);
+                } else if(self.liveType === 2) {
+                  setTimeout(()=>{
+                    self.supportFLV();
+                  }, 3000)
+                }
               }
 
               // 课程title
@@ -1014,8 +1041,16 @@
     width: 100%;
   }
 
+  .pt15 {
+    padding-top: 0.2rem;
+  }
+
   .pb15 {
     padding-bottom: 0.2rem;
+  }
+
+  .pr15 {
+    padding-right: 0.2rem;
   }
 
   .qr-code {
@@ -1139,6 +1174,41 @@
   }
 
 
+  .live__view {
+    display: flex;
+    flex-flow: column;
+
+    .live__wrap {
+      position: relative;
+      padding: 2.33rem 0 0.253333rem;
+
+      .video__live {
+        width: 100%;
+        // height: 7.5rem;
+        min-height: 5rem;
+        background: rgba(0,0,0,0.45);
+      }
+
+      .live__fold {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        height: 0.64rem;
+        .fold-text {
+          padding-left: 5px;
+        }
+      }
+    }
+
+    .student__timeline-wrapper {
+      flex: 1;
+      overflow-y: auto;
+
+      position: relative;
+      top: 0;
+    }
+  }
 
   /*-------------------*\
     $ 时间轴 列表
@@ -1312,5 +1382,11 @@
 
   }
 
+  video::-webkit-media-controls-timeline {
+    visibility: hidden;
+  }
+  video::-webkit-media-controls-current-time-display {
+    visibility: hidden;
+  }
 
 </style>

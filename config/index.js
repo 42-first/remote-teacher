@@ -31,7 +31,10 @@ module.exports = {
       '/pc/debug_login': proxyUrl,
       '/v/api': proxyUrl,
       '/v': proxyUrl,
-      '/group': proxyUrl
+      '/group': proxyUrl,
+      '/api': proxyUrl,
+      '/v/lesson': proxyUrl,
+      '/hls': proxyUrl,
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
