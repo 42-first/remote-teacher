@@ -141,6 +141,7 @@ let pages = {
   "networkerror" : "Failed，please try again",
   "networkerror2" : "Submit failed，please try again",
   "livetip" : "Live On , click to play",
+  "liveunfold" : "Live  Click here",
 
   // socket event
   "LESSON_START": "Start Class!",

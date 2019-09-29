@@ -3,7 +3,7 @@
  */
 let api
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env) {
     api = {
         // 用户权限
         'GET_USER_INFO': '/v/lesson/lesson_user_info',
