@@ -56,7 +56,9 @@ const store = new Vuex.Store({
     initiativeCtrlMaskTpl: '',
 
     newToolBar: !1,
-    addinversion: 0                        // 插件协议版本号
+    addinversion: 0,                        // 插件协议版本号
+    postWordCloudOpen: false,               // 投稿词云是否开启
+    danmuWordCloudOpen: false               // 弹幕词云是否开启
   },
 
   mutations: {
@@ -198,6 +200,12 @@ const store = new Vuex.Store({
     },
     addinversion(state, addinversion) {
       state.addinversion = addinversion
+    },
+    set_postWordCloudOpen(state, isWordCloudOpen){
+      state.postWordCloudOpen = isWordCloudOpen
+    },
+    set_danmuWordCloudOpen(state, isWordCloudOpen){
+      state.danmuWordCloudOpen = isWordCloudOpen
     }
   },
 
@@ -231,6 +239,12 @@ const store = new Vuex.Store({
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
+    },
+    set_postWordCloudOpen({commit}, isWordCloudOpen){
+      commit('set_postWordCloudOpen', isWordCloudOpen)
+    },
+    set_danmuWordCloudOpen({commit}, isWordCloudOpen){
+      commit('set_danmuWordCloudOpen', isWordCloudOpen)
     }
   },
   getters
