@@ -54,6 +54,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             'SET_GUIDE': '/v/lesson/set_guide',
             // 学生答题时获取分组作答主观题状态
             'GET_GROUP_STATUS': '/v/lesson/student_group_subj_problem_status/',
+            // 获取小组列表
+            'GET_ALL_GROUP_LIST': '/group/student/get_all_group_list/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
             // (学生端)获取互评的详情
@@ -95,6 +97,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
         // 用户权限
         'GET_USER_INFO': '/static/mock/user_info.json',
+        
+        // 软件版本号
+        'GET_SOFT_VERSION': '/v/lesson/lesson_ppt_version',
 
         // 停服务通知
         'HOLD_SERVICE_NOTICE': 'http://apimock.xuetangx.com/mock/115/pc/hole_service_notice/',
@@ -105,7 +110,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
         student: {
             // 课件习题列表
-            'GET_PRESENTATION_LIST': 'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_info_v2/',
+            // 'GET_PRESENTATION_LIST': 'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_info_v2/',
+            'GET_PRESENTATION_LIST': '/v/lesson/lesson_info_v2',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/static/mock/student/red_envelope_detail.json',
             // 习题提交
@@ -119,9 +125,10 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             // 发送danmu
             'SEND_DANMU': '/static/mock/student/presentationList.json',
             // 发送投稿
-            'SEND_SUBMISSION': '/v/tougao/create',
+            'SEND_SUBMISSION': '/v/api/tougao/create',
             // 我的投稿列表
-            'GET_SUBMISSION_LIST': 'http://apimock.xuetangx.com/mock/115/v/api/tougao/student/list',
+            // 'GET_SUBMISSION_LIST': 'http://apimock.xuetangx.com/mock/115/v/api/tougao/student/list',
+            'GET_SUBMISSION_LIST': '/v/api/tougao/student/list',
             // 删除投稿
             'DELETE_SUBMISSION': '/static/mock/student/tougao_list.json',
             // 上传图片
@@ -137,6 +144,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             'SET_GUIDE': '/v/lesson/set_guide',
             // 学生答题时获取分组作答主观题状态
             'GET_GROUP_STATUS': 'http://apimock.xuetangx.com/mock/115/v/lesson/student_group_subj_problem_status/',
+            // 获取小组列表
+            // 'GET_ALL_GROUP_LIST': 'http://apimock.xuetangx.com/mock/115/group/student/get_all_group_list/',
+            'GET_ALL_GROUP_LIST': '/group/student/get_all_group_list/',
             // (学生端)获取小组详情
             'GET_TEAM_DETAIL': 'http://apimock.xuetangx.com/mock/115/group/student/get_team_detail/',
             // (学生端)获取互评的详情

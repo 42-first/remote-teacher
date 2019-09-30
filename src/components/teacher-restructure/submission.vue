@@ -30,9 +30,13 @@
           <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.id">
             <div class="item">
               <div class="detail">
-                <img :src="item.user_avatar" class="avatar" alt="">
                 <div class="cont f18">
-                  <span class="author f15">{{item.user_name}}</span>
+                  <div v-if="!item.is_group">
+                    <img-group :groupdata="item.team_info" :big="1"></img-group>
+                  </div>
+                  <div @click="showCurGroupList(index)" v-else>
+                    <img-group :groupdata="item.team_info" :big="1"></img-group>
+                  </div>
                   <div>
                     {{item.fold ? item.foldContent : item.content}}
                     <span v-show="!item.hideFold">
@@ -108,6 +112,8 @@
     <v-touch class="btn f18" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     <Scale></Scale>
 
+    <!-- 组列表 -->
+    <group-list v-if="curGroupInfo" @close="hideGroupList" :groupdata="curGroupInfo"></group-list>
     <!-- 教师投稿入口 -->
     <div class="publish-btn" @click="handlePublish">
       <i class="iconfont icon-ykq_tab_tougao f24"></i>
@@ -123,6 +129,8 @@
   import Loadmore from 'mint-ui/lib/loadmore'
   import Scale from './common/scale'
   import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+  import groupList from '@/components/common/groupMembers/group-list.vue'
+  import imgGroup from '@/components/common/groupMembers/img-group.vue'
 
   let FENYE_COUNT = 10
 
@@ -144,7 +152,8 @@
         isShowNewHint: false,         // 上方提示有新的条目进来
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
-        isHideName: false,               // 匿名投屏
+        isHideName: false,             // 匿名投屏
+        curGroupInfo: null,            // 当前的分组 
       }
     },
     computed: {
@@ -160,7 +169,9 @@
     components: {
       Loadmore,
       Scale,
-      hideSomeInfo
+      hideSomeInfo,
+      groupList,
+      imgGroup
     },
     created () {
       let self = this
@@ -400,7 +411,6 @@
             })
             isAllLoaded = false
           }
-
           self.setData({
             isAllLoaded
           })
@@ -567,7 +577,6 @@
             gallery.init();
           }, 1500)
         }
-
       },
       /*
       * 变更投屏状态
@@ -577,16 +586,30 @@
      showUserInfoChange(val) {
        this.isHideName = val
      },
-      // 增加fold 属性
+      // 增加fold 属性    ---- 另： 针对个人发送的投稿做数据格式处理方便按照分组的样式展示头像
       addFold(list) {
         list.map(e => {
-            if(e.content && this.getLength(e.content)> 200) {
-                e.fold = true
-            } else {
-                e.fold = false
-                e.hideFold = true
-            }
-            e.foldContent = e.content.slice(0, 100)
+          if(e.content && this.getLength(e.content)> 200) {
+            e.fold = true
+          } else {
+            e.fold = false
+            e.hideFold = true
+          }
+          e.foldContent = e.content.slice(0, 100)
+
+          if (!e.is_group) {
+            e = Object.assign(e, {
+              team_info: {
+                team_name: e.user_name,
+                members: [
+                  {
+                    avatar: e.user_avatar
+                  }
+                ]
+              }
+            })
+          }
+          return e
         })
         return list
       },
@@ -619,6 +642,23 @@
           })
         }
         self.socket.send(str)
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      showCurGroupList(index) {
+        let item = this.dataList[index]
+        if (item) {
+          this.curGroupInfo = Object.assign(item.team_info, {
+            group_name: item.group_name
+          })
+        }
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      hideGroupList() {
+        this.curGroupInfo = null
       },
 
       // 进入发布投稿页面
@@ -755,7 +795,7 @@
         .detail {
           display: flex;
           // margin-bottom: 0.4rem;
-          padding-top: 0.266667rem;
+          padding-top: px2rem(30px);
 
           .avatar {
             margin-right: 0.4rem;
@@ -795,11 +835,16 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          height: 1rem;
-          margin-left: 1.386667rem;
+          height: px2rem(80px);
+          
+          // height: 1rem;
+          // margin-left: 1.386667rem;
 
           .gray {
             color: $graybg;
+            i{
+              vertical-align: middle;
+            }
           }
 
           .time {

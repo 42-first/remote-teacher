@@ -20,7 +20,7 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/'+lessonID+'/submission/'" tag="p" class="action line f17" v-if="version > 0.8">
+            <router-link :to="'/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action line f17" v-if="version > 0.8">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
@@ -71,7 +71,7 @@
             </section>
           </div>
           <!-- 时间轴内容列表 -->
-          <div class="timeline-wrapper" v-for="(item, index) in cards">
+          <div class="timeline-wrapper" v-for="(item, index) in cards" :key="index">
             <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
           <!-- 各类型中的空状态 -->
@@ -202,7 +202,7 @@
   window.request = request;
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
-    request.post = request.get
+    // request.post = request.get
   }
 
   export default {
@@ -223,6 +223,7 @@
         //
         title: this.$i18n.t('ykt') || '雨课堂',
         courseName: '',
+        classroom: {},
         // 课程ID
         lessonID: 0,
         // pptID
@@ -373,7 +374,6 @@
        */
       init() {
         let self = this;
-
         this.lessonID = this.$route.params.lessonID || 3049;
         this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 
