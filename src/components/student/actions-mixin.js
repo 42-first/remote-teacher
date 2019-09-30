@@ -817,9 +817,20 @@ var actionsMixin = {
         }}
      */
     startLive(data) {
-      if(data) {
-        this.liveURL = data.hls;
-        this.Hls && this.supportHLS(this.Hls);
+      if(data && data.liveurl) {
+        this.liveurl = data.liveurl;
+        // 直播类型
+        this.liveType = data.type;
+        this.liveURL = data.liveurl.hls;
+
+        if(this.liveType === 1) {
+          this.Hls && this.supportHLS(this.Hls);
+        } else if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.supportFLV(true);
+          }, 3000)
+        }
+
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
         // 标记这是一堂远程课
@@ -834,6 +845,7 @@ var actionsMixin = {
     endLive(data) {
       // this.handlestop();
       this.liveURL = '';
+      this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       // 关闭弹幕直播
