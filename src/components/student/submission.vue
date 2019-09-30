@@ -497,6 +497,12 @@
        * picker: 分组列表数据展示
        */
       pickerDataInit() {
+        // 针对没有分组的处理
+        this.selectedVal = "个人"
+        this.groupList = [{
+          value: 0,
+          text: '个人'
+        }]
         this.getGroupList().then(data => {
           const list = data.filter(item => {
             const { team_info } = item
