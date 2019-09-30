@@ -19,12 +19,12 @@
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
-        <div class="item-avatar" v-if="!result.is_group">
+        <div class="item-avatar" v-if="result.anon || !result.is_group">
           <img class="" :src="result.user_avatar_46" alt="" />
         </div>
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15" v-if="!result.is_group">{{ result.user_name }}</p>
+          <p class="user-name f15" v-if="result.anon || !result.is_group">{{ result.user_name }}</p>
           <div v-else @click="showCurGroupList(index)">
             <img-group :groupdata="result.team_info" :big="1"></img-group>
           </div>
@@ -106,7 +106,8 @@
 
               anon && Object.assign(data, {
                 user_avatar_46: 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
-                user_name: this.$i18n.t('anonymous2') || '匿名'
+                user_name: this.$i18n.t('anonymous2') || '匿名',
+                anon: true
               })
 
               this.result = data;
