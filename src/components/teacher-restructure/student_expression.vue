@@ -346,7 +346,7 @@
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
           student_id: this.userid,
-          score: this.behavior_score_temp
+          score: this.behavior_score_temp ? this.behavior_score_temp : 0
         }
         request.post(URL, params).then(res => {
           if(res.success){
