@@ -433,7 +433,8 @@ let pages = {
     "bonus": "加分",
     "currentbonuspoints": "当前已有加分",
     "thepoints": "本次加分",
-    "studentId": "按学号排序"
+    "studentId": "按学号排序",
+    "pleaseenterinteger": "请输入整数"
   },
 
 

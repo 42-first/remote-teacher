@@ -53,7 +53,7 @@
           </div>
           <div class="tag-list" v-if="!isEdit">
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)">
+              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)" :key="item.id">
                 <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
               </div>
             </template>
@@ -65,7 +65,7 @@
           </div>
           <div class="tag-list" v-else>
             <template v-for="(item, index) in tagList">
-              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)">
+              <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)" :key="item.id">
                 <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
                 <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.is_default"></i>
               </div>
@@ -106,7 +106,7 @@
               <span><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
               <div class="box-center f14">
                 <div class="input-box">
-                  <input class="f24 c333" type="number" v-model="behavior_score_temp" @blur="handleScoreBlur">
+                  <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" @blur="handleScoreBlur">
                 </div>
                 <!-- 分 -->{{$t('behavior.points')}}
               </div>

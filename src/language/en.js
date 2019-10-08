@@ -432,7 +432,8 @@ let pages = {
     "bonus": "Bonus",
     "currentbonuspoints": "Current Bonus Points",
     "thepoints": "The Points",
-    "studentId": "Students ID"
+    "studentId": "Students ID",
+    "pleaseenterinteger": "Integer required"
   },
   // 引导页
   guide: {
