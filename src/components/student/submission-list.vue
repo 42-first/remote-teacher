@@ -13,7 +13,7 @@
       <!-- 我的投稿列表 -->
       <section class="submission-mine">
         <ul class="submission-list">
-          <li class="item" v-for="(item, index) in submissionlist">
+          <li class="item" v-for="(item, index) in submissionlist" :key="index">
             <!-- 投稿时间 -->
             <div class="item-date">
               <p class="date-time f15">{{ item.create_time|formatTime('HH:mm') }}</p>
@@ -25,17 +25,26 @@
               <div class="content__wrap">
                 <div class="f15">{{ item.text }}
                   <template v-if="item.hasMore">
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse"><!-- 全文 -->{{ $t('fulltext') }}<span class="f12">({{ item.content.length }})</span></span>
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else><i class="iconfont icon-zhankai f21"></i><!-- 收起 -->{{ $t('fold') }}</span>
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse">
+                      <!-- 全文 -->{{ $t('fulltext') }}
+                      <span class="f12">({{ item.content.length }})</span>
+                    </span>
+                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
+                      <i class="iconfont icon-zhankai f21"></i>
+                      <!-- 收起 -->{{ $t('fold') }}
+                    </span>
                   </template>
                 </div>
               </div>
               <div class="image__wrap" v-if="item.pic" >
-                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" alt="" />
+                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" />
               </div>
               <!-- 视频展示 -->
               <div class="video__preview" v-if="item.video && item.video.url">
                 <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+              </div>
+              <div v-if="item.is_group" @click="showCurGroupList(index)">
+                <img-group :groupdata="item.team_info"></img-group>
               </div>
             </div>
 
@@ -97,6 +106,8 @@
     <!-- actionsheet -->
     <mt-actionsheet :actions="actions" :cancel-text="cancelText" v-model="sheetVisible"></mt-actionsheet>
 
+    <!-- 组列表 -->
+    <group-list v-if="curGroupInfo" @close="hideGroupList" :groupdata="curGroupInfo"></group-list>
   </section>
 </template>
 <script>
@@ -105,6 +116,8 @@
   import Vue from 'vue'
   import { Actionsheet } from 'mint-ui';
   import API from '@/util/api'
+  import groupList from '@/components/common/groupMembers/group-list.vue'
+  import imgGroup from '@/components/common/groupMembers/img-group.vue'
 
   Vue.component(Actionsheet.name, Actionsheet);
 
@@ -127,10 +140,13 @@
             this.handleWithdraw();
             console.log('撤回');
           }
-        }]
+        }],
+        curGroupInfo: null
       };
     },
     components: {
+      groupList,
+      imgGroup
     },
     computed: {
     },
@@ -164,21 +180,44 @@
         }
 
         return request.get(URL, params)
-          .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
+        .then(function (res) {
+          if(res && res.data) {
+            let data = res.data;
 
-              self.submissionlist = self.formatData(data.tougao_list);
+            self.submissionlist = self.formatData(data.tougao_list);
 
-              if(!self.submissionlist.length) {
-                self.isEmpty = true;
-              }
-
-              return data;
+            if(!self.submissionlist.length) {
+              self.isEmpty = true;
             }
-          });
-      },
 
+            return data;
+          }
+        }).catch(e => {
+          console.log(e)
+          this.$toast({
+            message: e.msg,
+            duration: 3000
+          });
+          self.submissionlist = []
+        });
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      showCurGroupList(index) {
+        let item = this.submissionlist[index]
+        if (item) {
+          this.curGroupInfo = Object.assign(item.team_info, {
+            group_name: item.group_name
+          })
+        }
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      hideGroupList() {
+        this.curGroupInfo = null
+      },
       /*
        * @method 格式化投稿控制文字收起展开
        * @param
@@ -192,9 +231,7 @@
           } else {
             item.text = item.content;
           }
-
         })
-
         return data;
       },
 
@@ -368,7 +405,9 @@
 
       !window.moment && require(['moment'], function(moment) {
         window.moment = moment;
-        self.submissionlist = self.submissionlist.slice(0);
+        if (self.submissionlist instanceof Array) {
+          self.submissionlist = self.submissionlist.slice(0);
+        }
       })
 
       this.lessonID = +this.$route.params.lessonID;
@@ -382,7 +421,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .page-submissionlist {
     z-index: 2;
     position: fixed;

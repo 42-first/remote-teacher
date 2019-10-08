@@ -58,6 +58,8 @@ const store = new Vuex.Store({
     newToolBar: !1,
     addinversion: 0,                        // 插件协议版本号
     toupinginfo: 0,                          // 记录当前投屏的problemid
+    postWordCloudOpen: false,               // 投稿词云是否开启
+    danmuWordCloudOpen: false               // 弹幕词云是否开启
   },
 
   mutations: {
@@ -202,6 +204,12 @@ const store = new Vuex.Store({
     },
     set_toupinginfo(state, toupinginfo) {
       state.toupinginfo = toupinginfo
+    },
+    set_postWordCloudOpen(state, isWordCloudOpen){
+      state.postWordCloudOpen = isWordCloudOpen
+    },
+    set_danmuWordCloudOpen(state, isWordCloudOpen){
+      state.danmuWordCloudOpen = isWordCloudOpen
     }
   },
 
@@ -238,6 +246,12 @@ const store = new Vuex.Store({
     },
     toupinginfo({ commit }, payload) {
       commit('set_toupinginfo', payload)
+    },
+    set_postWordCloudOpen({commit}, isWordCloudOpen){
+      commit('set_postWordCloudOpen', isWordCloudOpen)
+    },
+    set_danmuWordCloudOpen({commit}, isWordCloudOpen){
+      commit('set_danmuWordCloudOpen', isWordCloudOpen)
     }
   },
   getters

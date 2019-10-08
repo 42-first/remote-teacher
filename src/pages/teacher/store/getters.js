@@ -48,6 +48,8 @@ const getters = {
   stateSet: state => state.stateSet,
   newToolBar: state => state.newToolBar,
   addinversion: state => state.addinversion,
-  toupinginfo: state => state.toupinginfo
+  toupinginfo: state => state.toupinginfo,
+  postWordCloudOpen: state => state.postWordCloudOpen,
+  danmuWordCloudOpen: state => state.danmuWordCloudOpen
 };
 export default getters

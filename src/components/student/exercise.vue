@@ -380,10 +380,10 @@
           // 续时 分钟 秒
           let minutes = parseInt(extend / 60, 10);
           let seconds = parseInt(extend % 60, 10);
-          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
+          let sMsg = minutes > 0 ? this.$i18n && this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n && this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
 
           if(extend === -1) {
-            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
+            sMsg = this.$i18n && this.$i18n.t('notimelimit') || '题目不限时';
           }
 
           // 同一个问题续时 切没有结束

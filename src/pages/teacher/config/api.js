@@ -123,7 +123,8 @@ if (process.env.NODE_ENV === 'production' || 1) {
     red_envelope_detail:                '/static/lesson/mock/red_envelope_detail.json',        // 获取某个红包的详情
     danmulist:                          '/static/lesson/mock/danmulist.json',                  // 弹幕列表
     danmulist2:                         '/static/lesson/mock/danmulist2.json',                 // 弹幕列表 2.0版（分页）
-    submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
+    // submissionlist:                     '/static/lesson/mock/submissionlist.json',             // 投稿列表
+    submissionlist:                     prefix + '/v/api/tougao/teacher/list',        // 投稿列表
     submission_unread_num:              '/static/lesson/mock/submission_unread_num.json',      // 未读的新增投稿的数目
     tougaostatus:                       '/static/lesson/mock/tougaostatus.json',               // 查询投稿是否存在（被学生删除）并投屏
     collectsubmission:                  '/static/lesson/mock/collectsubmission.json',          // 收藏投稿
@@ -134,7 +135,8 @@ if (process.env.NODE_ENV === 'production' || 1) {
     subjective_problem_teacher_scorev2: 'http://apimock.xuetangx.com/mock/115/v/lesson/subjective_problem_teacher_scorev2/',   // 主观题老师给答案打分
 
     // 获取用户当前语言设置
-    get_current_language:  'http://apimock.xuetangx.com/mock/115/v/user/get_current_language',
+    // get_current_language:  'http://apimock.xuetangx.com/mock/115/v/user/get_current_language',
+    get_current_language: "/v/user/get_current_language",
     // 设置语言
     set_lang_en: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/en',
     set_lang_zh_cn: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn',
