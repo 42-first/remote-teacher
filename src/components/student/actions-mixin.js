@@ -269,7 +269,7 @@ var actionsMixin = {
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
           if(isWebLesson) {
-            let step = data.event.step - 1;
+            let step = data.event.step;
             if(step <= Shapes.length) {
               let shape = Shapes[step];
 
