@@ -9,6 +9,13 @@
 <template>
   <section class="page-submission">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
+      <div class="text-left contributor-wrapper">
+        <div class="title">选择分组</div>
+        <div class="handler-wrapper" @click="showPicker">
+          <span>{{ selectedVal }}</span>
+          <i class="iconfont icon-dakai ver-middle font20"></i>
+        </div>
+      </div>
       <div class="submission-inner">
 
       <!-- 文字编辑 -->
@@ -91,11 +98,14 @@
 
     </section>
 
+    <!-- picker -->
+    <picker :list="groupList" :selectedindex="selectedIndex" :text="pickerText" @close="pickerClose" v-if="isShowPicker"></picker>
   </section>
 </template>
 <script>
   import API from '@/util/api'
   import {compress} from '@/util/image'
+  import picker from '@/components/common/picker/index.vue'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   // 是否华为特殊手机 P20 P20-pro
@@ -125,11 +135,24 @@
         // 图片比例
         rate: 1,
         retryTimes: 0,
+        classroomid: 0,
+        selectedIndex: [0], // 选择的分组
+        groupList: [], // 分组列表
+        pickerText: {
+          title: '选择分组/个人',
+          cancel: '取消',
+          confirm: '确定'
+        },
+        selectedVal: '',
+        group_id: 0,
+        team_id: 0,
+        isShowPicker: false,
         // 是否华为特殊手机
         huawei: !!huawei
       };
     },
     components: {
+      picker
     },
     computed: {
     },
@@ -185,7 +208,9 @@
           'content': content,
           'pic': this.imageURL,
           'thumb': this.imageThumbURL,
-          'lesson_id': this.lessonID
+          'lesson_id': this.lessonID,
+          'team_id': this.team_id,
+          'group_id': this.group_id
         }
 
         // 发送中
@@ -454,15 +479,82 @@
       },
       handleBack() {
         this.$router.back();
+      },
+      /**
+       * 获取 学生班级的分组列表
+       */
+      getGroupList() {
+        let url = API.student.GET_ALL_GROUP_LIST
+        return request.get(url, {
+          classroom_id: this.classroomid
+        }).then(e => {
+          if (e.success) {
+            return e.data.team_list || []
+          }
+        })
+      },
+      /**
+       * picker: 分组列表数据展示
+       */
+      pickerDataInit() {
+        this.getGroupList().then(data => {
+          const list = data.filter(item => {
+            const { team_info } = item
+            if (team_info.joined) {
+              item = Object.assign(item, {
+                value: team_info.team_id,
+                text: team_info.team_name
+              })
+            return item
+            }
+            return false
+          })
+          list.unshift({
+            value: 0,
+            text: '个人'
+          })
+          this.selectedVal = list[0].text
+          this.groupList = [list]
+        })
+      },
+      /**
+       * 展示picker
+       */
+      showPicker() {
+        this.isShowPicker = true
+      },
+      /**
+       * 关闭 picker
+       */
+      pickerClose(data) {
+        if (data) {
+          let index = 0
+          if (data.selectedIndex) {
+            index = data.selectedIndex[0]
+          }
+          let item = this.groupList[0][index]
+          if(item) {
+            if (item.team_info) {
+              this.group_id = item.group_id
+              this.team_id = item.team_info.team_id
+            } else {
+              this.group_id = this.team_id = 0
+            }
+          }
+          this.selectedVal = item.text
+        }
+        this.isShowPicker = false
+        return null
       }
     },
     created() {
       this.lessonID = +this.$route.params.lessonID;
       document.title = this.$i18n.t('post') || '投稿';
-
+      this.classroomid = this.$route.query.classroomid
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
-
+      // 获取学生分组列表
+      this.pickerDataInit()
       // huawei 使用微信自己的图片选择
       if(this.huawei) {
         configWX();
@@ -475,8 +567,26 @@
   };
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+  @import "~@/style/common_rem";
+  /* 
+    设置投稿人
+  */
+  .contributor-wrapper{
+    height: px2rem(98px);
+    line-height: px2rem(98px);
+    background-color: #f8f8f8;
+    color: #666;
+    font-size: px2rem(34px);
+    display: flex;
+    padding: 0 px2rem(30px);
+    .title{
+      flex: 1;
+    }
+    .handler-wrapper{
+      color: #333;
+    }
+  }
   /*------------------*\
     $ 文字编辑
   \*------------------*/
@@ -494,6 +604,7 @@
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+    text-align: center;
   }
 
   .submission-inner {
