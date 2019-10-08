@@ -13,7 +13,7 @@
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
-          <i class="iconfont icon-dakai ver-middle font20"></i>
+          <i class="iconfont icon-dakai ver-middle font20" v-if="classroomid"></i>
         </div>
       </div>
       <div class="submission-inner">
@@ -531,6 +531,9 @@
        * 展示picker
        */
       showPicker() {
+        if (!this.classroomid) {
+          return
+        }
         this.isShowPicker = true
       },
       /**
