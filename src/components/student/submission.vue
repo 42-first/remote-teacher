@@ -9,11 +9,11 @@
 <template>
   <section class="page-submission">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <div class="text-left contributor-wrapper">
+      <div class="text-left contributor-wrapper" v-if="classroomid">
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
-          <i class="iconfont icon-dakai ver-middle font20" v-if="classroomid"></i>
+          <i class="iconfont icon-dakai ver-middle font20"></i>
         </div>
       </div>
       <div class="submission-inner">
