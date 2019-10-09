@@ -324,7 +324,7 @@
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
         liveType: 0,
-        liveVisible: true,
+        liveVisible: false,
         // 是否web开课
         isWebLesson: false,
       };
