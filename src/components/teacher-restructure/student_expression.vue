@@ -103,7 +103,7 @@
           <div class="box-content">
             <span class="current-score f14"><!-- 当前已有加分 -->{{$t('behavior.currentbonuspoints')}}：<span class="c666">{{behavior_score}}{{$t('behavior.points')}}</span></span>
             <div class="add-score">
-              <span><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
+              <span class="f14 c666"><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
               <div class="box-center f14">
                 <div class="input-box">
                   <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" @blur="handleScoreBlur">
@@ -685,6 +685,10 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            span {
+              text-align: center;
+              margin-right: 0.53333333rem;
+            }
             .input-box {
               width: 6.4rem;
               padding: 0.2rem 0 0.24rem;
@@ -695,6 +699,9 @@
                 width: 100%;
                 border: none;
                 outline: none;
+                &::-webkit-input-placeholder{ /*WebKit browsers*/
+                  font-size: 0.48rem;
+                }
               }
             }
             
