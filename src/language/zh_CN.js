@@ -140,6 +140,7 @@ let pages = {
   "networkerror" : "网络不佳，图片上传失败，请重新上传",
   "networkerror2" : "网络不佳，答案提交失败，请重试",
   "livetip" : "直播中，点击播放",
+  "liveunfold" : "直播中 点击观看",
 
   // socket event
   "LESSON_START": "上课啦！",
@@ -520,6 +521,9 @@ let pages = {
     "pleasescore" : "请打分",
     "noarticipate": "未作答的小组不参与互评",
   },
+
+  "openwordcloud": "生成词云并投屏",
+  "closewordcloud": "关闭词云",
 
   // 图片国际化
   imgs: {

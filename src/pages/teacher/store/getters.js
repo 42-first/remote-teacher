@@ -46,6 +46,8 @@ const getters = {
   initiativeCtrlMaskTpl: state => state.initiativeCtrlMaskTpl,
   stateSet: state => state.stateSet,
   newToolBar: state => state.newToolBar,
-  addinversion: state => state.addinversion
+  addinversion: state => state.addinversion,
+  postWordCloudOpen: state => state.postWordCloudOpen,
+  danmuWordCloudOpen: state => state.danmuWordCloudOpen
 };
 export default getters
