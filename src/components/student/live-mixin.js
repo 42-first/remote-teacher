@@ -42,6 +42,8 @@ let liveMixin = {
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
           flvPlayer.play();
+
+          this.setLiveTip();
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -196,6 +198,7 @@ let liveMixin = {
 
           if(status === 1) {
             this.handleplay();
+            this.liveVisible = true;
           } else if(status === 0) {
             this.handlestop();
           }
