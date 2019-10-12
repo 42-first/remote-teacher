@@ -38,6 +38,8 @@ let liveMixin = {
           url: this.liveurl.httpflv
         });
 
+        this.flvPlayer = flvPlayer;
+
         try {
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
@@ -226,12 +228,27 @@ let liveMixin = {
      * @params
      */
     handleLiveVisible(visible) {
+      let liveEl = document.getElementById('player');
+      let flvPlayer = this.flvPlayer;
       this.liveVisible = visible;
 
       if(visible) {
+        // 开始拉流
+        if(flvPlayer) {
+          try {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          } catch(e) {
+          }
+        }
+
         this.handleplay();
       } else {
         this.handlestop();
+
+        // 停止拉流
+        flvPlayer && flvPlayer.unload();
       }
     },
 
