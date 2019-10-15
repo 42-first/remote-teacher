@@ -106,7 +106,7 @@
               <span class="f14 c666"><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
               <div class="box-center f14">
                 <div class="input-box">
-                  <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" @blur="handleScoreBlur">
+                  <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" pattern="[0-9]*" @blur="handleScoreBlur">
                 </div>
                 <!-- 分 -->{{$t('behavior.points')}}
               </div>
@@ -179,6 +179,7 @@
         if(newVal > 100){
           this.behavior_score_temp = 100
         }
+        this.behavior_score_temp = newVal.replace(/\D/g,'')
       }
     },
 	  methods: {
