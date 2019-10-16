@@ -430,7 +430,12 @@ let pages = {
     "noquizzes": "No quizzes in this class",
     "noeligiblestudents": "No Eligible Students",
     "present": "Present",
-    "absent": "Absent"
+    "absent": "Absent",
+    "bonus": "Bonus",
+    "currentbonuspoints": "Current Bonus Points",
+    "thepoints": "The Points",
+    "studentId": "Students ID",
+    "pleaseenterinteger": "Integer required"
   },
   // 引导页
   guide: {
