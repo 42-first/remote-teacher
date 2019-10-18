@@ -21,7 +21,7 @@
 											<template v-if="search.indexOf(str.name) >= 0"><span class="cblue">{{str.name}}</span></template><template v-else>{{str.name}}</template>
 										</template>
 									</span>
-									<span class="school_number f14 color6">{{item.profile.school_number ? item.profile.school_number : $t('cards.wszxh')}}</span>
+									<span class="school_number f14 color6">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
 								</div>
 								<div class="user-score f14 cblue" v-if="item.score">
 									<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
