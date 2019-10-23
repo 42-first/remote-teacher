@@ -91,7 +91,8 @@
 
       <v-touch class="btn-wrapper" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
         <div class="btn">
-          <i class="iconfont icon-refresh"></i>{{ $t('refresh') }}
+          <i class="iconfont icon-refresh"></i>
+          <div>{{ $t('refresh') }}</div>
         </div>
       </v-touch>
     </div>
@@ -477,24 +478,20 @@
     .btn-wrapper{
       position: fixed;
       display: inline;
-      left: 50%;
+      right: px2rem(50px);
       bottom: px2rem(50px);
-      transform: translateX(px2rem(100px));
-      padding: px2rem(11px) px2rem(25px);
+      padding: px2rem(25px);
     }
-    .btn {
-      border-radius: px2rem(4px);
-      width: px2rem(150px);
-      height: px2rem(66px);
-      line-height: px2rem(66px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .btn{
+      border-radius: 50%;
+      width: px2rem(100px);
+      height: px2rem(100px);
+      line-height: 1.2;
       box-shadow: 0 px2rem(2px) px2rem(4px) rgba(0,0,0,.2);
       font-size: px2rem(24px);
+      padding-top: px2rem(14px);
       i {
-        margin-right: px2rem(10px);
-        font-size: px2rem(30px);
+        font-size: px2rem(36px);
       }
     }
     .abs {
