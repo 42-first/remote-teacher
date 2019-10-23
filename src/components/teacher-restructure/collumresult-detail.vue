@@ -7,7 +7,7 @@
       <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
       <div :class="['answer-box', {'toomany': answerList.length > 4}]">
         <template v-if="answerList.length">
-  	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
+  	    	<div v-for="(item, index) in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']" :key="index">{{item}}</div>
   	    </template>
 
         <div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
@@ -29,7 +29,7 @@
       </div>
       <div class="choice-list" v-show="activeTab === 1">
         <template v-if="problemResultDetailData.data.length">
-  				<div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
+  				<div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data" :key="index">
   	        <v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
   	          <template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
   			      	<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
@@ -43,8 +43,8 @@
               <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
             </v-touch>
             <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
-              <div class="stu" v-for="stu in choiceItem.members">
-                <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+              <div class="stu" v-for="(stu, sindex) in choiceItem.members" :key="sindex">
+                <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
                 <div class="ellipsis">{{stu.name}}</div>
               </div>
             </div>
@@ -53,9 +53,9 @@
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png" alt="">
+            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
+            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanweida') : $t('quanweitoupiao')}}</p>
           </div>
         </template>
@@ -65,8 +65,8 @@
         <template v-if="not_answeredList.length && problemResultDetailData.problem_type !== 8">
           <div class="gap"></div>
           <div class="item-bd">
-  					<div class="stu" v-for="stu in not_answeredList">
-  	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+  					<div class="stu" v-for="(stu, index) in not_answeredList" :key="index">
+  	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
   	          <div class="ellipsis">{{stu.name}}</div>
   	        </div>
           </div>
@@ -74,16 +74,16 @@
         <template v-else-if="not_answeredList.length && problemResultDetailData.problem_type === 8">
           <div class="gap"></div>
           <div class="empty">
-            <img src="~images/teacher/nimingtoupiao.png" alt="">
+            <img src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{$t('nimingtoupiao')}}</p>
           </div>
         </template>
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png" alt="">
+            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
+            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanyida') : $t('quantoupiao')}}</p>
           </div>
         </template>
@@ -301,6 +301,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common_rem";
   .problemresultdetail-box {
     position: relative;
     height: 100%;
@@ -330,7 +331,7 @@
       justify-content: center;
 
       .anser-item {
-        margin: 0 0.133333rem;
+        margin: 0 px2rem(10px);
         width: 2.0rem;
         height: 2.0rem;
         line-height: 2.0rem;
@@ -397,7 +398,7 @@
     }
 
     .choice-list, .notAnswerList {
-      padding-bottom: 1.466667rem;
+      padding-bottom: px2rem(88px);
     }
 
     .choice-item,
@@ -476,18 +477,18 @@
     .btn {
       position: fixed;
       left: 50%;
-      width: 4.093333rem;
-      bottom: 0.666667rem;
-      transform: translateX(-50%);
-      border-radius: 0.106667rem;
-      height: 1.466667rem;
-      line-height: 1.466667rem;
+      width: px2rem(200px);
+      bottom: px2rem(50px);
+      transform: translateX(px2rem(100px));
+      border-radius: px2rem(8px);
+      height: px2rem(88px);
+      line-height: px2rem(88px);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0.026667rem 0.053333rem 0 rgba(0,0,0,.5);
+      box-shadow: 0 px2rem(2px) px2rem(4px) rgba(0,0,0,.2);
       i {
-        margin-right: 0.133333rem;
+        margin-right: px2rem(10px);
       }
     }
     .abs {
