@@ -89,8 +89,10 @@
         </template>
       </div>
 
-      <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
-        <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
+      <v-touch class="btn-wrapper" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
+        <div class="btn">
+          <i class="iconfont icon-refresh"></i>{{ $t('refresh') }}
+        </div>
       </v-touch>
     </div>
 
@@ -200,7 +202,6 @@
             // 多选题判分
             // https://www.tapd.cn/20392061/prong/stories/view/1120392061001001309
             // result_type 0 默认类型；1 多选题全对；2 多选题半对；3 多选题错误
-
             // 设置试卷详情数据
             self.problemResultDetailData = jsonData
 
@@ -473,22 +474,27 @@
         color: #9b9b9b;
       }
     }
-
-    .btn {
+    .btn-wrapper{
       position: fixed;
+      display: inline;
       left: 50%;
-      width: px2rem(200px);
       bottom: px2rem(50px);
       transform: translateX(px2rem(100px));
-      border-radius: px2rem(8px);
-      height: px2rem(88px);
-      line-height: px2rem(88px);
+      padding: px2rem(11px) px2rem(25px);
+    }
+    .btn {
+      border-radius: px2rem(4px);
+      width: px2rem(150px);
+      height: px2rem(66px);
+      line-height: px2rem(66px);
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 px2rem(2px) px2rem(4px) rgba(0,0,0,.2);
+      font-size: px2rem(24px);
       i {
         margin-right: px2rem(10px);
+        font-size: px2rem(30px);
       }
     }
     .abs {
