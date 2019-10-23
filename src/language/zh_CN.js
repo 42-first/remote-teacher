@@ -140,6 +140,7 @@ let pages = {
   "networkerror" : "网络不佳，图片上传失败，请重新上传",
   "networkerror2" : "网络不佳，答案提交失败，请重试",
   "livetip" : "直播中，点击播放",
+  "liveunfold" : "直播中 点击观看",
 
   // socket event
   "LESSON_START": "上课啦！",
@@ -403,6 +404,7 @@ let pages = {
   "boardunknow": "白板不懂",
   "showall": "全文",
   "foldall": "收起",
+  "tougaowarn": "当前插件版本不支持播放小视频，请将电脑端雨课堂升级至最新版本",
 
   // 给学生增加备注需求增加
   behavior: {
@@ -429,9 +431,14 @@ let pages = {
     "noquizzes": "本节课没有发布习题",
     "noeligiblestudents": "没有符合的学生",
     "present": "已出勤",
-    "absent": "未出勤"
+    "absent": "未出勤",
+    "bonus": "加分",
+    "currentbonuspoints": "当前已有加分",
+    "thepoints": "本次加分",
+    "studentId": "按学号排序",
+    "pleaseenterinteger": "请输入整数"
   },
-  
+
 
 
   // 引导页
@@ -499,8 +506,8 @@ let pages = {
     "pointsofgrading": "评分要点",
     "textareaplaceholder": "请输入您的参考答案或评分要点，供学生参考",
     "hupingguize": "互评规则",
-    "rule1": "<i>＊</i>已提交答案的各组才能参加互评，每个组将收到<span class='f15'>一份</span>非本组的作答内容",
-    "rule2": "各组之间相互匿名",
+    "rule1": "<i>＊</i>已提交答案的同学才能参加互评，每人/每组将收到<span class='f15'>一份</span>非本人/本组的作答内容",
+    "rule2": "互评相互匿名",
     "rule3": "教师在发起互评时可设置互评占比，最终得分可随时修改",
     "faqihuping": "发起互评",
     "cancel": "取消",
@@ -512,13 +519,16 @@ let pages = {
     "gradingscore" : "互评得分：{score}分",
     "gradingtotalscore" : "请输入互评分数（满分{score}分）",
     "notice" : "注意",
-    "noticecontent" : "本题以小组形式批改，每人只有一次评分机会<br>成绩以最后一次提交为主",
+    "noticecontent" : "请认真根据评分要点进行打分<br>成绩以最后一次提交为准",
     "close" : "关闭",
-    "gradedalready" : "已有人批改",
+    "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
     "noarticipate": "未作答的小组不参与互评",
   },
+
+  "openwordcloud": "生成词云并投屏",
+  "closewordcloud": "关闭词云",
 
   // 图片国际化
   imgs: {

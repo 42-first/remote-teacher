@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'g.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -380,7 +380,8 @@ var mixin = {
 
           // 开始直播
           case 'startlive':
-            this.startLive(msg['liveurl']);
+            // this.startLive(msg['liveurl']);
+            this.startLive(msg);
 
             break;
 

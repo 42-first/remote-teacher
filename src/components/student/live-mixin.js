@@ -7,62 +7,11 @@
  */
 
  import { isSupported } from '@/util/util'
+ import flvjs from 'flv.js/dist/flv.min'
 
 
 let liveMixin = {
   methods: {
-    /*
-     * @method 直播列表
-     * @param  lessonID
-     */
-    getLiveList(lessonID) {
-      let self = this;
-      let URL = API.student.GET_LIVE_LIST;
-      let param = {
-        'lesson_id': lessonID
-      }
-
-      request.get(URL, param)
-      .then((res) => {
-        if(res && res.data) {
-          let data = res.data;
-
-          if(data.live_list && data.live_list.length) {
-            let oLive = data.live_list[0];
-
-            if(oLive.activating) {
-              this.getLiveURL(oLive.live_id);
-            }
-          }
-        }
-      });
-    },
-
-    /*
-     * @method 直播地址
-     * @param  liveID
-     */
-    getLiveURL(liveID) {
-      let self = this;
-      let URL = API.student.GET_LIVE_URL;
-      let param = {
-        'live_id': liveID
-      }
-
-      request.get(URL, param)
-      .then((res) => {
-        if(res && res.data) {
-          let data = res.data;
-
-          if(data.live_url && data.live_url.hls) {
-            this.liveURL = data.live_url.hls;
-
-            this.Hls && this.supportHLS(this.Hls);
-          }
-        }
-      });
-    },
-
     /*
     * @method 加载hls库
     *
@@ -73,8 +22,48 @@ let liveMixin = {
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        self.liveURL && self.supportHLS(Hls);
+        self.liveType === 1 && self.supportHLS(Hls);
       })
+    },
+
+    /**
+     * @method 检测是否支持httpflv
+     * @params
+     */
+    supportFLV(isStart) {
+      let liveEl = document.getElementById('player');
+      if (flvjs.isSupported() && liveEl) {
+        let flvPlayer = flvjs.createPlayer({
+          type: 'flv',
+          url: this.liveurl.httpflv
+        });
+
+        this.flvPlayer = flvPlayer;
+
+        try {
+          flvPlayer.attachMediaElement(liveEl);
+          flvPlayer.load();
+          flvPlayer.play();
+
+          this.setLiveTip();
+        } catch(evt) {
+          setTimeout(()=>{
+            this.supportFLV();
+          }, 3000)
+        }
+
+        return true;
+      } else {
+        if(isStart) {
+          setTimeout(()=>{
+            this.supportHLS(this.Hls)
+          }, 1000*10)
+        } else {
+          this.Hls && this.supportHLS(this.Hls);
+        }
+
+        return false;
+      }
     },
 
     /*
@@ -82,14 +71,14 @@ let liveMixin = {
     * @params
     */
     supportHLS(Hls) {
-      let audioEl = document.getElementById('player');
+      let liveEl = document.getElementById('player');
 
       if(Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(this.liveURL);
-        hls.attachMedia(audioEl);
+        hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          // audioEl && audioEl.play();
+          this.liveType === 2 && liveEl.play();
         });
 
         this.handleerror(hls);
@@ -99,11 +88,27 @@ let liveMixin = {
       // This is using the built-in support of the plain video element, without using hls.js.
       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
-      else if (audioEl.canPlayType('application/vnd.apple.mpegurl')) {
-        audioEl.src = this.liveURL;
-        audioEl.addEventListener('loadedmetadata',function() {
-          audioEl.play();
+      else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
+        liveEl.src = this.liveURL;
+        liveEl.addEventListener('loadedmetadata',function() {
+          liveEl.play();
         });
+
+        // 检测404
+        liveEl.addEventListener('error', ()=>{
+          setTimeout(()=>{
+            this.supportHLS(this.Hls)
+          }, 1000*5)
+        });
+
+        // iOS不能直接play
+        this.liveType === 2 && wx.getNetworkType({
+          success: (res)=> {
+            liveEl.play();
+          }
+        });
+
+        console.log('loadedmetadata hls supportHLS');
       }
 
       this.setLiveTip();
@@ -195,6 +200,7 @@ let liveMixin = {
 
           if(status === 1) {
             this.handleplay();
+            this.liveVisible = true;
           } else if(status === 0) {
             this.handlestop();
           }
@@ -214,6 +220,35 @@ let liveMixin = {
 
       if(isSupported(window.localStorage)) {
         localStorage.setItem(key, status);
+      }
+    },
+
+    /*
+     * @method 设置直播展开收起
+     * @params
+     */
+    handleLiveVisible(visible) {
+      let liveEl = document.getElementById('player');
+      let flvPlayer = this.flvPlayer;
+      this.liveVisible = visible;
+
+      if(visible) {
+        // 开始拉流
+        if(flvPlayer) {
+          try {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          } catch(e) {
+          }
+        }
+
+        this.handleplay();
+      } else {
+        this.handlestop();
+
+        // 停止拉流
+        flvPlayer && flvPlayer.unload();
       }
     },
 

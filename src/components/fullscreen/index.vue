@@ -13,11 +13,16 @@
       <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
     </section>
 
-    <!-- 直播入口 -->
-    <section class="live" v-if="liveURL">
+    <!-- 直播入口 音频直播 -->
+    <section class="live" v-if="liveURL && liveType === 1">
       <!-- live-player作为音频直播的容器 -->
       <audio id="player" class="live__container" autobuffer :src="liveURL">
       </audio>
+    </section>
+
+    <!-- 直播入口 视频直播 -->
+    <section class="live__video J_live" v-if="liveURL && liveType === 2">
+      <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
     </section>
 
   </section>
@@ -30,6 +35,7 @@
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import livemixin from '@/components/fullscreen/live-mixin'
+  import eventmixin from '@/components/fullscreen/event-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -138,6 +144,12 @@
         // 当前正在播放的ppt
         currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
+        liveurl: null,
+        // 直播类型 0：默认值 1:audio  2:video
+        liveType: 0,
+        liveVisible: true,
+        // 是否web开课
+        isWebLesson: false,
       };
     },
     components: {
@@ -146,14 +158,28 @@
     },
     watch: {
       cards(newVal, oldVal) {
-        console.info('cards', newVal, newVal.length);
         let slide = null;
 
         newVal.forEach( (item, index) => {
-          if(item.type === 2) {
+          if(item.type === 2 || item.type === 3 || item.type === 10) {
             slide = item;
+
+            if(item.type === 3) {
+              slide.src = item.cover;
+            }
           }
         });
+
+        // 问题处理宽高
+        if(slide.type === 3) {
+          let presentation = this.presentationMap.get(slide.presentationid);
+
+          if(presentation) {
+            slide.Width = presentation.Width;
+            slide.Height = presentation.Height;
+            slide.rate = presentation.Width / presentation.Height;
+          }
+        }
 
         if(slide && slide.src) {
           this.currSlide = slide;
@@ -162,7 +188,9 @@
       liveURL(newVal, oldVal) {
         setTimeout(()=>{
           newVal && this.supportFLV();
-        }, 500)
+
+          this.initEvent();
+        }, 3000)
       }
     },
     filters: {
@@ -188,7 +216,7 @@
         return oStyle;
       }
     },
-    mixins: [ wsmixin, actionsmixin, livemixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -368,8 +396,7 @@
 
               // 直播处理 1为直播中，2为已结束
               if(self.liveInfo && self.liveInfo.status === 1) {
-                // self.liveURL = self.liveInfo.live_url.hls;
-                // self.Hls && self.supportHLS(self.Hls);
+                self.liveType = self.liveInfo.type || 1;
                 self.liveURL = self.liveInfo.live_url.httpflv;
                 // this.liveURL && this.supportFLV();
               }
@@ -524,7 +551,8 @@
        * @params
        */
       handleFullscreen(evt) {
-        let element = this.$el.querySelector('.J_ppt');
+        // let element = this.$el.querySelector('.J_ppt');
+        let element = this.$el;
 
         if(this.isFullscreen) {
           this.exitFullscreen(element);
@@ -587,8 +615,6 @@
 </script>
 
 <style lang="scss">
-  // @import "~@/style/font/iconfont/iconfont.css";
-  // @import "~@/style/animate.css";
   @import "~@/style/mintui.css";
 
   .page {
@@ -625,5 +651,27 @@
     right: 0;
     visibility: hidden;
   }
+
+  .live__video {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    .live__container {
+      width: 400px;
+      height: 300px;
+      border: 1px solid #ddd;
+    }
+  }
+
+</style>
+<style>
+  .live__container {
+    --x: 0px;
+    --y: 0px;
+
+    transform: translate(var(--x), var(--y));
+  }
+
 
 </style>

@@ -19,25 +19,35 @@
       <div class="submission__inner">
       <div class="submission__item">
         <!-- 投稿时间 -->
-        <div class="item-avatar">
+        <div class="item-avatar" v-if="result.anon || !result.is_group">
           <img class="" :src="result.user_avatar_46" alt="" />
         </div>
-
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15">{{ result.user_name }}</p>
+          <p class="user-name f15" v-if="result.anon || !result.is_group">{{ result.user_name }}</p>
+          <div v-else @click="showCurGroupList(index)">
+            <img-group :groupdata="result.team_info" :big="1"></img-group>
+          </div>
           <p class="f15">{{ result.content }}</p>
           <img v-if="result.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
+          <!-- 视频展示 -->
+          <div class="video__preview" v-if="result.video && result.video.url">
+            <video :src="result.video.url" :style="result.video|setStyle" controls ></video>
+          </div>
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
         </div>
 
       </div>
       </div>
     </div>
+    <!-- 组列表 -->
+    <group-list v-if="curGroupInfo" @close="hideGroupList" :groupdata="curGroupInfo"></group-list>
   </section>
 </template>
 <script>
   import API from '@/util/api'
+  import groupList from '@/components/common/groupMembers/group-list.vue'
+  import imgGroup from '@/components/common/groupMembers/img-group.vue'
 
   export default {
     name: 'submission-detail-page',
@@ -50,10 +60,14 @@
         width: 0,
         height: 0,
         // 图片比例
-        rate: 1
+        rate: 1,
+        curGroupInfo: null,
+
       };
     },
     components: {
+      groupList,
+      imgGroup
     },
     computed: {
     },
@@ -62,6 +76,13 @@
     filters: {
       formatTime(time, format) {
         return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
+      },
+      setStyle(video) {
+        let width = 3.466;
+        let height = width/video.width * video.height;
+        let sCss = `width: ${width}rem; height: ${height}rem;`;
+
+        return sCss;
       }
     },
     mixins: [],
@@ -85,7 +106,8 @@
 
               anon && Object.assign(data, {
                 user_avatar_46: 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
-                user_name: this.$i18n.t('anonymous2') || '匿名'
+                user_name: this.$i18n.t('anonymous2') || '匿名',
+                anon: true
               })
 
               this.result = data;
@@ -165,7 +187,24 @@
       },
       handleBack() {
         this.$router.back();
-      }
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      showCurGroupList(index) {
+        let item = this.result
+        if (item) {
+          this.curGroupInfo = Object.assign(item.team_info, {
+            group_name: item.group_name
+          })
+        }
+      },
+      /**
+       *  展示本条投稿的分组成员列表
+       */
+      hideGroupList() {
+        this.curGroupInfo = null
+      },
     },
     created() {
       this.index = +this.$route.params.index;
@@ -191,7 +230,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .submission__detail {
     z-index: 1;
     position: fixed;
@@ -279,5 +318,9 @@
       }
     }
 
+  }
+
+  .video__preview video {
+    background: #000;
   }
 </style>

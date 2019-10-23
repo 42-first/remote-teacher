@@ -80,15 +80,11 @@
 
 <script>
 	import 'mint-ui/lib/picker/style.css'
-	import 'mint-ui/lib/message-box/style.css'
 	import Vue from 'vue'
 	import API from '@/pages/teacher/config/api'
 	import request from '@/util/request'
 	import { Picker } from 'mint-ui';
 	import {mapGetters} from 'vuex'
-	import MessageBox from 'mint-ui/lib/message-box';
-
-	Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 
 	Vue.component(Picker.name, Picker);
 	export default {
@@ -221,7 +217,7 @@
 					this.team = team;
 					this.index = index;
 					this.isActive = active
-				}        
+				}
       },
       /*
        * @method picker操作
