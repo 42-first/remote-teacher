@@ -659,7 +659,8 @@
 
     .live__container {
       width: 400px;
-      height: 300px;
+      min-height: 225px;
+      max-height: 300px;
       border: 1px solid #ddd;
     }
   }
