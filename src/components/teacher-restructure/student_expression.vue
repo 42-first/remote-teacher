@@ -101,9 +101,8 @@
             <span class="save f18" @click="handleAddScore"><!-- 保存 -->{{$t('behavior.save')}}</span>
           </div>
           <div class="box-content">
-            <span class="current-score f14"><!-- 当前已有加分 -->{{$t('behavior.currentbonuspoints')}}：<span class="c666">{{behavior_score}}{{$t('behavior.points')}}</span></span>
             <div class="add-score">
-              <span class="f14 c666"><!-- 本次加分 -->{{$t('behavior.thepoints')}}</span>
+              <span class="f14 c666"><!-- 本次加分 {{$t('behavior.thepoints')}}-->课堂总加分</span>
               <div class="box-center f14">
                 <div class="input-box">
                   <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" pattern="[0-9]*" @blur="handleScoreBlur">
@@ -112,10 +111,10 @@
               </div>
             </div>
             <div class="score flexcenter f14">
-              <span class="score-item" @click="changeScore(1)">1<!-- 分 -->{{$t('behavior.points')}}</span>
-              <span class="score-item" @click="changeScore(2)">2<!-- 分 -->{{$t('behavior.points')}}</span>
-              <span class="score-item" @click="changeScore(5)">5<!-- 分 -->{{$t('behavior.points')}}</span>
-              <span class="score-item" @click="changeScore(10)">10<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(1)">+1<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(2)">+2<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(5)">+5<!-- 分 -->{{$t('behavior.points')}}</span>
+              <span class="score-item" @click="changeScore(10)">+10<!-- 分 -->{{$t('behavior.points')}}</span>
             </div>
           </div>
         </div>
@@ -179,7 +178,7 @@
         if(newVal > 100){
           this.behavior_score_temp = 100
         }
-        this.behavior_score_temp = newVal.replace(/\D/g,'')
+        this.behavior_score_temp = +(newVal.replace(/\D/g,''))
       }
     },
 	  methods: {
@@ -338,7 +337,7 @@
         this.tagText = ''
       },
       changeScore(score){
-        this.behavior_score_temp = score
+        this.behavior_score_temp += score
       },
       handleAddScore(){
         let self = this
@@ -353,7 +352,7 @@
           if(res.success){
             self.behavior_score = res.data.score
             self.addScoreFlag = false
-            self.behavior_score_temp = 0
+            self.behavior_score_temp = res.data.score
           }
         })
       },
@@ -364,7 +363,7 @@
       },
       handleHideScore(){
         this.addScoreFlag = false
-        this.behavior_score_temp = 0
+        this.behavior_score_temp = this.behavior_score
       }
 
 	  }
@@ -679,10 +678,10 @@
           }
         }
         .box-content {
-          padding: 0.53333333rem 0.53333333rem 1.06666667rem;
+          padding: 1.06666667rem 0.53333333rem 1.06666667rem;
 
           .add-score {
-            margin: 0.53333333rem 0;
+            margin-bottom: 0.53333333rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -692,7 +691,7 @@
             }
             .input-box {
               width: 6.4rem;
-              padding: 0.2rem 0 0.24rem;
+              padding: 0.26666667rem 0 0.24rem;
               margin-right: 0.24rem;
               border-bottom: 1px solid #eee;
               input {
