@@ -213,6 +213,9 @@
   .toolbar-root {
     position: relative;
     color: #9b9b9b;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #222;
   }
 
   .rc-toolbar {
