@@ -201,6 +201,7 @@
             self.tagList = res.data.tags
             self.tagListTemp = res.data.tags
             self.behavior_score = res.data.behavior_score
+            self.behavior_score_temp = res.data.behavior_score
             self.participate = res.data.participate
             self.attendance_status = res.data.attendance_status
             self.isloaded = true
