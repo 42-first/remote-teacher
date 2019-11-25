@@ -102,7 +102,7 @@
           </div>
           <div class="box-content">
             <div class="add-score">
-              <span class="f14 c666"><!-- 本次加分 {{$t('behavior.thepoints')}}-->课堂总加分</span>
+              <span class="f14 c666"><!-- 课堂总加分 --> {{$t('behavior.thepoints')}}</span>
               <div class="box-center f14">
                 <div class="input-box">
                   <input class="f24 c333" type="number" :placeholder="$t('behavior.pleaseenterinteger')"  v-model="behavior_score_temp" pattern="[0-9]*" @blur="handleScoreBlur">
