@@ -433,7 +433,7 @@ let pages = {
     "absent": "Absent",
     "bonus": "Bonus",
     "currentbonuspoints": "Current Bonus Points",
-    "thepoints": "The Points",
+    "thepoints": "Total points in class",
     "studentId": "Students ID",
     "pleaseenterinteger": "Integer required"
   },
