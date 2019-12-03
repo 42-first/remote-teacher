@@ -15,6 +15,13 @@ function goHome () {
 
 function socketProcessMessage(msg){
   let self = this
+  const { op, mask } = msg
+  if(op === "hello") {
+    if (mask && mask.type === "remark") {
+      const { prob } = mask
+      this.$store.commit('set_analysisRemarkId', prob)
+    }
+  }
   // 没有在上课则直接跳走
   if (msg.op === 'hello' && !msg.isAlive) {
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';

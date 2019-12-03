@@ -27,7 +27,7 @@
       <!-- 投屏/取消投屏 -->
       <div class="item">
         <p class="analysis--closed f17" @click="handleScreen">
-          <template v-if="!goScreen">{{ $t('screenmode') }}</template>
+          <template v-if="!hasThrownScreen">{{ $t('screenmode') }}</template>
           <template v-else>{{ $t('screenmodeoff') }}</template>
         </p>
       </div>
@@ -153,7 +153,7 @@
       return {
         // 锁定发送 发送状态 0：未发送 1：发送中 2：已发送 3：发送失败
         sendStatus: 0,
-        goScreen: false
+        hasThrownScreen: false
       }
     },
     watch: {
@@ -163,7 +163,8 @@
     computed: {
       ...mapGetters([
         'lessonid',
-        'socket'
+        'socket',
+        'analysisRemarkId'
       ]),
       problemid() {
         return typeof this.problem === "object" && this.problem.ProblemID
@@ -177,16 +178,20 @@
        * @method 组件初始化
        */
       init() {
-        // let key = 'analysis-sendstatus-' + this.problem.ProblemID;
-        // if(isSupported(window.localStorage)) {
-        //   this.sendStatus = +localStorage.getItem(key);
-        // }
+        let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+        if(isSupported(window.localStorage)) {
+          this.sendStatus = +localStorage.getItem(key);
+        }
+        if (this.analysisRemarkId === this.problemid) {
+          this.handleScreen(2)
+        }
         this.msgHandle()
       },
       /**
        * @method 关闭答案解析页面
        */
       handleclosed() {
+        this.handleScreen(1)
         if(typeof this.hideAnalysis === 'function') {
           this.hideAnalysis();
         }
@@ -194,12 +199,24 @@
       /**
        * @method 答案解析投屏和取消投屏
        */
-      handleScreen() {
-        const params = {
-          op: "showproblemremark",
-          lessonid: this.lessonid,
-          prob: this.problemid,
-          msgid: 1
+      handleScreen(type) {
+        let params = null
+        const lessonid = this.lessonid
+        if (this.hasThrownScreen || type === 1) {
+          params = {
+            'op': 'closemask',
+            lessonid,
+            'type': 'remark',
+            'msgid': 1
+          }
+          this.$store.commit('set_analysisRemarkId', 0)
+        } else if(!this.hasThrownScreen || type === 2) {
+          params = {
+            op: "showproblemremark",
+            lessonid: this.lessonid,
+            prob: this.problemid,
+            msgid: 1
+          }
         }
         this.socket.send(JSON.stringify(params))
       },
@@ -210,16 +227,24 @@
         this.socket.onmessage = e => {
           try {
             const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data
-            if (data.op === 'showproblemremark' || data.op === 'problemremarkshown') {
-              this.goScreen = !this.goScreen
+            if (data.op === 'problemremarkshown') {
+              this.hasThrownScreen = true
+            }
+            if (data.op === 'closedmask') {
+              this.hasThrownScreen = false
             }
             if(data.op === 'problemremark') {
               const { remark } = data
               if (remark.prob === this.problemid) {
-                this.sendStatus = 2
+                // 发送成功
+                this.sendStatus = 2;
+                // 这里记录是否发送
+                let key = 'analysis-sendstatus-' + this.problemid;
+                if(isSupported(window.localStorage)) {
+                  localStorage.setItem(key, this.sendStatus);
+                }
               }
             }
-            console.log(data)
           } catch (error) {
             console.log(error)
           }

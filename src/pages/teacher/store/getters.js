@@ -50,6 +50,7 @@ const getters = {
   addinversion: state => state.addinversion,
   toupinginfo: state => state.toupinginfo,
   postWordCloudOpen: state => state.postWordCloudOpen,
-  danmuWordCloudOpen: state => state.danmuWordCloudOpen
+  danmuWordCloudOpen: state => state.danmuWordCloudOpen,
+  analysisRemarkId: state => state.analysisRemarkId
 };
 export default getters

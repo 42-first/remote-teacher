@@ -59,7 +59,8 @@ const store = new Vuex.Store({
     addinversion: 0,                        // 插件协议版本号
     toupinginfo: 0,                          // 记录当前投屏的problemid
     postWordCloudOpen: false,               // 投稿词云是否开启
-    danmuWordCloudOpen: false               // 弹幕词云是否开启
+    danmuWordCloudOpen: false,               // 弹幕词云是否开启
+    analysisRemarkId: 0,                    // 标示当前答案解析投屏状态的problemid
   },
 
   mutations: {
@@ -210,7 +211,10 @@ const store = new Vuex.Store({
     },
     set_danmuWordCloudOpen(state, isWordCloudOpen){
       state.danmuWordCloudOpen = isWordCloudOpen
-    }
+    },
+    set_analysisRemarkId(state, id) {
+      state.analysisRemarkId = id
+    },
   },
 
   actions: {
@@ -252,6 +256,9 @@ const store = new Vuex.Store({
     },
     set_danmuWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_danmuWordCloudOpen', isWordCloudOpen)
+    },
+    set_analysisRemarkId({commit}, id) {
+      commit("set_analysisRemarkId", id)
     }
   },
   getters
