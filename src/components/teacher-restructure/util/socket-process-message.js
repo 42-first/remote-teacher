@@ -19,7 +19,15 @@ function socketProcessMessage(msg){
   if(op === "hello") {
     if (mask && mask.type === "remark") {
       const { prob } = mask
-      this.$store.commit('set_analysisRemarkId', prob)
+
+      this.socket.send(JSON.stringify({
+        'op': 'closemask',
+        'lessonid': this.lessonid,
+        'type': 'remark',
+        'msgid': 1
+      }));
+
+      // this.$store.commit('set_analysisRemarkId', prob)
     }
   }
   // 没有在上课则直接跳走
