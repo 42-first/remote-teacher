@@ -37,15 +37,31 @@
   			      	<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
   			      	<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
 		      		</template>
-
               <span class="f18 asw">{{choiceItem.label}}</span>
               <span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
               <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
             </v-touch>
             <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
+              <div class="sort-wrapper" @click="sortActive(index)">
+                <span class="color6">作答时长</span>
+                <div class="inline-block icon-wrapper">
+                  <i class="iconfont icon-bofang3" :class="{active: !choiceItem.sortType}"></i>
+                  <i class="iconfont icon-bofang3" :class="{active: choiceItem.sortType}"></i>
+                </div>
+              </div>
               <div class="stu" v-for="(stu, sindex) in choiceItem.members" :key="sindex">
                 <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
-                <div class="ellipsis">{{stu.name}}</div>
+                <div class="name-number-wrapper">
+                  <div class="name-duration">
+                    <div class="text-ellipsis name">{{stu.name}}</div>
+                    <span class="duration">
+                      {{ stu.cost|duration }}
+                    </span>
+                  </div>
+                  <div class="number">
+                    {{ stu.school_number }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -67,7 +83,14 @@
           <div class="item-bd">
   					<div class="stu" v-for="(stu, index) in not_answeredList" :key="index">
   	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
-  	          <div class="ellipsis">{{stu.name}}</div>
+  	          <div class="name-number-wrapper">
+                <div class="name-duration">
+                  <div class="text-ellipsis name">{{stu.name}}</div>
+                </div>
+                <div class="number">
+                  {{ stu.school_number }}
+                </div>
+              </div>
   	        </div>
           </div>
         </template>
@@ -296,6 +319,31 @@
         let self = this
         // console.log(type);
         self.activeTab = type
+      },
+      /*
+      * 变更顺序
+      */
+     sortActive(index) {
+       this.problemResultDetailData.data.map((a, i) => {
+         if (index === i) {
+           return Object.assign(a, {
+             sortType: !a.sortType,
+             members: a.members.reverse()
+           })
+         }
+         return a
+       })
+     }
+    },
+    filters: {
+      duration(cost = 120) {
+        const second = cost - Math.floor(cost/60) * 60
+        const hours = Math.floor(cost/(60*60))
+        const minutes = (cost - second - hours*60*60)/60
+        const hoursStr = !!hours ? `${hours}`.padStart(2, 0) + ':' : ''
+        const minutesStr = !!minutes ? `${minutes}`.padStart(2, 0) + ':' : ''
+        const secondStr = `${second}`.padStart(2, 0)
+        return `${hoursStr}${minutesStr}${secondStr}`
       }
     }
   }
@@ -412,7 +460,6 @@
         background: #F6F6F6;
         text-align: left;
         border-top: 1px solid #C8C8C8;
-
         .asw {
           margin: 0 0.533333rem;
         }
@@ -425,31 +472,75 @@
         border-top: 0;
       }
 
-      .item-bd {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        width: 9.066667rem;
-        margin: 0.533333rem auto 0;
+      .item-bd{
+        padding: px2rem(20px);
         overflow: hidden;
-
-        .stu {
-          text-align: center;
-          margin-right: 0.57687496rem;
-          margin-bottom: 0.8rem;
-          width: 1.266667rem;
-          img {
-            width: 0.986667rem;
-            height: 0.986667rem;
+        width: 100%;
+        .sort-wrapper{
+          font-size: px2rem(28px);
+          height: px2rem(40px);
+          line-height: px2rem(40px);
+          text-align: right;
+          .icon-wrapper{
+            position: relative;
+            height: 100%;
+            width: px2rem(40px);
+            vertical-align: middle;
+            i{
+              position: absolute;
+              left: 0;
+              color: #d8d8d8;
+              font-size: px2rem(24px);
+            }
+            i:first-child{
+              top: px2rem(-10px);
+              transform: rotate(-90deg);
+            }
+            i:last-child{
+              bottom: px2rem(-10px);
+              transform: rotate(90deg);
+            }
+            i.active{
+              color: #639EF4;
+            }
+          }
+        }
+        .stu{
+          border-bottom: px2rem(2px) solid #eee;
+          display: flex;
+          padding: 20px;
+          img{
+            width: px2rem(74px);
+            height: px2rem(74px);
             border-radius: 50%;
-            margin-bottom: 0.386667rem;
           }
-          &:nth-child(5n) {
-            margin-right: 0;
+          .name-number-wrapper{
+            flex: 1;
+            text-align: left;
+            padding-left: px2rem(26px);
+            width: px2rem(300px);
+            .name-duration{
+              line-height: px2rem(45px);
+              font-size: px2rem(32px);
+              color: #333;
+              display: flex;
+              .name{
+                flex: 1;
+              }
+              .duration{
+                font-size: px2rem(24px);
+                color: #9b9b9b;
+              }
+            }
+            .number{
+              line-height: px2rem(40px);
+              font-size: px2rem(28px);
+              color: #9b9b9b;
+            }
           }
-          &:last-child {
-            margin-bottom: 0;
-          }
+        }
+        .stu:last-child{
+          border: none;
         }
       }
       .item-hidden {
