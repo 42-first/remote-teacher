@@ -42,12 +42,14 @@
               <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
             </v-touch>
             <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
-              <div class="sort-wrapper" @click="sortActive(index)">
-                <span class="color6">作答时长</span>
-                <div class="inline-block icon-wrapper">
-                  <i class="iconfont icon-bofang3" :class="{active: !choiceItem.sortType}"></i>
-                  <i class="iconfont icon-bofang3" :class="{active: choiceItem.sortType}"></i>
-                </div>
+              <div class="sort-wrapper">
+                <span @click="sortActive(index)">
+                  <span class="color6">作答时长</span>
+                  <div class="inline-block icon-wrapper">
+                    <i :class="{active: !choiceItem.sortType}"></i>
+                    <i :class="{active: choiceItem.sortType}"></i>
+                  </div>
+                </span>
               </div>
               <div class="stu" v-for="(stu, sindex) in choiceItem.members" :key="sindex">
                 <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
@@ -341,7 +343,7 @@
         const hours = Math.floor(cost/(60*60))
         const minutes = (cost - second - hours*60*60)/60
         const hoursStr = !!hours ? `${hours}`.padStart(2, 0) + ':' : ''
-        const minutesStr = !!minutes ? `${minutes}`.padStart(2, 0) + ':' : ''
+        const minutesStr = `${minutes}`.padStart(2, 0) + ':'
         const secondStr = `${second}`.padStart(2, 0)
         return `${hoursStr}${minutesStr}${secondStr}`
       }
@@ -481,27 +483,34 @@
           height: px2rem(40px);
           line-height: px2rem(40px);
           text-align: right;
+          padding: 0 px2rem(20px);
           .icon-wrapper{
             position: relative;
             height: 100%;
-            width: px2rem(40px);
             vertical-align: middle;
+            padding-left: px2rem(20px);
             i{
-              position: absolute;
-              left: 0;
-              color: #d8d8d8;
-              font-size: px2rem(24px);
+              border-color: #d8d8d8;
+              display: block;
+              box-sizing: border-box;
+              border-left-width:  px2rem(10px);
+              border-right-width:  px2rem(10px);
+              border-left-color: transparent !important;
+              border-right-color: transparent !important;
+              border-style: solid;
             }
             i:first-child{
-              top: px2rem(-10px);
-              transform: rotate(-90deg);
+              margin-top:  px2rem(2px);
+              border-bottom-width: px2rem(15px);
+              border-top-width: 0;
             }
             i:last-child{
-              bottom: px2rem(-10px);
-              transform: rotate(90deg);
+              border-bottom-width: 0;
+              border-top-width: px2rem(15px);
+              margin-top: px2rem(2px);
             }
             i.active{
-              color: #639EF4;
+              border-color: #639ef4;
             }
           }
         }
