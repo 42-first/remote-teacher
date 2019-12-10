@@ -39,13 +39,17 @@ let liveMixin = {
         });
 
         this.flvPlayer = flvPlayer;
+        // this.liveURL = this.liveurl.httpflv;
 
         try {
-          flvPlayer.attachMediaElement(liveEl);
-          flvPlayer.load();
-          flvPlayer.play();
-
           this.setLiveTip();
+
+          // 展开播放模式下才开始拉流
+          if(this.liveVisible) {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -249,6 +253,7 @@ let liveMixin = {
 
         // 停止拉流
         flvPlayer && flvPlayer.unload();
+        flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
