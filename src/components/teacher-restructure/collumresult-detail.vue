@@ -507,6 +507,7 @@
         }
         .stu{
           border-bottom: px2rem(2px) solid #eee;
+          width: 100%;
           display: flex;
           padding: 20px;
           img{
