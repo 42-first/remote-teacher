@@ -197,6 +197,8 @@
   import livemixin from '@/components/student/live-mixin'
   import boardmixin from '@/components/common/board-mixin'
 
+  import logmixin from '@/components/common/log-reporting'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -367,7 +369,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -668,6 +670,11 @@
                     self.supportFLV();
                   }, 3000)
                 }
+
+                // 日志上报
+                setTimeout(() => {
+                  self.handleLogEvent();
+                }, 1000)
               }
 
               // 课程title
