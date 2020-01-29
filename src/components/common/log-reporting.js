@@ -26,9 +26,15 @@ let logMixin = {
         lob: 'ykt',
         // 服务商
         n: 'sjy',
+        // 直播类型
+        t: 'live-video',
         // 事件
-        et: '',
+        et: ''
       };
+
+      if(this.liveType === 1) {
+        system['t'] = 'live-audio';
+      }
 
       typeof wx !== 'undefined' && wx.getNetworkType({
         success: (res) => {
@@ -75,11 +81,7 @@ let logMixin = {
         'time_stamp': (new Date()).getTime()
       };
 
-      console.dir(params);
-
-      request.post(URL, params)
-      .then((res) => {
-      });
+      request.post(URL, params);
     },
 
   }
