@@ -76,9 +76,9 @@ let logMixin = {
     reportLog(log) {
       let URL = '/video-log/log/unified/';
       let params = {
-        // 'ip': '127.0.0.1',
-        'log': log,
-        'time_stamp': (new Date()).getTime()
+        // 'uip': '127.0.0.1',
+        'data': log,
+        'ts_ms': (new Date()).getTime()
       };
 
       request.post(URL, params);
