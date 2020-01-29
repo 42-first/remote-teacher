@@ -56,7 +56,7 @@ let liveMixin = {
           }, 3000)
         }
 
-        this.handleFLVError();
+        // this.handleFLVError();
 
         return true;
       } else {

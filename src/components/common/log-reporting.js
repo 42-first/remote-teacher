@@ -15,7 +15,7 @@ let logMixin = {
      */
     setSystem() {
       let system = {
-        userid: this.userID,
+        u: this.userID,
         lessonid: this.lessonID,
         ua: navigator.userAgent,
         // 网络环境
