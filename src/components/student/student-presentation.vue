@@ -1186,6 +1186,7 @@
     flex-flow: column;
 
     .live__wrap {
+      z-index: 1;
       position: relative;
       padding: 2.33rem 0 0.253333rem;
 
