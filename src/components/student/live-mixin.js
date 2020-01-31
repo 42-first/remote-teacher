@@ -38,15 +38,25 @@ let liveMixin = {
           url: this.liveurl.httpflv
         });
 
+        this.flvPlayer = flvPlayer;
+        // this.liveURL = this.liveurl.httpflv;
+
         try {
-          flvPlayer.attachMediaElement(liveEl);
-          flvPlayer.load();
-          flvPlayer.play();
+          this.setLiveTip();
+
+          // 展开播放模式下才开始拉流
+          if(this.liveVisible) {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
           }, 3000)
         }
+
+        // this.handleFLVError();
 
         return true;
       } else {
@@ -118,23 +128,49 @@ let liveMixin = {
       let Hls = this.Hls;
 
       hls.on(Hls.Events.ERROR, (event, data) => {
+        let system = this.system;
+
         if (data.fatal) {
           switch(data.type) {
           case Hls.ErrorTypes.NETWORK_ERROR:
             // try to recover network error
             console.log("fatal network error encountered, try to recover");
             hls.startLoad();
+
+            // 上报
+            system['et'] = 'network error';
             break;
           case Hls.ErrorTypes.MEDIA_ERROR:
             console.log("fatal media error encountered, try to recover");
             hls.recoverMediaError();
+
+            // 上报
+            system['et'] = 'media error';
             break;
           default:
             // cannot recover
             hls.destroy();
+
+            // 上报
+            system['et'] = 'cannot recover';
             break;
           }
+
+          this.reportLog(system);
         }
+      });
+    },
+
+    /**
+     * @method 直播过程错误处理
+     * @params
+     */
+    handleFLVError() {
+      flvjs.LoggingControl.addLogListener((type, str) => {
+        let system = this.system;
+        system['et'] = type;
+
+        this.reportLog(system);
       });
     },
 
@@ -196,6 +232,7 @@ let liveMixin = {
 
           if(status === 1) {
             this.handleplay();
+            this.liveVisible = true;
           } else if(status === 0) {
             this.handlestop();
           }
@@ -223,12 +260,28 @@ let liveMixin = {
      * @params
      */
     handleLiveVisible(visible) {
+      let liveEl = document.getElementById('player');
+      let flvPlayer = this.flvPlayer;
       this.liveVisible = visible;
 
       if(visible) {
+        // 开始拉流
+        if(flvPlayer) {
+          try {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          } catch(e) {
+          }
+        }
+
         this.handleplay();
       } else {
         this.handlestop();
+
+        // 停止拉流
+        flvPlayer && flvPlayer.unload();
+        flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 

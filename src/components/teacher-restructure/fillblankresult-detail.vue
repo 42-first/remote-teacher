@@ -90,8 +90,11 @@
         </div>
       </section>
 
-      <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
-        <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
+      <v-touch class="btn-wrapper" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
+        <div class="btn">
+          <i class="iconfont icon-refresh"></i>
+          <div>{{ $t('refresh') }}</div>
+        </div>
       </v-touch>
     </template>
 
@@ -219,6 +222,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common_rem";
   .problemresultdetail-box {
     position: relative;
     height: 100%;
@@ -426,21 +430,23 @@
       }
     }
 
-    .btn {
+    .btn-wrapper{
       position: fixed;
-      left: 50%;
-      width: 4.093333rem;
-      bottom: 0.666667rem;
-      transform: translateX(-50%);
-      border-radius: 0.106667rem;
-      height: 1.466667rem;
-      line-height: 1.466667rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0.026667rem 0.053333rem 0 rgba(0,0,0,.5);
+      display: inline;
+      right: px2rem(50px);
+      bottom: px2rem(50px);
+      padding: px2rem(25px);
+    }
+    .btn{
+      border-radius: 50%;
+      width: px2rem(100px);
+      height: px2rem(100px);
+      line-height: 1.2;
+      box-shadow: 0 px2rem(2px) px2rem(4px) rgba(0,0,0,.2);
+      font-size: px2rem(24px);
+      padding-top: px2rem(14px);
       i {
-        margin-right: 0.133333rem;
+        font-size: px2rem(36px);
       }
     }
     .abs {

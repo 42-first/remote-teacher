@@ -7,7 +7,7 @@
       <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
       <div :class="['answer-box', {'toomany': answerList.length > 4}]">
         <template v-if="answerList.length">
-  	    	<div v-for="item in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']">{{item}}</div>
+  	    	<div v-for="(item, index) in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']" :key="index">{{item}}</div>
   	    </template>
 
         <div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
@@ -29,7 +29,7 @@
       </div>
       <div class="choice-list" v-show="activeTab === 1">
         <template v-if="problemResultDetailData.data.length">
-  				<div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data">
+  				<div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data" :key="index">
   	        <v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
   	          <template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
   			      	<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
@@ -37,15 +37,33 @@
   			      	<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
   			      	<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
 		      		</template>
-
               <span class="f18 asw">{{choiceItem.label}}</span>
               <span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
               <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
             </v-touch>
             <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
-              <div class="stu" v-for="stu in choiceItem.members">
-                <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-                <div class="ellipsis">{{stu.name}}</div>
+              <div class="sort-wrapper">
+                <span @click="sortActive(index)">
+                  <span class="color6">作答时长</span>
+                  <div class="inline-block icon-wrapper">
+                    <i :class="{active: !choiceItem.sortType}"></i>
+                    <i :class="{active: choiceItem.sortType}"></i>
+                  </div>
+                </span>
+              </div>
+              <div class="stu" v-for="(stu, sindex) in choiceItem.members" :key="sindex">
+                <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+                <div class="name-number-wrapper">
+                  <div class="name-duration">
+                    <div class="text-ellipsis name">{{stu.name}}</div>
+                    <span class="duration">
+                      {{ stu.cost|duration }}
+                    </span>
+                  </div>
+                  <div class="number">
+                    {{ stu.school_number }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -53,9 +71,9 @@
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png" alt="">
+            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
+            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanweida') : $t('quanweitoupiao')}}</p>
           </div>
         </template>
@@ -65,32 +83,42 @@
         <template v-if="not_answeredList.length && problemResultDetailData.problem_type !== 8">
           <div class="gap"></div>
           <div class="item-bd">
-  					<div class="stu" v-for="stu in not_answeredList">
-  	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-  	          <div class="ellipsis">{{stu.name}}</div>
+  					<div class="stu" v-for="(stu, index) in not_answeredList" :key="index">
+  	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+  	          <div class="name-number-wrapper">
+                <div class="name-duration">
+                  <div class="text-ellipsis name">{{stu.name}}</div>
+                </div>
+                <div class="number">
+                  {{ stu.school_number }}
+                </div>
+              </div>
   	        </div>
           </div>
         </template>
         <template v-else-if="not_answeredList.length && problemResultDetailData.problem_type === 8">
           <div class="gap"></div>
           <div class="empty">
-            <img src="~images/teacher/nimingtoupiao.png" alt="">
+            <img src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{$t('nimingtoupiao')}}</p>
           </div>
         </template>
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png" alt="">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png" alt="">
+            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
+            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
             <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanyida') : $t('quantoupiao')}}</p>
           </div>
         </template>
       </div>
 
-      <v-touch class="btn f18" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
-        <i class="iconfont icon-refresh f30"></i>{{ $t('refresh') }}
+      <v-touch class="btn-wrapper" :class="{'abs': !isBottomBtnFixed}" v-on:tap="refreshProblemResultDetail">
+        <div class="btn">
+          <i class="iconfont icon-refresh"></i>
+          <div>{{ $t('refresh') }}</div>
+        </div>
       </v-touch>
     </div>
 
@@ -200,7 +228,6 @@
             // 多选题判分
             // https://www.tapd.cn/20392061/prong/stories/view/1120392061001001309
             // result_type 0 默认类型；1 多选题全对；2 多选题半对；3 多选题错误
-
             // 设置试卷详情数据
             self.problemResultDetailData = jsonData
 
@@ -294,6 +321,31 @@
         let self = this
         // console.log(type);
         self.activeTab = type
+      },
+      /*
+      * 变更顺序
+      */
+     sortActive(index) {
+       this.problemResultDetailData.data.map((a, i) => {
+         if (index === i) {
+           return Object.assign(a, {
+             sortType: !a.sortType,
+             members: a.members.reverse()
+           })
+         }
+         return a
+       })
+     }
+    },
+    filters: {
+      duration(cost = 120) {
+        const second = cost - Math.floor(cost/60) * 60
+        const hours = Math.floor(cost/(60*60))
+        const minutes = (cost - second - hours*60*60)/60
+        const hoursStr = !!hours ? `${hours}`.padStart(2, 0) + ':' : ''
+        const minutesStr = `${minutes}`.padStart(2, 0) + ':'
+        const secondStr = `${second}`.padStart(2, 0)
+        return `${hoursStr}${minutesStr}${secondStr}`
       }
     }
   }
@@ -301,6 +353,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common_rem";
   .problemresultdetail-box {
     position: relative;
     height: 100%;
@@ -330,7 +383,7 @@
       justify-content: center;
 
       .anser-item {
-        margin: 0 0.133333rem;
+        margin: 0 px2rem(10px);
         width: 2.0rem;
         height: 2.0rem;
         line-height: 2.0rem;
@@ -397,7 +450,7 @@
     }
 
     .choice-list, .notAnswerList {
-      padding-bottom: 1.466667rem;
+      padding-bottom: px2rem(88px);
     }
 
     .choice-item,
@@ -409,7 +462,6 @@
         background: #F6F6F6;
         text-align: left;
         border-top: 1px solid #C8C8C8;
-
         .asw {
           margin: 0 0.533333rem;
         }
@@ -422,31 +474,83 @@
         border-top: 0;
       }
 
-      .item-bd {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        width: 9.066667rem;
-        margin: 0.533333rem auto 0;
+      .item-bd{
+        padding: px2rem(20px);
         overflow: hidden;
-
-        .stu {
-          text-align: center;
-          margin-right: 0.57687496rem;
-          margin-bottom: 0.8rem;
-          width: 1.266667rem;
-          img {
-            width: 0.986667rem;
-            height: 0.986667rem;
+        width: 100%;
+        .sort-wrapper{
+          font-size: px2rem(28px);
+          height: px2rem(40px);
+          line-height: px2rem(40px);
+          text-align: right;
+          padding: 0 px2rem(20px);
+          .icon-wrapper{
+            position: relative;
+            height: 100%;
+            vertical-align: middle;
+            padding-left: px2rem(20px);
+            i{
+              border-color: #d8d8d8;
+              display: block;
+              box-sizing: border-box;
+              border-left-width:  px2rem(10px);
+              border-right-width:  px2rem(10px);
+              border-left-color: transparent !important;
+              border-right-color: transparent !important;
+              border-style: solid;
+            }
+            i:first-child{
+              margin-top:  px2rem(2px);
+              border-bottom-width: px2rem(15px);
+              border-top-width: 0;
+            }
+            i:last-child{
+              border-bottom-width: 0;
+              border-top-width: px2rem(15px);
+              margin-top: px2rem(2px);
+            }
+            i.active{
+              border-color: #639ef4;
+            }
+          }
+        }
+        .stu{
+          border-bottom: px2rem(2px) solid #eee;
+          width: 100%;
+          display: flex;
+          padding: 20px;
+          img{
+            width: px2rem(74px);
+            height: px2rem(74px);
             border-radius: 50%;
-            margin-bottom: 0.386667rem;
           }
-          &:nth-child(5n) {
-            margin-right: 0;
+          .name-number-wrapper{
+            flex: 1;
+            text-align: left;
+            padding-left: px2rem(26px);
+            width: px2rem(300px);
+            .name-duration{
+              line-height: px2rem(45px);
+              font-size: px2rem(32px);
+              color: #333;
+              display: flex;
+              .name{
+                flex: 1;
+              }
+              .duration{
+                font-size: px2rem(24px);
+                color: #9b9b9b;
+              }
+            }
+            .number{
+              line-height: px2rem(40px);
+              font-size: px2rem(28px);
+              color: #9b9b9b;
+            }
           }
-          &:last-child {
-            margin-bottom: 0;
-          }
+        }
+        .stu:last-child{
+          border: none;
         }
       }
       .item-hidden {
@@ -472,22 +576,23 @@
         color: #9b9b9b;
       }
     }
-
-    .btn {
+    .btn-wrapper{
       position: fixed;
-      left: 50%;
-      width: 4.093333rem;
-      bottom: 0.666667rem;
-      transform: translateX(-50%);
-      border-radius: 0.106667rem;
-      height: 1.466667rem;
-      line-height: 1.466667rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0.026667rem 0.053333rem 0 rgba(0,0,0,.5);
+      display: inline;
+      right: px2rem(50px);
+      bottom: px2rem(50px);
+      padding: px2rem(25px);
+    }
+    .btn{
+      border-radius: 50%;
+      width: px2rem(100px);
+      height: px2rem(100px);
+      line-height: 1.2;
+      box-shadow: 0 px2rem(2px) px2rem(4px) rgba(0,0,0,.2);
+      font-size: px2rem(24px);
+      padding-top: px2rem(14px);
       i {
-        margin-right: 0.133333rem;
+        font-size: px2rem(36px);
       }
     }
     .abs {

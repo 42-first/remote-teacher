@@ -9,7 +9,7 @@
 <template>
   <section class="page-submission">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <div class="text-left contributor-wrapper">
+      <div class="text-left contributor-wrapper" v-if="classroomid">
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
@@ -497,30 +497,43 @@
        * picker: 分组列表数据展示
        */
       pickerDataInit() {
-        this.getGroupList().then(data => {
-          const list = data.filter(item => {
-            const { team_info } = item
-            if (team_info.joined) {
-              item = Object.assign(item, {
-                value: team_info.team_id,
-                text: team_info.team_name
-              })
-            return item
-            }
-            return false
-          })
-          list.unshift({
+        console.log(this.classroomid)
+        // todo: 投稿分组，针对老师的特殊处理
+        if (!this.classroomid) {
+          this.selectedVal = "个人"
+          this.groupList = [{
             value: 0,
             text: '个人'
+          }]
+        } else {
+          this.getGroupList().then(data => {
+            const list = data.filter(item => {
+              const { team_info } = item
+              if (team_info.joined) {
+                item = Object.assign(item, {
+                  value: team_info.team_id,
+                  text: team_info.team_name
+                })
+              return item
+              }
+              return false
+            })
+            list.unshift({
+              value: 0,
+              text: '个人'
+            })
+            this.selectedVal = list[0].text
+            this.groupList = [list]
           })
-          this.selectedVal = list[0].text
-          this.groupList = [list]
-        })
+        }
       },
       /**
        * 展示picker
        */
       showPicker() {
+        if (!this.classroomid) {
+          return
+        }
         this.isShowPicker = true
       },
       /**
