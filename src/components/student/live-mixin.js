@@ -56,6 +56,8 @@ let liveMixin = {
           }, 3000)
         }
 
+        // this.handleFLVError();
+
         return true;
       } else {
         if(isStart) {
@@ -126,23 +128,49 @@ let liveMixin = {
       let Hls = this.Hls;
 
       hls.on(Hls.Events.ERROR, (event, data) => {
+        let system = this.system;
+
         if (data.fatal) {
           switch(data.type) {
           case Hls.ErrorTypes.NETWORK_ERROR:
             // try to recover network error
             console.log("fatal network error encountered, try to recover");
             hls.startLoad();
+
+            // 上报
+            system['et'] = 'network error';
             break;
           case Hls.ErrorTypes.MEDIA_ERROR:
             console.log("fatal media error encountered, try to recover");
             hls.recoverMediaError();
+
+            // 上报
+            system['et'] = 'media error';
             break;
           default:
             // cannot recover
             hls.destroy();
+
+            // 上报
+            system['et'] = 'cannot recover';
             break;
           }
+
+          this.reportLog(system);
         }
+      });
+    },
+
+    /**
+     * @method 直播过程错误处理
+     * @params
+     */
+    handleFLVError() {
+      flvjs.LoggingControl.addLogListener((type, str) => {
+        let system = this.system;
+        system['et'] = type;
+
+        this.reportLog(system);
       });
     },
 

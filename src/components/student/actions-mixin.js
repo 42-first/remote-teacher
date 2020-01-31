@@ -835,6 +835,11 @@ var actionsMixin = {
 
         // 标记这是一堂远程课
         !this.isLive && this.liveURL && (this.isLive = true);
+
+        // 日志上报
+        setTimeout(() => {
+          this.handleLogEvent();
+        }, 1000)
       }
     },
 
