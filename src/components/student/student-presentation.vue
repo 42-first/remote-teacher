@@ -1041,7 +1041,7 @@
   }
 
   .page-fixed {
-    z-index: 1;
+    z-index: 2;
     position: fixed;
     top: 0;
     left: 0;
@@ -1249,6 +1249,7 @@
   }
 
   .student__msg {
+    z-index: 1;
     position: absolute;
     top: 2.5rem;
     left: 50%;
