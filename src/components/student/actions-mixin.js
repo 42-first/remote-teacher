@@ -296,7 +296,14 @@ var actionsMixin = {
             if(data.event.step >= 0 && data.event.step < data.event.total) {
               // 之前没有播放过这个ppt
               if(!hasPPT) {
-                data = Object.assign(data, cardItem, { animation: 1 })
+                // 直播默认动画不遮挡
+                if(this.liveurl && this.visibleAnimation) {
+                  data = Object.assign(data, cardItem, { animation: 0 })
+                } else {
+                  data = Object.assign(data, cardItem, { animation: 1 })
+                }
+
+                // data = Object.assign(data, cardItem, { animation: 1 })
               } else {
                 // 之前播放了这一页 再次播放就不用蒙版了
                 data = Object.assign(data, cardItem, { animation: 0 })

@@ -329,6 +329,8 @@
         liveVisible: false,
         // 是否web开课
         isWebLesson: false,
+        // 直播下默认显示动画
+        visibleAnimation: true
       };
     },
     components: {
