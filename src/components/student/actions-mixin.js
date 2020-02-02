@@ -296,7 +296,14 @@ var actionsMixin = {
             if(data.event.step >= 0 && data.event.step < data.event.total) {
               // 之前没有播放过这个ppt
               if(!hasPPT) {
-                data = Object.assign(data, cardItem, { animation: 1 })
+                // 直播默认动画不遮挡
+                if(this.liveurl && this.visibleAnimation) {
+                  data = Object.assign(data, cardItem, { animation: 0 })
+                } else {
+                  data = Object.assign(data, cardItem, { animation: 1 })
+                }
+
+                // data = Object.assign(data, cardItem, { animation: 1 })
               } else {
                 // 之前播放了这一页 再次播放就不用蒙版了
                 data = Object.assign(data, cardItem, { animation: 0 })
@@ -840,6 +847,27 @@ var actionsMixin = {
         setTimeout(() => {
           this.handleLogEvent();
         }, 1000)
+      }
+    },
+
+    /*
+     * @method 切换直播地址
+     * @param
+     */
+    changeLive(data) {
+      if(data && data.url) {
+        this.liveurl = data.url;
+        // 直播类型
+        this.liveType = data.type;
+        this.liveURL = data.url.hls;
+
+        if(this.liveType === 1) {
+          this.Hls && this.supportHLS(this.Hls);
+        } else if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.supportFLV(true);
+          }, 3000)
+        }
       }
     },
 

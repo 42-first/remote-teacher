@@ -385,6 +385,12 @@ var mixin = {
 
             break;
 
+          // 切换直播
+          case 'updateliveurl':
+            this.changeLive(msg);
+
+            break;
+
           // 结束直播
           case 'endlive':
             this.endLive(msg);
