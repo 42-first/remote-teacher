@@ -851,6 +851,27 @@ var actionsMixin = {
     },
 
     /*
+     * @method 切换直播地址
+     * @param
+     */
+    changeLive(data) {
+      if(data && data.url) {
+        this.liveurl = data.url;
+        // 直播类型
+        this.liveType = data.type;
+        this.liveURL = data.url.hls;
+
+        if(this.liveType === 1) {
+          this.Hls && this.supportHLS(this.Hls);
+        } else if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.supportFLV(true);
+          }, 3000)
+        }
+      }
+    },
+
+    /*
      * @method 结束直播
      * @param
      */
