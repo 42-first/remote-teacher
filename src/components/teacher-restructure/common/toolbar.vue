@@ -44,6 +44,10 @@
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
+        <v-touch class="more-item" v-on:tap="gotoStu">
+          <i class="iconfont icon-yanjingkai f24 ver-middle"></i>
+          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('viewasstudent') }}</span>
+        </v-touch>
       </div>
     </div>
 
@@ -202,6 +206,10 @@
       closeTips () {
         this.$store.commit('set_newToolBar', false)
         localStorage.setItem('newToolBar', 1)
+      },
+      // 学生视角预览
+      gotoStu(){
+        location.href = '/lesson/student/'+ this.lessonid +'?force=lecture&remote=1'
       }
     }
   }
@@ -280,7 +288,7 @@
     position: absolute;
     right: 0.133333rem;
     bottom: 0.24rem;
-    width: 3.6rem;
+    width: 3.86666667rem;
     /*height: 4.5rem;*/
 
     background: #333333;
@@ -296,7 +304,7 @@
 
     .more-item {
       margin: 0 auto;
-      width: 2.826667rem;
+      width: 3.2rem;
       height: 1.44rem;
       line-height: 1.44rem;
       text-align: left;

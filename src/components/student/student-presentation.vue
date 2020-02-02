@@ -330,7 +330,8 @@
         // 是否web开课
         isWebLesson: false,
         // 直播下默认显示动画
-        visibleAnimation: true
+        visibleAnimation: true,
+        returnRemote: false
       };
     },
     components: {
@@ -381,6 +382,8 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 
+        this.returnRemote = this.$route.query.remote ? true : false
+        this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
         // this.getLiveList(this.lessonID);
@@ -649,7 +652,7 @@
 
               if(self.presentationID) {
                 presentationData = self.presentationMap.get(self.presentationID);
-                presentationData && presentationData.Title && (self.title = presentationData.Title);
+                !self.returnRemote && presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
                 self.fetchPresentationCount < 2 && setTimeout(() => {
@@ -1007,6 +1010,8 @@
       handleBack() {
         if(this.backURL) {
           location.href = this.backURL;
+        } else if(this.returnRemote){
+          this.$router.back();
         } else if(this.classroom && this.classroom.courseId) {
           // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
           location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
