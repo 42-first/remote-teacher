@@ -33,6 +33,10 @@ let liveMixin = {
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play();
+
+          setTimeout(()=>{
+            flvPlayer.play();
+          }, 500)
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -45,6 +49,7 @@ let liveMixin = {
 
         // this.flvPlayer = flvPlayer;
         this.playState = 1;
+        this.handleplay();
       }
     },
 
