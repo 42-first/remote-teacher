@@ -666,16 +666,16 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  let isWeb = window.parent && window.parent.PubSub || null;
-                  if(isWeb) {
-                    setTimeout(()=>{
-                      self.supportFLV();
-                    }, 3000)
-                  } else {
-                    self.Hls && self.supportHLS(self.Hls);
-                  }
+                  // let isWeb = window.parent && window.parent.PubSub || null;
+                  // if(isWeb) {
+                  //   setTimeout(()=>{
+                  //     self.supportFLV();
+                  //   }, 3000)
+                  // } else {
+                  //   self.Hls && self.supportHLS(self.Hls);
+                  // }
 
-                  // self.Hls && self.supportHLS(self.Hls);
+                  self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
