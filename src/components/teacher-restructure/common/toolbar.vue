@@ -311,7 +311,7 @@
       line-height: 1.44rem;
       text-align: left;
       border-bottom: 1px solid #979797;
-
+      white-space: nowrap;
       .iconfont {
         margin-right: 0.2rem;
       }
