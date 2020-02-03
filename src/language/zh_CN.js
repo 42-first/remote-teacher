@@ -529,7 +529,7 @@ let pages = {
 
   "openwordcloud": "生成词云并投屏",
   "closewordcloud": "关闭词云",
-  "viewasstudent": "学生视角预览",
+  "viewasstudent": "学生视角",
 
   // 图片国际化
   imgs: {

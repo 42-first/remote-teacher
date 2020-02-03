@@ -36,6 +36,11 @@
           <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
         </v-touch>
 
+        <v-touch class="more-item" v-on:tap="gotoStu">
+          <i class="iconfont icon-qiehuanshijiao f24 ver-middle"></i>
+          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('viewasstudent') }}</span>
+        </v-touch>
+
         <v-touch class="more-item" v-on:tap="setEndShow">
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
@@ -44,10 +49,7 @@
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
-        <v-touch class="more-item" v-on:tap="gotoStu">
-          <i class="iconfont icon-yanjingkai f24 ver-middle"></i>
-          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('viewasstudent') }}</span>
-        </v-touch>
+        
       </div>
     </div>
 
