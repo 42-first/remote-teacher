@@ -56,7 +56,7 @@ let liveMixin = {
           }, 3000)
         }
 
-        // this.handleFLVError();
+        this.handleFLVError();
 
         return true;
       } else {
@@ -166,12 +166,52 @@ let liveMixin = {
      * @params
      */
     handleFLVError() {
-      flvjs.LoggingControl.addLogListener((type, str) => {
-        let system = this.system;
-        system['et'] = type;
+      this.flvPlayer.on(flvjs.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+        console.log('errorType:', errorType);
+        console.log('errorDetail:', errorDetail);
 
-        this.reportLog(system);
+        let system = this.system;
+        system['et'] = errorType;
+
+        if (errorType) {
+          this.createFlvPlayer();
+
+          this.reportLog(system);
+        }
       });
+
+      flvjs.LoggingControl.addLogListener((type, msg) => {
+        if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
+          let liveEl = document.getElementById('player');
+          let flvPlayer = this.flvPlayer;
+
+          flvPlayer.attachMediaElement(liveEl);
+          flvPlayer.load();
+          flvPlayer.play();
+        }
+      });
+    },
+
+    createFlvPlayer() {
+      let liveEl = document.getElementById('player');
+      if (flvjs.isSupported() && liveEl) {
+        let flvPlayer = flvjs.createPlayer({
+          type: 'flv',
+          url: this.liveurl.httpflv
+        });
+
+        this.flvPlayer = flvPlayer;
+
+        try {
+          // 展开播放模式下才开始拉流
+          if(this.liveVisible) {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }
+        } catch(evt) {
+        }
+      }
     },
 
     /*
