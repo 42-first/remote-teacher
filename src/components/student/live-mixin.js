@@ -241,6 +241,8 @@ let liveMixin = {
       }, 500)
 
       this.saveLiveStatus(this.playState);
+
+      //
     },
 
     /*
@@ -252,6 +254,11 @@ let liveMixin = {
       let key = 'live' + lessonID;
       let statusKey = 'live-status-' + lessonID;
       let hiddenLiveTip = false;
+
+      // 网页版手动点击播放
+      if(typeof window.WeixinJSBridge == 'undefined') {
+        return this;
+      }
 
       if(isSupported(window.localStorage)) {
         hiddenLiveTip = +localStorage.getItem(key);
