@@ -526,6 +526,8 @@ let pages = {
   "openwordcloud": "Show word cloud",
   "closewordcloud": "Close",
   "viewasstudent": "Student View",
+  "watchmode2": "View mode. Unable to join test.",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"

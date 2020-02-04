@@ -49,13 +49,13 @@
     <template v-else-if="item.type==4">
       <div class="timeline__paper">
         <div class="">
-          <a :class="['paper-info', item.isComplete ? 'complete' : '']" :href="item.href" :data-quizid="item.quizid">
+          <div :class="['paper-info', item.isComplete ? 'complete' : '']" :data-quizid="item.quizid" @click="gotoQuiz(item.href)">
             <div class="paper-txt f18">
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count">{{ $t('totalprob', { number: item.count }) }}</p>
             </div>
             <i class="iconfont icon-shiti_shijuan f55"></i>
-          </a>
+          </div>
         </div>
         <div class="item-footer">
           <p class="f16" :data-time="item.time">{{ item.time|getTimeago }}</p>
@@ -438,6 +438,19 @@
 
         return true;
       },
+      /** 
+       * @method 进入试卷
+      */
+      gotoQuiz(url){
+        if(this.observerMode){
+          this.$toast({
+            message: this.$i18n.t('watchmode2'),
+            duration: 3000
+          })
+        }else {
+          location.href = url
+        }
+      }
     },
     created() {
       // 观看者
