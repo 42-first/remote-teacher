@@ -10,11 +10,17 @@
   <section class="page">
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt" @click="handleFullscreen" >
+      <!-- 提示 -->
+      <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动</p>
       <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
     </section>
 
     <!-- 直播入口 音频直播 -->
     <section class="live" v-if="liveURL && liveType === 1">
+      <div class="live__audio">
+        <i class="iconfont icon-quxiaojingyinx" v-if="playState" @click="handlestop"></i>
+        <i class="iconfont icon-jingyin" v-else @click="handleplay"></i>
+      </div>
       <!-- live-player作为音频直播的容器 -->
       <audio id="player" class="live__container" autobuffer :src="liveURL">
       </audio>
@@ -150,6 +156,8 @@
         liveVisible: true,
         // 是否web开课
         isWebLesson: false,
+        // 显示提示
+        visibleTip: true
       };
     },
     components: {
@@ -186,7 +194,7 @@
         }
       },
       liveURL(newVal, oldVal) {
-        setTimeout(()=>{
+        this.liveType === 2 && setTimeout(()=>{
           newVal && this.supportFLV();
 
           this.initEvent();
@@ -203,6 +211,11 @@
         let width = slide.Width;
         let height = slide.Height;
         let rate = slide.rate;
+
+        // 截图
+        if(slide.type === 10 ) {
+          return oStyle;
+        }
 
         // 正常宽高比屏幕的宽高
         if(rate > screenRate) {
@@ -227,6 +240,10 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
+
+        setTimeout(()=>{
+          this.visibleTip = false;
+        }, 10000)
       },
 
       /*
@@ -398,7 +415,11 @@
               if(self.liveInfo && self.liveInfo.status === 1) {
                 self.liveType = self.liveInfo.type || 1;
                 self.liveURL = self.liveInfo.live_url.httpflv;
-                // this.liveURL && this.supportFLV();
+
+                if(self.liveType === 1) {
+                  self.liveURL = self.liveInfo.live_url.hls;
+                  this.loadHLS();
+                }
               }
 
               // 课程title
@@ -615,6 +636,7 @@
 </script>
 
 <style lang="scss">
+  @import "~@/style/font/iconfont/iconfont.css";
   @import "~@/style/mintui.css";
 
   .page {
@@ -646,11 +668,47 @@
 
 
   .live {
+    z-index: 2;
     position: absolute;
+    bottom: 30px;
+    right: 30px;
+    // visibility: hidden;
+
+    width: 60px;
+    height: 60px;
+
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 3px 18px rgba(0,0,0,0.5);
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    .live__container {
+      opacity: 0;
+    }
+  }
+
+  .live__audio {
+    position: absolute;
+    top: 0;
+    left: 0;
     bottom: 0;
     right: 0;
-    visibility: hidden;
+    width: 60px;
+    height: 60px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
   }
+
+  .live__audio .iconfont {
+    // padding-right: 5px;
+    // padding-bottom: 5px;
+    font-size: 45px;
+    color: #fff;
+  }
+
 
   .live__video {
     position: absolute;
@@ -663,6 +721,24 @@
       max-height: 300px;
       border: 1px solid #ddd;
     }
+  }
+
+  .lesson--tip {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    right: 0;
+
+    margin: 0 auto;
+    width: 410px;
+    height: 40px;
+    line-height: 40px;
+
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    background: #757575;
+    border-radius: 4px;
   }
 
 </style>

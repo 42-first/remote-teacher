@@ -1,6 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-var proxyUrl = 'http://10.0.3.3:30166'
+var proxyUrl = 'http://10.0.3.3:9000'
 module.exports = {
   build: {
     env: require('./prod.env'),
