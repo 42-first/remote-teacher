@@ -18,6 +18,8 @@ let logMixin = {
         u: this.userID,
         lessonid: this.lessonID,
         ua: navigator.userAgent,
+        // 直播地址
+        liveurl: this.liveURL,
         // 网络环境
         net: 'wifi',
         // 客户端：h5 wx_app

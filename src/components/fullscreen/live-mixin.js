@@ -13,6 +13,20 @@ import flvjs from 'flv.js/dist/flv.min'
 
 let liveMixin = {
   methods: {
+    /*
+    * @method 加载hls库
+    *
+    */
+    loadHLS() {
+      let self = this;
+
+      require(['hls.js',], function(Hls) {
+        self.Hls = Hls;
+
+        self.liveType === 1 && self.supportHLS(Hls);
+      })
+    },
+
     /**
      * @method
      *
@@ -29,14 +43,12 @@ let liveMixin = {
           url: this.liveURL
         });
 
+        this.flvPlayer = flvPlayer;
+
         try {
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play();
-
-          setTimeout(()=>{
-            flvPlayer.play();
-          }, 500)
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -46,11 +58,96 @@ let liveMixin = {
         setTimeout(()=>{
           audioEl.play();
         }, 3000)
-
-        // this.flvPlayer = flvPlayer;
-        this.playState = 1;
-        this.handleplay();
       }
+    },
+
+     /*
+    * @method 直播音频兼容hls
+    * @params
+    */
+    supportHLS(Hls) {
+      let liveEl = document.getElementById('player');
+
+      if(Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(this.liveURL);
+        hls.attachMedia(liveEl);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          liveEl.play().then(()=>{
+            this.playState = 1;
+          });
+        });
+
+        this.handleerror(hls);
+      }
+      // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+      // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+      // This is using the built-in support of the plain video element, without using hls.js.
+      // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+      // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+      else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
+        liveEl.src = this.liveURL;
+        liveEl.addEventListener('loadedmetadata',function() {
+          liveEl.play();
+        });
+
+        // 检测404
+        liveEl.addEventListener('error', ()=>{
+          setTimeout(()=>{
+            this.supportHLS(this.Hls)
+          }, 1000*5)
+        });
+
+        // iOS不能直接play
+        this.liveType === 2 && wx.getNetworkType({
+          success: (res)=> {
+            liveEl.play();
+          }
+        });
+
+        console.log('loadedmetadata hls supportHLS');
+      }
+    },
+
+    /*
+    * @method 直播过程错误处理
+    * @params
+    */
+    handleerror(hls) {
+      let Hls = this.Hls;
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        let system = this.system;
+
+        if (data.fatal) {
+          switch(data.type) {
+          case Hls.ErrorTypes.NETWORK_ERROR:
+            // try to recover network error
+            console.log("fatal network error encountered, try to recover");
+            hls.startLoad();
+
+            // 上报
+            // system['et'] = 'network error';
+            break;
+          case Hls.ErrorTypes.MEDIA_ERROR:
+            console.log("fatal media error encountered, try to recover");
+            hls.recoverMediaError();
+
+            // 上报
+            // system['et'] = 'media error';
+            break;
+          default:
+            // cannot recover
+            hls.destroy();
+
+            // 上报
+            // system['et'] = 'cannot recover';
+            break;
+          }
+
+          // this.reportLog(system);
+        }
+      });
     },
 
     /*
@@ -72,13 +169,8 @@ let liveMixin = {
     handleplay() {
       let audioEl = document.getElementById('player');
       audioEl.play();
-
-      // 避免音频没有加载不播放问题
-      setTimeout(()=>{
-        audioEl.play();
-      }, 500)
-
       this.playState = 1;
+
       this.saveLiveStatus(this.playState);
     },
 
