@@ -415,7 +415,7 @@
             })
 
             // 直播hls格式初始化
-            let isWeb = typeof window.WeixinJSBridge === 'undefined';
+            let isWeb = this.isWeb;
             !isWeb && self.loadHLS();
           }, 1500)
 
@@ -670,7 +670,7 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  let isWeb = typeof window.WeixinJSBridge === 'undefined';
+                  let isWeb = this.isWeb;
                   if(isWeb) {
                     setTimeout(()=>{
                       self.supportFLV();
@@ -1035,7 +1035,9 @@
     },
     mounted() {
       // 是否网页版
-      this.isWeb = typeof window.WeixinJSBridge === 'undefined';
+      let ua = navigator.userAgent.toLowerCase();
+      let isWeixin = ~ua.indexOf('micromessenger');
+      this.isWeb = !isWeixin;
     },
     updated() {
       // window.language && window.language.translate(this.$el);

@@ -48,20 +48,23 @@ let liveMixin = {
         this.flvPlayer = flvPlayer;
 
         try {
-          flvPlayer.attachMediaElement(audioEl);
-          flvPlayer.load();
-          flvPlayer.play().then(()=>{
-            this.playState = 1;
-          });
+          if(this.liveType === 2) {
+            flvPlayer.attachMediaElement(audioEl);
+            flvPlayer.load();
+            flvPlayer.play().then(()=>{
+              this.playState = 1;
+            });
+
+          }
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
           }, 3000)
         }
 
-        setTimeout(()=>{
-          audioEl.play();
-        }, 3000)
+        // setTimeout(()=>{
+        //   audioEl.play();
+        // }, 3000)
 
         this.handleFLVError();
       }
