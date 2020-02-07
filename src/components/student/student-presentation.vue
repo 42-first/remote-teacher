@@ -415,7 +415,8 @@
             })
 
             // 直播hls格式初始化
-            self.loadHLS();
+            let isWeb = this.isWeb;
+            !isWeb && self.loadHLS();
           }, 1500)
 
           setTimeout(()=>{
@@ -669,16 +670,16 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  // let isWeb = window.parent && window.parent.PubSub || null;
-                  // if(isWeb) {
-                  //   setTimeout(()=>{
-                  //     self.supportFLV();
-                  //   }, 3000)
-                  // } else {
-                  //   self.Hls && self.supportHLS(self.Hls);
-                  // }
+                  let isWeb = this.isWeb;
+                  if(isWeb) {
+                    setTimeout(()=>{
+                      self.supportFLV();
+                    }, 3000)
+                  } else {
+                    self.Hls && self.supportHLS(self.Hls);
+                  }
 
-                  self.Hls && self.supportHLS(self.Hls);
+                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -1033,6 +1034,10 @@
       this.init();
     },
     mounted() {
+      // 是否网页版
+      let ua = navigator.userAgent.toLowerCase();
+      let isWeixin = ~ua.indexOf('micromessenger');
+      this.isWeb = !isWeixin;
     },
     updated() {
       // window.language && window.language.translate(this.$el);
