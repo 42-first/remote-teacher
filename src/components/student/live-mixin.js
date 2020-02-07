@@ -86,8 +86,11 @@ let liveMixin = {
         var hls = new Hls();
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          this.liveType === 2 && liveEl.play();
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          // this.liveType === 2 && liveEl.play();
+          liveEl.play().then(()=>{
+            this.playState = 1;
+          });
         });
 
         this.handleerror(hls);
