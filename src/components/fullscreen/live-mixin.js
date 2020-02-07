@@ -40,7 +40,9 @@ let liveMixin = {
       if (flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: this.liveURL
+          url: this.liveURL,
+          hasVideo: this.liveType === 2 ? true : false,
+          isLive: true,
         });
 
         this.flvPlayer = flvPlayer;
@@ -48,7 +50,9 @@ let liveMixin = {
         try {
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(()=>{
+            this.playState = 1;
+          });
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -58,6 +62,8 @@ let liveMixin = {
         setTimeout(()=>{
           audioEl.play();
         }, 3000)
+
+        this.handleFLVError();
       }
     },
 
@@ -150,15 +156,79 @@ let liveMixin = {
       });
     },
 
+    /**
+     * @method 直播过程错误处理
+     * @params
+     */
+    handleFLVError() {
+      this.flvPlayer.on(flvjs.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+        console.log('errorType:', errorType);
+        console.log('errorDetail:', errorDetail);
+
+        let system = this.system;
+        system['et'] = errorType;
+
+        if (errorType) {
+          this.createFlvPlayer();
+
+          // this.reportLog(system);
+        }
+      });
+
+      flvjs.LoggingControl.addLogListener((type, msg) => {
+        if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
+          let liveEl = document.getElementById('player');
+          let flvPlayer = this.flvPlayer;
+
+          flvPlayer.attachMediaElement(liveEl);
+          flvPlayer.load();
+          flvPlayer.play();
+        }
+      });
+    },
+
+    createFlvPlayer() {
+      let liveEl = document.getElementById('player');
+      if (flvjs.isSupported() && liveEl) {
+        let flvPlayer = flvjs.createPlayer({
+          type: 'flv',
+          url: this.liveurl.httpflv,
+          hasVideo: this.liveType === 2 ? true : false,
+          isLive: true,
+        });
+
+        this.flvPlayer = flvPlayer;
+
+        try {
+          // 展开播放模式下才开始拉流
+          if(this.liveVisible) {
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }
+        } catch(evt) {
+        }
+      }
+    },
+
     /*
     * @method 直播音频停止直播
     * @params
     */
     handlestop() {
       let audioEl = document.getElementById('player');
-      audioEl.pause();
-      this.playState = 0;
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
+        } catch(e) {
+        }
+      } else {
+        audioEl.pause();
+      }
 
+      this.playState = 0;
       this.saveLiveStatus(this.playState);
     },
 
@@ -168,9 +238,19 @@ let liveMixin = {
     */
     handleplay() {
       let audioEl = document.getElementById('player');
-      audioEl.play();
-      this.playState = 1;
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.attachMediaElement(audioEl);
+          flvPlayer.load();
+          flvPlayer.play();
+        } catch(e) {
+        }
+      } else {
+        audioEl.play();
+      }
 
+      this.playState = 1;
       this.saveLiveStatus(this.playState);
     },
 
