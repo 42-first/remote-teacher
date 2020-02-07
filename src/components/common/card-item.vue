@@ -370,7 +370,7 @@
         }
 
         return request.post(URL, param).
-          then(function (res) {
+          then( (res) => {
             if(res) {
               if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
                 return;
@@ -383,6 +383,11 @@
 
               tag === 1 && (slideData['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0);
               tag === 2 && (slideData['store'] = ppts.length && ppts[0].hasStore ? 1 : 0);
+
+              setTimeout(()=>{
+                // 存储状态
+                this.$parent.$parent.setLocalData('cards', cards);
+              }, 50)
 
               return res;
             }

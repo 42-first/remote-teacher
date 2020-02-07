@@ -198,6 +198,7 @@
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -371,7 +372,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -436,6 +437,9 @@
             this.cards.forEach((item) => {
               item.time && (item.time = item.time - 1);
             })
+
+            // 存储状态
+            // this.saveSlideTag();
           }, 60000)
 
           // 订阅发布重置
@@ -580,6 +584,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -587,6 +597,8 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+              // this.setLocalData('base', data);
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -666,15 +678,6 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  // let isWeb = window.parent && window.parent.PubSub || null;
-                  // if(isWeb) {
-                  //   setTimeout(()=>{
-                  //     self.supportFLV();
-                  //   }, 3000)
-                  // } else {
-                  //   self.Hls && self.supportHLS(self.Hls);
-                  // }
-
                   self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
@@ -702,6 +705,8 @@
                 this.step = 3;
               }
 
+              this.setLocalData('base', data);
+
               return presentationData;
             }
           })
@@ -719,6 +724,8 @@
               // 显示引导
               this.showGuide = true;
               this.getTeacherName(this.lessonID);
+            } else {
+              this.initByLocalData(true)
             }
           });
       },
@@ -1034,6 +1041,8 @@
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
