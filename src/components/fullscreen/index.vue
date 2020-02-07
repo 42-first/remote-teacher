@@ -11,7 +11,9 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt" @click="handleFullscreen" >
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动</p>
+      <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动。使用雨课堂小程序，直播同步效果更好哦</p>
+      <!-- 习题 -->
+      <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p>
       <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
     </section>
 
@@ -157,7 +159,9 @@
         // 是否web开课
         isWebLesson: false,
         // 显示提示
-        visibleTip: true
+        visibleTip: true,
+        // 显示题目提示
+        visibleProblemTip: false,
       };
     },
     components: {
@@ -187,6 +191,11 @@
             slide.Height = presentation.Height;
             slide.rate = presentation.Width / presentation.Height;
           }
+
+          this.visibleProblemTip = true;
+          setTimeout(()=>{
+            this.visibleProblemTip = false;
+          }, 5000)
         }
 
         if(slide && slide.src) {
@@ -194,7 +203,7 @@
         }
       },
       liveURL(newVal, oldVal) {
-        this.liveType === 2 && setTimeout(()=>{
+        setTimeout(()=>{
           newVal && this.supportFLV();
 
           this.initEvent();
@@ -416,10 +425,10 @@
                 self.liveType = self.liveInfo.type || 1;
                 self.liveURL = self.liveInfo.live_url.httpflv;
 
-                if(self.liveType === 1) {
-                  self.liveURL = self.liveInfo.live_url.hls;
-                  this.loadHLS();
-                }
+                // if(self.liveType === 1) {
+                //   self.liveURL = self.liveInfo.live_url.hls;
+                //   this.loadHLS();
+                // }
               }
 
               // 课程title
@@ -590,7 +599,7 @@
           }
         }, 300)
 
-        this.liveURL && this.handleplay();
+        // this.liveURL && this.handleplay();
       },
 
       /**
@@ -730,9 +739,12 @@
     right: 0;
 
     margin: 0 auto;
-    width: 410px;
+    width: 610px;
     height: 40px;
     line-height: 40px;
+
+    width: fit-content;
+    padding: 0 15px;
 
     font-size: 16px;
     text-align: center;

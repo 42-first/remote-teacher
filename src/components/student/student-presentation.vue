@@ -330,7 +330,8 @@
         // 是否web开课
         isWebLesson: false,
         // 直播下默认显示动画
-        visibleAnimation: true
+        visibleAnimation: true,
+        returnRemote: false
       };
     },
     components: {
@@ -381,6 +382,8 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 
+        this.returnRemote = this.$route.query.remote ? true : false
+        this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
         // this.getLiveList(this.lessonID);
@@ -412,7 +415,8 @@
             })
 
             // 直播hls格式初始化
-            self.loadHLS();
+            let isWeb = this.isWeb;
+            !isWeb && self.loadHLS();
           }, 1500)
 
           setTimeout(()=>{
@@ -649,7 +653,7 @@
 
               if(self.presentationID) {
                 presentationData = self.presentationMap.get(self.presentationID);
-                presentationData && presentationData.Title && (self.title = presentationData.Title);
+                !self.returnRemote && presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
                 self.fetchPresentationCount < 2 && setTimeout(() => {
@@ -666,16 +670,16 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  // let isWeb = window.parent && window.parent.PubSub || null;
-                  // if(isWeb) {
-                  //   setTimeout(()=>{
-                  //     self.supportFLV();
-                  //   }, 3000)
-                  // } else {
-                  //   self.Hls && self.supportHLS(self.Hls);
-                  // }
+                  let isWeb = this.isWeb;
+                  if(isWeb) {
+                    setTimeout(()=>{
+                      self.supportFLV();
+                    }, 3000)
+                  } else {
+                    self.Hls && self.supportHLS(self.Hls);
+                  }
 
-                  self.Hls && self.supportHLS(self.Hls);
+                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -1016,6 +1020,8 @@
       handleBack() {
         if(this.backURL) {
           location.href = this.backURL;
+        } else if(this.returnRemote){
+          this.$router.back();
         } else if(this.classroom && this.classroom.courseId) {
           // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
           location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
@@ -1028,6 +1034,10 @@
       this.init();
     },
     mounted() {
+      // 是否网页版
+      let ua = navigator.userAgent.toLowerCase();
+      let isWeixin = ~ua.indexOf('micromessenger');
+      this.isWeb = !isWeixin;
     },
     updated() {
       // window.language && window.language.translate(this.$el);

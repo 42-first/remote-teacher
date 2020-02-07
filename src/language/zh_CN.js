@@ -529,7 +529,9 @@ let pages = {
 
   "openwordcloud": "生成词云并投屏",
   "closewordcloud": "关闭词云",
-
+  "viewasstudent": "学生视角",
+  "watchmode2": "观看者模式下无法参与作答",
+  
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
