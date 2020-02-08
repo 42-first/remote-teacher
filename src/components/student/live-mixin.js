@@ -38,6 +38,7 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
+          enableStashBuffer: false,
         });
 
         this.flvPlayer = flvPlayer;
@@ -52,7 +53,7 @@ let liveMixin = {
             flvPlayer.play();
           }
 
-          this.liveURL = this.liveurl.httpflv;
+          // this.liveURL = this.liveurl.httpflv;
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -189,7 +190,11 @@ let liveMixin = {
         system['et'] = errorType;
 
         if (errorType) {
-          this.createFlvPlayer();
+          setTimeout(()=>{
+            this.flvPlayer.unload();
+            this.flvPlayer.detachMediaElement();
+            this.createFlvPlayer();
+          }, 3500)
 
           this.reportLog(system);
         }
@@ -200,9 +205,14 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
-          flvPlayer.attachMediaElement(liveEl);
-          flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement()
+
+          setTimeout(()=>{
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }, 3000)
         }
       });
     },
@@ -221,13 +231,15 @@ let liveMixin = {
 
         try {
           // 展开播放模式下才开始拉流
-          if(this.liveVisible) {
+          if(this.liveVisible || this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play();
           }
         } catch(evt) {
         }
+
+        this.handleFLVError();
       }
     },
 
