@@ -129,10 +129,10 @@ let liveMixin = {
 
       this.setLiveTip();
 
-      this.$toast({
-        message: '建议使用雨课堂小程序，直播同步效果更好',
-        duration: 3000
-      });
+      // this.$toast({
+      //   message: '建议使用雨课堂小程序，直播同步效果更好',
+      //   duration: 3000
+      // });
     },
 
     /*
