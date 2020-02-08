@@ -176,6 +176,8 @@
     <!-- 弹幕直播 v-if="isLive" -->
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live>
 
+    <!-- 停服务通知 -->
+    <livetip :id="lessonID" v-if="liveURL"></livetip>
   </section>
 </template>
 <script>
@@ -343,6 +345,7 @@
       auditorTips: () => import('@/components/student/auditor_tips.vue'),
       notice: () => import('@/components/common/service-notice.vue'),
       danmuLive: () => import('@/components/common/danmu-live.vue'),
+      livetip: () => import('@/components/common/live-tip.vue'),
     },
     computed: {
     },

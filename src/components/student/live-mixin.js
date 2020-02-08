@@ -39,6 +39,7 @@ let liveMixin = {
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
           enableStashBuffer: false,
+          lazyLoad: false,
         });
 
         this.flvPlayer = flvPlayer;
@@ -52,8 +53,6 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play();
           }
-
-          // this.liveURL = this.liveurl.httpflv;
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
@@ -84,7 +83,11 @@ let liveMixin = {
       let liveEl = document.getElementById('player');
 
       if(Hls.isSupported()) {
-        var hls = new Hls();
+        let config = {
+          maxBufferLength: 6,
+          nudgeMaxRetry: 5
+        };
+        var hls = new Hls(config);
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -126,10 +129,10 @@ let liveMixin = {
 
       this.setLiveTip();
 
-      this.$toast({
-        message: '建议使用雨课堂小程序，直播同步效果更好',
-        duration: 3000
-      });
+      // this.$toast({
+      //   message: '建议使用雨课堂小程序，直播同步效果更好',
+      //   duration: 3000
+      // });
     },
 
     /*
@@ -225,6 +228,8 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
+          enableStashBuffer: false,
+          lazyLoad: false,
         });
 
         this.flvPlayer = flvPlayer;
