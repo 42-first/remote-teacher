@@ -146,7 +146,11 @@ let liveMixin = {
           case Hls.ErrorTypes.NETWORK_ERROR:
             // try to recover network error
             console.log("fatal network error encountered, try to recover");
-            hls.startLoad();
+            // hls.startLoad();
+
+            setTimeout(()=>{
+              this.supportHLS(Hls);
+            }, 3000)
 
             // 上报
             system['et'] = 'network error';
