@@ -333,7 +333,9 @@
         isWebLesson: false,
         // 直播下默认显示动画
         visibleAnimation: true,
-        returnRemote: false
+        returnRemote: false,
+        // 直播卡顿检测
+        liveDetection: {},
       };
     },
     components: {
