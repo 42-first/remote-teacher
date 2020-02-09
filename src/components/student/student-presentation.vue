@@ -374,7 +374,13 @@
         if(newValue === 1) {
           this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
@@ -606,7 +612,6 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
-              // this.setLocalData('base', data);
 
               self.pro_perm_info = data.pro_perm_info
               // auth
@@ -740,8 +745,6 @@
               // 显示引导
               this.showGuide = true;
               this.getTeacherName(this.lessonID);
-            } else {
-              this.initByLocalData(true)
             }
           });
       },
