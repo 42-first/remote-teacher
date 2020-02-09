@@ -51,7 +51,9 @@ let liveMixin = {
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.liveStatusTips = ''
+            });
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -94,6 +96,7 @@ let liveMixin = {
           // this.liveType === 2 && liveEl.play();
           liveEl.play().then(()=>{
             this.playState = 1;
+            this.liveStatusTips = ''
           });
         });
 
