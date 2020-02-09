@@ -123,13 +123,6 @@ let localstorageMixin = {
       // 是否web版开课
       this.isWebLesson = data.is_web || false;
 
-      // set title
-      let presentationData = null;
-      if(this.presentationID) {
-        presentationData = this.presentationMap.get(this.presentationID);
-        presentationData && presentationData.Title && (this.title = presentationData.Title);
-      }
-
       // 课程title
       document.title = this.courseName = data.classroom && data.classroom.courseName;
     },
@@ -218,6 +211,13 @@ let localstorageMixin = {
             setTimeout(() => {
               this.handleLogEvent();
             }, 1000)
+          }
+
+          // set title
+          let presentationData = null;
+          if(this.presentationID) {
+            presentationData = this.presentationMap.get(this.presentationID);
+            presentationData && presentationData.Title && (this.title = presentationData.Title);
           }
 
           // 初始化websocket
