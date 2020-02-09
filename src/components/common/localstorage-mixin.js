@@ -27,7 +27,9 @@ let localstorageMixin = {
 
           data[name] = value;
           // 记录更新时间
-          data['dt'] = (new Date()).getTime();
+          if(name === 'base') {
+            data['dt'] = (new Date()).getTime();
+          }
 
           let temp = JSON.stringify(data);
           localStorage.setItem(key, temp);
@@ -107,9 +109,6 @@ let localstorageMixin = {
      * @params
      */
     initLesson(data) {
-      // 读取课程状态数据
-      this.getLessonStatus(this.lessonID);
-
       // auth
       this.userID = data.userID;
       this.avatar = data.avatar;
@@ -125,6 +124,9 @@ let localstorageMixin = {
 
       // 课程title
       document.title = this.courseName = data.classroom && data.classroom.courseName;
+
+      // 读取课程状态数据
+      this.getLessonStatus(this.lessonID);
     },
 
     /*
@@ -132,6 +134,7 @@ let localstorageMixin = {
      * @param
      */
     getLessonStatus(id) {
+      let self = this;
       let URL = API.student.GET_LESSON_STATUS;
       let param = {
         'lesson_id': this.lessonID
@@ -152,10 +155,12 @@ let localstorageMixin = {
           this.boardList = data.share_board_track || null;
 
           // set presentation map
-          if(this.presentationList.length) {
-            this.presentationList.forEach((presentation)=>{
-              this.formatSlides(presentation);
-            })
+          if(self.presentationList.length) {
+            for(let i = 0; i < self.presentationList.length; i++) {
+              let presentation = self.presentationList[i];
+
+              self.formatSlides(presentation, presentation.presentationID);
+            }
           }
 
           // set quiz map
@@ -223,7 +228,7 @@ let localstorageMixin = {
           // 初始化websocket
           setTimeout(() => {
             this.initws();
-          }, 20)
+          }, 1000)
         }
       })
       .catch(error => {
@@ -235,21 +240,21 @@ let localstorageMixin = {
      * @method 格式化ppt数据
      * @param
      */
-    formatSlides(presentation) {
+    formatSlides(presentation, id) {
       if(presentation) {
         let slides = presentation['Slides'];
         let problemList = this.problemList;
         let tags = this.tags;
 
         if(slides.length) {
-          slides.forEach( (slide) => {
+          slides.forEach( (slide, index) => {
             let slideTag = tags && tags.find((item)=>{
               return item.lessonSlideID === slide.lessonSlideID;
             })
 
             // 收藏 不懂
-            if(slideTag && slideTag.length) {
-              slideTag.forEach((tag)=>{
+            if(slideTag && slideTag['tag'] && slideTag['tag'].length) {
+              slideTag['tag'].forEach((tag)=>{
                 tag === 1 && (slide['question'] = 1);
                 tag === 2 && (slide['store'] = 1);
               })
@@ -271,7 +276,7 @@ let localstorageMixin = {
           presentation['Slides'] = slides;
         }
 
-        this.presentationMap.set(presentation.presentationID, presentation);
+        this.presentationMap.set(id || presentation.presentationID, presentation);
       }
     },
 
