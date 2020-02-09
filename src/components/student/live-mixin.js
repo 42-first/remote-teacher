@@ -35,11 +35,14 @@ let liveMixin = {
       if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: this.liveurl.httpflv
+          url: this.liveurl.httpflv,
+          hasVideo: this.liveType === 2 ? true : false,
+          isLive: true,
+          enableStashBuffer: false,
+          lazyLoad: false,
         });
 
         this.flvPlayer = flvPlayer;
-        // this.liveURL = this.liveurl.httpflv;
 
         try {
           this.setLiveTip();
@@ -80,11 +83,18 @@ let liveMixin = {
       let liveEl = document.getElementById('player');
 
       if(Hls.isSupported()) {
-        var hls = new Hls();
+        let config = {
+          maxBufferLength: 6,
+          nudgeMaxRetry: 5
+        };
+        var hls = new Hls(config);
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          this.liveType === 2 && liveEl.play();
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          // this.liveType === 2 && liveEl.play();
+          liveEl.play().then(()=>{
+            this.playState = 1;
+          });
         });
 
         this.handleerror(hls);
@@ -118,6 +128,11 @@ let liveMixin = {
       }
 
       this.setLiveTip();
+
+      // this.$toast({
+      //   message: '建议使用雨课堂小程序，直播同步效果更好',
+      //   duration: 3000
+      // });
     },
 
     /*
@@ -135,7 +150,11 @@ let liveMixin = {
           case Hls.ErrorTypes.NETWORK_ERROR:
             // try to recover network error
             console.log("fatal network error encountered, try to recover");
-            hls.startLoad();
+            // hls.startLoad();
+
+            setTimeout(()=>{
+              this.supportHLS(Hls);
+            }, 3000)
 
             // 上报
             system['et'] = 'network error';
@@ -174,7 +193,11 @@ let liveMixin = {
         system['et'] = errorType;
 
         if (errorType) {
-          this.createFlvPlayer();
+          setTimeout(()=>{
+            this.flvPlayer.unload();
+            this.flvPlayer.detachMediaElement();
+            this.createFlvPlayer();
+          }, 3500)
 
           this.reportLog(system);
         }
@@ -185,9 +208,14 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
-          flvPlayer.attachMediaElement(liveEl);
-          flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement()
+
+          setTimeout(()=>{
+            flvPlayer.attachMediaElement(liveEl);
+            flvPlayer.load();
+            flvPlayer.play();
+          }, 3000)
         }
       });
     },
@@ -197,20 +225,26 @@ let liveMixin = {
       if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: this.liveurl.httpflv
+          url: this.liveurl.httpflv,
+          hasVideo: this.liveType === 2 ? true : false,
+          isLive: true,
+          enableStashBuffer: false,
+          lazyLoad: false,
         });
 
         this.flvPlayer = flvPlayer;
 
         try {
           // 展开播放模式下才开始拉流
-          if(this.liveVisible) {
+          if(this.liveVisible || this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play();
           }
         } catch(evt) {
         }
+
+        this.handleFLVError();
       }
     },
 
@@ -220,9 +254,20 @@ let liveMixin = {
     */
     handlestop() {
       let audioEl = document.getElementById('player');
-      audioEl.pause();
-      this.playState = 0;
+      // audioEl.pause();
 
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
+        } catch(e) {
+        }
+      } else {
+        audioEl.pause();
+      }
+
+      this.playState = 0;
       this.saveLiveStatus(this.playState);
     },
 
@@ -232,17 +277,25 @@ let liveMixin = {
     */
     handleplay() {
       let audioEl = document.getElementById('player');
-      audioEl.play();
-      this.playState = 1;
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.attachMediaElement(audioEl);
+          flvPlayer.load();
+          flvPlayer.play();
+        } catch(e) {
+        }
+      } else {
+        audioEl.play();
+      }
 
       // 避免音频没有加载不播放问题
       setTimeout(()=>{
         audioEl.play();
       }, 500)
 
+      this.playState = 1;
       this.saveLiveStatus(this.playState);
-
-      //
     },
 
     /*
