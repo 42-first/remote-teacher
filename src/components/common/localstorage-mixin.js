@@ -88,7 +88,7 @@ let localstorageMixin = {
 
       if(info && info['base']) {
         let base = info['base'];
-        const timeLimit = 5;
+        const timeLimit = 7;
         const dt = info['dt'] || 0;
         const now = (new Date()).getTime();
         const timeInterval = (now - dt)/1000/60;
@@ -305,6 +305,7 @@ let localstorageMixin = {
           // list.splice(index, 1, presentation);
           list[index] = presentation;
         } else {
+          presentation.presentationID = id;
           list.push(presentation)
         }
 

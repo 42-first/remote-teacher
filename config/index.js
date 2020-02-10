@@ -34,6 +34,7 @@ module.exports = {
       '/group': proxyUrl,
       '/api': proxyUrl,
       '/v/lesson': proxyUrl,
+      '/lesson': proxyUrl,
       '/hls': proxyUrl,
       '/reporter': proxyUrl
     },
