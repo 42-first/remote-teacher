@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'production') {
     lesson_quiz_list:                   prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
     presentation_tag:                   prefix + '/v/lesson/presentation_tag',        // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   prefix + '/v/lesson/teaching_lesson_participant_list',  // 获取签到学生名单
+    teaching_lesson_participant_count:  prefix + '/v/lesson/teaching_lesson_participant_count',  // 获取签到人数和前几位头像
     publish_problem:                    prefix + '/v/lesson/publish_problem/',        // 发布试题
     problem_statistics:                 prefix + '/v/lesson/problem_statistics',      // 试题柱状图数据
     problem_result_detail:              prefix + '/v/lesson/problem_result_detail',   // 试题详情数据
