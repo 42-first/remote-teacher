@@ -71,7 +71,7 @@
 					</div>
 	      </div>
 				<div class="load-wrapper loading-wrapper" v-if="!signLoaded">{{$t('toploading')}}</div>
-				<div class="load-wrapper loaded-wrapper" v-else>————</div>
+				<div class="load-wrapper loaded-wrapper" v-else>—— END ——</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -108,7 +108,7 @@
 					</div>
 	      </div>
 				<div class="load-wrapper loading-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
-				<div class="load-wrapper loaded-wrapper" v-else>————</div>
+				<div class="load-wrapper loaded-wrapper" v-else>—— END ——</div>
 			</template>
 			<template v-else>
 				<div class="empty">
