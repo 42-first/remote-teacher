@@ -55,6 +55,7 @@ if (process.env.NODE_ENV === 'production') {
     lesson_quiz_list:                   '/static/lesson/mock/lesson_quiz_list.json',           // 试卷数据（已发布、未发布）
     presentation_tag:                   '/static/lesson/mock/presentation_tag.json',           // 获取缩略图页 不懂 等标志的信息
     teaching_lesson_participant_list:   '/static/lesson/mock/teaching_lesson_participant_list.json',    // 获取签到学生名单
+    teaching_lesson_participant_count:  prefix + '/v/lesson/teaching_lesson_participant_count',  // 获取签到人数和前几位头像
     publish_problem:                    '/static/lesson/mock/publish_problem.json',            // 发布试题
     problem_statistics:                 '/static/lesson/mock/problem_statistics.json',         // 试题柱状图数据
     problem_result_detail:              '/static/lesson/mock/problem_result_detail.json',      // 试题详情数据

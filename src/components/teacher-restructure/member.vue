@@ -16,7 +16,7 @@
 					<span class="f14 count">({{notParticipantList.length}})</span>
 				</v-touch>
 			</div>
-			<div class="search" @click="goSearch"><i class="iconfont icon-sousuo f19"></i></div>
+			<div class="search" @click="goSearch" v-if="studentCount < 500"><i class="iconfont icon-sousuo f19"></i></div>
 		</div>
 		<div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
 			* <!-- 当有主观题未批改时，此排名可能不是最终排名 -->{{ $t('behavior.dyzgtwpgs') }}
@@ -70,6 +70,8 @@
 						</template>
 					</div>
 	      </div>
+				<div class="load-wrapper loading-wrapper" v-if="!signLoaded">{{$t('toploading')}}</div>
+				<div class="load-wrapper loaded-wrapper" v-else>----</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -105,6 +107,8 @@
 						</template>
 					</div>
 	      </div>
+				<div class="load-wrapper loading-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
+				<div class="load-wrapper loaded-wrapper" v-else>----</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -145,7 +149,9 @@
 				participantList: [], // 签到列表
 				notParticipantList: [], // 未签到列表
 				isLoading: false,
-				isAllLoaded: false
+				studentCount: 0,
+				uuidSign: null,
+				uuidNotSign: null
       }
     },
     computed: {
@@ -157,6 +163,7 @@
 		mounted() {
 		},
     created () {
+			this.studentCount = this.$route.query.count - 0 || 0;
       this.fetchList()
 			this.not_participant_list()
     },
@@ -178,7 +185,8 @@
 					// sort_type,
 					'classroomid': self.classroomid,
 					page,
-					page_size: 20
+					page_size: 20,
+					uuid_code: this.uuidSign
 				}).then(jsonData => {
 						self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
@@ -209,14 +217,15 @@
 			},
 			fetchListHandle(jsonData, type) {
 				let list = jsonData.students || [];
-				const total = jsonData.total || 0;
-				this.isLoading = false;
+				const total = jsonData.total - 0 || 0;
 				if (!type) {
 					this.participantList = this.participantList.concat(list);
-					this.signLoaded = this.participantList.length >= total;
+					this.signLoaded = list.length === 0 || this.participantList.length >= total;
+					this.uuidSign = jsonData.uuid_code
 				} else {
 					this.notParticipantList = this.notParticipantList.concat(list);
-					this.signNoLoaded = this.notParticipantList.length >= total;
+					this.signNoLoaded = list.length === 0 || this.participantList.length >= total;
+					this.uuidNotSign = jsonData.uuid_code
 				}
 			},
 
@@ -226,9 +235,7 @@
        */
       not_participant_list(page = 1) {
         let self = this
-
         let url = API.lesson_not_participant_list
-
         if (process.env.NODE_ENV === 'production') {
           url = API.lesson_not_participant_list
         }
@@ -237,7 +244,8 @@
 					'classroomid': self.classroomid,
 					'lesson_id': self.lessonid,
 					page,
-					page_size: 20
+					page_size: 20,
+					uuid_code: this.uuidNotSign
 					})
           .then(jsonData => {
 						self.fetchListHandle(jsonData.data, 1);
@@ -249,9 +257,9 @@
 				timer = setTimeout(() => {
 
 					if (this.activeTab === 1) {
-						this.fetchList(this.signedPage)
+						!this.signLoaded &&  this.fetchList(this.signedPage)
 					} else {
-						this.not_participant_list(this.notSignedPage)
+						!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
 					}
 
 				}, 500)
@@ -401,7 +409,6 @@
 			height: 100%;
 			width: 100%;
 			box-sizing: border-box;
-			padding-top: px2rem(100px);
 			overflow-x: hidden;
 			overflow-y: auto;
 			-webkit-overflow-scrolling: touch;
@@ -413,7 +420,7 @@
 			z-index: 1;
 		}
     .participantList {
-      padding: 0 0.4rem 0 0;
+      padding: 0 0.4rem px2rem(60px) 0;
 			.order-box {
 				position: relative;
 				margin: 0.37333333rem 0.4rem 0.26666667rem;
@@ -604,9 +611,8 @@
 				width: 6.826667rem;
 			}
     }
-
 		.notParticipantList {
-			padding: 0 0.4rem 0;
+			padding: 0 0.4rem px2rem(60px);
 			.item {
 				padding: 0.4rem 0;
 				position: relative;
@@ -681,20 +687,27 @@
 					}
 				}
 			}
-
-		.ellipsis-2line {
-			overflow : hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
-			word-break: break-all;
-		}
+			.ellipsis-2line {
+				overflow : hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				word-break: break-all;
+			}
 			.empty img {
 				display: block;
 				margin: 3.973333rem auto 0;
 				width: 6.826667rem;
 			}
+		}
+		.load-wrapper{
+			height: px2rem(80px);
+			line-height: px2rem(80px);
+			font-size: px2rem(24px);
+			color: #c8c8c8;
+			text-align: center;
+			position: relative;
 		}
 		@media screen and (max-width: 720px) and (-webkit-min-device-pixel-ratio: 2) {
 

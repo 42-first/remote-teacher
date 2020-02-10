@@ -7,7 +7,7 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <div class="head-link-wrap">
-        <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+        <router-link tag="div" :to="{name: 'member', query: {count: studentCount}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
           <div class="avatar-box">
             <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           </div>
@@ -96,6 +96,7 @@
       return {
         participantList: [],
         participant_count: 0,
+        studentCount: 0
       }
     },
     computed: {
@@ -130,20 +131,15 @@
        */
       fetchParticipantList () {
         let self = this
-
-        let url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
-        // let url = `${API.teaching_lesson_participant_count}/${self.lessonid}`;
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
-        }
-
+        let url = `${API.teaching_lesson_participant_count}/${self.lessonid}`;
         request.get(url)
           .then(jsonData => {
             // self.$store.commit('set_participantList', jsonData.data.students)
             const data = jsonData.data;
+            console.log(data)
             this.participant_count = data.participant_count || 0;
             this.participantList = data.avatars || [];
+            this.studentCount = data.students_count || 0
           })
       },
       /**
