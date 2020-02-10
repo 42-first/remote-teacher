@@ -40,7 +40,6 @@ let liveMixin = {
           isLive: true,
           // enableStashBuffer: false,
           // lazyLoad: false,
-          hasAudio: this.liveType === 2 ? false : true
         });
 
         this.flvPlayer = flvPlayer;
@@ -234,7 +233,6 @@ let liveMixin = {
           isLive: true,
           // enableStashBuffer: false,
           // lazyLoad: false,
-          hasAudio: this.liveType === 2 ? false : true
         });
 
         this.flvPlayer = flvPlayer;
