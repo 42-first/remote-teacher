@@ -531,7 +531,7 @@ let pages = {
   "closewordcloud": "关闭词云",
   "viewasstudent": "学生视角",
   "watchmode2": "观看者模式下无法参与作答",
-  "isconnecting ": "老师端直播连接中...",
+  "isconnecting": "老师端直播连接中...",
   "ispoor": "老师端网络信号不佳",
   "switchinglivecontent": "老师正在切换直播内容",
   "silentmood": "老师开启静音中...",

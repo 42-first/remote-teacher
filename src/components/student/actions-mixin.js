@@ -1024,6 +1024,43 @@ var actionsMixin = {
       }
     },
 
+    /** 
+     * @method 更新视频状态提示
+    */
+    changeLiveStatusTips(status){
+      switch (status) {
+        case 1:
+          if (this.liveStatusTips) {
+            this.liveStatusTips = ''
+            if (this.liveType === 1) {
+              this.supportHLS(this.Hls)
+            } else {
+              if (this.flvPlayer) {
+                this.flvPlayer.unload()
+                this.flvPlayer.detachMediaElement()
+                this.createFlvPlayer()
+              } else {
+                this.supportHLS(this.Hls)
+              }
+            }
+          }
+          
+          break
+        case -1:
+          this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
+          break
+        case -2:
+          this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
+          break
+        case -3:
+          this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
+          break
+        case -4:
+          this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
+          break
+      }
+    }
+
   }
 }
 

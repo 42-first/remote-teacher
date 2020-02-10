@@ -38,8 +38,9 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.liveType === 2 ? false : true
         });
 
         this.flvPlayer = flvPlayer;
@@ -231,8 +232,9 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.liveType === 2 ? false : true
         });
 
         this.flvPlayer = flvPlayer;

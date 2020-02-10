@@ -168,23 +168,7 @@ var mixin = {
               this.setTimeline(timeline)
             }
 
-            switch (msg.live) {
-              case 1:
-                this.liveStatusTips = ''
-                break
-              case -1:
-                this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
-                break
-              case -2:
-                this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
-                break
-              case -3:
-                this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
-                break
-              case -4:
-                this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
-                break
-            }
+            this.changeLiveStatusTips(msg.live)
 
             break
 
@@ -448,33 +432,7 @@ var mixin = {
 
           // 直播状态
           case 'livestatus':
-            switch (msg.status) {
-              case 1:
-                if (this.liveStatusTips) {
-                  this.liveStatusTips = ''
-                  if (this.liveType === 1) {
-                    this.supportHLS(this.Hls)
-                  } else {
-                    this.flvPlayer.unload()
-                    this.flvPlayer.detachMediaElement()
-                    this.createFlvPlayer()
-                  }
-                }
-                
-                break
-              case -1:
-                this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
-                break
-              case -2:
-                this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
-                break
-              case -3:
-                this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
-                break
-              case -4:
-                this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
-                break
-            }
+            this.changeLiveStatusTips(msg.status)
             break;
 
           default:
