@@ -289,7 +289,30 @@ let localstorageMixin = {
       this.setLocalData('cards', this.cards);
     },
 
-  },
+    /*
+     * @method 更新课件到本地缓存
+     * @param
+     */
+    updateSlides(id, presentation) {
+      let base = this.getLocalData('base');
+      if(base && base.presentationList) {
+        let list = base.presentationList;
+        let index = list.findIndex((item)=>{
+          return id === item.presentationID;
+        })
+
+        if(~index) {
+          // list.splice(index, 1, presentation);
+          list[index] = presentation;
+        } else {
+          list.push(presentation)
+        }
+
+        base.presentationList = list;
+        this.setLocalData('base', base);
+      }
+    }
+  }
 
 }
 

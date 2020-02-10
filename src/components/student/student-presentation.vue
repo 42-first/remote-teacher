@@ -452,9 +452,6 @@
             this.cards.forEach((item) => {
               item.time && (item.time = item.time - 1);
             })
-
-            // 存储状态
-            // this.saveSlideTag();
           }, 60000)
 
           // 订阅发布重置
@@ -800,6 +797,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
