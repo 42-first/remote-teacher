@@ -159,7 +159,7 @@ let localstorageMixin = {
             for(let i = 0; i < self.presentationList.length; i++) {
               let presentation = self.presentationList[i];
 
-              self.formatSlides(presentation, presentation.presentationID);
+              self.formatSlides(presentation, presentation.presentationID || self.presentationID);
             }
           }
 
