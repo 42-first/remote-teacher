@@ -1031,22 +1031,25 @@ var actionsMixin = {
       let self = this
       switch (status) {
         case 1:
-          if(this.lastStatus == -1){
-            this.needNew = true
-          }
-          this.liveStatusTips = ''
-          if (this.liveType === 1) {
-            this.supportHLS(this.Hls)
-          } else {
-            if (this.flvPlayer) {
-              this.flvPlayer.unload()
-              this.flvPlayer.detachMediaElement()
-              this.createFlvPlayer()              
-            } else {
-              this.supportHLS(this.Hls)
+          if(this.liveVisible){
+            if(this.lastStatus == -1){
+              this.needNew = true
             }
+            this.liveStatusTips = ''
+            if (this.liveType === 1) {
+              this.supportHLS(this.Hls)
+            } else {
+              if (this.flvPlayer) {
+                this.flvPlayer.unload()
+                this.flvPlayer.detachMediaElement()
+                this.createFlvPlayer()              
+              } else {
+                this.supportHLS(this.Hls)
+              }
+            }
+            this.handleplay();
           }
-          this.handleplay();
+          
           
           break
         case -1:
@@ -1066,7 +1069,7 @@ var actionsMixin = {
       this.lastStatus = status
       let  liveEl = document.querySelector('#player')
       if(status !== 1){
-        this.currentTime = liveEl.currentTime
+        liveEl && (this.currentTime = liveEl.currentTime)
       }
       setTimeout(() => {
         self.liveStatusTips = ''
