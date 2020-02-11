@@ -341,7 +341,10 @@
         // 直播下默认显示动画
         visibleAnimation: true,
         returnRemote: false,
-        liveStatusTips: ''
+        liveStatusTips: '',
+        isMute: false,  //静音播放
+        lastStatus: 1,
+        needNew: false
       };
     },
     components: {

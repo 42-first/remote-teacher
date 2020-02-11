@@ -1030,20 +1030,23 @@ var actionsMixin = {
     changeLiveStatusTips(status){
       switch (status) {
         case 1:
-          if (this.liveStatusTips) {
-            this.liveStatusTips = ''
-            if (this.liveType === 1) {
-              this.supportHLS(this.Hls)
+          if(this.lastStatus == -1){
+            this.needNew = true
+          }
+          this.liveStatusTips = ''
+          this.isMute = false
+          if (this.liveType === 1) {
+            this.supportHLS(this.Hls)
+          } else {
+            if (this.flvPlayer) {
+              this.flvPlayer.unload()
+              this.flvPlayer.detachMediaElement()
+              this.createFlvPlayer()              
             } else {
-              if (this.flvPlayer) {
-                this.flvPlayer.unload()
-                this.flvPlayer.detachMediaElement()
-                this.createFlvPlayer()
-              } else {
-                this.supportHLS(this.Hls)
-              }
+              this.supportHLS(this.Hls)
             }
           }
+          this.handleplay();
           
           break
         case -1:
@@ -1053,12 +1056,15 @@ var actionsMixin = {
           this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
           break
         case -3:
-          this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
+          // this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
+          this.liveStatusTips = ''
+          this.isMute = true
           break
         case -4:
           this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
           break
       }
+      this.lastStatus = status
     }
 
   }
