@@ -45,9 +45,8 @@
     <section class="live__wrap" v-if="liveType === 2">
       <section class="player__box" v-show="liveVisible">
         <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL"  ></video>
-        <div class="live__status" v-show="liveStatusTips">
-          <i class="iconfont icon-dengdai f30"></i>
-          <span class="f14">{{liveStatusTips}}</span> 
+        <div class="live__status f14" v-show="liveStatusTips">
+          {{liveStatusTips}}
         </div>
       </section>
       
@@ -344,7 +343,9 @@
         liveStatusTips: '',
         isMute: false,  //静音播放
         lastStatus: 1,
-        needNew: false
+        needNew: false,
+        currentTime: 0,
+        loadNewUrlTimer: null
       };
     },
     components: {
@@ -1235,17 +1236,14 @@
         }
         .live__status {
           position: absolute;
-          top: 0.66666667rem;
+          top: 50%;
           left: 50%;
-          transform: translateX(-50%);
-          width: 5.33333333rem;
-          height: 3.33333333rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          align-items: center;
-          color: #fff;
-          background: rgba(0,0,0,.6);
+          transform: translate(-50%, -50%);
+          font-family: PingFangSC-Medium;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.50);
         }
       }
       

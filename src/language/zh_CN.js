@@ -535,6 +535,7 @@ let pages = {
   "ispoor": "老师端网络信号不佳",
   "switchinglivecontent": "老师正在切换直播内容",
   "silentmood": "老师开启静音中...",
+  "offsilentmood": "老师开启声音中...",
 
   
   // 图片国际化

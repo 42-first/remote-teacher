@@ -168,7 +168,7 @@ var mixin = {
               this.setTimeline(timeline)
             }
 
-            this.changeLiveStatusTips(msg.live)
+            this.changeLiveStatusTips(msg.livestatus, msg.livevoice)
 
             break
 
@@ -432,7 +432,7 @@ var mixin = {
 
           // 直播状态
           case 'livestatus':
-            this.changeLiveStatusTips(msg.status)
+            this.changeLiveStatusTips(msg.status, msg.voice)
             break;
 
           default:

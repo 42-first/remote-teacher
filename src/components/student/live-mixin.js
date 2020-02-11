@@ -112,10 +112,15 @@ let liveMixin = {
         if (this.needNew) {
           this.needNew = false
           console.log('needNew');
+          console.log(this.currentTime);
+          console.log(liveEl.currentTime);
+          liveEl.src = this.liveURL;
+          
           setTimeout(() => {
-            console.log('我重新加载啦');
-            liveEl.src = this.liveURL;
-          }, 1000 * 60 * 2)
+            this.loadNewUrl()
+          }, 1000 * 30)
+          
+          
         }else {
           liveEl.src = this.liveURL;
         }
@@ -399,6 +404,25 @@ let liveMixin = {
       }
     },
 
+    loadNewUrl(){
+      let liveEl = document.querySelector('#player')
+      this.loadNewUrlTimer && clearTimeout(this.loadNewUrlTimer)
+      this.loadNewUrlTimer = setTimeout(() => {
+        console.log('ssssssss', liveEl.currentTime , this.currentTime);
+        if(liveEl.currentTime - this.currentTime < 1){
+          liveEl.src = this.liveURL
+          console.log('我重新加载啦', liveEl.currentTime , this.currentTime);
+          this.loadNewUrl()
+        }
+      }, 1000 * 10)
+      liveEl.addEventListener('timeupdate', () => {
+        if(liveEl.currentTime !== 0){
+          clearTimeout(this.loadNewUrlTimer)
+        }else {
+          this.loadNewUrl()
+        }
+      })
+    }
   }
 }
 

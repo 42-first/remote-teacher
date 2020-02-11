@@ -531,6 +531,7 @@ let pages = {
   "ispoor": "Teacher's network signal is poor",
   "switchinglivecontent": "Teacher is switching live content",
   "silentmood": "Teacher is switching to silent mood",
+  "offsilentmood": "Teacher is turning off silent mood",
 
   // 图片国际化
   imgs: {

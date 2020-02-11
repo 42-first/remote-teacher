@@ -1027,14 +1027,14 @@ var actionsMixin = {
     /** 
      * @method 更新视频状态提示
     */
-    changeLiveStatusTips(status){
+    changeLiveStatusTips(status, voice){
+      let self = this
       switch (status) {
         case 1:
           if(this.lastStatus == -1){
             this.needNew = true
           }
           this.liveStatusTips = ''
-          this.isMute = false
           if (this.liveType === 1) {
             this.supportHLS(this.Hls)
           } else {
@@ -1056,15 +1056,21 @@ var actionsMixin = {
           this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
           break
         case -3:
-          // this.liveStatusTips = this.$i18n.t('silentmood') || '老师开启静音中...'
-          this.liveStatusTips = ''
-          this.isMute = true
+          this.liveStatusTips = voice == 1 ? this.$i18n.t('offsilentmood') : this.$i18n.t('silentmood')
           break
         case -4:
           this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
           break
       }
+      this.isMute = voice == -1 ? true : false
       this.lastStatus = status
+      let  liveEl = document.querySelector('#player')
+      if(status !== 1){
+        this.currentTime = liveEl.currentTime
+      }
+      setTimeout(() => {
+        self.liveStatusTips = ''
+      }, 5000)
     }
 
   }
