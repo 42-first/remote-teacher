@@ -67,8 +67,48 @@ let logMixin = {
           system['et'] = evt;
 
           this.reportLog(system);
+
+          this.detectionWaiting(evt);
         });
       })
+    },
+
+    /**
+     * @method 检测直播卡顿
+     * @params
+     */
+    detectionWaiting(evt) {
+      let liveDetection = this.liveDetection;
+      let timers = liveDetection && liveDetection['waiting'] || 0;
+      let now = (new Date()).getTime();
+      let dt = liveDetection && liveDetection.dt || now;
+      let duration = (now - dt)/1000;
+      if(evt === 'waiting') {
+        timers = timers + 1;
+      } else {
+        timers = 0;
+      }
+
+      // 检测到大于三次 重新拉流
+      if(timers > 3 && duration < 15 || evt === 'error') {
+        if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.flvPlayer.unload();
+            this.flvPlayer.detachMediaElement();
+            this.createFlvPlayer();
+          }, 3500)
+        } else if(this.liveType === 1) {
+          setTimeout(()=>{
+            this.Hls && this.supportHLS(this.Hls);
+          }, 3000)
+        }
+      }
+
+      this.liveDetection['waiting'] = timers;
+
+      if(timers === 1) {
+        this.liveDetection['dt'] = now;
+      }
     },
 
     /**
