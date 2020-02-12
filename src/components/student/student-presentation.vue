@@ -66,7 +66,11 @@
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
+                <!-- 雨课堂 -->
+                <!-- 其它定制 例如清华 -->
+                <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
+                <!-- 雨课堂 -->
+                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -209,6 +213,12 @@
     // request.post = request.get
   }
 
+  const host = {
+    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+  }
+
   export default {
     name: 'student-page',
 
@@ -336,6 +346,8 @@
         returnRemote: false,
         // 直播卡顿检测
         liveDetection: {},
+        // 小程序码
+        miniCode: '',
       };
     },
     components: {
@@ -1045,6 +1057,8 @@
       let ua = navigator.userAgent.toLowerCase();
       let isWeixin = ~ua.indexOf('micromessenger');
       this.isWeb = !isWeixin;
+
+      this.miniCode = host[location.host] || '';
     },
     updated() {
       // window.language && window.language.translate(this.$el);
