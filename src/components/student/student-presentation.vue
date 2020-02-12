@@ -204,6 +204,7 @@
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -386,11 +387,17 @@
           // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
           this.backURL = '/v/index/lessonend'
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -602,6 +609,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -609,6 +622,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -696,8 +710,6 @@
                   } else {
                     self.Hls && self.supportHLS(self.Hls);
                   }
-
-                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -723,6 +735,8 @@
                 this.showGuide = true;
                 this.step = 3;
               }
+
+              this.setLocalData('base', data);
 
               return presentationData;
             }
@@ -797,6 +811,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
@@ -1065,6 +1082,8 @@
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
