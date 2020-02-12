@@ -72,7 +72,7 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
 
-  let FENYE_COUNT = 20
+  let FENYE_COUNT = 60
 
   export default {
     name: 'Danmu',
