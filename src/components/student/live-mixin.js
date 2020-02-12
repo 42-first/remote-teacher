@@ -109,20 +109,15 @@ let liveMixin = {
       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
+        liveEl.src = this.liveURL;
         if (this.needNew) {
           this.needNew = false
           console.log('needNew');
           console.log(this.currentTime);
           console.log(liveEl.currentTime);
-          liveEl.src = this.liveURL;
-          
           setTimeout(() => {
             this.loadNewUrl()
           }, 1000 * 30)
-          
-          
-        }else {
-          liveEl.src = this.liveURL;
         }
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
