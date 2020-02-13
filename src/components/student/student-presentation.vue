@@ -345,7 +345,8 @@
         lastStatus: 1,
         needNew: false,
         currentTime: 0,
-        loadNewUrlTimer: null
+        loadNewUrlTimer: null,
+        voice: 1,   // -1静音 1非静音
       };
     },
     components: {

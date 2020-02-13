@@ -1032,7 +1032,7 @@ var actionsMixin = {
       switch (status) {
         case 1:
           if(this.liveVisible){
-            if(this.lastStatus == -1){
+            if(this.lastStatus !== 1 && this.lastStatus !== -3){
               this.needNew = true
             }
             this.liveStatusTips = ''
@@ -1065,6 +1065,10 @@ var actionsMixin = {
           this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
           break
       }
+      // if(this.voice !== voice){
+      //   this.liveStatusTips = voice == 1 ? this.$i18n.t('offsilentmood') : this.$i18n.t('silentmood')
+      // }
+      // this.voice = voice
       this.isMute = voice == -1 ? true : false
       this.lastStatus = status
       let  liveEl = document.querySelector('#player')
