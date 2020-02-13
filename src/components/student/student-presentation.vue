@@ -43,7 +43,13 @@
 
     <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
-      <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
+      <section class="player__box" v-show="liveVisible">
+        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL"  ></video>
+        <div class="live__status f14" v-show="liveStatusTips">
+          {{liveStatusTips}}
+        </div>
+      </section>
+      
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -333,7 +339,14 @@
         isWebLesson: false,
         // 直播下默认显示动画
         visibleAnimation: true,
-        returnRemote: false
+        returnRemote: false,
+        liveStatusTips: '',
+        isMute: false,  //静音播放
+        lastStatus: 1,
+        needNew: false,
+        currentTime: 0,
+        loadNewUrlTimer: null,
+        voice: 1,   // -1静音 1非静音
       };
     },
     components: {
@@ -1214,12 +1227,27 @@
       position: relative;
       padding: 2.33rem 0 0.253333rem;
 
-      .video__live {
-        width: 100%;
-        // height: 7.5rem;
-        min-height: 5rem;
-        background: rgba(0,0,0,0.45);
+      .player__box {
+        position: relative;
+          .video__live {
+          width: 100%;
+          // height: 7.5rem;
+          min-height: 5rem;
+          background: rgba(0,0,0,0.45);
+        }
+        .live__status {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: PingFangSC-Medium;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+        }
       }
+      
 
       .live__fold {
         display: flex;
