@@ -719,7 +719,7 @@
                 // 日志上报
                 setTimeout(() => {
                   self.handleLogEvent();
-                }, 1000)
+                }, 30000)
               }
 
               // 课程title
