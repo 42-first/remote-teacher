@@ -56,7 +56,7 @@ let logMixin = {
     handleLogEvent() {
       let liveEl = document.getElementById('player');
       // let events = ['play', 'pause', 'error', 'stalled', 'waiting', 'loadstart', 'loadeddata' ];
-      let events = [ 'play', 'pause', 'error', 'stalled', 'waiting' ];
+      let events = [ 'error', 'stalled', 'waiting' ];
 
       this.setSystem();
 

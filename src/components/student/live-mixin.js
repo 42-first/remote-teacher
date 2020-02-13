@@ -38,8 +38,9 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.isMute ? false : true
         });
 
         this.flvPlayer = flvPlayer;
@@ -51,7 +52,9 @@ let liveMixin = {
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.liveStatusTips = ''
+            });
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -94,6 +97,7 @@ let liveMixin = {
           // this.liveType === 2 && liveEl.play();
           liveEl.play().then(()=>{
             this.playState = 1;
+            this.liveStatusTips = ''
           });
         });
 
@@ -106,6 +110,15 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+        if (this.needNew) {
+          this.needNew = false
+          console.log('needNew');
+          console.log(this.currentTime);
+          console.log(liveEl.currentTime);
+          setTimeout(() => {
+            this.loadNewUrl()
+          }, 1000 * 30)
+        }
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -228,8 +241,9 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.isMute ? false : true
         });
 
         this.flvPlayer = flvPlayer;
@@ -385,6 +399,25 @@ let liveMixin = {
       }
     },
 
+    loadNewUrl(){
+      let liveEl = document.querySelector('#player')
+      this.loadNewUrlTimer && clearTimeout(this.loadNewUrlTimer)
+      this.loadNewUrlTimer = setTimeout(() => {
+        console.log('ssssssss', liveEl.currentTime , this.currentTime);
+        if(liveEl.currentTime - this.currentTime < 1){
+          liveEl.src = this.liveURL
+          console.log('我重新加载啦', liveEl.currentTime , this.currentTime);
+          this.loadNewUrl()
+        }
+      }, 1000 * 10)
+      liveEl.addEventListener('timeupdate', () => {
+        if(liveEl.currentTime !== 0){
+          clearTimeout(this.loadNewUrlTimer)
+        }else {
+          this.loadNewUrl()
+        }
+      })
+    }
   }
 }
 
