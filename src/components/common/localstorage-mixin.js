@@ -233,6 +233,7 @@ let localstorageMixin = {
       })
       .catch(error => {
         console.log(error);
+        this.delLocalData();
       });
     },
 
