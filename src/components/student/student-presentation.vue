@@ -43,7 +43,13 @@
 
     <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
-      <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
+      <section class="player__box" v-show="liveVisible">
+        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL"  ></video>
+        <div class="live__status f14" v-show="liveStatusTips">
+          {{liveStatusTips}}
+        </div>
+      </section>
+      
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -204,6 +210,7 @@
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -344,6 +351,13 @@
         // 直播下默认显示动画
         visibleAnimation: true,
         returnRemote: false,
+        liveStatusTips: '',
+        isMute: false,  //静音播放
+        lastStatus: 1,
+        needNew: false,
+        currentTime: 0,
+        loadNewUrlTimer: null,
+        voice: 1,   // -1静音 1非静音
         // 直播卡顿检测
         liveDetection: {},
         // 小程序码
@@ -386,11 +400,17 @@
           // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
           this.backURL = '/v/index/lessonend'
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -602,6 +622,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -609,6 +635,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -696,8 +723,6 @@
                   } else {
                     self.Hls && self.supportHLS(self.Hls);
                   }
-
-                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -707,7 +732,7 @@
                 // 日志上报
                 setTimeout(() => {
                   self.handleLogEvent();
-                }, 1000)
+                }, 30000)
               }
 
               // 课程title
@@ -723,6 +748,8 @@
                 this.showGuide = true;
                 this.step = 3;
               }
+
+              this.setLocalData('base', data);
 
               return presentationData;
             }
@@ -797,6 +824,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
@@ -1065,6 +1095,8 @@
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
@@ -1232,12 +1264,27 @@
       position: relative;
       padding: 2.33rem 0 0.253333rem;
 
-      .video__live {
-        width: 100%;
-        // height: 7.5rem;
-        min-height: 5rem;
-        background: rgba(0,0,0,0.45);
+      .player__box {
+        position: relative;
+          .video__live {
+          width: 100%;
+          // height: 7.5rem;
+          min-height: 5rem;
+          background: rgba(0,0,0,0.45);
+        }
+        .live__status {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: PingFangSC-Medium;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+        }
       }
+      
 
       .live__fold {
         display: flex;
