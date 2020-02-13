@@ -72,7 +72,11 @@
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
+                <!-- 雨课堂 -->
+                <!-- 其它定制 例如清华 -->
+                <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
+                <!-- 雨课堂 -->
+                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -206,6 +210,7 @@
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -213,6 +218,12 @@
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
     // request.post = request.get
+  }
+
+  const host = {
+    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
   }
 
   export default {
@@ -347,6 +358,10 @@
         currentTime: 0,
         loadNewUrlTimer: null,
         voice: 1,   // -1静音 1非静音
+        // 直播卡顿检测
+        liveDetection: {},
+        // 小程序码
+        miniCode: '',
       };
     },
     components: {
@@ -382,13 +397,20 @@
       lessonStatus (newValue, oldValue) {
         // 下课啦
         if(newValue === 1) {
-          this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          this.backURL = '/v/index/lessonend'
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -600,6 +622,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -607,6 +635,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -694,8 +723,6 @@
                   } else {
                     self.Hls && self.supportHLS(self.Hls);
                   }
-
-                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -705,7 +732,7 @@
                 // 日志上报
                 setTimeout(() => {
                   self.handleLogEvent();
-                }, 1000)
+                }, 30000)
               }
 
               // 课程title
@@ -722,6 +749,8 @@
                 this.step = 3;
               }
 
+              this.setLocalData('base', data);
+
               return presentationData;
             }
           })
@@ -731,7 +760,8 @@
             if(error && error.status_code === 601) {
               // 课程结束
               console.log('课程结束');
-              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              // location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              location.href = '/v/index/lessonend';
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
@@ -794,6 +824,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
@@ -1054,12 +1087,16 @@
       let ua = navigator.userAgent.toLowerCase();
       let isWeixin = ~ua.indexOf('micromessenger');
       this.isWeb = !isWeixin;
+
+      this.miniCode = host[location.host] || '';
     },
     updated() {
       // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
