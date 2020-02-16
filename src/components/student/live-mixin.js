@@ -56,11 +56,8 @@ let liveMixin = {
               this.liveStatusTips = ''
             });
           } else if(this.isWeb && this.liveType === 1) {
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            // flvPlayer.play().then(() => {
-            //   this.playState = 1;
-            // });
+            // flvPlayer.attachMediaElement(liveEl);
+            // flvPlayer.load();
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -302,19 +299,22 @@ let liveMixin = {
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playState = 1;
+          });
         } catch(e) {
         }
       } else {
         audioEl.play();
+        this.playState = 1;
+
+        // 避免音频没有加载不播放问题
+        setTimeout(()=>{
+          audioEl.play();
+        }, 500)
       }
 
-      // 避免音频没有加载不播放问题
-      setTimeout(()=>{
-        audioEl.play();
-      }, 500)
-
-      this.playState = 1;
+      // this.playState = 1;
       this.saveLiveStatus(this.playState);
     },
 
