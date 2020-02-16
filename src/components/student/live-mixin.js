@@ -275,6 +275,15 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
+          if(this.playLoading) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -300,13 +309,14 @@ let liveMixin = {
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {
-            this.playState = 1;
+            this.playLoading = false;
           });
+
+          this.playLoading = true;
         } catch(e) {
         }
       } else {
         audioEl.play();
-        this.playState = 1;
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
@@ -314,7 +324,7 @@ let liveMixin = {
         }, 500)
       }
 
-      // this.playState = 1;
+      this.playState = 1;
       this.saveLiveStatus(this.playState);
     },
 
