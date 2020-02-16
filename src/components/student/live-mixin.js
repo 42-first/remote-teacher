@@ -275,7 +275,7 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
-          if(this.playLoading) {
+          if(this.playLoading && this.liveType === 1 && this.isWeb) {
             this.$toast({
               message: '连接中...',
               duration: 3000
