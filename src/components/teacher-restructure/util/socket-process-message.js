@@ -7,10 +7,18 @@ import config from '@/pages/teacher/config/config'
 import request from '@/util/request'
 
 function goHome () {
+  this.$store.commit('set_toolbarIndex', 0)
   this.goHome.call(this)
   if (this.$route.name !== 'home') {
     location.href = `/lesson/teacher/${window.LESSONID}`
   }
+}
+
+// 重连时必要的初始化
+function remoteReset() {
+  this.$store.commit('set_errType', 5)
+  this.$store.commit('set_isToastCtrlMaskHidden', true)
+  this.$store.commit('set_toolbarIndex', 0)
 }
 
 function socketProcessMessage(msg){
@@ -20,7 +28,6 @@ function socketProcessMessage(msg){
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
-
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
     // 有可能 presentationupdated 触发的 fetchData 比较慢（比 showpresentation 指令慢），这时还没有新 slideid 的 map
@@ -46,6 +53,8 @@ function socketProcessMessage(msg){
 
   // 这个depriveremote是用户发送夺权并成功后服务端返回的指令
   if (msg.op === 'hello' || msg.op === 'depriveremote') {
+    // 初次进来或新上课时，初始化部分选项
+    remoteReset.call(self)
 
     self.isPPTVersionAboveOne = msg.addinversion > 1
     
@@ -84,6 +93,10 @@ function socketProcessMessage(msg){
           self.$store.commit('set_danmuWordCloudOpen', false)
         }
       } else {
+        // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
+        self.setData({
+          isRobbing: false
+        })
         // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
         self.showEscMask()
       }
@@ -348,6 +361,7 @@ function socketProcessMessage(msg){
   //关于qrcode为99、101、102的分析详见tower记录
   //链接：https://tower.im/projects/1a3a5c7ea6ff4a109296d3c5039c9c19/docs/0c842a038c3f41648a25a169f6fd8e46/#6e559264aaeb4662ba74888c912ce019
   if (msg.op == 'qrcodezoomed') {
+    remoteReset.call(self);
     if(msg.qrcode == 1){
       //已经缩小
       self.$store.commit('set_qrcodeStatus', 1)
