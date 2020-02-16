@@ -230,11 +230,11 @@ var actionsMixin = {
 
       if (slideData['Cover']=='rain://error/upload-error') {
         if(!data.isFetch) {
-          this.addMessage({ type: 1, message: '幻灯片解析失败' });
+          this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
       } else if(slideData['Cover']=='rain://error/export-error'){
         if(!data.isFetch) {
-          this.addMessage({ type: 1, message: '幻灯片上传失败' });
+          this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
       } else {
         // 预加载图片
@@ -831,7 +831,14 @@ var actionsMixin = {
         this.liveURL = data.liveurl.hls;
 
         if(this.liveType === 1) {
-          this.Hls && this.supportHLS(this.Hls);
+          let isWeb = this.isWeb;
+          if(isWeb) {
+            setTimeout(()=>{
+              this.supportFLV();
+            }, 1000)
+          } else {
+            this.Hls && this.supportHLS(this.Hls);
+          }
         } else if(this.liveType === 2) {
           setTimeout(()=>{
             this.supportFLV(true);
@@ -1024,7 +1031,7 @@ var actionsMixin = {
       }
     },
 
-    /** 
+    /**
      * @method 更新视频状态提示
     */
     changeLiveStatusTips(status, voice){
@@ -1042,15 +1049,15 @@ var actionsMixin = {
               if (this.flvPlayer) {
                 this.flvPlayer.unload()
                 this.flvPlayer.detachMediaElement()
-                this.createFlvPlayer()              
+                this.createFlvPlayer()
               } else {
                 this.supportHLS(this.Hls)
               }
             }
             this.handleplay();
           }
-          
-          
+
+
           break
         case -1:
           this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
