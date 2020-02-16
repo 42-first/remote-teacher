@@ -58,9 +58,9 @@ let liveMixin = {
           } else if(this.isWeb && this.liveType === 1) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play().then(() => {
-              this.playState = 1;
-            });
+            // flvPlayer.play().then(() => {
+            //   this.playState = 1;
+            // });
           }
         } catch(evt) {
           setTimeout(()=>{
