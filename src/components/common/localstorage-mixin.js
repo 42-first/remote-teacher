@@ -202,7 +202,7 @@ let localstorageMixin = {
               if(isWeb) {
                 setTimeout(()=>{
                   this.supportFLV();
-                }, 3000)
+                }, 100)
               } else {
                 this.Hls && this.supportHLS(this.Hls);
               }
