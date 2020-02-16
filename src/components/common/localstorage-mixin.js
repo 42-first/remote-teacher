@@ -209,7 +209,7 @@ let localstorageMixin = {
             } else if(this.liveType === 2) {
               setTimeout(()=>{
                 this.supportFLV();
-              }, 3000)
+              }, 100)
             }
 
             // 日志上报
