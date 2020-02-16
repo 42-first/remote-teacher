@@ -831,7 +831,14 @@ var actionsMixin = {
         this.liveURL = data.liveurl.hls;
 
         if(this.liveType === 1) {
-          this.Hls && this.supportHLS(this.Hls);
+          let isWeb = this.isWeb;
+          if(isWeb) {
+            setTimeout(()=>{
+              this.supportFLV();
+            }, 1000)
+          } else {
+            this.Hls && this.supportHLS(this.Hls);
+          }
         } else if(this.liveType === 2) {
           setTimeout(()=>{
             this.supportFLV(true);
