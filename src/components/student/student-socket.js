@@ -169,8 +169,9 @@ var mixin = {
             }
 
             if(typeof msg.livestatus !== 'undefined'){
-              this.changeLiveStatusTips(msg.livestatus, msg.livevoice)
+              // this.changeLiveStatusTips(msg.livestatus, msg.livevoice)
             }
+
             break
 
           // 翻页
