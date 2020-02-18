@@ -1127,6 +1127,15 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  .page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 50px;
+    padding: 0 20px;
+  }
+
   .problem-tag {
     border-left: 15px solid #4A90E2;
   }
