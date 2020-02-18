@@ -64,6 +64,8 @@ let liveMixin = {
         }
 
         this.handleFLVError();
+      } else {
+        this.loadHLS();
       }
     },
 
@@ -74,9 +76,13 @@ let liveMixin = {
     supportHLS(Hls) {
       let liveEl = document.getElementById('player');
 
+      if(!Hls) {
+        this.loadHLS();
+      }
+
       if(Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource(this.liveURL);
+        hls.loadSource(this.liveurl.hls);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           liveEl.play().then(()=>{
@@ -92,7 +98,7 @@ let liveMixin = {
       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
-        liveEl.src = this.liveURL;
+        liveEl.src = this.liveurl.hls;
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });

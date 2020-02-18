@@ -52,6 +52,8 @@
   import livemixin from '@/components/fullscreen/live-mixin'
   import eventmixin from '@/components/fullscreen/event-mixin'
 
+  import logmixin from '@/components/common/log-reporting'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -170,6 +172,8 @@
         // 显示题目提示
         visibleProblemTip: false,
         isWeb: true,
+        // 直播卡顿检测
+        liveDetection: {},
       };
     },
     components: {
@@ -258,7 +262,7 @@
         return oStyle;
       }
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -444,11 +448,17 @@
               if(self.liveInfo && self.liveInfo.status === 1) {
                 self.liveType = self.liveInfo.type || 1;
                 self.liveURL = self.liveInfo.live_url.httpflv;
+                self.liveurl = self.liveInfo.live_url;
 
                 // if(self.liveType === 1) {
                 //   self.liveURL = self.liveInfo.live_url.hls;
                 //   this.loadHLS();
                 // }
+
+                // 日志上报
+                setTimeout(() => {
+                  self.handleLogEvent();
+                }, 30000)
               }
 
               // 课程title
@@ -770,6 +780,7 @@
   }
 
   .lesson--tip {
+    z-index: 1;
     position: absolute;
     top: 2px;
     left: 0;

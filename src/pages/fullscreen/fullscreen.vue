@@ -27,6 +27,10 @@
     /* -webkit-user-select: none; */
   }
 
+  .w30 {
+    width: 30px;
+  }
+
   .ponter {
     cursor: pointer;
   }

@@ -11,7 +11,7 @@
     <div class="container">
       <!-- 练习导航 -->
       <header class="page__header">
-        <p class="header--back ponter" @click="handleBack">返回</p>
+        <p class="header--back w30" ></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <p class="header--back ponter" @click="handleBack">关闭</p>
       </header>
