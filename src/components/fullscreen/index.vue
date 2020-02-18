@@ -13,7 +13,7 @@
       <!-- 提示 -->
       <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动。使用雨课堂小程序，直播同步效果更好哦</p>
       <!-- 习题 -->
-      <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p>
+      <!-- <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p> -->
 
       <div class="cover__container">
         <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" @click="handleFullscreen"  />
@@ -227,7 +227,7 @@
           newVal && this.supportFLV();
 
           this.initEvent();
-        }, 3000)
+        }, 1000)
       }
     },
     filters: {
@@ -666,7 +666,7 @@
 
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
-  @import "~@/style/mintui.css";
+  // @import "~@/style/mintui.css";
 
   .page {
     position: absolute;

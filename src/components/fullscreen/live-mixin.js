@@ -165,8 +165,8 @@ let liveMixin = {
         console.log('errorType:', errorType);
         console.log('errorDetail:', errorDetail);
 
-        let system = this.system;
-        system['et'] = errorType;
+        // let system = this.system;
+        // system['et'] = errorType;
 
         if (errorType) {
           this.createFlvPlayer();
