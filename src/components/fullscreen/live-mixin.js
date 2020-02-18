@@ -54,17 +54,14 @@ let liveMixin = {
             flvPlayer.play().then(()=>{
               this.playState = 1;
             });
-
+          } else {
+            this.playState = 0;
           }
         } catch(evt) {
           setTimeout(()=>{
             this.supportFLV();
           }, 3000)
         }
-
-        // setTimeout(()=>{
-        //   audioEl.play();
-        // }, 3000)
 
         this.handleFLVError();
       }
@@ -168,8 +165,8 @@ let liveMixin = {
         console.log('errorType:', errorType);
         console.log('errorDetail:', errorDetail);
 
-        let system = this.system;
-        system['et'] = errorType;
+        // let system = this.system;
+        // system['et'] = errorType;
 
         if (errorType) {
           this.createFlvPlayer();
@@ -222,6 +219,15 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       if(this.flvPlayer) {
         try {
+          if(this.playLoading && this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -246,7 +252,16 @@ let liveMixin = {
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+          });
+
+          this.playLoading = true;
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+          }, 5000)
         } catch(e) {
         }
       } else {

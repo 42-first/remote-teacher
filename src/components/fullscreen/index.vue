@@ -9,12 +9,17 @@
 <template>
   <section class="page">
     <!-- PPT 展示 -->
-    <section class="ppt__wrapper J_ppt" @click="handleFullscreen" >
+    <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
       <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动。使用雨课堂小程序，直播同步效果更好哦</p>
       <!-- 习题 -->
-      <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p>
-      <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
+      <!-- <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p> -->
+
+      <div class="cover__container">
+        <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" @click="handleFullscreen"  />
+        <!-- 作答按钮 -->
+        <router-link tag="p" class="answer-btn cfff f20" :to="currSlide.pageURL + currSlide.index" v-if="currSlide.problemType" >去作答</router-link>
+      </div>
     </section>
 
     <!-- 直播入口 音频直播 -->
@@ -33,6 +38,8 @@
       <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
     </section>
 
+    <!-- 子页面 -->
+    <router-view></router-view>
   </section>
 </template>
 <script>
@@ -162,6 +169,7 @@
         visibleTip: true,
         // 显示题目提示
         visibleProblemTip: false,
+        isWeb: true,
       };
     },
     components: {
@@ -169,6 +177,11 @@
     computed: {
     },
     watch: {
+      '$route' (to, from) {
+        // 对路由变化作出响应...
+        console.log(from.name);
+        console.log(to.name);
+      },
       cards(newVal, oldVal) {
         let slide = null;
 
@@ -200,6 +213,13 @@
 
         if(slide && slide.src) {
           this.currSlide = slide;
+
+          // todo: 检测是否在答题页 需要关闭
+          console.dir(this.$route)
+          let route = this.$route;
+          if(route.name !== 'student-fullscreen') {
+            this.$router.back();
+          }
         }
       },
       liveURL(newVal, oldVal) {
@@ -207,7 +227,7 @@
           newVal && this.supportFLV();
 
           this.initEvent();
-        }, 3000)
+        }, 1000)
       }
     },
     filters: {
@@ -646,7 +666,7 @@
 
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
-  @import "~@/style/mintui.css";
+  // @import "~@/style/mintui.css";
 
   .page {
     position: absolute;
@@ -669,6 +689,23 @@
     padding: 20px;
 
     background: #2F3963;
+  }
+
+  .cover__container {
+    position: relative;
+
+    .answer-btn {
+      position: absolute;
+      right: 100px;
+      bottom: 50px;
+
+      width: 180px;
+      height: 44px;
+      line-height: 44px;
+      background: #639EF4;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   }
 
   .cover {
@@ -752,6 +789,101 @@
     background: #757575;
     border-radius: 4px;
   }
+
+  /*------------------*\
+    $ 习题定时
+  \*------------------*/
+
+  .exercise__tips {
+    margin: 5px auto 25px;
+    width: 360px;
+    height: 60px;
+    line-height: 60px;
+
+    background: #212121;
+    color: #fff;
+    opacity: 0.8;
+
+    border-radius: 2px;
+    box-shadow: 0 2.5px 5px rgba(0,0,0,0.2);
+
+    .timing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .timing--icon {
+        margin-right: 17px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .over.timing--number {
+        color: #F84F41;
+      }
+    }
+  }
+
+  /*------------------*\
+    $ 习题内容
+  \*------------------*/
+
+  .exercise-content {
+    position: relative;
+    margin: 15px 17px 0;
+    padding-bottom: 15px;
+
+
+    border-top: 1px solid #C8C8C8;
+    border-bottom: 1px solid #C8C8C8;
+    overflow: hidden;
+    .page-no {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      padding: 0 12px;
+      height: 25px;
+      line-height: 25px;
+      color: #fff;
+
+      background: rgba(0,0,0,0.5);
+    }
+
+    .cover {
+      display: block;
+      width: 100%;
+
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    }
+  }
+
+
+  .submit-btn {
+    margin: 30px auto 45px;
+
+    width: 275px;
+    height: 40px;
+
+    line-height: 40px;
+
+    color: #fff;
+    background: #999999;
+
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .submit-btn.can {
+    background: #639EF4;
+  }
+
+  .submit-btn.can:active {
+    background: rgba(99,158,244,0.7);
+  }
+
+
+
 
 </style>
 <style>
