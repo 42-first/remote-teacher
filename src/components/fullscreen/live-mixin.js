@@ -54,7 +54,8 @@ let liveMixin = {
             flvPlayer.play().then(()=>{
               this.playState = 1;
             });
-
+          } else {
+            this.playState = 0;
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -62,11 +63,9 @@ let liveMixin = {
           }, 3000)
         }
 
-        // setTimeout(()=>{
-        //   audioEl.play();
-        // }, 3000)
-
         this.handleFLVError();
+      } else {
+        this.loadHLS();
       }
     },
 
@@ -77,9 +76,13 @@ let liveMixin = {
     supportHLS(Hls) {
       let liveEl = document.getElementById('player');
 
+      if(!Hls) {
+        this.loadHLS();
+      }
+
       if(Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource(this.liveURL);
+        hls.loadSource(this.liveurl.hls);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           liveEl.play().then(()=>{
@@ -95,7 +98,7 @@ let liveMixin = {
       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
-        liveEl.src = this.liveURL;
+        liveEl.src = this.liveurl.hls;
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -168,8 +171,8 @@ let liveMixin = {
         console.log('errorType:', errorType);
         console.log('errorDetail:', errorDetail);
 
-        let system = this.system;
-        system['et'] = errorType;
+        // let system = this.system;
+        // system['et'] = errorType;
 
         if (errorType) {
           this.createFlvPlayer();
@@ -222,6 +225,15 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       if(this.flvPlayer) {
         try {
+          if(this.playLoading && this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -246,7 +258,16 @@ let liveMixin = {
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+          });
+
+          this.playLoading = true;
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+          }, 5000)
         } catch(e) {
         }
       } else {

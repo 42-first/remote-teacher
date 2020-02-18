@@ -44,6 +44,8 @@ let liveMixin = {
         });
 
         this.flvPlayer = flvPlayer;
+        // 上报记录直播地址
+        this.logLiveurl = this.liveurl.httpflv;
 
         try {
           this.setLiveTip();
@@ -144,6 +146,9 @@ let liveMixin = {
       }
 
       this.setLiveTip();
+
+      // 上报记录直播地址
+      this.logLiveurl = this.liveURL;
 
       // this.$toast({
       //   message: '建议使用雨课堂小程序，直播同步效果更好',
