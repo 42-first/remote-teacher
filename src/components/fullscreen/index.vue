@@ -219,11 +219,11 @@
           this.currSlide = slide;
 
           // todo: 检测是否在答题页 需要关闭
-          console.dir(this.$route)
-          let route = this.$route;
-          if(route.name !== 'student-fullscreen') {
-            this.$router.back();
-          }
+          // console.dir(this.$route)
+          // let route = this.$route;
+          // if(route.name !== 'student-fullscreen') {
+          //   this.$router.back();
+          // }
         }
       },
       liveURL(newVal, oldVal) {
