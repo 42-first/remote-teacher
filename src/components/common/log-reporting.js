@@ -22,8 +22,8 @@ let logMixin = {
         liveurl: this.liveURL,
         // 网络环境
         net: 'wifi',
-        // 客户端：h5 wx_app
-        p: 'h5',
+        // 客户端：h5 wx_app web
+        p: this.isWeb ? 'web': 'h5',
         // 业务线
         lob: 'ykt',
         // 服务商
