@@ -196,7 +196,7 @@
         });
 
         // 问题处理宽高
-        if(slide.type === 3) {
+        if(slide && slide.type === 3) {
           let presentation = this.presentationMap.get(slide.presentationid);
 
           if(presentation) {
