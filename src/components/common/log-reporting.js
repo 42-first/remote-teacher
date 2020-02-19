@@ -66,7 +66,12 @@ let logMixin = {
           let system = this.system;
           system['et'] = evt;
 
-          this.reportLog(system);
+          this.reportTimer && clearTimeout(this.reportTimer);
+          this.reportTimer = setTimeout(()=>{
+            this.reportLog(system);
+          }, 5000)
+
+          // this.reportLog(system);
 
           this.detectionWaiting(evt);
         });
@@ -98,9 +103,18 @@ let logMixin = {
             this.createFlvPlayer();
           }, 3500)
         } else if(this.liveType === 1) {
-          setTimeout(()=>{
-            this.Hls && this.supportHLS(this.Hls);
-          }, 3000)
+          let isWeb = this.isWeb;
+          if(isWeb && this.flvPlayer) {
+            setTimeout(()=>{
+              this.flvPlayer.unload();
+              this.flvPlayer.detachMediaElement();
+              this.createFlvPlayer();
+            }, 3000)
+          } else {
+            setTimeout(()=>{
+              this.Hls && this.supportHLS(this.Hls);
+            }, 3000)
+          }
         }
       }
 

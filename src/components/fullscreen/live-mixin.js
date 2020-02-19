@@ -78,6 +78,8 @@ let liveMixin = {
 
       if(!Hls) {
         this.loadHLS();
+
+        return this;
       }
 
       if(Hls.isSupported()) {
@@ -263,6 +265,15 @@ let liveMixin = {
           });
 
           this.playLoading = true;
+
+          // 音频直播提示 防止用户随便点击
+          if(this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 4500
+            });
+          }
+
           setTimeout(()=>{
             if(this.playLoading) {
               this.playLoading = false;
