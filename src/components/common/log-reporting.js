@@ -66,7 +66,12 @@ let logMixin = {
           let system = this.system;
           system['et'] = evt;
 
-          this.reportLog(system);
+          this.reportTimer && clearTimeout(this.reportTimer);
+          this.reportTimer = setTimeout(()=>{
+            this.reportLog(system);
+          }, 5000)
+
+          // this.reportLog(system);
 
           this.detectionWaiting(evt);
         });
