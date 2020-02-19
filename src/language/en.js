@@ -318,7 +318,7 @@ let pages = {
   "showended": "End",
   "jsskqzdnd": 'Continue the class, please click "Slide Show" on your computer and students do not need to scan the QR code again.',
   "jsskq": "End class, please",
-  "djzl": "Click Here",
+  "djzl": " Click Here",
   "showconnecting": "or connecting",
   "otherslogin": "Your account has been logged in by others",
   "forcelogout": "You have been force logged out",
