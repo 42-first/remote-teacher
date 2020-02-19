@@ -1,5 +1,6 @@
 /**
  * @module socket处理函数
+ * 现在在用
  */
 
 let isOldVersion = false               // 雨课堂软件是老版本
