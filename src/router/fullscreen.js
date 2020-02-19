@@ -8,6 +8,10 @@ import MessageBox from 'mint-ui/lib/message-box';
 
 import Index from '@/components/fullscreen/index'
 
+// 问题解析
+const Exercise = resolve => require(['@/components/fullscreen/exercise'], resolve)
+const Subjective = resolve => require(['@/components/fullscreen/subjective'], resolve)
+const FillBlank = resolve => require(['@/components/fullscreen/blank'], resolve)
 
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
@@ -26,11 +30,21 @@ const fullscreenRouter = new Router({
       name: 'student-fullscreen',
       component: Index,
       children: [
-        // {
-        //   path: 'danmu',
-        //   name: 'student-danmu-page',
-        //   component: Danmu
-        // },
+        {
+          path: 'exercise/:index',
+          name: 'exercise-page',
+          component: Exercise
+        },
+        {
+          path: 'subjective/:index',
+          name: 'subjective-page',
+          component: Subjective
+        },
+        {
+          path: 'blank/:index',
+          name: 'blank-page',
+          component: FillBlank
+        },
       ]
     }
   ]

@@ -44,6 +44,8 @@ let liveMixin = {
         });
 
         this.flvPlayer = flvPlayer;
+        // 上报记录直播地址
+        this.logLiveurl = this.liveurl.httpflv;
 
         try {
           this.setLiveTip();
@@ -55,6 +57,9 @@ let liveMixin = {
             flvPlayer.play().then(() => {
               this.liveStatusTips = ''
             });
+          } else if(this.isWeb && this.liveType === 1) {
+            // flvPlayer.attachMediaElement(liveEl);
+            // flvPlayer.load();
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -141,6 +146,9 @@ let liveMixin = {
       }
 
       this.setLiveTip();
+
+      // 上报记录直播地址
+      this.logLiveurl = this.liveURL;
 
       // this.$toast({
       //   message: '建议使用雨课堂小程序，直播同步效果更好',
@@ -272,6 +280,15 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
+          if(this.playLoading && this.liveType === 1 && this.isWeb) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -296,17 +313,21 @@ let liveMixin = {
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+          });
+
+          this.playLoading = true;
         } catch(e) {
         }
       } else {
         audioEl.play();
-      }
 
-      // 避免音频没有加载不播放问题
-      setTimeout(()=>{
-        audioEl.play();
-      }, 500)
+        // 避免音频没有加载不播放问题
+        setTimeout(()=>{
+          audioEl.play();
+        }, 500)
+      }
 
       this.playState = 1;
       this.saveLiveStatus(this.playState);

@@ -49,7 +49,7 @@
           {{liveStatusTips}}
         </div>
       </section>
-      
+
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -719,7 +719,7 @@
                   if(isWeb) {
                     setTimeout(()=>{
                       self.supportFLV();
-                    }, 3000)
+                    }, 1000)
                   } else {
                     self.Hls && self.supportHLS(self.Hls);
                   }
@@ -1281,10 +1281,13 @@
           color: #FFFFFF;
           letter-spacing: 0;
           text-align: center;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+          // text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+          padding: 0.13333333rem 0.26666667rem;
+          background: rgba(68,68,68,.4);
+          border-radius: 0.05333333rem;
         }
       }
-      
+
 
       .live__fold {
         display: flex;
