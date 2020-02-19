@@ -98,9 +98,18 @@ let logMixin = {
             this.createFlvPlayer();
           }, 3500)
         } else if(this.liveType === 1) {
-          setTimeout(()=>{
-            this.Hls && this.supportHLS(this.Hls);
-          }, 3000)
+          let isWeb = this.isWeb;
+          if(isWeb && this.flvPlayer) {
+            setTimeout(()=>{
+              this.flvPlayer.unload();
+              this.flvPlayer.detachMediaElement();
+              this.createFlvPlayer();
+            }, 3000)
+          } else {
+            setTimeout(()=>{
+              this.Hls && this.supportHLS(this.Hls);
+            }, 3000)
+          }
         }
       }
 
