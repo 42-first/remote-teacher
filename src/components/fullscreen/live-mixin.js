@@ -188,6 +188,8 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
           flvPlayer.play();
@@ -210,6 +212,8 @@ let liveMixin = {
         try {
           // 展开播放模式下才开始拉流
           if(this.liveVisible) {
+            flvPlayer.unload();
+            flvPlayer.detachMediaElement();
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play();
@@ -258,7 +262,7 @@ let liveMixin = {
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
-          flvPlayer.unload();
+          // flvPlayer.unload();
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {

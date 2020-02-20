@@ -44,20 +44,25 @@
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
-      <div class="video__controls cfff">
+      <div class="video__controls cfff f18">
         <div class="ponter">
-          <i class="iconfont icon-zanting1" @click="handlestop" v-if="playState"></i>
-          <i class="iconfont icon-bofang2" @click="handleplay" v-else></i>
+          <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
+          <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
         <!-- 弹幕发送 -->
+        <div></div>
         <div class="ponter">
-          <i class="iconfont icon-quanping" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
-          <i class="iconfont icon-quanping" @click="handleVideoFullscreen" v-else></i>
+          <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
+          <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
         </div>
       </div>
 
-      <!-- 提示信息 -->
-      <div class="problem__tip" v-if="videoFullscreen" v-show="visibleProblemTip"></div>
+      <!-- 提示信息 v-if="visibleProblemTip" -->
+      <div class="problem__tip f16" v-if="visibleProblemTip">
+        <span class="cfff">{{ currSlide.caption}}</span>
+        <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
+        <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
+      </div>
     </section>
 
     <!-- 实时弹幕列表 -->
@@ -253,14 +258,8 @@
           }
 
           this.visibleProblemTip = true;
-          setTimeout(()=>{
-            this.visibleProblemTip = false;
-          }, 5000)
-
-          // 遇到题目
-          if(screenfull.isFullscreen) {
-            screenfull.exit()
-          }
+        } else {
+          this.visibleProblemTip = false;
         }
 
         console.log('isFullscreen:'+ screenfull.isFullscreen);
@@ -831,8 +830,42 @@
       align-items: center;
       justify-content: center;
 
+      .live__video_box {
+        display: flex;
+        align-items: center;
+      }
+
       .live__container {
         width: 100vw;
+      }
+
+      .video__controls {
+        height: 56px;
+        padding: 5px 30px;
+        background: rgba(0,0,0, 0.7);
+
+        .iconfont {
+          font-size: 25px;
+        }
+      }
+
+      .problem__tip {
+        // width: 100vw;
+        height: 56px;
+        padding: 0 25px;
+
+        left: 50%;
+        right: initial;
+        bottom: 96px;
+        transform: translateX(-50%);
+
+        .anwser--tip  {
+          margin: 12px;
+          padding: 3px 10px;
+          color: #fff;
+          background: #5096F5;
+          border-radius: 15px/50%;
+        }
       }
     }
 
@@ -866,6 +899,7 @@
 
 
   .video__controls {
+    opacity: 0;
     position: absolute;
     bottom: 0;
 
@@ -877,6 +911,33 @@
     height: 44px;
     padding: 5px 20px;
     background: rgba(0,0,0, 1);
+
+    transition: opacity ease-in 2.5s 1.5s;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity ease-in 0.35s;
+    }
+  }
+
+
+  .problem__tip {
+    position: absolute;
+    right: 10px;
+    bottom: 50px;
+
+    display: flex;
+    align-items: center;
+
+    height: 44px;
+    padding: 0 18px;
+
+    background: rgba(0,0,0, 0.5);
+    border-radius: 4px;
+
+    .anwser--tip {
+      padding: 0 20px;
+    }
   }
 
 

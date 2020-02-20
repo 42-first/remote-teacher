@@ -17,8 +17,18 @@ let fullscreenMixin = {
      */
     handleVideoFullscreen(evt) {
       let videoWrapEl =  this.$el.querySelector('.J_live');
+
+      this.videoFullscreen = true;
       screenfull.request(videoWrapEl).then(()=>{
-        this.videoFullscreen = true;
+        // this.videoFullscreen = true;
+        screenfull.on('change', () => {
+          console.log('Am I fullscreen?', screenfull.isFullscreen ? 'Yes' : 'No');
+
+          if(!screenfull.isFullscreen) {
+            this.videoFullscreen = false;
+          }
+        });
+
       });
     },
 
@@ -32,7 +42,62 @@ let fullscreenMixin = {
       if(screenfull.isFullscreen) {
         screenfull.exit()
       }
-    }
+    },
+
+    handleClosedTip() {
+      this.visibleProblemTip = false;
+    },
+
+    handleAnwser() {
+      let slide = this.currSlide;
+      this.$router.push({ path: slide.pageURL + slide.index });
+
+      if(screenfull.isFullscreen) {
+        screenfull.exit()
+      }
+    },
+
+
+     /*
+    * @method 直播音频停止直播
+    * @params
+    */
+    handlestopVideo() {
+      let audioEl = document.getElementById('player');
+      audioEl.pause();
+
+      this.playState = 0;
+      this.saveLiveStatus(this.playState);
+    },
+
+    /*
+    * @method 直播音频播放
+    * @params
+    */
+    handleplayVideo() {
+      let audioEl = document.getElementById('player');
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
+          flvPlayer.attachMediaElement(audioEl);
+          flvPlayer.load();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+            this.playState = 1;
+          });
+
+          this.playLoading = true;
+        } catch(e) {
+        }
+      } else {
+        audioEl.play();
+      }
+
+      this.playState = 1;
+      this.saveLiveStatus(this.playState);
+    },
 
   }
 }

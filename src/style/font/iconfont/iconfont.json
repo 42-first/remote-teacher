@@ -6,6 +6,55 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "4602234",
+      "name": "遥控器设置",
+      "font_class": "yaokongqishezhi",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "9532341",
+      "name": "关闭",
+      "font_class": "guanbi2",
+      "unicode": "e6f5",
+      "unicode_decimal": 59125
+    },
+    {
+      "icon_id": "9807337",
+      "name": "缩小",
+      "font_class": "suoxiao",
+      "unicode": "e70e",
+      "unicode_decimal": 59150
+    },
+    {
+      "icon_id": "9807342",
+      "name": "全屏",
+      "font_class": "quanping1",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "9807471",
+      "name": "播放",
+      "font_class": "bofang4",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "9807472",
+      "name": "暂停",
+      "font_class": "zanting2",
+      "unicode": "e711",
+      "unicode_decimal": 59153
+    },
+    {
+      "icon_id": "9807514",
+      "name": "全部",
+      "font_class": "quanbu",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
       "icon_id": "13105717",
       "name": "弹幕开2",
       "font_class": "danmukai1",
