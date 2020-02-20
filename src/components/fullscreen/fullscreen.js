@@ -6,6 +6,8 @@
  *
  */
 
+
+import { isSupported } from '@/util/util'
 let screenfull = require('screenfull');
 
 
@@ -51,6 +53,8 @@ let fullscreenMixin = {
     handleAnwser() {
       let slide = this.currSlide;
       this.$router.push({ path: slide.pageURL + slide.index });
+      // 提示去掉
+      this.visibleProblemTip = false;
 
       if(screenfull.isFullscreen) {
         screenfull.exit()
@@ -64,6 +68,15 @@ let fullscreenMixin = {
     */
     handlestopVideo() {
       let audioEl = document.getElementById('player');
+
+      if(this.playLoading) {
+        return this;
+      }
+
+      let flvPlayer = this.flvPlayer;
+      flvPlayer.unload();
+      flvPlayer.detachMediaElement();
+
       audioEl.pause();
 
       this.playState = 0;
@@ -86,9 +99,19 @@ let fullscreenMixin = {
           flvPlayer.play().then(() => {
             this.playLoading = false;
             this.playState = 1;
+            this.liveStatusTips = '';
           });
 
           this.playLoading = true;
+          this.liveStatusTips = '连接中...';
+
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+
+            this.liveStatusTips = '';
+          }, 5000)
         } catch(e) {
         }
       } else {
@@ -98,6 +121,18 @@ let fullscreenMixin = {
       this.playState = 1;
       this.saveLiveStatus(this.playState);
     },
+
+
+    handleClosedTopTip() {
+      this.visibleTip = false;
+
+      let lessonID = this.lessonID;
+      let key = 'lesson-tip-cloesed-' + lessonID;
+
+      if(isSupported(window.localStorage)) {
+        localStorage.setItem(key, true);
+      }
+    }
 
   }
 }

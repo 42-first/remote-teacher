@@ -12,15 +12,13 @@
     <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
       <p class="lesson--tip" v-if="visibleTip">
-        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="visibleTip = false"></i>
+        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
       </p>
-      <!-- 习题 -->
-      <!-- <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p> -->
 
       <div class="cover__container">
         <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
         <!-- 作答按钮 -->
-        <router-link tag="p" class="answer-btn cfff f20" :to="currSlide.pageURL + currSlide.index" v-if="currSlide.problemType" >去作答</router-link>
+        <p class="answer-btn cfff f20" @click="handleAnwser" v-if="currSlide.problemType" >去作答</p>
       </div>
     </section>
 
@@ -78,7 +76,8 @@
 <script>
   import request from '@/util/request'
   import API from '@/util/api'
-  import '@/util/util'
+  // import '@/util/util'
+  import { isSupported } from '@/util/util'
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
@@ -236,6 +235,7 @@
       },
       cards(newVal, oldVal) {
         let slide = null;
+        let prev = this.currSlide;
 
         newVal.forEach( (item, index) => {
           if(item.type === 2 || item.type === 3 || item.type === 10) {
@@ -257,7 +257,11 @@
             slide.rate = presentation.Width / presentation.Height;
           }
 
-          this.visibleProblemTip = true;
+          if(prev && prev.problemID !== slide.problemID) {
+            this.visibleProblemTip = true;
+          }
+
+          // this.visibleProblemTip = true;
         } else {
           this.visibleProblemTip = false;
         }
@@ -326,6 +330,14 @@
         // setTimeout(()=>{
         //   this.visibleTip = false;
         // }, 10000)
+
+        let key = 'lesson-tip-cloesed-' + this.lessonID;
+        let visibleTip = true;
+        if(isSupported(window.localStorage)) {
+          visibleTip = !localStorage.getItem(key);
+        }
+
+        this.visibleTip = visibleTip;
       },
 
       /*
