@@ -16,7 +16,7 @@
       <!-- <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p> -->
 
       <div class="cover__container">
-        <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" @click="handleFullscreen"  />
+        <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
         <!-- 作答按钮 -->
         <router-link tag="p" class="answer-btn cfff f20" :to="currSlide.pageURL + currSlide.index" v-if="currSlide.problemType" >去作答</router-link>
       </div>
@@ -34,9 +34,29 @@
     </section>
 
     <!-- 直播入口 视频直播 -->
-    <section class="live__video J_live" v-if="liveURL && liveType === 2">
-      <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
+    <section class="live__video J_live" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
+      <!-- <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" controls="fasle" :src="liveURL" ></video> -->
+      <!-- 定制video -->
+      <video id="player" class="live__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
+      <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
+      <div class="video__controls cfff">
+        <div class="ponter">
+          <i class="iconfont icon-zanting1" @click="handlestop" v-if="playState"></i>
+          <i class="iconfont icon-bofang2" @click="handleplay" v-else></i>
+        </div>
+        <!-- 弹幕发送 -->
+        <div class="ponter">
+          <i class="iconfont icon-quanping" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
+          <i class="iconfont icon-quanping" @click="handleVideoFullscreen" v-else></i>
+        </div>
+      </div>
+
+      <!-- 提示信息 -->
+      <div class="problem__tip" v-if="videoFullscreen" v-show="visibleProblemTip"></div>
     </section>
+
+    <!-- 实时弹幕列表 -->
+    <!-- <section class="danmu-live J_danmu_live"></section> -->
 
     <!-- 子页面 -->
     <router-view></router-view>
@@ -53,6 +73,11 @@
   import eventmixin from '@/components/fullscreen/event-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import fullscreenMixin from '@/components/fullscreen/fullscreen'
+
+
+  let screenfull = require('screenfull');
+  // import Danmaku from 'danmaku';
 
 
   // 子组件不需要引用直接使用
@@ -67,6 +92,8 @@
 
     data() {
       return {
+        // 弹幕引擎
+        danmaku: null,
         isResetSocket: false,
         socket: null,
         // socket重连
@@ -174,6 +201,11 @@
         isWeb: true,
         // 直播卡顿检测
         liveDetection: {},
+
+        // 视频是否全屏
+        videoFullscreen: false
+        // 是否播放
+        // playState
       };
     },
     components: {
@@ -213,7 +245,14 @@
           setTimeout(()=>{
             this.visibleProblemTip = false;
           }, 5000)
+
+          // 遇到题目
+          if(screenfull.isFullscreen) {
+            screenfull.exit()
+          }
         }
+
+        console.log('isFullscreen:'+ screenfull.isFullscreen);
 
         if(slide && slide.src) {
           this.currSlide = slide;
@@ -262,7 +301,7 @@
         return oStyle;
       }
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -771,13 +810,46 @@
     top: 5px;
     right: 5px;
 
+    &.fullscreen {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .live__container {
+        width: 100vw;
+      }
+    }
+
     .live__container {
       width: 400px;
-      min-height: 225px;
-      max-height: 300px;
-      border: 1px solid #ddd;
+      // min-height: 225px;
+      // max-height: 300px;
+      background: rgba(0, 0, 0, 0.7);
     }
   }
+
+
+  .video__controls {
+    position: absolute;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 44px;
+    padding: 5px 20px;
+    background: rgba(0,0,0, 1);
+  }
+
+
+
 
   .lesson--tip {
     z-index: 1;
@@ -898,7 +970,7 @@
 
 </style>
 <style>
-  .live__container {
+  .live__video {
     --x: 0px;
     --y: 0px;
 

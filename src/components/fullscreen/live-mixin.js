@@ -258,10 +258,12 @@ let liveMixin = {
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
+          flvPlayer.unload();
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {
             this.playLoading = false;
+            this.playState = 1;
           });
 
           this.playLoading = true;
