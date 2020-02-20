@@ -8,8 +8,8 @@
 <template>
   <section class="danmu-control-cmp">
     <div class="danmu__control">
-      <i class="iconfont icon-danmukai1 f24" v-if="flag"></i>
-      <i class="iconfont icon-danmuguan1 f24" v-else></i>
+      <!-- <i class="iconfont icon-danmukai1 f24" v-if="flag"></i>
+      <i class="iconfont icon-danmuguan1 f24" v-else></i> -->
       <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
     </div>
     <div class="danmu__send_box" v-show="showSend">
@@ -108,18 +108,20 @@ export default {
   .danmu__control {
     position: absolute;
     bottom: 30px;
-    right: 25px;
+    right: 30px;
     padding: 12px 0;
     width: 54px;
-    height: 84px;
+    // height: 84px;   //弹幕开关icon展示的时候用这个高度
+    height: 54px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    // justify-content: space-between; //弹幕开关icon展示的时候用这个高度
+    justify-content: center;
     align-items: center;
     border-radius: 27px;
     background: #fff;
     opacity: .8;
-    box-shadow: 0 2px 10px rgba(0,0,0,.6);
+    box-shadow: 0 3px 18px rgba(0,0,0,.6);
     cursor: pointer;
     &:hover {
       opacity: 1;
