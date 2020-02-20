@@ -543,7 +543,8 @@
             if(error && error.status_code === 601) {
               // 课程结束
               console.log('课程结束');
-              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              // location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              location.href = '/v/index/lessonend';
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
