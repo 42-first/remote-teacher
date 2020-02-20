@@ -560,7 +560,7 @@
               self.isComplete = true;
 
               setTimeout(() => {
-                self.$router.back();
+                // self.$router.back();
               }, 3000)
             });
 
