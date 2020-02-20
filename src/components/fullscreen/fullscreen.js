@@ -51,7 +51,7 @@ let fullscreenMixin = {
     },
 
     handleAnwser() {
-      let slide = this.currSlide;
+      let slide = this.problem;
       this.$router.push({ path: slide.pageURL + slide.index });
       // 提示去掉
       this.visibleProblemTip = false;

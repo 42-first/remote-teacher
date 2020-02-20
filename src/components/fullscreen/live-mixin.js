@@ -53,7 +53,13 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play().then(()=>{
               this.playState = 1;
+              this.liveStatusTips = '';
             });
+            this.liveStatusTips = '连接中...';
+
+            setTimeout(()=>{
+              this.liveStatusTips = '';
+            }, 5000)
           } else {
             this.playState = 0;
           }

@@ -38,7 +38,7 @@
       <!-- <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" controls="fasle" :src="liveURL" ></video> -->
       <!-- 定制video -->
       <div class="live__video_box">
-        <video id="player" class="live__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
+        <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
@@ -56,8 +56,8 @@
       </div>
 
       <!-- 提示信息 v-if="visibleProblemTip" -->
-      <div class="problem__tip f16" v-if="visibleProblemTip">
-        <span class="cfff">{{ currSlide.caption}}</span>
+      <div class="problem__tip f16" v-if="visibleProblemTip && problem">
+        <span class="cfff">{{ problem.caption}}</span>
         <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
         <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
       </div>
@@ -183,7 +183,7 @@
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
-        playState: 0,
+        playState: 1,
         // 是否提示语音直播
         showLiveTip: false,
         // 版本基本信息 宽高
@@ -219,7 +219,9 @@
         videoFullscreen: false,
         // 是否播放
         // playState
-        liveStatusTips: ''
+        liveStatusTips: '',
+        // 问题
+        problem: null
       };
     },
     components: {
@@ -259,11 +261,13 @@
 
           if(prev && prev.problemID !== slide.problemID) {
             this.visibleProblemTip = true;
+
+            this.problem = slide;
           }
 
           // this.visibleProblemTip = true;
         } else {
-          this.visibleProblemTip = false;
+          // this.visibleProblemTip = false;
         }
 
         console.log('isFullscreen:'+ screenfull.isFullscreen);
@@ -832,6 +836,13 @@
     top: 5px;
     right: 5px;
 
+    &:hover {
+      .video__controls {
+        opacity: 1;
+        transition: opacity ease-in 0.35s;
+      }
+    }
+
     &.fullscreen {
       top: 0;
       bottom: 0;
@@ -849,6 +860,7 @@
 
       .live__container {
         width: 100vw;
+        max-height: 100vh;
       }
 
       .video__controls {
@@ -899,6 +911,7 @@
         color: #fff;
         background: rgba(0,0,0,.3);
       }
+
     }
 
     .live__container {
@@ -924,7 +937,7 @@
     padding: 5px 20px;
     background: rgba(0,0,0, 1);
 
-    transition: opacity ease-in 2.5s 1.5s;
+    transition: opacity ease-in 0.5s 0.5s;
 
     &:hover {
       opacity: 1;
