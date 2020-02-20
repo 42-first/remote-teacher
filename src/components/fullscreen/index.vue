@@ -44,6 +44,9 @@
       
     </section>
 
+    <!-- 弹幕控制组件 -->
+    <danmu-cmp v-if="danmuStatus"></danmu-cmp>
+
     <!-- 子页面 -->
     <router-view></router-view>
   </section>
@@ -59,6 +62,7 @@
   import eventmixin from '@/components/fullscreen/event-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import danmuCmp from './danmu.vue'
 
 
   // 子组件不需要引用直接使用
@@ -184,6 +188,7 @@
       };
     },
     components: {
+      danmuCmp
     },
     computed: {
     },
@@ -733,7 +738,7 @@
   .live {
     z-index: 2;
     position: absolute;
-    bottom: 30px;
+    top: 30px;
     right: 30px;
     // visibility: hidden;
 

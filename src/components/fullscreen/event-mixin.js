@@ -16,6 +16,7 @@ let eventMixin = {
     initEvent() {
       let videoEl = this.$el.querySelector('#player');
       let videoBox = this.$el.querySelector('.live__video_box');
+      if(!videoBox) return false
       videoBox.addEventListener('mousedown', (evt) => {
         evt.preventDefault();
 
