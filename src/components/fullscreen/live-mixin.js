@@ -53,7 +53,13 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play().then(()=>{
               this.playState = 1;
+              this.liveStatusTips = '';
             });
+            this.liveStatusTips = '连接中...';
+
+            setTimeout(()=>{
+              this.liveStatusTips = '';
+            }, 5000)
           } else {
             this.playState = 0;
           }
@@ -188,6 +194,8 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
           flvPlayer.play();
@@ -210,6 +218,8 @@ let liveMixin = {
         try {
           // 展开播放模式下才开始拉流
           if(this.liveVisible) {
+            flvPlayer.unload();
+            flvPlayer.detachMediaElement();
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play();
@@ -258,10 +268,12 @@ let liveMixin = {
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
+          // flvPlayer.unload();
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {
             this.playLoading = false;
+            this.playState = 1;
           });
 
           this.playLoading = true;

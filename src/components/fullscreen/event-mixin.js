@@ -14,7 +14,9 @@ let eventMixin = {
      * @params
      */
     initEvent() {
-      let videoEl = this.$el.querySelector('#player');
+      let videoEl = this.$el.querySelector('.J_live');
+      // let videoBox = this.$el.querySelector('.live__video_box');
+      // if(!videoBox) return false
       videoEl.addEventListener('mousedown', (evt) => {
         evt.preventDefault();
 
@@ -31,7 +33,7 @@ let eventMixin = {
         this.lastPoint = { x, y };
 
         console.dir(cssStyles);
-      })
+      }, true)
 
       videoEl.addEventListener('mouseup', (evt) => {
         evt.preventDefault();
@@ -39,15 +41,16 @@ let eventMixin = {
         this.canMove = false;
 
         setTimeout(()=>{
-          videoEl.play();
+          // videoEl.play();
+          videoEl.querySelector('#player').play();
         }, 400)
-      })
+      }, true)
 
       videoEl.addEventListener('mouseout', (evt) => {
         evt.preventDefault();
 
         this.canMove = false;
-      })
+      }, true)
 
       videoEl.addEventListener('mousemove', (evt)=>{
         evt.preventDefault();
@@ -64,11 +67,11 @@ let eventMixin = {
 
           return false;
         }
-      })
+      }, true)
     },
 
     translateContent(point) {
-      let videoEl = this.$el.querySelector('#player');
+      let videoEl = this.$el.querySelector('.J_live');
       let lastPoint = this.lastPoint;
 
       let offsetX = point.x;
