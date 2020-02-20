@@ -11,7 +11,9 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动。使用雨课堂小程序，直播同步效果更好哦</p>
+      <p class="lesson--tip" v-if="visibleTip">
+        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="visibleTip = false"></i>
+      </p>
       <!-- 习题 -->
       <!-- <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p> -->
 
@@ -35,7 +37,11 @@
 
     <!-- 直播入口 视频直播 -->
     <section class="live__video J_live" v-if="liveURL && liveType === 2">
-      <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
+      <div class="live__video_box">
+        <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
+        <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
+      </div>
+      
     </section>
 
     <!-- 子页面 -->
@@ -174,6 +180,7 @@
         isWeb: true,
         // 直播卡顿检测
         liveDetection: {},
+        liveStatusTips: ''
       };
     },
     components: {
@@ -274,9 +281,9 @@
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
 
-        setTimeout(()=>{
-          this.visibleTip = false;
-        }, 10000)
+        // setTimeout(()=>{
+        //   this.visibleTip = false;
+        // }, 10000)
       },
 
       /*
@@ -771,6 +778,25 @@
     top: 5px;
     right: 5px;
 
+    .live__video_box {
+      width: 400px;
+      min-height: 225px;
+      max-height: 300px;
+      position: relative;
+      .live__status_tip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        border-radius: 2px;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        background: rgba(0,0,0,.3);
+      }
+    }
     .live__container {
       width: 400px;
       min-height: 225px;
@@ -787,18 +813,25 @@
     right: 0;
 
     margin: 0 auto;
-    width: 610px;
-    height: 40px;
-    line-height: 40px;
+    width: 600px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    width: fit-content;
-    padding: 0 15px;
+    // width: fit-content;
+    padding: 0 8px 0 12px;
 
     font-size: 16px;
     text-align: center;
     color: #fff;
-    background: #757575;
-    border-radius: 4px;
+    background: #5096f5;
+    border-radius: 2px;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,.1);
+
+    .close {
+      cursor: pointer;
+    }
   }
 
   /*------------------*\
@@ -898,7 +931,7 @@
 
 </style>
 <style>
-  .live__container {
+  .live__container, .live__video_box {
     --x: 0px;
     --y: 0px;
 

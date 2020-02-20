@@ -15,12 +15,13 @@ let eventMixin = {
      */
     initEvent() {
       let videoEl = this.$el.querySelector('#player');
-      videoEl.addEventListener('mousedown', (evt) => {
+      let videoBox = this.$el.querySelector('.live__video_box');
+      videoBox.addEventListener('mousedown', (evt) => {
         evt.preventDefault();
 
         this.canMove = true;
 
-        const cssStyles = getComputedStyle(videoEl);
+        const cssStyles = getComputedStyle(videoBox);
         let xVal = String(cssStyles.getPropertyValue('--x')).trim();
         let yVal = String(cssStyles.getPropertyValue('--y')).trim();
         xVal = parseInt(xVal, 10);
@@ -31,9 +32,9 @@ let eventMixin = {
         this.lastPoint = { x, y };
 
         console.dir(cssStyles);
-      })
+      }, true)
 
-      videoEl.addEventListener('mouseup', (evt) => {
+      videoBox.addEventListener('mouseup', (evt) => {
         evt.preventDefault();
 
         this.canMove = false;
@@ -41,15 +42,15 @@ let eventMixin = {
         setTimeout(()=>{
           videoEl.play();
         }, 400)
-      })
+      }, true)
 
-      videoEl.addEventListener('mouseout', (evt) => {
+      videoBox.addEventListener('mouseout', (evt) => {
         evt.preventDefault();
 
         this.canMove = false;
-      })
+      }, true)
 
-      videoEl.addEventListener('mousemove', (evt)=>{
+      videoBox.addEventListener('mousemove', (evt)=>{
         evt.preventDefault();
 
         if(this.canMove) {
@@ -64,11 +65,11 @@ let eventMixin = {
 
           return false;
         }
-      })
+      }, true)
     },
 
     translateContent(point) {
-      let videoEl = this.$el.querySelector('#player');
+      let videoEl = this.$el.querySelector('.live__video_box');
       let lastPoint = this.lastPoint;
 
       let offsetX = point.x;
