@@ -196,6 +196,7 @@ export default {
       color: #fff;
       top: 50%;
       transform: translateY(-50%);
+      cursor: pointer;
     }
   }
 }
