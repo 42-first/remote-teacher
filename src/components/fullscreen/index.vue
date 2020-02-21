@@ -298,7 +298,7 @@
         setTimeout(()=>{
           newVal && this.supportFLV();
 
-          this.initEvent();
+          this.liveType === 2 && this.initEvent();
         }, 1000)
       },
       danmus(newVal, oldVal) {
@@ -888,7 +888,7 @@
     width: 60px;
     height: 60px;
 
-    background: rgba(0, 0, 0, 0.7);
+    background: #fff;
     box-shadow: 0 3px 18px rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
@@ -917,7 +917,7 @@
     // padding-right: 5px;
     // padding-bottom: 5px;
     font-size: 45px;
-    color: #fff;
+    color: #5096F5;
   }
 
 
