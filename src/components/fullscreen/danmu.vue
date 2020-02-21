@@ -9,8 +9,8 @@
   <section class="danmu-control-cmp">
     <template v-if="!videoFullscreen">
       <div class="danmu__control">
-        <!-- <i class="iconfont icon-danmukai1 f24" v-if="flag"></i>
-        <i class="iconfont icon-danmuguan1 f24" v-else></i> -->
+        <i class="iconfont icon-danmukai1 f28" v-if="visibleDanmu" @click="handleVisibleDanmu"></i>
+        <i class="iconfont icon-danmuguan1 f28" v-else @click="handleVisibleDanmu"></i>
         <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
       </div>
       <div class="danmu__send_box" v-show="showSend">
@@ -21,7 +21,7 @@
               <i class="current">{{danmuText.length}}</i>/50
             </span>
           </div>
-          
+
           <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
         </div>
         <i class="iconfont icon-guanbi1 send__close" @click="showSend = false"></i>
@@ -35,7 +35,7 @@
             {{danmuText.length}}/50
           </span>
         </div>
-        
+
         <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
       </div>
     </template>
@@ -48,13 +48,16 @@ export default {
   name: 'danmuControl',
   data(){
     return {
-      flag: true,    // 弹幕开关
       showSend: false,
       danmuText: ''
     }
   },
   props: {
-    videoFullscreen: Boolean
+    videoFullscreen: Boolean,
+    visibleDanmu: {
+      type: Boolean,
+      default: true
+    },
   },
   components: {
   },
@@ -77,7 +80,7 @@ export default {
     * @param
     */
     handleSend() {
-      if(this.danmuText.length > 50 || !this.danmuText) return 
+      if(this.danmuText.length > 50 || !this.danmuText) return
       let self = this;
       let URL = API.student.SEND_DANMU;
       // let socket = this.$parent.socket;
@@ -119,15 +122,24 @@ export default {
           duration: 3000
         });
       }
+    },
+
+    /*
+     * @method 弹幕开关控制
+     * @param
+     */
+    handleVisibleDanmu() {
+      // this.visibleDanmu = !this.visibleDanmu;
+      this.$parent.setVisibleDanmu(!this.visibleDanmu);
     }
   },
   created() {
-    
+
   },
   mounted() {
   },
   beforeDestroy() {
-    
+
   }
 }
 </script>
@@ -135,6 +147,9 @@ export default {
 <style lang="scss" scoped>
 .f24 {
   font-size: 24px;
+}
+.f28 {
+  font-size: 28px;
 }
 .danmu-control-cmp {
   position: relative;
@@ -144,12 +159,12 @@ export default {
     right: 30px;
     padding: 12px 0;
     width: 54px;
-    // height: 84px;   //弹幕开关icon展示的时候用这个高度
-    height: 54px;
+    height: 84px;   //弹幕开关icon展示的时候用这个高度
+    // height: 54px;
     display: flex;
     flex-direction: column;
-    // justify-content: space-between; //弹幕开关icon展示的时候用这个高度
-    justify-content: center;
+    justify-content: space-between; //弹幕开关icon展示的时候用这个高度
+    // justify-content: center;
     align-items: center;
     border-radius: 27px;
     background: #fff;
@@ -206,7 +221,7 @@ export default {
           }
         }
       }
-      
+
       .send__btn {
         width: 100px;
         background: #5096F5;
@@ -265,7 +280,7 @@ export default {
         }
       }
     }
-    
+
     .send__btn {
       width: 74px;
       background: #4182FA;
