@@ -47,12 +47,16 @@
           <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
           <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
-        <!-- 弹幕发送 -->
-        <div></div>
-        <div class="ponter">
-          <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
-          <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
+        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
+          <!-- 弹幕发送 -->
+          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
+          <div class="ponter">
+            <volume @setvolume="handleSetVolume"></volume>
+            <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
+            <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
+          </div>
         </div>
+
       </div>
 
       <!-- 提示信息 v-if="visibleProblemTip" -->
@@ -61,13 +65,16 @@
         <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
         <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
       </div>
+
+      <!-- 实时弹幕列表 -->
+      <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
     </section>
 
     <!-- 实时弹幕列表 -->
-    <!-- <section class="danmu-live J_danmu_live"></section> -->
+    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
 
     <!-- 弹幕控制组件 -->
-    <danmu-cmp v-if="danmuStatus"></danmu-cmp>
+    <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
 
     <!-- 子页面 -->
     <router-view></router-view>
@@ -89,9 +96,10 @@
 
 
   let screenfull = require('screenfull');
-  // import Danmaku from 'danmaku';
+  import Danmaku from 'danmaku';
 
   import danmuCmp from './danmu.vue'
+  import volume from './video_volume.vue'
 
 
   // 子组件不需要引用直接使用
@@ -139,6 +147,8 @@
         observerMode: false,
         // 是否开启弹幕
         danmuStatus: false,
+        // 是否显示弹幕
+        visibleDanmu: true,
         // 课程是否结束
         lessonStatus: 0,
         presentationList: null,
@@ -225,7 +235,8 @@
       };
     },
     components: {
-      danmuCmp
+      danmuCmp,
+      volume
     },
     computed: {
     },
@@ -287,8 +298,24 @@
         setTimeout(()=>{
           newVal && this.supportFLV();
 
-          this.initEvent();
+          this.liveType === 2 && this.initEvent();
         }, 1000)
+      },
+      danmus(newVal, oldVal) {
+        if(newVal && newVal.length) {
+          let danmu = newVal.shift();
+          if(danmu) {
+            this.emitDanmu(danmu.danmu)
+          }
+        }
+      },
+      visibleDanmu(newVal, oldVal) {
+        // 视频全屏开启弹幕
+        if(newVal && this.videoFullscreen) {
+          setTimeout(()=>{
+            this.initVideoDanmu();
+          }, 500)
+        }
       }
     },
     filters: {
@@ -331,10 +358,6 @@
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
 
-        // setTimeout(()=>{
-        //   this.visibleTip = false;
-        // }, 10000)
-
         let key = 'lesson-tip-cloesed-' + this.lessonID;
         let visibleTip = true;
         if(isSupported(window.localStorage)) {
@@ -342,6 +365,62 @@
         }
 
         this.visibleTip = visibleTip;
+      },
+
+      /**
+       * @method 初始化弹幕
+       * @params
+       */
+      initDanmu() {
+        let options = {
+          container: this.$el.querySelector('.J_danmu_live'),
+          comments: [],
+          speed: this.speed || 180
+        };
+        let danmaku = new Danmaku(options);
+
+        this.danmaku = danmaku;
+      },
+
+      /**
+       * @method 发射弹幕
+       * @params
+       */
+      emitDanmu(msg) {
+        // let colors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        // let color = colors[Math.floor(Math.random() * 6)];
+        let bgcolors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        let bgcolor = bgcolors[Math.floor(Math.random() * 6)];
+        let danmu = {
+          text: msg,
+          style: {
+            margin: '10px',
+            padding: '0 15px',
+            fontSize: '16px',
+            // color: color,
+            // background: 'rgba(0,0,0,0.15)',
+            color: '#fff',
+            background: bgcolor,
+            borderRadius: '13px/50%',
+          },
+        };
+
+        // this.danmaku.emit(danmu);
+
+        // 视频全屏使用
+        if(this.videoFullscreen && this.videoDanmaku) {
+          this.videoDanmaku.emit(danmu);
+        } else {
+          this.danmaku.emit(danmu);
+        }
+      },
+
+      /**
+       * @method 是否显示弹幕
+       * @params
+       */
+      setVisibleDanmu(visible) {
+        this.visibleDanmu = visible;
       },
 
       /*
@@ -727,11 +806,29 @@
           document.webkitExitFullscreen();
         }
       },
+      /**
+       * @method 弹幕发送toast
+      */
+      handleShowTips(text){
+        this.liveStatusTips = text
+        setTimeout(() => {
+          this.liveStatusTips = ''
+        }, 3000)
+      },
+      /**
+       * @member 设置音量
+      */
+      handleSetVolume(volume){
+        document.querySelector('#player').volume = volume
+      }
     },
     created() {
       this.init();
     },
     mounted() {
+      setTimeout(()=>{
+        this.initDanmu();
+      }, 1000)
     },
     updated() {
     },
@@ -799,7 +896,7 @@
     width: 60px;
     height: 60px;
 
-    background: rgba(0, 0, 0, 0.7);
+    background: #fff;
     box-shadow: 0 3px 18px rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
@@ -828,7 +925,7 @@
     // padding-right: 5px;
     // padding-bottom: 5px;
     font-size: 45px;
-    color: #fff;
+    color: #5096F5;
   }
 
 
@@ -872,12 +969,13 @@
         .iconfont {
           font-size: 25px;
         }
+
       }
 
       .problem__tip {
         // width: 100vw;
         height: 56px;
-        padding: 0 25px;
+        padding: 0 35px;
 
         left: 50%;
         right: initial;
@@ -885,7 +983,7 @@
         transform: translateX(-50%);
 
         .anwser--tip  {
-          margin: 12px;
+          margin: 0 20px;
           padding: 3px 10px;
           color: #fff;
           background: #5096F5;
@@ -905,6 +1003,7 @@
         left: 50%;
         width: 300px;
         height: 84px;
+        font-size: 20px;
         line-height: 84px;
         text-align: center;
         border-radius: 2px;
@@ -934,7 +1033,7 @@
     justify-content: space-between;
 
     width: 100%;
-    height: 44px;
+    height: 30px;
     padding: 5px 20px;
     background: rgba(0,0,0, 1);
 
@@ -943,6 +1042,21 @@
     &:hover {
       opacity: 1;
       transition: opacity ease-in 0.35s;
+    }
+    .controls__right {
+      display: flex;
+      &.halfWidth {
+        width: 50%;
+        min-width: 550px;
+      }
+      .danmu-control-cmp {
+        flex: 1;
+        margin-right: 34px;
+      }
+      .ponter {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
@@ -964,6 +1078,18 @@
     .anwser--tip {
       padding: 0 20px;
     }
+  }
+
+
+  .danmu-live {
+    z-index: 1;
+    pointer-events: none;
+    position: fixed;
+    top: 50px;
+    left: 0;
+
+    width: 100vw;
+    height: 50vh;
   }
 
 

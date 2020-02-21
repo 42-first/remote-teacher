@@ -211,7 +211,7 @@ let liveMixin = {
         console.log('errorDetail:', errorDetail);
 
         let system = this.system;
-        system['et'] = errorType;
+        system && (system['et'] = errorType);
 
         if (errorType) {
           setTimeout(()=>{
@@ -220,7 +220,7 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          this.reportLog(system);
+          system && this.reportLog(system);
         }
       });
 

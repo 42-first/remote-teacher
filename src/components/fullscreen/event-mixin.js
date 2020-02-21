@@ -18,6 +18,7 @@ let eventMixin = {
       // let videoBox = this.$el.querySelector('.live__video_box');
       // if(!videoBox) return false
       videoEl.addEventListener('mousedown', (evt) => {
+        if(evt.target.parentElement.className.indexOf('volume_list') != -1) return 
         evt.preventDefault();
 
         this.canMove = true;
