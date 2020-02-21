@@ -51,6 +51,7 @@
           <!-- 弹幕发送 -->
           <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips"></danmu-cmp>
           <div class="ponter">
+            <volume @setvolume="handleSetVolume"></volume>
             <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
             <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
           </div>
@@ -98,6 +99,7 @@
   import Danmaku from 'danmaku';
 
   import danmuCmp from './danmu.vue'
+  import volume from './video_volume.vue'
 
 
   // 子组件不需要引用直接使用
@@ -233,7 +235,8 @@
       };
     },
     components: {
-      danmuCmp
+      danmuCmp,
+      volume
     },
     computed: {
     },
@@ -803,6 +806,12 @@
         setTimeout(() => {
           this.liveStatusTips = ''
         }, 3000)
+      },
+      /** 
+       * @member 设置音量
+      */
+      handleSetVolume(volume){
+        document.querySelector('#player').volume = volume
       }
     },
     created() {
@@ -1034,6 +1043,10 @@
       .danmu-control-cmp {
         flex: 1;
         margin-right: 34px;
+      }
+      .ponter {
+        display: flex;
+        align-items: center;
       }
     }
   }
