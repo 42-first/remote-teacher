@@ -22,7 +22,7 @@
             </span>
           </div>
           
-          <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">{{sendSuccess ? '发送成功' : '发送'}}</span>
+          <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
         </div>
         <i class="iconfont icon-guanbi1 send__close" @click="showSend = false"></i>
       </div>
@@ -36,7 +36,7 @@
           </span>
         </div>
         
-        <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">{{sendSuccess ? '发送成功' : '发送'}}</span>
+        <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
       </div>
     </template>
 
@@ -50,8 +50,7 @@ export default {
     return {
       flag: true,    // 弹幕开关
       showSend: false,
-      danmuText: '',
-      sendSuccess: false
+      danmuText: ''
     }
   },
   props: {
@@ -95,18 +94,31 @@ export default {
             // 弹幕返回数据结构 danmuID success
             let data = res;
             if(data.success){
-              self.sendSuccess = true
               self.danmuText = ''
-              setTimeout(() => {
-                self.sendSuccess = false
-              }, 3000);
+              self.showToast(true)
+            }else {
+              self.showToast(false)
             }
             return data;
           }
+        }).catch(err => {
+          self.showToast(false)
         });
     },
     handleFocus(){
       this.$refs.danmuinput2.focus()
+    },
+    showToast(success){
+      if(this.videoFullscreen){
+        this.$emit('showtips', success ? '发送成功' : '发送失败')
+      }else {
+        this.$refs.danmuinput.focus()
+        this.$toast({
+          message: success ? '发送成功' : '发送失败',
+          className: 'fullscreen-toast',
+          duration: 3000
+        });
+      }
     }
   },
   created() {
@@ -278,3 +290,17 @@ export default {
 }
 
 </style>
+<style lang="scss">
+.fullscreen-toast {
+  z-index: 999999 !important;
+  width: 300px;
+  height: 84px;
+  line-height: 84px;
+  padding: 0 !important;
+  background: rgba(0,0,0,.3);
+  .mint-toast-text {
+    font-size: 20px !important;
+  }
+}
+</style>
+

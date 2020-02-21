@@ -49,7 +49,7 @@
         </div>
         <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
           <!-- 弹幕发送 -->
-          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen"></danmu-cmp>
+          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips"></danmu-cmp>
           <div class="ponter">
             <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
             <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
@@ -730,6 +730,15 @@
           document.webkitExitFullscreen();
         }
       },
+      /** 
+       * @method 弹幕发送toast
+      */
+      handleShowTips(text){
+        this.liveStatusTips = text
+        setTimeout(() => {
+          this.liveStatusTips = ''
+        }, 3000)
+      }
     },
     created() {
       this.init();
@@ -909,6 +918,7 @@
         left: 50%;
         width: 300px;
         height: 84px;
+        font-size: 20px;
         line-height: 84px;
         text-align: center;
         border-radius: 2px;
