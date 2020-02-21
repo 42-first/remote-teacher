@@ -47,9 +47,9 @@
           <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
           <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
-        <div class="controls__right">
+        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
           <!-- 弹幕发送 -->
-          <danmu-cmp v-if="videoFullscreen" :videoFullscreen="videoFullscreen"></danmu-cmp>
+          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen"></danmu-cmp>
           <div class="ponter">
             <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
             <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
@@ -875,9 +875,7 @@
         .iconfont {
           font-size: 25px;
         }
-        .controls__right {
-          width: 50%;
-        }
+
       }
 
       .problem__tip {
@@ -952,7 +950,9 @@
     }
     .controls__right {
       display: flex;
-      
+      &.halfWidth {
+        width: 50%;
+      }
       .danmu-control-cmp {
         flex: 1;
         margin-right: 34px;
