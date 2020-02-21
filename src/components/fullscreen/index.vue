@@ -64,10 +64,10 @@
     </section>
 
     <!-- 实时弹幕列表 -->
-    <!-- <section class="danmu-live J_danmu_live"></section> -->
+    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
 
     <!-- 弹幕控制组件 -->
-    <danmu-cmp v-if="danmuStatus"></danmu-cmp>
+    <danmu-cmp :visible-danmu="visibleDanmu" v-if="danmuStatus"></danmu-cmp>
 
     <!-- 子页面 -->
     <router-view></router-view>
@@ -89,7 +89,7 @@
 
 
   let screenfull = require('screenfull');
-  // import Danmaku from 'danmaku';
+  import Danmaku from 'danmaku';
 
   import danmuCmp from './danmu.vue'
 
@@ -139,6 +139,8 @@
         observerMode: false,
         // 是否开启弹幕
         danmuStatus: false,
+        // 是否显示弹幕
+        visibleDanmu: true,
         // 课程是否结束
         lessonStatus: 0,
         presentationList: null,
@@ -289,6 +291,14 @@
 
           this.initEvent();
         }, 1000)
+      },
+      danmus(newVal, oldVal) {
+        if(newVal && newVal.length) {
+          let danmu = newVal.shift();
+          if(danmu) {
+            this.emitDanmu(danmu.danmu)
+          }
+        }
       }
     },
     filters: {
@@ -331,10 +341,6 @@
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
 
-        // setTimeout(()=>{
-        //   this.visibleTip = false;
-        // }, 10000)
-
         let key = 'lesson-tip-cloesed-' + this.lessonID;
         let visibleTip = true;
         if(isSupported(window.localStorage)) {
@@ -342,6 +348,55 @@
         }
 
         this.visibleTip = visibleTip;
+      },
+
+      /**
+       * @method 初始化弹幕
+       * @params
+       */
+      initDanmu() {
+        let options = {
+          container: this.$el.querySelector('.J_danmu_live'),
+          comments: [],
+          speed: this.speed || 180
+        };
+        let danmaku = new Danmaku(options);
+
+        this.danmaku = danmaku;
+      },
+
+      /**
+       * @method 发射弹幕
+       * @params
+       */
+      emitDanmu(msg) {
+        // let colors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        // let color = colors[Math.floor(Math.random() * 6)];
+        let bgcolors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        let bgcolor = bgcolors[Math.floor(Math.random() * 6)];
+        let danmu = {
+          text: msg,
+          style: {
+            margin: '10px',
+            padding: '0 15px',
+            fontSize: '16px',
+            // color: color,
+            // background: 'rgba(0,0,0,0.15)',
+            color: '#fff',
+            background: bgcolor,
+            borderRadius: '13px/50%',
+          },
+        };
+
+        this.danmaku.emit(danmu);
+      },
+
+      /**
+       * @method 是否显示弹幕
+       * @params
+       */
+      setVisibleDanmu(visible) {
+        this.visibleDanmu = visible;
       },
 
       /*
@@ -732,6 +787,9 @@
       this.init();
     },
     mounted() {
+      setTimeout(()=>{
+        this.initDanmu();
+      }, 1000)
     },
     updated() {
     },
@@ -877,7 +935,7 @@
       .problem__tip {
         // width: 100vw;
         height: 56px;
-        padding: 0 25px;
+        padding: 0 35px;
 
         left: 50%;
         right: initial;
@@ -885,7 +943,7 @@
         transform: translateX(-50%);
 
         .anwser--tip  {
-          margin: 12px;
+          margin: 0 20px;
           padding: 3px 10px;
           color: #fff;
           background: #5096F5;
@@ -964,6 +1022,18 @@
     .anwser--tip {
       padding: 0 20px;
     }
+  }
+
+
+  .danmu-live {
+    z-index: 1;
+    pointer-events: none;
+    position: fixed;
+    top: 50px;
+    left: 0;
+
+    width: 100vw;
+    height: 50vh;
   }
 
 
