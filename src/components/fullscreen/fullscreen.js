@@ -32,7 +32,7 @@ let fullscreenMixin = {
         });
 
         // 创建弹幕引擎
-        this.initVideoDanmu();
+        this.visibleDanmu && this.initVideoDanmu();
       });
     },
 

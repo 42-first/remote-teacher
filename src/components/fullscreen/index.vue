@@ -308,6 +308,14 @@
             this.emitDanmu(danmu.danmu)
           }
         }
+      },
+      visibleDanmu(newVal, oldVal) {
+        // 视频全屏开启弹幕
+        if(newVal && this.videoFullscreen) {
+          setTimeout(()=>{
+            this.initVideoDanmu();
+          }, 500)
+        }
       }
     },
     filters: {
