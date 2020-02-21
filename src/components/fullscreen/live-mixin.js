@@ -36,6 +36,12 @@ let liveMixin = {
         return;
       }
 
+      // 拉流之前先解绑
+      if(this.flvPlayer) {
+        this.flvPlayer.unload();
+        this.flvPlayer.detachMediaElement();
+      }
+
       let audioEl = document.getElementById('player');
       if (flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
@@ -198,7 +204,9 @@ let liveMixin = {
           flvPlayer.detachMediaElement();
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playState = 1;
+          });
         }
       });
     },
@@ -222,7 +230,9 @@ let liveMixin = {
             flvPlayer.detachMediaElement();
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.playState = 1;
+            });
           }
         } catch(evt) {
         }
