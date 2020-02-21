@@ -29,14 +29,18 @@
     </template>
     <template v-else>
       <div class="send__box">
-        <div class="input__box" @click="handleFocus">
-          <input class="send__input" ref="danmuinput2" type="text" v-model="danmuText" placeholder="点击这里发射一条弹幕" autofocus>
-          <span class="words" :class="danmuText.length > 50 ? 'warning' : ''" v-if="danmuText">
-            {{danmuText.length}}/50
-          </span>
+        <i class="iconfont icon-danmukai1" v-if="visibleDanmu" @click="handleVisibleDanmu"></i>
+        <i class="iconfont icon-danmuguan1" v-else @click="handleVisibleDanmu"></i>
+        <div class="send__container">
+          <div class="input__box" @click="handleFocus">
+            <input class="send__input" ref="danmuinput2" type="text" v-model="danmuText" placeholder="点击这里发射一条弹幕" autofocus>
+            <span class="words" :class="danmuText.length > 50 ? 'warning' : ''" v-if="danmuText">
+              {{danmuText.length}}/50
+            </span>
+          </div>
+          <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
         </div>
-
-        <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
+        
       </div>
     </template>
 
@@ -252,10 +256,23 @@ export default {
     height: 40px;
     display: flex;
     align-items: center;
-    border-radius: 20px;
-    overflow: hidden;
-    color: #fff;
-    background: rgba(255,255,255,.3);
+    .iconfont {
+      color: #5096F5;
+      font-size: 30px;
+      cursor: pointer;
+      position: relative;
+    }
+    .send__container {
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      height: 40px;
+      flex: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      color: #fff;
+      background: rgba(255,255,255,.3);
+    } 
     .input__box {
       flex: 1;
       height: 100%;

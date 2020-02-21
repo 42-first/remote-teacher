@@ -49,7 +49,7 @@
         </div>
         <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
           <!-- 弹幕发送 -->
-          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips"></danmu-cmp>
+          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
           <div class="ponter">
             <volume @setvolume="handleSetVolume"></volume>
             <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
@@ -1039,6 +1039,7 @@
       display: flex;
       &.halfWidth {
         width: 50%;
+        min-width: 550px;
       }
       .danmu-control-cmp {
         flex: 1;
