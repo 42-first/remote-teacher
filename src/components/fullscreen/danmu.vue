@@ -7,24 +7,39 @@
  */
 <template>
   <section class="danmu-control-cmp">
-    <div class="danmu__control">
-      <!-- <i class="iconfont icon-danmukai1 f24" v-if="flag"></i>
-      <i class="iconfont icon-danmuguan1 f24" v-else></i> -->
-      <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
-    </div>
-    <div class="danmu__send_box" v-show="showSend">
-      <div class="send__container">
-        <div class="input__box">
-          <input class="send__input" ref="danmuinput" type="text" v-model="danmuText" placeholder="发弹幕" autofocus>
-          <span class="words" :class="danmuText.length > 50 ? 'warning' : ''">
-            <i class="current">{{danmuText.length}}</i>/50
+    <template v-if="!videoFullscreen">
+      <div class="danmu__control">
+        <!-- <i class="iconfont icon-danmukai1 f24" v-if="flag"></i>
+        <i class="iconfont icon-danmuguan1 f24" v-else></i> -->
+        <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
+      </div>
+      <div class="danmu__send_box" v-show="showSend">
+        <div class="send__container">
+          <div class="input__box">
+            <input class="send__input" ref="danmuinput" type="text" v-model="danmuText" placeholder="发弹幕" autofocus>
+            <span class="words" :class="danmuText.length > 50 ? 'warning' : ''">
+              <i class="current">{{danmuText.length}}</i>/50
+            </span>
+          </div>
+          
+          <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">{{sendSuccess ? '发送成功' : '发送'}}</span>
+        </div>
+        <i class="iconfont icon-guanbi1 send__close" @click="showSend = false"></i>
+      </div>
+    </template>
+    <template v-else>
+      <div class="send__box">
+        <div class="input__box" @click="handleFocus">
+          <input class="send__input" ref="danmuinput2" type="text" v-model="danmuText" placeholder="点击这里发射一条弹幕" autofocus>
+          <span class="words" :class="danmuText.length > 50 ? 'warning' : ''" v-if="danmuText">
+            {{danmuText.length}}/50
           </span>
         </div>
         
         <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">{{sendSuccess ? '发送成功' : '发送'}}</span>
       </div>
-      <i class="iconfont icon-guanbi1 send__close" @click="showSend = false"></i>
-    </div>
+    </template>
+
   </section>
 </template>
 
@@ -38,6 +53,9 @@ export default {
       danmuText: '',
       sendSuccess: false
     }
+  },
+  props: {
+    videoFullscreen: Boolean
   },
   components: {
   },
@@ -87,6 +105,9 @@ export default {
           }
         });
     },
+    handleFocus(){
+      this.$refs.danmuinput2.focus()
+    }
   },
   created() {
     
@@ -197,6 +218,61 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
+    }
+  }
+  .send__box {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    overflow: hidden;
+    color: #fff;
+    background: rgba(255,255,255,.1);
+    .input__box {
+      flex: 1;
+      height: 100%;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      .send__input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        line-height: 22px;
+        caret-color:#5096F5;
+        background: none;
+        color: #ffff;
+      }
+      .words {
+        margin-left: 20px;
+        font-size: 18px;
+        &.warning {
+          color: #F84F41;
+        }
+      }
+    }
+    
+    .send__btn {
+      width: 74px;
+      background: #4182FA;
+      color: #fff;
+      line-height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+      &.disabled {
+        background: transparent;
+        pointer-events: none;
+        position: relative;
+        &::before {
+          content: "|";
+          position: absolute;
+          left: 0;
+          top: 0;
+
+        }
+      }
     }
   }
 }

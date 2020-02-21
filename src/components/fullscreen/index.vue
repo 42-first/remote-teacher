@@ -47,12 +47,15 @@
           <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
           <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
-        <!-- 弹幕发送 -->
-        <div></div>
-        <div class="ponter">
-          <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
-          <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
+        <div class="controls__right">
+          <!-- 弹幕发送 -->
+          <danmu-cmp v-if="videoFullscreen" :videoFullscreen="videoFullscreen"></danmu-cmp>
+          <div class="ponter">
+            <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
+            <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
+          </div>
         </div>
+        
       </div>
 
       <!-- 提示信息 v-if="visibleProblemTip" -->
@@ -67,7 +70,7 @@
     <!-- <section class="danmu-live J_danmu_live"></section> -->
 
     <!-- 弹幕控制组件 -->
-    <danmu-cmp v-if="danmuStatus"></danmu-cmp>
+    <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen"></danmu-cmp>
 
     <!-- 子页面 -->
     <router-view></router-view>
@@ -872,6 +875,9 @@
         .iconfont {
           font-size: 25px;
         }
+        .controls__right {
+          width: 50%;
+        }
       }
 
       .problem__tip {
@@ -943,6 +949,14 @@
     &:hover {
       opacity: 1;
       transition: opacity ease-in 0.35s;
+    }
+    .controls__right {
+      display: flex;
+      
+      .danmu-control-cmp {
+        flex: 1;
+        margin-right: 34px;
+      }
     }
   }
 
