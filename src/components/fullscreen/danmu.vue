@@ -255,7 +255,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     color: #fff;
-    background: rgba(255,255,255,.1);
+    background: rgba(255,255,255,.3);
     .input__box {
       flex: 1;
       height: 100%;

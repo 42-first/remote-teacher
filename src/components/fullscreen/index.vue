@@ -1016,7 +1016,7 @@
     justify-content: space-between;
 
     width: 100%;
-    height: 44px;
+    height: 30px;
     padding: 5px 20px;
     background: rgba(0,0,0, 1);
 
