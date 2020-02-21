@@ -67,7 +67,7 @@
       </div>
 
       <!-- 实时弹幕列表 -->
-      <section class="danmu-live J_video_danmu" v-show="videoFullscreen"></section>
+      <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
     </section>
 
     <!-- 实时弹幕列表 -->
@@ -807,7 +807,7 @@
           this.liveStatusTips = ''
         }, 3000)
       },
-      /** 
+      /**
        * @member 设置音量
       */
       handleSetVolume(volume){
