@@ -64,6 +64,9 @@
         <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
         <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
       </div>
+
+      <!-- 实时弹幕列表 -->
+      <section class="danmu-live J_video_danmu" v-show="videoFullscreen"></section>
     </section>
 
     <!-- 实时弹幕列表 -->
@@ -391,7 +394,14 @@
           },
         };
 
-        this.danmaku.emit(danmu);
+        // this.danmaku.emit(danmu);
+
+        // 视频全屏使用
+        if(this.videoFullscreen && this.videoDanmaku) {
+          this.videoDanmaku.emit(danmu);
+        } else {
+          this.danmaku.emit(danmu);
+        }
       },
 
       /**

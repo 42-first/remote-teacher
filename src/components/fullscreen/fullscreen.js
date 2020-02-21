@@ -9,7 +9,7 @@
 
 import { isSupported } from '@/util/util'
 let screenfull = require('screenfull');
-
+import Danmaku from 'danmaku';
 
 let fullscreenMixin = {
   methods: {
@@ -31,7 +31,24 @@ let fullscreenMixin = {
           }
         });
 
+        // 创建弹幕引擎
+        this.initVideoDanmu();
       });
+    },
+
+    /**
+     * @method 初始化弹幕
+     * @params
+     */
+    initVideoDanmu() {
+      let options = {
+        container: this.$el.querySelector('.J_video_danmu'),
+        comments: [],
+        speed: 144
+      };
+      let danmaku = new Danmaku(options);
+
+      this.videoDanmaku = danmaku;
     },
 
     /**
@@ -43,6 +60,11 @@ let fullscreenMixin = {
 
       if(screenfull.isFullscreen) {
         screenfull.exit()
+
+        // 销毁弹幕库
+        if(this.videoDanmaku) {
+          this.videoDanmaku.destroy();
+        }
       }
     },
 
