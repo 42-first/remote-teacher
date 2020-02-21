@@ -31,6 +31,7 @@ export default {
   methods: {
     setVolume(volume){
       this.volume = volume
+      this.mute = false
       this.$emit('setvolume', volume/10)
     },
     handleSetMute(){
