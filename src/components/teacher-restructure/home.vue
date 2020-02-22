@@ -51,7 +51,10 @@
 
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
-    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback']">
+    <div id="templates" 
+			v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden"
+				:class="['templates', 'dontcallback']"
+			>
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，课堂动态，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
@@ -81,7 +84,7 @@
       </div>
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
-      <div class="rc-mask" v-show="!isMsgMaskHidden">
+      <div class="rc-mask" v-show="!isMsgMaskHidden && errType !== 2">
         <component
           ref="MsgMask"
           :is="msgMaskTpl"
@@ -90,6 +93,12 @@
           @triggerReconnect="triggerReconnect"
         ></component>
       </div>
+
+			<endshow v-show="
+				errType == 2 
+				&& toolbarIndex !== 2
+				&& isToastCtrlMaskHidden
+			"></endshow>
     </div>
 
     <!-- 新手引导页 -->
@@ -153,6 +162,8 @@
 	import Activity from '@/components/teacher-restructure/common/activity'
 
 	import change_lang_dialog from "@/components/common/change_lang_dialog.vue"
+
+	import endshow from '@/components/teacher-restructure/common/endshow'
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 	import './util/preventoverscroll'
@@ -239,8 +250,9 @@
 
         'msgMaskTpl',
         'toastCtrlMaskTpl',
-        'initiativeCtrlMaskTpl'
-      ])
+				'initiativeCtrlMaskTpl',
+				'toolbarIndex'
+			])
 	  },
 	  components: {
 	    Toolbar,
@@ -254,6 +266,7 @@
 	    Activity,
 	    change_lang_dialog,
 			notice: () => import('@/components/common/service-notice.vue'),
+			endshow
 	  },
 	  created () {
 	    this.init()
@@ -264,7 +277,6 @@
 	  },
 	  mounted () {
 	    let self = this
-
 	    self.pmos()
 
 	    // 根据localStorage判断是否显示新手引导
@@ -382,7 +394,6 @@
 	     */
 	    videoControl (sid, pptshapeid) {
 	      let self = this
-	      console.log(900, self.lessonid, self.presentationid, sid, pptshapeid)
 	      let str = JSON.stringify({
 	        'op': 'videocontrol',
 	        'lessonid': self.lessonid,
@@ -913,6 +924,9 @@
     right: 0;
     z-index: 101;
   }
+	.templates-endshow{
+		bottom: px2rem(128px);
+	}
 
   .rc-mask {
     position: absolute;
