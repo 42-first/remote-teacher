@@ -40,6 +40,8 @@ let liveMixin = {
       if(this.flvPlayer) {
         this.flvPlayer.unload();
         this.flvPlayer.detachMediaElement();
+        this.flvPlayer.destroy();
+        this.flvPlayer = null;
       }
 
       let audioEl = document.getElementById('player');
@@ -70,9 +72,9 @@ let liveMixin = {
             this.playState = 0;
           }
         } catch(evt) {
-          setTimeout(()=>{
-            this.supportFLV();
-          }, 3000)
+          // setTimeout(()=>{
+          //   this.supportFLV();
+          // }, 3000)
         }
 
         this.handleFLVError();
@@ -214,6 +216,14 @@ let liveMixin = {
     createFlvPlayer() {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+          this.flvPlayer.destroy();
+          this.flvPlayer = null;
+        }
+
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
@@ -226,8 +236,6 @@ let liveMixin = {
         try {
           // 展开播放模式下才开始拉流
           if(this.liveVisible) {
-            flvPlayer.unload();
-            flvPlayer.detachMediaElement();
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
