@@ -780,7 +780,7 @@
             });
 
             setTimeout(() => {
-              self.$router.back();
+              // self.$router.back();
             }, 3000)
           });
       },

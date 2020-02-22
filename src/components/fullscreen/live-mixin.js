@@ -36,6 +36,14 @@ let liveMixin = {
         return;
       }
 
+      // 拉流之前先解绑
+      if(this.flvPlayer) {
+        this.flvPlayer.unload();
+        this.flvPlayer.detachMediaElement();
+        this.flvPlayer.destroy();
+        this.flvPlayer = null;
+      }
+
       let audioEl = document.getElementById('player');
       if (flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
@@ -53,14 +61,20 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play().then(()=>{
               this.playState = 1;
+              this.liveStatusTips = '';
             });
+            this.liveStatusTips = '连接中...';
+
+            setTimeout(()=>{
+              this.liveStatusTips = '';
+            }, 5000)
           } else {
             this.playState = 0;
           }
         } catch(evt) {
-          setTimeout(()=>{
-            this.supportFLV();
-          }, 3000)
+          // setTimeout(()=>{
+          //   this.supportFLV();
+          // }, 3000)
         }
 
         this.handleFLVError();
@@ -78,6 +92,8 @@ let liveMixin = {
 
       if(!Hls) {
         this.loadHLS();
+
+        return this;
       }
 
       if(Hls.isSupported()) {
@@ -186,9 +202,13 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playState = 1;
+          });
         }
       });
     },
@@ -196,6 +216,14 @@ let liveMixin = {
     createFlvPlayer() {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+          this.flvPlayer.destroy();
+          this.flvPlayer = null;
+        }
+
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
@@ -210,7 +238,9 @@ let liveMixin = {
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.playState = 1;
+            });
           }
         } catch(evt) {
         }
@@ -256,13 +286,24 @@ let liveMixin = {
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
+          // flvPlayer.unload();
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {
             this.playLoading = false;
+            this.playState = 1;
           });
 
           this.playLoading = true;
+
+          // 音频直播提示 防止用户随便点击
+          if(this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 4500
+            });
+          }
+
           setTimeout(()=>{
             if(this.playLoading) {
               this.playLoading = false;

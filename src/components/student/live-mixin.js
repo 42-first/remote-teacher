@@ -211,7 +211,7 @@ let liveMixin = {
         console.log('errorDetail:', errorDetail);
 
         let system = this.system;
-        system['et'] = errorType;
+        system && (system['et'] = errorType);
 
         if (errorType) {
           setTimeout(()=>{
@@ -220,7 +220,7 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          this.reportLog(system);
+          system && this.reportLog(system);
         }
       });
 
@@ -318,6 +318,19 @@ let liveMixin = {
           });
 
           this.playLoading = true;
+          // 音频直播提示 防止用户随便点击
+          if(this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 4500
+            });
+          }
+
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+          }, 5000)
         } catch(e) {
         }
       } else {

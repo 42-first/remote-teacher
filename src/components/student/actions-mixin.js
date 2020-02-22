@@ -835,7 +835,7 @@ var actionsMixin = {
           if(isWeb) {
             setTimeout(()=>{
               this.supportFLV();
-            }, 1000)
+            }, 3000)
           } else {
             this.Hls && this.supportHLS(this.Hls);
           }
@@ -884,9 +884,20 @@ var actionsMixin = {
      */
     endLive(data) {
       // this.handlestop();
-      this.liveURL = '';
-      this.liveType = 0;
+      // this.liveURL = '';
+      // this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+
+      setTimeout(()=>{
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+        }
+
+        this.liveURL = '';
+        this.liveType = 0;
+      }, 3000)
 
       // 关闭弹幕直播
       this.isLive && (this.isLive = false);
