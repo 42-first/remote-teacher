@@ -835,7 +835,7 @@ var actionsMixin = {
           if(isWeb) {
             setTimeout(()=>{
               this.supportFLV();
-            }, 1000)
+            }, 3000)
           } else {
             this.Hls && this.supportHLS(this.Hls);
           }
