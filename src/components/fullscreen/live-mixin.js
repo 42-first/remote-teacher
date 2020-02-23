@@ -36,6 +36,14 @@ let liveMixin = {
         return;
       }
 
+      // 拉流之前先解绑
+      if(this.flvPlayer) {
+        this.flvPlayer.unload();
+        this.flvPlayer.detachMediaElement();
+        this.flvPlayer.destroy();
+        this.flvPlayer = null;
+      }
+
       let audioEl = document.getElementById('player');
       if (flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
@@ -53,20 +61,25 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play().then(()=>{
               this.playState = 1;
+              this.liveStatusTips = '';
             });
+            this.liveStatusTips = '连接中...';
 
+            setTimeout(()=>{
+              this.liveStatusTips = '';
+            }, 5000)
+          } else {
+            this.playState = 0;
           }
         } catch(evt) {
-          setTimeout(()=>{
-            this.supportFLV();
-          }, 3000)
+          // setTimeout(()=>{
+          //   this.supportFLV();
+          // }, 3000)
         }
 
-        // setTimeout(()=>{
-        //   audioEl.play();
-        // }, 3000)
-
         this.handleFLVError();
+      } else {
+        this.loadHLS();
       }
     },
 
@@ -77,9 +90,15 @@ let liveMixin = {
     supportHLS(Hls) {
       let liveEl = document.getElementById('player');
 
+      if(!Hls) {
+        this.loadHLS();
+
+        return this;
+      }
+
       if(Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource(this.liveURL);
+        hls.loadSource(this.liveurl.hls);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           liveEl.play().then(()=>{
@@ -95,7 +114,7 @@ let liveMixin = {
       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
-        liveEl.src = this.liveURL;
+        liveEl.src = this.liveurl.hls;
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -168,8 +187,8 @@ let liveMixin = {
         console.log('errorType:', errorType);
         console.log('errorDetail:', errorDetail);
 
-        let system = this.system;
-        system['et'] = errorType;
+        // let system = this.system;
+        // system['et'] = errorType;
 
         if (errorType) {
           this.createFlvPlayer();
@@ -183,9 +202,13 @@ let liveMixin = {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
+          flvPlayer.unload();
+          flvPlayer.detachMediaElement();
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playState = 1;
+          });
         }
       });
     },
@@ -193,6 +216,14 @@ let liveMixin = {
     createFlvPlayer() {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+          this.flvPlayer.destroy();
+          this.flvPlayer = null;
+        }
+
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
@@ -207,7 +238,9 @@ let liveMixin = {
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.playState = 1;
+            });
           }
         } catch(evt) {
         }
@@ -222,6 +255,15 @@ let liveMixin = {
       let audioEl = document.getElementById('player');
       if(this.flvPlayer) {
         try {
+          if(this.playLoading && this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -244,9 +286,29 @@ let liveMixin = {
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
+          // flvPlayer.unload();
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+            this.playState = 1;
+          });
+
+          this.playLoading = true;
+
+          // 音频直播提示 防止用户随便点击
+          if(this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 4500
+            });
+          }
+
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+          }, 5000)
         } catch(e) {
         }
       } else {

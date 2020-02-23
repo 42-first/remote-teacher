@@ -19,11 +19,11 @@ let logMixin = {
         lessonid: this.lessonID,
         ua: navigator.userAgent,
         // 直播地址
-        liveurl: this.liveURL,
+        liveurl: this.logLiveurl || this.liveURL,
         // 网络环境
         net: 'wifi',
-        // 客户端：h5 wx_app
-        p: 'h5',
+        // 客户端：h5 wx_app web
+        p: this.isWeb ? 'web': 'h5',
         // 业务线
         lob: 'ykt',
         // 服务商
@@ -56,7 +56,7 @@ let logMixin = {
     handleLogEvent() {
       let liveEl = document.getElementById('player');
       // let events = ['play', 'pause', 'error', 'stalled', 'waiting', 'loadstart', 'loadeddata' ];
-      let events = [ 'play', 'pause', 'error', 'stalled', 'waiting' ];
+      let events = [ 'error', 'stalled', 'waiting' ];
 
       this.setSystem();
 
@@ -66,7 +66,12 @@ let logMixin = {
           let system = this.system;
           system['et'] = evt;
 
-          this.reportLog(system);
+          this.reportTimer && clearTimeout(this.reportTimer);
+          this.reportTimer = setTimeout(()=>{
+            this.reportLog(system);
+          }, 5000)
+
+          // this.reportLog(system);
 
           this.detectionWaiting(evt);
         });
@@ -98,9 +103,18 @@ let logMixin = {
             this.createFlvPlayer();
           }, 3500)
         } else if(this.liveType === 1) {
-          setTimeout(()=>{
-            this.Hls && this.supportHLS(this.Hls);
-          }, 3000)
+          let isWeb = this.isWeb;
+          if(isWeb && this.flvPlayer) {
+            setTimeout(()=>{
+              this.flvPlayer.unload();
+              this.flvPlayer.detachMediaElement();
+              this.createFlvPlayer();
+            }, 3000)
+          } else {
+            setTimeout(()=>{
+              this.Hls && this.supportHLS(this.Hls);
+            }, 3000)
+          }
         }
       }
 

@@ -38,11 +38,14 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.isMute ? false : true
         });
 
         this.flvPlayer = flvPlayer;
+        // 上报记录直播地址
+        this.logLiveurl = this.liveurl.httpflv;
 
         try {
           this.setLiveTip();
@@ -51,7 +54,12 @@ let liveMixin = {
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.liveStatusTips = ''
+            });
+          } else if(this.isWeb && this.liveType === 1) {
+            // flvPlayer.attachMediaElement(liveEl);
+            // flvPlayer.load();
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -94,6 +102,7 @@ let liveMixin = {
           // this.liveType === 2 && liveEl.play();
           liveEl.play().then(()=>{
             this.playState = 1;
+            this.liveStatusTips = ''
           });
         });
 
@@ -106,6 +115,15 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+        if (this.needNew) {
+          this.needNew = false
+          console.log('needNew');
+          console.log(this.currentTime);
+          console.log(liveEl.currentTime);
+          setTimeout(() => {
+            this.loadNewUrl()
+          }, 1000 * 30)
+        }
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -128,6 +146,9 @@ let liveMixin = {
       }
 
       this.setLiveTip();
+
+      // 上报记录直播地址
+      this.logLiveurl = this.liveURL;
 
       // this.$toast({
       //   message: '建议使用雨课堂小程序，直播同步效果更好',
@@ -190,7 +211,7 @@ let liveMixin = {
         console.log('errorDetail:', errorDetail);
 
         let system = this.system;
-        system['et'] = errorType;
+        system && (system['et'] = errorType);
 
         if (errorType) {
           setTimeout(()=>{
@@ -199,7 +220,7 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          this.reportLog(system);
+          system && this.reportLog(system);
         }
       });
 
@@ -228,8 +249,9 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          enableStashBuffer: false,
-          lazyLoad: false,
+          // enableStashBuffer: false,
+          // lazyLoad: false,
+          hasAudio: this.isMute ? false : true
         });
 
         this.flvPlayer = flvPlayer;
@@ -258,6 +280,15 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
+          if(this.playLoading && this.liveType === 1 && this.isWeb) {
+            this.$toast({
+              message: '连接中...',
+              duration: 3000
+            });
+
+            return this;
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
@@ -282,17 +313,34 @@ let liveMixin = {
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(audioEl);
           flvPlayer.load();
-          flvPlayer.play();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+          });
+
+          this.playLoading = true;
+          // 音频直播提示 防止用户随便点击
+          if(this.liveType === 1) {
+            this.$toast({
+              message: '连接中...',
+              duration: 4500
+            });
+          }
+
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+          }, 5000)
         } catch(e) {
         }
       } else {
         audioEl.play();
-      }
 
-      // 避免音频没有加载不播放问题
-      setTimeout(()=>{
-        audioEl.play();
-      }, 500)
+        // 避免音频没有加载不播放问题
+        setTimeout(()=>{
+          audioEl.play();
+        }, 500)
+      }
 
       this.playState = 1;
       this.saveLiveStatus(this.playState);
@@ -385,6 +433,25 @@ let liveMixin = {
       }
     },
 
+    loadNewUrl(){
+      let liveEl = document.querySelector('#player')
+      this.loadNewUrlTimer && clearTimeout(this.loadNewUrlTimer)
+      this.loadNewUrlTimer = setTimeout(() => {
+        console.log('ssssssss', liveEl.currentTime , this.currentTime);
+        if(liveEl.currentTime - this.currentTime < 1){
+          liveEl.src = this.liveURL
+          console.log('我重新加载啦', liveEl.currentTime , this.currentTime);
+          this.loadNewUrl()
+        }
+      }, 1000 * 10)
+      liveEl.addEventListener('timeupdate', () => {
+        if(liveEl.currentTime !== 0){
+          clearTimeout(this.loadNewUrlTimer)
+        }else {
+          this.loadNewUrl()
+        }
+      })
+    }
   }
 }
 

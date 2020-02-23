@@ -3,7 +3,7 @@
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
-        <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
+        <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal'"></i>
         <div class="icondesc">{{ $t('remotectrl') }}</div>
       </v-touch>
 		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
@@ -26,7 +26,7 @@
     <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden" @click="touchCloseToolbarMoreBox">
       <div class="toolbar-more-box f14">
         <i class="iconfont icon-sanjiaoxing f24"></i>
-        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
+        <v-touch class="more-item" v-on:tap="summonQrcodeMask" v-show="errType !== 2">
           <i class="iconfont icon-ykq_erweima f24"></i>
           <span>{{ $t('qrcode') }}</span>
         </v-touch>
@@ -41,7 +41,7 @@
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('viewasstudent') }}</span>
         </v-touch>
 
-        <v-touch class="more-item" v-on:tap="setEndShow">
+        <v-touch class="more-item" v-on:tap="setEndShow" v-show="errType !== 2">
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
@@ -72,7 +72,6 @@
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
         isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
         isHideSet: false,           // 工具栏设置按钮的隐藏
-        addinversionRight: 0
       }
     },
     computed: {
@@ -83,8 +82,13 @@
         'newdoubt',
         'newtougao',
         'newToolBar',
-        'addinversion'
-      ])
+        'addinversion',
+        'errType',
+        'toolbarIndex'
+      ]),
+      addinversionRight() {
+        return Number(this.addinversion) || 0;
+      }
     },
     created () {
       let self = this
@@ -94,8 +98,7 @@
       })
       let newToolBar = !localStorage.getItem('newToolBar')
       this.$store.commit('set_newToolBar', newToolBar)
-      this.isHideSet = this.$route.name === "stateSet"
-      this.addinversionRight = Number(this.addinversion) || 0
+      this.isHideSet = this.$route.name === "stateSet";
     },
     methods: {
       /**
@@ -104,6 +107,7 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
+        this.$store.dispatch('set_toolbarIndex', 1)
       },
       /**
        * 点击 课堂动态 按钮
@@ -111,6 +115,7 @@
        */
       showActivity () {
         this.$emit('showActivity')
+        this.$store.dispatch('set_toolbarIndex', 2)
       },
       /**
        * 点击 遥控器 按钮
@@ -119,6 +124,7 @@
        */
       goHome () {
         this.$emit('goHome')
+        this.$store.dispatch('set_toolbarIndex', 0)
       },
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -204,7 +210,7 @@
           self.isToolbarMoreBoxHidden = true
         }, 200)
       },
-    //  关闭新功能提示tips
+      //  关闭新功能提示tips
       closeTips () {
         this.$store.commit('set_newToolBar', false)
         localStorage.setItem('newToolBar', 1)

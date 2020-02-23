@@ -43,7 +43,13 @@
 
     <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
-      <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
+      <section class="player__box" v-show="liveVisible">
+        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL"  ></video>
+        <div class="live__status f14" v-show="liveStatusTips">
+          {{liveStatusTips}}
+        </div>
+      </section>
+
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -66,7 +72,11 @@
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
+                <!-- 雨课堂 -->
+                <!-- 其它定制 例如清华 -->
+                <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
+                <!-- 雨课堂 -->
+                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -200,6 +210,7 @@
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -207,6 +218,13 @@
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
     // request.post = request.get
+  }
+
+  const host = {
+    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
   }
 
   export default {
@@ -334,8 +352,17 @@
         // 直播下默认显示动画
         visibleAnimation: true,
         returnRemote: false,
+        liveStatusTips: '',
+        isMute: false,  //静音播放
+        lastStatus: 1,
+        needNew: false,
+        currentTime: 0,
+        loadNewUrlTimer: null,
+        voice: 1,   // -1静音 1非静音
         // 直播卡顿检测
         liveDetection: {},
+        // 小程序码
+        miniCode: '',
       };
     },
     components: {
@@ -371,13 +398,20 @@
       lessonStatus (newValue, oldValue) {
         // 下课啦
         if(newValue === 1) {
-          this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          this.backURL = '/v/index/lessonend'
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -589,6 +623,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -596,6 +636,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -679,12 +720,10 @@
                   if(isWeb) {
                     setTimeout(()=>{
                       self.supportFLV();
-                    }, 3000)
+                    }, 1000)
                   } else {
                     self.Hls && self.supportHLS(self.Hls);
                   }
-
-                  // self.Hls && self.supportHLS(self.Hls);
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
@@ -694,7 +733,7 @@
                 // 日志上报
                 setTimeout(() => {
                   self.handleLogEvent();
-                }, 1000)
+                }, 30000)
               }
 
               // 课程title
@@ -711,6 +750,8 @@
                 this.step = 3;
               }
 
+              this.setLocalData('base', data);
+
               return presentationData;
             }
           })
@@ -720,7 +761,8 @@
             if(error && error.status_code === 601) {
               // 课程结束
               console.log('课程结束');
-              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              // location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              location.href = '/v/index/lessonend';
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
@@ -783,6 +825,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
@@ -1043,12 +1088,16 @@
       let ua = navigator.userAgent.toLowerCase();
       let isWeixin = ~ua.indexOf('micromessenger');
       this.isWeb = !isWeixin;
+
+      this.miniCode = host[location.host] || '';
     },
     updated() {
       // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
@@ -1216,12 +1265,30 @@
       position: relative;
       padding: 2.33rem 0 0.253333rem;
 
-      .video__live {
-        width: 100%;
-        // height: 7.5rem;
-        min-height: 5rem;
-        background: rgba(0,0,0,0.45);
+      .player__box {
+        position: relative;
+          .video__live {
+          width: 100%;
+          // height: 7.5rem;
+          min-height: 5rem;
+          background: rgba(0,0,0,0.45);
+        }
+        .live__status {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: PingFangSC-Medium;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          // text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+          padding: 0.13333333rem 0.26666667rem;
+          background: rgba(68,68,68,.4);
+          border-radius: 0.05333333rem;
+        }
       }
+
 
       .live__fold {
         display: flex;

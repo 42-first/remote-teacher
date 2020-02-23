@@ -370,7 +370,7 @@
         }
 
         return request.post(URL, param).
-          then(function (res) {
+          then( (res) => {
             if(res) {
               if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
                 return;
@@ -438,7 +438,7 @@
 
         return true;
       },
-      /** 
+      /**
        * @method 进入试卷
       */
       gotoQuiz(url){

@@ -9,12 +9,17 @@
 <template>
   <section class="page">
     <!-- PPT 展示 -->
-    <section class="ppt__wrapper J_ppt" @click="handleFullscreen" >
+    <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">大屏观看模式，暂时无法参与课堂互动。使用雨课堂小程序，直播同步效果更好哦</p>
-      <!-- 习题 -->
-      <p class="lesson--tip" v-if="visibleProblemTip">老师发送了新题目，请在手机上作答</p>
-      <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
+      <p class="lesson--tip" v-if="visibleTip">
+        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
+      </p>
+
+      <div class="cover__container">
+        <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
+        <!-- 作答按钮 -->
+        <p class="answer-btn cfff f20" @click="handleAnwser" v-if="currSlide.problemType" >去作答</p>
+      </div>
     </section>
 
     <!-- 直播入口 音频直播 -->
@@ -29,21 +34,72 @@
     </section>
 
     <!-- 直播入口 视频直播 -->
-    <section class="live__video J_live" v-if="liveURL && liveType === 2">
-      <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" ></video>
+    <section class="live__video J_live" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
+      <!-- <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" controls="fasle" :src="liveURL" ></video> -->
+      <!-- 定制video -->
+      <div class="live__video_box">
+        <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
+        <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
+      </div>
+      <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
+      <div class="video__controls cfff f18">
+        <div class="ponter">
+          <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
+          <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
+        </div>
+        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
+          <!-- 弹幕发送 -->
+          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
+          <div class="ponter">
+            <volume @setvolume="handleSetVolume"></volume>
+            <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
+            <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 提示信息 v-if="visibleProblemTip" -->
+      <div class="problem__tip f16" v-if="visibleProblemTip && problem">
+        <span class="cfff">{{ problem.caption}}</span>
+        <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
+        <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
+      </div>
+
+      <!-- 实时弹幕列表 -->
+      <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
     </section>
 
+    <!-- 实时弹幕列表 -->
+    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
+
+    <!-- 弹幕控制组件 -->
+    <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
+
+    <!-- 子页面 -->
+    <router-view></router-view>
   </section>
 </template>
 <script>
   import request from '@/util/request'
   import API from '@/util/api'
-  import '@/util/util'
+  // import '@/util/util'
+  import { isSupported } from '@/util/util'
 
   import wsmixin from '@/components/student/student-socket'
   import actionsmixin from '@/components/student/actions-mixin'
   import livemixin from '@/components/fullscreen/live-mixin'
   import eventmixin from '@/components/fullscreen/event-mixin'
+
+  import logmixin from '@/components/common/log-reporting'
+  import fullscreenMixin from '@/components/fullscreen/fullscreen'
+
+
+  let screenfull = require('screenfull');
+  import Danmaku from 'danmaku';
+
+  import danmuCmp from './danmu.vue'
+  import volume from './video_volume.vue'
 
 
   // 子组件不需要引用直接使用
@@ -58,6 +114,8 @@
 
     data() {
       return {
+        // 弹幕引擎
+        danmaku: null,
         isResetSocket: false,
         socket: null,
         // socket重连
@@ -89,6 +147,8 @@
         observerMode: false,
         // 是否开启弹幕
         danmuStatus: false,
+        // 是否显示弹幕
+        visibleDanmu: true,
         // 课程是否结束
         lessonStatus: 0,
         presentationList: null,
@@ -133,7 +193,7 @@
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
-        playState: 0,
+        playState: 1,
         // 是否提示语音直播
         showLiveTip: false,
         // 版本基本信息 宽高
@@ -162,15 +222,33 @@
         visibleTip: true,
         // 显示题目提示
         visibleProblemTip: false,
+        isWeb: true,
+        // 直播卡顿检测
+        liveDetection: {},
+        // 视频是否全屏
+        videoFullscreen: false,
+        // 是否播放
+        // playState
+        liveStatusTips: '',
+        // 问题
+        problem: null
       };
     },
     components: {
+      danmuCmp,
+      volume
     },
     computed: {
     },
     watch: {
+      '$route' (to, from) {
+        // 对路由变化作出响应...
+        console.log(from.name);
+        console.log(to.name);
+      },
       cards(newVal, oldVal) {
         let slide = null;
+        let prev = this.currSlide;
 
         newVal.forEach( (item, index) => {
           if(item.type === 2 || item.type === 3 || item.type === 10) {
@@ -183,7 +261,7 @@
         });
 
         // 问题处理宽高
-        if(slide.type === 3) {
+        if(slide && slide.type === 3) {
           let presentation = this.presentationMap.get(slide.presentationid);
 
           if(presentation) {
@@ -192,22 +270,52 @@
             slide.rate = presentation.Width / presentation.Height;
           }
 
-          this.visibleProblemTip = true;
-          setTimeout(()=>{
-            this.visibleProblemTip = false;
-          }, 5000)
+          if(prev && prev.problemID !== slide.problemID) {
+            this.visibleProblemTip = true;
+
+            this.problem = slide;
+          }
+
+          // this.visibleProblemTip = true;
+        } else {
+          // this.visibleProblemTip = false;
         }
+
+        console.log('isFullscreen:'+ screenfull.isFullscreen);
 
         if(slide && slide.src) {
           this.currSlide = slide;
+
+          // todo: 检测是否在答题页 需要关闭
+          // console.dir(this.$route)
+          // let route = this.$route;
+          // if(route.name !== 'student-fullscreen') {
+          //   this.$router.back();
+          // }
         }
       },
       liveURL(newVal, oldVal) {
         setTimeout(()=>{
           newVal && this.supportFLV();
 
-          this.initEvent();
-        }, 3000)
+          this.liveType === 2 && this.initEvent();
+        }, 1000)
+      },
+      danmus(newVal, oldVal) {
+        if(newVal && newVal.length) {
+          let danmu = newVal.shift();
+          if(danmu) {
+            this.emitDanmu(danmu.danmu)
+          }
+        }
+      },
+      visibleDanmu(newVal, oldVal) {
+        // 视频全屏开启弹幕
+        if(newVal && this.videoFullscreen) {
+          setTimeout(()=>{
+            this.initVideoDanmu();
+          }, 500)
+        }
       }
     },
     filters: {
@@ -238,7 +346,7 @@
         return oStyle;
       }
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -250,9 +358,69 @@
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
 
-        setTimeout(()=>{
-          this.visibleTip = false;
-        }, 10000)
+        let key = 'lesson-tip-cloesed-' + this.lessonID;
+        let visibleTip = true;
+        if(isSupported(window.localStorage)) {
+          visibleTip = !localStorage.getItem(key);
+        }
+
+        this.visibleTip = visibleTip;
+      },
+
+      /**
+       * @method 初始化弹幕
+       * @params
+       */
+      initDanmu() {
+        let options = {
+          container: this.$el.querySelector('.J_danmu_live'),
+          comments: [],
+          speed: this.speed || 180
+        };
+        let danmaku = new Danmaku(options);
+
+        this.danmaku = danmaku;
+      },
+
+      /**
+       * @method 发射弹幕
+       * @params
+       */
+      emitDanmu(msg) {
+        // let colors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        // let color = colors[Math.floor(Math.random() * 6)];
+        let bgcolors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
+        let bgcolor = bgcolors[Math.floor(Math.random() * 6)];
+        let danmu = {
+          text: msg,
+          style: {
+            margin: '10px',
+            padding: '0 15px',
+            fontSize: '16px',
+            // color: color,
+            // background: 'rgba(0,0,0,0.15)',
+            color: '#fff',
+            background: bgcolor,
+            borderRadius: '13px/50%',
+          },
+        };
+
+        // this.danmaku.emit(danmu);
+
+        // 视频全屏使用
+        if(this.videoFullscreen && this.videoDanmaku) {
+          this.videoDanmaku.emit(danmu);
+        } else {
+          this.danmaku.emit(danmu);
+        }
+      },
+
+      /**
+       * @method 是否显示弹幕
+       * @params
+       */
+      setVisibleDanmu(visible) {
+        this.visibleDanmu = visible;
       },
 
       /*
@@ -424,11 +592,17 @@
               if(self.liveInfo && self.liveInfo.status === 1) {
                 self.liveType = self.liveInfo.type || 1;
                 self.liveURL = self.liveInfo.live_url.httpflv;
+                self.liveurl = self.liveInfo.live_url;
 
                 // if(self.liveType === 1) {
                 //   self.liveURL = self.liveInfo.live_url.hls;
                 //   this.loadHLS();
                 // }
+
+                // 日志上报
+                setTimeout(() => {
+                  self.handleLogEvent();
+                }, 30000)
               }
 
               // 课程title
@@ -448,7 +622,8 @@
             if(error && error.status_code === 601) {
               // 课程结束
               console.log('课程结束');
-              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              // location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              location.href = '/v/index/lessonend';
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
@@ -631,11 +806,29 @@
           document.webkitExitFullscreen();
         }
       },
+      /**
+       * @method 弹幕发送toast
+      */
+      handleShowTips(text){
+        this.liveStatusTips = text
+        setTimeout(() => {
+          this.liveStatusTips = ''
+        }, 3000)
+      },
+      /**
+       * @member 设置音量
+      */
+      handleSetVolume(volume){
+        document.querySelector('#player').volume = volume
+      }
     },
     created() {
       this.init();
     },
     mounted() {
+      setTimeout(()=>{
+        this.initDanmu();
+      }, 1000)
     },
     updated() {
     },
@@ -646,7 +839,7 @@
 
 <style lang="scss">
   @import "~@/style/font/iconfont/iconfont.css";
-  @import "~@/style/mintui.css";
+  // @import "~@/style/mintui.css";
 
   .page {
     position: absolute;
@@ -671,6 +864,23 @@
     background: #2F3963;
   }
 
+  .cover__container {
+    position: relative;
+
+    .answer-btn {
+      position: absolute;
+      right: 100px;
+      bottom: 50px;
+
+      width: 180px;
+      height: 44px;
+      line-height: 44px;
+      background: #639EF4;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
   .cover {
     width: 100%;
   }
@@ -679,14 +889,14 @@
   .live {
     z-index: 2;
     position: absolute;
-    bottom: 30px;
+    top: 30px;
     right: 30px;
     // visibility: hidden;
 
     width: 60px;
     height: 60px;
 
-    background: rgba(0, 0, 0, 0.7);
+    background: #fff;
     box-shadow: 0 3px 18px rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
@@ -715,7 +925,7 @@
     // padding-right: 5px;
     // padding-bottom: 5px;
     font-size: 45px;
-    color: #fff;
+    color: #5096F5;
   }
 
 
@@ -724,38 +934,294 @@
     top: 5px;
     right: 5px;
 
+    &:hover {
+      .video__controls {
+        opacity: 1;
+        transition: opacity ease-in 0.35s;
+      }
+    }
+
+    &.fullscreen {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .live__video_box {
+        display: flex;
+        align-items: center;
+      }
+
+      .live__container {
+        width: 100vw;
+        max-height: 100vh;
+      }
+
+      .video__controls {
+        height: 56px;
+        padding: 5px 30px;
+        background: rgba(0,0,0, 0.7);
+
+        .iconfont {
+          font-size: 25px;
+        }
+
+      }
+
+      .problem__tip {
+        // width: 100vw;
+        height: 56px;
+        padding: 0 35px;
+
+        left: 50%;
+        right: initial;
+        bottom: 96px;
+        transform: translateX(-50%);
+
+        .anwser--tip  {
+          margin: 0 20px;
+          padding: 3px 10px;
+          color: #fff;
+          background: #5096F5;
+          border-radius: 15px/50%;
+        }
+      }
+    }
+
+    .live__video_box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+
+      .live__status_tip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 84px;
+        font-size: 20px;
+        line-height: 84px;
+        text-align: center;
+        border-radius: 2px;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        background: rgba(0,0,0,.3);
+      }
+
+    }
+
     .live__container {
       width: 400px;
-      min-height: 225px;
-      max-height: 300px;
-      border: 1px solid #ddd;
+      // min-height: 225px;
+      // max-height: 300px;
+      background: rgba(0, 0, 0, 0.7);
     }
   }
 
+
+  .video__controls {
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 30px;
+    padding: 5px 20px;
+    background: rgba(0,0,0, 1);
+
+    transition: opacity ease-in 0.5s 0.5s;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity ease-in 0.35s;
+    }
+    .controls__right {
+      display: flex;
+      &.halfWidth {
+        width: 50%;
+        min-width: 550px;
+      }
+      .danmu-control-cmp {
+        flex: 1;
+        margin-right: 34px;
+      }
+      .ponter {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+
+  .problem__tip {
+    position: absolute;
+    right: 10px;
+    bottom: 50px;
+
+    display: flex;
+    align-items: center;
+
+    height: 44px;
+    padding: 0 18px;
+
+    background: rgba(0,0,0, 0.5);
+    border-radius: 4px;
+
+    .anwser--tip {
+      padding: 0 20px;
+    }
+  }
+
+
+  .danmu-live {
+    z-index: 1;
+    pointer-events: none;
+    position: fixed;
+    top: 50px;
+    left: 0;
+
+    width: 100vw;
+    height: 50vh;
+  }
+
+
+
+
   .lesson--tip {
+    z-index: 1;
     position: absolute;
     top: 2px;
     left: 0;
     right: 0;
 
     margin: 0 auto;
-    width: 610px;
-    height: 40px;
-    line-height: 40px;
+    width: 600px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    width: fit-content;
-    padding: 0 15px;
+    // width: fit-content;
+    padding: 0 8px 0 12px;
 
     font-size: 16px;
     text-align: center;
     color: #fff;
-    background: #757575;
-    border-radius: 4px;
+    background: #5096f5;
+    border-radius: 2px;
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,.1);
+
+    .close {
+      cursor: pointer;
+    }
   }
+
+  /*------------------*\
+    $ 习题定时
+  \*------------------*/
+
+  .exercise__tips {
+    margin: 5px auto 25px;
+    width: 360px;
+    height: 60px;
+    line-height: 60px;
+
+    background: #212121;
+    color: #fff;
+    opacity: 0.8;
+
+    border-radius: 2px;
+    box-shadow: 0 2.5px 5px rgba(0,0,0,0.2);
+
+    .timing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .timing--icon {
+        margin-right: 17px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .over.timing--number {
+        color: #F84F41;
+      }
+    }
+  }
+
+  /*------------------*\
+    $ 习题内容
+  \*------------------*/
+
+  .exercise-content {
+    position: relative;
+    margin: 15px 17px 0;
+    padding-bottom: 15px;
+
+
+    border-top: 1px solid #C8C8C8;
+    border-bottom: 1px solid #C8C8C8;
+    overflow: hidden;
+    .page-no {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      padding: 0 12px;
+      height: 25px;
+      line-height: 25px;
+      color: #fff;
+
+      background: rgba(0,0,0,0.5);
+    }
+
+    .cover {
+      display: block;
+      width: 100%;
+
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    }
+  }
+
+
+  .submit-btn {
+    margin: 30px auto 45px;
+
+    width: 275px;
+    height: 40px;
+
+    line-height: 40px;
+
+    color: #fff;
+    background: #999999;
+
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .submit-btn.can {
+    background: #639EF4;
+  }
+
+  .submit-btn.can:active {
+    background: rgba(99,158,244,0.7);
+  }
+
+
+
 
 </style>
 <style>
-  .live__container {
+  .live__video {
     --x: 0px;
     --y: 0px;
 

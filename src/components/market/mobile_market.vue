@@ -29,7 +29,7 @@
                 ¥ {{i.price}}
               </div>
               <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
-              <a href="javascript:alert('请在电脑上打开 \n ykt.io \n下载样章');" class="download_courseware inline-block font16">免费下载样章</a>
+              <a href="javascript:;" class="download_courseware inline-block font16" @click="handleTip">免费下载样章</a>
             </div>
           </div>
         </li>
@@ -144,6 +144,10 @@
             }
           })
         })
+      },
+      handleTip(evt) {
+        let host = location.host;
+        alert(`请在电脑上打开 \n ${host} \n下载样章`);
       }
     },
     directives: {

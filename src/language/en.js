@@ -318,7 +318,7 @@ let pages = {
   "showended": "End",
   "jsskqzdnd": 'Continue the class, please click "Slide Show" on your computer and students do not need to scan the QR code again.',
   "jsskq": "End class, please",
-  "djzl": "Click Here",
+  "djzl": " Click Here",
   "showconnecting": "or connecting",
   "otherslogin": "Your account has been logged in by others",
   "forcelogout": "You have been force logged out",
@@ -527,6 +527,11 @@ let pages = {
   "closewordcloud": "Close",
   "viewasstudent": "Student View",
   "watchmode2": "View mode. Unable to join test.",
+  "isconnecting": "Teacher's live broadcast is connecting",
+  "ispoor": "Teacher's network signal is poor",
+  "switchinglivecontent": "Teacher is switching live content",
+  "silentmood": "Teacher is switching to silent mood",
+  "offsilentmood": "Teacher is turning off silent mood",
 
   // 图片国际化
   imgs: {
