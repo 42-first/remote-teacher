@@ -188,7 +188,8 @@
 					page_size: 20,
 					uuid_code: this.uuidSign
 				}).then(jsonData => {
-						self.has_problems = jsonData.data.has_problems
+						// 用户量大，隐藏分数 20200223
+						// self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
 						self.fetchListHandle(jsonData.data);
 						self.signedPage = page + 1
