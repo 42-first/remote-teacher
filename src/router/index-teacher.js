@@ -253,6 +253,9 @@ router.afterEach(function (to, from){
   setTimeout(()=>{
       // 解决 android手机字体缩放
       setSize();
+
+      // mta pv单页面统计
+      typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
   }, 1050);
 
 })

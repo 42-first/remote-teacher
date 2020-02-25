@@ -119,8 +119,9 @@ studentRouter.beforeEach((to, from, next) => {
 studentRouter.afterEach(route=>{
   // google统计
   setTimeout(() => {
+    typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
     typeof ga === 'function' && ga('send', 'pageview', location.pathname);
-  }, 1000);
+  }, 2000);
 });
 
 export default studentRouter;
