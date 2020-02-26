@@ -32,6 +32,15 @@ let liveMixin = {
      */
     supportFLV(isStart) {
       let liveEl = document.getElementById('player');
+
+      // 拉流之前先解绑
+      if(this.flvPlayer) {
+        this.flvPlayer.unload();
+        this.flvPlayer.detachMediaElement();
+        this.flvPlayer.destroy();
+        this.flvPlayer = null;
+      }
+
       if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
@@ -244,6 +253,14 @@ let liveMixin = {
     createFlvPlayer() {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+          this.flvPlayer.destroy();
+          this.flvPlayer = null;
+        }
+
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
