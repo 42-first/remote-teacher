@@ -84,7 +84,7 @@ let logMixin = {
       // 距离上次上报的时间多少分钟
       let duration = (now - lastReportTime)/1000/60;
       // 最大阈值3min 低于阈值禁止上报
-      let threshold = 3;
+      let threshold = 5;
 
       if(duration < threshold) {
         return this;
