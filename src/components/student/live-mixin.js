@@ -205,7 +205,8 @@ let liveMixin = {
             break;
           }
 
-          this.reportLog(system);
+          // this.reportLog(system);
+          this.reportStrategy(system)
         }
       });
     },
@@ -229,7 +230,8 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          system && this.reportLog(system);
+          // system && this.reportLog(system);
+          system && this.reportStrategy(system)
         }
       });
 
@@ -431,22 +433,22 @@ let liveMixin = {
 
       if(visible) {
         // 开始拉流
-        if(flvPlayer) {
-          try {
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            flvPlayer.play();
-          } catch(e) {
-          }
-        }
+        // if(flvPlayer) {
+        //   try {
+        //     flvPlayer.attachMediaElement(liveEl);
+        //     flvPlayer.load();
+        //     flvPlayer.play();
+        //   } catch(e) {
+        //   }
+        // }
 
         this.handleplay();
       } else {
         this.handlestop();
 
         // 停止拉流
-        flvPlayer && flvPlayer.unload();
-        flvPlayer && flvPlayer.detachMediaElement();
+        // flvPlayer && flvPlayer.unload();
+        // flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
