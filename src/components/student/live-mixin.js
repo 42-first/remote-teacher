@@ -433,22 +433,22 @@ let liveMixin = {
 
       if(visible) {
         // 开始拉流
-        if(flvPlayer) {
-          try {
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            flvPlayer.play();
-          } catch(e) {
-          }
-        }
+        // if(flvPlayer) {
+        //   try {
+        //     flvPlayer.attachMediaElement(liveEl);
+        //     flvPlayer.load();
+        //     flvPlayer.play();
+        //   } catch(e) {
+        //   }
+        // }
 
         this.handleplay();
       } else {
         this.handlestop();
 
         // 停止拉流
-        flvPlayer && flvPlayer.unload();
-        flvPlayer && flvPlayer.detachMediaElement();
+        // flvPlayer && flvPlayer.unload();
+        // flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
