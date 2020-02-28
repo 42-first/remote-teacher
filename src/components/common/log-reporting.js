@@ -6,6 +6,8 @@
  *
  */
 
+// 记录上报事件
+let reportMap = new Map();
 
 let logMixin = {
   methods: {
@@ -83,15 +85,23 @@ let logMixin = {
       let lastReportTime = this.reportTime || 0;
       // 距离上次上报的时间多少分钟
       let duration = (now - lastReportTime)/1000/60;
-      // 最大阈值3min 低于阈值禁止上报
-      let threshold = 5;
+      // 最大阈值10min 低于阈值禁止上报
+      let threshold = 10;
 
-      if(duration < threshold) {
+      if(!system) {
         return this;
       }
 
-      system && this.reportLog(system);
-      this.reportTime = now;
+      if(duration < threshold && reportMap.has(system.et)) {
+        return this;
+      }
+
+      if(system && system.et) {
+        this.reportLog(system);
+
+        reportMap.set(system.et, system);
+        this.reportTime = now;
+      }
     },
 
     /**
