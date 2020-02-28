@@ -32,6 +32,15 @@ let liveMixin = {
      */
     supportFLV(isStart) {
       let liveEl = document.getElementById('player');
+
+      // 拉流之前先解绑
+      if(this.flvPlayer) {
+        this.flvPlayer.unload();
+        this.flvPlayer.detachMediaElement();
+        this.flvPlayer.destroy();
+        this.flvPlayer = null;
+      }
+
       if (flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
@@ -196,7 +205,8 @@ let liveMixin = {
             break;
           }
 
-          this.reportLog(system);
+          // this.reportLog(system);
+          this.reportStrategy(system)
         }
       });
     },
@@ -220,7 +230,8 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          system && this.reportLog(system);
+          // system && this.reportLog(system);
+          system && this.reportStrategy(system)
         }
       });
 
@@ -244,6 +255,14 @@ let liveMixin = {
     createFlvPlayer() {
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+          this.flvPlayer.destroy();
+          this.flvPlayer = null;
+        }
+
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
@@ -414,22 +433,22 @@ let liveMixin = {
 
       if(visible) {
         // 开始拉流
-        if(flvPlayer) {
-          try {
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            flvPlayer.play();
-          } catch(e) {
-          }
-        }
+        // if(flvPlayer) {
+        //   try {
+        //     flvPlayer.attachMediaElement(liveEl);
+        //     flvPlayer.load();
+        //     flvPlayer.play();
+        //   } catch(e) {
+        //   }
+        // }
 
         this.handleplay();
       } else {
         this.handlestop();
 
         // 停止拉流
-        flvPlayer && flvPlayer.unload();
-        flvPlayer && flvPlayer.detachMediaElement();
+        // flvPlayer && flvPlayer.unload();
+        // flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
