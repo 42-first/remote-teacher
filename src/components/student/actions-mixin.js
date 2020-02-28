@@ -1059,8 +1059,6 @@ var actionsMixin = {
               let isWeb = this.isWeb;
               if(isWeb) {
                 if (this.flvPlayer) {
-                  this.flvPlayer.unload()
-                  this.flvPlayer.detachMediaElement()
                   this.createFlvPlayer()
                 } else {
                   this.supportFLV();
@@ -1070,8 +1068,6 @@ var actionsMixin = {
               }
             } else {
               if (this.flvPlayer) {
-                this.flvPlayer.unload()
-                this.flvPlayer.detachMediaElement()
                 this.createFlvPlayer()
               } else {
                 this.supportHLS(this.Hls)
