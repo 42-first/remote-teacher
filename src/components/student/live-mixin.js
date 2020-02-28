@@ -205,7 +205,8 @@ let liveMixin = {
             break;
           }
 
-          this.reportLog(system);
+          // this.reportLog(system);
+          this.reportStrategy(system)
         }
       });
     },
@@ -229,7 +230,8 @@ let liveMixin = {
             this.createFlvPlayer();
           }, 3500)
 
-          system && this.reportLog(system);
+          // system && this.reportLog(system);
+          system && this.reportStrategy(system)
         }
       });
 

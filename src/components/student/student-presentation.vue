@@ -222,9 +222,10 @@
 
   const host = {
     'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
-    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
     'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
     'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
   }
 
   export default {

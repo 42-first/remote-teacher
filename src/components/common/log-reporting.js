@@ -66,16 +66,32 @@ let logMixin = {
           let system = this.system;
           system['et'] = evt;
 
-          this.reportTimer && clearTimeout(this.reportTimer);
-          this.reportTimer = setTimeout(()=>{
-            this.reportLog(system);
-          }, 5000)
-
+          this.reportStrategy(system)
           // this.reportLog(system);
 
           this.detectionWaiting(evt);
         });
       })
+    },
+
+    /**
+     * @method 上报策略调整
+     * @params
+     */
+    reportStrategy(system) {
+      let now = (new Date()).getTime();
+      let lastReportTime = this.reportTime || 0;
+      // 距离上次上报的时间多少分钟
+      let duration = (now - lastReportTime)/1000/60;
+      // 最大阈值3min 低于阈值禁止上报
+      let threshold = 3;
+
+      if(duration < threshold) {
+        return this;
+      }
+
+      system && this.reportLog(system);
+      this.reportTime = now;
     },
 
     /**
@@ -98,16 +114,12 @@ let logMixin = {
       if(timers > 3 && duration < 15 || evt === 'error') {
         if(this.liveType === 2) {
           setTimeout(()=>{
-            this.flvPlayer.unload();
-            this.flvPlayer.detachMediaElement();
             this.createFlvPlayer();
           }, 3500)
         } else if(this.liveType === 1) {
           let isWeb = this.isWeb;
           if(isWeb && this.flvPlayer) {
             setTimeout(()=>{
-              this.flvPlayer.unload();
-              this.flvPlayer.detachMediaElement();
               this.createFlvPlayer();
             }, 3000)
           } else {
