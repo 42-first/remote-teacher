@@ -14,6 +14,7 @@ const Subjective = resolve => require(['@/components/fullscreen/subjective'], re
 const FillBlank = resolve => require(['@/components/fullscreen/blank'], resolve)
 
 const PPT = resolve => require(['@/components/fullscreen/ppt'], resolve)
+const Webview = resolve => require(['@/components/fullscreen/webview'], resolve)
 
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
@@ -36,6 +37,11 @@ const fullscreenRouter = new Router({
           path: 'ppt/:index',
           name: 'ppt-page',
           component: PPT
+        },
+        {
+          path: 'webview/:index',
+          name: 'webview',
+          component: Webview
         },
         {
           path: 'exercise/:index',

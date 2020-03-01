@@ -15,12 +15,8 @@
         <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
       </p>
 
-      <!-- 大屏模式布局 -->
-      <div class="cover__container">
-        <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
-        <!-- 作答按钮 -->
-        <p class="answer-btn cfff f20" @click="handleAnwser" v-if="currSlide.problemType" >去作答</p>
-      </div>
+      <!-- 消息通知 -->
+      <msgbox></msgbox>
 
       <!-- 这里布局要改成 pad版 -->
       <lesson ref="lessoncmp" ></lesson>
@@ -96,6 +92,8 @@
   import livemixin from '@/components/fullscreen/mixin/live-mixin'
   import eventmixin from '@/components/fullscreen/mixin/event-mixin'
 
+   import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
+
   import logmixin from '@/components/common/log-reporting'
   import fullscreenMixin from '@/components/fullscreen/mixin/fullscreen'
 
@@ -107,6 +105,7 @@
   import volume from './video_volume.vue'
 
   import lesson from './components/lesson';
+  import msgbox from './components/msg-box';
 
 
   // 子组件不需要引用直接使用
@@ -167,11 +166,6 @@
         // 习题map
         problemMap: new Map(),
 
-        // timeline列表
-        // cards: [],
-
-        // 消息box数据
-        msgBoxs: [],
         // 插件版本号
         version: 1.5,
         // 老师名称
@@ -229,7 +223,8 @@
     components: {
       lesson,
       danmuCmp,
-      volume
+      volume,
+      msgbox
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -274,11 +269,7 @@
 
             this.problem = slide;
           }
-
-          // this.visibleProblemTip = true;
         }
-
-        console.log('isFullscreen:'+ screenfull.isFullscreen);
 
         if(slide && slide.src) {
           this.currSlide = slide;
@@ -339,7 +330,7 @@
         return oStyle;
       }
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin ],
     methods: {
       ...mapActions([
         // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`
@@ -348,6 +339,8 @@
         'setLines',
         'reset',
         'setObserverMode',
+        'setSlideIndex',
+        'setMsg',
       ]),
 
       /*

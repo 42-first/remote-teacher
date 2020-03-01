@@ -58,6 +58,8 @@
   </section>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex'
+
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
 
@@ -106,6 +108,11 @@
     components: {
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
+      ...mapState([
+        'lesson',
+        'cards',
+      ]),
     },
     watch: {
     },
@@ -563,7 +570,8 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      let cards = this.$parent.cards;
+      // let cards = this.$parent.cards;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {

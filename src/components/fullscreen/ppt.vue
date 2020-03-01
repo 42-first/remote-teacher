@@ -101,8 +101,6 @@ export default {
      * @params
      */
     init() {
-
-
       this.initEvent();
 
       setTimeout(()=>{
@@ -126,14 +124,30 @@ export default {
      * @params
      */
     resize() {
-      this.checkFullscreen();
-      this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 40;
-      this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 40;
+      let oStyle = {};
 
-      setTimeout(()=>{
-        this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 41;
-        this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 41;
-      }, 1500)
+      let innerHeight = window.innerHeight - 80;
+      let innerWidth = window.innerWidth - 220 -40;
+      let screenRate = innerWidth/innerHeight;
+      let width = slide.Width;
+      let height = slide.Height;
+      let rate = slide.rate;
+
+      // 截图
+      if(slide.type === 10 ) {
+        return oStyle;
+      }
+
+      // 正常宽高比屏幕的宽高
+      if(rate > screenRate) {
+        oStyle['width'] = innerWidth + 'px';
+        oStyle['height'] = innerWidth/rate + 'px';
+      } else {
+        oStyle['width'] = innerHeight*rate + 'px';
+        oStyle['height'] = innerHeight + 'px';
+      }
+
+      return oStyle;
     },
 
     /**

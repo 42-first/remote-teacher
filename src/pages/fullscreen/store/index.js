@@ -28,6 +28,8 @@ const store = new Vuex.Store({
     slideIndex: 0,
     // 当前slide
     slide: null,
+    // 信息消息提醒
+    msg: null,
     // 是否全屏
     fullscreen: false,
     // 是否观察者模式
@@ -61,6 +63,10 @@ const store = new Vuex.Store({
       state.slide = slide;
     },
 
+    setMsg(state, msg) {
+      state.msg = msg;
+    },
+
     setObserverMode(state, data) {
       state.observerMode = data;
     },
@@ -87,6 +93,10 @@ const store = new Vuex.Store({
     },
     setSlide({commit}, slide) {
       commit('setSlide', slide)
+    },
+
+    setMsg({commit}, slide) {
+      commit('setMsg', slide)
     },
 
     setObserverMode({commit}, slide) {

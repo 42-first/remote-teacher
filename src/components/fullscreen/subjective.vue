@@ -125,6 +125,8 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from 'vuex'
+
   import API from '@/util/api'
   import {compress} from '@/util/image'
   import { isSupported } from '@/util/util'
@@ -199,6 +201,11 @@
     components: {
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
+      ...mapState([
+        'lesson',
+        'cards',
+      ]),
     },
     watch: {
       text(newValue, oldValue) {
@@ -1082,8 +1089,10 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      this.lessonID = this.$parent.lessonID;
-      let cards = this.$parent.cards;
+      // this.lessonID = this.$parent.lessonID;
+      // let cards = this.$parent.cards;
+      this.lessonID = this.lesson && this.lesson.lessonID;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {

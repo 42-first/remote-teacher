@@ -7,8 +7,8 @@
 <template>
   <!-- timeline -->
   <section class="timeline__wrap" >
-    <section class="timeline__item" :class="{ 'active': slideIndex === index }" v-for="(item, index) in lines" :key="index" v-if="item" @click="handleViewDetail(item, index)" >
-      <!-- 正在放映提示 item.type !== 1 && index === lines.length-1-->
+    <section class="timeline__item" :class="{ 'active': slideIndex === index }" v-for="(item, index) in lines" :key="index" v-if="item" @click="handleView(item, index)" >
+      <!-- 正在放映提示 -->
       <section class="box-between inlesson" v-if="item.type !== 1 && index === lines.length-1">
         <span class="f12 cfff">正在放映</span>
       </section>
@@ -45,7 +45,7 @@
         <div class="timeline__ppt">
           <span class="ppt--pageno f12"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
           <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="screenshot--image" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)" alt="雨课堂,截图分享" />
+            <img class="screenshot--image" :src="item.src" alt="雨课堂,截图分享" />
           </div>
           <div class="timeline__footer box-between">
             <p class="f12 c9b">{{ item.time|getTimeago }}</p>
@@ -219,36 +219,8 @@
       /**
        * @method timeline详情
        */
-      handleViewDetail(item, index) {
+      handleView(item, index) {
         if(item && item.type) {
-          let path = '';
-          switch (item.type) {
-            // ppt
-            case 2:
-              path = `/${this.lesson.lessonID}/ppt/${index}`;
-              this.$router.replace({ path });
-
-              break;
-
-            // 截图
-            case 10:
-            case 11:
-              // ppt
-              path = `/${this.lesson.lessonID}/ppt/${index}`;
-              this.$router.replace({ path });
-
-              break;
-
-            // 习题
-            case 3:
-              path = item.pageURL + item.index;
-              this.$router.replace({ path });
-              break;
-
-            default:
-              break;
-          }
-
           this.setSlideIndex(index);
         }
       },
