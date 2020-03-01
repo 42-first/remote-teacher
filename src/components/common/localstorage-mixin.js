@@ -29,6 +29,12 @@ let localstorageMixin = {
           // 记录更新时间
           if(name === 'base') {
             data['dt'] = (new Date()).getTime();
+
+            // 检测课件是否完整
+            let isAll = this.checkIsAll(value);
+            if(!isAll) {
+              return this;
+            }
           }
 
           let temp = JSON.stringify(data);
@@ -313,7 +319,43 @@ let localstorageMixin = {
         base.presentationList = list;
         this.setLocalData('base', base);
       }
+    },
+
+    /*
+     * @method 检测课件数据是否完整
+     * @param
+     */
+    checkIsAll(data) {
+      let isAll = true;
+
+      if(data && data.presentationList) {
+        let count = data.presentationList.length;
+
+        for(let i = 0; i < count; i++) {
+          let presentation = data.presentationList[i];
+
+          if(presentation) {
+            let slides = presentation['Slides'];
+            if(slides && slides.length) {
+              slides.forEach( (slide) => {
+                if(slide && !slide.Cover) {
+                  isAll = false
+                }
+              });
+            }
+          }
+
+          if(!isAll) {
+            break;
+          }
+
+        }
+      }
+
+      return isAll;
     }
+
+
   }
 
 }
