@@ -13,6 +13,8 @@ const Exercise = resolve => require(['@/components/fullscreen/exercise'], resolv
 const Subjective = resolve => require(['@/components/fullscreen/subjective'], resolve)
 const FillBlank = resolve => require(['@/components/fullscreen/blank'], resolve)
 
+const PPT = resolve => require(['@/components/fullscreen/ppt'], resolve)
+
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
@@ -30,6 +32,11 @@ const fullscreenRouter = new Router({
       name: 'student-fullscreen',
       component: Index,
       children: [
+        {
+          path: 'ppt/:index',
+          name: 'ppt-page',
+          component: PPT
+        },
         {
           path: 'exercise/:index',
           name: 'exercise-page',

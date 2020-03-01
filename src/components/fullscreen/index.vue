@@ -15,11 +15,15 @@
         <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
       </p>
 
+      <!-- 大屏模式布局 -->
       <div class="cover__container">
         <img class="cover" :src="currSlide.src" :style="currSlide|setStyle" alt="" />
         <!-- 作答按钮 -->
         <p class="answer-btn cfff f20" @click="handleAnwser" v-if="currSlide.problemType" >去作答</p>
       </div>
+
+      <!-- 这里布局要改成 pad版 -->
+      <lesson ref="lessoncmp" ></lesson>
     </section>
 
     <!-- 直播入口 音频直播 -->
@@ -77,22 +81,23 @@
     <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
 
     <!-- 子页面 -->
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
   </section>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex';
+
   import request from '@/util/request'
   import API from '@/util/api'
-  // import '@/util/util'
   import { isSupported } from '@/util/util'
 
-  import wsmixin from '@/components/student/student-socket'
-  import actionsmixin from '@/components/student/actions-mixin'
-  import livemixin from '@/components/fullscreen/live-mixin'
-  import eventmixin from '@/components/fullscreen/event-mixin'
+  import wsmixin from '@/components/fullscreen/mixin/socket-mixin'
+  import actionsmixin from '@/components/fullscreen/mixin/actions-mixin'
+  import livemixin from '@/components/fullscreen/mixin/live-mixin'
+  import eventmixin from '@/components/fullscreen/mixin/event-mixin'
 
   import logmixin from '@/components/common/log-reporting'
-  import fullscreenMixin from '@/components/fullscreen/fullscreen'
+  import fullscreenMixin from '@/components/fullscreen/mixin/fullscreen'
 
 
   let screenfull = require('screenfull');
@@ -100,6 +105,8 @@
 
   import danmuCmp from './danmu.vue'
   import volume from './video_volume.vue'
+
+  import lesson from './components/lesson';
 
 
   // 子组件不需要引用直接使用
@@ -111,7 +118,6 @@
 
   export default {
     name: 'fullscreen',
-
     data() {
       return {
         // 弹幕引擎
@@ -143,8 +149,6 @@
 
         // 是否有新消息
         hasMsg: false,
-        // 是否观看模式
-        observerMode: false,
         // 是否开启弹幕
         danmuStatus: false,
         // 是否显示弹幕
@@ -164,24 +168,12 @@
         problemMap: new Map(),
 
         // timeline列表
-        cards: [],
+        // cards: [],
 
         // 消息box数据
         msgBoxs: [],
-
-        // 记录全部的事件
-        allEvents: [],
-        // 时间轴数据
-        timeline: {
-          'problem': {}
-        },
-        // 弹幕投稿是否展开
-        isMore: false,
-        // todo: 是否新版本 隐藏功能
-        version: 0.9,
-
-        // 第一张ppt
-        pptCover: '',
+        // 插件版本号
+        version: 1.5,
         // 老师名称
         teacherName: '',
         // 尝试拉取数据的次数
@@ -235,10 +227,17 @@
       };
     },
     components: {
+      lesson,
       danmuCmp,
       volume
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
+      ...mapState([
+        'lesson',
+        'cards',
+        'lines',
+      ])
     },
     watch: {
       '$route' (to, from) {
@@ -277,22 +276,16 @@
           }
 
           // this.visibleProblemTip = true;
-        } else {
-          // this.visibleProblemTip = false;
         }
 
         console.log('isFullscreen:'+ screenfull.isFullscreen);
 
         if(slide && slide.src) {
           this.currSlide = slide;
-
-          // todo: 检测是否在答题页 需要关闭
-          // console.dir(this.$route)
-          // let route = this.$route;
-          // if(route.name !== 'student-fullscreen') {
-          //   this.$router.back();
-          // }
         }
+
+        // 更新接收器展示timeline
+        this.setLines(newVal);
       },
       liveURL(newVal, oldVal) {
         setTimeout(()=>{
@@ -348,15 +341,21 @@
     },
     mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin ],
     methods: {
+      ...mapActions([
+        // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`
+        'setLesson',
+        'setCards',
+        'setLines',
+        'reset',
+        'setObserverMode',
+      ]),
+
       /*
        * @method 接收器初始化
        */
       init() {
-        let self = this;
-
         this.lessonID = this.$route.params.lessonID || 3049;
         this.iniTimeline(this.lessonID);
-        this.getSoftVersion(this.lessonID);
 
         let key = 'lesson-tip-cloesed-' + this.lessonID;
         let visibleTip = true;
@@ -453,54 +452,6 @@
       },
 
       /*
-       * @method 用户权限
-       * @param  lessonID
-       */
-      getUserInfo(lessonID) {
-        let self = this;
-        let URL = API.GET_USER_INFO;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.userID = data.user_id;
-              self.avatar = data.avatar;
-              self.userAuth = data.user_auth;
-
-              return data;
-            }
-          });
-      },
-
-      /*
-       * @method 软件版本号
-       * @param  lessonID
-       */
-      getSoftVersion(lessonID) {
-        let self = this;
-        let URL = API.GET_SOFT_VERSION;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.version = +data.ppt_version;
-
-              return data;
-            }
-          });
-      },
-
-      /*
       * @method 读取直播的课程列表和auth信息
       * @param  init: 是否初始化socket
       */
@@ -594,11 +545,6 @@
                 self.liveURL = self.liveInfo.live_url.httpflv;
                 self.liveurl = self.liveInfo.live_url;
 
-                // if(self.liveType === 1) {
-                //   self.liveURL = self.liveInfo.live_url.hls;
-                //   this.loadHLS();
-                // }
-
                 // 日志上报
                 setTimeout(() => {
                   self.handleLogEvent();
@@ -612,6 +558,16 @@
               setTimeout(() => {
                 self.initws();
               }, 20)
+
+              // 课程基本信息
+              self.setLesson({
+                lessonID: self.lessonID,
+                presentationID: self.presentationID,
+                title: presentationData && presentationData.Title,
+                userID: data.userID,
+                avatar: data.avatar,
+                userAuth: data.userAuth
+              })
 
               return presentationData;
             }
@@ -752,61 +708,6 @@
       },
 
       /**
-       * @method 全屏展示
-       * @params
-       */
-      handleFullscreen(evt) {
-        // let element = this.$el.querySelector('.J_ppt');
-        let element = this.$el;
-
-        if(this.isFullscreen) {
-          this.exitFullscreen(element);
-        } else {
-          this.launchIntoFullscreen(element);
-        }
-
-        this.isFullscreen = !this.isFullscreen;
-
-        setTimeout(()=>{
-          let silde = this.currSlide;
-          if(silde) {
-            this.currSlide = Object.assign({}, silde, { time: +new Date() } );
-          }
-        }, 300)
-
-        // this.liveURL && this.handleplay();
-      },
-
-      /**
-       * @method 全屏展示
-       * @params
-       */
-      launchIntoFullscreen(element) {
-        if(element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if(element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        } else if(element.msRequestFullscreen) {
-          element.msRequestFullscreen();
-        }
-      },
-
-      /**
-       * @method 退出全屏展示
-       * @params
-       */
-      exitFullscreen() {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
-      },
-      /**
        * @method 弹幕发送toast
       */
       handleShowTips(text){
@@ -838,7 +739,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/style/font/iconfont/iconfont.css";
+  // @import "~@/style/font/iconfont/iconfont.css";
   // @import "~@/style/mintui.css";
 
   .page {
