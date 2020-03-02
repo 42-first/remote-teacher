@@ -74,12 +74,6 @@ export default {
       'lesson',
       'lessonAllStatus',
     ]),
-
-    problem() {
-      let slide = this.presentation.Slides[this.slideIndex];
-
-      return slide && slide.Problem;
-    }
   },
   components: {
     timeline,

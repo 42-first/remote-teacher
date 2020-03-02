@@ -7,9 +7,9 @@
 <template>
   <!-- timeline -->
   <section class="timeline__wrap" >
-    <section class="timeline__item" :class="{ 'active': slideIndex === index }" v-for="(item, index) in lines" :key="index" v-if="item" @click="handleView(item, index)" >
+    <section class="timeline__item J_slide" :data-index="index" :class="{ 'active': slideIndex === index }" v-for="(item, index) in cards" :key="index" v-if="item" @click="handleView(item, index)" >
       <!-- 正在放映提示 -->
-      <section class="box-between inlesson" v-if="item.type !== 1 && index === lines.length-1">
+      <section class="box-between inlesson" v-if="item.type !== 1 && index === cards.length-1">
         <span class="f12 cfff">正在放映</span>
       </section>
 
@@ -17,7 +17,7 @@
       <template v-if="item.type==1"><div class="timeline__msg f12">{{ item.message }}</div></template>
       <!-- ppt模板 -->
       <template v-else-if="item.type==2">
-        <div class="timeline__ppt" v-show="!item.isRepeat">
+        <div class="timeline__ppt">
           <span class="ppt--pageno f12" >{{ $t('pno', { number: item.pageIndex }) }}</span>
           <div class="ppt__cover--wrapper" :style="{ minHeight: 180/item.rate + 'px' }">
             <img class="cover" :src="item.src">
@@ -196,13 +196,30 @@
       };
     },
     watch: {
+      msg(newVal, oldVal) {
+        // let index = this.cards.findIndex((item)=>{
+        //   return item.type === newVal.type;
+        // })
+
+        let index = newVal.index || this.cards.length - 1;
+        if(index) {
+          // let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
+          setTimeout(()=>{
+            let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
+            slideEl && slideEl.scrollIntoView();
+
+            this.autoJump(index, newVal);
+          }, 100)
+        }
+      },
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
       ...mapState([
         'lesson',
-        'lines',
+        'cards',
         'slideIndex',
+        'msg',
         'observerMode'
       ]),
     },
@@ -224,6 +241,29 @@
           this.setSlideIndex(index);
         }
       },
+
+      /**
+       * @method timeline详情
+       */
+      autoJump(index, slide) {
+        // TODO: 自动跳转策略
+        // 当前是PPT 直接跳转, 有题目出现跳转
+        console.log(index);
+        console.dir(this.$route);
+
+        let pageName = this.$route.name;
+        // PPT页可以自动切换
+        if(pageName === 'ppt-page') {
+          this.setSlideIndex(index);
+
+          return this;
+        }
+
+        // 新消息是题目自动切换到题目
+        if(slide && slide.type === 3) {
+          this.setSlideIndex(index);
+        }
+      }
     },
     created() {
     },

@@ -335,6 +335,11 @@ let actionsMixin = {
         }
 
         this.setCards(this.cards)
+
+        // 新PPT也提醒
+        if(!data.isTimeline) {
+          this.setMsg(data);
+        }
       }
     },
 
