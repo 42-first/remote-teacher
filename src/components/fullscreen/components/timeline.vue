@@ -415,6 +415,13 @@
       }
     }
 
+    &.fenzu {
+      .icon__wrap {
+        background: #9C81FA;
+        box-shadow: 0 2px 4px rgba(156, 129, 250, 0.5);
+      }
+    }
+
     .icon__wrap {
       margin: 0 auto 7px;
       width: 40px;

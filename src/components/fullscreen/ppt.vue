@@ -13,6 +13,18 @@
     <div class="cover__container box-center" v-if="slide">
       <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" />
     </div>
+
+    <!-- 不懂收藏 -->
+    <section class="ppt__opt f12 c9b" v-if="slide && slide.type===2" >
+      <div class="opt__action pb10" @click="handleTag(1)">
+        <i class="iconfont icon--budongnormal f24 " :class="[ slide.hasQuestion ? 'red': 'c666' ]"></i>
+        <p><!-- 不懂 -->{{ $t('unknown') }}</p>
+      </div>
+      <div class="opt__action" @click="handleTag(2)">
+        <i class="iconfont icon--shoucangactive f24" :class="[ slide.hasStore? 'red': 'c666' ]"></i>
+        <p><!-- 收藏 -->{{ $t('favorite') }}</p>
+      </div>
+    </section>
   </section>
 
 </template>
@@ -93,7 +105,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setSlide',
+      'setCards',
     ]),
 
     /**
@@ -102,10 +114,6 @@ export default {
      */
     init() {
       this.initEvent();
-
-      setTimeout(()=>{
-        // this.resize();
-      }, 100)
     },
 
     /**
@@ -114,9 +122,6 @@ export default {
      */
     initEvent() {
       window.addEventListener('resize', this.resize);
-
-      // // 监听放映状态
-      // document.addEventListener('fullscreenchange', this.resize);
     },
 
     /**
@@ -124,6 +129,7 @@ export default {
      * @params
      */
     resize() {
+      let slide = this.slide;
       let oStyle = {};
 
       let innerHeight = window.innerHeight - 80;
@@ -151,10 +157,51 @@ export default {
     },
 
     /**
-     * @method 切换slide
+     * @method 不懂收藏
+     * @ tag 1 不懂 2 收藏
      */
-    handleSwitchSlide(index) {
-      this.setSlideIndex(index);
+    handleTag(tag) {
+      let URL = API.student.SET_LEESON_SILDE_TAG;
+      let cards = this.cards;
+      let slide = this.slide;
+      let slideID = slide.slideID;
+
+      let ppts = cards.filter((card, index)=>{
+        return card.slideID === slideID;
+      })
+
+      // 确实是否不懂
+      let tagType = ppts.length && ppts[0].hasQuestion ? 'cancel' : 'add';
+      // 是否收藏
+      if(tag === 2) {
+        tagType = ppts.length && ppts[0].hasStore ? 'cancel' : 'add';
+      }
+
+      let param = {
+        'tag': tag,
+        'lessonSlideID': slideID,
+        'tagType': tagType
+      }
+
+      request.post(URL, param).
+      then( (res) => {
+        if(res) {
+          if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
+            return;
+          }
+
+          ppts.forEach( (item, index) => {
+            tag === 1 && (item.hasQuestion = !item.hasQuestion);
+            tag === 2 && (item.hasStore = !item.hasStore);
+          });
+
+          this.setCards(cards);
+
+          // tag === 1 && (slideData['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0);
+          // tag === 2 && (slideData['store'] = ppts.length && ppts[0].hasStore ? 1 : 0);
+        }
+      });
+
     },
 
   }
@@ -172,6 +219,31 @@ export default {
 
   .cover__container {
 
+  }
+
+  .ppt__opt {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+
+    transform: translateY(-50%);
+
+    width: 60px;
+    height: 120px;
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+
+    background: #fff;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+
+    .opt__action {
+      cursor: pointer;
+      line-height: 1.3;
+    }
   }
 
 </style>

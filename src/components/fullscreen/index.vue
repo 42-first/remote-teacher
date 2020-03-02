@@ -111,7 +111,7 @@
   window.request = request;
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
-    request.post = request.get
+    // request.post = request.get
   }
 
   export default {

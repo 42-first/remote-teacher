@@ -6,6 +6,20 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "13240609",
+      "name": "24-收藏active",
+      "font_class": "-shoucangactive",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
+      "icon_id": "13240610",
+      "name": "24-不懂normal",
+      "font_class": "-budongnormal",
+      "unicode": "e753",
+      "unicode_decimal": 59219
+    },
+    {
       "icon_id": "4602234",
       "name": "遥控器设置",
       "font_class": "yaokongqishezhi",
