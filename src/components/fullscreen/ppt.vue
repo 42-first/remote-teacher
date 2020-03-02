@@ -56,7 +56,7 @@ export default {
     this.index = +this.$route.params.index;
 
     console.log(this.index);
-    this.init();
+    this.init(this.index);
   },
   updated() {},
   beforeDestroy() {
@@ -98,9 +98,15 @@ export default {
       }
     },
     index(newVal, oldVal) {
-      let slide = this.cards[this.index];
-
-      this.slide = slide;
+      if(this.cards && this.cards.length) {
+        let slide = this.cards[newVal];
+        this.slide = slide;
+      } else {
+        setTimeout(()=>{
+          let slide = this.cards[newVal];
+          this.slide = slide;
+        }, 1000)
+      }
     },
   },
   methods: {
@@ -112,7 +118,12 @@ export default {
      * @method 页面初始化
      * @params
      */
-    init() {
+    init(index) {
+      let slide = this.cards[index];
+      if(slide) {
+        this.slide = slide;
+      }
+
       this.initEvent();
     },
 
@@ -131,6 +142,10 @@ export default {
     resize() {
       let slide = this.slide;
       let oStyle = {};
+
+      if(!slide) {
+        return this;
+      }
 
       let innerHeight = window.innerHeight - 80;
       let innerWidth = window.innerWidth - 220 -40;
@@ -195,10 +210,15 @@ export default {
             tag === 2 && (item.hasStore = !item.hasStore);
           });
 
-          this.setCards(cards);
+          if(tag === 1) {
+            slide['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0;
+            slide.hasQuestion = ppts[0].hasQuestion;
+          } else if(tag === 2) {
+            slide['store'] = ppts.length && ppts[0].hasStore ? 1 : 0;
+            slide.store = ppts[0].hasStore;
+          }
 
-          // tag === 1 && (slideData['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0);
-          // tag === 2 && (slideData['store'] = ppts.length && ppts[0].hasStore ? 1 : 0);
+          this.setCards(cards);
         }
       });
 

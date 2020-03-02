@@ -9,14 +9,14 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from 'vuex-persistedstate'
 
 
 Vue.use(Vuex)
 
 
 const store = new Vuex.Store({
-  // plugins: [createPersistedState()],
+  plugins: [createPersistedState()],
   state: {
     // 课程信息 lessonID 课程ID classroomID presentationid, sid si
     lesson: {},

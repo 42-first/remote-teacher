@@ -34,11 +34,11 @@ var commandMixin = {
     handleViewDetail(item, index) {
       if(item && item.type) {
         let path = '';
+
         switch (item.type) {
           // ppt
           case 2:
             path = `/${this.lesson.lessonID}/ppt/${index}`;
-            this.$router.replace({ path });
 
             break;
 
@@ -47,67 +47,69 @@ var commandMixin = {
           case 11:
             // ppt
             path = `/${this.lesson.lessonID}/ppt/${index}`;
-            this.$router.replace({ path });
 
             break;
 
           // 习题
           case 3:
             path = item.pageURL + item.index;
-            this.$router.replace({ path });
+
             break;
 
           // 试卷
           case 4:
             path = `/${this.lesson.lessonID}/webview/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 红包
           case 5:
             path = `/${this.lesson.lessonID}/hongbao/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 投稿分享
           case 6:
             path = `/${this.lesson.lessonID}/submission_share/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 主观题答案分享
           case 7:
             path = `/${this.lesson.lessonID}/subjective_share/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 发起了分组
           case 8:
             path = `/${this.lesson.lessonID}/webview/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 发起了互评
           case 9:
             path = `/${this.lesson.lessonID}/evaluation/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 白板
           case 12:
             path = `/${this.lesson.lessonID}/webview/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           // 问题解析
           case 13:
             path = `/${this.lesson.lessonID}/analysis/${index}`;
-            this.$router.replace({ path });
+
             break;
 
           default:
             break;
         }
+
+        // this.$router.replace({ path });
+        this.$router.push({ path });
       }
     },
 
