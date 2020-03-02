@@ -63,8 +63,44 @@ var commandMixin = {
             this.$router.replace({ path });
             break;
 
+          // 红包
+          case 5:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
+          // 投稿分享
+          case 6:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
+          // 主观题答案分享
+          case 7:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
+          // 发起了分组
+          case 8:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
+          // 发起了互评
+          case 9:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
           // 白板
           case 12:
+            path = `/${this.lesson.lessonID}/webview/${index}`;
+            this.$router.replace({ path });
+            break;
+
+          // 问题解析
+          case 13:
             path = `/${this.lesson.lessonID}/webview/${index}`;
             this.$router.replace({ path });
             break;

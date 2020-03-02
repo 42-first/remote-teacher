@@ -35,7 +35,6 @@
 
     <!-- 直播入口 视频直播 -->
     <section class="live__video J_live" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
-      <!-- <video id="player" class="live__container" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" controls="fasle" :src="liveURL" ></video> -->
       <!-- 定制video -->
       <div class="live__video_box">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
@@ -379,8 +378,6 @@
        * @params
        */
       emitDanmu(msg) {
-        // let colors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
-        // let color = colors[Math.floor(Math.random() * 6)];
         let bgcolors = [ '#F84F41', '#F84F41', '#FEA300', '#F5C900', '#62D793', '#9C81FA', '#FA7AD3',];
         let bgcolor = bgcolors[Math.floor(Math.random() * 6)];
         let danmu = {

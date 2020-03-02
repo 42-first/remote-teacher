@@ -1,6 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-var proxyUrl = 'http://10.0.3.3:7979'
+var proxyUrl = 'http://10.0.3.3:9000'
 
 function proxyConfig () {
   return {

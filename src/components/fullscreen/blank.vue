@@ -10,11 +10,11 @@
   <section class="page-exercise">
     <div class="container">
       <!-- 练习导航 -->
-      <header class="page__header">
+      <!-- <header class="page__header">
         <p class="header--back w30" ></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <p class="header--back ponter" @click="handleBack">关闭</p>
-      </header>
+      </header> -->
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
@@ -142,13 +142,17 @@
     },
     mixins: [],
     methods: {
+      ...mapActions([
+        'setCards',
+      ]),
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
       */
       init(data) {
         let problemID = data.problemID;
-        this.title = this.$parent.title;
+        this.title = this.lesson && this.lesson.title;
 
         if(!problemID) {
           return ;
@@ -160,8 +164,7 @@
         this.initPubSub();
 
         // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.oProblem = this.$parent.$parent.problemMap.get(problemID)['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
         this.result = this.oProblem['Result'] || this.result;
@@ -181,7 +184,7 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           blanks.forEach((item, index) => {
@@ -203,17 +206,6 @@
         }, 300)
 
         this.blanks = blanks;
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
       },
 
       /*
@@ -436,7 +428,7 @@
           }
 
           this.oProblem['Result'] = param['result'];
-          let problem = self.$parent.problemMap.get(problemID)
+          let problem = self.$parent.$parent.problemMap.get(problemID)
 
           return request.post(URL, param)
             .then((res) => {
@@ -449,12 +441,13 @@
                 })
 
                 // 替换原来的数据
-                self.$parent.cards.splice(self.index, 1, self.summary);
+                self.cards.splice(self.index, 1, self.summary);
+                self.setCards(self.cards);
 
                 problem = Object.assign(problem, {
                   'Problem': self.oProblem
                 })
-                self.$parent.problemMap.set(problemID, problem);
+                self.$parent.$parent.problemMap.set(problemID, problem);
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
@@ -481,9 +474,9 @@
                   });
                 }
 
-                setTimeout(() => {
-                  self.$router.back();
-                }, 2000)
+                // setTimeout(() => {
+                //   self.$router.back();
+                // }, 2000)
 
                 return data;
               }
@@ -497,10 +490,6 @@
               });
 
               self.isComplete = true;
-
-              setTimeout(() => {
-                // self.$router.back();
-              }, 3000)
             });
 
           clearInterval(this.timer);
@@ -595,18 +584,13 @@
   \*------------------*/
 
   .page-exercise {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: rgba(0,0,0, 0.3);
   }
 
   .container {

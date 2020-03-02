@@ -11,11 +11,12 @@
 
     <div class="subjective-wrapper">
       <!-- 练习导航 -->
-      <header class="page__header">
+      <!-- <header class="page__header">
         <p class="w30"></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <p class="ponter" @click="handleBack">关闭</p>
-      </header>
+      </header> -->
+
       <!-- 定时 续时等 -->
       <section class="exercise__tips">
         <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -244,6 +245,10 @@
     },
     mixins: [ imagemixin ],
     methods: {
+      ...mapActions([
+        'setCards',
+      ]),
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
@@ -265,8 +270,7 @@
         this.initPubSub();
 
         // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.oProblem = this.$parent.$parent.problemMap.get(problemID)['Problem'];
         // 问题分数
         let score = this.oProblem['Score'];
         let getScore = this.oProblem['getScore'];
@@ -294,7 +298,7 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 恢复作答结果
@@ -321,17 +325,6 @@
             this.setTiming(data.limit)
           }
         }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
 
         // 预加载图片
         let oImg = new Image();
@@ -723,7 +716,7 @@
         };
 
         this.oProblem['Result'] = param['result'];
-        let problem = self.$parent.problemMap.get(problemID)
+        let problem = self.$parent.$parent.problemMap.get(problemID)
 
         console.log(param);
 
@@ -739,12 +732,13 @@
               })
 
               // 替换原来的数据
-              self.$parent.cards.splice(self.index, 1, self.summary);
+              self.cards.splice(self.index, 1, self.summary);
+              self.setCards(self.cards);
 
               problem = Object.assign(problem, {
                 'Problem': self.oProblem
               })
-              self.$parent.problemMap.set(problemID, problem);
+              self.$parent.$parent.problemMap.set(problemID, problem);
 
               clearInterval(self.timer);
 
@@ -771,9 +765,9 @@
                 });
               }
 
-              setTimeout(() => {
-                self.$router.back();
-              }, 2000)
+              // setTimeout(() => {
+              //   self.$router.back();
+              // }, 2000)
 
               return data;
             }
@@ -785,10 +779,6 @@
               message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
-
-            setTimeout(() => {
-              // self.$router.back();
-            }, 3000)
           });
       },
 
@@ -1113,18 +1103,13 @@
 
 <style lang="scss" scoped>
   .page-subjective {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: rgba(0,0,0, 0.3);
   }
 
   .subjective-wrapper {

@@ -119,7 +119,9 @@ let actionsMixin = {
             }
           });
 
-          slideIndex && this.setSlideIndex(slideIndex);
+          setTimeout(()=>{
+            slideIndex && this.setSlideIndex(slideIndex);
+          }, 1500)
         }
       }
     },

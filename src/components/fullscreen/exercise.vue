@@ -10,11 +10,11 @@
   <section class="page-exercise">
     <div class="container">
       <!-- 练习导航 -->
-      <header class="page__header">
+     <!--  <header class="page__header">
         <p class="header--back w30"></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <p class="header--back ponter" @click="handleBack">关闭</p>
-      </header>
+      </header> -->
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
@@ -78,8 +78,6 @@
         options: null,
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
-
-        observerMode: false,
 
         // 选择的答案
         optionsSet: new Set(),
@@ -536,9 +534,9 @@
                   });
                 }
 
-                setTimeout(() => {
-                  self.$router.back();
-                }, 2000)
+                // setTimeout(() => {
+                //   self.$router.back();
+                // }, 2000)
 
                 return data;
               }
@@ -552,10 +550,6 @@
               });
 
               self.isComplete = true;
-
-              setTimeout(() => {
-                // self.$router.back();
-              }, 3000)
             });
 
           clearInterval(this.timer);

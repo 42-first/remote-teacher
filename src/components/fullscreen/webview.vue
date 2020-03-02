@@ -20,7 +20,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-import $ from "zepto";
+// import $ from "zepto";
+import $ from 'jquery'
 
 
 export default {
@@ -79,6 +80,11 @@ export default {
         switch (slide.type) {
           // 试卷
           case 4:
+            this.src = slide.href;
+            break;
+
+          // 发起了分组
+          case 8:
             this.src = slide.href;
             break;
 
