@@ -72,9 +72,6 @@ var mixin = {
 
           // 记录socket关闭
           // window.Raven && Raven.captureException(`WebSocket onclose userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
-
-          // 重连时重新拉取ppt数据 保证数据准确性
-          // self.getPresentationList();
         }
 
         // 接收socket信息
@@ -309,7 +306,7 @@ var mixin = {
           case 'updateredpacket':
             item = msg['event'];
 
-            this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
+            this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item, isPopup: true  });
 
             break
 
@@ -317,7 +314,7 @@ var mixin = {
           case 'sendpost':
             item = msg['post'];
 
-            this.addSubmission({ type: 6, postid: item.postid, anon: item.anon, time: item.dt, event: item });
+            this.addSubmission({ type: 6, postid: item.postid, anon: item.anon, time: item.dt, event: item, isPopup: true  });
 
             break
 
@@ -325,7 +322,7 @@ var mixin = {
           case 'sendsproblem':
             item = msg['problem'];
 
-            this.addSubjective({ type: 7, spid: item.spid, anon: item.anon, time: item.dt, event: item });
+            this.addSubjective({ type: 7, spid: item.spid, anon: item.anon, time: item.dt, event: item, isPopup: true  });
 
             break
 
@@ -349,7 +346,7 @@ var mixin = {
           case 'problemremark':
             item = msg['remark'];
 
-            this.addAnalysis({ type: 13, remark: item, time: item['dt'], event: item });
+            this.addAnalysis({ type: 13, remark: item, time: item['dt'], event: item, isPopup: true });
 
             break
 

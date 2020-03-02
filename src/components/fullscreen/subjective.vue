@@ -10,12 +10,6 @@
   <section class="page-subjective">
 
     <div class="subjective-wrapper">
-      <!-- 练习导航 -->
-      <!-- <header class="page__header">
-        <p class="w30"></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="ponter" @click="handleBack">关闭</p>
-      </header> -->
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips">
@@ -322,7 +316,7 @@
           }
 
           if (process.env.NODE_ENV !== 'production') {
-            this.setTiming(data.limit)
+            // this.setTiming(data.limit)
           }
         }
 

@@ -100,8 +100,8 @@
   let screenfull = require('screenfull');
   import Danmaku from 'danmaku';
 
-  import danmuCmp from './danmu.vue'
-  import volume from './video_volume.vue'
+  import danmuCmp from './components/danmu.vue'
+  import volume from './components/video_volume.vue'
 
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';

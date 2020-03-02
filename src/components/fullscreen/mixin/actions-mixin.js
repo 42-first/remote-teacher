@@ -503,6 +503,9 @@ let actionsMixin = {
         if(!hasEvent) {
           this.cards.push(data);
           this.setCards(this.cards)
+
+          // 消息box弹框
+          data.isPopup && this.setMsg(data);
         }
       }
 
@@ -526,6 +529,9 @@ let actionsMixin = {
       if(!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
       }
     },
 
@@ -547,6 +553,9 @@ let actionsMixin = {
       if(!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
       }
     },
 
@@ -629,6 +638,9 @@ let actionsMixin = {
       if(!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
       }
     },
 

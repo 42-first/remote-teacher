@@ -65,19 +65,19 @@ var commandMixin = {
 
           // 红包
           case 5:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/hongbao/${index}`;
             this.$router.replace({ path });
             break;
 
           // 投稿分享
           case 6:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/submission_share/${index}`;
             this.$router.replace({ path });
             break;
 
           // 主观题答案分享
           case 7:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/subjective_share/${index}`;
             this.$router.replace({ path });
             break;
 
@@ -89,7 +89,7 @@ var commandMixin = {
 
           // 发起了互评
           case 9:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/evaluation/${index}`;
             this.$router.replace({ path });
             break;
 
@@ -101,7 +101,7 @@ var commandMixin = {
 
           // 问题解析
           case 13:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/analysis/${index}`;
             this.$router.replace({ path });
             break;
 

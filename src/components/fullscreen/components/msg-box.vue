@@ -151,6 +151,8 @@
         if(~slideIndex) {
           this.setSlideIndex(slideIndex);
         }
+
+        this.setMsg(null);
       },
 
       /**
