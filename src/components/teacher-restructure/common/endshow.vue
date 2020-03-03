@@ -48,7 +48,6 @@
         'toolbarIndex'
       ]),
       activeIndex() {
-        console.log(this.toolbarIndex)
         return this.toolbarIndex
       }
     },
