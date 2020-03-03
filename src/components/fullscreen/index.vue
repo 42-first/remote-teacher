@@ -58,12 +58,8 @@
 
       </div>
 
-      <!-- 提示信息 -->
-      <div class="problem__tip f16" v-if="visibleProblemTip && problem">
-        <span class="cfff">{{ problem.caption}}</span>
-        <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
-        <i class="iconfont icon-guanbi2 cfff f25 ponter" @click="handleClosedTip"></i>
-      </div>
+      <!-- 消息提醒 新版 v-show="videoFullscreen" -->
+      <videomsg :videoFullscreen="videoFullscreen" ></videomsg>
 
       <!-- 实时弹幕列表 -->
       <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
@@ -102,6 +98,7 @@
 
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';
+  import videomsg from './components/video-msg';
 
 
   // 子组件不需要引用直接使用
@@ -220,7 +217,8 @@
       lesson,
       danmuCmp,
       volume,
-      msgbox
+      msgbox,
+      videomsg
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -858,24 +856,6 @@
 
       }
 
-      .problem__tip {
-        // width: 100vw;
-        height: 56px;
-        padding: 0 35px;
-
-        left: 50%;
-        right: initial;
-        bottom: 96px;
-        transform: translateX(-50%);
-
-        .anwser--tip  {
-          margin: 0 20px;
-          padding: 3px 10px;
-          color: #fff;
-          background: #5096F5;
-          border-radius: 15px/50%;
-        }
-      }
     }
 
     .live__video_box {
@@ -946,27 +926,6 @@
     }
   }
 
-
-  .problem__tip {
-    position: absolute;
-    right: 10px;
-    bottom: 50px;
-
-    display: flex;
-    align-items: center;
-
-    height: 44px;
-    padding: 0 18px;
-
-    background: rgba(0,0,0, 0.5);
-    border-radius: 4px;
-
-    .anwser--tip {
-      padding: 0 20px;
-    }
-  }
-
-
   .danmu-live {
     z-index: 1;
     pointer-events: none;
@@ -977,7 +936,6 @@
     width: 100vw;
     height: 50vh;
   }
-
 
 
 

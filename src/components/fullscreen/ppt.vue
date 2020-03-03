@@ -11,7 +11,8 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center" v-if="slide">
-      <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" />
+      <!-- <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" /> -->
+      <img class="cover" :src="slide.src" alt="" />
     </div>
 
     <!-- 不懂收藏 -->
@@ -51,7 +52,6 @@ export default {
   },
   mixins: [ ],
   created() {
-    // this.index = +this.$route.params.index;
   },
   mounted() {
     this.index = +this.$route.params.index;
@@ -132,7 +132,7 @@ export default {
      * @params
      */
     initEvent() {
-      window.addEventListener('resize', this.resize);
+      // window.addEventListener('resize', this.resize);
     },
 
     /**
@@ -147,8 +147,8 @@ export default {
         return this;
       }
 
-      let innerHeight = window.innerHeight - 80;
-      let innerWidth = window.innerWidth - 220 -40;
+      let innerHeight = this.$el.innerHeight - 80;
+      let innerWidth = this.$el.innerWidth - 220 -40;
       let screenRate = innerWidth/innerHeight;
       let width = slide.Width;
       let height = slide.Height;
@@ -239,7 +239,7 @@ export default {
 
   .cover__container {
     .cover {
-      object-fit: cover;
+      object-fit: contain;
     }
   }
 
