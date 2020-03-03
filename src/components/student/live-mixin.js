@@ -78,6 +78,11 @@ let liveMixin = {
 
         this.handleFLVError();
 
+        // 初始化快手SDK
+        setTimeout(()=>{
+          this.initKwai(this.liveurl.httpflv);
+        }, 3000)
+
         return true;
       } else {
         if(isStart) {
@@ -470,6 +475,35 @@ let liveMixin = {
           this.loadNewUrl()
         }
       })
+    },
+
+    /*
+     * @method 初始化快手SDK
+     * @params
+     */
+    initKwai(liveurl) {
+      // https://tx-xuetangx.pull.yximgs.com/live/6000_kszt=GN=fp4YLg4o.flv
+      let isKwai = liveurl && liveurl.indexOf('pull.yximgs.com');
+      if(~isKwai) {
+        let videoEl = document.getElementById('player');
+
+        if(typeof KwaiVideoQosH5 !== 'undefined') {
+          let qos = new KwaiVideoQosH5();
+          qos.attachMedia(videoEl);
+
+          this.qos = qos;
+        }
+      }
+
+      // 测试
+      // setTimeout(()=>{
+      //   if(this.qos) {
+      //     this.qos.sendSummary({
+      //       lessonid: this.lessonID,
+      //       uid: this.userID
+      //     });
+      //   }
+      // }, 10000)
     }
   }
 }
