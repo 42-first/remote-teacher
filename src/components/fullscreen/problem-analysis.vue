@@ -295,7 +295,8 @@
     margin: 0 auto;
 
     width: 375px;
-    height: 667px;
+    // height: 667px;
+    height: 100%;
 
     background: #eee;
 

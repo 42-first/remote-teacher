@@ -1120,7 +1120,8 @@
 
   .subjective-wrapper {
     width: 375px;
-    height: 667px;
+    // height: 667px;
+    height: 100%;
 
     background: #f6f7f8;
     overflow-y: auto;

@@ -52,7 +52,7 @@
 
     <!-- 打分弹层 -->
     <section class="score__wrap" v-if="scoreVisible">
-      <div :class="[ 'score__modal', modalActive ? 'active' : '']" >
+      <div class="score__modal" >
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
           <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
