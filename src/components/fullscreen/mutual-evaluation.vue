@@ -13,7 +13,7 @@
       <!-- 互评得分 修改入口 -->
       <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
         <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
-        <p @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
+        <p class="pointer" @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
       <!-- 主观题题干 -->
@@ -30,7 +30,7 @@
       <section class="evaluation__answer" v-if="result">
         <h3 class="answer__header">
           <p class="f21 c333"><!-- 答案 -->{{ $t('grading.answer') }}</p>
-          <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
+          <p class="answer--points f14 blue pointer" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
           <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
@@ -44,7 +44,7 @@
 
       <!-- 打分 -->
       <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
-        <p class="score--btn" @click="handlescore"><!-- 打分 -->{{ $t('grading.grade') }}</p>
+        <p class="score--btn pointer" @click="handlescore"><!-- 打分 -->{{ $t('grading.grade') }}</p>
       </section>
 
       </section>
@@ -242,7 +242,6 @@
                 isComplete: true
               })
               // 替换原来的数据
-              // this.$parent.cards.splice(this.index, 1, this.summary);
               this.cards.splice(this.index, 1, this.summary);
               this.setCards(this.cards);
 
@@ -250,10 +249,6 @@
                 message: this.$i18n.t('sendsuccess') || '提交成功',
                 duration: 2000
               });
-
-              setTimeout(() => {
-                this.$router.back();
-              }, 2000)
 
               return data;
             }

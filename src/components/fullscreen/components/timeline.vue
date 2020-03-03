@@ -203,7 +203,6 @@
 
         let index = newVal.index || this.cards.length - 1;
         if(index) {
-          // let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
           setTimeout(()=>{
             let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
             slideEl && slideEl.scrollIntoView();

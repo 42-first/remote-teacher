@@ -58,7 +58,7 @@
 
       </div>
 
-      <!-- 提示信息 v-if="visibleProblemTip" -->
+      <!-- 提示信息 -->
       <div class="problem__tip f16" v-if="visibleProblemTip && problem">
         <span class="cfff">{{ problem.caption}}</span>
         <span class="blue anwser--tip ponter" @click="handleAnwser">去作答</span>
@@ -74,9 +74,6 @@
 
     <!-- 弹幕控制组件 -->
     <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
-
-    <!-- 子页面 -->
-    <!-- <router-view></router-view> -->
   </section>
 </template>
 <script>
@@ -729,7 +726,6 @@
 
 <style lang="scss">
   // @import "~@/style/font/iconfont/iconfont.css";
-  // @import "~@/style/mintui.css";
 
   .page {
     position: absolute;

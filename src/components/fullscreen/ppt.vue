@@ -39,6 +39,7 @@ export default {
     return {
       index: 0,
       slide: null,
+      style: {},
     };
   },
   computed: {
@@ -55,7 +56,6 @@ export default {
   mounted() {
     this.index = +this.$route.params.index;
 
-    console.log(this.index);
     this.init(this.index);
   },
   updated() {},
@@ -238,7 +238,9 @@ export default {
   }
 
   .cover__container {
-
+    .cover {
+      object-fit: cover;
+    }
   }
 
   .ppt__opt {

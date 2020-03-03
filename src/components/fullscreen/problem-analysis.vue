@@ -311,7 +311,7 @@
 
   .problem__content {
     position: relative;
-    margin: 15px 0 0;
+    margin: 5px 0 0;
 
     border-top: 1px solid #C8C8C8;
 

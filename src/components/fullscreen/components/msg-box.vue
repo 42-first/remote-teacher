@@ -144,9 +144,11 @@
       */
       handleLink(slide) {
         // 对应类型第一个
-        let slideIndex = this.cards.findIndex((item)=>{
-          return item.type === slide.type;
-        })
+        // let slideIndex = this.cards.findIndex((item)=>{
+        //   return item.type === slide.type;
+        // })
+
+        let slideIndex = slide.index || this.cards.length - 1;
 
         if(~slideIndex) {
           this.setSlideIndex(slideIndex);

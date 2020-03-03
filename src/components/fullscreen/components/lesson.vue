@@ -26,14 +26,20 @@
       </header>
       <!-- 课件内容 -->
       <section class="lesson__cards">
-        <nav class="cards__nav" v-show="!fullscreen">
-          <h3 class="nav__header">动态</h3>
+        <nav class="cards__nav" v-show="!fullscreen" v-if="!fold">
+          <h3 class="nav__header box-between">
+            <span>动态</span>
+            <i class="iconfont icon-guanbi1 f20 c333 pointer" @click="handleFold(true)"></i>
+          </h3>
           <section class="nav__list">
-            <!--  -->
             <timeline></timeline>
           </section>
         </nav>
-        <section class="slide__info J_container" >
+        <!-- 展开更多 -->
+        <p class="nav__fold box-center pointer" v-if="fold" @click="handleFold(false)">
+          <i class="iconfont icon-quanbu f28 cfff" ></i>
+        </p>
+        <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
           <!-- 当前或者选中的数据展示 -->
           <router-view></router-view>
         </section>
@@ -63,8 +69,8 @@ export default {
       maxWidth: 0,
       maxHeight: 0,
 
-      // 是否放映结束
-      isEnd: false,
+      // 导航收起展开
+      fold: false,
       fullscreen: false
     };
   },
@@ -101,28 +107,6 @@ export default {
         slideEl && slideEl.scrollIntoView({ behavior: "smooth", block: 'center' });
       }, 0)
     },
-    slideIndex(newVal, oldVal) {
-      this.activeIndex = newVal;
-
-      let slide = this.slides[newVal];
-      this.setSlide(slide);
-
-      if(this.isEnd) {
-        this.isEnd = false;
-      }
-    },
-    slide(newVal, oldVal) {
-      if(newVal.ClickCount > 0) {
-        // 往前翻页 非放映模式 动画显示完整
-        if(this.direction === 'prev' || !this.fullscreen) {
-          this.setStep(newVal.ClickCount);
-        } else {
-          this.setStep(0);
-        }
-      } else {
-        this.setStep(-1);
-      }
-    },
     fullscreen(newVal, oldVal) {
       if(newVal) {
         if(this.problem && this.problem.isPublished) {
@@ -141,15 +125,15 @@ export default {
      * @params
      */
     init() {
-      // let slide = this.slides[this.slideIndex];
-      // this.setSlide(slide);
-      // this.activeIndex = this.slideIndex;
-
       this.initEvent();
+    },
 
-      setTimeout(()=>{
-        // this.resize();
-      }, 100)
+    /**
+     * @method 导航收起
+     * @params
+     */
+    handleFold(fold) {
+      this.fold = fold;
     },
 
     /**
@@ -158,8 +142,6 @@ export default {
      */
     initEvent() {
       window.addEventListener('resize', this.resize);
-
-      this.$el.focus();
 
       // 监听放映状态
       document.addEventListener('fullscreenchange', this.resize);
@@ -206,14 +188,6 @@ export default {
     },
 
     /**
-     * @method 结束授课
-     * @params
-     */
-    handleEndLesson() {
-      this.setEndLessonVisible(true);
-    },
-
-    /**
      * @method 切换slide
      */
     handleSwitchSlide(index) {
@@ -251,20 +225,6 @@ export default {
     flex-flow: column;
   }
 
-  .slide__end {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-
-    background: #050606;
-
-    .end--txt {
-      padding-top: 45px;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
   .lesson__header {
     height: 40px;
     padding: 0 20px;
@@ -289,6 +249,7 @@ export default {
   }
 
   .lesson__cards {
+    position: relative;
     flex: 1;
     height: calc(100vh - 40px);
     max-height: calc(100vh - 40px);
@@ -299,6 +260,19 @@ export default {
 
     // background: #fff;
     background: #f5f5f5;
+
+    .nav__fold {
+      z-index: 1;
+      position: absolute;
+      top: 5px;
+      left: 10px;
+
+      width: 40px;
+      height: 40px;
+
+      border-radius: 50%;
+      background: rgba(0,0,0,0.3);
+    }
   }
 
   .cards__nav {
@@ -317,7 +291,7 @@ export default {
     .nav__header {
       height: 40px;
       line-height: 40px;
-      padding: 0 20px;
+      padding: 0 20px 0 20px;
       border-bottom: 1px solid #ddd;
 
       text-align: left;
@@ -326,30 +300,6 @@ export default {
     .nav__list {
       flex: 1;
       overflow-y: auto;
-    }
-
-    .slide__nav {
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-
-      padding: 5px 10px 5px;
-
-      cursor: pointer;
-
-      .silde__order {
-        width: 20px;
-        text-align: left;
-      }
-
-      .slide--thumb {
-        width: 140px;
-        height: 79px;
-
-        object-fit: contain;
-        background: #fff;
-        border: 1px solid #ddd;
-      }
     }
 
     .active {
@@ -373,7 +323,9 @@ export default {
     justify-content: center;
     align-items: center;
 
-    // background: #f5f5f5;
+    &.full {
+      max-width: 100vw;
+    }
   }
 
   .unlock-problem {

@@ -9,12 +9,6 @@
 <template>
   <section class="page-exercise">
     <div class="container">
-      <!-- 练习导航 -->
-      <!-- <header class="page__header">
-        <p class="header--back w30" ></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="header--back ponter" @click="handleBack">关闭</p>
-      </header> -->
 
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
@@ -115,6 +109,21 @@
       ]),
     },
     watch: {
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'blank-page') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          if(this.summary) {
+            this.init(this.summary);
+          } else {
+            this.$router.back();
+          }
+        }
+      },
     },
     filters: {
       setSubmitText(submitStatus) {
@@ -559,7 +568,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      // let cards = this.$parent.cards;
+
       let cards = this.cards;
       this.summary = cards[this.index];
 

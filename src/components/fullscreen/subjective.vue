@@ -233,7 +233,22 @@
         } else if(newValue === 5) {
           this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
-      }
+      },
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'subjective-page') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          if(this.summary) {
+            this.init(this.summary);
+          } else {
+            this.$router.back();
+          }
+        }
+      },
     },
     filters: {
     },
@@ -1073,8 +1088,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      // this.lessonID = this.$parent.lessonID;
-      // let cards = this.$parent.cards;
+
       this.lessonID = this.lesson && this.lesson.lessonID;
       let cards = this.cards;
       this.summary = cards[this.index];
@@ -1085,8 +1099,6 @@
         this.$router.back();
       }
 
-      // 课程结束啦
-      this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
     },
     mounted() {
     },

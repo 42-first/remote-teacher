@@ -113,15 +113,16 @@ let actionsMixin = {
         // 定位到最新
         if(!isFetch) {
           let slideIndex = 0;
-          this.cards.forEach( (item, index) => {
-            if(item.type === 2 || item.type === 3 || item.type === 10) {
-              slideIndex = index;
-            }
-          });
 
           setTimeout(()=>{
+            this.cards.forEach( (item, index) => {
+              if(item.type !== 1) {
+                slideIndex = index;
+              }
+            });
+
             slideIndex && this.setSlideIndex(slideIndex);
-          }, 1500)
+          }, 1000)
         }
       }
     },
@@ -205,7 +206,7 @@ let actionsMixin = {
       let pptData = presentation && presentation['Slides'];
       // let slideData = pptData && pptData[data.pageIndex-1];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
-      let index = -1;
+      let index = this.cards.length;
       let cover = slideData && slideData['Cover'] || '';
 
       if (!slideData) {
@@ -246,6 +247,7 @@ let actionsMixin = {
         oImg.src = slideData['Cover'];
 
         let cardItem = {
+          index,
           src: slideData['Cover'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
@@ -489,6 +491,7 @@ let actionsMixin = {
       // 找到对应问题
       let remark = data.remark;
       let slideData = this.problemMap.get(remark.prob);
+      let index = this.cards.length;
 
       if(slideData) {
         // 组织解析数据
@@ -497,7 +500,8 @@ let actionsMixin = {
           pageIndex: slideData.Index,
           problemID: slideData['Problem']['ProblemID'],
           pageURL,
-          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
+          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析',
+          index
         })
 
         // 是否含有重复数据
@@ -521,6 +525,7 @@ let actionsMixin = {
      * { type: 6, postid: 123, isFetch: false }
      */
     addSubmission(data) {
+      let index = this.cards.length;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 6 && item.postid === data.postid && data.isFetch;
@@ -528,7 +533,8 @@ let actionsMixin = {
 
       data = Object.assign(data, {
         status: '未读',
-        isComplete: false
+        isComplete: false,
+        index
       })
 
       if(!hasEvent) {
@@ -545,6 +551,7 @@ let actionsMixin = {
      * { type: 7, spid: 123 , isFetch: false }
      */
     addSubjective(data) {
+      let index = this.cards.length;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 7 && item.spid === data.spid && data.isFetch;
@@ -552,7 +559,8 @@ let actionsMixin = {
 
       data = Object.assign(data, {
         status: '未读',
-        isComplete: false
+        isComplete: false,
+        index
       })
 
       if(!hasEvent) {
@@ -991,7 +999,7 @@ let actionsMixin = {
           })
 
           if(data.from !== 'timeline') {
-            this.simulationDrawing(null, data);
+            // this.simulationDrawing(null, data);
           }
 
           // 更新最新时间
@@ -1013,7 +1021,7 @@ let actionsMixin = {
         let boardInfo = this.boardMap.get(id);
 
         // 置顶操作
-        this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
+        // this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
       }
     },
 
@@ -1024,7 +1032,7 @@ let actionsMixin = {
     clearBoard(data) {
       if(data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
-        this.clearScreen(id, true);
+        // this.clearScreen(id, true);
       }
     },
 
