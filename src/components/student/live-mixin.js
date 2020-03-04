@@ -78,8 +78,8 @@ let liveMixin = {
 
         this.handleFLVError();
 
-        // 初始化快手SDK
-        setTimeout(()=>{
+        // 初始化快手SDK 目前支持视频
+        this.liveType === 2 && setTimeout(()=>{
           this.initKwai(this.liveurl.httpflv);
         }, 3000)
 
@@ -164,10 +164,10 @@ let liveMixin = {
       // 上报记录直播地址
       this.logLiveurl = this.liveURL;
 
-      // this.$toast({
-      //   message: '建议使用雨课堂小程序，直播同步效果更好',
-      //   duration: 3000
-      // });
+      // 初始化快手SDK 目前支持视频
+      this.liveType === 2 && setTimeout(()=>{
+        this.initKwai(this.liveURL);
+      }, 5000)
     },
 
     /*
