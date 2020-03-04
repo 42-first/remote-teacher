@@ -897,6 +897,15 @@ var actionsMixin = {
 
         this.liveURL = '';
         this.liveType = 0;
+
+        // 快手上报
+        if(this.qos && this.logLiveurl) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.logLiveurl
+          });
+        }
       }, 3000)
 
       // 关闭弹幕直播
