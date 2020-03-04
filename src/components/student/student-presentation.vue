@@ -1084,8 +1084,8 @@
     created() {
       this.init();
 
-      // 关闭 刷新页面 上报快手
-      window.onbeforeunload = window.onunload = (evt) => {
+      // 关闭 刷新页面 上报快手 window.onbeforeunload
+      window.onunload = (evt) => {
         // 快手上报
         if(this.qos && this.logLiveurl) {
           this.qos.sendSummary({
