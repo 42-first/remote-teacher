@@ -318,6 +318,15 @@ let liveMixin = {
           flvPlayer.detachMediaElement();
         } catch(e) {
         }
+
+        // 快手上报 用户关闭直播
+        if(this.qos) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.liveurl && this.liveurl.httpflv
+          });
+        }
       } else {
         audioEl.pause();
       }
