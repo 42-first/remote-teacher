@@ -323,10 +323,11 @@
     padding: 0 10px;
     max-width: 100%;
     height: 20px;
+    line-height: 20px;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    // align-items: center;
+    // justify-content: center;
 
     text-align: center;
     color: #fff;

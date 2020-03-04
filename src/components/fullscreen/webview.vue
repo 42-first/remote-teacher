@@ -81,6 +81,14 @@ export default {
           // 试卷
           case 4:
             this.src = slide.href;
+
+            setTimeout(()=>{
+              let webviewEl = document.getElementById('webview').contentWindow;
+              $(webviewEl).click((evt) => {
+                webviewEl.$ && webviewEl.$(evt.target).trigger('tap')
+              })
+            }, 1500)
+
             break;
 
           // 发起了分组
@@ -97,12 +105,6 @@ export default {
             break;
         }
 
-        setTimeout(()=>{
-          let webviewEl = document.getElementById('webview').contentWindow;
-          $(webviewEl).click((evt) => {
-            $(evt.target).trigger('tap')
-          })
-        }, 2500)
       }
     },
 
