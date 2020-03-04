@@ -151,6 +151,9 @@
           if(res.success) {
             let data = res.data;
             this.init(data);
+
+            // 本地保存数据
+            this.setLocalData(data);
           }
         })
       },
@@ -169,10 +172,63 @@
 
         this.valid = false;
       },
+      /*
+      * @method 保存数据
+      * @params
+      */
+      setLocalData(data) {
+        let key = 'yktservicenotice';
+        if(isSupported(localStorage)) {
+          try {
+            // 记录更新时间
+            if(typeof data === 'object') {
+              data['dt'] = (new Date()).getTime();
+            }
+            let temp = JSON.stringify(data);
+            localStorage.setItem(key, temp);
+          } catch(e) {
+            console.dir(e);
+          }
+        }
+      },
+
+      /*
+      * @method 读取本都存储数据
+      * @params
+      */
+      getLocalData() {
+        let key = 'yktservicenotice';
+        let value = null;
+        if(isSupported(window.localStorage)) {
+          value = JSON.parse(localStorage.getItem(key)) || null;
+        }
+        return value;
+      },
+      /*
+       * @method 使用缓存数据恢复
+       * @params force: 强制只用缓存
+       */
+      initByLocalData() {
+        // 本地缓存是都存在
+        let info = this.getLocalData();
+        if(info) {
+          // 时效 一个小时
+          const timeLimit = 60;
+          const dt = info['dt'] || 0;
+          const now = (new Date()).getTime();
+          const timeInterval = (now - dt)/1000/60;
+          if(timeInterval < timeLimit) {
+            this.init(info);
+            return this;
+          }
+        }
+        this.getServiceNotice();
+      },
     },
     created() {
       setTimeout(()=>{
-        this.getServiceNotice();
+        // this.getServiceNotice();
+        this.initByLocalData();
       }, 3500)
     },
   }

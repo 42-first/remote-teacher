@@ -1083,6 +1083,18 @@
     },
     created() {
       this.init();
+
+      // 关闭 刷新页面 上报快手 window.onbeforeunload
+      window.onunload = (evt) => {
+        // 快手上报
+        if(this.qos && this.logLiveurl) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.logLiveurl
+          });
+        }
+      };
     },
     mounted() {
       // 是否网页版
@@ -1093,7 +1105,6 @@
       this.miniCode = host[location.host] || '';
     },
     updated() {
-      // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();
