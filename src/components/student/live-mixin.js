@@ -79,7 +79,7 @@ let liveMixin = {
         this.handleFLVError();
 
         // 初始化快手SDK 目前支持视频
-        this.liveType === 2 && setTimeout(()=>{
+        setTimeout(()=>{
           this.initKwai(this.liveurl.httpflv);
         }, 3000)
 
@@ -165,7 +165,7 @@ let liveMixin = {
       this.logLiveurl = this.liveURL;
 
       // 初始化快手SDK 目前支持视频
-      this.liveType === 2 && setTimeout(()=>{
+      setTimeout(()=>{
         this.initKwai(this.liveURL);
       }, 5000)
     },
@@ -320,11 +320,11 @@ let liveMixin = {
         }
 
         // 快手上报 用户关闭直播
-        if(this.qos) {
+        if(this.qos && this.logLiveurl) {
           this.qos.sendSummary({
             lessonid: this.lessonID,
             uid: this.userID,
-            liveurl: this.liveurl && this.liveurl.httpflv
+            liveurl: this.logLiveurl
           });
         }
       } else {
