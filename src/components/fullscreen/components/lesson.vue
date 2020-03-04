@@ -28,7 +28,7 @@
       <section class="lesson__cards">
         <nav class="cards__nav" v-show="!fullscreen" v-if="!fold">
           <h3 class="nav__header box-between">
-            <span>动态</span>
+            <span>课堂动态</span>
             <i class="iconfont icon-guanbi1 f20 c333 pointer" @click="handleFold(true)"></i>
           </h3>
           <section class="nav__list">

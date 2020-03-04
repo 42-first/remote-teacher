@@ -15,6 +15,7 @@ var commandMixin = {
     // 使用对象展开运算符将 getter 混入 computed 对象中
     ...mapState([
       'slideIndex',
+      'msg',
     ])
   },
   watch: {
@@ -23,6 +24,11 @@ var commandMixin = {
         let slide = this.cards[newVal];
 
         this.handleViewDetail(slide, newVal);
+
+        // 点击的最新动态关闭消息
+        if(this.msg && this.msg.index === newVal) {
+          this.setMsg(null);
+        }
       }
     },
   },

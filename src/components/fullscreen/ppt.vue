@@ -22,7 +22,7 @@
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
       <div class="opt__action" @click="handleTag(2)">
-        <i class="iconfont icon--shoucangactive f24" :class="[ slide.hasStore? 'red': 'c666' ]"></i>
+        <i class="iconfont f24" :class="[ slide.hasStore ? 'icon--shoucangactive red': 'icon-tougao_bushoucang c666' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
     </section>

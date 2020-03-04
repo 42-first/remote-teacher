@@ -102,7 +102,7 @@ export default {
           $(webviewEl).click((evt) => {
             $(evt.target).trigger('tap')
           })
-        }, 1000)
+        }, 2500)
       }
     },
 

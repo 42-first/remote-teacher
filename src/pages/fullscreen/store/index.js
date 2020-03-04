@@ -26,8 +26,8 @@ const store = new Vuex.Store({
     lines: [],
     // 当前选中的序号
     slideIndex: 0,
-    // 当前slide
-    slide: null,
+    // 当前放映slide
+    currSlide: null,
     // 信息消息提醒
     msg: null,
     // 是否全屏
@@ -59,8 +59,8 @@ const store = new Vuex.Store({
       state.slideIndex = index;
     },
 
-    setSlide(state, slide) {
-      state.slide = slide;
+    setCurrSlide(state, slide) {
+      state.currSlide = slide;
     },
 
     setMsg(state, msg) {
@@ -91,8 +91,8 @@ const store = new Vuex.Store({
     setSlideIndex({commit}, index) {
       commit('setSlideIndex', index)
     },
-    setSlide({commit}, slide) {
-      commit('setSlide', slide)
+    setCurrSlide({commit}, slide) {
+      commit('setCurrSlide', slide)
     },
 
     setMsg({commit}, slide) {

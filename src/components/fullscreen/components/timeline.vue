@@ -8,13 +8,15 @@
   <!-- timeline -->
   <section class="timeline__wrap" >
     <section class="timeline__item J_slide" :data-index="index" :class="{ 'active': slideIndex === index }" v-for="(item, index) in cards" :key="index" v-if="item" @click="handleView(item, index)" >
-      <!-- 正在放映提示 -->
-      <section class="box-between inlesson" v-if="item.type !== 1 && index === cards.length-1">
+      <!-- 正在放映提示 v-if="item.type === 2 || item.type === 3 " -->
+      <section class="box-between inlesson" v-if="currSlide && index === currSlide.index">
         <span class="f12 cfff">正在放映</span>
       </section>
 
       <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享 11白板分享 12白板绘制 -->
-      <template v-if="item.type==1"><div class="timeline__msg f12">{{ item.message }}</div></template>
+      <template v-if="item.type==1">
+        <div class="timeline__msg f12" :title="item.message">{{ item.message }}</div>
+      </template>
       <!-- ppt模板 -->
       <template v-else-if="item.type==2">
         <div class="timeline__ppt">
@@ -219,7 +221,8 @@
         'cards',
         'slideIndex',
         'msg',
-        'observerMode'
+        'observerMode',
+        'currSlide'
       ]),
     },
     filters: {
@@ -255,12 +258,14 @@
         if(pageName === 'ppt-page') {
           this.setSlideIndex(index);
 
+          this.setMsg(null);
+
           return this;
         }
 
         // 新消息是题目自动切换到题目
         if(slide && slide.type === 3) {
-          this.setSlideIndex(index);
+          // this.setSlideIndex(index);
         }
       }
     },

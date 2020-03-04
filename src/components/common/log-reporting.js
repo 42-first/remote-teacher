@@ -97,7 +97,8 @@ let logMixin = {
       }
 
       if(system && system.et) {
-        this.reportLog(system);
+        // 有直播的时候上报
+        this.liveType && this.reportLog(system);
 
         reportMap.set(system.et, system);
         this.reportTime = now;

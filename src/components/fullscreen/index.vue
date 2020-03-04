@@ -58,8 +58,8 @@
 
       </div>
 
-      <!-- 消息提醒 新版 v-show="videoFullscreen" -->
-      <videomsg :videoFullscreen="videoFullscreen" ></videomsg>
+      <!-- 消息提醒 新版 -->
+      <videomsg :videoFullscreen="videoFullscreen" v-show="videoFullscreen" ></videomsg>
 
       <!-- 实时弹幕列表 -->
       <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
@@ -189,7 +189,7 @@
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
-        currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
+        // currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
@@ -199,8 +199,6 @@
         isWebLesson: false,
         // 显示提示
         visibleTip: true,
-        // 显示题目提示
-        visibleProblemTip: false,
         isWeb: true,
         // 直播卡顿检测
         liveDetection: {},
@@ -209,8 +207,6 @@
         // 是否播放
         // playState
         liveStatusTips: '',
-        // 问题
-        problem: null
       };
     },
     components: {
@@ -236,7 +232,6 @@
       },
       cards(newVal, oldVal) {
         let slide = null;
-        let prev = this.currSlide;
 
         newVal.forEach( (item, index) => {
           if(item.type === 2 || item.type === 3 || item.type === 10) {
@@ -248,25 +243,9 @@
           }
         });
 
-        // 问题处理宽高
-        if(slide && slide.type === 3) {
-          let presentation = this.presentationMap.get(slide.presentationid);
-
-          if(presentation) {
-            slide.Width = presentation.Width;
-            slide.Height = presentation.Height;
-            slide.rate = presentation.Width / presentation.Height;
-          }
-
-          if(prev && prev.problemID !== slide.problemID) {
-            this.visibleProblemTip = true;
-
-            this.problem = slide;
-          }
-        }
-
-        if(slide && slide.src) {
-          this.currSlide = slide;
+        // 过滤当前放映PPT
+        if(slide.type === 2 || slide.type === 3 ) {
+          this.setCurrSlide(slide);
         }
 
         // 更新接收器展示timeline
@@ -297,32 +276,6 @@
       }
     },
     filters: {
-      setStyle(slide) {
-        let oStyle = {};
-
-        let innerHeight = window.innerHeight - 40;
-        let innerWidth = window.innerWidth - 40;
-        let screenRate = innerWidth/innerHeight;
-        let width = slide.Width;
-        let height = slide.Height;
-        let rate = slide.rate;
-
-        // 截图
-        if(slide.type === 10 ) {
-          return oStyle;
-        }
-
-        // 正常宽高比屏幕的宽高
-        if(rate > screenRate) {
-          oStyle['width'] = innerWidth + 'px';
-          oStyle['height'] = innerWidth/rate + 'px';
-        } else {
-          oStyle['width'] = innerHeight*rate + 'px';
-          oStyle['height'] = innerHeight + 'px';
-        }
-
-        return oStyle;
-      }
     },
     mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin ],
     methods: {
@@ -335,6 +288,7 @@
         'setObserverMode',
         'setSlideIndex',
         'setMsg',
+        'setCurrSlide',
       ]),
 
       /*
