@@ -454,6 +454,7 @@ let actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
+        src: slideData['Cover'],
         index,
         pageURL,
         groupid: data.event['groupid']
@@ -1017,20 +1018,22 @@ let actionsMixin = {
     boardNav(data) {
       if(data && !data.isFetch) {
         let id = data.boardid;
-        // let boardInfo = this.boardMap.get(id);
-
         // 找到之前的板子
         let targetIndex = this.cards.findIndex((item) => {
           return item.type === 12 && item.boardid === id;
         })
 
+        if(data.from === 'timeline') {
+          return this;
+        }
+
         // 删除之前的白板
         if(~targetIndex) {
           let originBoards = this.cards.splice(targetIndex, 1);
 
-          // 新建白板
           if(originBoards.length) {
             this.cards.push(originBoards[0]);
+            this.setCards(this.cards)
           }
         }
       }

@@ -125,6 +125,7 @@ export default {
         this.boardInfo = boardInfo;
 
         setTimeout(()=>{
+          this.clearScreen(boardInfo);
           this.restore(boardInfo);
         }, 0)
       } else {

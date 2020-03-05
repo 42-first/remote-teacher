@@ -278,8 +278,16 @@
         // event消息订阅
         this.initPubSub();
 
-        // 是否观察者模式
-        this.oProblem = this.$parent.$parent.problemMap.get(problemID)['Problem'];
+        let problem = this.$parent.$parent.problemMap.get(problemID);
+        if(!problem ) {
+          setTimeout(()=>{
+            this.init(data);
+          }, 1500)
+
+          return this;
+        }
+
+        this.oProblem = problem['Problem'];
         // 问题分数
         let score = this.oProblem['Score'];
         let getScore = this.oProblem['getScore'];

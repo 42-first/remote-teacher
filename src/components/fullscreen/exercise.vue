@@ -159,7 +159,16 @@
 
         // event消息订阅
         this.initPubSub();
-        this.oProblem = this.$parent.$parent.problemMap.get(problemID)['Problem'];
+        let problem = this.$parent.$parent.problemMap.get(problemID);
+        if(!problem ) {
+          setTimeout(()=>{
+            this.init(data);
+          }, 1500)
+
+          return this;
+        }
+
+        this.oProblem = problem['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
         // 选项
