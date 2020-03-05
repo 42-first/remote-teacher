@@ -1123,7 +1123,8 @@
     // height: 667px;
     height: 100%;
 
-    background: #f6f7f8;
+    background: #fff;
+    border: 2px solid #eee;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }

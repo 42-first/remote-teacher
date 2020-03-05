@@ -221,6 +221,7 @@
     height: 100%;
 
     background: #fff;
+    border: 2px solid #eee;
   }
 
   .submission__inner {

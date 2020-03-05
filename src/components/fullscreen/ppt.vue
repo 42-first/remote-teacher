@@ -16,14 +16,14 @@
     </div>
 
     <!-- 不懂收藏 -->
-    <section class="ppt__opt f12 c9b" v-if="slide && slide.type===2" >
-      <div class="opt__action pb10" @click="handleTag(1)">
-        <i class="iconfont icon--budongnormal f24 " :class="[ slide.hasQuestion ? 'red': 'c666' ]"></i>
-        <p><!-- 不懂 -->{{ $t('unknown') }}</p>
-      </div>
-      <div class="opt__action" @click="handleTag(2)">
-        <i class="iconfont f24" :class="[ slide.hasStore ? 'icon--shoucangactive red': 'icon-tougao_bushoucang c666' ]"></i>
+    <section class="ppt__opt f12 cfff" v-if="slide && slide.type===2" >
+      <div class="opt__action pb10" @click="handleTag(2)">
+        <i class="iconfont f20" :class="[ slide.hasStore ? 'icon--shoucangactive red': 'icon-tougao_bushoucang cfff' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
+      </div>
+      <div class="opt__action" @click="handleTag(1)">
+        <i class="iconfont icon--budongnormal f20 " :class="[ slide.hasQuestion ? 'red': 'cfff' ]"></i>
+        <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
     </section>
   </section>
@@ -246,21 +246,21 @@ export default {
   .ppt__opt {
     position: fixed;
     top: 50%;
-    right: 10px;
+    right: 15px;
 
     transform: translateY(-50%);
 
-    width: 60px;
-    height: 120px;
+    width: 50px;
+    height: 118px;
 
     display: flex;
     flex-flow: column;
     align-items: center;
     justify-content: center;
 
-    background: #fff;
-    border: 1px solid #c8c8c8;
-    border-radius: 2px;
+    background: rgba(0,0,0,0.7);
+    // border: 1px solid #c8c8c8;
+    border-radius: 4px;
 
     .opt__action {
       cursor: pointer;

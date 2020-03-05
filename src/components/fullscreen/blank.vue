@@ -608,6 +608,7 @@
     height: 100%;
 
     background: #fff;
+    border: 2px solid #eee;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }

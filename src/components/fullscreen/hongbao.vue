@@ -199,6 +199,7 @@
     height: 667px;
 
     background: #fff;
+    border: 2px solid #eee;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }

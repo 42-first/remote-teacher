@@ -243,8 +243,11 @@
     display: flex;
     flex-direction: column;
     width: 375px;
-    height: 667px;
+    height: 100%;
+    // height: 667px;
+
     background: #fff;
+    border: 2px solid #eee;
   }
 
   .submission__inner {

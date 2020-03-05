@@ -727,15 +727,14 @@
   .live {
     z-index: 2;
     position: absolute;
-    top: 30px;
-    right: 30px;
-    // visibility: hidden;
+    top: 55px;
+    right: 15px;
 
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
 
     background: #fff;
-    box-shadow: 0 3px 18px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
     border-radius: 50%;
     box-sizing: border-box;
 
@@ -750,8 +749,8 @@
     left: 0;
     bottom: 0;
     right: 0;
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
 
     display: flex;
     justify-content: center;
@@ -760,9 +759,7 @@
   }
 
   .live__audio .iconfont {
-    // padding-right: 5px;
-    // padding-bottom: 5px;
-    font-size: 45px;
+    font-size: 28px;
     color: #5096F5;
   }
 

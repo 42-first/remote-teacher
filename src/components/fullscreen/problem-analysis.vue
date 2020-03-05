@@ -299,6 +299,7 @@
     height: 100%;
 
     background: #eee;
+    border: 2px solid #eee;
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
@@ -312,7 +313,7 @@
 
   .problem__content {
     position: relative;
-    margin: 5px 0 0;
+    // margin: 5px 0 0;
 
     border-top: 1px solid #C8C8C8;
 
