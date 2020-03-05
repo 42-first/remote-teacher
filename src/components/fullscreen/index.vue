@@ -84,7 +84,7 @@
   import livemixin from '@/components/fullscreen/mixin/live-mixin'
   import eventmixin from '@/components/fullscreen/mixin/event-mixin'
 
-   import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
+  import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
 
   import logmixin from '@/components/common/log-reporting'
   import fullscreenMixin from '@/components/fullscreen/mixin/fullscreen'
@@ -234,17 +234,13 @@
         let slide = null;
 
         newVal.forEach( (item, index) => {
-          if(item.type === 2 || item.type === 3 || item.type === 10) {
+          if(item.type === 2 || item.type === 3 || item.type === 12) {
             slide = item;
-
-            if(item.type === 3) {
-              slide.src = item.cover;
-            }
           }
         });
 
         // 过滤当前放映PPT
-        if(slide.type === 2 || slide.type === 3 ) {
+        if(slide.type === 2 || slide.type === 3 || slide.type === 12) {
           this.setCurrSlide(slide);
         }
 
@@ -289,6 +285,7 @@
         'setSlideIndex',
         'setMsg',
         'setCurrSlide',
+        'setBoardMsg',
       ]),
 
       /*

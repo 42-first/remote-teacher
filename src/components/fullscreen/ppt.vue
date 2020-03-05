@@ -18,11 +18,11 @@
     <!-- 不懂收藏 -->
     <section class="ppt__opt f12 cfff" v-if="slide && slide.type===2" >
       <div class="opt__action pb10" @click="handleTag(2)">
-        <i class="iconfont f20" :class="[ slide.hasStore ? 'icon--shoucangactive red': 'icon-tougao_bushoucang cfff' ]"></i>
+        <i class="iconfont f20 cfff" :class="[ slide.hasStore ? 'icon-shoucangjihuo-': 'icon-shoucang-' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
       <div class="opt__action" @click="handleTag(1)">
-        <i class="iconfont icon--budongnormal f20 " :class="[ slide.hasQuestion ? 'red': 'cfff' ]"></i>
+        <i class="iconfont f20 cfff" :class="[ slide.hasQuestion ? 'icon-budongjihuo': 'icon-budong-' ]"></i>
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
     </section>

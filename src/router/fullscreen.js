@@ -23,6 +23,9 @@ const ProblemAnalysis = resolve => require(['@/components/fullscreen/problem-ana
 
 const Webview = resolve => require(['@/components/fullscreen/webview'], resolve)
 
+// 白板
+const Board = resolve => require(['@/components/fullscreen/board'], resolve)
+
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
@@ -89,6 +92,11 @@ const fullscreenRouter = new Router({
           path: 'analysis/:index',
           name: 'analysis-page',
           component: ProblemAnalysis
+        },
+        {
+          path: 'board/:index',
+          name: 'board',
+          component: Board
         },
       ]
     }

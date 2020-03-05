@@ -33,7 +33,9 @@ const store = new Vuex.Store({
     // 是否全屏
     fullscreen: false,
     // 是否观察者模式
-    observerMode: false
+    observerMode: false,
+    // 白板命令
+    boardMsg: null,
   },
   mutations: {
     // 重置课堂信息
@@ -67,6 +69,10 @@ const store = new Vuex.Store({
       state.msg = msg;
     },
 
+    setBoardMsg(state, msg) {
+      state.boardMsg = msg;
+    },
+
     setObserverMode(state, data) {
       state.observerMode = data;
     },
@@ -97,6 +103,10 @@ const store = new Vuex.Store({
 
     setMsg({commit}, slide) {
       commit('setMsg', slide)
+    },
+
+    setBoardMsg({commit}, slide) {
+      commit('setBoardMsg', slide)
     },
 
     setObserverMode({commit}, slide) {

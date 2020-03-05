@@ -100,7 +100,7 @@ var commandMixin = {
 
           // 白板
           case 12:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/${this.lesson.lessonID}/board/${index}`;
 
             break;
 

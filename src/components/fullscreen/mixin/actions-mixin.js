@@ -960,6 +960,7 @@ let actionsMixin = {
      */
     setBoardInfo(data) {
       let id = data.boardid;
+      let index = this.cards.length;
        // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 12 && item.boardid === id && data.isFetch;
@@ -971,7 +972,8 @@ let actionsMixin = {
           rate: data.devwidth / data.devheight,
           time: data.dt,
           doubt: false,
-          emphasis: false
+          emphasis: false,
+          index
         }, boardInfo);
 
         // 记录当前白板信息
@@ -1000,19 +1002,8 @@ let actionsMixin = {
           boardInfo.lines.push(data);
           this.boardMap.set(id, boardInfo);
 
-          // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
-          let lastCards = this.cards.slice(-3);
-          let cardBoard = lastCards.find((item) => {
-            return item.type === 12 && item.boardid === id;
-          })
-
           if(data.from !== 'timeline') {
-            // this.simulationDrawing(null, data);
-          }
-
-          // 更新最新时间
-          if(data.dt > 0) {
-            cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+            this.setBoardMsg(data);
           }
         }
 
@@ -1026,10 +1017,22 @@ let actionsMixin = {
     boardNav(data) {
       if(data && !data.isFetch) {
         let id = data.boardid;
-        let boardInfo = this.boardMap.get(id);
+        // let boardInfo = this.boardMap.get(id);
 
-        // 置顶操作
-        // this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
+        // 找到之前的板子
+        let targetIndex = this.cards.findIndex((item) => {
+          return item.type === 12 && item.boardid === id;
+        })
+
+        // 删除之前的白板
+        if(~targetIndex) {
+          let originBoards = this.cards.splice(targetIndex, 1);
+
+          // 新建白板
+          if(originBoards.length) {
+            this.cards.push(originBoards[0]);
+          }
+        }
       }
     },
 
@@ -1039,8 +1042,16 @@ let actionsMixin = {
      */
     clearBoard(data) {
       if(data && !data.isFetch) {
-        let id = data.boardid || this.boardInfo.boardid;
+        let id = data.boardid;
         // this.clearScreen(id, true);
+
+        this.setBoardMsg(data);
+
+        let boardMap = this.boardMap;
+        let boardInfo = boardMap.get(id);
+
+        boardInfo.lines = [];
+        boardMap.set(id, boardInfo);
       }
     },
 
