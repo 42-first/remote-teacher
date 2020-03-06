@@ -127,17 +127,13 @@
   import { isSupported } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
-  // 是否华为特殊手机 P20 P20-pro
-  const ua = navigator.userAgent.toLowerCase();
-  const huawei = ua.match(/huaweiclt|huaweieml/i);
+
 
   export default {
     name: 'subjective-page',
     data() {
       return {
         ispreview: false,
-        opacity: 0,
-        title: '主观题作答',
         // 是否作答完成
         isComplete: false,
         // 是否新的延时
@@ -189,8 +185,6 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
-        // 是否华为特殊手机
-        huawei: !!huawei
       };
     },
     components: {
@@ -259,6 +253,23 @@
       ]),
 
       /*
+      * @method 重置数据
+      * @param
+      */
+      reset() {
+        this.text = '';
+        this.imageURL = '';
+        this.imageThumbURL = '';
+        this.ispreview =false;
+        this.sendStatus = 0;
+        this.teamVisible = false;
+        this.answerType = 0;
+        this.noTeam = false;
+        this.timeOver =false;
+        this.warning = false;
+      },
+
+      /*
       * @method 初始化习题页面
       * @param problemID 问题ID
       */
@@ -269,11 +280,9 @@
           return ;
         }
 
-        this.problemID = problemID;
+        this.reset();
 
-        // TODO：检测这个问题是否分组
-        let isTeam = data.groupid || false;
-        isTeam && this.getTeamInfo(problemID);
+        this.problemID = problemID;
 
         // event消息订阅
         this.initPubSub();
@@ -287,6 +296,10 @@
           return this;
         }
 
+        // TODO：检测这个问题是否分组
+        let isTeam = data.groupid || false;
+        isTeam && this.getTeamInfo(problemID);
+
         this.oProblem = problem['Problem'];
         // 问题分数
         let score = this.oProblem['Score'];
@@ -295,11 +308,6 @@
         if(score && getScore > 0) {
           this.starCount = getScore / score * 5;
           this.getScore = getScore;
-        }
-
-        // 是否观察者模式
-        if(this.observerMode) {
-          this.sendStatus = 5;
         }
 
         // 是否完成

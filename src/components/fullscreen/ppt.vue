@@ -11,8 +11,8 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center" v-if="slide">
-      <!-- <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" /> -->
-      <img class="cover" :src="slide.src" alt="" />
+      <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" />
+      <!-- <img class="cover" :src="slide.src" alt="" /> -->
     </div>
 
     <!-- 不懂收藏 -->
@@ -238,8 +238,12 @@ export default {
   }
 
   .cover__container {
+    width: 100%;
+    height: 100%;
+
     .cover {
       object-fit: contain;
+      max-height: 100%;
     }
   }
 

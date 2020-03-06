@@ -54,7 +54,6 @@
     data() {
       return {
         index: 0,
-        opacity: 0,
         problemID: 0,
         title: '习题',
         // 是否作答完成
@@ -144,6 +143,19 @@
       ]),
 
       /*
+      * @method 重置数据
+      * @param
+      */
+      reset() {
+        this.optionsSet = new Set();
+        this.timeOver =false;
+        this.canSubmit = false;
+        this.warning = false;
+        this.limit = -1;
+        this.leaveTime = 0;
+      },
+
+      /*
       * @method 初始化习题页面
       * @param problemID 问题ID
       */
@@ -154,6 +166,8 @@
         if(!problemID) {
           return ;
         }
+
+        this.reset();
 
         this.problemID = problemID;
 

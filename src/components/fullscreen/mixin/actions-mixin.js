@@ -1029,12 +1029,12 @@ let actionsMixin = {
 
         // 删除之前的白板
         if(~targetIndex) {
-          let originBoards = this.cards.splice(targetIndex, 1);
+          // let originBoards = this.cards.splice(targetIndex, 1);
 
-          if(originBoards.length) {
-            this.cards.push(originBoards[0]);
-            this.setCards(this.cards)
-          }
+          // if(originBoards.length) {
+          //   this.cards.push(originBoards[0]);
+          //   this.setCards(this.cards)
+          // }
         }
       }
     },
