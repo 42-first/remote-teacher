@@ -133,6 +133,19 @@ var webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
+    // web 推流测试页面
+    new HtmlWebpackPlugin({
+      filename: 'pusher.html',
+      template: 'pusher.html',
+      chunks: ['app'],
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      chunksSortMode: 'dependency'
+    }),
     // split vendor js into its own file
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: 'vendor',
