@@ -9,13 +9,6 @@
 <template>
   <section class="page-exercise">
     <div class="container">
-      <!-- 练习导航 -->
-      <header class="page__header">
-        <p class="header--back w30"></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="header--back ponter" @click="handleBack">关闭</p>
-      </header>
-
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
         <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -51,6 +44,8 @@
   </section>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex'
+
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
 
@@ -59,7 +54,6 @@
     data() {
       return {
         index: 0,
-        opacity: 0,
         problemID: 0,
         title: '习题',
         // 是否作答完成
@@ -76,8 +70,6 @@
         options: null,
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
-
-        observerMode: false,
 
         // 选择的答案
         optionsSet: new Set(),
@@ -98,8 +90,27 @@
     components: {
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
+      ...mapState([
+        'lesson',
+        'cards',
+        'observerMode',
+      ]),
     },
     watch: {
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'exercise-page') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          if(this.summary) {
+            this.init(this.summary);
+          }
+        }
+      },
     },
     filters: {
       setSubmitText(submitStatus) {
@@ -127,26 +138,51 @@
     },
     mixins: [],
     methods: {
+      ...mapActions([
+        'setCards',
+      ]),
+
+      /*
+      * @method 重置数据
+      * @param
+      */
+      reset() {
+        this.optionsSet = new Set();
+        this.timeOver =false;
+        this.canSubmit = false;
+        this.warning = false;
+        this.limit = -1;
+        this.leaveTime = 0;
+      },
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
       */
       init(data) {
         let problemID = data.problemID;
-        this.title = this.$parent.title;
+        this.title = this.lesson.title;
 
         if(!problemID) {
           return ;
         }
 
+        this.reset();
+
         this.problemID = problemID;
 
         // event消息订阅
         this.initPubSub();
+        let problem = this.$parent.$parent.problemMap.get(problemID);
+        if(!problem ) {
+          setTimeout(()=>{
+            this.init(data);
+          }, 1500)
 
-        // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+          return this;
+        }
+
+        this.oProblem = problem['Problem'];
         // 问题类型
         this.problemType = this.oProblem['Type'];
         // 选项
@@ -173,13 +209,11 @@
             this.setOptions(option, true, true);
           });
 
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
         } else {
           // 开始启动定时
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 投票类型
@@ -197,25 +231,11 @@
             }
           })
 
-          // 提交有困难地址
-          this.commitDiffURL = this.commitDiffURL + problemID;
-
           if (process.env.NODE_ENV !== 'production') {
             // todo: test测试
             // this.setTiming(data.limit)
           }
         }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
       },
 
       /*
@@ -497,7 +517,7 @@
           }
 
           this.oProblem['Result'] = param['result'];
-          let problem = self.$parent.problemMap.get(problemID)
+          let problem = self.$parent.$parent.problemMap.get(problemID)
 
           return request.post(URL, param)
             .then((res) => {
@@ -510,12 +530,13 @@
                 })
 
                 // 替换原来的数据
-                self.$parent.cards.splice(self.index, 1, self.summary);
+                self.cards.splice(self.index, 1, self.summary);
+                self.setCards(self.cards);
 
                 problem = Object.assign(problem, {
                   'Problem': self.oProblem
                 })
-                self.$parent.problemMap.set(problemID, problem);
+                self.$parent.$parent.problemMap.set(problemID, problem);
 
                 self.canSubmit = 3;
                 clearInterval(self.timer);
@@ -542,9 +563,9 @@
                   });
                 }
 
-                setTimeout(() => {
-                  self.$router.back();
-                }, 2000)
+                // setTimeout(() => {
+                //   self.$router.back();
+                // }, 2000)
 
                 return data;
               }
@@ -558,10 +579,6 @@
               });
 
               self.isComplete = true;
-
-              setTimeout(() => {
-                // self.$router.back();
-              }, 3000)
             });
 
           clearInterval(this.timer);
@@ -601,7 +618,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      let cards = this.$parent.cards;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {
@@ -625,25 +642,21 @@
   \*------------------*/
 
   .page-exercise {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: rgba(0,0,0, 0.3);
   }
 
   .container {
     width: 375px;
-    height: 667px;
+    height: 100%;
 
     background: #fff;
+    border: 2px solid #eee;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
