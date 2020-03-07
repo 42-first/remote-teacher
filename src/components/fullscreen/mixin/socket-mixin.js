@@ -420,7 +420,7 @@ var mixin = {
 
           // 接收弹幕
           case 'newdanmu':
-            this.isLive && this.receiveDanmu(msg);
+            this.receiveDanmu(msg);
             hasMsg = false;
 
             break;
