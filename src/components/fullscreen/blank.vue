@@ -165,6 +165,8 @@
         this.limit = -1;
         this.leaveTime = 0;
         this.isShowSubmit = true;
+        this.result = {};
+        this.isComplete = false;
       },
 
       /*
@@ -203,12 +205,6 @@
         // 选项
         let blanks = this.oProblem.Blanks;
 
-        // 是否观察者模式
-        if(this.observerMode) {
-          this.isShowOption = false;
-          this.isShowSubmit = false;
-        }
-
         // 是否完成
         if(data.isComplete) {
           this.isShowSubmit = false;
@@ -225,10 +221,6 @@
               this.result[index + 1] = '';
             }
           })
-
-          if (process.env.NODE_ENV !== 'production') {
-            // this.setTiming(data.limit)
-          }
         }
 
         setTimeout(()=>{

@@ -62,6 +62,21 @@
       ]),
     },
     watch: {
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'subjective-share-page') {
+          let params = to.params;
+          this.index = params.index
+
+          setTimeout(()=>{
+            let cards = this.cards;
+            this.summary = cards[this.index];
+
+            if(this.summary) {
+              this.getSubjective(this.summary.spid);
+            }
+          }, 500)
+        }
+      },
     },
     filters: {
       formatTime(time, format) {

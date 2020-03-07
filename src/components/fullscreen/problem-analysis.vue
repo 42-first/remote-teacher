@@ -106,6 +106,19 @@
       ]),
     },
     watch: {
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'analysis-page') {
+          let params = to.params;
+          this.index = params.index
+
+          setTimeout(()=>{
+            let cards = this.cards;
+            this.card = cards[this.index];
+            let problemID = this.card.problemID;
+            this.init(problemID);
+          }, 1000)
+        }
+      },
     },
     filters: {
     },

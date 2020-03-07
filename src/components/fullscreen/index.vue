@@ -268,6 +268,10 @@
           setTimeout(()=>{
             this.initVideoDanmu();
           }, 500)
+        } else if(newVal) {
+          setTimeout(()=>{
+            // this.initDanmu();
+          }, 200)
         }
       }
     },

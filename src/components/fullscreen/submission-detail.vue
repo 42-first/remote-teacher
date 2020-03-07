@@ -72,6 +72,21 @@
       ]),
     },
     watch: {
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'submission-detail-page') {
+          let params = to.params;
+          this.index = params.index
+
+          setTimeout(()=>{
+            let cards = this.cards;
+            this.summary = cards[this.index];
+
+            if(this.summary) {
+              this.getSubmission(this.summary.postid);
+            }
+          }, 500)
+        }
+      },
     },
     filters: {
       formatTime(time, format) {
@@ -211,10 +226,6 @@
 
       let cards = this.cards;
       this.summary = cards[this.index];
-
-      setTimeout(()=>{
-        this.opacity = 1;
-      }, 20)
 
       if(this.summary) {
         this.getSubmission(this.summary.postid);
