@@ -67,7 +67,8 @@
     <param name="align" value="middle">
     <param name="flashvars" value="id=100&width=862&height=486&js_bridge_method=nePublisher.js_bridge_message">
   </object>
-    <script type="text/javascript">
+  <script type="text/javascript">
+
     var cameraList,
       microPhoneList,
       cameraOptions = '',
@@ -105,14 +106,14 @@
     var qualityList = [
       {
         //流畅
-        fps: 20,
+        fps: 10,
         bitrate: 600,
         videoWidth:480,
         videoHeight:360
       },
       {
         //标清
-        fps: 20,
+        fps: 15,
         bitrate: 800,
         videoWidth:640,
         videoHeight:480
@@ -180,6 +181,7 @@
       }
       previewBtn.disabled = false;
     };
-    </script>
+
+  </script>
 </body>
 </html>
