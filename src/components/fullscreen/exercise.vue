@@ -153,6 +153,7 @@
         this.warning = false;
         this.limit = -1;
         this.leaveTime = 0;
+        this.isShowSubmit = true;
       },
 
       /*
