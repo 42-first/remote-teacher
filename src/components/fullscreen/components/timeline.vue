@@ -203,6 +203,10 @@
         //   return item.type === newVal.type;
         // })
 
+        if(!newVal) {
+          return this;
+        }
+
         let index = newVal.index || this.cards.length - 1;
         if(index) {
           setTimeout(()=>{
@@ -233,6 +237,7 @@
     methods: {
       ...mapActions([
         'setSlideIndex',
+        'setMsg',
       ]),
 
       /**
