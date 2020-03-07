@@ -6,6 +6,48 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "4920157",
+      "name": "收藏激活",
+      "font_class": "shoucangjihuo-",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "4920250",
+      "name": "不懂激活",
+      "font_class": "budongjihuo",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "4920150",
+      "name": "不懂",
+      "font_class": "budong-",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "4920151",
+      "name": "收藏",
+      "font_class": "shoucang-",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "13240609",
+      "name": "24-收藏active",
+      "font_class": "-shoucangactive",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
+      "icon_id": "13240610",
+      "name": "24-不懂normal",
+      "font_class": "-budongnormal",
+      "unicode": "e753",
+      "unicode_decimal": 59219
+    },
+    {
       "icon_id": "4602234",
       "name": "遥控器设置",
       "font_class": "yaokongqishezhi",
