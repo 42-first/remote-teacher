@@ -21,6 +21,19 @@
       @showActivity="showActivity"
       @goHome="goHome"
     ></Toolbar>
+
+    <div class="rc-mask close-modal" v-show="!isModalHidden">
+  		<div class="pub-inner">
+        <div class="title f20"><!-- 您即将结束本次授课 -->{{ $t('tciate') }}</div>
+        <div class="paper-title f16"><!-- 电脑端将会同步结束授课 -->{{ $t('tsswes') }}</div>
+        <div class="pub-btns f18">
+          <v-touch class="cancel" v-on:tap="closeModal">{{ $t('cancel') }}</v-touch>
+          <div class="bar"></div>
+          <v-touch class="confirm" v-on:tap="endLesson">{{ $t('confirm') }} <!-- $t('endclass') --></v-touch>
+        </div>
+      </div>
+  	</div>
+
   </div>
 </template>
 
@@ -48,7 +61,6 @@
         'toolbarIndex'
       ]),
       activeIndex() {
-        console.log(this.toolbarIndex)
         return this.toolbarIndex
       }
     },

@@ -78,6 +78,11 @@ let liveMixin = {
 
         this.handleFLVError();
 
+        // 初始化快手SDK 目前支持视频
+        setTimeout(()=>{
+          this.initKwai(this.liveurl.httpflv);
+        }, 3000)
+
         return true;
       } else {
         if(isStart) {
@@ -159,10 +164,10 @@ let liveMixin = {
       // 上报记录直播地址
       this.logLiveurl = this.liveURL;
 
-      // this.$toast({
-      //   message: '建议使用雨课堂小程序，直播同步效果更好',
-      //   duration: 3000
-      // });
+      // 初始化快手SDK 目前支持视频
+      setTimeout(()=>{
+        this.initKwai(this.liveURL);
+      }, 5000)
     },
 
     /*
@@ -312,6 +317,15 @@ let liveMixin = {
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
         } catch(e) {
+        }
+
+        // 快手上报 用户关闭直播
+        if(this.qos && this.logLiveurl) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.logLiveurl
+          });
         }
       } else {
         audioEl.pause();
@@ -470,6 +484,35 @@ let liveMixin = {
           this.loadNewUrl()
         }
       })
+    },
+
+    /*
+     * @method 初始化快手SDK
+     * @params
+     */
+    initKwai(liveurl) {
+      // https://tx-xuetangx.pull.yximgs.com/live/6000_kszt=GN=fp4YLg4o.flv
+      let isKwai = liveurl && liveurl.indexOf('pull.yximgs.com');
+      if(~isKwai) {
+        let videoEl = document.getElementById('player');
+
+        if(typeof KwaiVideoQosH5 !== 'undefined') {
+          let qos = new KwaiVideoQosH5();
+          qos.attachMedia(videoEl);
+
+          this.qos = qos;
+        }
+      }
+
+      // 测试
+      // setTimeout(()=>{
+      //   if(this.qos) {
+      //     this.qos.sendSummary({
+      //       lessonid: this.lessonID,
+      //       uid: this.userID
+      //     });
+      //   }
+      // }, 10000)
     }
   }
 }

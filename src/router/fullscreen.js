@@ -13,6 +13,19 @@ const Exercise = resolve => require(['@/components/fullscreen/exercise'], resolv
 const Subjective = resolve => require(['@/components/fullscreen/subjective'], resolve)
 const FillBlank = resolve => require(['@/components/fullscreen/blank'], resolve)
 
+const PPT = resolve => require(['@/components/fullscreen/ppt'], resolve)
+const HongBao = resolve => require(['@/components/fullscreen/hongbao'], resolve)
+const SubmissionDetail = resolve => require(['@/components/fullscreen/submission-detail'], resolve)
+const SubjectiveShare = resolve => require(['@/components/fullscreen/subjective-share'], resolve)
+const MutualEvaluation = resolve => require(['@/components/fullscreen/mutual-evaluation'], resolve)
+// 问题解析
+const ProblemAnalysis = resolve => require(['@/components/fullscreen/problem-analysis'], resolve)
+
+const Webview = resolve => require(['@/components/fullscreen/webview'], resolve)
+
+// 白板
+const Board = resolve => require(['@/components/fullscreen/board'], resolve)
+
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
@@ -31,6 +44,21 @@ const fullscreenRouter = new Router({
       component: Index,
       children: [
         {
+          path: 'ppt/:index',
+          name: 'ppt-page',
+          component: PPT
+        },
+        {
+          path: 'hongbao/:index',
+          name: 'hongbao-page',
+          component: HongBao
+        },
+        {
+          path: 'webview/:index',
+          name: 'webview',
+          component: Webview
+        },
+        {
           path: 'exercise/:index',
           name: 'exercise-page',
           component: Exercise
@@ -44,6 +72,31 @@ const fullscreenRouter = new Router({
           path: 'blank/:index',
           name: 'blank-page',
           component: FillBlank
+        },
+        {
+          path: 'subjective_share/:index',
+          name: 'subjective-share-page',
+          component: SubjectiveShare
+        },
+        {
+          path: 'submission_share/:index',
+          name: 'submission-detail-page',
+          component: SubmissionDetail
+        },
+        {
+          path: 'evaluation/:index',
+          name: 'evaluation-page',
+          component: MutualEvaluation
+        },
+        {
+          path: 'analysis/:index',
+          name: 'analysis-page',
+          component: ProblemAnalysis
+        },
+        {
+          path: 'board/:index',
+          name: 'board',
+          component: Board
         },
       ]
     }

@@ -1,13 +1,13 @@
 /*
  * 学生接收器 各种类型处理
  * @author: chenzhou
- * @update: 2017.5.31
+ * @update: 2020.2.29
  * @desc 新增ppt，新增加红包，新增试卷，新增试题等
  *
  */
 
 
-var actionsMixin = {
+let actionsMixin = {
   methods: {
     /*
     * @method 创建更新timeline
@@ -27,7 +27,6 @@ var actionsMixin = {
             case 'problem':
               this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
 
-              this.timeline['problem'][item['prob']] = item;
               break;
 
             // 试卷
@@ -110,6 +109,21 @@ var actionsMixin = {
             default: break;
           }
         });
+
+        // 定位到最新
+        if(!isFetch) {
+          let slideIndex = 0;
+
+          setTimeout(()=>{
+            this.cards.forEach( (item, index) => {
+              if(item.type !== 1) {
+                slideIndex = index;
+              }
+            });
+
+            slideIndex && this.setSlideIndex(slideIndex);
+          }, 1000)
+        }
       }
     },
 
@@ -140,8 +154,10 @@ var actionsMixin = {
         }
       }
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -153,13 +169,6 @@ var actionsMixin = {
 
       // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
       if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0 && slides) {
-        // if(slideData && slideData.lessonSlideID !== sid) {
-        //   // ppt不一致 通过sid取slideData
-        //   slideData = slides.find((slide)=>{
-        //     return slide.lessonSlideID === sid;
-        //   });
-        // }
-
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide)=>{
           return slide.lessonSlideID === sid;
@@ -188,18 +197,6 @@ var actionsMixin = {
     },
 
     /*
-     * @method 隐藏动画蒙版
-     * param:
-     */
-    hideAnimationMask() {
-      this.cards.forEach((item) => {
-        if(item.type === 2 && item.animation === 1) {
-          Object.assign(item, { animation: 0 });
-        }
-      })
-    },
-
-    /*
     * @method 新增PPT
     * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
@@ -209,7 +206,7 @@ var actionsMixin = {
       let pptData = presentation && presentation['Slides'];
       // let slideData = pptData && pptData[data.pageIndex-1];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
-      let index = -1;
+      let index = this.cards.length;
       let cover = slideData && slideData['Cover'] || '';
 
       if (!slideData) {
@@ -250,6 +247,7 @@ var actionsMixin = {
         oImg.src = slideData['Cover'];
 
         let cardItem = {
+          index,
           src: slideData['Cover'],
           rate: presentation.Width / presentation.Height,
           hasQuestion: slideData['question'] == 1 ? true : false,
@@ -262,9 +260,6 @@ var actionsMixin = {
         // 是否web开课的动画 Shapes里面有动画步骤
         let Shapes = slideData.Shapes;
         let isWebLesson = this.isWebLesson;
-
-        // 之前有动画隐藏蒙版
-        this.hideAnimationMask();
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
@@ -341,15 +336,13 @@ var actionsMixin = {
           this.cards.push(data);
         }
 
-        index = this.cards.length;
+        this.setCards(this.cards)
 
-        // 第一张ppt显示在引导页
-        if(!this.pptCover) {
-          this.pptCover = slideData['Cover'];
+        // 新PPT也提醒
+        if(!data.isTimeline) {
+          this.setMsg(data);
         }
       }
-
-      this.allEvents.push(data);
     },
 
     /*
@@ -363,7 +356,10 @@ var actionsMixin = {
         return item.type === 4 && item.quiz === data.quiz;
       })
 
+      let index = this.cards.length;
+
       data = Object.assign(data, {
+        index,
         papername: data.title,
         quizid: data.quiz,
         href: '/v/quiz/quiz_result/' + data.quiz,
@@ -374,11 +370,12 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      // data.isPopup && this.msgBoxs.push(data);
-      data.isPopup && (this.msgBoxs = [data]);
+      data.isPopup && this.setMsg(data);
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -457,14 +454,14 @@ var actionsMixin = {
         problemID: slideData['Problem']['ProblemID'],
         options: slideData['Problem']['Bullets'],
         cover: slideData['Cover'],
+        src: slideData['Cover'],
         index,
         pageURL,
         groupid: data.event['groupid']
       })
 
       // 消息box弹框
-      // data.isPopup && this.msgBoxs.push(data);
-      data.isPopup && (this.msgBoxs = [data]);
+      data.isPopup && this.setMsg(data);
 
       // 预加载习题图片
       let oImg = new Image();
@@ -480,12 +477,11 @@ var actionsMixin = {
         hasEvent.cover = slideData && slideData['Cover'];
       }
 
-      !hasEvent && this.cards.push(data);
-      !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
-      this.allEvents.push(data);
-
-      // 之前有动画隐藏蒙版
-      !hasEvent && this.hideAnimationMask();
+      if(!hasEvent) {
+        this.cards.push(data);
+        slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+        this.setCards(this.cards)
+      }
     },
 
     /**
@@ -496,6 +492,7 @@ var actionsMixin = {
       // 找到对应问题
       let remark = data.remark;
       let slideData = this.problemMap.get(remark.prob);
+      let index = this.cards.length;
 
       if(slideData) {
         // 组织解析数据
@@ -504,7 +501,8 @@ var actionsMixin = {
           pageIndex: slideData.Index,
           problemID: slideData['Problem']['ProblemID'],
           pageURL,
-          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
+          caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析',
+          index
         })
 
         // 是否含有重复数据
@@ -512,8 +510,13 @@ var actionsMixin = {
           return item.type === 13 && item.problemID === data.problemID && data.isFetch;
         })
 
-        !hasEvent && this.cards.push(data);
-        this.allEvents.push(data);
+        if(!hasEvent) {
+          this.cards.push(data);
+          this.setCards(this.cards)
+
+          // 消息box弹框
+          data.isPopup && this.setMsg(data);
+        }
       }
 
     },
@@ -523,6 +526,7 @@ var actionsMixin = {
      * { type: 6, postid: 123, isFetch: false }
      */
     addSubmission(data) {
+      let index = this.cards.length;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 6 && item.postid === data.postid && data.isFetch;
@@ -530,11 +534,17 @@ var actionsMixin = {
 
       data = Object.assign(data, {
         status: '未读',
-        isComplete: false
+        isComplete: false,
+        index
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
+      }
     },
 
     /*
@@ -542,6 +552,7 @@ var actionsMixin = {
      * { type: 7, spid: 123 , isFetch: false }
      */
     addSubjective(data) {
+      let index = this.cards.length;
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 7 && item.spid === data.spid && data.isFetch;
@@ -549,11 +560,17 @@ var actionsMixin = {
 
       data = Object.assign(data, {
         status: '未读',
-        isComplete: false
+        isComplete: false,
+        index
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
+      }
     },
 
     /*
@@ -632,8 +649,13 @@ var actionsMixin = {
         }
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+
+        // 消息box弹框
+        data.isPopup && this.setMsg(data);
+      }
     },
 
     /*
@@ -673,10 +695,12 @@ var actionsMixin = {
 
 
       // 消息box弹框
-      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+      data.isPopup && !this.observerMode && this.setMsg(data);
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -689,7 +713,10 @@ var actionsMixin = {
       })
 
       // 可以确认分组被取消了
-      targetIndex !== -1 && this.cards.splice(targetIndex, 1);
+      if(targetIndex !== -1) {
+        this.cards.splice(targetIndex, 1);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -706,6 +733,8 @@ var actionsMixin = {
         status: this.$i18n.t('undone'),
         isComplete:  true
       })
+
+      this.setCards(this.cards)
     },
 
     /*
@@ -734,10 +763,12 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+      data.isPopup && !this.observerMode && this.setMsg(data);
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -771,8 +802,10 @@ var actionsMixin = {
 
       data = Object.assign(data, cardItem)
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -807,8 +840,10 @@ var actionsMixin = {
 
       data = Object.assign(data, cardItem)
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -883,9 +918,6 @@ var actionsMixin = {
      * @param
      */
     endLive(data) {
-      // this.handlestop();
-      // this.liveURL = '';
-      // this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       setTimeout(()=>{
@@ -899,11 +931,10 @@ var actionsMixin = {
         this.liveType = 0;
 
         // 快手上报
-        if(this.qos && this.logLiveurl) {
+        if(this.qos) {
           this.qos.sendSummary({
             lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
+            uid: this.userID
           });
         }
       }, 3000)
@@ -930,6 +961,7 @@ var actionsMixin = {
      */
     setBoardInfo(data) {
       let id = data.boardid;
+      let index = this.cards.length;
        // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 12 && item.boardid === id && data.isFetch;
@@ -941,15 +973,18 @@ var actionsMixin = {
           rate: data.devwidth / data.devheight,
           time: data.dt,
           doubt: false,
-          emphasis: false
+          emphasis: false,
+          index
         }, boardInfo);
 
         // 记录当前白板信息
         this.boardMap.set(id, data);
         this.boardInfo = data;
 
-        !hasEvent && this.cards.push(data);
-        this.allEvents.push(data);
+        if(!hasEvent) {
+          this.cards.push(data);
+          this.setCards(this.cards)
+        }
       }
     },
 
@@ -968,19 +1003,8 @@ var actionsMixin = {
           boardInfo.lines.push(data);
           this.boardMap.set(id, boardInfo);
 
-          // 根据一些策略确定板子是否置顶 最新两条记录不是该板子就置顶
-          let lastCards = this.cards.slice(-3);
-          let cardBoard = lastCards.find((item) => {
-            return item.type === 12 && item.boardid === id;
-          })
-
           if(data.from !== 'timeline') {
-            this.simulationDrawing(null, data);
-          }
-
-          // 更新最新时间
-          if(data.dt > 0) {
-            cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
+            this.setBoardMsg(data);
           }
         }
 
@@ -994,10 +1018,24 @@ var actionsMixin = {
     boardNav(data) {
       if(data && !data.isFetch) {
         let id = data.boardid;
-        let boardInfo = this.boardMap.get(id);
+        // 找到之前的板子
+        let targetIndex = this.cards.findIndex((item) => {
+          return item.type === 12 && item.boardid === id;
+        })
 
-        // 置顶操作
-        this.setTopping(boardInfo, data.from !== 'timeline' ? true : false);
+        if(data.from === 'timeline') {
+          return this;
+        }
+
+        // 删除之前的白板
+        if(~targetIndex) {
+          // let originBoards = this.cards.splice(targetIndex, 1);
+
+          // if(originBoards.length) {
+          //   this.cards.push(originBoards[0]);
+          //   this.setCards(this.cards)
+          // }
+        }
       }
     },
 
@@ -1007,8 +1045,16 @@ var actionsMixin = {
      */
     clearBoard(data) {
       if(data && !data.isFetch) {
-        let id = data.boardid || this.boardInfo.boardid;
-        this.clearScreen(id, true);
+        let id = data.boardid;
+        // this.clearScreen(id, true);
+
+        this.setBoardMsg(data);
+
+        let boardMap = this.boardMap;
+        let boardInfo = boardMap.get(id);
+
+        boardInfo.lines = [];
+        boardMap.set(id, boardInfo);
       }
     },
 
@@ -1026,7 +1072,7 @@ var actionsMixin = {
           this.boardMap.set(id, boardInfo);
 
           // 将白板线路图改成图片
-          this.drawImage(boardInfo);
+          // this.drawImage(boardInfo);
         }
       }
     },
@@ -1100,16 +1146,14 @@ var actionsMixin = {
           this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
           break
       }
-      // if(this.voice !== voice){
-      //   this.liveStatusTips = voice == 1 ? this.$i18n.t('offsilentmood') : this.$i18n.t('silentmood')
-      // }
-      // this.voice = voice
+
       this.isMute = voice == -1 ? true : false
       this.lastStatus = status
       let  liveEl = document.querySelector('#player')
       if(status !== 1){
         liveEl && (this.currentTime = liveEl.currentTime)
       }
+
       setTimeout(() => {
         self.liveStatusTips = ''
       }, 5000)

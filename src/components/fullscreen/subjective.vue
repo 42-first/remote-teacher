@@ -10,12 +10,7 @@
   <section class="page-subjective">
 
     <div class="subjective-wrapper">
-      <!-- 练习导航 -->
-      <header class="page__header">
-        <p class="w30"></p>
-        <h3 class="header-title f18">{{ title }}</h3>
-        <p class="ponter" @click="handleBack">关闭</p>
-      </header>
+
       <!-- 定时 续时等 -->
       <section class="exercise__tips">
         <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -125,22 +120,20 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from 'vuex'
+
   import API from '@/util/api'
   import {compress} from '@/util/image'
   import { isSupported } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
-  // 是否华为特殊手机 P20 P20-pro
-  const ua = navigator.userAgent.toLowerCase();
-  const huawei = ua.match(/huaweiclt|huaweieml/i);
+
 
   export default {
     name: 'subjective-page',
     data() {
       return {
         ispreview: false,
-        opacity: 0,
-        title: '主观题作答',
         // 是否作答完成
         isComplete: false,
         // 是否新的延时
@@ -192,13 +185,16 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
-        // 是否华为特殊手机
-        huawei: !!huawei
       };
     },
     components: {
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
+      ...mapState([
+        'lesson',
+        'cards',
+      ]),
     },
     watch: {
       text(newValue, oldValue) {
@@ -231,12 +227,48 @@
         } else if(newValue === 5) {
           this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
-      }
+      },
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'subjective-page') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          if(this.summary) {
+            this.init(this.summary);
+          } else {
+            this.$router.back();
+          }
+        }
+      },
     },
     filters: {
     },
     mixins: [ imagemixin ],
     methods: {
+      ...mapActions([
+        'setCards',
+      ]),
+
+      /*
+      * @method 重置数据
+      * @param
+      */
+      reset() {
+        this.text = '';
+        this.imageURL = '';
+        this.imageThumbURL = '';
+        this.ispreview =false;
+        this.sendStatus = 0;
+        this.teamVisible = false;
+        this.answerType = 0;
+        this.noTeam = false;
+        this.timeOver =false;
+        this.warning = false;
+      },
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
@@ -248,18 +280,27 @@
           return ;
         }
 
+        this.reset();
+
         this.problemID = problemID;
+
+        // event消息订阅
+        this.initPubSub();
+
+        let problem = this.$parent.$parent.problemMap.get(problemID);
+        if(!problem ) {
+          setTimeout(()=>{
+            this.init(data);
+          }, 1500)
+
+          return this;
+        }
 
         // TODO：检测这个问题是否分组
         let isTeam = data.groupid || false;
         isTeam && this.getTeamInfo(problemID);
 
-        // event消息订阅
-        this.initPubSub();
-
-        // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.oProblem = problem['Problem'];
         // 问题分数
         let score = this.oProblem['Score'];
         let getScore = this.oProblem['getScore'];
@@ -267,11 +308,6 @@
         if(score && getScore > 0) {
           this.starCount = getScore / score * 5;
           this.getScore = getScore;
-        }
-
-        // 是否观察者模式
-        if(this.observerMode) {
-          this.sendStatus = 5;
         }
 
         // 是否完成
@@ -287,7 +323,7 @@
           this.isComplete = true;
         } else {
           // 开始启动定时
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          this.$parent.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
           // 恢复作答结果
@@ -311,20 +347,9 @@
           }
 
           if (process.env.NODE_ENV !== 'production') {
-            this.setTiming(data.limit)
+            // this.setTiming(data.limit)
           }
         }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
 
         // 预加载图片
         let oImg = new Image();
@@ -716,7 +741,7 @@
         };
 
         this.oProblem['Result'] = param['result'];
-        let problem = self.$parent.problemMap.get(problemID)
+        let problem = self.$parent.$parent.problemMap.get(problemID)
 
         console.log(param);
 
@@ -732,12 +757,13 @@
               })
 
               // 替换原来的数据
-              self.$parent.cards.splice(self.index, 1, self.summary);
+              self.cards.splice(self.index, 1, self.summary);
+              self.setCards(self.cards);
 
               problem = Object.assign(problem, {
                 'Problem': self.oProblem
               })
-              self.$parent.problemMap.set(problemID, problem);
+              self.$parent.$parent.problemMap.set(problemID, problem);
 
               clearInterval(self.timer);
 
@@ -764,9 +790,9 @@
                 });
               }
 
-              setTimeout(() => {
-                self.$router.back();
-              }, 2000)
+              // setTimeout(() => {
+              //   self.$router.back();
+              // }, 2000)
 
               return data;
             }
@@ -778,10 +804,6 @@
               message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
-
-            setTimeout(() => {
-              // self.$router.back();
-            }, 3000)
           });
       },
 
@@ -1082,8 +1104,9 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      this.lessonID = this.$parent.lessonID;
-      let cards = this.$parent.cards;
+
+      this.lessonID = this.lesson && this.lesson.lessonID;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {
@@ -1092,8 +1115,6 @@
         this.$router.back();
       }
 
-      // 课程结束啦
-      this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
     },
     mounted() {
     },
@@ -1104,25 +1125,22 @@
 
 <style lang="scss" scoped>
   .page-subjective {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: rgba(0,0,0, 0.3);
   }
 
   .subjective-wrapper {
     width: 375px;
-    height: 667px;
+    // height: 667px;
+    height: 100%;
 
-    background: #f6f7f8;
+    background: #fff;
+    border: 2px solid #eee;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
