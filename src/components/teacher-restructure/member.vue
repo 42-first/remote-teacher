@@ -9,11 +9,11 @@
 			<div class="tabbar">
 				<v-touch :class="['tab-item', activeTab == 1 ? 'active f20' : 'f17']" v-on:tap="toggleTab(1)">
 					<span class="label">{{$t('yiqiandao')}}</span>
-					<span class="f14 count">({{participantList.length}})</span>
+					<span class="f14 count">({{partTotal}})</span>
 				</v-touch>
 				<v-touch :class="['tab-item ml50', activeTab == 2 ? 'active f20' : 'f17']" v-on:tap="toggleTab(2)">
 					<span class="label">{{$t('weiqiandao')}}</span>
-					<span class="f14 count">({{notParticipantList.length}})</span>
+					<span class="f14 count">({{notPartTotal}})</span>
 				</v-touch>
 			</div>
 			<div class="search" @click="goSearch" v-if="studentCount < 500"><i class="iconfont icon-sousuo f19"></i></div>
@@ -27,7 +27,7 @@
 			infinite-scroll-disabled="isLoading"
 			infinite-scroll-distance="10"
 			:class="{ 'list-wrapper-active': activeTab == 1 }"
-		>
+			>
 			<template v-if="participantList.length">
 				<!-- <div class="order-box">
 					<v-touch class="title f14" v-on:tap="openOrder">
@@ -148,6 +148,10 @@
 				notSignedPage: 1, // 未签到页
 				participantList: [], // 签到列表
 				notParticipantList: [], // 未签到列表
+				// 签到人数
+				partTotal: 0,
+				// 未签到人数
+				notPartTotal: 0,
 				isLoading: false,
 				studentCount: 0,
 				uuidSign: null,
@@ -223,10 +227,12 @@
 					this.participantList = this.participantList.concat(list);
 					this.signLoaded = list.length === 0 || this.participantList.length >= total;
 					this.uuidSign = jsonData.uuid_code
+					this.partTotal = total;
 				} else {
 					this.notParticipantList = this.notParticipantList.concat(list);
 					this.signNoLoaded = list.length === 0 || this.participantList.length >= total;
-					this.uuidNotSign = jsonData.uuid_code
+					this.uuidNotSign = jsonData.uuid_code;
+					this.notPartTotal = total;
 				}
 			},
 
