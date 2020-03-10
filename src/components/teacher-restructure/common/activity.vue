@@ -108,7 +108,8 @@
         'socket',
         'isDanmuOpen',
         'newtougao',
-				'classroomid'
+        'classroomid',
+        'toolbarIndex'
       ])
     },
     components: {
@@ -116,13 +117,12 @@
     },
     created () {
       let self = this
-
       // 点击 课堂动态 按钮 父组件发送事件给本子组件，获取学生名单、投稿数等
-      self.$on('Activity', function () {
-        self.fetchParticipantList()
-      })
-    },
-    updated () {
+      // self.$on('Activity', function () {
+      //   self.fetchParticipantList()
+      // });
+      // 点击学生头像进入签到列表，返回的时候需要重新请求数据，干脆直接初始化的时候就请求
+      this.fetchParticipantList();
     },
     methods: {
       /**
@@ -176,6 +176,10 @@
       radomrollcall(e){
         this.$refs.Toolbar.callWakeup(e)
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      console.log(to, from);
+      next();
     }
   }
 </script>
