@@ -34,9 +34,9 @@
     </section>
 
     <!-- 直播入口 视频直播 -->
-    <section class="live__video J_live" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
       <!-- 定制video -->
-      <div class="live__video_box">
+      <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
       </div>
@@ -57,6 +57,14 @@
         </div>
 
       </div>
+
+      <!-- resize 控制点 -->
+      <section class="video__anchors" v-show="!videoFullscreen" >
+        <div class="video--anchor J_anchor" data-direction="north-west"></div>
+        <div class="video--anchor J_anchor" data-direction="north-east"></div>
+        <div class="video--anchor J_anchor" data-direction="south-east"></div>
+        <div class="video--anchor J_anchor" data-direction="south-west"></div>
+      </section>
 
       <!-- 消息提醒 新版 -->
       <videomsg :videoFullscreen="videoFullscreen" v-show="videoFullscreen" ></videomsg>
@@ -491,6 +499,10 @@
                 }, 30000)
               }
 
+              // todo: test
+              self.liveType = 2;
+              self.liveURL = 'https://bd-flv-video.xuetangx.com/xuetanglive/webpushertest306.flv';
+
               // 课程title
               document.title = self.courseName = data.classroom && data.classroom.courseName;
 
@@ -770,6 +782,8 @@
     top: 5px;
     right: 5px;
 
+    width: 400px;
+
     &:hover {
       .video__controls {
         opacity: 1;
@@ -778,6 +792,7 @@
     }
 
     &.fullscreen {
+      width: 100vw;
       top: 0;
       bottom: 0;
       right: 0;
@@ -795,6 +810,8 @@
       .live__container {
         width: 100vw;
         max-height: 100vh;
+
+        cursor: move;
       }
 
       .video__controls {
@@ -833,16 +850,68 @@
     }
 
     .live__container {
-      width: 400px;
-      // min-height: 225px;
-      // max-height: 300px;
+      // width: 400px;
+      width: 100%;
       background: rgba(0, 0, 0, 0.7);
+    }
+
+    .video__anchors {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+
+      .video--anchor {
+        z-index: 1;
+        position: absolute;
+        pointer-events: none;
+
+        width: 30px;
+        height: 30px;
+
+        opacity: 0;
+      }
+
+      .video--anchor[data-direction="north-west"] {
+        top: -10px;
+        left: -10px;
+        cursor: nw-resize;
+      }
+
+      .video--anchor[data-direction="north-east"] {
+        top: -10px;
+        right: -10px;
+        cursor: ne-resize;
+      }
+
+      .video--anchor[data-direction="south-east"] {
+        bottom: -10px;
+        right: -10px;
+        cursor: se-resize;
+      }
+
+      .video--anchor[data-direction="south-west"] {
+        bottom: -10px;
+        left: -10px;
+        cursor: sw-resize;
+      }
+
+    }
+
+    &:hover {
+      .video--anchor {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
   }
 
 
   .video__controls {
     opacity: 0;
+    z-index: 1;
     position: absolute;
     bottom: 0;
 

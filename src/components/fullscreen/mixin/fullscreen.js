@@ -18,7 +18,7 @@ let fullscreenMixin = {
      * @params
      */
     handleVideoFullscreen(evt) {
-      let videoWrapEl =  this.$el.querySelector('.J_live');
+      let videoWrapEl =  this.$el.querySelector('.J_live_wrap');
 
       this.videoFullscreen = true;
       screenfull.request(videoWrapEl).then(()=>{
