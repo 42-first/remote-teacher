@@ -84,7 +84,7 @@ let fullscreenMixin = {
     },
 
 
-     /*
+    /*
     * @method 直播音频停止直播
     * @params
     */
@@ -154,6 +154,32 @@ let fullscreenMixin = {
       if(isSupported(window.localStorage)) {
         localStorage.setItem(key, true);
       }
+    },
+
+    /**
+     * @method 显示更多操作
+     * @params
+     */
+    handleVisibleMore(visibleMore) {
+      this.visibleMore = visibleMore;
+    },
+
+    /**
+     * @method 显示发送弹幕
+     * @params
+     */
+    handleVisibleDanmu(evt) {
+      this.setVisibleDanmuSend(true);
+    },
+
+    /**
+     * @method 显示分组
+     * @params
+     */
+    handleVisibleGroup(evt) {
+
+      // location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+
     }
 
   }

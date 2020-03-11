@@ -19,8 +19,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
-// import $ from "zepto";
 import $ from 'jquery'
 
 
