@@ -499,10 +499,6 @@
                 }, 30000)
               }
 
-              // todo: test
-              self.liveType = 2;
-              self.liveURL = 'https://bd-flv-video.xuetangx.com/xuetanglive/webpushertest306.flv';
-
               // 课程title
               document.title = self.courseName = data.classroom && data.classroom.courseName;
 
