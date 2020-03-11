@@ -193,6 +193,11 @@
       },
 
       handlesubmit() {
+        // 是否可以提交
+        if(!this.submitStatus) {
+          return this;
+        }
+
         // 第一次打分直接提交 第二次打分确认
         if(this.reviewScore === -1) {
           this.submitReview();

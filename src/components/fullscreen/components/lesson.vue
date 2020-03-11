@@ -152,7 +152,7 @@ export default {
      * @params
      */
     resize() {
-      this.checkFullscreen();
+      // this.checkFullscreen();
       this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 40;
       this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 40;
 
@@ -170,7 +170,7 @@ export default {
       // 保证全屏放映兼容性
       screenfull.request().
       then(()=>{
-        this.setFullscreen(true);
+        // this.setFullscreen(true);
       });
 
       setTimeout(()=>{
@@ -183,7 +183,7 @@ export default {
 
       if (fullscreen !== this.fullscreen) {
         console.log('checkFullscreen', fullscreen);
-        this.setFullscreen(fullscreen);
+        // this.setFullscreen(fullscreen);
       }
     },
 
