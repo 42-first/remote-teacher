@@ -48,8 +48,10 @@
 						</div>
 						<div class="alignCenter">
 							<div class="user">
-								<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
-								<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+								<template v-if="item.profile">
+									<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
+									<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+								</template>
 							</div>
 							<div v-if="has_problems" class="score-box f14" :class="item.index < 3 ? 'orange' : ''">
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
@@ -220,7 +222,7 @@
 						// }
           })
 			},
-			fetchListHandle(jsonData, type) {
+			fetchListHandle(jsonData, type = 0) {
 				let list = jsonData.students || [];
 				const total = jsonData.total - 0 || 0;
 				if (!type) {
