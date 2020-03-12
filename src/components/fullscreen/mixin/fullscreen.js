@@ -177,10 +177,19 @@ let fullscreenMixin = {
      * @params
      */
     handleVisibleGroup(evt) {
+      let src = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
 
-      // location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+      this.$router.push({ name: 'team-page', query: { src: encodeURIComponent(src) } });
+    },
 
-    }
+    /**
+     * @method 显示投稿
+     * @params
+     */
+    handleVisibleSubmission(evt) {
+      let path = `/${this.lesson.lessonID}/submission`;
+      this.$router.push({ path });
+    },
 
   }
 }

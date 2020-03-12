@@ -91,7 +91,7 @@
       </div>
       <div class="" v-if="visibleMore">
         <p class="line" v-show="danmuStatus" ></p>
-        <p class="action-btn action-tip" @click="" data-tip="投稿">
+        <p class="action-btn action-tip" @click="handleVisibleSubmission" data-tip="投稿">
           <i class="iconfont icon-ykq_tab_tougao f32"></i>
         </p>
         <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">

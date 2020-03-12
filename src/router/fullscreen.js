@@ -25,6 +25,10 @@ const Webview = resolve => require(['@/components/fullscreen/webview'], resolve)
 
 // 白板
 const Board = resolve => require(['@/components/fullscreen/board'], resolve)
+// 投稿
+const Submission = resolve => require(['@/components/fullscreen/submission'], resolve)
+// 分组
+const Team = resolve => require(['@/components/fullscreen/team'], resolve)
 
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
@@ -79,6 +83,11 @@ const fullscreenRouter = new Router({
           component: SubjectiveShare
         },
         {
+          path: 'submission',
+          name: 'submission-page',
+          component: Submission
+        },
+        {
           path: 'submission_share/:index',
           name: 'submission-detail-page',
           component: SubmissionDetail
@@ -97,6 +106,11 @@ const fullscreenRouter = new Router({
           path: 'board/:index',
           name: 'board',
           component: Board
+        },
+        {
+          path: 'team',
+          name: 'team-page',
+          component: Team
         },
       ]
     }
