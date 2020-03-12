@@ -79,10 +79,10 @@
     <!-- 更多操作 -->
     <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore }" >
       <div class="" v-show="danmuStatus" >
-        <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕" v-if="visibleDanmu">
+        <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕：开" v-if="visibleDanmu">
           <i class="iconfont icon-danmukai f32"></i>
         </p>
-        <p class="action-btn action-tip" @click="setVisibleDanmu(true)" data-tip="弹幕" v-else >
+        <p class="action-btn action-tip" @click="setVisibleDanmu(true)" data-tip="弹幕：关" v-else >
           <i class="iconfont icon-danmuguan f32 c666"></i>
         </p>
         <p class="action-btn action-tip" @click="handleVisibleDanmu" data-tip="发弹幕">
