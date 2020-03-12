@@ -434,14 +434,17 @@
             if(data) {
               let streams = data.streams;
               let info = streams[0];
+              let iofo2 = streams[1];
               let format = data.format;
+              let width = info.width || iofo2.width;
+              let height = info.height || iofo2.height;
               let video =  {
                 'url': url,
-                'thumb': `${url}?vframe/jpg/offset/2/w/${info.width}/h/${info.height}`,
+                'thumb': `${url}?vframe/jpg/offset/2/w/${width}/h/${height}`,
                 'duration': info.duration,
                 'size': format.size,
-                'height': info.height,
-                'width': info.width,
+                'height': height,
+                'width': width
               };
 
               console.dir(video);
@@ -465,29 +468,18 @@
         this.rate = this.width/this.height;
       },
       handleDeleteImg() {
-        let self = this;
-        // 国际化confirm options改造
-        let msgOptions = {
-          confirmButtonText: this.$i18n.t('confirm'),
-          cancelButtonText: this.$i18n.t('cancel')
-        }
+        this.hasImage = false;
+        this.imageURL = '';
+        this.imageThumbURL = '';
+        this.video = {
+          url: '',
+          duration: '',
+          size: '',
+          width: '',
+          height: ''
+        };
 
-        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?', msgOptions).then(action => {
-          if(action === 'confirm') {
-            self.hasImage = false;
-            self.imageURL = '';
-            self.imageThumbURL = '';
-            self.video = {
-              url: '',
-              duration: '',
-              size: '',
-              width: '',
-              height: ''
-            };
-
-            !self.text && (self.sendStatus = 0);
-          }
-        });
+        !this.text && (this.sendStatus = 0);
       },
       handleScaleImage() {
         let targetEl = event.target;
