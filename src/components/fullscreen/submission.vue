@@ -30,12 +30,18 @@
         <!-- 图片 -->
         <section class="submission__pic">
           <div v-if="!hasImage">
-            <div class="submission__pic--add"><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
-            <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
+            <div class="submission__pic--add">
+              <!-- <input type=file accept="image/*" class="camera" @change="handleChooseImageChange" > -->
+              <input type=file accept="image/*,video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" >
+            </div>
+            <p class="submission__pic--remark f14">可上传一张图片或一个小视频</p>
           </div>
           <div class="pic-view" v-show="hasImage">
             <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
-            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
+            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else-if="imageThumbURL" />
+            <!-- 视频 -->
+            <video class="video--preview" :src="video.url" controls :poster="video.thumb" v-if="video && video.url" >
+            </video>
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
           </div>
@@ -96,6 +102,8 @@
   import picker from '@/components/common/picker/index.vue'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import upload from '@/util/upload'
+  import $ from 'jquery'
 
 
   export default {
@@ -110,6 +118,15 @@
         text: '',
         imageURL: '',
         imageThumbURL: '',
+        // 视频部分
+        video: {
+          url: '',
+          // thumb: '',
+          duration: '',
+          size: '',
+          width: '',
+          height: ''
+        },
         // 本地图片base64/二进制
         fileData: null,
         hasImage: false,
@@ -173,9 +190,6 @@
       }
     },
     filters: {
-      formatTime(time) {
-        return moment && moment(time).format('hh:mm:ss') || time;
-      }
     },
     mixins: [ imagemixin ],
     methods: {
@@ -193,7 +207,8 @@
           'thumb': this.imageThumbURL,
           'lesson_id': this.lessonID,
           'team_id': this.team_id,
-          'group_id': this.group_id
+          'group_id': this.group_id,
+          'video': this.video
         }
 
         // 发送中
@@ -268,6 +283,7 @@
             return null;
           });
       },
+
       /*
        * @method 上传图片失败重试策略
        * @param
@@ -313,13 +329,34 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          if(size >= 10) {
-            this.$toast({
-              message: '图片不可超过10M，请重试',
-              duration: 2000
+          let isVideo = 'video/mp4' === fileType;
+          if(isVideo) {
+            if(size >= 50) {
+              this.$toast({
+                message: '视频不可超过50M，请重试',
+                duration: 2000
+              });
+
+              return this;
+            }
+
+            Promise.all([upload.getToken()]).then(() => {
+              // 上传七牛
+              this.uploadFile(file).then((res)=>{
+                res && this.getVideoInfo(res.url);
+              });
             });
 
             return this;
+          } else {
+            if(size >= 10) {
+              this.$toast({
+                message: '图片不可超过10M，请重试',
+                duration: 2000
+              });
+
+              return this;
+            }
           }
         }
 
@@ -345,6 +382,80 @@
         });
 
       },
+
+      /**
+       * method 视频上传七牛
+       * params
+       */
+      uploadFile(file) {
+        let self = this;
+        let domain = upload.qiniuDomain;
+
+        return new Promise((resolve, reject)=>{
+          let observer = {
+            next(res) {
+              let total = res.total;
+              let percent = total.percent;
+
+              console.log("进度：" + percent + "% ");
+            },
+            error(err) {
+              console.log(err);
+              // todo: 给一个失败图图片吗 后面还需要重试吗 放入失败的队列
+              reject(Object.assign(file, { url: '' }));
+            },
+            complete(res) {
+              console.log(res);
+              let url = domain + res.key;
+
+              console.log("视频url:" + url);
+              resolve(Object.assign(file, { url }));
+            }
+          };
+
+          upload.upload(file, observer, 'file');
+        });
+      },
+
+      /**
+       * method 视频源信息(?avinfo)
+       * params
+       */
+      getVideoInfo(url) {
+        let URL = url + '?avinfo';
+
+        $.ajax({
+          type: 'GET',
+          url: URL,
+          dataType: 'json',
+          success: (res) => {
+            let data = res;
+
+            if(data) {
+              let streams = data.streams;
+              let info = streams[0];
+              let format = data.format;
+              let video =  {
+                'url': url,
+                'thumb': `${url}?vframe/jpg/offset/2/w/${info.width}/h/${info.height}`,
+                'duration': info.duration,
+                'size': format.size,
+                'height': info.height,
+                'width': info.width,
+              };
+
+              console.dir(video);
+
+              this.hasImage = true;
+              this.sendStatus = 2;
+              this.video = video;
+            }
+          },
+          error: (xhr, type) => {
+          }
+        })
+      },
+
       handlelaodImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
@@ -366,6 +477,13 @@
             self.hasImage = false;
             self.imageURL = '';
             self.imageThumbURL = '';
+            self.video = {
+              url: '',
+              duration: '',
+              size: '',
+              width: '',
+              height: ''
+            };
 
             !self.text && (self.sendStatus = 0);
           }
@@ -693,6 +811,11 @@
 
         color: #fff;
         background: rgba(0,0,0,0.6);
+      }
+
+      .video--preview {
+        width: 100%;
+        height: 100%;
       }
 
     }
