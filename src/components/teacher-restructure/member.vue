@@ -272,8 +272,7 @@
 						} else {
 							!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
 						}
-
-					}, 500);
+					}, 800);
 				}
 			},
 			/**
