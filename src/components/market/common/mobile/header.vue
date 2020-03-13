@@ -1,7 +1,7 @@
 <template>
   <!-- 导航模块 -->
   <div class="nav">
-    <a class="logo-wrapper" href="/"><img class="logo" src="http://sfe.ykt.io/o_1bpfrptlcaflochlas11h1s1c9.png" alt="logo"></a>
+    <a class="logo-wrapper" href="/"><img class="logo" src="https://qn-sfe.yuketang.cn/o_1bpfrptlcaflochlas11h1s1c9.png" alt="logo"></a>
     <div class="nav-menus" v-bind:class="{ios: isIos}">
       <a class="join-us" href="/presenter">翻页笔</a>
       <a class="join-us curr" href="/lesson/market/mobile_market">雨课件</a>
