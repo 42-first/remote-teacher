@@ -23,6 +23,7 @@
 		</div>
 
     <section v-show="activeTab == 1" class="participantList list-wrapper"
+			infinite-scroll-immediate-check="false"
 			v-infinite-scroll="loadBottom"
 			infinite-scroll-disabled="isLoading"
 			infinite-scroll-distance="10"
@@ -44,7 +45,7 @@
 				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div :class="['xuhao']">
-							<span :class="[{'star-box': item.index <= 3}, 'star'+ (item.index)]">{{item.index}}</span>
+							<span :class="[{'star-box': index <= 2}, 'star'+ (index + 1)]">{{index + 1}}</span>
 						</div>
 						<div class="alignCenter">
 							<div class="user">
@@ -53,7 +54,7 @@
 									<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
 								</template>
 							</div>
-							<div v-if="has_problems" class="score-box f14" :class="item.index < 3 ? 'orange' : ''">
+							<div v-if="has_problems" class="score-box f14" :class="index < 2 ? 'orange' : ''">
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
@@ -82,6 +83,7 @@
 			</template>
     </section>
 		<section class="notParticipantList list-wrapper"
+			infinite-scroll-immediate-check="false"
 			v-infinite-scroll="loadBottom"
 			infinite-scroll-disabled="isLoading"
 			infinite-scroll-distance="10"
@@ -157,7 +159,8 @@
 				isLoading: false,
 				studentCount: 0,
 				uuidSign: null,
-				uuidNotSign: null
+				uuidNotSign: null,
+				timer: null
       }
     },
     computed: {
@@ -261,16 +264,17 @@
           })
 			},
 			loadBottom() {
-				clearTimeout(timer);
-				timer = setTimeout(() => {
+				if (!this.timer) {
+					this.timer = setTimeout(() => {
+						this.timer = null;
+						if (this.activeTab === 1) {
+							!this.signLoaded &&  this.fetchList(this.signedPage)
+						} else {
+							!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
+						}
 
-					if (this.activeTab === 1) {
-						!this.signLoaded &&  this.fetchList(this.signedPage)
-					} else {
-						!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
-					}
-
-				}, 500)
+					}, 500);
+				}
 			},
 			/**
        * 切换签到状态
