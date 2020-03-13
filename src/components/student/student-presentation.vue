@@ -494,11 +494,11 @@
       */
       setSentry() {
         if(typeof Raven !== 'undefined') {
-          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userID });
         } else {
           setTimeout(() => {
-            Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
