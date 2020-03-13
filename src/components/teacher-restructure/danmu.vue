@@ -29,6 +29,7 @@
 			v-infinite-scroll="loadBottom"
 			infinite-scroll-disabled="isLoading"
 			infinite-scroll-distance="10"
+      ref="scrollTop"
       >
       <div class="item-with-gap" v-for="(item, index) in dataList" :key="index">
         <div class="item">
@@ -105,16 +106,16 @@
       self.handlePubSub()
     },
     mounted () {
-      let self = this
-      let wh = window.innerHeight
+      // let self = this
+      // let wh = window.innerHeight
 
       // 如果搓到底了，不要到底，防止ios上搓露底
-      let boxDom = document.querySelector('.danmu-box')
-      boxDom.addEventListener('scroll', e => {
-        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
-          boxDom.scrollTop = boxDom.scrollTop -2
-        }
-      })
+      // let boxDom = document.querySelector('.danmu-box')
+      // boxDom.addEventListener('scroll', e => {
+      //   if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+      //     boxDom.scrollTop = boxDom.scrollTop -2
+      //   }
+      // })
 
     },
     beforeDestroy(){
@@ -196,7 +197,6 @@
         self.fetchList(tailNow).then(jsonData => {
           // 设置试卷详情数据
           // response_num 当前请求返回的投稿数量
-          console.log(jsonData.data.response_num)
           if (jsonData.data.response_num === 0) {
             self.isAllLoaded = true
             return
@@ -293,8 +293,6 @@
           }, 2000)
 
           self.isFetching = false
-
-
           let isAllLoaded = self.isAllLoaded
           if (response_num === 0) {
             isAllLoaded = true
@@ -320,10 +318,11 @@
           self.setData({
             isAllLoaded
           })
-
           // 刷新的话回顶部
           setTimeout(() => {
-            self.$el.scrollTop = 0
+            // self.$refs.scrollTop = 0
+            const listDom = document.querySelector('.list');
+            listDom && (listDom.scrollTop = 0);
           }, 100)
         })
       },

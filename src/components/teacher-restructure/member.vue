@@ -35,7 +35,7 @@
 						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)"><!-- 按学号排序 -->{{ $t('behavior.studentId') }}</v-touch>
 					</ul>
 				</div>
-				<div class="item" v-for="(item,index) in participantList" :key="item.id" @click="goStudentDetail(item.id)">
+				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div :class="['xuhao']">
 							<span :class="[{'star-box': item.index <= 3}, 'star'+ (item.index)]">{{item.index}}</span>
@@ -58,7 +58,7 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags" :key="idx">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -86,7 +86,7 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags" :key="idx">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
