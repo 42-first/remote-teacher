@@ -1,9 +1,9 @@
 <template>
   <div class="banner">
-    <img src="http://sfe.ykt.io/o_1bq1tobqec6b9slj8m17cu6r3e.png" v-if="type === 0"/>
-    <img src="http://sfe.ykt.io/o_1bq1tobqe1vklsj3ino1r1n1tnkc.png" v-if="type === 1"/>
+    <img src="https://qn-sfe.yuketang.cn/o_1bq1tobqec6b9slj8m17cu6r3e.png" v-if="type === 0"/>
+    <img src="https://qn-sfe.yuketang.cn/o_1bq1tobqe1vklsj3ino1r1n1tnkc.png" v-if="type === 1"/>
     <div class="text-center courseware" v-if="type == 2">
-      <img src="http://sfe.ykt.io/o_1bq1tobqeogi1hrb13c71n071eond.png"/>
+      <img src="https://qn-sfe.yuketang.cn/o_1bq1tobqeogi1hrb13c71n071eond.png"/>
     </div>
     <div class="text-center font48 colorf text" v-if="type !== 2">
       <div>{{text}}</div>

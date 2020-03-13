@@ -3,7 +3,7 @@
     <div id="navbg" class="bg"></div>
     <div class="box clearfix">
       <a class="a_logo" href="/">
-        <img class="logo" src="http://sfe.ykt.io/o_1bpfrptlcaflochlas11h1s1c9.png" alt="logo">
+        <img class="logo" src="https://qn-sfe.yuketang.cn/o_1bpfrptlcaflochlas11h1s1c9.png" alt="logo">
       </a>
       <a href="/web" target="_blank" class="right loginweb">登录网页版</a>
       <a href="/help" class="right">帮助中心</a>
