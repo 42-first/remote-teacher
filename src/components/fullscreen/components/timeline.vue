@@ -213,8 +213,10 @@
             let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
             slideEl && slideEl.scrollIntoView();
 
-            this.autoJump(index, newVal);
+            // this.autoJump(index, newVal);
           }, 100)
+
+          this.autoJump(index, newVal);
         }
       },
     },
@@ -253,25 +255,24 @@
        * @method timeline详情
        */
       autoJump(index, slide) {
-        // TODO: 自动跳转策略
-        // 当前是PPT 直接跳转, 有题目出现跳转
-        console.log(index);
-        console.dir(this.$route);
-
-        let pageName = this.$route.name;
-        // PPT页可以自动切换
-        if(pageName === 'ppt-page') {
-          this.setSlideIndex(index);
-
-          this.setMsg(null);
-
-          return this;
+        // 自动跳转策略
+        // 当前页是是放映页 PPT或者白板 新消息是PPT习题白板自动跳
+        let curr = this.currSlide;
+        // 当前页是放映也
+        if(curr && curr.index === this.slideIndex) {
+          // PPT或者白板
+          if([2, 12].includes(curr.type)) {
+            // 消息类型 PPT习题白板自动跳
+            if(slide && [2, 3, 12].includes(slide.type)) {
+              this.setSlideIndex(index);
+              this.setMsg(null);
+            }
+          }
         }
 
-        // 新消息是题目自动切换到题目
-        if(slide && slide.type === 3) {
-          // this.setSlideIndex(index);
-        }
+        // let pageName = this.$route.name;
+        // if(pageName === 'ppt-page') {
+        // }
       }
     },
     created() {

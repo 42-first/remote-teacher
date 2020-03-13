@@ -11,9 +11,9 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">
+      <!-- <p class="lesson--tip" v-if="visibleTip">
         <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
-      </p>
+      </p> -->
 
       <!-- 消息通知 -->
       <msgbox></msgbox>
@@ -279,7 +279,9 @@
 
         // 过滤当前放映PPT
         if(slide.type === 2 || slide.type === 3 || slide.type === 12) {
-          this.setCurrSlide(slide);
+          setTimeout(()=>{
+            this.setCurrSlide(slide);
+          }, 100)
         }
 
         // 更新接收器展示timeline
@@ -338,13 +340,13 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.iniTimeline(this.lessonID);
 
-        let key = 'lesson-tip-cloesed-' + this.lessonID;
-        let visibleTip = true;
-        if(isSupported(window.localStorage)) {
-          visibleTip = !localStorage.getItem(key);
-        }
+        // let key = 'lesson-tip-cloesed-' + this.lessonID;
+        // let visibleTip = true;
+        // if(isSupported(window.localStorage)) {
+        //   visibleTip = !localStorage.getItem(key);
+        // }
 
-        this.visibleTip = visibleTip;
+        // this.visibleTip = visibleTip;
       },
 
       /**
