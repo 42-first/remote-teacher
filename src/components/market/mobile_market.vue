@@ -1,7 +1,7 @@
 <template>
   <div class="over app">
     <div class="banner">
-      <img src="http://sfe.ykt.io/o_1bq1tobqeap3ov9slt1tof1q1lf.jpg"/>
+      <img src="https://qn-sfe.yuketang.cn/o_1bq1tobqeap3ov9slt1tof1q1lf.jpg"/>
     </div>
     <div class="product">
       <div class="color3 list-name">
@@ -112,7 +112,7 @@
           title: '「雨课堂」雨课件',
           desc: '名师教学资源，经验共筑共享',
           lineLink: location.href,
-          imgUrl: 'http://sfe.ykt.io/o_1bppvh39sj5josf15s8m431itf9.png'
+          imgUrl: 'https://qn-sfe.yuketang.cn/o_1bppvh39sj5josf15s8m431itf9.png'
         }
 
         window.wx && window.wx.ready(function () {
