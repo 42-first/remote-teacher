@@ -180,6 +180,7 @@ let pages = {
   'answerpublished': 'The Answer Key has been sent',
   'sendtostus': 'Send to the class',
   'hasbeensend': 'Has been sent',
+  'windowapptip': '由于微信电脑端尚不完善，雨课堂的直播、互动等使用体验无法保证。<br>建议您在浏览器中打开雨课堂网页版继续参与教学。',
 
 
   // 遥控器
