@@ -37,7 +37,7 @@
         </nav>
         <!-- 展开更多 -->
         <p class="nav__fold box-center pointer" v-if="fold" @click="handleFold(false)">
-          <i class="iconfont icon-quanbu f28 cfff" ></i>
+          <!-- <i class="iconfont icon-quanbu f28 cfff" ></i> -->
         </p>
         <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
           <!-- 当前或者选中的数据展示 -->
@@ -162,22 +162,6 @@ export default {
       }, 1500)
     },
 
-    /**
-     * @method 全屏展示
-     * @params
-     */
-    handleFullscreen(evt) {
-      // 保证全屏放映兼容性
-      screenfull.request().
-      then(()=>{
-        // this.setFullscreen(true);
-      });
-
-      setTimeout(()=>{
-        this.$parent.danmaku.resize();
-      }, 500)
-    },
-
     checkFullscreen() {
       var fullscreen = document.webkitIsFullScreen || document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || false
 
@@ -258,20 +242,18 @@ export default {
     justify-content: flex-start;
     align-items: flex-start;
 
-    // background: #fff;
     background: #f5f5f5;
 
     .nav__fold {
       z-index: 1;
       position: absolute;
-      top: 5px;
-      left: 10px;
-
-      width: 40px;
-      height: 40px;
-
-      border-radius: 50%;
-      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 200px;
+      background: url(https://qn-sfe.yuketang.cn/o_1e28aupan5lrkiq2ip1k4do0be.png) center
+        center/contain no-repeat;
     }
   }
 
@@ -325,6 +307,7 @@ export default {
 
     &.full {
       max-width: 100vw;
+      padding: 20px 30px;
     }
   }
 

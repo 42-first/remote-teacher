@@ -36,6 +36,8 @@ const store = new Vuex.Store({
     observerMode: false,
     // 白板命令
     boardMsg: null,
+    // 是否显示弹幕发送
+    visibleDanmuSend: false
   },
   mutations: {
     // 重置课堂信息
@@ -73,6 +75,10 @@ const store = new Vuex.Store({
       state.boardMsg = msg;
     },
 
+    setVisibleDanmuSend(state, data) {
+      state.visibleDanmuSend = data;
+    },
+
     setObserverMode(state, data) {
       state.observerMode = data;
     },
@@ -107,6 +113,10 @@ const store = new Vuex.Store({
 
     setBoardMsg({commit}, slide) {
       commit('setBoardMsg', slide)
+    },
+
+    setVisibleDanmuSend({commit}, data) {
+      commit('setVisibleDanmuSend', data)
     },
 
     setObserverMode({commit}, slide) {

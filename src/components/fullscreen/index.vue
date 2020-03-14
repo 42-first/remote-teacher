@@ -11,9 +11,9 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">
+      <!-- <p class="lesson--tip" v-if="visibleTip">
         <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
-      </p>
+      </p> -->
 
       <!-- 消息通知 -->
       <msgbox></msgbox>
@@ -76,8 +76,39 @@
     <!-- 实时弹幕列表 -->
     <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
 
+    <!-- 更多操作 -->
+    <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore }" >
+      <div class="" v-show="danmuStatus" >
+        <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕：开" v-if="visibleDanmu">
+          <i class="iconfont icon-danmukai f32"></i>
+        </p>
+        <p class="action-btn action-tip" @click="setVisibleDanmu(true)" data-tip="弹幕：关" v-else >
+          <i class="iconfont icon-danmuguan f32 c666"></i>
+        </p>
+        <p class="action-btn action-tip" @click="handleVisibleDanmu" data-tip="发弹幕">
+          <i class="iconfont icon-fadanmu f32"></i>
+        </p>
+      </div>
+      <div class="" v-if="visibleMore">
+        <p class="line" v-show="danmuStatus" ></p>
+        <p class="action-btn action-tip" @click="handleVisibleSubmission" data-tip="投稿">
+          <i class="iconfont icon-ykq_tab_tougao f32"></i>
+        </p>
+        <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">
+          <i class="iconfont icon-fenzu1 f32"></i>
+        </p>
+      </div>
+      <p class="action-btn action-tip" @click="handleVisibleMore(false)" data-tip="收起" v-if="visibleMore">
+        <i class="iconfont icon--shuangjiantouxiangxia f24"></i>
+      </p>
+      <p class="action-btn action-tip" @click="handleVisibleMore(true)" data-tip="更多" v-else>
+        <i class="iconfont icon--gengduocaozuo f24"></i>
+      </p>
+    </section>
+
     <!-- 弹幕控制组件 -->
     <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
+
   </section>
 </template>
 <script>
@@ -112,9 +143,6 @@
   // 子组件不需要引用直接使用
   window.request = request;
   window.API = API;
-  if (process.env.NODE_ENV !== 'production') {
-    // request.post = request.get
-  }
 
   export default {
     name: 'fullscreen',
@@ -215,6 +243,8 @@
         // 是否播放
         // playState
         liveStatusTips: '',
+        // 显示更多操作
+        visibleMore: false
       };
     },
     components: {
@@ -249,7 +279,9 @@
 
         // 过滤当前放映PPT
         if(slide.type === 2 || slide.type === 3 || slide.type === 12) {
-          this.setCurrSlide(slide);
+          setTimeout(()=>{
+            this.setCurrSlide(slide);
+          }, 100)
         }
 
         // 更新接收器展示timeline
@@ -298,6 +330,7 @@
         'setMsg',
         'setCurrSlide',
         'setBoardMsg',
+        'setVisibleDanmuSend',
       ]),
 
       /*
@@ -307,13 +340,13 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.iniTimeline(this.lessonID);
 
-        let key = 'lesson-tip-cloesed-' + this.lessonID;
-        let visibleTip = true;
-        if(isSupported(window.localStorage)) {
-          visibleTip = !localStorage.getItem(key);
-        }
+        // let key = 'lesson-tip-cloesed-' + this.lessonID;
+        // let visibleTip = true;
+        // if(isSupported(window.localStorage)) {
+        //   visibleTip = !localStorage.getItem(key);
+        // }
 
-        this.visibleTip = visibleTip;
+        // this.visibleTip = visibleTip;
       },
 
       /**
@@ -387,11 +420,11 @@
       */
       setSentry() {
         if(typeof Raven !== 'undefined') {
-          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userID });
         } else {
           setTimeout(() => {
-            Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
@@ -686,7 +719,6 @@
 </script>
 
 <style lang="scss">
-  // @import "~@/style/font/iconfont/iconfont.css";
 
   .page {
     position: absolute;
@@ -984,6 +1016,82 @@
       cursor: pointer;
     }
   }
+
+
+
+  /*------------------*\
+    $ 更多操作
+  \*------------------*/
+
+  .actions__wrap {
+    position: absolute;
+    // bottom: 55px;
+    bottom: 30px;
+    right: 15px;
+
+    width: 52px;
+    min-height: 52px;
+    padding: 15px 0;
+
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    border-radius: 50%/26px;
+    box-sizing: border-box;
+
+    &.only {
+      padding: 0;
+
+      .action-btn {
+        height: 52px;
+      }
+    }
+
+    .line {
+      margin: 5px auto;
+      width: 30px;
+      height: 1px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .action-btn {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      height: 42px;
+      cursor: pointer;
+    }
+
+    .action-tip:hover:before {
+      content: '';
+      position: absolute;
+      right: 100%;
+
+      border: 5px solid transparent;
+      border-left-color: #333;
+    }
+
+    .action-tip:hover:after {
+      content: attr(data-tip);
+      position: absolute;
+      right: calc(100% + 10px);
+
+      display: block;
+      padding: 0 5px;
+      min-width: 50px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      white-space: nowrap;
+
+      color: #fff;
+      background: #333;
+      border-radius: 4px;
+    }
+  }
+
+
 
   /*------------------*\
     $ 习题定时
