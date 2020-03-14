@@ -72,7 +72,7 @@
                     {{ $t('screenmodeoff') }}
                   </v-touch>
 
-                  
+
                 </div>
               </div>
             </div>
@@ -84,11 +84,11 @@
             <div class="wenan">end</div>
           </div>
 
-        </section> 
+        </section>
       </Loadmore>
-      
+
     </div>
-    
+
     <div class="toast-box f15" v-show="isAskingItemStatus || isItemDeleted">
       <span v-show="isAskingItemStatus">{{ $t('onscreenmode') }}...</span>
       <span v-show="isItemDeleted">{{ $t('postdeleted') }}</span>
@@ -152,7 +152,7 @@
         clearTimeout(postingTimer)
         self.isAskingItemStatus = false
       })
-      
+
     },
     mounted () {
       let self = this
@@ -219,8 +219,6 @@
         clearInterval(pollingTimer)
         this.$emit('closeSubmissionbox')
         this.closeSubmissionmask()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 更新投稿列表的数据
@@ -257,12 +255,12 @@
         }).then(jsonData => {
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
-            
+
             setTimeout(() => {
               self.isShowBtnBox = true
             },500)
 
-            
+
             let newList = jsonData.data.tougao_list
             // 返回的条目的个数
             let response_num = jsonData.data.response_num
@@ -274,7 +272,7 @@
             // 从课堂动态进来的话，不显示提示
             // 无论显示提示与否，2秒后不再显示提示
             self.isShowNoNewItem = typeof isClickedin !== 'string' && newList[0].id === headNow
-            
+
             setTimeout(() => {
               self.isShowNoNewItem = false
             }, 2000)
@@ -315,7 +313,7 @@
         postingTimer = setTimeout(() => {
           self.isAskingItemStatus = true
         },800)
-        
+
         let url = API.tougaostatus
 
         let postData = {
@@ -373,7 +371,6 @@
         })
 
         self.socket.send(str)
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 收藏投稿
@@ -441,7 +438,7 @@
 
           tapToClose: true,
           // 解决消息点击问题
-          // history: false,       
+          // history: false,
         };
 
         // Initializes and opens PhotoSwipe
@@ -584,7 +581,7 @@
         height: 100%;
       }
     }
-    
+
     .isFetching {
       position: relative;
       z-index: 10;
@@ -596,7 +593,7 @@
       height: 100%;
       background: $white;
       text-align: center;
-      
+
       img {
         display: inline-block;
         width: 5.5rem;
@@ -619,7 +616,7 @@
     .list {
       padding-bottom: 2.1rem;
       -webkit-overflow-scrolling: touch;
-      
+
       .item {
         padding: 0 0.4rem;
         background: $white;
@@ -664,7 +661,7 @@
           align-items: center;
           height: 1rem;
           margin-left: 1.386667rem;
-          
+
           .gray {
             color: $graybg;
           }
@@ -732,7 +729,7 @@
         }
       }
     }
-    
+
     .toast-box {
       position: fixed;
       left: 50%;

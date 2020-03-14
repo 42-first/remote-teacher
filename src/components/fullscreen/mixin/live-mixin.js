@@ -51,6 +51,8 @@ let liveMixin = {
           url: this.liveURL,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
+          // 调太小的话会在秒出画面后立刻卡顿 最小缓存 默认384
+          stashInitialSize: this.liveType === 2 ? 512 : 128
         });
 
         this.flvPlayer = flvPlayer;
@@ -204,16 +206,7 @@ let liveMixin = {
 
       flvjs.LoggingControl.addLogListener((type, msg) => {
         if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
-          let liveEl = document.getElementById('player');
-          let flvPlayer = this.flvPlayer;
-
-          flvPlayer.unload();
-          flvPlayer.detachMediaElement();
-          flvPlayer.attachMediaElement(liveEl);
-          flvPlayer.load();
-          flvPlayer.play().then(() => {
-            this.playState = 1;
-          });
+          this.createFlvPlayer();
         }
       });
     },
@@ -234,6 +227,8 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
+          // 调太小的话会在秒出画面后立刻卡顿 最小缓存 默认384
+          stashInitialSize: this.liveType === 2 ? 512 : 128
         });
 
         this.flvPlayer = flvPlayer;

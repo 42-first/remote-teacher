@@ -1,7 +1,7 @@
 /*
  * @page：web上课 暂时没有的类型跳转到H5地址
  * @author: chenzhou
- * @update: 2020.3.1
+ * @update: 2020.3.12
  * @desc
  *
  */
@@ -19,15 +19,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import $ from 'jquery'
 
 
 export default {
-  name: "lesson-webview",
+  name: "lesson-team",
   data() {
     return {
       index: 0,
-      slide: null,
       src: '',
     };
   },
@@ -40,28 +38,20 @@ export default {
   },
   mixins: [ ],
   created() {
-    // this.index = +this.$route.params.index;
+    let query = this.$route.query;
+    if(query && query.src) {
+      this.src = decodeURIComponent(query.src);
+    }
   },
   mounted() {
-    this.index = +this.$route.params.index;
   },
   updated() {},
   beforeDestroy() {
   },
-  filters: {
-  },
   watch: {
     '$route' (to, from) {
-      if(to && to.params && to.name === 'webview') {
-        let params = to.params;
-        this.index = params.index
+      if(to && to.params && to.name === 'team') {
       }
-    },
-    index(newVal, oldVal) {
-      let slide = this.cards[this.index];
-      this.slide = slide;
-
-      this.init(slide);
     },
   },
   methods: {
@@ -74,38 +64,7 @@ export default {
      * @params
      */
     init(slide) {
-      if(slide && slide.type) {
-        switch (slide.type) {
-          // 试卷
-          case 4:
-            this.src = slide.href;
-
-            setTimeout(()=>{
-              let webviewEl = document.getElementById('webview').contentWindow;
-              $(webviewEl).click((evt) => {
-                webviewEl.$ && webviewEl.$(evt.target).trigger('tap')
-              })
-            }, 1500)
-
-            break;
-
-          // 发起了分组
-          case 8:
-            this.src = slide.href;
-            break;
-
-          // 白板
-          case 12:
-            this.src = `/lesson/student/${this.lesson.lessonID}`;
-            break;
-
-          default:
-            break;
-        }
-
-      }
     },
-
   }
 };
 </script>
