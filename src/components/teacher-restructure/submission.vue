@@ -153,7 +153,7 @@
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
         isHideName: false,             // 匿名投屏
-        curGroupInfo: null,            // 当前的分组 
+        curGroupInfo: null,            // 当前的分组
       }
     },
     computed: {
@@ -240,7 +240,7 @@
         T_PUBSUB.subscribe('submission-msg.wordcloudshown', (_name, msg) => {
           self.$store.commit('set_postWordCloudOpen', true)
         })
-        
+
         T_PUBSUB.subscribe('submission-msg.closepostwc', (_name, msg) => {
           self.$store.commit('set_postWordCloudOpen', false)
         })
@@ -508,7 +508,6 @@
         })
 
         self.socket.send(str)
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 收藏投稿
@@ -618,9 +617,9 @@
         var result = s.replace(/[^\x00-\xff]/g, '**')
         return result.length
     },
-    /** 
+    /**
        * @method 词云投屏控制
-       * 
+       *
       */
       setWordCloudStatus(){
         if(!this.dataList.length) return false;
@@ -836,7 +835,7 @@
           justify-content: space-between;
           align-items: center;
           height: px2rem(80px);
-          
+
           // height: 1rem;
           // margin-left: 1.386667rem;
 
@@ -940,7 +939,7 @@
       position: absolute;
       top: 0.26666667rem;
       right: 0.4rem;
-    } 
+    }
   }
 
   .publish-btn {

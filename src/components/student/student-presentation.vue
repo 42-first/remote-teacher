@@ -494,16 +494,14 @@
       */
       setSentry() {
         if(typeof Raven !== 'undefined') {
-          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userID });
         } else {
           setTimeout(() => {
-            Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
-
-        typeof ga === 'function' && ga('set', 'userId', this.userID);
       },
 
       /*
@@ -1024,6 +1022,23 @@
         }
       },
 
+      /**
+       * @method 检测是否在window客户端
+       */
+      checkInWindowsApp(ua, isWeixin) {
+        let isInWindowApp = ~ua.indexOf('windowswechat');
+        if(isInWindowApp && isWeixin) {
+          let msgOptions = {
+            confirmButtonText: this.$i18n.t('gotit') || '知道了'
+          };
+          let message = this.$i18n.t('windowapptip') || '由于微信电脑端尚不完善，雨课堂的直播、互动等使用体验无法保证。<br>建议您在浏览器中打开雨课堂网页版继续参与教学。';
+          this.$messagebox.alert(message, msgOptions).then(action => {
+            if(action === 'confirm') {
+            }
+          });
+        }
+      },
+
       /*
        * @method 进入分组
        *
@@ -1103,6 +1118,10 @@
       this.isWeb = !isWeixin;
 
       this.miniCode = host[location.host] || '';
+
+      setTimeout(()=>{
+        this.checkInWindowsApp(ua, isWeixin);
+      }, 500)
     },
     updated() {
     },

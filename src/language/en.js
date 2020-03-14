@@ -180,6 +180,7 @@ let pages = {
   'answerpublished': 'The Answer Key has been sent',
   'sendtostus': 'Send to the class',
   'hasbeensend': 'Has been sent',
+  'windowapptip': 'The live and interactive experience of RainClassroom cannot be guaranteed on WeChat PC version. Please visit the web version in your browser to continue participating.',
 
 
   // 遥控器

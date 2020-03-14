@@ -84,7 +84,7 @@ let fullscreenMixin = {
     },
 
 
-     /*
+    /*
     * @method 直播音频停止直播
     * @params
     */
@@ -154,7 +154,42 @@ let fullscreenMixin = {
       if(isSupported(window.localStorage)) {
         localStorage.setItem(key, true);
       }
-    }
+    },
+
+    /**
+     * @method 显示更多操作
+     * @params
+     */
+    handleVisibleMore(visibleMore) {
+      this.visibleMore = visibleMore;
+    },
+
+    /**
+     * @method 显示发送弹幕
+     * @params
+     */
+    handleVisibleDanmu(evt) {
+      this.setVisibleDanmuSend(true);
+    },
+
+    /**
+     * @method 显示分组
+     * @params
+     */
+    handleVisibleGroup(evt) {
+      let src = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+
+      this.$router.push({ name: 'team-page', query: { src: encodeURIComponent(src) } });
+    },
+
+    /**
+     * @method 显示投稿
+     * @params
+     */
+    handleVisibleSubmission(evt) {
+      let path = `/${this.lesson.lessonID}/submission`;
+      this.$router.push({ path });
+    },
 
   }
 }

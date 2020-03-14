@@ -120,7 +120,7 @@
               let anon = this.summary.anon;
 
               anon && Object.assign(data, {
-                user_avatar_46: 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
+                user_avatar_46: 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
                 user_name: this.$i18n.t('anonymous2') || '匿名',
                 anon: true
               })
