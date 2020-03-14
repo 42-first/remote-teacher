@@ -125,9 +125,9 @@ fullscreenRouter.beforeEach((to, from, next) => {
 })
 
 fullscreenRouter.afterEach(route=>{
-  // google统计
+  // mta统计
   setTimeout(() => {
-    typeof ga === 'function' && ga('send', 'pageview', location.pathname);
+    typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
   }, 1000);
 });
 

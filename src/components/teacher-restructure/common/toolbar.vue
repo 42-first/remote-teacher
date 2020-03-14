@@ -49,7 +49,7 @@
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
-        
+
       </div>
     </div>
 
@@ -179,8 +179,6 @@
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
         self.closeMore()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课

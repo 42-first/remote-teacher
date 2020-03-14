@@ -428,8 +428,6 @@
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
-
-        typeof ga === 'function' && ga('set', 'userId', this.userID);
       },
 
       /*

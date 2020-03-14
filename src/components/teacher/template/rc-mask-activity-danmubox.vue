@@ -50,7 +50,7 @@
           <div class="wenan">end</div>
         </div>
 
-      </section> 
+      </section>
      </Loadmore>
 
     <div class="button-box f18" v-show="isShowBtnBox">
@@ -180,8 +180,6 @@
       closeDanmubox (evt) {
         this.$emit('closeDanmubox')
         this.closeDanmumask()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击弹幕按钮，设置是否允许弹幕
@@ -252,16 +250,16 @@
             }, 2000)
 
             let newList = jsonData.data.danmu_list
-            
+
             self.isFetching = false
 
             // 新增的条目的个数
             let newItemsCount = jsonData.data.response_num
-            
+
             if (!self.danmuList.length || newItemsCount > FENYE_COUNT) {
               // 刚加载展示或新条目数大于于 FENYE_COUNT，
               // 就算只是刚加载展示的话，就算新条目少，slice这么写也刚好没问题
-              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)            
+              self.danmuList = newList.reverse().slice(0, FENYE_COUNT)
             } else {
               // 不是刚展示，新条目数也小于 FENYE_COUNT
               self.danmuList = newList.reverse().concat(self.danmuList)
@@ -373,7 +371,7 @@
       height: 100%;
       background: $white;
       text-align: center;
-      
+
       img {
         display: inline-block;
         width: 7.0rem;
@@ -398,7 +396,7 @@
       height: 1.466667rem;
       line-height: 1.466667rem;
       background: $white;
-      
+
       span {
         color: $blue;
       }
@@ -445,7 +443,7 @@
     .list {
       padding-bottom: 2.1rem;
       -webkit-overflow-scrolling: touch;
-      
+
       .item {
         padding: 0 0.4rem;
         background: $white;

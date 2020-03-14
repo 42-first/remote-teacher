@@ -341,13 +341,6 @@ export default {
     });
 
     self.setSentry()
-
-    setTimeout(()=>{
-        require(['@/util/ga'], function(gaue){
-          window.gaue = gaue;
-          gaue.default.registerEl();
-        })
-    }, 500)
   },
   mounted () {
     let self = this
@@ -691,16 +684,14 @@ export default {
      */
     setSentry() {
       if(typeof Raven !== 'undefined') {
-        Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+        Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
         Raven.setUserContext({ userid: this.userid });
       } else {
         setTimeout(() => {
-          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userid });
         }, 1500)
       }
-
-      typeof ga === 'function' && ga('set', 'userId', this.userid);
     },
     /*
      * @method polyfill数组的 includes 方法
