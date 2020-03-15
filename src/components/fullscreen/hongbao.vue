@@ -216,7 +216,7 @@
       height: 110px;
 
       color: #FFE595;
-      background-image: url('http://sfe.ykt.io/o_1bhriotgh176ansqjom1kelmdfe.png');
+      background-image: url('https://qn-sfe.yuketang.cn/o_1bhriotgh176ansqjom1kelmdfe.png');
       background-size: 100% 100%;
     }
 

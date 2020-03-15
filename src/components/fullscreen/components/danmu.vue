@@ -8,12 +8,12 @@
 <template>
   <section class="danmu-control-cmp">
     <template v-if="!videoFullscreen">
-      <div class="danmu__control">
+      <!-- <div class="danmu__control">
         <i class="iconfont icon-danmukai1 f28" v-if="visibleDanmu" @click="handleVisibleDanmu"></i>
         <i class="iconfont icon-danmuguan1 f28" v-else @click="handleVisibleDanmu"></i>
         <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
-      </div>
-      <div class="danmu__send_box" v-show="showSend">
+      </div> -->
+      <div class="danmu__send_box" v-show="visibleDanmuSend">
         <div class="send__container">
           <div class="input__box">
             <input class="send__input" ref="danmuinput" type="text" v-model="danmuText" placeholder="发弹幕" autofocus>
@@ -24,7 +24,7 @@
 
           <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
         </div>
-        <i class="iconfont icon-guanbi1 send__close" @click="showSend = false"></i>
+        <i class="iconfont icon-guanbi1 send__close" @click="handleClosedSend"></i>
       </div>
     </template>
     <template v-else>
@@ -40,7 +40,7 @@
           </div>
           <span class="send__btn" :class="!danmuText ? 'disabled' : ''" @click="handleSend">发送</span>
         </div>
-        
+
       </div>
     </template>
 
@@ -48,11 +48,13 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'danmuControl',
   data(){
     return {
-      showSend: false,
+      // showSend: false,
       danmuText: ''
     }
   },
@@ -66,9 +68,13 @@ export default {
   components: {
   },
   computed: {
+    // 使用对象展开运算符将 getter 混入 computed 对象中
+    ...mapState([
+      'visibleDanmuSend',
+    ]),
   },
   watch: {
-    showSend(newVal){
+    visibleDanmuSend(newVal){
       if(newVal){
         this.$nextTick(() => {
           this.$refs.danmuinput.focus()
@@ -79,6 +85,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setVisibleDanmuSend'
+    ]),
+
     /*
     * @method 发送弹幕
     * @param
@@ -135,6 +145,14 @@ export default {
     handleVisibleDanmu() {
       // this.visibleDanmu = !this.visibleDanmu;
       this.$parent.setVisibleDanmu(!this.visibleDanmu);
+    },
+
+    /**
+     * @method 关闭弹幕发送
+     * @param
+     */
+    handleClosedSend(evt) {
+      this.setVisibleDanmuSend(false);
     }
   },
   created() {
@@ -156,6 +174,7 @@ export default {
   font-size: 28px;
 }
 .danmu-control-cmp {
+  z-index: 1;
   position: relative;
   .danmu__control {
     position: absolute;
@@ -272,7 +291,7 @@ export default {
       overflow: hidden;
       color: #fff;
       background: rgba(255,255,255,.3);
-    } 
+    }
     .input__box {
       flex: 1;
       height: 100%;

@@ -348,6 +348,11 @@ let liveMixin = {
           flvPlayer.load();
           flvPlayer.play().then(() => {
             this.playLoading = false;
+
+            // 快手上报 开始加载时间戳
+            if(this.qos && this.logLiveurl) {
+              this.qos.setLoadTimeOnMSE();
+            }
           });
 
           this.playLoading = true;

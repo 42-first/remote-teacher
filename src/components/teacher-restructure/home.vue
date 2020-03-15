@@ -51,7 +51,7 @@
 
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
-    <div id="templates" 
+    <div id="templates"
 			v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden"
 				:class="['templates', 'dontcallback']"
 			>
@@ -95,7 +95,7 @@
       </div>
 
 			<endshow v-show="
-				errType == 2 
+				errType == 2
 				&& toolbarIndex !== 2
 				&& isToastCtrlMaskHidden
 			"></endshow>
@@ -329,10 +329,6 @@
 
 		    self.setSentry()
 
-		    import('@/util/ga').then(gaue => {
-		    	window.gaue = gaue;
-		      gaue.default.registerEl();
-		    })
 				let goHomeFlag = localStorage.getItem('gohome')
 				if(goHomeFlag){
 					localStorage.removeItem('gohome')
@@ -669,16 +665,14 @@
 	     */
 	    setSentry() {
 	      if(typeof Raven !== 'undefined') {
-	        Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+	        Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	        Raven.setUserContext({ userid: this.userid });
 	      } else {
 	        setTimeout(() => {
-	          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+	          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	          Raven.setUserContext({ userid: this.userid });
 	        }, 1500)
 	      }
-
-	      typeof ga === 'function' && ga('set', 'userId', this.userid);
 	    },
 	    /*
 	     * @method polyfill数组的 includes 方法

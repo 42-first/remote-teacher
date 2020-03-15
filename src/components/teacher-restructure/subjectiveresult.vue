@@ -967,7 +967,6 @@
         })
 
         self.socket.send(str)
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 归零、结束定时器等

@@ -19,11 +19,11 @@
           <i class="iconfont icon-dakai f14"></i>
         </v-touch>
       </section>
-      
+
       <!-- 试卷库 -->
       <section class="list downer">
         <div class="title f17">{{ $t('myquiz') }}</div>
-        
+
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paper_id, paper.title, paper.total)">
           <div class="desc f18 ellipsis">
             {{paper.title}} <br>
@@ -33,7 +33,7 @@
         </v-touch>
       </section>
     </div>
-    
+
     <div class="rc-mask pub-modal" v-show="!isPubmodalHidden">
       <div class="pub-inner">
         <div class="title f20">{{ $t('publishquiz') }}</div>
@@ -117,10 +117,10 @@
       // socket通知收卷了，有可能是pc发的，也有可能是手机遥控器自己发的
       self.$on('quizfinished', function (msg) {
         self.$refs.RcMaskActivityPaperQuizresult.$emit('quizfinished', msg)
-        
+
         // 改单通后，执行 collectQuiz 不是是子组件上传的事件，
         // 而是这次从外面socket传进来的指令通知的
-        self.collectQuiz(msg.quizid) 
+        self.collectQuiz(msg.quizid)
       })
     },
     methods: {
@@ -132,8 +132,6 @@
        */
       closePaper (evt) {
         this.$emit('closePaper')
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 获取试卷数据
@@ -331,7 +329,7 @@
       height: 100%;
       background: $white;
       text-align: center;
-      
+
       img {
         display: inline-block;
         width: 5.88rem;
@@ -388,7 +386,7 @@
     .downer {
       padding-bottom: 1.466667rem;
     }
-    
+
     /* 发布试卷模态框 */
     .pub-modal {
       position: fixed;

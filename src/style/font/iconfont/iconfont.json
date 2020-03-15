@@ -6,6 +6,34 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "5721173",
+      "name": "16-双箭头向下",
+      "font_class": "-shuangjiantouxiangxia",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
+      "icon_id": "9200672",
+      "name": "20-更多操作",
+      "font_class": "-gengduocaozuo",
+      "unicode": "e748",
+      "unicode_decimal": 59208
+    },
+    {
+      "icon_id": "13327527",
+      "name": "60-微信",
+      "font_class": "-weixin",
+      "unicode": "e755",
+      "unicode_decimal": 59221
+    },
+    {
+      "icon_id": "9200771",
+      "name": "30-文件夹",
+      "font_class": "-wenjianjia",
+      "unicode": "e762",
+      "unicode_decimal": 59234
+    },
+    {
       "icon_id": "4920157",
       "name": "收藏激活",
       "font_class": "shoucangjihuo-",
