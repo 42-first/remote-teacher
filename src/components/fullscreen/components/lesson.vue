@@ -78,7 +78,10 @@ export default {
     // 使用对象展开运算符将 getter 混入 computed 对象中
     ...mapState([
       'lesson',
-      'lessonAllStatus',
+      'cards',
+      'slideIndex',
+      'msg',
+      'currSlide'
     ]),
   },
   components: {
@@ -97,27 +100,25 @@ export default {
   filters: {
   },
   watch: {
-    activeIndex(newVal, oldVal) {
-      if(this.problem && this.problem.isPublished && this.fullscreen) {
-        this.handleProblemInfo()
+    msg(newVal, oldVal) {
+      if(!newVal) {
+        return this;
       }
 
-      let slideEl = this.$el.querySelector(`.J_slide[data-index="${newVal}"]`);
-      setTimeout(()=>{
-        slideEl && slideEl.scrollIntoView({ behavior: "smooth", block: 'center' });
-      }, 0)
+      let index = newVal.index || this.cards.length - 1;
+      if(index) {
+        this.autoJump(index, newVal);
+      }
     },
     fullscreen(newVal, oldVal) {
       if(newVal) {
-        if(this.problem && this.problem.isPublished) {
-          this.handleProblemInfo();
-        }
       }
     }
   },
   methods: {
     ...mapActions([
-      'setSlide',
+      'setSlideIndex',
+      'setMsg',
     ]),
 
     /**
@@ -142,9 +143,6 @@ export default {
      */
     initEvent() {
       window.addEventListener('resize', this.resize);
-
-      // 监听放映状态
-      document.addEventListener('fullscreenchange', this.resize);
     },
 
     /**
@@ -177,6 +175,30 @@ export default {
     handleSwitchSlide(index) {
       this.setSlideIndex(index);
     },
+
+    /**
+     * @method 自动跳转逻辑
+     */
+    autoJump(index, slide) {
+      // 自动跳转策略
+      // 当前页是是放映页 PPT或者白板 新消息是PPT习题白板自动跳
+      let curr = this.currSlide;
+      // 当前页是放映也
+      if(curr && curr.index === this.slideIndex) {
+        // PPT或者白板
+        if([2, 12].includes(curr.type)) {
+          // 消息类型 PPT习题白板自动跳
+          if(slide && [2, 3, 12].includes(slide.type)) {
+            this.setSlideIndex(index);
+            this.setMsg(null);
+          }
+        }
+      }
+
+      // let pageName = this.$route.name;
+      // if(pageName === 'ppt-page') {
+      // }
+    }
 
   }
 };

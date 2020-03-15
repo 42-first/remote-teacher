@@ -212,11 +212,9 @@
           setTimeout(()=>{
             let slideEl = this.$el.querySelector(`.J_slide[data-index="${index}"]`);
             slideEl && slideEl.scrollIntoView();
-
-            // this.autoJump(index, newVal);
           }, 100)
 
-          this.autoJump(index, newVal);
+          // this.autoJump(index, newVal);
         }
       },
     },
