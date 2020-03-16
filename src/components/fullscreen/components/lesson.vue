@@ -143,6 +143,15 @@ export default {
      */
     initEvent() {
       window.addEventListener('resize', this.resize);
+
+      this.$el.focus();
+      this.$el.addEventListener('keydown', (e) => {
+        console.dir(e);
+
+        if(e.keyCode) {
+          this.mapKeyCode(e);
+        }
+      })
     },
 
     /**
@@ -198,6 +207,75 @@ export default {
       // let pageName = this.$route.name;
       // if(pageName === 'ppt-page') {
       // }
+    },
+
+    /**
+     * @method 键盘事件处理
+     * @params
+     */
+    mapKeyCode(evt) {
+      let keyCode = evt.keyCode;
+
+      switch (keyCode) {
+        // 上一个
+        case 33:
+        case 37:
+        case 38:
+          this.handlePrevSlide();
+
+          break;
+
+        // 下一个
+        case 34:
+        case 39:
+        case 40:
+          this.handleNextSlide();
+
+          break;
+      }
+    },
+
+    /**
+     * @method 上一个
+     * @params
+     */
+    handlePrevSlide() {
+      // 当前选中位置
+      let index = this.slideIndex;
+      let prev = this.cards.findIndex((item, i)=>{
+        return i > index && item.type !== 1;
+      })
+
+      if(~prev) {
+        this.setSlideIndex(prev);
+        setTimeout(()=>{
+          let slideEl = this.$el.querySelector(`.J_slide[data-index="${prev}"]`);
+          slideEl && slideEl.scrollIntoView();
+        }, 50)
+      }
+    },
+
+    /**
+     * @method 下一个
+     * @params
+     */
+    handleNextSlide() {
+      let index = this.slideIndex;
+      let cards = this.cards.slice(0, index);
+      let next = index - 1;
+      cards.forEach((item, i)=>{
+        if(item.type !== 1) {
+          next = i;
+        }
+      })
+
+      if(~next) {
+        this.setSlideIndex(next);
+        setTimeout(()=>{
+          let slideEl = this.$el.querySelector(`.J_slide[data-index="${next}"]`);
+          slideEl && slideEl.scrollIntoView();
+        }, 50)
+      }
     }
 
   }

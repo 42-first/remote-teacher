@@ -6,7 +6,7 @@
 
 <template>
   <!-- timeline -->
-  <section class="timeline__wrap" >
+  <section class="timeline__wrap" tabindex="1">
     <section class="timeline__item J_slide" :data-index="index" :class="{ 'active': slideIndex === index }" v-for="(item, index) in cards" :key="index" v-if="item" @click="handleView(item, index)" >
       <!-- 正在放映提示 v-if="item.type === 2 || item.type === 3 " -->
       <section class="box-between inlesson" v-if="currSlide && index === currSlide.index">
@@ -271,7 +271,8 @@
         // let pageName = this.$route.name;
         // if(pageName === 'ppt-page') {
         // }
-      }
+      },
+
     },
     created() {
     },

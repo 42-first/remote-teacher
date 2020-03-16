@@ -121,6 +121,7 @@ let actionsMixin = {
               }
             });
 
+            // todo:上一次和这次计算的结果一致不更新
             slideIndex && this.setSlideIndex(slideIndex);
           }, 1000)
         }
