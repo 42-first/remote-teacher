@@ -84,7 +84,8 @@
         'newToolBar',
         'addinversion',
         'errType',
-        'toolbarIndex'
+        'toolbarIndex',
+        'isCloneClass'
       ]),
       addinversionRight() {
         return Number(this.addinversion) || 0;
@@ -170,6 +171,16 @@
        * @param {object} evt event对象
        */
       callWakeup (evt) {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         let self = this
         let str = JSON.stringify({
           'op': 'callwakeup',
@@ -186,6 +197,16 @@
        * @event bindtap
        */
       setEndShow () {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         let self = this
         let str = JSON.stringify({
           'op': 'endshow',

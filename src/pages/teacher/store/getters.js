@@ -50,5 +50,6 @@ const getters = {
   postWordCloudOpen: state => state.postWordCloudOpen,
   danmuWordCloudOpen: state => state.danmuWordCloudOpen,
   toolbarIndex: state => state.toolbarIndex,
+  isCloneClass: state => state.isCloneClass,
 };
 export default getters

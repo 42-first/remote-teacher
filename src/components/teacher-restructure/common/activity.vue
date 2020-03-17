@@ -107,7 +107,8 @@
         'isDanmuOpen',
         'newtougao',
 				'notParticipantList',
-				'classroomid'
+        'classroomid',
+        'isCloneClass'
       ])
     },
     components: {
@@ -174,6 +175,15 @@
        * 新增随机点名入口
       */
       radomrollcall(e){
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         this.$refs.Toolbar.callWakeup(e)
       }
     }

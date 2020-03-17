@@ -114,7 +114,8 @@
         'current',
         'total',
         'socket',
-        'newdoubt'
+        'newdoubt',
+        'isCloneClass'
       ])
     },
     components: {
@@ -164,6 +165,14 @@
        */
       swichType (tab) {
         let self = this
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 
         self.tab = tab
         if (tab === 2) {
@@ -197,6 +206,14 @@
             self.$emit('goHome')
           }, 100)
           return;
+        }
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
         }
 
         let str = JSON.stringify({

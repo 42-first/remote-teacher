@@ -163,7 +163,8 @@
         'postingSubmissionid',
         'postingSubmissionSent',
         'postWordCloudOpen',
-        'addinversion'
+        'addinversion',
+        'isCloneClass'
       ])
     },
     components: {
@@ -432,6 +433,15 @@
       postSubmission (submissionid) {
         let self = this
 
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         // 因为学生能够删除投稿，修改投屏方式为ajax
         // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691
         postingTimer = setTimeout(() => {
@@ -622,6 +632,15 @@
        *
       */
       setWordCloudStatus(){
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         if(!this.dataList.length) return false;
         let self = this
         let str = ''
@@ -662,6 +681,14 @@
 
       // 进入发布投稿页面
       handlePublish(evt) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         this.$router.push({
           name: 'postsubmission',
           params: {

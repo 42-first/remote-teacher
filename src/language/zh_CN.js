@@ -537,7 +537,7 @@ let pages = {
   "silentmood": "老师即将静音...",
   "offsilentmood": "老师即将开启声音...",
 
-
+  "cloneTips": "当前为克隆班级，无法进行该操作",
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

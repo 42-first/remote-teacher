@@ -59,7 +59,9 @@ const store = new Vuex.Store({
     newToolBar: !1,
     addinversion: 0,                        // 插件协议版本号
     postWordCloudOpen: false,               // 投稿词云是否开启
-    danmuWordCloudOpen: false               // 弹幕词云是否开启
+    danmuWordCloudOpen: false,               // 弹幕词云是否开启
+
+    isCloneClass: false,                     // 是不是克隆班
 
   },
 
@@ -210,6 +212,9 @@ const store = new Vuex.Store({
     },
     set_toolbarIndex(state, index) {
       state.toolbarIndex = index
+    },
+    set_isCloneClass(state, status) {
+      state.isCloneClass = status
     }
   },
 
@@ -255,6 +260,9 @@ const store = new Vuex.Store({
     },
     set_errType({commit}, type) {
       commit('set_errType', type);
+    },
+    set_isCloneClass({commit}, status) {
+      commit('set_isCloneClass', status)
     }
   },
   getters
