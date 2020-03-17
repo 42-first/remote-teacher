@@ -334,7 +334,8 @@
         'current',
         'pptData',
         'postingSubjectiveid',
-        'postingSubjectiveSent'
+        'postingSubjectiveSent',
+        'isCloneClass'
       ])
 	  },
 	  components: {
@@ -862,8 +863,15 @@
        * @event bindtap
        */
       yanshi () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         self.isProblemtimeHidden = false
       },
       /**
@@ -872,8 +880,15 @@
        * @event bindtap
        */
       shouti () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
       },
       /**
@@ -882,8 +897,15 @@
        * @event bindtap
        */
       shoutiConfirm () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         let postData = {
           'op': 'problemfinished',
           'problemid': self.problemid
@@ -922,6 +944,14 @@
        * @params {string} id 将要投屏的主观题的id
        */
       postSubjective (id) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
 
         let str = JSON.stringify({
@@ -1103,6 +1133,14 @@
 			 * 发起互评,唤出互评面板
 			 */
 			faqihuping() {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 				let self = this
 				if(this.newTime > 0){
 					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
