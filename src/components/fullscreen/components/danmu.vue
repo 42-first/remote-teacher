@@ -16,7 +16,7 @@
       <div class="danmu__send_box" v-show="visibleDanmuSend">
         <div class="send__container">
           <div class="input__box">
-            <input class="send__input" ref="danmuinput" type="text" v-model="danmuText" placeholder="发弹幕" autofocus>
+            <input class="send__input" ref="danmuinput" type="text" v-model="danmuText" placeholder="发弹幕" autofocus @keyup="handleKeyup" >
             <span class="words" :class="danmuText.length > 50 ? 'warning' : ''">
               <i class="current">{{danmuText.length}}</i>/50
             </span>
@@ -33,7 +33,7 @@
         <i class="iconfont icon-danmuguan1" v-else @click="handleVisibleDanmu"></i>
         <div class="send__container">
           <div class="input__box" @click="handleFocus">
-            <input class="send__input" ref="danmuinput2" type="text" v-model="danmuText" placeholder="点击这里发射一条弹幕" autofocus>
+            <input class="send__input" ref="danmuinput2" type="text" v-model="danmuText" placeholder="点击这里发射一条弹幕" autofocus @keyup="handleKeyup" >
             <span class="words" :class="danmuText.length > 50 ? 'warning' : ''" v-if="danmuText">
               {{danmuText.length}}/50
             </span>
@@ -125,6 +125,20 @@ export default {
     handleFocus(){
       this.$refs.danmuinput2.focus()
     },
+
+    /**
+     * @method enter发送
+     * @param
+     */
+    handleKeyup(evt) {
+      // 回车自动提交
+      if (evt.keyCode === 13 && this.danmuText) {
+        setTimeout(()=>{
+          this.handleSend();
+        }, 150)
+      }
+    },
+
     showToast(success){
       if(this.videoFullscreen){
         this.$emit('showtips', success ? '发送成功' : '发送失败')
