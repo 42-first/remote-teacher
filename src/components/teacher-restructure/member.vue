@@ -18,9 +18,10 @@
 			</div>
 			<div class="search" @click="goSearch" v-if="studentCount <= 500"><i class="iconfont icon-sousuo f19"></i></div>
 		</div>
-		<div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
-			* <!-- 当有主观题未批改时，此排名可能不是最终排名 -->{{ $t('behavior.dyzgtwpgs') }}
-		</div>
+		<!-- 当有主观题未批改时，此排名可能不是最终排名 -->
+		<!-- <div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
+			* {{ $t('behavior.dyzgtwpgs') }}
+		</div> -->
 
     <section v-show="activeTab == 1" class="participantList list-wrapper"
 			infinite-scroll-immediate-check="false"
