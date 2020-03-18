@@ -462,14 +462,6 @@
 	     * @param {boolean} status true 已经投屏
 	     */
 	    toggleTouping (status) {
-				// 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
 	    	let self = this
 				self.isTouping = status
 	    	localStorage.setItem('posting-problem'+self.problemid, status)
@@ -661,6 +653,16 @@
 	     * @param {boolean} isTouping true 正在投屏，要取消投屏
 	     */
 	    handlePostProblemresult (isTouping) {
+
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
 	      let self = this
 				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
@@ -723,17 +725,16 @@
 				去发红包/查看红包列表
 			*/
 			sendCheckRed({type, name, problemid, redid}) {
-				// 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
-
 				// 发红包
 				if (!type) {
+					// 克隆班不能执行当前操作
+					if (!!this.isCloneClass) {
+						this.$toast({
+							message: this.$t('cloneTips'),
+							duration: 3e3
+						});
+						return
+					}
 					this.$router.push({name, query: { problemid }});
 				}
 				// 红包列表 

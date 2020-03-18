@@ -49,13 +49,13 @@ export default {
         self.socket.send(str)
       }else{
         // 克隆班不能执行当前操作
-        // if (!!this.isCloneClass) {
-        //   this.$toast({
-        //     message: this.$t('cloneTips'),
-        //     duration: 3e3
-        //   });
-        //   return
-        // }
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 
         // 发送题目
         self.$store.commit('set_initiativeCtrlMaskTpl', 'Problemtime')
