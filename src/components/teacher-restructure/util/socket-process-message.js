@@ -24,6 +24,12 @@ function remoteReset() {
 
 function socketProcessMessage(msg){
   let self = this
+
+  if (msg.op === 'hello') {
+    console.log(msg, '测试克隆班')
+    this.set_isCloneClass(msg.isClone !== 0)
+  }
+
   // 没有在上课则直接跳走
   if (msg.op === 'hello' && !msg.isAlive) {
     location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';

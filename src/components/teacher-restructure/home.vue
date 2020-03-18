@@ -271,7 +271,6 @@
 			endshow
 	  },
 	  created () {
-			this.set_isCloneClass(true)
 	    this.init()
 	  },
 	  beforeDestroy () {
