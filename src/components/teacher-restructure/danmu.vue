@@ -24,41 +24,37 @@
       <img v-show="isDanmuOpen" :src="nodanmuopenImg" alt="" style="transform: translateY(50%); width: 6.5rem;">
     </div>
     <!-- 上拉加载更多页，刷新返回并刷新只显示第一页 -->
-    <Loadmore
-       ref="Loadmore"
-       v-show="dataList.length"
-       :bottom-method="loadBottom"
-       :bottom-all-loaded="isAllLoaded"
-       :bottomPullText="$t('release')"
-       :bottomDropText="$t('shifang')"
-       :class="{'allLoaded': isAllLoaded}"
-       >
-      <section v-show="!isFetching && dataList.length" class="list">
-
-        <div class="item-with-gap" v-for="item in dataList" :key="item.id">
-          <div class="item">
-            <div class="detail">
-              <img :src="item.user_avatar_46" alt="">
-              <div class="danmu f18">{{item.message}}</div>
-            </div>
-            <div class="action-box">
-              <div class="time f15">{{item.time.substring(11)}}</div>
-              <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
-              <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
-            </div>
+    <section v-show="!isFetching && dataList.length" class="list"
+      infinite-scroll-immediate-check="false"
+			v-infinite-scroll="loadBottom"
+			infinite-scroll-disabled="isLoading"
+			infinite-scroll-distance="10"
+      ref="scrollTop"
+      >
+      <div class="item-with-gap" v-for="(item, index) in dataList" :key="index">
+        <div class="item">
+          <div class="detail">
+            <img :src="item.user_avatar_46" alt="">
+            <div class="danmu f18">{{item.message}}</div>
           </div>
-          <div class="gap"></div>
+          <div class="action-box">
+            <div class="time f15">{{item.time.substring(11)}}</div>
+            <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
+            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
+          </div>
         </div>
+        <div class="gap"></div>
+      </div>
+      <div v-show="isAllLoaded" class="nomore f15">
+        <div class="bgline"></div>
+        <div class="wenan">end</div>
+      </div>
+      <div v-show="!isAllLoaded" class="nomore f15">
+        <span>{{$t('toploading')}}</span>
+      </div>
 
-        <div v-show="isAllLoaded  && isContLonger" class="nomore f15">
-          <div class="bgline"></div>
-          <div class="wenan">end</div>
-        </div>
-
-      </section> 
-     </Loadmore>
-     <div class="gap"></div>
-
+    </section> 
+    <!-- <div class="gap"></div> -->
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     </div>
@@ -69,8 +65,9 @@
   import {mapGetters} from 'vuex'
   import request from '@/util/request'
   import API from '@/pages/teacher/config/api'
-
-  import Loadmore from 'mint-ui/lib/loadmore'
+  import Vue from "vue"
+  import { InfiniteScroll } from 'mint-ui';
+  Vue.use(InfiniteScroll);
 
   let FENYE_COUNT = 60
 
@@ -88,6 +85,7 @@
         isToastSwitch: false,       // 显示弹幕开启关闭提示
         nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
         nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
+        timer: null
       }
     },
     computed: {
@@ -100,9 +98,6 @@
         'addinversion'
       ])
     },
-    components: {
-      Loadmore
-    },
     created () {
       let self = this
 
@@ -111,31 +106,31 @@
       self.handlePubSub()
     },
     mounted () {
-      let self = this
-      let wh = window.innerHeight
+      // let self = this
+      // let wh = window.innerHeight
 
       // 如果搓到底了，不要到底，防止ios上搓露底
-      let boxDom = document.querySelector('.danmu-box')
-      boxDom.addEventListener('scroll', e => {
-        if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
-          boxDom.scrollTop = boxDom.scrollTop -2
-        }
-      })
+      // let boxDom = document.querySelector('.danmu-box')
+      // boxDom.addEventListener('scroll', e => {
+      //   if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
+      //     boxDom.scrollTop = boxDom.scrollTop -2
+      //   }
+      // })
 
     },
     beforeDestroy(){
       this.closeDanmumask()
       T_PUBSUB.unsubscribe('danmu-msg')
     },
-    watch: {
-      dataList: function() {
-        setTimeout(() => {
-          let sbh = document.querySelector('.danmu-box .list').offsetHeight
-          let wh = window.innerHeight
-          this.isContLonger = sbh >= wh
-        }, 100)
-      }
-    },
+    // watch: {
+    //   dataList: function() {
+    //     setTimeout(() => {
+    //       let sbh = document.querySelector('.danmu-box .list').offsetHeight
+    //       let wh = window.innerHeight
+    //       this.isContLonger = sbh >= wh
+    //     }, 100)
+    //   }
+    // },
     methods: {
       /**
        * 处理发布订阅
@@ -189,15 +184,13 @@
        */
       loadBottom () {
         let self = this
-        console.log('上拉松手了')
 
-        if (!self.dataList[0]) {
-          setTimeout(() => {
-            // this.$refs.Loadmore.onBottomLoaded()
-            self.onBottomLoaded()
-          }, 100)
-          return;
-        }
+        // if (!self.dataList[0]) {
+        //   setTimeout(() => {
+        //     self.onBottomLoaded()
+        //   }, 100)
+        //   return;
+        // }
 
         let tailNow = self.dataList[self.dataList.length-1].id
 
@@ -210,8 +203,7 @@
           }
           self.dataList = self.dataList.concat(jsonData.data.danmu_list)
 
-          // this.$refs.Loadmore.onBottomLoaded()
-          self.onBottomLoaded()
+          // self.onBottomLoaded()
         })
       },
       /**
@@ -301,8 +293,6 @@
           }, 2000)
 
           self.isFetching = false
-
-
           let isAllLoaded = self.isAllLoaded
           if (response_num === 0) {
             isAllLoaded = true
@@ -328,10 +318,11 @@
           self.setData({
             isAllLoaded
           })
-
           // 刷新的话回顶部
           setTimeout(() => {
-            self.$el.scrollTop = 0
+            // self.$refs.scrollTop = 0
+            const listDom = document.querySelector('.list');
+            listDom && (listDom.scrollTop = 0);
           }, 100)
         })
       },
@@ -424,14 +415,14 @@
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+  @import "~@/style/common_rem.scss";
   .danmu-box {
     position: relative;
     height: 100%;
-    padding-top: 1.5rem;
+    padding: px2rem(110px) 0 px2rem(140px) 0;
     background: #EDF2F6;
     color: #4A4A4A;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 
     .new-item-hint {
       position: fixed;
@@ -505,8 +496,8 @@
       top: 0;
       right: 0;
       padding: 0 0.4rem;
-      height: 1.466667rem;
-      line-height: 1.466667rem;
+      height: px2rem(110px);
+      line-height: px2rem(110px);
       background: $white;
       display: flex;
       justify-content: space-between;
@@ -568,7 +559,9 @@
     }
 
     .list {
-      padding-bottom: 2.1rem;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       
       .item {
@@ -619,7 +612,7 @@
 
       .nomore {
         position: relative;
-        height: 0.6rem;
+        height: px2rem(45px);
         margin: 0 0.6rem;
         text-align: center;
         color: $graybg;
@@ -647,14 +640,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 1.466667rem;
+      height: px2rem(110px);
       text-align: center;
 
       .btn {
         flex: 1;
         border-radius: 0;
-        height: 1.466667rem;
-        line-height: 1.466667rem;
+        height: px2rem(110px);
+        line-height: px2rem(110px);
         box-shadow: none;
       }
       .innerline {

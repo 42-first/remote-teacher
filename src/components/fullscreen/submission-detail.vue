@@ -93,9 +93,9 @@
         return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
       },
       setStyle(video) {
-        let width = 3.466;
+        let width = 200;
         let height = width/video.width * video.height;
-        let sCss = `width: ${width}rem; height: ${height}rem;`;
+        let sCss = `width: ${width}px; height: ${height}px;`;
 
         return sCss;
       }

@@ -121,6 +121,7 @@ let actionsMixin = {
               }
             });
 
+            // todo:上一次和这次计算的结果一致不更新
             slideIndex && this.setSlideIndex(slideIndex);
           }, 1000)
         }
@@ -984,6 +985,9 @@ let actionsMixin = {
         if(!hasEvent) {
           this.cards.push(data);
           this.setCards(this.cards)
+
+          // 新消息提醒
+          this.setMsg(data);
         }
       }
     },
