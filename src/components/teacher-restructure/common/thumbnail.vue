@@ -199,14 +199,6 @@
           }, 100)
           return;
         }
-        // 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
 
         let str = JSON.stringify({
           'op': 'navtoslide',
