@@ -27,7 +27,7 @@ function socketProcessMessage(msg){
 
   if (msg.op === 'hello') {
     console.log(msg, '测试克隆班')
-    this.set_isCloneClass(msg.isClone !== 0)
+    this.set_isCloneClass(!!msg.isClone)
   }
 
   // 没有在上课则直接跳走
