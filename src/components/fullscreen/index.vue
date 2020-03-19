@@ -244,7 +244,8 @@
         // playState
         liveStatusTips: '',
         // 显示更多操作
-        visibleMore: false
+        visibleMore: false,
+        currentTime: 0
       };
     },
     components: {
