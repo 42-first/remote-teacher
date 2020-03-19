@@ -7,8 +7,9 @@
  */
 
 import { isSupported } from '@/util/util'
-// import flvjs from 'flv.js'
-import flvjs from 'flv.js/dist/flv.min'
+// import flvjs from 'flv.js/dist/flv.min'
+// import '@/util/flv.min'
+import '@/util/flv.min'
 
 
 let liveMixin = {
@@ -45,7 +46,7 @@ let liveMixin = {
       }
 
       let audioEl = document.getElementById('player');
-      if (flvjs.isSupported() && audioEl) {
+      if (flvjs && flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveURL,
