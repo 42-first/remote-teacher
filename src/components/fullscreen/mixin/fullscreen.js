@@ -122,6 +122,10 @@ let fullscreenMixin = {
             this.playLoading = false;
             this.playState = 1;
             this.liveStatusTips = '';
+
+            this.liveType === 2 && setTimeout(()=>{
+              audioEl.currentTime = audioEl.currentTime;
+            }, 5000)
           });
 
           this.playLoading = true;
