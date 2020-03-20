@@ -484,16 +484,6 @@ let liveMixin = {
           this.qos = qos;
         }
       }
-
-      // 测试
-      // setTimeout(()=>{
-      //   if(this.qos) {
-      //     this.qos.sendSummary({
-      //       lessonid: this.lessonID,
-      //       uid: this.userID
-      //     });
-      //   }
-      // }, 10000)
     }
 
   }

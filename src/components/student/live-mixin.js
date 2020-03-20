@@ -7,7 +7,8 @@
  */
 
  import { isSupported } from '@/util/util'
- import flvjs from 'flv.js/dist/flv.min'
+ // import flvjs from 'flv.js/dist/flv.min'
+ import '@/util/flv.min'
 
 
 let liveMixin = {
@@ -41,15 +42,15 @@ let liveMixin = {
         this.flvPlayer = null;
       }
 
-      if (flvjs.isSupported() && liveEl) {
+      if (flvjs && flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          // enableStashBuffer: false,
-          // lazyLoad: false,
-          hasAudio: this.isMute ? false : true
+          hasAudio: this.isMute ? false : true,
+          // 调太小的话会在秒出画面后立刻卡顿 最小缓存 默认384
+          stashInitialSize: this.liveType === 2 ? 512 : 128
         });
 
         this.flvPlayer = flvPlayer;
@@ -198,6 +199,8 @@ let liveMixin = {
 
       // 卡主不能播放视频问题
       liveEl.addEventListener('timeupdate', (evt) => {
+        console.log('currentTime:', liveEl.currentTime)
+
         // 删除提示
         if(self.liveStatusTips) {
           self.liveStatusTips = '';
@@ -443,6 +446,7 @@ let liveMixin = {
 
             this.liveType === 2 && setTimeout(()=>{
               audioEl.currentTime = audioEl.currentTime;
+              audioEl.play();
             }, 5000)
           });
 
