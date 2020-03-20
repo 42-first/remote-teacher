@@ -232,6 +232,8 @@ let liveMixin = {
 
       //
       let handleEvent = (evt) => {
+         console.dir && console.dir(evt);
+
         if(this.liveType === 2) {
           this.liveStatusTips = this.$i18n && this.$i18n.t('isconnecting') || '直播连接中...';
         }
@@ -249,7 +251,7 @@ let liveMixin = {
       };
 
       liveEl.addEventListener('loadstart', handleEvent);
-      liveEl.addEventListener('seeking', handleEvent);
+      // liveEl.addEventListener('seeking', handleEvent);
       liveEl.addEventListener('waiting', handleEvent);
     },
 
