@@ -5,7 +5,7 @@
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length && !dirList.length" class="no-paper-box">
-      <img :src="nopaperImg" alt="">
+      <img :src="nopaperImg" />
       <div class="hint f12"><!-- 试试从雨课堂桌面端制作并上传试卷吧 -->{{ $t('ttmtobrc') }}</div>
     </div>
     <div v-show="!isFetching && paperList.length || quizList.length || dirList.length">
@@ -30,7 +30,7 @@
       <section class="list downer" v-show="activeTab === 0">
         <!-- <div class="title f17">{{ $t('myquiz') }}</div> -->
 
-        <router-link tag="div" :to="{name: 'paperfolder', params: {folderid: folder.id}}" class="folder f15" v-for="(folder, index) in dirList" :key="folder.id">
+        <router-link tag="div" :to="{name: 'paperfolder', params: {folderid: folder.id}}" class="folder f15" v-for="(folder, index) in dirList" :key="index">
           <div class="left ellipsis">
             <img class="foldericon" src="~images/teacher/folder.png" alt="">
             {{folder.title}}
@@ -93,6 +93,7 @@
       ...mapGetters([
         'lessonid',
         'socket',
+        'isCloneClass'
       ])
     },
     components: {
@@ -148,7 +149,7 @@
 
         let url = API.lesson_paper_quiz
 
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production' || 1) {
           url = API.lesson_paper_quiz + '?lesson_id=' + self.lessonid
         }
 
@@ -190,8 +191,15 @@
        * @param {number, number, string, number} index paperid papertitle papertotal
        */
       choosePaper (index, paperid, papertitle, papertotal) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         self.paperChosen.index = index
         self.paperChosen.id = paperid
         self.paperChosen.title = papertitle

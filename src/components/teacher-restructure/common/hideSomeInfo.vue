@@ -42,7 +42,8 @@
         'socket',
         'userid',
         'auth',
-        'addinversion'
+        'addinversion',
+        'isCloneClass'
       ])
     },
     data () {
@@ -67,6 +68,16 @@
     methods: {
       // 隐藏答案
 			showAnswerHandle() {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
 				this.showAnswer = !this.showAnswer
 	      let str = JSON.stringify({
 	        'op' : 'postproblemresult',
@@ -79,6 +90,16 @@
       },
       // 点击是否显示学生姓名
       hideNameHandle() {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         this.isHideName = !this.isHideName;
         // let str = JSON.stringify({
         //   "op": "protectprivacy",

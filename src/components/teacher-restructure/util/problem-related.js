@@ -29,14 +29,13 @@ export default {
      */
     problemHandler () {
       let self = this
-
+      
       let current = self.current - 1
       let pptData = self.pptData
       let problemid = pptData[current].Problem.ProblemID
 
       problemType = pptData[current].Problem.Type
       self.problemType = problemType
-
       if(self.isProblemPublished){
         // 查看答案
         // 查询当前题目的状态，在 WebSocket 回复的指令 probleminfo 中执行 showProblemResult 函数
@@ -49,6 +48,15 @@ export default {
 
         self.socket.send(str)
       }else{
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         // 发送题目
         self.$store.commit('set_initiativeCtrlMaskTpl', 'Problemtime')
         self.$store.commit('set_isInitiativeCtrlMaskHidden', false)
