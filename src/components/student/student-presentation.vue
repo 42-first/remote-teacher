@@ -44,7 +44,7 @@
     <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
       <section class="player__box" v-show="liveVisible">
-        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL"  ></video>
+        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
         <div class="live__status f14" v-show="liveStatusTips">
           {{liveStatusTips}}
         </div>
@@ -113,7 +113,7 @@
         <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
       </div>
       <!-- live-player作为音频直播的容器 -->
-      <audio id="player" class="live__container" autobuffer :src="liveURL">
+      <audio id="player" class="live__container" autobuffer>
       </audio>
       <!-- 直播提示 -->
       <div class="live__tip f14" v-if="showLiveTip">
