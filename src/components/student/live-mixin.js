@@ -69,6 +69,7 @@ let liveMixin = {
 
               setTimeout(()=>{
                 liveEl.currentTime = liveEl.currentTime;
+                liveEl.play();
               }, 5000)
             });
           }
@@ -209,7 +210,7 @@ let liveMixin = {
         // 每3分钟对齐一次 过程中视频画面卡主解决方式
         if(self.liveType === 2) {
           let currentTime = parseInt(liveEl.currentTime, 10);
-          if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
+          if(currentTime && currentTime%30 === 0 && self.currentTime < currentTime) {
             liveEl.currentTime = currentTime;
             self.currentTime = currentTime;
 
@@ -238,23 +239,30 @@ let liveMixin = {
          console.dir && console.dir(evt);
 
         if(this.liveType === 2) {
-          this.liveStatusTips = this.$i18n && this.$i18n.t('isconnecting') || '直播连接中...';
+          this.liveStatusTips = '直播连接中...';
         }
 
         // 五秒之内定时器没有执行证明 已经确实卡主了
         this.loadingTimer && clearTimeout(this.loadingTimer)
         this.loadingTimer = setTimeout(()=>{
+          // 没有播放不用重新拉流
+          if(!this.playState) {
+            return this;
+          }
+
           // 重新拉流
           if (this.flvPlayer) {
             this.createFlvPlayer();
           } else {
             this.Hls && this.supportHLS(this.Hls);
           }
+
+          console.log('重新拉流');
         }, 5000)
       };
 
       liveEl.addEventListener('loadstart', handleEvent);
-      // liveEl.addEventListener('seeking', handleEvent);
+      liveEl.addEventListener('seeking', handleEvent);
       liveEl.addEventListener('waiting', handleEvent);
     },
 
@@ -408,21 +416,21 @@ let liveMixin = {
           flvPlayer.detachMediaElement();
         } catch(e) {
         }
-
-        // 快手上报 用户关闭直播
-        if(this.qos && this.logLiveurl) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
-          });
-        }
       } else {
         audioEl.pause();
       }
 
       this.playState = 0;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报 用户关闭直播
+      if(this.qos && this.logLiveurl) {
+        this.qos.sendSummary({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.logLiveurl
+        });
+      }
     },
 
     /*

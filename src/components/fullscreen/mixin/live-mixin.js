@@ -180,7 +180,7 @@ let liveMixin = {
         // 每3分钟对齐一次 过程中视频画面卡主解决方式
         if(self.liveType === 2) {
           let currentTime = parseInt(liveEl.currentTime, 10);
-          if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
+          if(currentTime && currentTime%30 === 0 && self.currentTime < currentTime) {
             liveEl.currentTime = currentTime;
             self.currentTime = currentTime;
 
@@ -214,6 +214,11 @@ let liveMixin = {
 
         this.loadingTimer && clearTimeout(this.loadingTimer)
         this.loadingTimer = setTimeout(()=>{
+          // 没有播放不用重新拉流
+          if(!this.playState) {
+            return this;
+          }
+
           // 重新拉流
           if (this.flvPlayer) {
             this.createFlvPlayer();
