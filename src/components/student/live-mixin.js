@@ -207,10 +207,10 @@ let liveMixin = {
           self.liveStatusTips = '';
         }
 
-        // 每3分钟对齐一次 过程中视频画面卡主解决方式
+        // 每1分钟对齐一次 过程中视频画面卡主解决方式
         if(self.liveType === 2) {
           let currentTime = parseInt(liveEl.currentTime, 10);
-          if(currentTime && currentTime%30 === 0 && self.currentTime < currentTime) {
+          if(currentTime && currentTime%60 === 0 && self.currentTime < currentTime) {
             liveEl.currentTime = currentTime;
             self.currentTime = currentTime;
 
@@ -447,11 +447,6 @@ let liveMixin = {
           flvPlayer.play().then(() => {
             this.playLoading = false;
 
-            // 快手上报 开始加载时间戳
-            if(this.qos && this.logLiveurl) {
-              this.qos.setLoadTimeOnMSE();
-            }
-
             this.liveType === 2 && setTimeout(()=>{
               audioEl.currentTime = audioEl.currentTime;
               audioEl.play();
@@ -485,6 +480,11 @@ let liveMixin = {
 
       this.playState = 1;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报 开始加载时间戳
+      if(this.qos && this.logLiveurl) {
+        this.qos.setLoadTimeOnMSE();
+      }
     },
 
     /*
