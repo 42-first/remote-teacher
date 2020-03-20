@@ -7,8 +7,9 @@
  */
 
 import { isSupported } from '@/util/util'
-// import flvjs from 'flv.js'
 import flvjs from 'flv.js/dist/flv.min'
+// import '@/util/flv.min'
+// import '@/util/flv.min'
 
 
 let liveMixin = {
@@ -23,7 +24,7 @@ let liveMixin = {
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        self.liveType === 1 && self.supportHLS(Hls);
+        self.supportHLS(Hls);
       })
     },
 
@@ -32,6 +33,7 @@ let liveMixin = {
      *
      */
     supportFLV() {
+      let self = this;
       if(!this.liveURL) {
         return;
       }
@@ -45,7 +47,7 @@ let liveMixin = {
       }
 
       let audioEl = document.getElementById('player');
-      if (flvjs.isSupported() && audioEl) {
+      if (flvjs && flvjs.isSupported() && audioEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveURL,
@@ -64,8 +66,26 @@ let liveMixin = {
             flvPlayer.play().then(()=>{
               this.playState = 1;
               this.liveStatusTips = '';
+
+              setTimeout(()=>{
+                audioEl.currentTime = audioEl.currentTime;
+              }, 5000)
             });
             this.liveStatusTips = '连接中...';
+
+            // 卡主不能播放视频问题
+            audioEl.addEventListener('timeupdate', () => {
+              // console.log('进度', audioEl.currentTime);
+
+              // 每3分钟 对齐一次
+              let currentTime = parseInt(audioEl.currentTime, 10);
+              if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
+                audioEl.currentTime = currentTime;
+                self.currentTime = currentTime;
+
+                console.log('更新进度', self.currentTime);
+              }
+            })
 
             setTimeout(()=>{
               this.liveStatusTips = '';
@@ -74,9 +94,6 @@ let liveMixin = {
             this.playState = 0;
           }
         } catch(evt) {
-          // setTimeout(()=>{
-          //   this.supportFLV();
-          // }, 3000)
         }
 
         this.handleFLVError();
@@ -240,6 +257,10 @@ let liveMixin = {
             flvPlayer.load();
             flvPlayer.play().then(() => {
               this.playState = 1;
+
+              this.liveType === 2 && setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+              }, 5000)
             });
           }
         } catch(evt) {

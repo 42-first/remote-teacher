@@ -3,6 +3,7 @@ var path = require('path')
 // var proxyUrl = 'http://10.0.3.3:9000'
 var proxyUrl = 'https://g.yuketang.cn'
 
+
 function proxyConfig () {
   return {
     target: proxyUrl,
