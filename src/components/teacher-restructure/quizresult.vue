@@ -83,6 +83,7 @@
         'lessonid',
         'socket',
         'finishedQuizList',
+        'isCloneClass'
       ])
     },
     components: {
@@ -275,6 +276,14 @@
        * @event bindtap
        */
       collectQuiz () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
         let url = API.quiz_finish
 
@@ -304,8 +313,15 @@
        * @param {boolean} isTouping true 正在投屏，要取消投屏
        */
       handlePostQuizresult (isTouping) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         let op = !isTouping ? 'postquizresult' : 'closequizresult'
 
         let str = JSON.stringify({

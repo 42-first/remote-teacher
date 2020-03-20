@@ -29,7 +29,8 @@
 </template>
 
 <script>
-	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+  import {mapGetters} from 'vuex'
 
 	export default {
 	  name: 'Rolex',
@@ -55,6 +56,14 @@
 	     * @event bindtap
 	     */
 	    shouti () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 	      this.$emit('shouti')
       },
       	/**
@@ -69,6 +78,11 @@
     },
     components: {
       hideSomeInfo
+    },
+    computed: {
+      ...mapGetters([
+        'isCloneClass'
+      ])
     }
 	}
 </script>
