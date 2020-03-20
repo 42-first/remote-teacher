@@ -87,7 +87,7 @@ let liveMixin = {
         }, 0)
 
         // 心跳检测卡顿
-        this.checkTimeupdate();
+        // this.checkTimeupdate();
 
         return true;
       } else {
