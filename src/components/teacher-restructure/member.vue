@@ -235,7 +235,7 @@
 					this.partTotal = total;
 				} else {
 					this.notParticipantList = this.notParticipantList.concat(list);
-					this.signNoLoaded = list.length === 0 || this.participantList.length >= total;
+					this.signNoLoaded = list.length === 0 || this.notParticipantList.length >= total;
 					this.uuidNotSign = jsonData.uuid_code;
 					this.notPartTotal = total;
 				}
