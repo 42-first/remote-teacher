@@ -7,12 +7,12 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <div class="head-link-wrap">
-        <router-link tag="div" :to="{name: 'member'}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+        <router-link tag="div" :to="{name: 'member', query: {count: studentCount}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
           <div class="avatar-box">
-            <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item.profile.avatar_96 ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+            <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           </div>
           <span class="dqxs f14">
-            {{ $t('activeno', { activeno: participantList.length }) }}
+            {{ $t('activeno', { activeno: participant_count }) }}
             <i class="iconfont icon-dakai f14"></i>
           </span>
         </router-link>
@@ -94,6 +94,9 @@
     name: 'Activity',
     data () {
       return {
+        participantList: [],
+        participant_count: 0,
+        studentCount: 0
       }
     },
     computed: {
@@ -103,11 +106,11 @@
         'lessonid',
         'presentationid',
         'socket',
-        'participantList',
         'isDanmuOpen',
         'newtougao',
-				'notParticipantList',
         'classroomid',
+        'toolbarIndex',
+				'notParticipantList',
         'isCloneClass'
       ])
     },
@@ -116,13 +119,12 @@
     },
     created () {
       let self = this
-
       // 点击 课堂动态 按钮 父组件发送事件给本子组件，获取学生名单、投稿数等
-      self.$on('Activity', function () {
-        self.fetchParticipantList()
-      })
-    },
-    updated () {
+      // self.$on('Activity', function () {
+      //   self.fetchParticipantList()
+      // });
+      // 点击学生头像进入签到列表，返回的时候需要重新请求数据，干脆直接初始化的时候就请求
+      this.fetchParticipantList();
     },
     methods: {
       /**
@@ -131,16 +133,15 @@
        */
       fetchParticipantList () {
         let self = this
-
-        let url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid + '?sort_type=2'
-        }
-
+        let url = `${API.teaching_lesson_participant_count}/${self.lessonid}`;
         request.get(url)
           .then(jsonData => {
-            self.$store.commit('set_participantList', jsonData.data.students)
+            // self.$store.commit('set_participantList', jsonData.data.students)
+            const data = jsonData.data;
+            console.log(data)
+            this.participant_count = data.participant_count || 0;
+            this.participantList = data.avatars || [];
+            this.studentCount = data.students_count || 0
           })
       },
       /**
@@ -186,6 +187,10 @@
         }
         this.$refs.Toolbar.callWakeup(e)
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      console.log(to, from);
+      next();
     }
   }
 </script>
