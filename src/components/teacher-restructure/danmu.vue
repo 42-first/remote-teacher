@@ -95,7 +95,8 @@
         'isDanmuOpen',
         'postingDanmuid',
         'danmuWordCloudOpen',
-        'addinversion'
+        'addinversion',
+        'isCloneClass'
       ])
     },
     created () {
@@ -333,6 +334,14 @@
        */
       setDanmuStatus () {
         let self = this
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let op = self.isDanmuOpen ? 'turnoffdanmu' : 'turnondanmu'
         let desc = self.isDanmuOpen ? '关闭' : '开启'
         let str = JSON.stringify({
@@ -354,8 +363,15 @@
        * @param {number, string} danmuid message
        */
       postDanmu (danmuid, message) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         let str = JSON.stringify({
           'op': 'showdanmu',
           'lessonid': self.lessonid,
@@ -389,6 +405,15 @@
        * 
       */
       setWordCloudStatus(){
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         if(!this.dataList.length) return false;
         let self = this
         let str = ''

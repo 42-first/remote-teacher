@@ -66,7 +66,8 @@
         'userid',
         'auth',
         'addinversion',
-        'presentationid'
+        'presentationid',
+        'isCloneClass'
       ])
     },
     created () {
@@ -116,6 +117,16 @@
       },
       // 点击确定是否显示学生姓名
       hideNameHandle () {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         this.isHideName = !this.isHideName;
         axios.post('/pc/web_ppt_config',{
           "op": "set_config",
@@ -126,6 +137,14 @@
         })
       },
       showAnswerHandle() {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         this.showAnswer = !this.showAnswer
         axios.post('/pc/web_ppt_config', {
           "op": "set_config",

@@ -1,7 +1,7 @@
 <!--试题结果-主观题结果页面-->
 <template>
 	<div class="wai">
-    <div class="problem-root" v-scroll="onScroll">
+    <div class="problem-root" @scroll="onScroll">
       <slot name="ykt-msg"></slot>
       <!-- 教师遥控器引导查看答案、续时 -->
       <!-- <GuideDelay
@@ -334,7 +334,8 @@
         'current',
         'pptData',
         'postingSubjectiveid',
-        'postingSubjectiveSent'
+        'postingSubjectiveSent',
+        'isCloneClass'
       ])
 	  },
 	  components: {
@@ -693,8 +694,8 @@
 	     * @param {object, object} e event对象，position 当前对象滚动信息
 	     */
 	    onScroll (e, position) {
+        console.log(e, position, '测试scroll')
 	      let self = this
-
         // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
         // let scoreDom = document.querySelector('#scoreDom')
         // scoreDom.style.top = position.scrollTop + 'px'
@@ -862,8 +863,15 @@
        * @event bindtap
        */
       yanshi () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         self.isProblemtimeHidden = false
       },
       /**
@@ -872,8 +880,15 @@
        * @event bindtap
        */
       shouti () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
       },
       /**
@@ -882,8 +897,15 @@
        * @event bindtap
        */
       shoutiConfirm () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         let postData = {
           'op': 'problemfinished',
           'problemid': self.problemid
@@ -922,6 +944,14 @@
        * @params {string} id 将要投屏的主观题的id
        */
       postSubjective (id) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
 
         let str = JSON.stringify({
@@ -1103,6 +1133,14 @@
 			 * 发起互评,唤出互评面板
 			 */
 			faqihuping() {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 				let self = this
 				if(this.newTime > 0){
 					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'

@@ -932,10 +932,11 @@ let actionsMixin = {
         this.liveType = 0;
 
         // 快手上报
-        if(this.qos) {
+        if(this.qos && this.liveURL) {
           this.qos.sendSummary({
             lessonid: this.lessonID,
-            uid: this.userID
+            uid: this.userID,
+            liveurl: this.liveURL
           });
         }
       }, 3000)
@@ -1112,6 +1113,7 @@ let actionsMixin = {
             if(this.lastStatus !== 1 && this.lastStatus !== -3){
               this.needNew = true
             }
+
             this.liveStatusTips = ''
             if (this.liveType === 1) {
               // this.supportHLS(this.Hls)
@@ -1135,7 +1137,6 @@ let actionsMixin = {
             this.handleplay();
           }
 
-
           break
         case -1:
           this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
@@ -1153,10 +1154,6 @@ let actionsMixin = {
 
       this.isMute = voice == -1 ? true : false
       this.lastStatus = status
-      let  liveEl = document.querySelector('#player')
-      if(status !== 1){
-        liveEl && (this.currentTime = liveEl.currentTime)
-      }
 
       setTimeout(() => {
         self.liveStatusTips = ''

@@ -129,7 +129,7 @@
 <script>
 	/* eslint-disable no-undef, no-new */
 
-	import {mapGetters} from 'vuex'
+	import { mapGetters, mapActions} from 'vuex'
 
 	import request from '@/util/request'
 	import {configWX} from '@/util/wx-util'
@@ -251,7 +251,9 @@
         'msgMaskTpl',
         'toastCtrlMaskTpl',
 				'initiativeCtrlMaskTpl',
-				'toolbarIndex'
+				'toolbarIndex',
+
+				'isCloneClass'
 			])
 	  },
 	  components: {
@@ -289,6 +291,9 @@
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
+			...mapActions([
+				'set_isCloneClass'
+			]),
 			showNote(text) {
 				this.noteText = text
 			},
@@ -372,7 +377,7 @@
 	     * @param {string, number} op 'next' || 'prev'  to: 缩略图时的页码， undefined时则不发送
 	     */
 	    sendSlideOp (op, to) {
-	      let self = this
+				let self = this
 	      let str = JSON.stringify({
 	        'op': op,
 	        'lessonid': self.lessonid,
@@ -380,7 +385,6 @@
 	        'msgid': 1234,
 	        'to': to
 	      })
-
 	      self.socket.send(str)
 	    },
 	    /**
