@@ -1085,7 +1085,6 @@ var actionsMixin = {
             this.handleplay();
           }
 
-
           break
         case -1:
           this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
@@ -1100,18 +1099,17 @@ var actionsMixin = {
           this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
           break
       }
-      // if(this.voice !== voice){
-      //   this.liveStatusTips = voice == 1 ? this.$i18n.t('offsilentmood') : this.$i18n.t('silentmood')
-      // }
-      // this.voice = voice
+
       this.isMute = voice == -1 ? true : false
       this.lastStatus = status
-      let  liveEl = document.querySelector('#player')
-      if(status !== 1){
+
+      let liveEl = document.querySelector('#player')
+      if(status !== 1) {
         liveEl && (this.currentTime = liveEl.currentTime)
       }
+
       setTimeout(() => {
-        self.liveStatusTips = ''
+        this.liveStatusTips = ''
       }, 5000)
     }
 

@@ -81,7 +81,7 @@ let liveMixin = {
         // 初始化快手SDK 目前支持视频
         setTimeout(()=>{
           this.initKwai(this.liveurl.httpflv);
-        }, 3000)
+        }, 0)
 
         return true;
       } else {
@@ -129,15 +129,16 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+
+        // 主要是断流后新推的HLS流要等到十几秒之后才能有流增加这个机制
         if (this.needNew) {
           this.needNew = false
-          console.log('needNew');
-          console.log(this.currentTime);
-          console.log(liveEl.currentTime);
+
           setTimeout(() => {
             this.loadNewUrl()
-          }, 1000 * 30)
+          }, 1000 * 20)
         }
+
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -167,7 +168,7 @@ let liveMixin = {
       // 初始化快手SDK 目前支持视频
       setTimeout(()=>{
         this.initKwai(this.liveURL);
-      }, 5000)
+      }, 0)
     },
 
     /*
@@ -471,21 +472,24 @@ let liveMixin = {
       }
     },
 
+    /*
+     * @method 断流后
+     * @params
+     */
     loadNewUrl(){
       let liveEl = document.querySelector('#player')
       this.loadNewUrlTimer && clearTimeout(this.loadNewUrlTimer)
       this.loadNewUrlTimer = setTimeout(() => {
-        console.log('ssssssss', liveEl.currentTime , this.currentTime);
         if(liveEl.currentTime - this.currentTime < 1){
           liveEl.src = this.liveURL
-          console.log('我重新加载啦', liveEl.currentTime , this.currentTime);
-          this.loadNewUrl()
+          // this.loadNewUrl()
         }
       }, 1000 * 10)
+
       liveEl.addEventListener('timeupdate', () => {
-        if(liveEl.currentTime !== 0){
+        if(liveEl.currentTime !== 0) {
           clearTimeout(this.loadNewUrlTimer)
-        }else {
+        } else {
           this.loadNewUrl()
         }
       })

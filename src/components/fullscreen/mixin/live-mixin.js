@@ -71,22 +71,8 @@ let liveMixin = {
                 audioEl.currentTime = audioEl.currentTime;
               }, 5000)
             });
+
             this.liveStatusTips = '连接中...';
-
-            // 卡主不能播放视频问题
-            audioEl.addEventListener('timeupdate', () => {
-              // console.log('进度', audioEl.currentTime);
-
-              // 每3分钟 对齐一次
-              let currentTime = parseInt(audioEl.currentTime, 10);
-              if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
-                audioEl.currentTime = currentTime;
-                self.currentTime = currentTime;
-
-                console.log('更新进度', self.currentTime);
-              }
-            })
-
             setTimeout(()=>{
               this.liveStatusTips = '';
             }, 5000)
@@ -97,17 +83,19 @@ let liveMixin = {
         }
 
         this.handleFLVError();
+        // 心跳检测卡顿
+        this.checkTimeupdate();
 
         // 初始化快手SDK
         setTimeout(()=>{
-          // this.initKwai(this.liveURL);
-        }, 3000)
+          this.initKwai(this.liveURL);
+        }, 0)
       } else {
         this.loadHLS();
       }
     },
 
-     /*
+    /*
     * @method 直播音频兼容hls
     * @params
     */
@@ -131,6 +119,7 @@ let liveMixin = {
         });
 
         this.handleerror(hls);
+        this.hls = hls;
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -159,6 +148,79 @@ let liveMixin = {
 
         console.log('loadedmetadata hls supportHLS');
       }
+
+      // 心跳检测卡顿
+      this.checkTimeupdate();
+    },
+
+    /**
+     * @method 检测是否出现卡顿
+     * @params
+     */
+    checkTimeupdate() {
+      let self = this;
+      let liveEl = document.getElementById('player');
+
+      // 防止重复监听
+      if(this.timeupdateTimer) {
+        return this;
+      }
+
+      // 卡主不能播放视频问题
+      liveEl.addEventListener('timeupdate', (evt) => {
+        // 删除提示
+        if(self.liveStatusTips) {
+          self.liveStatusTips = '';
+        }
+
+        // 每3分钟对齐一次 过程中视频画面卡主解决方式
+        if(self.liveType === 2) {
+          let currentTime = parseInt(liveEl.currentTime, 10);
+          if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
+            liveEl.currentTime = currentTime;
+            self.currentTime = currentTime;
+
+            console.log('更新进度', self.currentTime);
+          }
+        }
+
+        // 销毁重新拉流定时
+        if(self.loadingTimer) {
+          clearTimeout(self.loadingTimer);
+          self.loadingTimer = null;
+        }
+
+        // 检测卡顿定时
+        self.timeupdateTimer && clearTimeout(self.timeupdateTimer);
+        self.timeupdateTimer = setTimeout(()=>{
+          // 正常播放状态下 能走到这里就是卡了
+          if(self.playState === 1) {
+            liveEl.currentTime = liveEl.currentTime - 0.1;
+          }
+        }, 3000)
+      })
+
+      //
+      let handleEvent = (evt) => {
+        // 五秒之内定时器没有执行证明 已经确实卡主了
+        if(this.liveType === 2) {
+          this.liveStatusTips = '连接中...';
+        }
+
+        this.loadingTimer && clearTimeout(this.loadingTimer)
+        this.loadingTimer = setTimeout(()=>{
+          // 重新拉流
+          if (this.flvPlayer) {
+            this.createFlvPlayer();
+          } else {
+            this.Hls && this.supportHLS(this.Hls, true);
+          }
+        }, 5000)
+      };
+
+      liveEl.addEventListener('loadstart', handleEvent);
+      liveEl.addEventListener('seeking', handleEvent);
+      liveEl.addEventListener('waiting', handleEvent);
     },
 
     /*
@@ -296,6 +358,15 @@ let liveMixin = {
 
       this.playState = 0;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报
+      if(this.qos && this.liveURL) {
+        this.qos.sendSummary({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.liveURL
+        });
+      }
     },
 
     /*
