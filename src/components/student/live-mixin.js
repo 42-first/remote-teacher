@@ -7,7 +7,8 @@
  */
 
  import { isSupported } from '@/util/util'
- import flvjs from 'flv.js/dist/flv.min'
+ // import flvjs from 'flv.js/dist/flv.min'
+ import '@/util/flv.min'
 
 
 let liveMixin = {
@@ -41,15 +42,15 @@ let liveMixin = {
         this.flvPlayer = null;
       }
 
-      if (flvjs.isSupported() && liveEl) {
+      if (flvjs && flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          // enableStashBuffer: false,
-          // lazyLoad: false,
-          hasAudio: this.isMute ? false : true
+          hasAudio: this.isMute ? false : true,
+          // 调太小的话会在秒出画面后立刻卡顿 最小缓存 默认384
+          stashInitialSize: this.liveType === 2 ? 512 : 128
         });
 
         this.flvPlayer = flvPlayer;
@@ -64,11 +65,13 @@ let liveMixin = {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
-              this.liveStatusTips = ''
+              this.liveStatusTips = '';
+
+              setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+                liveEl.play();
+              }, 5000)
             });
-          } else if(this.isWeb && this.liveType === 1) {
-            // flvPlayer.attachMediaElement(liveEl);
-            // flvPlayer.load();
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -81,7 +84,10 @@ let liveMixin = {
         // 初始化快手SDK 目前支持视频
         setTimeout(()=>{
           this.initKwai(this.liveurl.httpflv);
-        }, 3000)
+        }, 0)
+
+        // 心跳检测卡顿
+        this.checkTimeupdate();
 
         return true;
       } else {
@@ -104,6 +110,10 @@ let liveMixin = {
     supportHLS(Hls) {
       let liveEl = document.getElementById('player');
 
+      if(this.hls) {
+        this.hls.destroy();
+      }
+
       if(Hls.isSupported()) {
         let config = {
           maxBufferLength: 6,
@@ -121,6 +131,7 @@ let liveMixin = {
         });
 
         this.handleerror(hls);
+        this.hls = hls;
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -129,15 +140,16 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+
+        // 主要是断流后新推的HLS流要等到十几秒之后才能有流增加这个机制
         if (this.needNew) {
           this.needNew = false
-          console.log('needNew');
-          console.log(this.currentTime);
-          console.log(liveEl.currentTime);
+
           setTimeout(() => {
             this.loadNewUrl()
-          }, 1000 * 30)
+          }, 1000 * 20)
         }
+
         liveEl.addEventListener('loadedmetadata',function() {
           liveEl.play();
         });
@@ -167,7 +179,91 @@ let liveMixin = {
       // 初始化快手SDK 目前支持视频
       setTimeout(()=>{
         this.initKwai(this.liveURL);
-      }, 5000)
+      }, 0)
+
+      // 心跳检测卡顿
+      this.checkTimeupdate();
+    },
+
+    /**
+     * @method 检测是否出现卡顿
+     * @params
+     */
+    checkTimeupdate() {
+      let self = this;
+      let liveEl = document.getElementById('player');
+
+      // 防止重复监听
+      if(this.timeupdateTimer) {
+        return this;
+      }
+
+      // 卡主不能播放视频问题
+      liveEl.addEventListener('timeupdate', (evt) => {
+        console.log('currentTime:', liveEl.currentTime)
+
+        // 删除提示
+        if(self.liveStatusTips) {
+          self.liveStatusTips = '';
+        }
+
+        // 每1分钟对齐一次 过程中视频画面卡主解决方式
+        if(self.liveType === 2) {
+          let currentTime = parseInt(liveEl.currentTime, 10);
+          if(currentTime && currentTime%60 === 0 && self.currentTime < currentTime) {
+            liveEl.currentTime = currentTime;
+            self.currentTime = currentTime;
+
+            console.log('更新进度', self.currentTime);
+          }
+        }
+
+        // 销毁重新拉流定时
+        if(self.loadingTimer) {
+          clearTimeout(self.loadingTimer);
+          self.loadingTimer = null;
+        }
+
+        // 检测卡顿定时
+        self.timeupdateTimer && clearTimeout(self.timeupdateTimer);
+        self.timeupdateTimer = setTimeout(()=>{
+          // 正常播放状态下 能走到这里就是卡了
+          if(self.playState === 1) {
+            liveEl.currentTime = liveEl.currentTime - 0.1;
+          }
+        }, 3000)
+      })
+
+      //
+      let handleEvent = (evt) => {
+         console.dir && console.dir(evt);
+
+        if(this.liveType === 2) {
+          this.liveStatusTips = '直播连接中...';
+        }
+
+        // 五秒之内定时器没有执行证明 已经确实卡主了
+        this.loadingTimer && clearTimeout(this.loadingTimer)
+        this.loadingTimer = setTimeout(()=>{
+          // 没有播放不用重新拉流
+          if(!this.playState) {
+            return this;
+          }
+
+          // 重新拉流
+          if (this.flvPlayer) {
+            this.createFlvPlayer();
+          } else {
+            this.Hls && this.supportHLS(this.Hls);
+          }
+
+          console.log('重新拉流');
+        }, 5000)
+      };
+
+      liveEl.addEventListener('loadstart', handleEvent);
+      liveEl.addEventListener('seeking', handleEvent);
+      liveEl.addEventListener('waiting', handleEvent);
     },
 
     /*
@@ -230,8 +326,6 @@ let liveMixin = {
 
         if (errorType) {
           setTimeout(()=>{
-            this.flvPlayer.unload();
-            this.flvPlayer.detachMediaElement();
             this.createFlvPlayer();
           }, 3500)
 
@@ -285,7 +379,11 @@ let liveMixin = {
           if(this.liveVisible || this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.liveType === 2 && setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+              }, 5000)
+            });
           }
         } catch(evt) {
         }
@@ -318,21 +416,21 @@ let liveMixin = {
           flvPlayer.detachMediaElement();
         } catch(e) {
         }
-
-        // 快手上报 用户关闭直播
-        if(this.qos && this.logLiveurl) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
-          });
-        }
       } else {
         audioEl.pause();
       }
 
       this.playState = 0;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报 用户关闭直播
+      if(this.qos && this.logLiveurl) {
+        this.qos.sendSummary({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.logLiveurl
+        });
+      }
     },
 
     /*
@@ -349,10 +447,10 @@ let liveMixin = {
           flvPlayer.play().then(() => {
             this.playLoading = false;
 
-            // 快手上报 开始加载时间戳
-            if(this.qos && this.logLiveurl) {
-              this.qos.setLoadTimeOnMSE();
-            }
+            this.liveType === 2 && setTimeout(()=>{
+              audioEl.currentTime = audioEl.currentTime;
+              audioEl.play();
+            }, 5000)
           });
 
           this.playLoading = true;
@@ -382,6 +480,11 @@ let liveMixin = {
 
       this.playState = 1;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报 开始加载时间戳
+      if(this.qos && this.logLiveurl) {
+        this.qos.setLoadTimeOnMSE();
+      }
     },
 
     /*
@@ -471,21 +574,24 @@ let liveMixin = {
       }
     },
 
+    /*
+     * @method 断流后
+     * @params
+     */
     loadNewUrl(){
       let liveEl = document.querySelector('#player')
       this.loadNewUrlTimer && clearTimeout(this.loadNewUrlTimer)
       this.loadNewUrlTimer = setTimeout(() => {
-        console.log('ssssssss', liveEl.currentTime , this.currentTime);
         if(liveEl.currentTime - this.currentTime < 1){
           liveEl.src = this.liveURL
-          console.log('我重新加载啦', liveEl.currentTime , this.currentTime);
-          this.loadNewUrl()
+          // this.loadNewUrl()
         }
       }, 1000 * 10)
+
       liveEl.addEventListener('timeupdate', () => {
-        if(liveEl.currentTime !== 0){
+        if(liveEl.currentTime !== 0) {
           clearTimeout(this.loadNewUrlTimer)
-        }else {
+        } else {
           this.loadNewUrl()
         }
       })

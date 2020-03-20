@@ -103,6 +103,15 @@ let fullscreenMixin = {
 
       this.playState = 0;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报
+      if(this.qos && this.liveURL) {
+        this.qos.sendSummary({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.liveURL
+        });
+      }
     },
 
     /*
