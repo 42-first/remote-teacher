@@ -109,7 +109,7 @@
         'isDanmuOpen',
         'newtougao',
         'classroomid',
-        'toolbarIndex'
+        'toolbarIndex',
 				'notParticipantList',
         'isCloneClass'
       ])
