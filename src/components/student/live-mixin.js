@@ -64,11 +64,12 @@ let liveMixin = {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
-              this.liveStatusTips = ''
+              this.liveStatusTips = '';
+
+              setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+              }, 5000)
             });
-          } else if(this.isWeb && this.liveType === 1) {
-            // flvPlayer.attachMediaElement(liveEl);
-            // flvPlayer.load();
           }
         } catch(evt) {
           setTimeout(()=>{
@@ -82,6 +83,9 @@ let liveMixin = {
         setTimeout(()=>{
           this.initKwai(this.liveurl.httpflv);
         }, 0)
+
+        // 心跳检测卡顿
+        this.checkTimeupdate();
 
         return true;
       } else {
@@ -104,6 +108,10 @@ let liveMixin = {
     supportHLS(Hls) {
       let liveEl = document.getElementById('player');
 
+      if(this.hls) {
+        this.hls.destroy();
+      }
+
       if(Hls.isSupported()) {
         let config = {
           maxBufferLength: 6,
@@ -121,6 +129,7 @@ let liveMixin = {
         });
 
         this.handleerror(hls);
+        this.hls = hls;
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -169,6 +178,79 @@ let liveMixin = {
       setTimeout(()=>{
         this.initKwai(this.liveURL);
       }, 0)
+
+      // 心跳检测卡顿
+      this.checkTimeupdate();
+    },
+
+    /**
+     * @method 检测是否出现卡顿
+     * @params
+     */
+    checkTimeupdate() {
+      let self = this;
+      let liveEl = document.getElementById('player');
+
+      // 防止重复监听
+      if(this.timeupdateTimer) {
+        return this;
+      }
+
+      // 卡主不能播放视频问题
+      liveEl.addEventListener('timeupdate', (evt) => {
+        // 删除提示
+        if(self.liveStatusTips) {
+          self.liveStatusTips = '';
+        }
+
+        // 每3分钟对齐一次 过程中视频画面卡主解决方式
+        if(self.liveType === 2) {
+          let currentTime = parseInt(liveEl.currentTime, 10);
+          if(currentTime && currentTime%180 === 0 && self.currentTime < currentTime) {
+            liveEl.currentTime = currentTime;
+            self.currentTime = currentTime;
+
+            console.log('更新进度', self.currentTime);
+          }
+        }
+
+        // 销毁重新拉流定时
+        if(self.loadingTimer) {
+          clearTimeout(self.loadingTimer);
+          self.loadingTimer = null;
+        }
+
+        // 检测卡顿定时
+        self.timeupdateTimer && clearTimeout(self.timeupdateTimer);
+        self.timeupdateTimer = setTimeout(()=>{
+          // 正常播放状态下 能走到这里就是卡了
+          if(self.playState === 1) {
+            liveEl.currentTime = liveEl.currentTime - 0.1;
+          }
+        }, 3000)
+      })
+
+      //
+      let handleEvent = (evt) => {
+        if(this.liveType === 2) {
+          this.liveStatusTips = this.$i18n && this.$i18n.t('isconnecting') || '直播连接中...';
+        }
+
+        // 五秒之内定时器没有执行证明 已经确实卡主了
+        this.loadingTimer && clearTimeout(this.loadingTimer)
+        this.loadingTimer = setTimeout(()=>{
+          // 重新拉流
+          if (this.flvPlayer) {
+            this.createFlvPlayer();
+          } else {
+            this.Hls && this.supportHLS(this.Hls);
+          }
+        }, 5000)
+      };
+
+      liveEl.addEventListener('loadstart', handleEvent);
+      liveEl.addEventListener('seeking', handleEvent);
+      liveEl.addEventListener('waiting', handleEvent);
     },
 
     /*
@@ -231,8 +313,6 @@ let liveMixin = {
 
         if (errorType) {
           setTimeout(()=>{
-            this.flvPlayer.unload();
-            this.flvPlayer.detachMediaElement();
             this.createFlvPlayer();
           }, 3500)
 
@@ -286,7 +366,11 @@ let liveMixin = {
           if(this.liveVisible || this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
-            flvPlayer.play();
+            flvPlayer.play().then(() => {
+              this.liveType === 2 && setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+              }, 5000)
+            });
           }
         } catch(evt) {
         }
@@ -354,6 +438,10 @@ let liveMixin = {
             if(this.qos && this.logLiveurl) {
               this.qos.setLoadTimeOnMSE();
             }
+
+            this.liveType === 2 && setTimeout(()=>{
+              audioEl.currentTime = audioEl.currentTime;
+            }, 5000)
           });
 
           this.playLoading = true;

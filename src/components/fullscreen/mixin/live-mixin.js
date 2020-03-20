@@ -108,6 +108,10 @@ let liveMixin = {
         return this;
       }
 
+      if(this.hls) {
+        this.hls.destroy();
+      }
+
       if(Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(this.liveurl.hls);
@@ -213,7 +217,7 @@ let liveMixin = {
           if (this.flvPlayer) {
             this.createFlvPlayer();
           } else {
-            this.Hls && this.supportHLS(this.Hls, true);
+            this.Hls && this.supportHLS(this.Hls);
           }
         }, 5000)
       };
