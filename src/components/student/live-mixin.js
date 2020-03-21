@@ -265,7 +265,7 @@ let liveMixin = {
           }
 
           console.log('重新拉流');
-        }, 5000)
+        }, 15000)
       };
 
       // liveEl.addEventListener('loadstart', handleEvent);
