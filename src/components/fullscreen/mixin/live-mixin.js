@@ -225,7 +225,7 @@ let liveMixin = {
           } else {
             this.Hls && this.supportHLS(this.Hls);
           }
-        }, 5000)
+        }, 15000)
       };
 
       // liveEl.addEventListener('loadstart', handleEvent);
