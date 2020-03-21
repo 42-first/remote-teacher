@@ -89,7 +89,7 @@ let liveMixin = {
         }, 0)
 
         // 心跳检测卡顿
-        // this.checkTimeupdate();
+        this.checkTimeupdate();
 
         return true;
       } else {
@@ -189,7 +189,7 @@ let liveMixin = {
       }, 0)
 
       // 心跳检测卡顿
-      // this.checkTimeupdate();
+      this.checkTimeupdate();
     },
 
     /**
@@ -243,10 +243,10 @@ let liveMixin = {
 
       //
       let handleEvent = (evt) => {
-         console.dir && console.dir(evt);
+        console.dir && console.dir(evt);
 
         if(this.liveType === 2) {
-          this.liveStatusTips = '直播连接中...';
+          // this.liveStatusTips = '直播连接中...';
         }
 
         // 五秒之内定时器没有执行证明 已经确实卡主了
@@ -268,9 +268,42 @@ let liveMixin = {
         }, 5000)
       };
 
-      liveEl.addEventListener('loadstart', handleEvent);
-      liveEl.addEventListener('seeking', handleEvent);
+      // liveEl.addEventListener('loadstart', handleEvent);
+      // liveEl.addEventListener('seeking', handleEvent);
       liveEl.addEventListener('waiting', handleEvent);
+
+      let stalledEvent = (evt) => {
+         if(!this.stalledCount) {
+           this.stalledCount = 1;
+         } else {
+           this.stalledCount += 1;
+         }
+
+        if(this.liveType === 2) {
+          this.liveStatusTips = '直播连接中...';
+
+          // 卡顿超过三次就切换hls
+          if(this.stalledCount > 2) {
+            let flvPlayer = this.flvPlayer;
+            if(flvPlayer) {
+              flvPlayer.unload();
+              flvPlayer.detachMediaElement();
+              flvPlayer.destroy();
+              this.flvPlayer = null;
+
+              if(this.Hls) {
+                this.supportHLS(this.Hls);
+              } else {
+                this.loadHLS(true);
+              }
+
+              console.log('切换hls 重新拉流');
+            }
+          }
+        }
+      };
+
+      liveEl.addEventListener('stalled', stalledEvent);
     },
 
     /*
@@ -557,23 +590,9 @@ let liveMixin = {
       this.liveVisible = visible;
 
       if(visible) {
-        // 开始拉流
-        // if(flvPlayer) {
-        //   try {
-        //     flvPlayer.attachMediaElement(liveEl);
-        //     flvPlayer.load();
-        //     flvPlayer.play();
-        //   } catch(e) {
-        //   }
-        // }
-
         this.handleplay();
       } else {
         this.handlestop();
-
-        // 停止拉流
-        // flvPlayer && flvPlayer.unload();
-        // flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
@@ -617,16 +636,6 @@ let liveMixin = {
           this.qos = qos;
         }
       }
-
-      // 测试
-      // setTimeout(()=>{
-      //   if(this.qos) {
-      //     this.qos.sendSummary({
-      //       lessonid: this.lessonID,
-      //       uid: this.userID
-      //     });
-      //   }
-      // }, 10000)
     }
   }
 }
