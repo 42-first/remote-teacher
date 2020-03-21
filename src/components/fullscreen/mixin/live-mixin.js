@@ -177,10 +177,10 @@ let liveMixin = {
           self.liveStatusTips = '';
         }
 
-        // 每3分钟对齐一次 过程中视频画面卡主解决方式
+        // 每1分钟对齐一次 过程中视频画面卡主解决方式
         if(self.liveType === 2) {
           let currentTime = parseInt(liveEl.currentTime, 10);
-          if(currentTime && currentTime%30 === 0 && self.currentTime < currentTime) {
+          if(currentTime && currentTime%60 === 0 && self.currentTime < currentTime) {
             liveEl.currentTime = currentTime;
             self.currentTime = currentTime;
 
@@ -209,7 +209,7 @@ let liveMixin = {
         console.dir && console.dir(evt);
         // 五秒之内定时器没有执行证明 已经确实卡主了
         if(this.liveType === 2) {
-          this.liveStatusTips = '连接中...';
+          // this.liveStatusTips = '连接中...';
         }
 
         this.loadingTimer && clearTimeout(this.loadingTimer)
@@ -228,7 +228,7 @@ let liveMixin = {
         }, 5000)
       };
 
-      liveEl.addEventListener('loadstart', handleEvent);
+      // liveEl.addEventListener('loadstart', handleEvent);
       // liveEl.addEventListener('seeking', handleEvent);
       liveEl.addEventListener('waiting', handleEvent);
     },

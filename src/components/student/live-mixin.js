@@ -17,13 +17,15 @@ let liveMixin = {
     * @method 加载hls库
     *
     */
-    loadHLS() {
+    loadHLS(canplay) {
       let self = this;
 
       require(['hls.js',], function(Hls) {
         self.Hls = Hls;
 
-        self.liveType === 1 && self.supportHLS(Hls);
+        if(self.liveType === 1 || canplay) {
+          self.supportHLS(Hls);
+        }
       })
     },
 
@@ -87,7 +89,7 @@ let liveMixin = {
         }, 0)
 
         // 心跳检测卡顿
-        // this.checkTimeupdate();
+        this.checkTimeupdate();
 
         return true;
       } else {
@@ -96,7 +98,11 @@ let liveMixin = {
             this.supportHLS(this.Hls)
           }, 1000*10)
         } else {
-          this.Hls && this.supportHLS(this.Hls);
+          if(this.Hls) {
+            this.supportHLS(this.Hls);
+          } else {
+            this.loadHLS(true);
+          }
         }
 
         return false;
@@ -123,8 +129,8 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // this.liveType === 2 && liveEl.play();
           liveEl.play().then(()=>{
+            this.liveType === 2 && (this.liveVisible = true);
             this.playState = 1;
             this.liveStatusTips = ''
           });
@@ -150,8 +156,9 @@ let liveMixin = {
           }, 1000 * 20)
         }
 
-        liveEl.addEventListener('loadedmetadata',function() {
+        liveEl.addEventListener('loadedmetadata', ()=> {
           liveEl.play();
+          this.liveType === 2 && (this.liveVisible = true);
         });
 
         // 检测404
@@ -236,10 +243,10 @@ let liveMixin = {
 
       //
       let handleEvent = (evt) => {
-         console.dir && console.dir(evt);
+        console.dir && console.dir(evt);
 
         if(this.liveType === 2) {
-          this.liveStatusTips = '直播连接中...';
+          // this.liveStatusTips = '直播连接中...';
         }
 
         // 五秒之内定时器没有执行证明 已经确实卡主了
@@ -261,9 +268,42 @@ let liveMixin = {
         }, 5000)
       };
 
-      liveEl.addEventListener('loadstart', handleEvent);
-      liveEl.addEventListener('seeking', handleEvent);
+      // liveEl.addEventListener('loadstart', handleEvent);
+      // liveEl.addEventListener('seeking', handleEvent);
       liveEl.addEventListener('waiting', handleEvent);
+
+      let stalledEvent = (evt) => {
+        if(!this.stalledCount) {
+          this.stalledCount = 1;
+        } else {
+          this.stalledCount += 1;
+        }
+
+        if(this.liveType === 2) {
+          this.liveStatusTips = '连接中...';
+
+          // 卡顿超过2次就切换hls
+          if(this.stalledCount > 1) {
+            let flvPlayer = this.flvPlayer;
+            if(flvPlayer) {
+              flvPlayer.unload();
+              flvPlayer.detachMediaElement();
+              flvPlayer.destroy();
+              this.flvPlayer = null;
+
+              if(this.Hls) {
+                this.supportHLS(this.Hls);
+              } else {
+                this.loadHLS(true);
+              }
+
+              console.log('切换hls 重新拉流');
+            }
+          }
+        }
+      };
+
+      liveEl.addEventListener('stalled', stalledEvent);
     },
 
     /*
@@ -335,6 +375,8 @@ let liveMixin = {
       });
 
       flvjs.LoggingControl.addLogListener((type, msg) => {
+        console.log(type, msg);
+
         if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
@@ -397,8 +439,7 @@ let liveMixin = {
     * @params
     */
     handlestop() {
-      let audioEl = document.getElementById('player');
-      // audioEl.pause();
+      let liveEl = document.getElementById('player');
 
       if(this.flvPlayer) {
         try {
@@ -412,12 +453,13 @@ let liveMixin = {
           }
 
           let flvPlayer = this.flvPlayer;
+          flvPlayer.pause();
           flvPlayer.unload();
           flvPlayer.detachMediaElement();
         } catch(e) {
         }
       } else {
-        audioEl.pause();
+        liveEl.pause();
       }
 
       this.playState = 0;
@@ -438,18 +480,18 @@ let liveMixin = {
     * @params
     */
     handleplay() {
-      let audioEl = document.getElementById('player');
+      let liveEl = document.getElementById('player');
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
-          flvPlayer.attachMediaElement(audioEl);
+          flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
           flvPlayer.play().then(() => {
             this.playLoading = false;
 
             this.liveType === 2 && setTimeout(()=>{
-              audioEl.currentTime = audioEl.currentTime;
-              audioEl.play();
+              liveEl.currentTime = liveEl.currentTime;
+              liveEl.play();
             }, 5000)
           });
 
@@ -461,20 +503,14 @@ let liveMixin = {
               duration: 4500
             });
           }
-
-          setTimeout(()=>{
-            if(this.playLoading) {
-              this.playLoading = false;
-            }
-          }, 5000)
         } catch(e) {
         }
       } else {
-        audioEl.play();
+        liveEl.play();
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
-          audioEl.play();
+          liveEl.play();
         }, 500)
       }
 
@@ -554,23 +590,9 @@ let liveMixin = {
       this.liveVisible = visible;
 
       if(visible) {
-        // 开始拉流
-        // if(flvPlayer) {
-        //   try {
-        //     flvPlayer.attachMediaElement(liveEl);
-        //     flvPlayer.load();
-        //     flvPlayer.play();
-        //   } catch(e) {
-        //   }
-        // }
-
         this.handleplay();
       } else {
         this.handlestop();
-
-        // 停止拉流
-        // flvPlayer && flvPlayer.unload();
-        // flvPlayer && flvPlayer.detachMediaElement();
       }
     },
 
@@ -614,16 +636,6 @@ let liveMixin = {
           this.qos = qos;
         }
       }
-
-      // 测试
-      // setTimeout(()=>{
-      //   if(this.qos) {
-      //     this.qos.sendSummary({
-      //       lessonid: this.lessonID,
-      //       uid: this.userID
-      //     });
-      //   }
-      // }, 10000)
     }
   }
 }
