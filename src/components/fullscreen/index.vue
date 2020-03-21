@@ -29,7 +29,7 @@
         <i class="iconfont icon-jingyin" v-else @click="handleplay"></i>
       </div>
       <!-- live-player作为音频直播的容器 -->
-      <audio id="player" class="live__container" autobuffer :src="liveURL">
+      <audio id="player" class="live__container" autobuffer >
       </audio>
     </section>
 
@@ -37,7 +37,7 @@
     <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
       <!-- 定制video -->
       <div class="live__video_box J_live">
-        <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer :src="liveURL" ></video>
+        <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->

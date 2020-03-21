@@ -534,6 +534,8 @@ let pages = {
   "silentmood": "Teacher is switching to silent mood",
   "offsilentmood": "Teacher is turning off silent mood",
 
+  "cloneTips": "Unavailable in Clone Class",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
