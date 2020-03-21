@@ -273,17 +273,17 @@ let liveMixin = {
       liveEl.addEventListener('waiting', handleEvent);
 
       let stalledEvent = (evt) => {
-         if(!this.stalledCount) {
-           this.stalledCount = 1;
-         } else {
-           this.stalledCount += 1;
-         }
+        if(!this.stalledCount) {
+          this.stalledCount = 1;
+        } else {
+          this.stalledCount += 1;
+        }
 
         if(this.liveType === 2) {
-          this.liveStatusTips = '直播连接中...';
+          this.liveStatusTips = '连接中...';
 
-          // 卡顿超过三次就切换hls
-          if(this.stalledCount > 2) {
+          // 卡顿超过2次就切换hls
+          if(this.stalledCount > 1) {
             let flvPlayer = this.flvPlayer;
             if(flvPlayer) {
               flvPlayer.unload();
