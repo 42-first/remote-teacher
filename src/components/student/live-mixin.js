@@ -90,8 +90,8 @@ let liveMixin = {
           this.initKwai(this.liveurl.httpflv);
         }, 0)
 
-        // 心跳检测卡顿
-        this.checkTimeupdate();
+        // 心跳检测卡顿 flv只加视频
+        this.liveType === 2 && this.checkTimeupdate();
 
         return true;
       } else {
@@ -243,13 +243,8 @@ let liveMixin = {
         }, 3000)
       })
 
-      //
       let handleEvent = (evt) => {
         console.dir && console.dir(evt);
-
-        if(this.liveType === 2) {
-          // this.liveStatusTips = '直播连接中...';
-        }
 
         // 五秒之内定时器没有执行证明 已经确实卡主了
         this.loadingTimer && clearTimeout(this.loadingTimer)
@@ -267,7 +262,7 @@ let liveMixin = {
           }
 
           console.log('重新拉流');
-        }, 15000)
+        }, 10000)
       };
 
       // liveEl.addEventListener('loadstart', handleEvent);
@@ -295,6 +290,8 @@ let liveMixin = {
 
               this.userNativePlayer();
             }
+          } else {
+            handleEvent();
           }
         }
       };
