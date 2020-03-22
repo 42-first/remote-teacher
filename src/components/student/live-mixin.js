@@ -280,7 +280,7 @@ let liveMixin = {
           this.liveStatusTips = '连接中...';
 
           // 卡顿超过2次就切换hls
-          if(this.stalledCount > 1) {
+          if(this.stalledCount > 2) {
             let flvPlayer = this.flvPlayer;
             if(flvPlayer) {
               flvPlayer.unload();
