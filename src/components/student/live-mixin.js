@@ -217,7 +217,7 @@ let liveMixin = {
         }
 
         // 每1分钟对齐一次 过程中视频画面卡主解决方式
-        if(self.liveType === 2) {
+        if(self.liveType === 2 && self.isWeb) {
           let currentTime = parseInt(liveEl.currentTime, 10);
           if(currentTime && currentTime%60 === 0 && self.currentTime < currentTime) {
             liveEl.currentTime = currentTime;
@@ -237,7 +237,7 @@ let liveMixin = {
         self.timeupdateTimer && clearTimeout(self.timeupdateTimer);
         self.timeupdateTimer = setTimeout(()=>{
           // 正常播放状态下 能走到这里就是卡了
-          if(self.playState === 1) {
+          if(self.playState === 1 && self.isWeb) {
             liveEl.currentTime = liveEl.currentTime - 0.1;
           }
         }, 3000)
