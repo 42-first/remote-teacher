@@ -69,10 +69,12 @@ let liveMixin = {
             flvPlayer.play().then(() => {
               this.liveStatusTips = '';
 
-              setTimeout(()=>{
-                liveEl.currentTime = liveEl.currentTime;
-                liveEl.play();
-              }, 5000)
+              if(this.isWeb) {
+                setTimeout(()=>{
+                  liveEl.currentTime = liveEl.currentTime;
+                  liveEl.play();
+                }, 5000)
+              }
             });
           }
         } catch(evt) {
@@ -291,19 +293,38 @@ let liveMixin = {
               flvPlayer.destroy();
               this.flvPlayer = null;
 
-              if(this.Hls) {
-                this.supportHLS(this.Hls);
-              } else {
-                this.loadHLS(true);
-              }
-
-              console.log('切换hls 重新拉流');
+              this.userNativePlayer();
             }
           }
         }
       };
 
       liveEl.addEventListener('stalled', stalledEvent);
+    },
+
+    /*
+    * @method 使用原生播放器
+    * @params
+    */
+    userNativePlayer() {
+      let liveEl = document.getElementById('player');
+
+      if(liveEl.canPlayType('application/vnd.apple.mpegurl')) {
+        liveEl.src = this.liveURL;
+
+        liveEl.addEventListener('loadedmetadata', ()=> {
+          liveEl.play();
+          this.liveType === 2 && (this.liveVisible = true);
+        });
+      } else {
+        if(this.Hls) {
+          this.supportHLS(this.Hls);
+        } else {
+          this.loadHLS(true);
+        }
+      }
+
+      console.log('切换原生或者hls 重新拉流');
     },
 
     /*
@@ -409,8 +430,6 @@ let liveMixin = {
           url: this.liveurl.httpflv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
-          // enableStashBuffer: false,
-          // lazyLoad: false,
           hasAudio: this.isMute ? false : true
         });
 
@@ -422,9 +441,11 @@ let liveMixin = {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
-              this.liveType === 2 && setTimeout(()=>{
-                liveEl.currentTime = liveEl.currentTime;
-              }, 5000)
+              if(this.isWeb && this.liveType === 2) {
+                setTimeout(()=>{
+                  liveEl.currentTime = liveEl.currentTime;
+                }, 5000)
+              }
             });
           }
         } catch(evt) {
@@ -489,10 +510,12 @@ let liveMixin = {
           flvPlayer.play().then(() => {
             this.playLoading = false;
 
-            this.liveType === 2 && setTimeout(()=>{
-              liveEl.currentTime = liveEl.currentTime;
-              liveEl.play();
-            }, 5000)
+            if(this.isWeb && this.liveType === 2) {
+              setTimeout(()=>{
+                liveEl.currentTime = liveEl.currentTime;
+                liveEl.play();
+              }, 5000)
+            }
           });
 
           this.playLoading = true;
