@@ -51,6 +51,7 @@
           <section class="live__unfold box-end f14">
             <!-- 展开状态 只听声音 关闭直播 -->
             <p class="box-center" @click="handleLiveVisible(false)">
+              <i class="iconfont icon-zhitingshengyin f18 pr10"></i>
               <span class=""><!-- 只听声音 -->{{ $t('liveonlyvoice') }}</span>
             </p>
             <div class="line"></div>
@@ -68,7 +69,7 @@
             </p>
             <p class="box-center">
               <span class="f12 pr10"><!-- 展开画面 -->{{ $t('liveunfold') }}</span>
-              <i class="iconfont icon-dakai f18"></i>
+              <i class="iconfont icon-zhankaihuamian f20"></i>
             </p>
           </section>
           <section class="live__fold blue" v-else @click="handlePlayVideo">
@@ -97,7 +98,7 @@
         </section>
         <section class="live__fold" v-else @click="handleplay">
           <p class="box-center">
-            <img class="icon-laba" src="~images/student/voice.gif" >
+            <i class="iconfont icon-yuyinzhibo f24 red pr10"></i>
             <span class="f12"><!-- 语音直播中… -->{{ $t('liveaudioing') }}</span>
           </p>
           <p class="box-center">
