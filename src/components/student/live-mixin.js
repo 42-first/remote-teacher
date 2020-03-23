@@ -549,9 +549,7 @@ let liveMixin = {
      */
     setLiveTip() {
       let lessonID = this.lessonID;
-      let key = 'live' + lessonID;
       let statusKey = 'live-status-' + lessonID;
-      let hiddenLiveTip = false;
 
       // 网页版手动点击播放
       if(typeof window.WeixinJSBridge == 'undefined') {
@@ -559,17 +557,6 @@ let liveMixin = {
       }
 
       if(isSupported(window.localStorage)) {
-        hiddenLiveTip = +localStorage.getItem(key);
-
-        if(!hiddenLiveTip) {
-          this.showLiveTip = true;
-          localStorage.setItem(key, 1);
-
-          setTimeout(()=>{
-            this.showLiveTip = false;
-          }, 3000)
-        }
-
         // 是否播放 静音
         let status = localStorage.getItem(statusKey);
         if(status) {
@@ -581,7 +568,6 @@ let liveMixin = {
           } else if(status === 0) {
             this.handlestop();
           }
-
         }
       }
 
@@ -609,11 +595,29 @@ let liveMixin = {
       let flvPlayer = this.flvPlayer;
       this.liveVisible = visible;
 
-      if(visible) {
-        this.handleplay();
-      } else {
-        this.handlestop();
-      }
+      // if(visible) {
+      //   this.handleplay();
+      // } else {
+      //   this.handlestop();
+      // }
+    },
+
+    /*
+     * @method 关闭视频直播
+     * @params
+     */
+    handleStopVideo() {
+      this.liveVisible = false;
+      this.handlestop();
+    },
+
+    /*
+     * @method 关闭视频直播
+     * @params
+     */
+    handlePlayVideo() {
+      this.liveVisible = true;
+      this.handleplay();
     },
 
     /*
