@@ -50,7 +50,7 @@
       </div>
     </v-touch>
 
-    <Toolbar 
+    <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
       :lessonid="lessonid"
@@ -210,8 +210,6 @@
         self.isParticipantlistHidden = false
 
         self.setAtRootFalse()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 返回 按钮关闭全部人员名单
@@ -237,8 +235,6 @@
         self.$refs.RcMaskActivityPaper.$emit('showPaper')
 
         self.setAtRootFalse()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 弹幕 按钮展示弹幕控制
@@ -253,8 +249,6 @@
         self.$refs.RcMaskActivityDanmubox.$emit('showDanmubox')
 
         self.setAtRootFalse()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击 投稿 按钮展示投稿控制
@@ -268,8 +262,6 @@
 
         self.$refs.RcMaskActivitySubmission.$emit('showSubmission')
         self.setAtRootFalse()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 投稿列表页面点击 刷新 按钮也应清零投稿未读数
@@ -358,7 +350,7 @@
     top: 0;
     bottom: 0;
     background: #EDF2F6;
-    
+
     .activity-tollbar {
       position: absolute;
       left: 0;
@@ -427,7 +419,7 @@
         width: 0.933333rem;
         height: 0.933333rem;
         margin-right: 0.3rem;
-        text-align: center; 
+        text-align: center;
         line-height: 0.933333rem;
         border-radius: 50%;
 

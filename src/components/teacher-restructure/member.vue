@@ -1,6 +1,6 @@
 <!-- 全部人员名单 -->
 <template>
-	<div class="member-box">
+	<div class="member-box" id="member-box">
     <slot name="ykt-msg"></slot>
     <!-- <div class="desc f18">
       {{ $t('totalstudent') }}<span class="f24">{{participantList.length}}</span> {{ $t('ren') }}
@@ -9,43 +9,53 @@
 			<div class="tabbar">
 				<v-touch :class="['tab-item', activeTab == 1 ? 'active f20' : 'f17']" v-on:tap="toggleTab(1)">
 					<span class="label">{{$t('yiqiandao')}}</span>
-					<span class="f14 count">({{participantList.length}})</span>
+					<span class="f14 count">({{partTotal}})</span>
 				</v-touch>
 				<v-touch :class="['tab-item ml50', activeTab == 2 ? 'active f20' : 'f17']" v-on:tap="toggleTab(2)">
 					<span class="label">{{$t('weiqiandao')}}</span>
-					<span class="f14 count">({{notParticipantList.length}})</span>
+					<span class="f14 count">({{notPartTotal}})</span>
 				</v-touch>
 			</div>
-			<div class="search" @click="goSearch"><i class="iconfont icon-sousuo f19"></i></div>
+			<div class="search" @click="goSearch" v-if="studentCount <= 500"><i class="iconfont icon-sousuo f19"></i></div>
 		</div>
-		<div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
-			* <!-- 当有主观题未批改时，此排名可能不是最终排名 -->{{ $t('behavior.dyzgtwpgs') }}
-		</div>
-    <section v-show="activeTab == 1" class="participantList">
+		<!-- 当有主观题未批改时，此排名可能不是最终排名 -->
+		<!-- <div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
+			* {{ $t('behavior.dyzgtwpgs') }}
+		</div> -->
+
+    <section v-show="activeTab == 1" class="participantList list-wrapper"
+			infinite-scroll-immediate-check="false"
+			v-infinite-scroll="loadBottom"
+			infinite-scroll-disabled="isLoading"
+			infinite-scroll-distance="10"
+			:class="{ 'list-wrapper-active': activeTab == 1 }"
+			>
 			<template v-if="participantList.length">
-				<div class="order-box">
+				<!-- <div class="order-box">
 					<v-touch class="title f14" v-on:tap="openOrder">
 						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : (orderType === 3 ? $t('behavior.qdsjpx') : $t('behavior.studentId')))}}
 						<div :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
 					</v-touch>
 					<ul class="choose-list" v-show="isOrderOpen">
-						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)"><!-- 得分由高到低 -->{{ $t('behavior.dfygdd') }}</v-touch>
-						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)"><!-- 得分由低到高 -->{{ $t('behavior.dfyddg') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 3}]" v-on:tap="setOrder(3)"><!-- 签到时间排序 -->{{ $t('behavior.qdsjpx') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)"><!-- 按学号排序 -->{{ $t('behavior.studentId') }}</v-touch>
+						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)">{{ $t('behavior.dfygdd') }}</v-touch>
+						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)">{{ $t('behavior.dfyddg') }}</v-touch>
+						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 3}]" v-on:tap="setOrder(3)">{{ $t('behavior.qdsjpx') }}</v-touch>
+						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)">{{ $t('behavior.studentId') }}</v-touch>
 					</ul>
-				</div>
-				<div class="item" v-for="(item,index) in participantList" :key="item.id" @click="goStudentDetail(item.id)">
+				</div> -->
+				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div :class="['xuhao']">
-							<span :class="[{'star-box': item.index <= 3}, 'star'+ (item.index)]">{{item.index}}</span>
+							<span :class="[{'star-box': index <= 2}, 'star'+ (index + 1)]">{{index + 1}}</span>
 						</div>
 						<div class="alignCenter">
 							<div class="user">
-								<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
-								<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+								<template v-if="item.profile">
+									<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
+									<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+								</template>
 							</div>
-							<div v-if="has_problems" class="score-box f14" :class="item.index < 3 ? 'orange' : ''">
+							<div v-if="has_problems" class="score-box f14" :class="index < 2 ? 'orange' : ''">
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
@@ -58,10 +68,14 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" 
+							:class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" 
+							v-for="(tag, idx) in item.behavior_tags" :key="idx">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
+				<div class="load-wrapper" v-if="!signLoaded">{{$t('toploading')}}</div>
+				<div class="load-wrapper" v-else>—— END ——</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -69,9 +83,15 @@
 				</div>
 			</template>
     </section>
-		<section v-show="activeTab == 2" class="notParticipantList">
+		<section class="notParticipantList list-wrapper"
+			infinite-scroll-immediate-check="false"
+			v-infinite-scroll="loadBottom"
+			infinite-scroll-disabled="isLoading"
+			infinite-scroll-distance="10"
+			:class="{ 'list-wrapper-active': activeTab == 2 }"
+		>
 			<template v-if="notParticipantList.length">
-				<div class="item" v-for="item in notParticipantList" :key="item.id" @click="goStudentDetail(item.id)">
+				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div class="user">
 							<span class="name ellipsis-2line f17">{{item.profile.name}}</span>
@@ -86,10 +106,14 @@
 					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
 						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
 						<template v-if="item.behavior_tags && item.behavior_tags.length">
-							<span class="tag f12" :class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags">{{tag}}</span>
+							<span class="tag f12" 
+							:class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags" 
+							:key="idx">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
+				<div class="load-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
+				<div class="load-wrapper" v-else>—— END ——</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -103,7 +127,12 @@
 <script>
   import {mapGetters} from 'vuex'
   import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+	import API from '@/pages/teacher/config/api'
+	import { InfiniteScroll } from 'mint-ui';
+	import Vue from "vue";
+	Vue.use(InfiniteScroll);
+
+	var timer = null
 
   // source代表学生签到的来源  1代表扫码  2代表邀请码   3代表我的课程-正在上课
   export default {
@@ -118,18 +147,33 @@
 				orderType: 1,
 				has_unscored_subj: false,
 				oData: {},
-				participantList: [],
+				signLoaded: !1, // 已签到数据是否已经拉取完
+				signNoLoaded: !1, // 未签到数据是否已经拉取完
+				signedPage: 1,    // 已签到页
+				notSignedPage: 1, // 未签到页
+				participantList: [], // 签到列表
+				notParticipantList: [], // 未签到列表
+				// 签到人数
+				partTotal: 0,
+				// 未签到人数
+				notPartTotal: 0,
+				isLoading: false,
+				studentCount: 0,
+				uuidSign: null,
+				uuidNotSign: null,
+				timer: null
       }
     },
     computed: {
       ...mapGetters([
 				'lessonid',
-				'classroomid',
-        // 'participantList',
-				'notParticipantList'
+				'classroomid'
       ])
-    },
+		},
+		mounted() {
+		},
     created () {
+			this.studentCount = this.$route.query.count - 0 || 0;
       this.fetchList()
 			this.not_participant_list()
     },
@@ -138,7 +182,7 @@
        * 获取签到学生名单
        *
        */
-      fetchList (sort_type = 1) {
+      fetchList (page = 1) {
         let self = this
 
         let url = API.teaching_lesson_participant_list + '/' + self.lessonid
@@ -147,55 +191,91 @@
           url = API.teaching_lesson_participant_list + '/' + self.lessonid
         }
 
-        request.get(url, {sort_type, 'classroomid': self.classroomid})
-          .then(jsonData => {
-						self.$store.commit('set_participantList', jsonData.data.students)
+        request.get(url, {
+					// sort_type,
+					'classroomid': self.classroomid,
+					page,
+					page_size: 20,
+					uuid_code: this.uuidSign
+				}).then(jsonData => {
 						self.has_problems = jsonData.data.has_problems
 						self.has_unscored_subj = jsonData.data.has_unscored_subj
-
-						self.orderType = jsonData.data.has_problems && sort_type == 1 ? 1 : (!jsonData.data.has_problems && sort_type == 1 ? 3 : sort_type)
-						if(sort_type == 1){
-							self.oData[1] = jsonData.data.students
-							self.oData[1].forEach((item, index) => {
-								item.index = index + 1
-							})
-							self.participantList = self.oData[1]
+						self.fetchListHandle(jsonData.data);
+						self.signedPage = page + 1
+						// self.orderType = jsonData.data.has_problems && sort_type == 1 ? 1 : (!jsonData.data.has_problems && sort_type == 1 ? 3 : sort_type)
+						// if(sort_type == 1){
+						// 	self.oData[1] = jsonData.data.students
+						// 	self.oData[1].forEach((item, index) => {
+						// 		item.index = index + 1
+						// 	})
+						// 	self.participantList = self.oData[1]
 							
-						}else if(sort_type == 3) {
-							this.oData[3] = jsonData.data.students
-							self.oData[3].forEach((item, index) => {
-								item.index = index + 1
-							})
-            	self.participantList = this.oData[3]
-						}else {
-							this.oData[4] = jsonData.data.students
-							self.oData[4].forEach((item, index) => {
-								item.index = index + 1
-							})
-            	self.participantList = this.oData[4]
-						}
+						// }else if(sort_type == 3) {
+						// 	this.oData[3] = jsonData.data.students
+						// 	self.oData[3].forEach((item, index) => {
+						// 		item.index = index + 1
+						// 	})
+            // 	self.participantList = this.oData[3]
+						// }else {
+						// 	this.oData[4] = jsonData.data.students
+						// 	self.oData[4].forEach((item, index) => {
+						// 		item.index = index + 1
+						// 	})
+            // 	self.participantList = this.oData[4]
+						// }
           })
-      },
+			},
+			fetchListHandle(jsonData, type = 0) {
+				let list = jsonData.students || [];
+				const total = jsonData.total - 0 || 0;
+				if (!type) {
+					this.participantList = this.participantList.concat(list);
+					this.signLoaded = list.length === 0 || this.participantList.length >= total;
+					this.uuidSign = jsonData.uuid_code
+					this.partTotal = total;
+				} else {
+					this.notParticipantList = this.notParticipantList.concat(list);
+					this.signNoLoaded = list.length === 0 || this.notParticipantList.length >= total;
+					this.uuidNotSign = jsonData.uuid_code;
+					this.notPartTotal = total;
+				}
+			},
 
 			/**
        * 获取未签到学生名单
        *
        */
-      not_participant_list () {
+      not_participant_list(page = 1) {
         let self = this
-
         let url = API.lesson_not_participant_list
-
         if (process.env.NODE_ENV === 'production') {
           url = API.lesson_not_participant_list
         }
 
-        request.get(url,{'classroomid': self.classroomid, 'lesson_id': self.lessonid})
+        request.get(url,{
+					'classroomid': self.classroomid,
+					'lesson_id': self.lessonid,
+					page,
+					page_size: 20,
+					uuid_code: this.uuidNotSign
+					})
           .then(jsonData => {
-            self.$store.commit('set_notParticipantList', jsonData.data.students)
+						self.fetchListHandle(jsonData.data, 1);
+						self.notSignedPage = page+1;
           })
-      },
-
+			},
+			loadBottom() {
+				if (!this.timer) {
+					this.timer = setTimeout(() => {
+						this.timer = null;
+						if (this.activeTab === 1) {
+							!this.signLoaded &&  this.fetchList(this.signedPage)
+						} else {
+							!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
+						}
+					}, 800);
+				}
+			},
 			/**
        * 切换签到状态
        *
@@ -203,10 +283,10 @@
 
       toggleTab(type) {
         let self = this
-        // console.log(type);
-        self.activeTab = type
+        if (type != self.activeTab) {
+					self.activeTab = type;
+				}
 			},
-			
 			/**  
 			 * 
 			*/
@@ -254,20 +334,20 @@
 				})
       }
 
-    }
+		}
   }
 </script>
 
 <style lang="scss" scoped>
   @import "~@/style/_variables";
+	@import "~@/style/common_rem";
   .member-box {
     position: relative;
-    min-height: 100%;
+    height: 100%;
+		overflow: hidden;
     background: $white;
     color: #4A4A4A;
-    overflow: auto;
-		padding-top: 1.33333333rem;
-
+		padding-top: px2rem(100px);
 		.tabbar-wrap {
 			position: fixed;
 			top: 0;
@@ -337,8 +417,22 @@
 			padding: 0 0.53333333rem;
 			color: #9B9B9B;
 		}
+		.list-wrapper{
+			height: 100%;
+			width: 100%;
+			box-sizing: border-box;
+			overflow-x: hidden;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			background-color: #fff;
+			position: relative;
+			z-index: 0;
+		}
+		.list-wrapper-active{
+			z-index: 1;
+		}
     .participantList {
-      padding: 0 .4rem 1.466667rem 0;
+      padding: 0 0.4rem px2rem(60px) 0;
 			.order-box {
 				position: relative;
 				margin: 0.37333333rem 0.4rem 0.26666667rem;
@@ -529,10 +623,8 @@
 				width: 6.826667rem;
 			}
     }
-
 		.notParticipantList {
-			padding: 0 0.4rem;
-
+			padding: 0 0.4rem px2rem(60px);
 			.item {
 				padding: 0.4rem 0;
 				position: relative;
@@ -607,20 +699,27 @@
 					}
 				}
 			}
-
-		.ellipsis-2line {
-			overflow : hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
-			word-break: break-all;
-		}
+			.ellipsis-2line {
+				overflow : hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				word-break: break-all;
+			}
 			.empty img {
 				display: block;
 				margin: 3.973333rem auto 0;
 				width: 6.826667rem;
 			}
+		}
+		.load-wrapper{
+			height: px2rem(80px);
+			line-height: px2rem(80px);
+			font-size: px2rem(24px);
+			color: #c8c8c8;
+			text-align: center;
+			position: relative;
 		}
 		@media screen and (max-width: 720px) and (-webkit-min-device-pixel-ratio: 2) {
 

@@ -8,6 +8,27 @@ import MessageBox from 'mint-ui/lib/message-box';
 
 import Index from '@/components/fullscreen/index'
 
+// 问题解析
+const Exercise = resolve => require(['@/components/fullscreen/exercise'], resolve)
+const Subjective = resolve => require(['@/components/fullscreen/subjective'], resolve)
+const FillBlank = resolve => require(['@/components/fullscreen/blank'], resolve)
+
+const PPT = resolve => require(['@/components/fullscreen/ppt'], resolve)
+const HongBao = resolve => require(['@/components/fullscreen/hongbao'], resolve)
+const SubmissionDetail = resolve => require(['@/components/fullscreen/submission-detail'], resolve)
+const SubjectiveShare = resolve => require(['@/components/fullscreen/subjective-share'], resolve)
+const MutualEvaluation = resolve => require(['@/components/fullscreen/mutual-evaluation'], resolve)
+// 问题解析
+const ProblemAnalysis = resolve => require(['@/components/fullscreen/problem-analysis'], resolve)
+
+const Webview = resolve => require(['@/components/fullscreen/webview'], resolve)
+
+// 白板
+const Board = resolve => require(['@/components/fullscreen/board'], resolve)
+// 投稿
+const Submission = resolve => require(['@/components/fullscreen/submission'], resolve)
+// 分组
+const Team = resolve => require(['@/components/fullscreen/team'], resolve)
 
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
@@ -26,11 +47,71 @@ const fullscreenRouter = new Router({
       name: 'student-fullscreen',
       component: Index,
       children: [
-        // {
-        //   path: 'danmu',
-        //   name: 'student-danmu-page',
-        //   component: Danmu
-        // },
+        {
+          path: 'ppt/:index',
+          name: 'ppt-page',
+          component: PPT
+        },
+        {
+          path: 'hongbao/:index',
+          name: 'hongbao-page',
+          component: HongBao
+        },
+        {
+          path: 'webview/:index',
+          name: 'webview',
+          component: Webview
+        },
+        {
+          path: 'exercise/:index',
+          name: 'exercise-page',
+          component: Exercise
+        },
+        {
+          path: 'subjective/:index',
+          name: 'subjective-page',
+          component: Subjective
+        },
+        {
+          path: 'blank/:index',
+          name: 'blank-page',
+          component: FillBlank
+        },
+        {
+          path: 'subjective_share/:index',
+          name: 'subjective-share-page',
+          component: SubjectiveShare
+        },
+        {
+          path: 'submission',
+          name: 'submission-page',
+          component: Submission
+        },
+        {
+          path: 'submission_share/:index',
+          name: 'submission-detail-page',
+          component: SubmissionDetail
+        },
+        {
+          path: 'evaluation/:index',
+          name: 'evaluation-page',
+          component: MutualEvaluation
+        },
+        {
+          path: 'analysis/:index',
+          name: 'analysis-page',
+          component: ProblemAnalysis
+        },
+        {
+          path: 'board/:index',
+          name: 'board',
+          component: Board
+        },
+        {
+          path: 'team',
+          name: 'team-page',
+          component: Team
+        },
       ]
     }
   ]
@@ -44,9 +125,9 @@ fullscreenRouter.beforeEach((to, from, next) => {
 })
 
 fullscreenRouter.afterEach(route=>{
-  // google统计
+  // mta统计
   setTimeout(() => {
-    typeof ga === 'function' && ga('send', 'pageview', location.pathname);
+    typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
   }, 1000);
 });
 

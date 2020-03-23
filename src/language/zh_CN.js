@@ -179,7 +179,7 @@ let pages = {
   'answerpublished': '老师公布了习题的答案解析',
   'sendtostus': '发送给学生',
   'hasbeensend': '已发给学生',
-
+  'windowapptip': '由于微信电脑端尚不完善，雨课堂的直播、互动等使用体验无法保证。<br>建议您在浏览器中打开雨课堂网页版继续参与教学。',
 
   // 遥控器
   "classsignal": "课堂暗号",
@@ -529,7 +529,15 @@ let pages = {
 
   "openwordcloud": "生成词云并投屏",
   "closewordcloud": "关闭词云",
+  "viewasstudent": "学生视角",
+  "watchmode2": "观看者模式下无法参与作答",
+  "isconnecting": "老师端直播连接中...",
+  "ispoor": "老师端网络信号不佳",
+  "switchinglivecontent": "老师正在切换直播内容",
+  "silentmood": "老师即将静音...",
+  "offsilentmood": "老师即将开启声音...",
 
+  "cloneTips": "当前为克隆班级，无法进行该操作",
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

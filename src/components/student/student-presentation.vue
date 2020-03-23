@@ -43,7 +43,13 @@
 
     <!-- 视频直播 liveURL && liveType === 2 controls -->
     <section class="live__wrap" v-if="liveType === 2">
-      <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" :src="liveURL" v-show="liveVisible" ></video>
+      <section class="player__box" v-show="liveVisible">
+        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
+        <div class="live__status f14" v-show="liveStatusTips">
+          {{liveStatusTips}}
+        </div>
+      </section>
+
       <!-- 展开收起 -->
       <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
         <i class="iconfont icon-fold f14"></i>
@@ -66,7 +72,11 @@
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" />
+                <!-- 雨课堂 -->
+                <!-- 其它定制 例如清华 -->
+                <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
+                <!-- 雨课堂 -->
+                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -103,7 +113,7 @@
         <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
       </div>
       <!-- live-player作为音频直播的容器 -->
-      <audio id="player" class="live__container" autobuffer :src="liveURL">
+      <audio id="player" class="live__container" autobuffer>
       </audio>
       <!-- 直播提示 -->
       <div class="live__tip f14" v-if="showLiveTip">
@@ -176,6 +186,8 @@
     <!-- 弹幕直播 v-if="isLive" -->
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live>
 
+    <!-- 停服务通知 -->
+    <livetip :id="lessonID" v-if="liveURL"></livetip>
   </section>
 </template>
 <script>
@@ -197,12 +209,23 @@
   import livemixin from '@/components/student/live-mixin'
   import boardmixin from '@/components/common/board-mixin'
 
+  import logmixin from '@/components/common/log-reporting'
+  import localstoragemixin from '@/components/common/localstorage-mixin'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
   window.API = API;
   if (process.env.NODE_ENV !== 'production') {
     // request.post = request.get
+  }
+
+  const host = {
+    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
   }
 
   export default {
@@ -327,6 +350,20 @@
         liveVisible: false,
         // 是否web开课
         isWebLesson: false,
+        // 直播下默认显示动画
+        visibleAnimation: true,
+        returnRemote: false,
+        liveStatusTips: '',
+        isMute: false,  //静音播放
+        lastStatus: 1,
+        needNew: false,
+        currentTime: 0,
+        loadNewUrlTimer: null,
+        voice: 1,   // -1静音 1非静音
+        // 直播卡顿检测
+        liveDetection: {},
+        // 小程序码
+        miniCode: '',
       };
     },
     components: {
@@ -338,6 +375,7 @@
       auditorTips: () => import('@/components/student/auditor_tips.vue'),
       notice: () => import('@/components/common/service-notice.vue'),
       danmuLive: () => import('@/components/common/danmu-live.vue'),
+      livetip: () => import('@/components/common/live-tip.vue'),
     },
     computed: {
     },
@@ -361,13 +399,20 @@
       lessonStatus (newValue, oldValue) {
         // 下课啦
         if(newValue === 1) {
-          this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+          this.backURL = '/v/index/lessonend'
         }
-      }
+      },
+      cards(newVal, oldVal) {
+        this.cachecardsTimer && clearTimeout(this.cachecardsTimer);
+        this.cachecardsTimer = setTimeout(()=>{
+          this.setLocalData('cards', newVal);
+        }, 1500)
+      },
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -377,6 +422,8 @@
         this.lessonID = this.$route.params.lessonID || 3049;
         this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
 
+        this.returnRemote = this.$route.query.remote ? true : false
+        this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
         // this.getLiveList(this.lessonID);
@@ -408,7 +455,8 @@
             })
 
             // 直播hls格式初始化
-            self.loadHLS();
+            let isWeb = this.isWeb;
+            !isWeb && self.loadHLS();
           }, 1500)
 
           setTimeout(()=>{
@@ -446,16 +494,14 @@
       */
       setSentry() {
         if(typeof Raven !== 'undefined') {
-          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
           Raven.setUserContext({ userid: this.userID });
         } else {
           setTimeout(() => {
-            Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
             Raven.setUserContext({ userid: this.userID });
           }, 1500)
         }
-
-        typeof ga === 'function' && ga('set', 'userId', this.userID);
       },
 
       /*
@@ -576,6 +622,12 @@
           'lesson_id': this.lessonID
         }
 
+        // 尝试从缓存恢复
+        let canRestore = this.initByLocalData();
+        if(canRestore) {
+          return canRestore;
+        }
+
         this.fetchPresentationCount++;
 
         // lessons
@@ -583,6 +635,7 @@
           .then((res) => {
             if(res && res.data) {
               let data = res.data;
+
               self.pro_perm_info = data.pro_perm_info
               // auth
               self.userID = data.userID;
@@ -645,7 +698,7 @@
 
               if(self.presentationID) {
                 presentationData = self.presentationMap.get(self.presentationID);
-                presentationData && presentationData.Title && (self.title = presentationData.Title);
+                !self.returnRemote && presentationData && presentationData.Title && (self.title = presentationData.Title);
               } else {
                 // presentation没有数据 重新初始化
                 self.fetchPresentationCount < 2 && setTimeout(() => {
@@ -662,12 +715,24 @@
 
                 self.liveType = self.liveInfo.type || 1;
                 if(self.liveType === 1) {
-                  self.Hls && self.supportHLS(self.Hls);
+                  let isWeb = this.isWeb;
+                  if(isWeb) {
+                    setTimeout(()=>{
+                      self.supportFLV();
+                    }, 1000)
+                  } else {
+                    self.Hls && self.supportHLS(self.Hls);
+                  }
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{
                     self.supportFLV();
                   }, 3000)
                 }
+
+                // 日志上报
+                setTimeout(() => {
+                  self.handleLogEvent();
+                }, 30000)
               }
 
               // 课程title
@@ -684,6 +749,8 @@
                 this.step = 3;
               }
 
+              this.setLocalData('base', data);
+
               return presentationData;
             }
           })
@@ -693,7 +760,8 @@
             if(error && error.status_code === 601) {
               // 课程结束
               console.log('课程结束');
-              location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              // location.href = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
+              location.href = '/v/index/lessonend';
             } else if(error && error.status_code === 603) {
               // 没有权限
               console.log('没有权限');
@@ -756,6 +824,9 @@
 
               // 更新完成
               self.updatingPPT = false;
+
+              // 更新本地换粗
+              self.updateSlides(presentationID, presentation);
 
               return presentation;
             }
@@ -951,6 +1022,23 @@
         }
       },
 
+      /**
+       * @method 检测是否在window客户端
+       */
+      checkInWindowsApp(ua, isWeixin) {
+        let isInWindowApp = ~ua.indexOf('windowswechat');
+        if(isInWindowApp && isWeixin) {
+          let msgOptions = {
+            confirmButtonText: this.$i18n.t('gotit') || '知道了'
+          };
+          let message = this.$i18n.t('windowapptip') || '由于微信电脑端尚不完善，雨课堂的直播、互动等使用体验无法保证。<br>建议您在浏览器中打开雨课堂网页版继续参与教学。';
+          this.$messagebox.alert(message, msgOptions).then(action => {
+            if(action === 'confirm') {
+            }
+          });
+        }
+      },
+
       /*
        * @method 进入分组
        *
@@ -998,6 +1086,8 @@
       handleBack() {
         if(this.backURL) {
           location.href = this.backURL;
+        } else if(this.returnRemote){
+          this.$router.back();
         } else if(this.classroom && this.classroom.courseId) {
           // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
           location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
@@ -1008,14 +1098,37 @@
     },
     created() {
       this.init();
+
+      // 关闭 刷新页面 上报快手 window.onbeforeunload
+      window.onunload = (evt) => {
+        // 快手上报
+        if(this.qos && this.logLiveurl) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.logLiveurl
+          });
+        }
+      };
     },
     mounted() {
+      // 是否网页版
+      let ua = navigator.userAgent.toLowerCase();
+      let isWeixin = ~ua.indexOf('micromessenger');
+      this.isWeb = !isWeixin;
+
+      this.miniCode = host[location.host] || '';
+
+      setTimeout(()=>{
+        this.checkInWindowsApp(ua, isWeixin);
+      }, 500)
     },
     updated() {
-      // window.language && window.language.translate(this.$el);
     },
     beforeDestroy() {
       this.unbindTouchEvents();
+
+      this.saveSlideTag();
     }
   };
 </script>
@@ -1179,15 +1292,34 @@
     flex-flow: column;
 
     .live__wrap {
+      // z-index: 1;
       position: relative;
       padding: 2.33rem 0 0.253333rem;
 
-      .video__live {
-        width: 100%;
-        // height: 7.5rem;
-        min-height: 5rem;
-        background: rgba(0,0,0,0.45);
+      .player__box {
+        position: relative;
+          .video__live {
+          width: 100%;
+          // height: 7.5rem;
+          min-height: 5rem;
+          background: rgba(0,0,0,0.45);
+        }
+        .live__status {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: PingFangSC-Medium;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          // text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+          padding: 0.13333333rem 0.26666667rem;
+          background: rgba(68,68,68,.4);
+          border-radius: 0.05333333rem;
+        }
       }
+
 
       .live__fold {
         display: flex;

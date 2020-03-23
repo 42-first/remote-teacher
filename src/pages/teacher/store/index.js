@@ -50,6 +50,7 @@ const store = new Vuex.Store({
     isInitiativeCtrlMaskHidden: true,       // 蒙版隐藏，用户主动弹出控制类，缩略图，二维码，试卷，发题，红包
     isPubCheckProblemBtnHidden: true,       // 发送题目、查看答案按钮的隐藏
     isProblemPublished: false,              // 标志发题按钮文案，跟任何页无关，翻页动态变化
+    toolbarIndex: 0,
 
     msgMaskTpl: 'Errormsg',
     toastCtrlMaskTpl: '',
@@ -58,7 +59,10 @@ const store = new Vuex.Store({
     newToolBar: !1,
     addinversion: 0,                        // 插件协议版本号
     postWordCloudOpen: false,               // 投稿词云是否开启
-    danmuWordCloudOpen: false               // 弹幕词云是否开启
+    danmuWordCloudOpen: false,               // 弹幕词云是否开启
+
+    isCloneClass: false,                     // 是不是克隆班
+
   },
 
   mutations: {
@@ -112,7 +116,6 @@ const store = new Vuex.Store({
       state.total = total
     },
     set_pptData: (state, pptData) => {
-      console.log('====store.set_pptData', pptData)
       // state.pptData = pptData
       // state.pptData = Array.from(pptData)
 
@@ -206,6 +209,12 @@ const store = new Vuex.Store({
     },
     set_danmuWordCloudOpen(state, isWordCloudOpen){
       state.danmuWordCloudOpen = isWordCloudOpen
+    },
+    set_toolbarIndex(state, index) {
+      state.toolbarIndex = index
+    },
+    set_isCloneClass(state, status) {
+      state.isCloneClass = status
     }
   },
 
@@ -245,6 +254,15 @@ const store = new Vuex.Store({
     },
     set_danmuWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_danmuWordCloudOpen', isWordCloudOpen)
+    },
+    set_toolbarIndex({commit}, index) {
+      commit('set_toolbarIndex', index);
+    },
+    set_errType({commit}, type) {
+      commit('set_errType', type);
+    },
+    set_isCloneClass({commit}, status) {
+      commit('set_isCloneClass', status)
     }
   },
   getters

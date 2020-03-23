@@ -230,11 +230,11 @@ var actionsMixin = {
 
       if (slideData['Cover']=='rain://error/upload-error') {
         if(!data.isFetch) {
-          this.addMessage({ type: 1, message: '幻灯片解析失败' });
+          this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
       } else if(slideData['Cover']=='rain://error/export-error'){
         if(!data.isFetch) {
-          this.addMessage({ type: 1, message: '幻灯片上传失败' });
+          this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
       } else {
         // 预加载图片
@@ -296,7 +296,14 @@ var actionsMixin = {
             if(data.event.step >= 0 && data.event.step < data.event.total) {
               // 之前没有播放过这个ppt
               if(!hasPPT) {
-                data = Object.assign(data, cardItem, { animation: 1 })
+                // 直播默认动画不遮挡
+                if(this.liveurl && this.visibleAnimation) {
+                  data = Object.assign(data, cardItem, { animation: 0 })
+                } else {
+                  data = Object.assign(data, cardItem, { animation: 1 })
+                }
+
+                // data = Object.assign(data, cardItem, { animation: 1 })
               } else {
                 // 之前播放了这一页 再次播放就不用蒙版了
                 data = Object.assign(data, cardItem, { animation: 0 })
@@ -824,7 +831,14 @@ var actionsMixin = {
         this.liveURL = data.liveurl.hls;
 
         if(this.liveType === 1) {
-          this.Hls && this.supportHLS(this.Hls);
+          let isWeb = this.isWeb;
+          if(isWeb) {
+            setTimeout(()=>{
+              this.supportFLV();
+            }, 3000)
+          } else {
+            this.Hls && this.supportHLS(this.Hls);
+          }
         } else if(this.liveType === 2) {
           setTimeout(()=>{
             this.supportFLV(true);
@@ -835,6 +849,32 @@ var actionsMixin = {
 
         // 标记这是一堂远程课
         !this.isLive && this.liveURL && (this.isLive = true);
+
+        // 日志上报
+        setTimeout(() => {
+          this.handleLogEvent();
+        }, 1000)
+      }
+    },
+
+    /*
+     * @method 切换直播地址
+     * @param
+     */
+    changeLive(data) {
+      if(data && data.url) {
+        this.liveurl = data.url;
+        // 直播类型
+        this.liveType = data.type;
+        this.liveURL = data.url.hls;
+
+        if(this.liveType === 1) {
+          this.Hls && this.supportHLS(this.Hls);
+        } else if(this.liveType === 2) {
+          setTimeout(()=>{
+            this.supportFLV(true);
+          }, 3000)
+        }
       }
     },
 
@@ -844,9 +884,29 @@ var actionsMixin = {
      */
     endLive(data) {
       // this.handlestop();
-      this.liveURL = '';
-      this.liveType = 0;
+      // this.liveURL = '';
+      // this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+
+      setTimeout(()=>{
+        // 拉流之前先解绑
+        if(this.flvPlayer) {
+          this.flvPlayer.unload();
+          this.flvPlayer.detachMediaElement();
+        }
+
+        this.liveURL = '';
+        this.liveType = 0;
+
+        // 快手上报
+        if(this.qos && this.logLiveurl) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.logLiveurl
+          });
+        }
+      }, 3000)
 
       // 关闭弹幕直播
       this.isLive && (this.isLive = false);
@@ -990,6 +1050,68 @@ var actionsMixin = {
         this.danmus = [];
       }
     },
+
+    /**
+     * @method 更新视频状态提示
+    */
+    changeLiveStatusTips(status, voice){
+      let self = this
+      switch (status) {
+        case 1:
+          if(this.liveVisible){
+            if(this.lastStatus !== 1 && this.lastStatus !== -3){
+              this.needNew = true
+            }
+            this.liveStatusTips = ''
+            if (this.liveType === 1) {
+              // this.supportHLS(this.Hls)
+              let isWeb = this.isWeb;
+              if(isWeb) {
+                if (this.flvPlayer) {
+                  this.createFlvPlayer()
+                } else {
+                  this.supportFLV();
+                }
+              } else {
+                this.Hls && this.supportHLS(this.Hls);
+              }
+            } else {
+              if (this.flvPlayer) {
+                this.createFlvPlayer()
+              } else {
+                this.supportHLS(this.Hls)
+              }
+            }
+            this.handleplay();
+          }
+
+          break
+        case -1:
+          this.liveStatusTips = this.$i18n.t('isconnecting') || '老师端直播连接中...'
+          break
+        case -2:
+          this.liveStatusTips = this.$i18n.t('ispoor') || '老师端网络信号不佳'
+          break
+        case -3:
+          this.liveStatusTips = voice == 1 ? this.$i18n.t('offsilentmood') : this.$i18n.t('silentmood')
+          break
+        case -4:
+          this.liveStatusTips = this.$i18n.t('switchinglivecontent') || '老师正在切换直播内容'
+          break
+      }
+
+      this.isMute = voice == -1 ? true : false
+      this.lastStatus = status
+
+      let liveEl = document.querySelector('#player')
+      if(status !== 1) {
+        liveEl && (this.currentTime = liveEl.currentTime)
+      }
+
+      setTimeout(() => {
+        this.liveStatusTips = ''
+      }, 5000)
+    }
 
   }
 }

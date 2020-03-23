@@ -59,6 +59,13 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['teacher'],
       inject: true
     }),
+    // web 推流测试页面
+    new HtmlWebpackPlugin({
+      filename: 'pusher.html',
+      template: 'pusher.html',
+      chunks: ['app'],
+      inject: true
+    }),
     new FriendlyErrorsPlugin()
   ]
 })

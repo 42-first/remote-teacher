@@ -2,7 +2,7 @@
   <section class="courseware__page">
     <!-- 雨课件 banner -->
     <section class="banner__wrap">
-      <!-- <img class="banner--img" src="http://sfe.ykt.io/o_1d0tmhi961p0n13q91bg81336e19.png" alt="雨课堂,雨课件" /> -->
+      <!-- <img class="banner--img" src="https://qn-sfe.yuketang.cn/o_1d0tmhi961p0n13q91bg81336e19.png" alt="雨课堂,雨课件" /> -->
     </section>
     <!-- 雨课件列表 -->
     <section class="courseware__info">
@@ -169,7 +169,7 @@
     height: 396px;
 
     background-color: #fff;
-    background-image: url(http://sfe.ykt.io/o_1d0u41np22kr57usaj99t1p09.png);
+    background-image: url(https://qn-sfe.yuketang.cn/o_1d0u41np22kr57usaj99t1p09.png);
     background-attachment: initial;
     background-size: auto 100%;
     background-origin: initial;

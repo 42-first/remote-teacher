@@ -168,6 +168,10 @@ var mixin = {
               this.setTimeline(timeline)
             }
 
+            if(typeof msg.livestatus !== 'undefined'){
+              // this.changeLiveStatusTips(msg.livestatus, msg.livevoice)
+            }
+
             break
 
           // 翻页
@@ -385,6 +389,12 @@ var mixin = {
 
             break;
 
+          // 切换直播
+          case 'updateliveurl':
+            this.changeLive(msg);
+
+            break;
+
           // 结束直播
           case 'endlive':
             this.endLive(msg);
@@ -418,7 +428,13 @@ var mixin = {
           // 接收弹幕
           case 'newdanmu':
             this.isLive && this.receiveDanmu(msg);
+            hasMsg = false;
 
+            break;
+
+          // 直播状态
+          case 'livestatus':
+            this.changeLiveStatusTips(msg.status, msg.voice)
             break;
 
           default:

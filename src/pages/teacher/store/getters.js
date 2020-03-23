@@ -48,6 +48,8 @@ const getters = {
   newToolBar: state => state.newToolBar,
   addinversion: state => state.addinversion,
   postWordCloudOpen: state => state.postWordCloudOpen,
-  danmuWordCloudOpen: state => state.danmuWordCloudOpen
+  danmuWordCloudOpen: state => state.danmuWordCloudOpen,
+  toolbarIndex: state => state.toolbarIndex,
+  isCloneClass: state => state.isCloneClass,
 };
 export default getters
