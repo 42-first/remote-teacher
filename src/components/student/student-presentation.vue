@@ -1351,6 +1351,7 @@
       }
 
       .live__unfold {
+        margin-top: -0.266667rem;
         width: 100%;
         height: 1.066667rem;
         padding: 0 0.4rem;
