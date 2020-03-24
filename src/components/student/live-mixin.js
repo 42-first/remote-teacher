@@ -450,6 +450,11 @@ let liveMixin = {
 
         this.handleFLVError();
       }
+
+      // 快手上报 重试
+      if(this.qos) {
+        this.qos.retry();
+      }
     },
 
     /*
@@ -490,6 +495,9 @@ let liveMixin = {
           uid: this.userID,
           liveurl: this.logLiveurl
         });
+
+        // 快手上报重置
+        this.qos.reset();
       }
     },
 
