@@ -9,12 +9,12 @@
           </p>
           <div class="footer-cr">
             <p>©2019 清华大学&学堂在线</p>
-            <p>京ICP证140571号 | 京公网安备 11010802017721</p>
+            <p>京ICP证140571号 | 京公网安备 11010802017721 | 北京慕华信息科技有限公司</p>
           </div>
           <!-- <p>京公网安备 11010802017721</p> -->
         </div>
         <div class="footer-right fr">
-          <img class="link-time" src="http://sfe.ykt.io/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
+          <img class="link-time" src="https://qn-sfe.yuketang.cn/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
           <p class="link-tel">400-099-6061</p>
           <!-- 联系方式 -->
           <div class="link-us clearfix">
@@ -23,18 +23,18 @@
                 <p><a href="mailto:yuketang@xuetangx.com">yuketang@xuetangx.com</a></p>
                 <p class="remark">邮箱</p>
               </div>
-              <img class="link-img" src="http://sfe.ykt.io/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件" />
+              <img class="link-img" src="https://qn-sfe.yuketang.cn/o_1bfogbbac1laj2ojlb8ur7c2o.png" alt="邮件" />
             </div>
             <div class="link-us-qq fr">
               <div class="link-us-qqgroup">
                 <p>QQ:529448617（用户八群）</p>
                 <p class="remark">雨课堂官方QQ群</p>
               </div>
-              <img class="link-img" src="http://sfe.ykt.io/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
+              <img class="link-img" src="https://qn-sfe.yuketang.cn/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
             </div>
             <div class="link-us-wechat fr">
-              <div class="link-us-qcode"><img src="http://sfe.ykt.io/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服"></div>
-              <img class="link-img" src="http://sfe.ykt.io/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信" />
+              <div class="link-us-qcode"><img src="https://qn-sfe.yuketang.cn/o_1bfog83r555e54q11fh7a51c399.png" alt="雨课堂微信客服"></div>
+              <img class="link-img" src="https://qn-sfe.yuketang.cn/o_1bfog9qnn1v2m8t6tb11oqn190ue.png" alt="微信" />
             </div>
           </div>
         </div>

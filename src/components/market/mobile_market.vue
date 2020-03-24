@@ -1,7 +1,7 @@
 <template>
   <div class="over app">
     <div class="banner">
-      <img src="http://sfe.ykt.io/o_1bq1tobqeap3ov9slt1tof1q1lf.jpg"/>
+      <img src="https://qn-sfe.yuketang.cn/o_1bq1tobqeap3ov9slt1tof1q1lf.jpg"/>
     </div>
     <div class="product">
       <div class="color3 list-name">
@@ -29,7 +29,7 @@
                 ¥ {{i.price}}
               </div>
               <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
-              <a href="javascript:alert('请在电脑上打开 \n ykt.io \n下载样章');" class="download_courseware inline-block font16">免费下载样章</a>
+              <a href="javascript:;" class="download_courseware inline-block font16" @click="handleTip">免费下载样章</a>
             </div>
           </div>
         </li>
@@ -112,7 +112,7 @@
           title: '「雨课堂」雨课件',
           desc: '名师教学资源，经验共筑共享',
           lineLink: location.href,
-          imgUrl: 'http://sfe.ykt.io/o_1bppvh39sj5josf15s8m431itf9.png'
+          imgUrl: 'https://qn-sfe.yuketang.cn/o_1bppvh39sj5josf15s8m431itf9.png'
         }
 
         window.wx && window.wx.ready(function () {
@@ -144,6 +144,10 @@
             }
           })
         })
+      },
+      handleTip(evt) {
+        let host = location.host;
+        alert(`请在电脑上打开 \n ${host} \n下载样章`);
       }
     },
     directives: {

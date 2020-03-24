@@ -71,19 +71,19 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
-	      <router-link tag="div" :to="{name: 'redpacket', query: { problemid: problemid }}" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
+	      <div @click="sendCheckRed({name: 'redpacket', problemid: problemid, type: 0})" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',RedEnvelopeID) }}</div>
-	      </router-link>
+	      </div>
 
-	      <router-link tag="div" :to="{name: 'redpacketlist', params: { redid: RedEnvelopeID }}" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
+	      <div @click="sendCheckRed({name: 'redpacketlist', redid: RedEnvelopeID, type: 1})" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',~RedEnvelopeID) }}</div>
-	      </router-link>
+	      </div>
 	    </section>
 	  </div>
 
@@ -173,7 +173,8 @@
         'socket',
         'isGuideDelayHidden',
 				'pptData',
-				'toupinginfo'
+				'toupinginfo',
+				'isCloneClass'
       ])
 	  },
 	  components: {
@@ -583,8 +584,15 @@
 	     * @event bindtap
 	     */
 	    yanshi () {
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 	      let self = this
-
 	      self.isProblemtimeHidden = false
 	    },
       /**
@@ -593,8 +601,15 @@
 	     * @event bindtap
 	     */
 	    shouti () {
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 	      let self = this
-
 	      T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[1], mark: self.problemid})
 	    },
 	    /**
@@ -643,6 +658,16 @@
 	     * @param {boolean} isTouping true 正在投屏，要取消投屏
 	     */
 	    handlePostProblemresult (isTouping) {
+
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
 	      let self = this
 				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
@@ -700,7 +725,28 @@
 
           this.problem = card.Problem;
         }
-      },
+			},
+			/*
+				去发红包/查看红包列表
+			*/
+			sendCheckRed({type, name, problemid, redid}) {
+				// 发红包
+				if (!type) {
+					// 克隆班不能执行当前操作
+					if (!!this.isCloneClass) {
+						this.$toast({
+							message: this.$t('cloneTips'),
+							duration: 3e3
+						});
+						return
+					}
+					this.$router.push({name, query: { problemid }});
+				}
+				// 红包列表 
+				else {
+					this.$router.push({name, params: { redid }});
+				}
+			}
 	  }
 	}
 </script>

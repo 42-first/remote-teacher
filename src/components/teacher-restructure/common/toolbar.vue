@@ -3,7 +3,7 @@
 	<div class="toolbar-root dontcallback">
 		<div class="rc-toolbar f12">
       <v-touch :class="['tool-item', 'first-item', {'active': activeIndex === 0}]" v-on:tap="goHome">
-        <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal' "></i>
+        <i class="iconfont f28" :class="activeIndex === 0 ? 'icon-ykq_tab_active2' : 'icon-ykq_tab_normal'"></i>
         <div class="icondesc">{{ $t('remotectrl') }}</div>
       </v-touch>
 		  <v-touch :class="['tool-item', 'J_ga', {'active': activeIndex === 1}]" v-on:tap="showThumbnail" data-category="1" data-label="工具栏">
@@ -26,7 +26,7 @@
     <div class="toolbar-more-box-wrapper" v-show="!isToolbarMoreBoxHidden" @click="touchCloseToolbarMoreBox">
       <div class="toolbar-more-box f14">
         <i class="iconfont icon-sanjiaoxing f24"></i>
-        <v-touch class="more-item" v-on:tap="summonQrcodeMask">
+        <v-touch class="more-item" v-on:tap="summonQrcodeMask" v-show="errType !== 2">
           <i class="iconfont icon-ykq_erweima f24"></i>
           <span>{{ $t('qrcode') }}</span>
         </v-touch>
@@ -36,7 +36,12 @@
           <span style="margin-left: 32rpx;">{{ $t('radomrollcall') }}</span>
         </v-touch>
 
-        <v-touch class="more-item" v-on:tap="setEndShow">
+        <v-touch class="more-item" v-on:tap="gotoStu">
+          <i class="iconfont icon-qiehuanshijiao f24 ver-middle"></i>
+          <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('viewasstudent') }}</span>
+        </v-touch>
+
+        <v-touch class="more-item" v-on:tap="setEndShow" v-show="errType !== 2">
           <i class="iconfont icon-ykq-tuichufangying f24"></i>
           <span style="margin-left: 32rpx;">{{ $t('endshow') }}</span>
         </v-touch>
@@ -44,6 +49,7 @@
           <i class="iconfont icon-shezhi f24 ver-middle"></i>
           <span style="margin-left: 32rpx;" class="ver-middle">{{ $t('set') }}</span>
         </v-touch>
+
       </div>
     </div>
 
@@ -66,7 +72,6 @@
         // activeIndex: 0,   // 当前正在高亮的工具栏tab序号
         isToolbarMoreBoxHidden: true,           // 工具栏更多按钮们的隐藏
         isHideSet: false,           // 工具栏设置按钮的隐藏
-        addinversionRight: 0
       }
     },
     computed: {
@@ -77,8 +82,14 @@
         'newdoubt',
         'newtougao',
         'newToolBar',
-        'addinversion'
-      ])
+        'addinversion',
+        'errType',
+        'toolbarIndex',
+        'isCloneClass'
+      ]),
+      addinversionRight() {
+        return Number(this.addinversion) || 0;
+      }
     },
     created () {
       let self = this
@@ -88,8 +99,7 @@
       })
       let newToolBar = !localStorage.getItem('newToolBar')
       this.$store.commit('set_newToolBar', newToolBar)
-      this.isHideSet = this.$route.name === "stateSet"
-      this.addinversionRight = Number(this.addinversion) || 0
+      this.isHideSet = this.$route.name === "stateSet";
     },
     methods: {
       /**
@@ -98,6 +108,7 @@
        */
       showThumbnail () {
         this.$emit('showThumbnail')
+        this.$store.dispatch('set_toolbarIndex', 1)
       },
       /**
        * 点击 课堂动态 按钮
@@ -105,6 +116,7 @@
        */
       showActivity () {
         this.$emit('showActivity')
+        this.$store.dispatch('set_toolbarIndex', 2)
       },
       /**
        * 点击 遥控器 按钮
@@ -113,6 +125,7 @@
        */
       goHome () {
         this.$emit('goHome')
+        this.$store.dispatch('set_toolbarIndex', 0)
       },
       /**
        * 点击工具栏更多按钮，显示隐藏更多按钮卡片
@@ -140,6 +153,14 @@
        * @event tap
        */
       summonQrcodeMask () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
         let str = JSON.stringify({
           'op': 'tryzoomqrcode',
@@ -158,6 +179,16 @@
        * @param {object} evt event对象
        */
       callWakeup (evt) {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         let self = this
         let str = JSON.stringify({
           'op': 'callwakeup',
@@ -167,8 +198,6 @@
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
         self.closeMore()
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课
@@ -176,6 +205,16 @@
        * @event bindtap
        */
       setEndShow () {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         let self = this
         let str = JSON.stringify({
           'op': 'endshow',
@@ -198,10 +237,14 @@
           self.isToolbarMoreBoxHidden = true
         }, 200)
       },
-    //  关闭新功能提示tips
+      //  关闭新功能提示tips
       closeTips () {
         this.$store.commit('set_newToolBar', false)
         localStorage.setItem('newToolBar', 1)
+      },
+      // 学生视角预览
+      gotoStu(){
+        location.href = '/lesson/student/'+ this.lessonid +'?force=lecture&remote=1'
       }
     }
   }
@@ -281,7 +324,7 @@
     position: absolute;
     right: 0.133333rem;
     bottom: 0.24rem;
-    width: 3.6rem;
+    width: 3.86666667rem;
     /*height: 4.5rem;*/
 
     background: #333333;
@@ -297,12 +340,12 @@
 
     .more-item {
       margin: 0 auto;
-      width: 2.826667rem;
+      width: 3.2rem;
       height: 1.44rem;
       line-height: 1.44rem;
       text-align: left;
       border-bottom: 1px solid #979797;
-
+      white-space: nowrap;
       .iconfont {
         margin-right: 0.2rem;
       }

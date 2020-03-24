@@ -21,6 +21,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
         student: {
             // 课件习题列表
             'GET_PRESENTATION_LIST': '/v/lesson/lesson_info_v2',
+            // 课程状态
+            'GET_LESSON_STATUS': '/v/lesson/status',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/api/red/red_envelope_detail/',
             // 习题提交
@@ -96,7 +98,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
     api = {
         // 用户权限
         'GET_USER_INFO': '/static/mock/user_info.json',
-        
+
         // 软件版本号
         'GET_SOFT_VERSION': '/v/lesson/lesson_ppt_version',
 
@@ -111,6 +113,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             // 课件习题列表
             // 'GET_PRESENTATION_LIST': 'http://apimock.xuetangx.com/mock/115/v/lesson/lesson_info_v2/',
             'GET_PRESENTATION_LIST': '/v/lesson/lesson_info_v2',
+            // 课程状态
+            'GET_LESSON_STATUS': '/v/lesson/status',
             // 红包详情
             'GET_RED_ENVELOPE_DETAIL': '/static/mock/student/red_envelope_detail.json',
             // 习题提交

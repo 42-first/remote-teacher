@@ -10,7 +10,7 @@ import socketProcessMessage from './socket-process-message'
 import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'g.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
@@ -64,7 +64,6 @@ let mixin = {
     initws() {
       let self = this
       // 持久化了，所以总是有socket对象
-      // console.log('initws.isReconnect.socket', isReconnect, self)
       if (!isReconnect && self.$store.state.socket && self.$store.state.socket.send) {
         // TODO 处理断网重连的socket怎么处理
         // 不用重连了：不是断网重连，并且有连接能力（刷新可能导致只是一个对象而已）
@@ -115,7 +114,6 @@ let mixin = {
         })
 
         this.socket.onerror = function(event) {
-          // console.log('socket.onerror', event)
           request.get(url, {
             'user_id': self.userid,
             'lesson_id': self.lessonid,
@@ -171,13 +169,11 @@ let mixin = {
 
           self.socket.onmessage = function (event) {
             let msg = JSON.parse(event.data)
-            // console.log(msg.addinversion, msg)
             msg.addinversion && self.$store.commit('addinversion', msg.addinversion)
             self.socketProcessMessage(msg)
           }
 
           // 握手开始通信
-          // console.log('========onopen.sendhello========')
           self.socket.send(JSON.stringify({
             'op': 'hello',
             'userid': self.userid,

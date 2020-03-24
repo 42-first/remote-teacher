@@ -37,13 +37,13 @@ var handler = function(evt) {
     var label = $el.data('label') || '遥控器';
     var value = $el.data('value') || 0;
 
-    ga('send', {
-        hitType: 'event',
-        eventCategory: cg,
-        eventAction: action,
-        eventLabel: label,
-        eventValue: value
-    });
+    // ga('send', {
+    //     hitType: 'event',
+    //     eventCategory: cg,
+    //     eventAction: action,
+    //     eventLabel: label,
+    //     eventValue: value
+    // });
 };
 var gaue = {
     selector: '.J_page',

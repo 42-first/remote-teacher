@@ -164,7 +164,8 @@
       ...mapGetters([
         'lessonid',
         'socket',
-        'analysisRemarkId'
+        'analysisRemarkId',
+        'isCloneClass'
       ]),
       problemid() {
         return typeof this.problem === "object" && this.problem.ProblemID
@@ -254,6 +255,16 @@
        * @method 发送给全班
        */
       handleSendToStu() {
+
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         let url = API.publish_remark;
         let params = {
           'problem_id': this.problem.ProblemID,

@@ -153,7 +153,7 @@
         isShowBtnBox: false,          // 显示底部返回按钮
         notougaoImg: require(`images/teacher/no-tougao${i18n.t('imgafterfix')}.png`),
         isHideName: false,             // 匿名投屏
-        curGroupInfo: null,            // 当前的分组 
+        curGroupInfo: null,            // 当前的分组
       }
     },
     computed: {
@@ -163,7 +163,8 @@
         'postingSubmissionid',
         'postingSubmissionSent',
         'postWordCloudOpen',
-        'addinversion'
+        'addinversion',
+        'isCloneClass'
       ])
     },
     components: {
@@ -240,7 +241,7 @@
         T_PUBSUB.subscribe('submission-msg.wordcloudshown', (_name, msg) => {
           self.$store.commit('set_postWordCloudOpen', true)
         })
-        
+
         T_PUBSUB.subscribe('submission-msg.closepostwc', (_name, msg) => {
           self.$store.commit('set_postWordCloudOpen', false)
         })
@@ -432,6 +433,15 @@
       postSubmission (submissionid) {
         let self = this
 
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         // 因为学生能够删除投稿，修改投屏方式为ajax
         // https://tower.im/projects/ea368aa0284f4fb3ab8993b006579460/todos/5854f6b0dd584a9fac796bba852e5ba1/#043541593c7d442e8921fbf9856a8691
         postingTimer = setTimeout(() => {
@@ -508,7 +518,6 @@
         })
 
         self.socket.send(str)
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(event);
       },
       /**
        * 收藏投稿
@@ -618,11 +627,20 @@
         var result = s.replace(/[^\x00-\xff]/g, '**')
         return result.length
     },
-    /** 
+    /**
        * @method 词云投屏控制
-       * 
+       *
       */
       setWordCloudStatus(){
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
+
         if(!this.dataList.length) return false;
         let self = this
         let str = ''
@@ -663,6 +681,14 @@
 
       // 进入发布投稿页面
       handlePublish(evt) {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         this.$router.push({
           name: 'postsubmission',
           params: {
@@ -836,7 +862,7 @@
           justify-content: space-between;
           align-items: center;
           height: px2rem(80px);
-          
+
           // height: 1rem;
           // margin-left: 1.386667rem;
 
@@ -940,7 +966,7 @@
       position: absolute;
       top: 0.26666667rem;
       right: 0.4rem;
-    } 
+    }
   }
 
   .publish-btn {

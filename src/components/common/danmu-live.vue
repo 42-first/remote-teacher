@@ -261,6 +261,11 @@
 
         if(danmus && danmus.length) {
           this.getOneDanmu(danmus);
+
+          // 屏幕最多显示20条
+          if(this.danmuList.length > 20) {
+            this.danmuList = this.danmuList.slice(-15);
+          }
         }
 
         // 30秒内没有收到新弹幕清空弹幕列表

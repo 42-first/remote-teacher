@@ -130,8 +130,6 @@
         self.socket.send(str)
         // self.$emit('update:isToolbarMoreBoxHidden', true)
         self.isToolbarMoreBoxHidden = true
-
-        typeof gaue !== 'undefined' && gaue.default.fixTrigger(evt);
       },
       /**
        * 点击更多->退出放映按钮，设置结束授课
@@ -178,7 +176,7 @@
         width: 100%;
         text-align: center;
       }
-      
+
       .icondesc {
         margin-top: -0.133333rem;
       }

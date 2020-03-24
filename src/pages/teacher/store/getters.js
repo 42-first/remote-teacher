@@ -51,6 +51,8 @@ const getters = {
   toupinginfo: state => state.toupinginfo,
   postWordCloudOpen: state => state.postWordCloudOpen,
   danmuWordCloudOpen: state => state.danmuWordCloudOpen,
-  analysisRemarkId: state => state.analysisRemarkId
+  analysisRemarkId: state => state.analysisRemarkId,
+  toolbarIndex: state => state.toolbarIndex,
+  isCloneClass: state => state.isCloneClass,
 };
 export default getters

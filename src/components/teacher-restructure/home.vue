@@ -51,7 +51,10 @@
 
     <!-- 蒙版层 -->
     <!-- 当蒙版是缩略图、课堂动态时，底部的工具栏要露出来 -->
-    <div id="templates" v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden" :class="['templates', 'dontcallback']">
+    <div id="templates"
+			v-show="!isInitiativeCtrlMaskHidden || !isToastCtrlMaskHidden || !isMsgMaskHidden"
+				:class="['templates', 'dontcallback']"
+			>
       <!-- 遥控器遮罩层（用户主动弹出控制类）：缩略图，二维码控制，发试题选时间，课堂动态，第三优先级 -->
       <div class="rc-mask" v-show="!isInitiativeCtrlMaskHidden">
         <component
@@ -81,7 +84,7 @@
       </div>
 
       <!-- 遥控器遮罩层（错误信息类，不可关闭）：各种错误信息，第一优先级 -->
-      <div class="rc-mask" v-show="!isMsgMaskHidden">
+      <div class="rc-mask" v-show="!isMsgMaskHidden && errType !== 2">
         <component
           ref="MsgMask"
           :is="msgMaskTpl"
@@ -90,6 +93,12 @@
           @triggerReconnect="triggerReconnect"
         ></component>
       </div>
+
+			<endshow v-show="
+				errType == 2
+				&& toolbarIndex !== 2
+				&& isToastCtrlMaskHidden
+			"></endshow>
     </div>
 
     <!-- 新手引导页 -->
@@ -120,7 +129,7 @@
 <script>
 	/* eslint-disable no-undef, no-new */
 
-	import {mapGetters} from 'vuex'
+	import { mapGetters, mapActions} from 'vuex'
 
 	import request from '@/util/request'
 	import {configWX} from '@/util/wx-util'
@@ -153,6 +162,8 @@
 	import Activity from '@/components/teacher-restructure/common/activity'
 
 	import change_lang_dialog from "@/components/common/change_lang_dialog.vue"
+
+	import endshow from '@/components/teacher-restructure/common/endshow'
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 	import './util/preventoverscroll'
@@ -240,8 +251,11 @@
         'msgMaskTpl',
         'toastCtrlMaskTpl',
 				'initiativeCtrlMaskTpl',
-				'toupinginfo'
-      ])
+				'toupinginfo',
+				'toolbarIndex',
+
+				'isCloneClass'
+			])
 	  },
 	  components: {
 	    Toolbar,
@@ -255,6 +269,7 @@
 	    Activity,
 	    change_lang_dialog,
 			notice: () => import('@/components/common/service-notice.vue'),
+			endshow
 	  },
 	  created () {
 	    this.init()
@@ -265,7 +280,6 @@
 	  },
 	  mounted () {
 	    let self = this
-
 	    self.pmos()
 
 	    // 根据localStorage判断是否显示新手引导
@@ -278,6 +292,9 @@
 	  },
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
+			...mapActions([
+				'set_isCloneClass'
+			]),
 			showNote(text) {
 				this.noteText = text.split(/\r\n/).join("<br/>")
 			},
@@ -318,10 +335,6 @@
 
 		    self.setSentry()
 
-		    import('@/util/ga').then(gaue => {
-		    	window.gaue = gaue;
-		      gaue.default.registerEl();
-		    })
 				let goHomeFlag = localStorage.getItem('gohome')
 				if(goHomeFlag){
 					localStorage.removeItem('gohome')
@@ -365,7 +378,7 @@
 	     * @param {string, number} op 'next' || 'prev'  to: 缩略图时的页码， undefined时则不发送
 	     */
 	    sendSlideOp (op, to) {
-	      let self = this
+				let self = this
 	      let str = JSON.stringify({
 	        'op': op,
 	        'lessonid': self.lessonid,
@@ -373,7 +386,6 @@
 	        'msgid': 1234,
 	        'to': to
 	      })
-
 	      self.socket.send(str)
 	    },
 	    /**
@@ -383,7 +395,6 @@
 	     */
 	    videoControl (sid, pptshapeid) {
 	      let self = this
-	      console.log(900, self.lessonid, self.presentationid, sid, pptshapeid)
 	      let str = JSON.stringify({
 	        'op': 'videocontrol',
 	        'lessonid': self.lessonid,
@@ -659,16 +670,14 @@
 	     */
 	    setSentry() {
 	      if(typeof Raven !== 'undefined') {
-	        Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+	        Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	        Raven.setUserContext({ userid: this.userid });
 	      } else {
 	        setTimeout(() => {
-	          Raven.config('http://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
+	          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
 	          Raven.setUserContext({ userid: this.userid });
 	        }, 1500)
 	      }
-
-	      typeof ga === 'function' && ga('set', 'userId', this.userid);
 	    },
 	    /*
 	     * @method polyfill数组的 includes 方法
@@ -914,6 +923,9 @@
     right: 0;
     z-index: 101;
   }
+	.templates-endshow{
+		bottom: px2rem(128px);
+	}
 
   .rc-mask {
     position: absolute;
