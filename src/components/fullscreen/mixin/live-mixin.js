@@ -338,6 +338,11 @@ let liveMixin = {
         } catch(evt) {
         }
       }
+
+      // 快手上报 重试
+      if(this.qos && this.liveURL) {
+        this.qos.retry();
+      }
     },
 
     /*
@@ -376,6 +381,9 @@ let liveMixin = {
           uid: this.userID,
           liveurl: this.liveURL
         });
+
+        // 快手上报重置
+        this.qos.reset();
       }
     },
 
@@ -419,6 +427,11 @@ let liveMixin = {
 
       this.playState = 1;
       this.saveLiveStatus(this.playState);
+
+      // 快手上报 开始加载时间戳
+      if(this.qos && this.liveURL) {
+        this.qos.setLoadTimeOnMSE();
+      }
     },
 
     /*
