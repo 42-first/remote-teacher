@@ -6,6 +6,13 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "13654144",
+      "name": "退出直播",
+      "font_class": "tuichuzhibo",
+      "unicode": "e75a",
+      "unicode_decimal": 59226
+    },
+    {
       "icon_id": "13624321",
       "name": "语音直播",
       "font_class": "yuyinzhibo",

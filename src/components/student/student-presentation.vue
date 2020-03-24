@@ -56,6 +56,7 @@
             </p>
             <div class="line"></div>
             <p class="box-center" @click="handleStopVideo">
+              <i class="iconfont icon-tuichuzhibo f18 pr10"></i>
               <span class=""><!-- 关闭直播 -->{{ $t('liveoff') }}</span>
             </p>
           </section>
