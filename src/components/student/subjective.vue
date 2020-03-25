@@ -738,6 +738,8 @@
                   duration: 2000
                 });
 
+                this.sendStatus = 4;
+                this.oProblem['Result'] = null;
                 return this;
               } else {
                 this.$toast({
