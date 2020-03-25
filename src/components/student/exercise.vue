@@ -558,6 +558,31 @@
               if(res && res.data) {
                 let data = res.data;
 
+                // 先处理异常状态
+                if(data.status_code === 4) {
+                  // 此题已经作答过
+                  this.$toast({
+                    message: '此题已经作答过',
+                    duration: 2000
+                  });
+                } else if(data.status_code === 2) {
+                  // 用户由于接口时间太长超时了
+                  this.$toast({
+                    message: `提交失败(错误码：${data.status_code})`,
+                    duration: 2000
+                  });
+
+                  this.canSubmit = 0;
+                  this.oProblem['Result'] = null;
+
+                  return this;
+                } else {
+                  this.$toast({
+                    message: this.$i18n.t('sendsuccess') || '提交成功',
+                    duration: 2000
+                  });
+                }
+
                 self.summary = Object.assign(self.summary, {
                   status: this.$i18n.t('done') || '已完成',
                   isComplete: true
@@ -575,26 +600,6 @@
                 clearInterval(self.timer);
                 this.sLeaveTime = this.$i18n.t('done') || '已完成';
                 this.isComplete = true;
-
-                // 是否重复提交了
-                if(data.status_code === 4) {
-                  // 此题已经作答过
-                  this.$toast({
-                    message: '此题已经作答过',
-                    duration: 2000
-                  });
-                } else if(data.status_code === 2) {
-                  // 用户由于接口时间太长超时了
-                  this.$toast({
-                    message: `提交失败(错误码：${data.status_code})`,
-                    duration: 2000
-                  });
-                } else {
-                  this.$toast({
-                    message: this.$i18n.t('sendsuccess') || '提交成功',
-                    duration: 2000
-                  });
-                }
 
                 setTimeout(() => {
                   self.$router.back();
