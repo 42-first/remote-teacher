@@ -491,16 +491,14 @@ let liveMixin = {
      */
     initKwai(liveurl) {
       // https://tx-xuetangx.pull.yximgs.com/live/6000_kszt=GN=fp4YLg4o.flv
-      let isKwai = liveurl.indexOf('pull.yximgs.com');
-      if(~isKwai) {
-        let videoEl = document.getElementById('player');
+      // let isKwai = liveurl.indexOf('pull.yximgs.com');
 
-        if(typeof KwaiVideoQosH5 !== 'undefined') {
-          let qos = new KwaiVideoQosH5();
-          qos.attachMedia(videoEl);
+      let videoEl = document.getElementById('player');
+      if(typeof KwaiVideoQosH5 !== 'undefined') {
+        let qos = new KwaiVideoQosH5();
+        qos.attachMedia(videoEl);
 
-          this.qos = qos;
-        }
+        this.qos = qos;
       }
     }
 
