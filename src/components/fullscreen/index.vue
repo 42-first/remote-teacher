@@ -338,7 +338,10 @@
        * @method 接收器初始化
        */
       init() {
-        this.lessonID = this.$route.params.lessonID || 3049;
+        this.lessonID = this.$route.params.lessonID;
+        // 签到方式
+        this.source = this.$route.query && this.$route.query.source || '';
+
         this.iniTimeline(this.lessonID);
 
         let key = 'lesson-tip-cloesed-' + this.lessonID;
@@ -440,6 +443,11 @@
         let URL = API.student.GET_PRESENTATION_LIST;
         let param = {
           'lesson_id': this.lessonID
+        }
+
+        // 是否有明确的签到方式
+        if(this.source) {
+          param['source'] = this.source;
         }
 
         this.fetchPresentationCount++;
@@ -704,6 +712,18 @@
     },
     created() {
       this.init();
+
+      // 关闭 刷新页面 上报快手 window.onbeforeunload
+      window.onunload = (evt) => {
+        // 快手上报
+        if(this.qos && this.liveURL) {
+          this.qos.sendSummary({
+            lessonid: this.lessonID,
+            uid: this.userID,
+            liveurl: this.liveURL
+          });
+        }
+      };
     },
     mounted() {
       setTimeout(()=>{
