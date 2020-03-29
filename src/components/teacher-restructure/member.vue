@@ -46,7 +46,8 @@
 				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div :class="['xuhao']">
-							<span :class="[{'star-box': index <= 2}, 'star'+ (index + 1)]">{{index + 1}}</span>
+							<!--  :class="[{'star-box': index <= 2}, 'star'+ (index + 1)]" -->
+							<span>{{index + 1}}</span>
 						</div>
 						<div class="alignCenter">
 							<div class="user">
