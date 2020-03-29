@@ -464,17 +464,17 @@ let liveMixin = {
     handlestop() {
       let liveEl = document.getElementById('player');
 
+      if(this.playLoading && this.liveType === 1) {
+        this.$toast({
+          message: 'Loading...',
+          duration: 2000
+        });
+
+        return this;
+      }
+
       if(this.flvPlayer) {
         try {
-          if(this.playLoading && this.liveType === 1 && this.isWeb) {
-            this.$toast({
-              message: '连接中...',
-              duration: 3000
-            });
-
-            return this;
-          }
-
           let flvPlayer = this.flvPlayer;
           flvPlayer.pause();
           flvPlayer.unload();
@@ -507,6 +507,7 @@ let liveMixin = {
     */
     handleplay() {
       let liveEl = document.getElementById('player');
+
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
@@ -523,18 +524,21 @@ let liveMixin = {
             }
           });
 
-          this.playLoading = true;
+          // this.playLoading = true;
           // 音频直播提示 防止用户随便点击
           if(this.liveType === 1) {
             this.$toast({
-              message: '连接中...',
+              message: 'Loading...',
               duration: 4500
             });
           }
         } catch(e) {
         }
       } else {
-        liveEl.play();
+        liveEl.play()
+        .then(() => {
+          this.playLoading = false;
+        })
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
@@ -542,6 +546,7 @@ let liveMixin = {
         }, 500)
       }
 
+      this.playLoading = true;
       this.playState = 1;
       this.saveLiveStatus(this.playState);
 
