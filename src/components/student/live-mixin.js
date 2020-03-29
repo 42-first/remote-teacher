@@ -60,8 +60,6 @@ let liveMixin = {
         this.logLiveurl = this.liveurl.httpflv;
 
         try {
-          this.setLiveTip();
-
           // 展开播放模式下才开始拉流
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
@@ -92,6 +90,11 @@ let liveMixin = {
 
         // 心跳检测卡顿 flv只加视频
         this.liveType === 2 && this.checkTimeupdate();
+
+        // 之前直播状态
+        setTimeout(()=>{
+          this.setLiveTip();
+        }, 1000)
 
         return true;
       } else {
@@ -554,6 +557,13 @@ let liveMixin = {
       if(this.qos && this.logLiveurl) {
         this.qos.setLoadTimeOnMSE();
       }
+
+      // 防止没有流的时候无法操作
+      setTimeout(()=>{
+        if(this.playLoading) {
+          this.playLoading = false;
+        }
+      }, 3000)
     },
 
     /*
@@ -565,7 +575,7 @@ let liveMixin = {
       let statusKey = 'live-status-' + lessonID;
 
       // 网页版手动点击播放
-      if(typeof window.WeixinJSBridge == 'undefined') {
+      if(this.isWeb) {
         return this;
       }
 
