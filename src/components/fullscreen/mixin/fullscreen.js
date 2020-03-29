@@ -111,6 +111,9 @@ let fullscreenMixin = {
           uid: this.userID,
           liveurl: this.liveURL
         });
+
+        // 快手上报重置
+        this.qos.reset();
       }
     },
 
