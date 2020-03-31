@@ -60,8 +60,6 @@ let liveMixin = {
         this.logLiveurl = this.liveurl.httpflv;
 
         try {
-          this.setLiveTip();
-
           // 展开播放模式下才开始拉流
           if(this.liveVisible) {
             flvPlayer.attachMediaElement(liveEl);
@@ -92,6 +90,11 @@ let liveMixin = {
 
         // 心跳检测卡顿 flv只加视频
         this.liveType === 2 && this.checkTimeupdate();
+
+        // 之前直播状态
+        setTimeout(()=>{
+          this.setLiveTip();
+        }, 1000)
 
         return true;
       } else {
@@ -125,13 +128,14 @@ let liveMixin = {
       if(Hls.isSupported()) {
         let config = {
           maxBufferLength: 6,
-          nudgeMaxRetry: 5
+          nudgeMaxRetry: 10
         };
         var hls = new Hls(config);
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          liveEl.play().then(()=>{
+          liveEl.play()
+          .then(()=>{
             this.liveType === 2 && (this.liveVisible = true);
             this.playState = 1;
             this.liveStatusTips = ''
@@ -140,6 +144,8 @@ let liveMixin = {
 
         this.handleerror(hls);
         this.hls = hls;
+
+        // this.setLiveTip();
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -148,19 +154,29 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+        // iOS不能自动播放
+        // this.playState = 0;
+        // this.liveVisible = false;
+
+        setTimeout(() => {
+          liveEl.src = this.liveURL;
+        }, 1000 * 10)
 
         // 主要是断流后新推的HLS流要等到十几秒之后才能有流增加这个机制
         if (this.needNew) {
           this.needNew = false
 
           setTimeout(() => {
+            liveEl.src = this.liveURL;
             this.loadNewUrl()
-          }, 1000 * 20)
+          }, 1000 * 15)
         }
 
         liveEl.addEventListener('loadedmetadata', ()=> {
-          liveEl.play();
-          this.liveType === 2 && (this.liveVisible = true);
+          if(this.playState) {
+            liveEl.play();
+            this.liveType === 2 && (this.liveVisible = true);
+          }
         });
 
         // 检测404
@@ -170,17 +186,8 @@ let liveMixin = {
           }, 1000*5)
         });
 
-        // iOS不能直接play
-        this.liveType === 2 && wx.getNetworkType({
-          success: (res)=> {
-            liveEl.play();
-          }
-        });
-
         console.log('loadedmetadata hls supportHLS');
       }
-
-      this.setLiveTip();
 
       // 上报记录直播地址
       this.logLiveurl = this.liveURL;
@@ -190,8 +197,10 @@ let liveMixin = {
         this.initKwai(this.liveURL);
       }, 0)
 
-      // 心跳检测卡顿
-      this.checkTimeupdate();
+      setTimeout(() => {
+        // 心跳检测卡顿
+        this.checkTimeupdate();
+      }, 1000 * 10)
     },
 
     /**
@@ -464,17 +473,12 @@ let liveMixin = {
     handlestop() {
       let liveEl = document.getElementById('player');
 
+      if(this.playLoading && this.liveType === 1) {
+        return this;
+      }
+
       if(this.flvPlayer) {
         try {
-          if(this.playLoading && this.liveType === 1 && this.isWeb) {
-            this.$toast({
-              message: '连接中...',
-              duration: 3000
-            });
-
-            return this;
-          }
-
           let flvPlayer = this.flvPlayer;
           flvPlayer.pause();
           flvPlayer.unload();
@@ -507,6 +511,7 @@ let liveMixin = {
     */
     handleplay() {
       let liveEl = document.getElementById('player');
+
       if(this.flvPlayer) {
         try {
           let flvPlayer = this.flvPlayer;
@@ -523,18 +528,21 @@ let liveMixin = {
             }
           });
 
-          this.playLoading = true;
+          // this.playLoading = true;
           // 音频直播提示 防止用户随便点击
           if(this.liveType === 1) {
             this.$toast({
-              message: '连接中...',
+              message: 'Loading...',
               duration: 4500
             });
           }
         } catch(e) {
         }
       } else {
-        liveEl.play();
+        liveEl.play()
+        .then(() => {
+          this.playLoading = false;
+        })
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
@@ -542,6 +550,7 @@ let liveMixin = {
         }, 500)
       }
 
+      this.playLoading = true;
       this.playState = 1;
       this.saveLiveStatus(this.playState);
 
@@ -549,6 +558,13 @@ let liveMixin = {
       if(this.qos && this.logLiveurl) {
         this.qos.setLoadTimeOnMSE();
       }
+
+      // 防止没有流的时候无法操作
+      setTimeout(()=>{
+        if(this.playLoading) {
+          this.playLoading = false;
+        }
+      }, 3000)
     },
 
     /*
@@ -557,27 +573,14 @@ let liveMixin = {
      */
     setLiveTip() {
       let lessonID = this.lessonID;
-      let key = 'live' + lessonID;
       let statusKey = 'live-status-' + lessonID;
-      let hiddenLiveTip = false;
 
       // 网页版手动点击播放
-      if(typeof window.WeixinJSBridge == 'undefined') {
+      if(this.isWeb) {
         return this;
       }
 
       if(isSupported(window.localStorage)) {
-        hiddenLiveTip = +localStorage.getItem(key);
-
-        if(!hiddenLiveTip) {
-          this.showLiveTip = true;
-          localStorage.setItem(key, 1);
-
-          setTimeout(()=>{
-            this.showLiveTip = false;
-          }, 3000)
-        }
-
         // 是否播放 静音
         let status = localStorage.getItem(statusKey);
         if(status) {
@@ -589,7 +592,6 @@ let liveMixin = {
           } else if(status === 0) {
             this.handlestop();
           }
-
         }
       }
 
@@ -617,11 +619,29 @@ let liveMixin = {
       let flvPlayer = this.flvPlayer;
       this.liveVisible = visible;
 
-      if(visible) {
-        this.handleplay();
-      } else {
-        this.handlestop();
-      }
+      // if(visible) {
+      //   this.handleplay();
+      // } else {
+      //   this.handlestop();
+      // }
+    },
+
+    /*
+     * @method 关闭视频直播
+     * @params
+     */
+    handleStopVideo() {
+      this.liveVisible = false;
+      this.handlestop();
+    },
+
+    /*
+     * @method 关闭视频直播
+     * @params
+     */
+    handlePlayVideo() {
+      this.liveVisible = true;
+      this.handleplay();
     },
 
     /*
