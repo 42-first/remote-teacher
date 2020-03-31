@@ -900,6 +900,8 @@ var actionsMixin = {
 
         this.liveURL = '';
         this.liveType = 0;
+        this.playState = 0;
+        this.liveVisible = false;
 
         // 快手上报
         if(this.qos && this.logLiveurl) {
@@ -1061,13 +1063,13 @@ var actionsMixin = {
       let self = this
       switch (status) {
         case 1:
-          if(this.liveVisible){
+          if(this.liveVisible) {
             if(this.lastStatus !== 1 && this.lastStatus !== -3){
               this.needNew = true
             }
+
             this.liveStatusTips = ''
             if (this.liveType === 1) {
-              // this.supportHLS(this.Hls)
               let isWeb = this.isWeb;
               if(isWeb) {
                 if (this.flvPlayer) {
@@ -1084,8 +1086,9 @@ var actionsMixin = {
               } else {
                 this.supportHLS(this.Hls)
               }
+
+              this.handleplay();
             }
-            this.handleplay();
           }
 
           break

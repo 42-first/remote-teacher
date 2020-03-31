@@ -134,7 +134,8 @@ let liveMixin = {
         hls.loadSource(this.liveURL);
         hls.attachMedia(liveEl);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          liveEl.play().then(()=>{
+          liveEl.play()
+          .then(()=>{
             this.liveType === 2 && (this.liveVisible = true);
             this.playState = 1;
             this.liveStatusTips = ''
@@ -154,8 +155,8 @@ let liveMixin = {
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
         // iOS不能自动播放
-        this.playState = 0;
-        this.liveVisible = false;
+        // this.playState = 0;
+        // this.liveVisible = false;
 
         setTimeout(() => {
           liveEl.src = this.liveURL;
@@ -172,8 +173,10 @@ let liveMixin = {
         }
 
         liveEl.addEventListener('loadedmetadata', ()=> {
-          liveEl.play();
-          this.liveType === 2 && (this.liveVisible = true);
+          if(this.playState) {
+            liveEl.play();
+            this.liveType === 2 && (this.liveVisible = true);
+          }
         });
 
         // 检测404
@@ -182,17 +185,6 @@ let liveMixin = {
             this.supportHLS(this.Hls)
           }, 1000*5)
         });
-
-        // iOS不能直接play
-        // wx.getNetworkType({
-        //   success: (res)=> {
-        //     liveEl.play()
-        //     .then(() => {
-        //       this.liveType === 2 && (this.liveVisible = true);
-        //       this.playState = 1;
-        //     })
-        //   }
-        // });
 
         console.log('loadedmetadata hls supportHLS');
       }
