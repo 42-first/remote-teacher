@@ -143,6 +143,8 @@ let liveMixin = {
 
         this.handleerror(hls);
         this.hls = hls;
+
+        this.setLiveTip();
       }
       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -151,6 +153,13 @@ let liveMixin = {
       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
       else if (liveEl.canPlayType('application/vnd.apple.mpegurl')) {
         liveEl.src = this.liveURL;
+        // iOS不能自动播放
+        this.playState = 0;
+        this.liveVisible = false;
+
+        setTimeout(() => {
+          liveEl.src = this.liveURL;
+        }, 1000 * 10)
 
         // 主要是断流后新推的HLS流要等到十几秒之后才能有流增加这个机制
         if (this.needNew) {
@@ -159,7 +168,7 @@ let liveMixin = {
           setTimeout(() => {
             liveEl.src = this.liveURL;
             this.loadNewUrl()
-          }, 1000 * 10)
+          }, 1000 * 15)
         }
 
         liveEl.addEventListener('loadedmetadata', ()=> {
@@ -175,16 +184,18 @@ let liveMixin = {
         });
 
         // iOS不能直接play
-        this.liveType === 2 && wx.getNetworkType({
-          success: (res)=> {
-            liveEl.play();
-          }
-        });
+        // wx.getNetworkType({
+        //   success: (res)=> {
+        //     liveEl.play()
+        //     .then(() => {
+        //       this.liveType === 2 && (this.liveVisible = true);
+        //       this.playState = 1;
+        //     })
+        //   }
+        // });
 
         console.log('loadedmetadata hls supportHLS');
       }
-
-      this.setLiveTip();
 
       // 上报记录直播地址
       this.logLiveurl = this.liveURL;
@@ -194,8 +205,10 @@ let liveMixin = {
         this.initKwai(this.liveURL);
       }, 0)
 
-      // 心跳检测卡顿
-      this.checkTimeupdate();
+      setTimeout(() => {
+        // 心跳检测卡顿
+        this.checkTimeupdate();
+      }, 1000 * 10)
     },
 
     /**
