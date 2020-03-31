@@ -6,6 +6,41 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "13654144",
+      "name": "退出直播",
+      "font_class": "tuichuzhibo",
+      "unicode": "e75a",
+      "unicode_decimal": 59226
+    },
+    {
+      "icon_id": "13624321",
+      "name": "语音直播",
+      "font_class": "yuyinzhibo",
+      "unicode": "e759",
+      "unicode_decimal": 59225
+    },
+    {
+      "icon_id": "13624290",
+      "name": "展开画面",
+      "font_class": "zhankaihuamian",
+      "unicode": "e757",
+      "unicode_decimal": 59223
+    },
+    {
+      "icon_id": "13624291",
+      "name": "只听声音",
+      "font_class": "zhitingshengyin",
+      "unicode": "e758",
+      "unicode_decimal": 59224
+    },
+    {
+      "icon_id": "13524628",
+      "name": "六边形",
+      "font_class": "liubianxing",
+      "unicode": "e756",
+      "unicode_decimal": 59222
+    },
+    {
       "icon_id": "5721173",
       "name": "16-双箭头向下",
       "font_class": "-shuangjiantouxiangxia",
