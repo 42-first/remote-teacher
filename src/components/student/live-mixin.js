@@ -157,8 +157,9 @@ let liveMixin = {
           this.needNew = false
 
           setTimeout(() => {
+            liveEl.src = this.liveURL;
             this.loadNewUrl()
-          }, 1000 * 20)
+          }, 1000 * 10)
         }
 
         liveEl.addEventListener('loadedmetadata', ()=> {
