@@ -76,6 +76,30 @@ textarea { outline: none; resize: none; }
   margin-bottom: 0.266667rem;
 }
 
+.box-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.box-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.box-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 
 /*-----------------------------*\
     $ 基本字体大小
