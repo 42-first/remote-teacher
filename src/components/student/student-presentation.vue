@@ -94,7 +94,7 @@
             <span class="f12"><!-- 语音直播收听中… -->{{ $t('liveaudiolisten') }}</span>
           </p>
           <p class="box-center">
-            <span class="f12 pr10" v-if="playLoading"><!-- 正在加载中 -->{{ $t('loading') }}</span>
+            <span class="f12 pr10" v-if="playLoading"><!-- 加载中 -->{{ $t('liveloading') }}</span>
             <span class="f12 pr10" v-else><!-- 点击关闭 -->{{ $t('liveaudiooff') }}</span>
           </p>
         </section>

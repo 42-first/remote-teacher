@@ -151,6 +151,7 @@ let pages = {
   "liveaudiooff": "点击关闭",
   "liveaudioing": "语音直播中…",
   "liveaudioon": "点击收听",
+  "liveloading": "加载中",
 
   // socket event
   "LESSON_START": "上课啦！",

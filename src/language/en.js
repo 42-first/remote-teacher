@@ -152,6 +152,7 @@ let pages = {
   "liveaudiooff": "Quit",
   "liveaudioing": "Audio live broadcasting",
   "liveaudioon": "Join",
+  "liveloading": "Loading",
 
   // socket event
   "LESSON_START": "Start Class!",
