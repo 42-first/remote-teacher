@@ -837,7 +837,10 @@ var actionsMixin = {
               this.supportFLV();
             }, 3000)
           } else {
-            this.Hls && this.supportHLS(this.Hls);
+            setTimeout(()=>{
+              this.needNew = true;
+              this.Hls && this.supportHLS(this.Hls);
+            }, 5000)
           }
         } else if(this.liveType === 2) {
           setTimeout(()=>{

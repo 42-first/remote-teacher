@@ -94,7 +94,8 @@
             <span class="f12"><!-- 语音直播收听中… -->{{ $t('liveaudiolisten') }}</span>
           </p>
           <p class="box-center">
-            <span class="f12 pr10"><!-- 点击关闭 -->{{ $t('liveaudiooff') }}</span>
+            <span class="f12 pr10" v-if="playLoading"><!-- 正在加载中 -->{{ $t('loading') }}</span>
+            <span class="f12 pr10" v-else><!-- 点击关闭 -->{{ $t('liveaudiooff') }}</span>
           </p>
         </section>
         <section class="live__fold" v-else @click="handleplay">
@@ -360,6 +361,8 @@
         liveURL: '',
         // 播放状态 1: 播放  0：停止
         playState: 0,
+        // 音频加载中
+        playLoading: false,
         // 是否提示语音直播
         showLiveTip: false,
         // 版本基本信息 宽高

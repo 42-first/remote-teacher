@@ -128,7 +128,7 @@ let liveMixin = {
       if(Hls.isSupported()) {
         let config = {
           maxBufferLength: 6,
-          nudgeMaxRetry: 5
+          nudgeMaxRetry: 10
         };
         var hls = new Hls(config);
         hls.loadSource(this.liveURL);
@@ -468,11 +468,6 @@ let liveMixin = {
       let liveEl = document.getElementById('player');
 
       if(this.playLoading && this.liveType === 1) {
-        this.$toast({
-          message: 'Loading...',
-          duration: 2000
-        });
-
         return this;
       }
 

@@ -304,7 +304,7 @@ let pages = {
 
   "refresh": "Refresh",
   "posttips": 'Tell students to explore post function by clicking <i class="iconfont icon-add f15"></i>',
-  "loading": "loading",
+  "loading": "Loading",
   "recvpost": "You have a new post",
   "nonewpost": "No new post",
   "star": "Save",
