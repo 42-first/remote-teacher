@@ -7,7 +7,7 @@
  */
 
 <template>
-  <section class="page" :class="[ liveType === 2 ? 'live__view' : '' ]" @click="handleFilter">
+  <section class="page" :class="[ liveType ? 'live__view' : '' ]" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
@@ -41,26 +41,74 @@
       </ul>
     </section>
 
-    <!-- 视频直播 liveURL && liveType === 2 controls -->
-    <section class="live__wrap" v-if="liveType === 2">
-      <section class="player__box" v-show="liveVisible">
-        <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
-        <div class="live__status f14" v-show="liveStatusTips">
-          {{liveStatusTips}}
-        </div>
+    <!-- 直播 -->
+    <section class="live__wrap" v-if="liveType">
+      <!-- 视频直播 -->
+      <section v-if="liveType === 2">
+        <section class="player__box" v-show="liveVisible">
+          <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
+          <div class="live__status f14" v-show="liveStatusTips">{{liveStatusTips}}</div>
+          <section class="live__unfold box-end f14">
+            <!-- 展开状态 只听声音 关闭直播 -->
+            <p class="box-center" @click="handleLiveVisible(false)">
+              <i class="iconfont icon-zhitingshengyin f18 pr10"></i>
+              <span class=""><!-- 只听声音 -->{{ $t('liveonlyvoice') }}</span>
+            </p>
+            <div class="line"></div>
+            <p class="box-center" @click="handleStopVideo">
+              <i class="iconfont icon-tuichuzhibo f18 pr10"></i>
+              <span class=""><!-- 关闭直播 -->{{ $t('liveoff') }}</span>
+            </p>
+          </section>
+        </section>
+        <!-- 收起 -->
+        <template v-if="!liveVisible">
+          <section class="live__fold blue" v-if="playState" @click="handleLiveVisible(true)">
+            <p class="box-center">
+              <img class="icon-laba" src="~images/student/voice.gif" >
+              <span class="f12"><!-- 视频直播收听中… -->{{ $t('livevideolisten') }}</span>
+            </p>
+            <p class="box-center">
+              <span class="f12 pr10"><!-- 展开画面 -->{{ $t('liveunfold') }}</span>
+              <i class="iconfont icon-zhankaihuamian f20"></i>
+            </p>
+          </section>
+          <section class="live__fold blue" v-else @click="handlePlayVideo">
+            <p class="box-center">
+              <i class="iconfont icon-zhibo pr10 f30 red"></i>
+              <span class="f12"><!-- 视频直播中… -->{{ $t('livevideoing') }}</span>
+            </p>
+            <p class="box-center">
+              <span class="f12 pr10"><!-- 点击观看 -->{{ $t('liveon') }}</span>
+              <i class="iconfont icon-dakai f18"></i>
+            </p>
+          </section>
+        </template>
       </section>
-
-      <!-- 展开收起 -->
-      <section class="live__fold c666" v-if="liveVisible" @click="handleLiveVisible(false)">
-        <i class="iconfont icon-fold f14"></i>
-        <span class="f12 fold-text"><!-- 收起 -->{{ $t('fold') }}</span>
-      </section>
-      <section class="live__fold c9b pt15" v-else @click="handleLiveVisible(true)">
-        <i class="iconfont icon-zhibo f20 red pr15"></i>
-        <span class="f12 fold-text"><!-- 直播中 点击观看 -->{{ $t('liveunfold') }}</span>
+      <!-- 音频直播 -->
+      <section class="blue" v-if="liveType === 1">
+        <audio id="player" class="live__container" autobuffer></audio>
+        <section class="live__fold" v-if="playState" @click="handlestop">
+          <p class="box-center">
+            <img class="icon-laba" src="~images/student/voice.gif" >
+            <span class="f12"><!-- 语音直播收听中… -->{{ $t('liveaudiolisten') }}</span>
+          </p>
+          <p class="box-center">
+            <span class="f12 pr10" v-if="playLoading"><!-- 加载中 -->{{ $t('liveloading') }}</span>
+            <span class="f12 pr10" v-else><!-- 点击关闭 -->{{ $t('liveaudiooff') }}</span>
+          </p>
+        </section>
+        <section class="live__fold" v-else @click="handleplay">
+          <p class="box-center">
+            <i class="iconfont icon-yuyinzhibo f24 red pr10"></i>
+            <span class="f12"><!-- 语音直播中… -->{{ $t('liveaudioing') }}</span>
+          </p>
+          <p class="box-center">
+            <span class="f12 pr10"><!-- 点击收听 -->{{ $t('liveaudioon') }}</span>
+          </p>
+        </section>
       </section>
     </section>
-
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
@@ -96,28 +144,13 @@
 
     <!-- 接收器 新消息提醒 -->
     <section class="student__msg f16" v-show="hasMsg" @click="handleScrollToTop">
-      <p class="" data-language-key="newfeed">{{ $t('newfeed') }}</p>
+      <p class="">{{ $t('newfeed') }}</p>
     </section>
 
     <!-- 习题试卷弹框 -->
     <section class="student__msgbox">
       <div class="" v-for="(item, index) in msgBoxs" :key="index">
         <Popup-Component :item="item" :index="index" :lessonid="lessonID" ></Popup-Component>
-      </div>
-    </section>
-
-    <!-- 直播入口 -->
-    <section class="live" v-if="liveURL && liveType === 1">
-      <div class="live__audio">
-        <i class="iconfont icon-quxiaojingyinx f32" v-if="playState" @click="handlestop"></i>
-        <i class="iconfont icon-jingyin f32" v-else @click="handleplay"></i>
-      </div>
-      <!-- live-player作为音频直播的容器 -->
-      <audio id="player" class="live__container" autobuffer>
-      </audio>
-      <!-- 直播提示 -->
-      <div class="live__tip f14" v-if="showLiveTip">
-        <p class="tip__text">{{ $t('livetip') }}</p>
       </div>
     </section>
 
@@ -162,7 +195,6 @@
     <!-- 网络不好 重新连接弹层 -->
     <section class="student__net-mask" v-if="isReconnect">
       <div class="content-block">
-        <!-- <p class=" f16" data-language-complex="connerr" :data-second="countdown">连接异常，<span class="countTime">{{ countdown }}</span>秒后尝试重连</p> -->
          <p class=" f16" v-html="$t('connerr', {second: countdown})"></p>
         <p class="connect-btn f18" @click="handleReconnect">{{ $t('connnow') }}</p>
       </div>
@@ -329,6 +361,8 @@
         liveURL: '',
         // 播放状态 1: 播放  0：停止
         playState: 0,
+        // 音频加载中
+        playLoading: false,
         // 是否提示语音直播
         showLiveTip: false,
         // 版本基本信息 宽高
@@ -1165,6 +1199,9 @@
   .pr15 {
     padding-right: 0.2rem;
   }
+  .pr10 {
+    padding-right: 0.133333rem;
+  }
 
   .qr-code {
     width: 5rem;
@@ -1292,15 +1329,13 @@
     flex-flow: column;
 
     .live__wrap {
-      // z-index: 1;
       position: relative;
-      padding: 2.33rem 0 0.253333rem;
+      padding: 2.33rem 0 0;
 
       .player__box {
         position: relative;
-          .video__live {
+        .video__live {
           width: 100%;
-          // height: 7.5rem;
           min-height: 5rem;
           background: rgba(0,0,0,0.45);
         }
@@ -1313,22 +1348,44 @@
           color: #FFFFFF;
           letter-spacing: 0;
           text-align: center;
-          // text-shadow: 0 2px 4px rgba(0,0,0,0.50);
           padding: 0.13333333rem 0.26666667rem;
           background: rgba(68,68,68,.4);
           border-radius: 0.05333333rem;
         }
       }
 
+      .live__unfold {
+        margin-top: -0.266667rem;
+        width: 100%;
+        height: 1.066667rem;
+        padding: 0 0.4rem;
+
+        color: #c8c8c8;
+        background: #333;
+
+        .line {
+          margin: 0 0.266667rem;
+          height: 0.4rem;
+          border-right: 1px solid #fff;
+        }
+      }
 
       .live__fold {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
 
-        height: 0.64rem;
-        .fold-text {
-          padding-left: 5px;
+        margin: 0.266667rem auto;
+        padding: 0 0.266667rem;
+        width: 9.066667rem;
+        height: 1.066667rem;
+        background: rgba(80, 150, 245, 0.1);
+        border-radius: 0.053333rem;
+
+        .icon-laba {
+          margin-right: 0.133333rem;
+          width: 0.64rem;
+          height: 0.64rem;
         }
       }
     }
@@ -1452,8 +1509,6 @@
     height: 1.28rem;
 
     background: rgba(0, 0, 0, 0.7);
-    // border: 0.026667rem solid #333;
-    // box-shadow: 0 0.026667rem 0.133333rem rgba(51, 51, 51, 0.3);
     box-shadow: 0 0.04rem 0.24rem rgba(0,0,0,0.5);
     border-radius: 50%;
     box-sizing: border-box;
@@ -1484,35 +1539,6 @@
     opacity: 0;
   }
 
-  .live__tip {
-    position: absolute;
-    top: -1.333333rem;
-    right: 0;
-
-    white-space: nowrap;
-    color: #fff;
-    // rgba(0,0,0,0.6);
-    background: rgba(0,0,0,0.6);
-    border-radius: 0.106667rem;
-  }
-
-  .tip__text {
-    z-index: 1;
-    position: relative;
-    padding: 0.2rem 0.333333rem;
-  }
-
-  .live__tip:after {
-    content: '';
-    z-index: 0;
-    position: absolute;
-    bottom: -0.26rem;
-    right: 0.64rem;
-    border-width: 0.13rem 0.2rem;
-    border-style: solid;
-    border-color: rgba(0,0,0,0.6) rgba(0,0,0,0.6) transparent transparent;
-
-  }
 
   video::-webkit-media-controls-timeline {
     visibility: hidden;

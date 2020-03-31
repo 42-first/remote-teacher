@@ -15,8 +15,8 @@
 
         <div class="img-wrapper">
         	<template v-if="pptData.length && pptData[current - 1].Shapes && pptData[current - 1].Shapes.length">
-        		<v-touch class="video-btn dontcallback" v-for="btnItem in pptData[current - 1].Shapes" :key="btnItem.PPTShapeType" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
-        			<div class="video-hint f12"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
+        		<v-touch class="dontcallback" :class="btnItem.URL.indexOf('rain://xtvideo') !== -1 ? 'video-btn' : 'audio-btn'" v-for="btnItem in pptData[current - 1].Shapes" :key="btnItem.PPTShapeType" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].lessonSlideID, btnItem.PPTShapeId)">
+        			<div class="video-hint f12" v-if="btnItem.URL.indexOf('rain://xtvideo') !== -1"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
         		</v-touch>
         	</template>
 
@@ -835,7 +835,7 @@
       .img-wrapper {
       	position: relative;
 
-      	.video-btn {
+      	.video-btn, .audio-btn {
       		position: absolute;
       		left: 1.333333rem;
       		top: 1.333333rem;
@@ -867,6 +867,12 @@
       			bottom: 0.4rem;
       			text-align: center;
       		}
+				}
+				.audio-btn {
+					background: #fff;
+					&:after {
+						background-image: url(~images/teacher/play_pause_black.png);
+					}
 				}
 				.note{
 					position: absolute;
