@@ -532,6 +532,7 @@
               });
 
               self.isComplete = true;
+              self.oProblem['Result'] = null;
 
               setTimeout(() => {
                 self.$router.back();
