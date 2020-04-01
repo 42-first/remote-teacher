@@ -209,8 +209,6 @@
         liveURL: '',
         // 播放状态 1: 播放  0：停止
         playState: 1,
-        // 是否提示语音直播
-        showLiveTip: false,
         // 版本基本信息 宽高
         boardInfo: {
           width: 0,
