@@ -120,7 +120,8 @@
 
   import wsmixin from '@/components/fullscreen/mixin/socket-mixin'
   import actionsmixin from '@/components/fullscreen/mixin/actions-mixin'
-  import livemixin from '@/components/fullscreen/mixin/live-mixin'
+  // import livemixin from '@/components/fullscreen/mixin/live-mixin'
+  import livemixin from '@/components/fullscreen/mixin/live-kwai'
   import eventmixin from '@/components/fullscreen/mixin/event-mixin'
 
   import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
@@ -288,7 +289,8 @@
       },
       liveURL(newVal, oldVal) {
         setTimeout(()=>{
-          newVal && this.supportFLV();
+          // newVal && this.supportFLV();
+          newVal && this.initKwai();
 
           this.liveType === 2 && this.initEvent();
         }, 1000)
