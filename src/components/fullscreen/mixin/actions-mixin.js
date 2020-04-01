@@ -864,7 +864,7 @@ let actionsMixin = {
         this.liveurl = data.liveurl;
         // 直播类型
         this.liveType = data.type;
-        this.liveURL = data.liveurl.hls;
+        this.liveURL = data.liveurl.flv;
 
         if(this.liveType === 1) {
           let isWeb = this.isWeb;
