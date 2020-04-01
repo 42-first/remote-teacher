@@ -50,12 +50,20 @@ let liveMixin = {
     handleplay() {
       let audioEl = document.getElementById('player');
 
+      if(this.playLoading && this.liveType === 1) {
+        this.$toast({
+          message: '连接中...',
+          duration: 3000
+        });
+      }
+
       try {
         this.initKwai();
       } catch(e) {
         audioEl.play()
         .then(()=>{
           this.playState = 1;
+          this.playLoading = false;
           this.saveLiveStatus(this.playState);
         });
       }
@@ -166,6 +174,7 @@ let liveMixin = {
         box: 'flv',
         isLive: true,
         maxRetry: 10,
+        retryDelay: 3000,
         logEnv: process.env.NODE_ENV
       };
 
