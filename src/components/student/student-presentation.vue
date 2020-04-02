@@ -238,7 +238,8 @@
   import actionsmixin from '@/components/student/actions-mixin'
   import exercisemixin from '@/components/student/exercise-mixin'
 
-  import livemixin from '@/components/student/live-mixin'
+  // import livemixin from '@/components/student/live-mixin'
+  import livemixin from '@/components/student/live-kwai'
   import boardmixin from '@/components/common/board-mixin'
 
   import logmixin from '@/components/common/log-reporting'
@@ -755,7 +756,10 @@
                       self.supportFLV();
                     }, 1000)
                   } else {
-                    self.Hls && self.supportHLS(self.Hls);
+                    // self.Hls && self.supportHLS(self.Hls);
+                    setTimeout(()=>{
+                      self.supportFLV();
+                    }, 3000)
                   }
                 } else if(self.liveType === 2) {
                   setTimeout(()=>{

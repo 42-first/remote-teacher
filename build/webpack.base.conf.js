@@ -15,6 +15,7 @@ module.exports = {
     market: './src/pages/market/market.js',
     teacher: './src/pages/teacher/teacher.js',
     fullscreen: './src/pages/fullscreen/fullscreen.js',
+    kwailive: './src/pages/kwailive/kwailive.js',
   },
   output: {
     path: config.build.assetsRoot,

@@ -66,6 +66,14 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['app'],
       inject: true
     }),
+    // web 推流测试页面
+    new HtmlWebpackPlugin({
+      filename: 'kwailive.html',
+      template: './src/pages/kwailive/kwailive.html',
+      chunks: [ 'kwailive' ],
+      inject: true
+    }),
+
     new FriendlyErrorsPlugin()
   ]
 })
