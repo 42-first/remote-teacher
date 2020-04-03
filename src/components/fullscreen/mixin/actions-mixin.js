@@ -854,7 +854,7 @@ let actionsMixin = {
         "type": 1,    //1音频 2视频
         "code": "RainLive-8201d0bf-e0d441b3",
         "liveurl": {
-          "flv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
+          "httpflv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
           "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
           "rtmp": "rtmp://vdn-push.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3"
         }}
@@ -864,7 +864,7 @@ let actionsMixin = {
         this.liveurl = data.liveurl;
         // 直播类型
         this.liveType = data.type;
-        this.liveURL = data.liveurl.hls;
+        this.liveURL = data.liveurl.httpflv;
 
         if(this.liveType === 1) {
           let isWeb = this.isWeb;

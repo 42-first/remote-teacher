@@ -543,6 +543,16 @@ let liveMixin = {
         .then(() => {
           this.playLoading = false;
         })
+        .catch((error) => {
+          // this.$toast({
+          //   message: 'Loading...',
+          //   duration: 5000
+          // });
+
+          // this.playLoading = true;
+          // this.playState = 0;
+          // this.saveLiveStatus(this.playState);
+        });
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
