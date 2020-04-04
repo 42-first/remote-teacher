@@ -212,10 +212,10 @@ let liveMixin = {
           this.playLoading = false;
           this.liveStatusTips = '';
 
-          this.$toast({
-            message: '浏览器禁止自动播放，请手动点击播放按钮',
-            duration: 5000
-          });
+          // this.$toast({
+          //   message: '浏览器禁止自动播放，请手动点击播放按钮',
+          //   duration: 5000
+          // });
         });
       } catch(e) {
       }
