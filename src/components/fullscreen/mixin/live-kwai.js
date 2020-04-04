@@ -195,18 +195,30 @@ let liveMixin = {
 
       this.qos = qos;
 
-      videoEl.play()
-      .then(()=>{
-        this.playLoading = false;
-        this.playState = 1;
-        this.liveStatusTips = '';
+      try {
+        videoEl.play()
+        .then(()=>{
+          this.playLoading = false;
+          this.playState = 1;
+          this.liveStatusTips = '';
 
-        this.liveType === 2 && setTimeout(()=>{
-          videoEl.currentTime = videoEl.currentTime;
-        }, 5000)
+          this.liveType === 2 && setTimeout(()=>{
+            videoEl.currentTime = videoEl.currentTime;
+          }, 5000)
 
-        this.saveLiveStatus(this.playState);
-      });
+          this.saveLiveStatus(this.playState);
+        })
+        .catch((error) => {
+          this.playLoading = false;
+          this.liveStatusTips = '';
+
+          this.$toast({
+            message: '浏览器禁止自动播放，请手动点击播放按钮',
+            duration: 5000
+          });
+        });
+      } catch(e) {
+      }
 
       this.playLoading = true;
       this.liveStatusTips = '连接中...';
