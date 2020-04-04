@@ -202,9 +202,9 @@ let liveMixin = {
           this.playState = 1;
           this.liveStatusTips = '';
 
-          this.liveType === 2 && setTimeout(()=>{
-            videoEl.currentTime = videoEl.currentTime;
-          }, 5000)
+          // this.liveType === 2 && setTimeout(()=>{
+          //   videoEl.currentTime = videoEl.currentTime;
+          // }, 5000)
 
           this.saveLiveStatus(this.playState);
         })
