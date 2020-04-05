@@ -908,6 +908,7 @@ let actionsMixin = {
 
         this.liveURL = '';
         this.liveType = 0;
+        this.playState = 0;
       }, 3000)
 
       // 关闭弹幕直播
