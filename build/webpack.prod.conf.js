@@ -146,6 +146,19 @@ var webpackConfig = merge(baseWebpackConfig, {
       },
       chunksSortMode: 'dependency'
     }),
+    // web 快手直播测试
+    new HtmlWebpackPlugin({
+      filename: 'kwailive.html',
+      template: './src/pages/kwailive/kwailive.html',
+      chunks: ['kwailive'],
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      chunksSortMode: 'dependency'
+    }),
     // split vendor js into its own file
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: 'vendor',

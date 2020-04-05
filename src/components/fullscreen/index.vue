@@ -120,7 +120,8 @@
 
   import wsmixin from '@/components/fullscreen/mixin/socket-mixin'
   import actionsmixin from '@/components/fullscreen/mixin/actions-mixin'
-  import livemixin from '@/components/fullscreen/mixin/live-mixin'
+  // import livemixin from '@/components/fullscreen/mixin/live-mixin'
+  import livemixin from '@/components/fullscreen/mixin/live-kwai'
   import eventmixin from '@/components/fullscreen/mixin/event-mixin'
 
   import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
@@ -208,9 +209,7 @@
         // 直播地址 http://vdn-snap.xuetangx.com/hls/RainLive-44c862d6-39260d78.m3u8
         liveURL: '',
         // 播放状态 1: 播放  0：停止
-        playState: 1,
-        // 是否提示语音直播
-        showLiveTip: false,
+        playState: 0,
         // 版本基本信息 宽高
         boardInfo: {
           width: 0,
@@ -290,7 +289,8 @@
       },
       liveURL(newVal, oldVal) {
         setTimeout(()=>{
-          newVal && this.supportFLV();
+          // newVal && this.supportFLV();
+          newVal && this.initKwai();
 
           this.liveType === 2 && this.initEvent();
         }, 1000)
