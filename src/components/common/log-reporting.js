@@ -129,7 +129,7 @@ let logMixin = {
           }, 3500)
         } else if(this.liveType === 1) {
           let isWeb = this.isWeb;
-          if(isWeb && this.flvPlayer) {
+          if(isWeb) {
             setTimeout(()=>{
               this.createFlvPlayer();
             }, 3000)
