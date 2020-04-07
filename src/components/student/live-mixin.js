@@ -500,8 +500,10 @@ let liveMixin = {
           liveurl: this.logLiveurl
         });
 
-        // 快手上报重置
-        this.qos.reset();
+        // 快手上报重置 重新拉流时需要重置
+        if(this.flvPlayer) {
+          this.qos.reset();
+        }
       }
     },
 

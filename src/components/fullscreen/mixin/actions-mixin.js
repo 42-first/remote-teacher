@@ -866,21 +866,6 @@ let actionsMixin = {
         this.liveType = data.type;
         this.liveURL = data.liveurl.httpflv;
 
-        if(this.liveType === 1) {
-          let isWeb = this.isWeb;
-          if(isWeb) {
-            setTimeout(()=>{
-              this.supportFLV();
-            }, 3000)
-          } else {
-            this.Hls && this.supportHLS(this.Hls);
-          }
-        } else if(this.liveType === 2) {
-          setTimeout(()=>{
-            this.supportFLV(true);
-          }, 3000)
-        }
-
         this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
         // 标记这是一堂远程课
@@ -902,15 +887,7 @@ let actionsMixin = {
         this.liveurl = data.url;
         // 直播类型
         this.liveType = data.type;
-        this.liveURL = data.url.hls;
-
-        if(this.liveType === 1) {
-          this.Hls && this.supportHLS(this.Hls);
-        } else if(this.liveType === 2) {
-          setTimeout(()=>{
-            this.supportFLV(true);
-          }, 3000)
-        }
+        this.liveURL = data.url.httpflv;
       }
     },
 
@@ -922,23 +899,16 @@ let actionsMixin = {
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       setTimeout(()=>{
-        // 拉流之前先解绑
-        if(this.flvPlayer) {
-          this.flvPlayer.unload();
-          this.flvPlayer.detachMediaElement();
+        // 快手上报
+        if(this.qos) {
+          this.qos.sendSummary();
+          // 拉流之前先解绑
+          this.destroyKwai();
         }
 
         this.liveURL = '';
         this.liveType = 0;
-
-        // 快手上报
-        if(this.qos && this.liveURL) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.liveURL
-          });
-        }
+        this.playState = 0;
       }, 3000)
 
       // 关闭弹幕直播
@@ -1109,32 +1079,18 @@ let actionsMixin = {
       let self = this
       switch (status) {
         case 1:
-          if(this.liveVisible){
-            if(this.lastStatus !== 1 && this.lastStatus !== -3){
+          if(this.liveVisible) {
+            if(this.lastStatus !== 1 && this.lastStatus !== -3) {
               this.needNew = true
             }
 
             this.liveStatusTips = ''
-            if (this.liveType === 1) {
-              // this.supportHLS(this.Hls)
-              let isWeb = this.isWeb;
-              if(isWeb) {
-                if (this.flvPlayer) {
-                  this.createFlvPlayer()
-                } else {
-                  this.supportFLV();
-                }
-              } else {
-                this.Hls && this.supportHLS(this.Hls);
-              }
-            } else {
-              if (this.flvPlayer) {
-                this.createFlvPlayer()
-              } else {
-                this.supportHLS(this.Hls)
-              }
-            }
-            this.handleplay();
+
+            this.changliveTimer && clearTimeout(this.changliveTimer);
+            this.changliveTimer = setTimeout(()=>{
+              // 初始化
+              this.initKwai();
+            }, 3000)
           }
 
           break
