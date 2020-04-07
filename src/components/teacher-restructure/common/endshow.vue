@@ -58,7 +58,8 @@
         'classroomid',
         'lessonid',
         'errType',
-        'toolbarIndex'
+        'toolbarIndex',
+        'isCloneClass'
       ]),
       activeIndex() {
         return this.toolbarIndex
@@ -71,8 +72,15 @@
        * @event bindtap
        */
       openModal () {
+        // 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
         let self = this
-
         self.isModalHidden = false
       },
 	  	/**

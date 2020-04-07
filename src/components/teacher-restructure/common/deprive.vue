@@ -38,7 +38,8 @@
       	'courseid',
       	'classroomid',
         'lessonid',
-        'socket',
+				'socket',
+				'isCloneClass'
       ])
     },
 	  methods: {
@@ -47,8 +48,15 @@
 		   *
 		   */
 		  tryDepriveRemote () {
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 		    let self = this
-
 		    let str = JSON.stringify({
 		      'op': 'depriveremote',
 		      'lessonid': self.lessonid
@@ -65,8 +73,15 @@
 		   * @event bindtap
 		   */
 		  exitRC () {
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 		  	let self = this
-
 		    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
 		  },
 		  /**
@@ -75,8 +90,15 @@
 		   * @event bindtap
 		   */
 		  gotoStu () {
+				// 克隆班不能执行当前操作
+        if (!!this.isCloneClass) {
+          this.$toast({
+            message: this.$t('cloneTips'),
+            duration: 3e3
+          });
+          return
+        }
 		  	let self = this
-		  	
 		    location.href = '/lesson/student/'+ self.lessonid +'?force=lecture'
 		  },
 	  }
