@@ -9,7 +9,6 @@
 import { isSupported } from '@/util/util'
 import flvjs from 'flv.js/dist/flv.min'
 // import '@/util/flv.min'
-// import '@/util/flv.min'
 
 
 let liveMixin = {
@@ -435,6 +434,80 @@ let liveMixin = {
     },
 
     /*
+    * @method 直播音频停止直播
+    * @params
+    */
+    handlestopVideo() {
+      let videoEl = document.getElementById('player');
+
+      if(this.playLoading) {
+        return this;
+      }
+
+      let flvPlayer = this.flvPlayer;
+      flvPlayer.unload();
+      flvPlayer.detachMediaElement();
+
+      videoEl.pause();
+
+      this.playState = 0;
+      this.saveLiveStatus(this.playState);
+
+      // 快手上报
+      if(this.qos && this.liveURL) {
+        this.qos.sendSummary({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.liveURL
+        });
+
+        // 快手上报重置
+        this.qos.reset();
+      }
+    },
+
+    /*
+    * @method 直播音频播放
+    * @params
+    */
+    handleplayVideo() {
+      let videoEl = document.getElementById('player');
+      if(this.flvPlayer) {
+        try {
+          let flvPlayer = this.flvPlayer;
+          flvPlayer.attachMediaElement(videoEl);
+          flvPlayer.load();
+          flvPlayer.play().then(() => {
+            this.playLoading = false;
+            this.playState = 1;
+            this.liveStatusTips = '';
+
+            this.liveType === 2 && setTimeout(()=>{
+              videoEl.currentTime = videoEl.currentTime;
+            }, 5000)
+          });
+
+          this.playLoading = true;
+          this.liveStatusTips = '连接中...';
+
+          setTimeout(()=>{
+            if(this.playLoading) {
+              this.playLoading = false;
+            }
+
+            this.liveStatusTips = '';
+          }, 5000)
+        } catch(e) {
+        }
+      } else {
+        videoEl.play();
+      }
+
+      this.playState = 1;
+      this.saveLiveStatus(this.playState);
+    },
+
+    /*
      * @method 是否显示直播提示
      * @params
      */
@@ -442,20 +515,8 @@ let liveMixin = {
       let lessonID = this.lessonID;
       let key = 'live' + lessonID;
       let statusKey = 'live-status-' + lessonID;
-      let hiddenLiveTip = false;
 
       if(isSupported(window.localStorage)) {
-        hiddenLiveTip = +localStorage.getItem(key);
-
-        if(!hiddenLiveTip) {
-          this.showLiveTip = true;
-          localStorage.setItem(key, 1);
-
-          setTimeout(()=>{
-            this.showLiveTip = false;
-          }, 3000)
-        }
-
         // 是否播放 静音
         let status = localStorage.getItem(statusKey);
         if(status) {

@@ -453,10 +453,11 @@
        */
       init() {
         let self = this;
+        let query = this.$route.query;
         this.lessonID = this.$route.params.lessonID || 3049;
-        this.observerMode = this.$route.query && this.$route.query.force === 'lecture' ? true : false;
+        this.observerMode = query && query.force === 'lecture' ? true : false;
 
-        this.returnRemote = this.$route.query.remote ? true : false
+        this.returnRemote = query && query.remote ? true : false
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
@@ -472,6 +473,13 @@
               'menuItem:favorite', 'menuItem:share:QZone']
           });
         });
+
+        // 是否开启debug模式
+        if(query && query.debug) {
+          setTimeout(()=>{
+            this.openDebug();
+          }, 1000*10)
+        }
       },
 
       /*

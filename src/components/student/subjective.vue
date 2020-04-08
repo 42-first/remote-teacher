@@ -714,7 +714,7 @@
           'retry_times': retryTimes
         };
 
-        this.oProblem['Result'] = param['result'];
+        // this.oProblem['Result'] = param['result'];
         let problem = self.$parent.problemMap.get(problemID)
 
         console.log(param);
@@ -750,6 +750,7 @@
 
               self.sendStatus = 4;
 
+              self.oProblem['Result'] = param['result'];
               self.summary = Object.assign(self.summary, {
                 status: this.$i18n.t('done') || '已完成',
                 isComplete: true
@@ -782,6 +783,8 @@
               message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
+
+            self.oProblem['Result'] = null;
 
             setTimeout(() => {
               self.$router.back();

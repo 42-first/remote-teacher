@@ -550,7 +550,7 @@
             'retry_times': retryTimes
           }
 
-          this.oProblem['Result'] = param['result'];
+          // this.oProblem['Result'] = param['result'];
           let problem = self.$parent.problemMap.get(problemID)
 
           return request.post(URL, param)
@@ -583,6 +583,7 @@
                   });
                 }
 
+                self.oProblem['Result'] = param['result'];
                 self.summary = Object.assign(self.summary, {
                   status: this.$i18n.t('done') || '已完成',
                   isComplete: true
@@ -617,6 +618,7 @@
               });
 
               self.isComplete = true;
+              self.oProblem['Result'] = null;
 
               setTimeout(() => {
                 self.$router.back();
