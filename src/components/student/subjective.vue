@@ -1100,7 +1100,17 @@
           let isComplete = data && data.isComplete;
 
           if(problemID && !isComplete) {
-            this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+            let socket = this.$parent.socket;
+
+            if (socket && socket.readyState === 1) {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 1000)
+            } else {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 3000)
+            }
           }
 
           console.log('息屏锁屏 ->唤醒启用');
