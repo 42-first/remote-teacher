@@ -1109,7 +1109,7 @@
             } else {
               setTimeout(()=>{
                 this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-              }, 3000)
+              }, 2000)
             }
           }
 
