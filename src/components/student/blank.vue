@@ -656,6 +656,36 @@
           localStorage.setItem(key, value);
         }
 
+      },
+
+      /*
+      * @method 息屏锁屏检测处理
+      * @param
+      */
+      visibilitychange(evt) {
+        if (document.hidden) {
+          console.log('息屏锁屏');
+        } else {
+          let data = this.summary;
+          let problemID = data && data.problemID;
+          let isComplete = data && data.isComplete;
+
+          if(problemID && !isComplete) {
+            let socket = this.$parent.socket;
+
+            if (socket && socket.readyState === 1) {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 1000)
+            } else {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 2000)
+            }
+          }
+
+          console.log('息屏锁屏 ->唤醒启用');
+        }
       }
     },
     created() {
@@ -670,9 +700,12 @@
       }
     },
     mounted() {
+      // 息屏锁屏检测
+      document.addEventListener('visibilitychange', this.visibilitychange);
     },
     beforeDestroy() {
-      clearInterval(this.timer);
+      this.timer && clearInterval(this.timer);
+      document.removeEventListener('visibilitychange', this.visibilitychange);
     }
   };
 </script>
