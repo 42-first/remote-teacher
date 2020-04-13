@@ -180,7 +180,11 @@ let liveMixin = {
 
       let qos = new KwaiPlayerKernelExternal(config);
       qos.on('error', (e) =>{
-        console.log(e);
+        console.log('error 断网了', e);
+
+        if(e.type === 'networkError') {
+          this.playState = 0;
+        }
       });
 
       qos.attachMedia(videoEl);
@@ -201,10 +205,6 @@ let liveMixin = {
           this.playLoading = false;
           this.playState = 1;
           this.liveStatusTips = '';
-
-          // this.liveType === 2 && setTimeout(()=>{
-          //   videoEl.currentTime = videoEl.currentTime;
-          // }, 5000)
 
           this.saveLiveStatus(this.playState);
         })
