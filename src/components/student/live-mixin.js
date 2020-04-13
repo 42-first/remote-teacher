@@ -405,22 +405,19 @@ let liveMixin = {
         console.log(type, msg);
 
         if(msg && ~msg.indexOf('MediaSource onSourceEnded') && this.playState) {
-          let liveEl = document.getElementById('player');
-          let flvPlayer = this.flvPlayer;
-
-          flvPlayer.unload();
-          flvPlayer.detachMediaElement()
-
           setTimeout(()=>{
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            flvPlayer.play();
-          }, 3000)
+            this.createFlvPlayer();
+          }, 3500)
         }
       });
     },
 
     createFlvPlayer() {
+      // 不是直播状态
+      if(!this.isLive) {
+        return this;
+      }
+
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
         // 拉流之前先解绑
