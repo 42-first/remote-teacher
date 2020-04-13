@@ -1145,11 +1145,7 @@
       window.onunload = (evt) => {
         // 快手上报
         if(this.qos && this.logLiveurl) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
-          });
+          this.qos.sendSummary();
         }
       };
     },

@@ -391,7 +391,7 @@ let liveMixin = {
         let system = this.system;
         system && (system['et'] = errorType);
 
-        if (errorType) {
+        if (errorType && this.playState) {
           setTimeout(()=>{
             this.createFlvPlayer();
           }, 3500)
@@ -404,7 +404,7 @@ let liveMixin = {
       flvjs.LoggingControl.addLogListener((type, msg) => {
         console.log(type, msg);
 
-        if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
+        if(msg && ~msg.indexOf('MediaSource onSourceEnded') && this.playState) {
           let liveEl = document.getElementById('player');
           let flvPlayer = this.flvPlayer;
 
@@ -443,7 +443,7 @@ let liveMixin = {
 
         try {
           // 展开播放模式下才开始拉流
-          if(this.liveVisible || this.playState) {
+          if(this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
@@ -461,7 +461,7 @@ let liveMixin = {
       }
 
       // 快手上报 重试
-      if(this.qos) {
+      if(this.qos && this.playState) {
         this.qos.retry();
       }
     },
@@ -494,16 +494,8 @@ let liveMixin = {
 
       // 快手上报 用户关闭直播
       if(this.qos && this.logLiveurl) {
-        this.qos.sendSummary({
-          lessonid: this.lessonID,
-          uid: this.userID,
-          liveurl: this.logLiveurl
-        });
-
-        // 快手上报重置 重新拉流时需要重置
-        if(this.flvPlayer) {
-          this.qos.reset();
-        }
+        // this.qos.sendSummary();
+        this.qos.onEnd();
       }
     },
 
@@ -516,6 +508,16 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
+          // 快手上报重置 重新拉流时需要重置
+          if(this.qos && this.logLiveurl) {
+            this.qos.reset();
+            this.qos.setBiz({
+              lessonid: this.lessonID,
+              uid: this.userID,
+              liveurl: this.logLiveurl
+            });
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
@@ -693,6 +695,13 @@ let liveMixin = {
         qos.attachMedia(videoEl);
 
         this.qos = qos;
+
+        // 添加业务数据
+        this.qos.setBiz({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.logLiveurl
+        });
       }
     }
   }

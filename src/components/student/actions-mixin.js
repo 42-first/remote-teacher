@@ -886,31 +886,15 @@ var actionsMixin = {
      * @param
      */
     endLive(data) {
-      // this.handlestop();
-      // this.liveURL = '';
-      // this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       setTimeout(()=>{
-        // 拉流之前先解绑
-        if(this.flvPlayer) {
-          this.flvPlayer.unload();
-          this.flvPlayer.detachMediaElement();
-        }
+        this.handlestop();
 
         this.liveURL = '';
         this.liveType = 0;
         this.playState = 0;
         this.liveVisible = false;
-
-        // 快手上报
-        if(this.qos && this.logLiveurl) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
-          });
-        }
       }, 3000)
 
       // 关闭弹幕直播
