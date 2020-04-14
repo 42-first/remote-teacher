@@ -121,8 +121,19 @@ let actionsMixin = {
               }
             });
 
-            // todo:上一次和这次计算的结果一致不更新
-            slideIndex && this.setSlideIndex(slideIndex);
+            // 上一次和这次计算的结果一致不更新
+            // slideIndex && this.setSlideIndex(slideIndex);
+            if(slideIndex) {
+              if(slideIndex !== this.slideIndex) {
+                this.setSlideIndex(slideIndex);
+              } else {
+                let slide = this.cards[slideIndex];
+                this.handleViewDetail(slide, slideIndex);
+
+                let slideEl = this.$el.querySelector(`.J_slide[data-index="${slideIndex}"]`);
+                slideEl && slideEl.scrollIntoView();
+              }
+            }
           }, 1000)
         }
       }
