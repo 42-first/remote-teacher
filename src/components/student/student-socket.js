@@ -243,11 +243,13 @@ var mixin = {
           // ppt更新
           case 'presentationupdated':
           case 'presentationcreated':
+            let presentationID = msg["presentation"];
 
-            msg['presentation'] && (this.presentationID = msg['presentation']);
+            if(presentationID) {
+              this.presentationID = presentationID;
+              this.getUpdatePPTData(presentationID)
+            }
 
-            let presentationID = msg["presentation"]
-            this.getUpdatePPTData(presentationID)
             break
 
           // 试卷结束

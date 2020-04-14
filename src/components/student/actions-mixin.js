@@ -214,7 +214,7 @@ var actionsMixin = {
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && this.getUpdatePPTData(data.presentationid);
+        !presentation && data.presentationid && this.getUpdatePPTData(data.presentationid);
         return;
       }
 
