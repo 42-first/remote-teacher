@@ -554,6 +554,8 @@
 
 	      pollingPresentationTagTimer = setInterval(self.fetchPresentationTag, 10*1000)
 	      // pollingTougaoTimer = setInterval(self.fetchTougaoUnreadnum, 10*1000)
+        // 进来请求一次 不轮询等ws通知
+        setTimeout(self.fetchTougaoUnreadnum, 5*1000)
 	    },
 	    /**
 	     * 获取缩略图页 不懂 的信息
