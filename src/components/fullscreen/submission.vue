@@ -9,9 +9,7 @@
 <template>
   <section class="page-submission box-center">
     <!-- 关闭页面 -->
-    <div class="page__back" @click="handleBack">
-      <i class="iconfont icon-shangyigex1"></i><span class="btn-txt">返回</span>
-    </div>
+    <div class="page__back" @click="handleBack">返回</div>
     <div class="submission-wrapper">
       <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
         <div class="title">选择分组</div>
@@ -681,6 +679,7 @@
     justify-content: center;
     align-items: center;
 
+    margin-top: 20px;
     margin-left: -90px;
     margin-right: 12px;
     width: 78px;

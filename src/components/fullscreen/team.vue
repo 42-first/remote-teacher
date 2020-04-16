@@ -11,6 +11,8 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center">
+      <!-- 关闭页面 -->
+      <div class="page__back" @click="handleBack">返回</div>
       <iframe class="webview" id="webview" :src="src" allowFullScreen></iframe>
     </div>
   </section>
@@ -65,6 +67,13 @@ export default {
      */
     init(slide) {
     },
+
+    /*
+    * @method 返回主页面
+    */
+    handleBack() {
+      this.$router.back();
+    }
   }
 };
 </script>
@@ -81,12 +90,32 @@ export default {
   .cover__container {
     width: 100%;
     height: 100%;
+
+    align-items: flex-start;
   }
 
   .webview {
     width: 375px;
     height: 100%;
     box-shadow: 1px 1px 5px #999;
+  }
+
+  .page__back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 20px;
+    margin-left: -90px;
+    margin-right: 12px;
+    width: 78px;
+    height: 32px;
+
+    color: #5096f5;
+    border: 1px solid #5096f5;
+    border-radius: 16px/16px;
+
+    cursor: pointer;
   }
 
 </style>
