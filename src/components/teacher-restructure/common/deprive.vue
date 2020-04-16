@@ -49,13 +49,13 @@
 		   */
 		  tryDepriveRemote () {
 				// 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
+        // if (!!this.isCloneClass) {
+        //   this.$toast({
+        //     message: this.$t('cloneTips'),
+        //     duration: 3e3
+        //   });
+        //   return
+        // }
 		    let self = this
 		    let str = JSON.stringify({
 		      'op': 'depriveremote',
@@ -74,13 +74,13 @@
 		   */
 		  exitRC () {
 				// 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
+        // if (!!this.isCloneClass) {
+        //   this.$toast({
+        //     message: this.$t('cloneTips'),
+        //     duration: 3e3
+        //   });
+        //   return
+        // }
 		  	let self = this
 		    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
 		  },
@@ -91,13 +91,13 @@
 		   */
 		  gotoStu () {
 				// 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
+        // if (!!this.isCloneClass) {
+        //   this.$toast({
+        //     message: this.$t('cloneTips'),
+        //     duration: 3e3
+        //   });
+        //   return
+        // }
 		  	let self = this
 		    location.href = '/lesson/student/'+ self.lessonid +'?force=lecture'
 		  },
