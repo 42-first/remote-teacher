@@ -8,14 +8,17 @@
 
 <template>
   <section class="page-submission box-center">
+    <!-- 关闭页面 -->
+    <div class="page__back" @click="handleBack">返回</div>
     <div class="submission-wrapper">
-      <div class="text-left contributor-wrapper" v-if="classroomid">
+      <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
           <i class="iconfont icon-dakai ver-middle font20"></i>
         </div>
-      </div>
+      </div> -->
+
       <div class="submission-inner">
         <!-- 文字编辑 -->
         <section class="submission__text">
@@ -93,7 +96,7 @@
     </section>
 
     <!-- picker -->
-    <picker :list="groupList" :selectedindex="selectedIndex" :text="pickerText" @close="pickerClose" v-if="isShowPicker"></picker>
+    <!-- <picker :list="groupList" :selectedindex="selectedIndex" :text="pickerText" @close="pickerClose" v-if="isShowPicker"></picker> -->
   </section>
 </template>
 <script>
@@ -225,6 +228,9 @@
               duration: 2000
             });
 
+            setTimeout(() => {
+              self.$router.back();
+            }, 2000)
           }
         }).catch(error => {
           this.sendStatus = 2;
@@ -235,6 +241,14 @@
           });
         });
       },
+
+      /*
+      * @method 返回主页面
+      */
+      handleBack() {
+        this.$router.back();
+      },
+
       /*
        * @method 上传图片
        * @param
@@ -657,9 +671,29 @@
     height: 100%;
 
     text-align: center;
+    align-items: flex-start;
+  }
+
+  .page__back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 20px;
+    margin-left: -90px;
+    margin-right: 12px;
+    width: 78px;
+    height: 32px;
+
+    color: #5096f5;
+    border: 1px solid #5096f5;
+    border-radius: 16px/16px;
+
+    cursor: pointer;
   }
 
   .submission-wrapper {
+    position: relative;
     width: 375px;
     height: 100%;
     background: #fff;
