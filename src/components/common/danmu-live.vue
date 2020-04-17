@@ -14,7 +14,10 @@
     <section class="danmu__wrap" :class="{ 'publish-mode': visibleIpt }" v-show="visible">
       <ul class="danmu__list">
         <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
-          <p class="danmu--text f14" >{{ danmu.danmu }}</p>
+          <p class="danmu--text f12" >
+            <!-- <span class="blue" v-if="danmu.ismine">(我)</span> -->
+            {{ danmu.danmu }}
+          </p>
         </li>
       </ul>
     </section>
@@ -92,8 +95,8 @@
     position: relative;
     margin: auto;
     padding: 0.066667rem 0;
-    width: 0.7rem;
-    height: 0.7rem;
+    width: 0.666667rem;
+    height: 0.666667rem;
 
     border-radius: 50%;
     border: 0.026667rem solid #fff;
@@ -270,9 +273,9 @@
         visibleIpt: false,
         // danmu内容
         danmuText: '',
+        // 已经发布过的弹幕ids
+        myDanmus: [],
       }
-    },
-    filters: {
     },
     watch: {
       danmus(newVal, oldVal) {
@@ -374,9 +377,14 @@
        */
       getOneDanmu(danmus) {
         let danmu = danmus.shift();
+        let myDanmus = this.myDanmus || [];
 
         if(danmu) {
-          let newDanmu = Object.assign({}, danmu, { status: 1 })
+          let danmuid = myDanmus.find((id)=>{
+            return id === danmu.danmuid;
+          });
+
+          let newDanmu = Object.assign({}, danmu, { status: 1, ismine: !!danmuid })
           this.danmuList.push(newDanmu);
 
           Promise.resolve().then(()=>{
@@ -450,8 +458,18 @@
           if(res) {
             // 弹幕返回数据结构 danmuID success
             let data = res;
+            let danmuID = data && data.danmuID;
 
             this.danmuText = '';
+            this.myDanmus.push(danmuID);
+
+            // let myDanmu = this.danmuList.find((danmu)=>{
+            //   return danmuID === danmu.danmuid;
+            // })
+
+            // if(myDanmu) {
+            //   myDanmu.ismine = true;
+            // }
 
             this.$toast({
               message: this.$i18n.t('sendsuccess') || '发送成功',
