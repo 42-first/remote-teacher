@@ -391,7 +391,7 @@ let liveMixin = {
         let system = this.system;
         system && (system['et'] = errorType);
 
-        if (errorType) {
+        if (errorType && this.playState) {
           setTimeout(()=>{
             this.createFlvPlayer();
           }, 3500)
@@ -404,23 +404,20 @@ let liveMixin = {
       flvjs.LoggingControl.addLogListener((type, msg) => {
         console.log(type, msg);
 
-        if(msg && ~msg.indexOf('MediaSource onSourceEnded')) {
-          let liveEl = document.getElementById('player');
-          let flvPlayer = this.flvPlayer;
-
-          flvPlayer.unload();
-          flvPlayer.detachMediaElement()
-
+        if(msg && ~msg.indexOf('MediaSource onSourceEnded') && this.playState) {
           setTimeout(()=>{
-            flvPlayer.attachMediaElement(liveEl);
-            flvPlayer.load();
-            flvPlayer.play();
-          }, 3000)
+            this.createFlvPlayer();
+          }, 3500)
         }
       });
     },
 
     createFlvPlayer() {
+      // 不是直播状态
+      if(!this.isLive) {
+        return this;
+      }
+
       let liveEl = document.getElementById('player');
       if (flvjs.isSupported() && liveEl) {
         // 拉流之前先解绑
@@ -443,7 +440,7 @@ let liveMixin = {
 
         try {
           // 展开播放模式下才开始拉流
-          if(this.liveVisible || this.playState) {
+          if(this.playState) {
             flvPlayer.attachMediaElement(liveEl);
             flvPlayer.load();
             flvPlayer.play().then(() => {
@@ -461,7 +458,7 @@ let liveMixin = {
       }
 
       // 快手上报 重试
-      if(this.qos) {
+      if(this.qos && this.playState) {
         this.qos.retry();
       }
     },
@@ -494,14 +491,8 @@ let liveMixin = {
 
       // 快手上报 用户关闭直播
       if(this.qos && this.logLiveurl) {
-        this.qos.sendSummary({
-          lessonid: this.lessonID,
-          uid: this.userID,
-          liveurl: this.logLiveurl
-        });
-
-        // 快手上报重置
-        this.qos.reset();
+        // this.qos.sendSummary();
+        this.qos.onEnd();
       }
     },
 
@@ -514,6 +505,16 @@ let liveMixin = {
 
       if(this.flvPlayer) {
         try {
+          // 快手上报重置 重新拉流时需要重置
+          if(this.qos && this.logLiveurl) {
+            this.qos.reset();
+            this.qos.setBiz({
+              lessonid: this.lessonID,
+              uid: this.userID,
+              liveurl: this.logLiveurl
+            });
+          }
+
           let flvPlayer = this.flvPlayer;
           flvPlayer.attachMediaElement(liveEl);
           flvPlayer.load();
@@ -543,6 +544,16 @@ let liveMixin = {
         .then(() => {
           this.playLoading = false;
         })
+        .catch((error) => {
+          // this.$toast({
+          //   message: 'Loading...',
+          //   duration: 5000
+          // });
+
+          // this.playLoading = true;
+          // this.playState = 0;
+          // this.saveLiveStatus(this.playState);
+        });
 
         // 避免音频没有加载不播放问题
         setTimeout(()=>{
@@ -681,6 +692,13 @@ let liveMixin = {
         qos.attachMedia(videoEl);
 
         this.qos = qos;
+
+        // 添加业务数据
+        this.qos.setBiz({
+          lessonid: this.lessonID,
+          uid: this.userID,
+          liveurl: this.logLiveurl
+        });
       }
     }
   }

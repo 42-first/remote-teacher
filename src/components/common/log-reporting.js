@@ -129,7 +129,7 @@ let logMixin = {
           }, 3500)
         } else if(this.liveType === 1) {
           let isWeb = this.isWeb;
-          if(isWeb && this.flvPlayer) {
+          if(isWeb) {
             setTimeout(()=>{
               this.createFlvPlayer();
             }, 3000)
@@ -161,6 +161,37 @@ let logMixin = {
       };
 
       request.post(URL, params);
+    },
+
+    /**
+     * @method 开启debug模式
+     * @params
+     */
+    openDebug() {
+      let vconsoleSrc = 'https://cdn.bootcss.com/vConsole/3.3.2/vconsole.min.js';
+
+      this.loadScript(vconsoleSrc)
+      .then(()=>{
+        var vConsole = new VConsole();
+        console.log('debug mode init');
+      })
+    },
+
+    loadScript(src) {
+      return new Promise((resolve, reject) => {
+        let scriptNode = document.createElement("script");
+        scriptNode.setAttribute("type", "text/javascript");
+        scriptNode.setAttribute("src", src);
+        document.body.appendChild(scriptNode);
+
+        scriptNode.onload = (evt) => {
+          resolve(evt);
+        }
+
+        scriptNode.onerror = (evt)=>{
+          reject('加载失败');
+        }
+      });
     },
 
   }

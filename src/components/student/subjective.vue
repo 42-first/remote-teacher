@@ -714,7 +714,7 @@
           'retry_times': retryTimes
         };
 
-        this.oProblem['Result'] = param['result'];
+        // this.oProblem['Result'] = param['result'];
         let problem = self.$parent.problemMap.get(problemID)
 
         console.log(param);
@@ -750,6 +750,7 @@
 
               self.sendStatus = 4;
 
+              self.oProblem['Result'] = param['result'];
               self.summary = Object.assign(self.summary, {
                 status: this.$i18n.t('done') || '已完成',
                 isComplete: true
@@ -782,6 +783,8 @@
               message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
+
+            self.oProblem['Result'] = null;
 
             setTimeout(() => {
               self.$router.back();
@@ -1082,6 +1085,36 @@
       },
       handleBack() {
         this.$router.back();
+      },
+
+      /*
+      * @method 息屏锁屏检测处理
+      * @param
+      */
+      visibilitychange(evt) {
+        if (document.hidden) {
+          console.log('息屏锁屏');
+        } else {
+          let data = this.summary;
+          let problemID = data && data.problemID;
+          let isComplete = data && data.isComplete;
+
+          if(problemID && !isComplete) {
+            let socket = this.$parent.socket;
+
+            if (socket && socket.readyState === 1) {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 1000)
+            } else {
+              setTimeout(()=>{
+                this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+              }, 2000)
+            }
+          }
+
+          console.log('息屏锁屏 ->唤醒启用');
+        }
       }
     },
     created() {
@@ -1100,8 +1133,12 @@
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
     },
     mounted() {
+      // 息屏锁屏检测
+      document.addEventListener('visibilitychange', this.visibilitychange);
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer)
+      document.removeEventListener('visibilitychange', this.visibilitychange);
     }
   };
 </script>

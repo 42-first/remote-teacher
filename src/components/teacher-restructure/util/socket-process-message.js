@@ -41,7 +41,6 @@ function socketProcessMessage(msg){
   }
 
   if (msg.op === 'hello') {
-    console.log(msg, '测试克隆班')
     this.set_isCloneClass(!!msg.isClone)
   }
 

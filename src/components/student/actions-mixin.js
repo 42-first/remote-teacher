@@ -214,7 +214,7 @@ var actionsMixin = {
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && this.getUpdatePPTData(data.presentationid);
+        !presentation && data.presentationid && this.getUpdatePPTData(data.presentationid);
         return;
       }
 
@@ -818,7 +818,7 @@ var actionsMixin = {
         "type": 1,    //1音频 2视频
         "code": "RainLive-8201d0bf-e0d441b3",
         "liveurl": {
-          "flv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
+          "httpflv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
           "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
           "rtmp": "rtmp://vdn-push.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3"
         }}
@@ -886,31 +886,15 @@ var actionsMixin = {
      * @param
      */
     endLive(data) {
-      // this.handlestop();
-      // this.liveURL = '';
-      // this.liveType = 0;
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
       setTimeout(()=>{
-        // 拉流之前先解绑
-        if(this.flvPlayer) {
-          this.flvPlayer.unload();
-          this.flvPlayer.detachMediaElement();
-        }
+        this.handlestop();
 
         this.liveURL = '';
         this.liveType = 0;
         this.playState = 0;
         this.liveVisible = false;
-
-        // 快手上报
-        if(this.qos && this.logLiveurl) {
-          this.qos.sendSummary({
-            lessonid: this.lessonID,
-            uid: this.userID,
-            liveurl: this.logLiveurl
-          });
-        }
       }, 3000)
 
       // 关闭弹幕直播

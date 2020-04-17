@@ -15,6 +15,7 @@ module.exports = {
     market: './src/pages/market/market.js',
     teacher: './src/pages/teacher/teacher.js',
     fullscreen: './src/pages/fullscreen/fullscreen.js',
+    kwailive: './src/pages/kwailive/kwailive.js',
   },
   output: {
     path: config.build.assetsRoot,
@@ -56,7 +57,8 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test')],
+        exclude: [resolve('src/util/kwai-player-v1.0.0')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
