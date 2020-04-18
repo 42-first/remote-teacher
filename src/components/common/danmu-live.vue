@@ -15,7 +15,7 @@
       <ul class="danmu__list">
         <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
           <p class="danmu--text f12" >
-            <!-- <span class="blue" v-if="danmu.ismine">(我)</span> -->
+            <span class="blue" v-if="danmu.ismine">(我)</span>
             {{ danmu.danmu }}
           </p>
         </li>
@@ -275,6 +275,8 @@
         danmuText: '',
         // 已经发布过的弹幕ids
         myDanmus: [],
+        // 用户ID
+        userid: 0,
       }
     },
     watch: {
@@ -335,6 +337,7 @@
           this.visible = !visible;
         }
 
+        this.userid = this.$parent.userID;
       },
 
       /**
@@ -377,14 +380,11 @@
        */
       getOneDanmu(danmus) {
         let danmu = danmus.shift();
-        let myDanmus = this.myDanmus || [];
 
         if(danmu) {
-          let danmuid = myDanmus.find((id)=>{
-            return id === danmu.danmuid;
-          });
+          let ismine = this.userid === danmu.userid ? true : false;
 
-          let newDanmu = Object.assign({}, danmu, { status: 1, ismine: !!danmuid })
+          let newDanmu = Object.assign({}, danmu, { status: 1, ismine })
           this.danmuList.push(newDanmu);
 
           Promise.resolve().then(()=>{
@@ -431,9 +431,17 @@
        * @method 关闭弹幕直播
        */
       handleBlur(evt) {
+        let ua = navigator.userAgent;
+        let isiOS = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+
         setTimeout(()=>{
           this.visibleIpt = false;
-        }, 500)
+
+          if(isiOS) {
+            document.activeElement && document.activeElement.scrollIntoViewIfNeeded(true);
+            window.scrollTo(0, 0);
+          }
+        }, 300)
       },
 
       /**
@@ -461,15 +469,7 @@
             let danmuID = data && data.danmuID;
 
             this.danmuText = '';
-            this.myDanmus.push(danmuID);
-
-            // let myDanmu = this.danmuList.find((danmu)=>{
-            //   return danmuID === danmu.danmuid;
-            // })
-
-            // if(myDanmu) {
-            //   myDanmu.ismine = true;
-            // }
+            // this.myDanmus.push(danmuID);
 
             this.$toast({
               message: this.$i18n.t('sendsuccess') || '发送成功',
