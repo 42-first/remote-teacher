@@ -15,7 +15,7 @@
       <ul class="danmu__list">
         <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
           <p class="danmu--text f12" >
-            <span class="blue" v-if="danmu.ismine">(我)</span>
+            <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
             {{ danmu.danmu }}
           </p>
         </li>
@@ -29,14 +29,13 @@
         <p :class="[ visible ? '' : 'danmu--close']">弹</p>
       </button>
       <!-- 发送弹幕入口 -->
-      <p class="box-start cfff f14 danmu--visible" @click="handleVisibleIpt">点击发弹幕 …</p>
+      <p class="box-start cfff f14 danmu--visible" @click="handleVisibleIpt"><!-- 点击发弹幕 … -->{{ $t('danmusendtip') }}</p>
     </section>
 
     <!-- 发送弹幕组件 -->
     <section class="danmu__publish f16" v-show="visibleIpt">
-      <input class="danmu__ipt J_input c333" type="text" placeholder="说点什么"
-      v-model="danmuText" @focus="" @blur="handleBlur" />
-      <p class="danmu__send box-center" :class="[ danmuText ? 'blue' : 'c9b']" @click="handleSend">发送</p>
+      <input class="danmu__ipt J_input c333" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="" @blur="handleBlur" @keyup="handleKeyup" />
+      <p class="danmu__send box-center" :class="[ danmuText ? 'blue' : 'c9b']" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
     </section>
   </section>
 </template>
@@ -442,6 +441,19 @@
             window.scrollTo(0, 0);
           }
         }, 300)
+      },
+
+      /**
+       * @method enter发送
+       * @param
+       */
+      handleKeyup(evt) {
+        // 回车自动提交
+        if (evt.keyCode === 13 && this.danmuText) {
+          setTimeout(()=>{
+            this.handleSend();
+          }, 50)
+        }
       },
 
       /**
