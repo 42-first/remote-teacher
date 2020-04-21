@@ -83,10 +83,15 @@ var mixin = {
           // self.sendXinTiao();
 
           self.socket.onmessage = function (event) {
-            let msg = JSON.parse(event.data)
-            console.log(msg)
+            if(event && event.data) {
+              let msg = JSON.parse(event.data)
+              self.processMessage(msg)
 
-            self.processMessage(msg)
+              console.log(msg)
+            } else {
+              let errorMsg = `ws onmessage undefined uid:${self.userID} lid:${self.lessonID} dt:${+new Date()}`;
+              window.Sentry && window.Sentry.captureMessage(errorMsg);
+            }
           }
 
           // 握手开始通信
@@ -106,7 +111,7 @@ var mixin = {
           // window.Raven && Raven.captureException(`WebSocket hello userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
         }
       } catch (error) {
-        Raven.captureException(error)
+        window.Sentry && window.Sentry.captureException(error);
       }
     },
     /*
