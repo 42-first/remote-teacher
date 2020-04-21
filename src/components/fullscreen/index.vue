@@ -414,8 +414,10 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-          // sentry 配置
-          this.setSentry();
+          setTimeout(()=>{
+            // sentry 配置
+            this.setSentry();
+          }, 1000)
         });
       },
 
@@ -423,14 +425,11 @@
       * @method sentry ga 配置
       */
       setSentry() {
-        if(typeof Raven !== 'undefined') {
-          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-          Raven.setUserContext({ userid: this.userID });
-        } else {
-          setTimeout(() => {
-            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-            Raven.setUserContext({ userid: this.userID });
-          }, 1500)
+        if(window.Sentry) {
+          window.Sentry.init({ dsn: 'https://27f98c41f6584529b30068fe12a71241@mobile-sentry.xuetangonline.com/5' });
+          window.Sentry.configureScope((scope) => {
+            scope.setUser({ 'id': this.userID });
+          });
         }
       },
 
