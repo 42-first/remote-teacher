@@ -308,13 +308,6 @@ let liveMixin = {
           }, 1000*5)
         });
 
-        // iOS不能直接play
-        this.liveType === 2 && wx.getNetworkType({
-          success: (res)=> {
-            liveEl.play();
-          }
-        });
-
         console.log('loadedmetadata hls supportHLS');
       }
     },
