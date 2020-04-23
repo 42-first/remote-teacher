@@ -501,7 +501,7 @@
             !isWeb && self.loadHLS();
 
             // sentry 配置
-            this.setSentry();
+            // this.setSentry();
           }, 1500)
 
           setTimeout(()=>{
