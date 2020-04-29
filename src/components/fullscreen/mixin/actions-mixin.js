@@ -924,6 +924,11 @@ let actionsMixin = {
 
       // 关闭弹幕直播
       this.isLive && (this.isLive = false);
+
+      // 快手结束直播
+      if(this.qos) {
+        this.qos.liveEnd();
+      }
     },
 
     /*
