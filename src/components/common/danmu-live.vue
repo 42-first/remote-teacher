@@ -17,7 +17,7 @@
           <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
             <p class="danmu--text f12" >
               <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
-              {{ danmu.danmu }}
+              <span>{{ danmu.danmu }}</span>
             </p>
           </li>
         </ul>
@@ -148,6 +148,7 @@
   }
 
   .danmu--text {
+    display: inline-table;
     box-sizing: border-box;
     position: relative;
     padding: 0.066667rem 0.4rem 0;
