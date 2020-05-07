@@ -623,6 +623,9 @@
               setTimeout(() => {
                 self.$router.back();
               }, 3000)
+
+              // 统计失败率
+              typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
             });
 
           clearInterval(this.timer);

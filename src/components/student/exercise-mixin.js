@@ -116,7 +116,7 @@ var exerciseMixin = {
           })
           .catch(error => {
             // self.removeAnswer(key);
-            Raven && Raven.captureMessage("习题提交失败:" + error);
+            // Raven && Raven.captureMessage("习题提交失败:" + error);
           });
       } else {
         return this;

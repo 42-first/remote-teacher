@@ -106,6 +106,11 @@ export function isSupported(storage) {
     storage.removeItem(key);
     return true;
   } catch (e) {
+    // const QUOTA_EXCEEDED_ERR_CODE = 22;
+    if (e.code === 22) {
+      storage.clear();
+    }
+
     return false;
   }
 }
