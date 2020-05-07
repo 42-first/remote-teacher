@@ -10,32 +10,36 @@
 <template>
   <!-- 弹幕直播 -->
   <section class="danmu__cmp" v-show="danmuStatus">
-    <!-- 弹幕列表 -->
-    <section class="danmu__wrap" :class="{ 'publish-mode': visibleIpt }" v-show="visible">
-      <ul class="danmu__list">
-        <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
-          <p class="danmu--text f12" >
-            <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
-            {{ danmu.danmu }}
-          </p>
-        </li>
-      </ul>
-    </section>
+    <section class="danmu__container" :class="{ 'publish-mode': visibleIpt }">
+      <!-- 弹幕列表 -->
+      <section class="danmu__wrap" v-show="visible">
+        <ul class="danmu__list">
+          <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
+            <p class="danmu--text f12" >
+              <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
+              {{ danmu.danmu }}
+            </p>
+          </li>
+        </ul>
+      </section>
 
-    <!-- footer -->
-    <section class="danmu__footer" v-show="!visibleIpt">
-      <!-- 弹幕标识 开关 -->
-      <button class="box-center danmu__btn f14" @click="handleClose">
-        <p :class="[ visible ? '' : 'danmu--close']">弹</p>
-      </button>
-      <!-- 发送弹幕入口 -->
-      <p class="box-start cfff f14 danmu--visible" @click="handleVisibleIpt"><!-- 点击发弹幕 … -->{{ $t('danmusendtip') }}</p>
+      <!-- footer  -->
+      <section class="danmu__footer" v-show="!visibleIpt">
+        <!-- 弹幕标识 开关 -->
+        <div class="box-center danmu__btn f14" @click="handleClose">
+          <p :class="[ visible ? '' : 'danmu--close']">弹</p>
+        </div>
+        <!-- 发送弹幕入口 -->
+        <p class="box-start cfff f14 danmu--visible" @click="handleVisibleIpt"><!-- 点击发弹幕 … -->{{ $t('danmusendtip') }}</p>
+      </section>
     </section>
 
     <!-- 发送弹幕组件 -->
-    <section class="danmu__publish f16" v-show="visibleIpt">
-      <input class="danmu__ipt J_input c333" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="" @blur="handleBlur" @keyup="handleKeyup" />
-      <p class="danmu__send box-center" :class="[ danmuText ? 'blue' : 'c9b']" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
+    <section class="publish__wrap" :class="{ 'ios': isiOS }" v-show="visibleIpt" >
+      <section class="danmu__publish f16">
+        <input class="danmu__ipt J_input c333" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @blur="handleBlur" @keyup="handleKeyup" />
+        <p class="danmu__send box-center" :class="[ danmuText ? 'blue' : 'c9b']" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
+      </section>
     </section>
   </section>
 </template>
@@ -50,9 +54,15 @@
     bottom: 0;
     left: 0;
 
+    box-sizing: border-box;
+  }
+
+  .danmu__container {
     padding: 0 0 0.533333rem 0.453333rem;
 
-    box-sizing: border-box;
+    &.publish-mode {
+      padding-bottom: 0;
+    }
   }
 
   .danmu__footer {
@@ -120,9 +130,9 @@
     width: 6.36rem;
     overflow: hidden;
 
-    &.publish-mode {
-      padding-bottom: 0.933333rem;
-    }
+    // &.publish-mode {
+    //   padding-bottom: 0.933333rem;
+    // }
   }
 
   .danmu__list {
@@ -194,11 +204,16 @@
     border-radius: 0.426667rem/50%;
   }
 
+  .publish__wrap {
+    background: #fff;
+
+    &.ios {
+      padding-bottom: 1.2rem;
+    }
+  }
 
   .danmu__publish {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
 
     display: flex;
     justify-content: space-between;
@@ -217,7 +232,8 @@
     &:before {
       content: '';
       position: absolute;
-      bottom: 1.21rem;
+      // bottom: 1.21rem;
+      bottom: 100%;
       left: 0;
 
       width: 100vw;
@@ -276,6 +292,7 @@
         myDanmus: [],
         // 用户ID
         userid: 0,
+        isiOS: false
       }
     },
     watch: {
@@ -427,11 +444,27 @@
       },
 
       /**
+       * @method 监听焦点
+       */
+      handleFocus(evt) {
+        const target = evt.target;
+
+        Promise.resolve().then(()=>{
+          target.focus();
+        });
+
+        setTimeout(()=>{
+          target.focus();
+          target.scrollIntoView(true);
+          target.scrollIntoViewIfNeeded();
+        }, 500)
+      },
+
+      /**
        * @method 关闭弹幕直播
        */
       handleBlur(evt) {
-        let ua = navigator.userAgent;
-        let isiOS = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        let isiOS = this.isiOS;
 
         setTimeout(()=>{
           this.visibleIpt = false;
@@ -493,6 +526,10 @@
     },
     created() {
       this.init();
+
+      let ua = navigator.userAgent;
+      let isiOS = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      this.isiOS = isiOS;
     },
     beforeDestroy() {
       clearInterval(this.timer);
