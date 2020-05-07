@@ -153,6 +153,10 @@ let pages = {
   "liveaudioing": "Audio live broadcasting",
   "liveaudioon": "Join",
   "liveloading": "Loading",
+  "danmume": "(Me)",
+  "danmusend": "Send",
+  "danmusendtip": "Tap to send Danmu …",
+  "danmuipttip": "Say something",
 
   // socket event
   "LESSON_START": "Start Class!",

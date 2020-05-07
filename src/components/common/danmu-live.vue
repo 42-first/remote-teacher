@@ -10,20 +10,37 @@
 <template>
   <!-- 弹幕直播 -->
   <section class="danmu__cmp" v-show="danmuStatus">
-    <!-- 弹幕列表 -->
-    <section class="danmu__wrap" v-show="visible">
-      <ul class="danmu__list">
-        <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
-          <p class="danmu--text f14" >{{ danmu.danmu }}</p>
-        </li>
-      </ul>
+    <section class="danmu__container" :class="{ 'publish-mode': visibleIpt }">
+      <!-- 弹幕列表 -->
+      <section class="danmu__wrap" v-show="visible">
+        <ul class="danmu__list">
+          <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
+            <p class="danmu--text f12" >
+              <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
+              <span>{{ danmu.danmu }}</span>
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- footer  -->
+      <section class="danmu__footer" v-show="!visibleIpt">
+        <!-- 弹幕标识 开关 -->
+        <div class="box-center danmu__btn f14" @click="handleClose">
+          <p :class="[ visible ? '' : 'danmu--close']">弹</p>
+        </div>
+        <!-- 发送弹幕入口 -->
+        <p class="box-start cfff f14 danmu--visible" @click="handleVisibleIpt"><!-- 点击发弹幕 … -->{{ $t('danmusendtip') }}</p>
+      </section>
     </section>
 
-    <!-- 弹幕标识 开关 -->
-    <button class="danmu__btn f18" @click="handleClose">
-      <p :class="[ visible ? '' : 'danmu--close']">弹</p>
-    </button>
-
+    <!-- 发送弹幕组件 -->
+    <section class="publish__wrap" :class="{ 'ios': isiOS }" v-show="visibleIpt" >
+      <section class="danmu__publish f16">
+        <input class="danmu__ipt J_input c333" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @blur="handleBlur" @keyup="handleKeyup" />
+        <p class="danmu__send box-center" :class="[ danmuText ? 'blue' : 'c9b']" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
+      </section>
+    </section>
   </section>
 </template>
 <style lang="scss" scoped>
@@ -34,23 +51,36 @@
   .danmu__cmp {
     // z-index: 2;
     position: fixed;
-    bottom: 0.533333rem;
-    left: 0.453333rem;
+    bottom: 0;
+    left: 0;
 
     box-sizing: border-box;
   }
 
-  .danmu__btn {
-    position: absolute;
-    bottom: 0;
-    left: 0.2rem;
+  .danmu__container {
+    padding: 0 0 0.533333rem 0.453333rem;
 
-    width: 1.2rem;
-    height: 1.0rem;
+    &.publish-mode {
+      padding-bottom: 0;
+    }
+  }
+
+  .danmu__footer {
+    padding-left: 0.2rem;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .danmu__btn {
+    position: relative;
+
+    width: 0.8rem;
+    height: 0.746667rem;
 
     color: #fff;
-    background: rgba(0,0,0,0.7);
-    // box-shadow: 0 0.04rem 0.24rem rgba(0,0,0,0.6);
+    background: #333;
     border-radius: 0.16rem;
     border: none;
     outline: none;
@@ -67,15 +97,15 @@
     height: 0;
     border-style: solid;
     border-width: 0.16rem;
-    border-color: transparent transparent rgba(0,0,0,0.7) transparent;
+    border-color: transparent transparent #333 transparent;
   }
 
   .danmu--close {
     position: relative;
     margin: auto;
     padding: 0.066667rem 0;
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 0.666667rem;
+    height: 0.666667rem;
 
     border-radius: 50%;
     border: 0.026667rem solid #fff;
@@ -94,14 +124,15 @@
   }
 
   .danmu__wrap {
-    position: absolute;
-    bottom: 1.266667rem;
-    left: 0;
+    padding-bottom: 0.266667rem;
 
     max-height: 6.0rem;
-    // max-width: 6.36rem;
     width: 6.36rem;
     overflow: hidden;
+
+    // &.publish-mode {
+    //   padding-bottom: 0.933333rem;
+    // }
   }
 
   .danmu__list {
@@ -117,6 +148,7 @@
   }
 
   .danmu--text {
+    display: inline-table;
     box-sizing: border-box;
     position: relative;
     padding: 0.066667rem 0.4rem 0;
@@ -162,6 +194,69 @@
     }
   }
 
+  .danmu--visible {
+    margin-left: 0.4rem;
+
+    width: 4.893333rem;
+    height: 0.853333rem;
+    padding: 0 0.426667rem;
+
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 0.426667rem/50%;
+  }
+
+  .publish__wrap {
+    background: #fff;
+
+    &.ios {
+      padding-bottom: 1.2rem;
+    }
+  }
+
+  .danmu__publish {
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100vw;
+    height: 1.2rem;
+    padding: 0 0.32rem;
+
+    border: 1px solid #eee;
+    border-left: none;
+    border-right: none;
+
+    background: #fff;
+
+    &:before {
+      content: '';
+      position: absolute;
+      // bottom: 1.21rem;
+      bottom: 100%;
+      left: 0;
+
+      width: 100vw;
+      height: 2.0rem;
+    }
+
+    .danmu__ipt {
+      flex: 1;
+      height: 100%;
+
+      padding-right: 0.32rem;
+      appearance: none;
+      outline: none;
+      border: none;
+    }
+
+    .danmu__send {
+      width: 1.066667rem;
+      height: 100%;
+    }
+  }
+
 </style>
 <script>
   import request from '@/util/request'
@@ -190,16 +285,27 @@
         danmuList: [],
         // 定时清理屏幕弹幕 十秒内没有弹幕清理屏幕
         timer: null,
+        // 是否显示发送弹幕
+        visibleIpt: false,
+        // danmu内容
+        danmuText: '',
+        // 已经发布过的弹幕ids
+        myDanmus: [],
+        // 用户ID
+        userid: 0,
+        isiOS: false
       }
-    },
-    filters: {
     },
     watch: {
       danmus(newVal, oldVal) {
         if(newVal && newVal.length) {
           this.calcDanmus();
         }
-      }
+      },
+      danmuText(newVal, oldVal) {
+        let value = newVal && newVal.substr(0, 50);
+        this.danmuText = value;
+      },
     },
     methods: {
       /**
@@ -248,6 +354,7 @@
           this.visible = !visible;
         }
 
+        this.userid = this.$parent.userID;
       },
 
       /**
@@ -292,7 +399,9 @@
         let danmu = danmus.shift();
 
         if(danmu) {
-          let newDanmu = Object.assign({}, danmu, { status: 1 })
+          let ismine = this.userid === danmu.userid ? true : false;
+
+          let newDanmu = Object.assign({}, danmu, { status: 1, ismine })
           this.danmuList.push(newDanmu);
 
           Promise.resolve().then(()=>{
@@ -323,9 +432,105 @@
           localStorage.setItem(key, this.visible ? '' : true);
         }
       },
+
+      /**
+       * @method 关闭弹幕直播
+       */
+      handleVisibleIpt(evt) {
+        this.visibleIpt = true;
+
+        Promise.resolve().then(()=>{
+          this.$el.querySelector('.J_input').focus();
+        });
+      },
+
+      /**
+       * @method 监听焦点
+       */
+      handleFocus(evt) {
+        const target = evt.target;
+
+        Promise.resolve().then(()=>{
+          target.focus();
+        });
+
+        setTimeout(()=>{
+          target.focus();
+          target.scrollIntoView(true);
+          target.scrollIntoViewIfNeeded();
+        }, 500)
+      },
+
+      /**
+       * @method 关闭弹幕直播
+       */
+      handleBlur(evt) {
+        let isiOS = this.isiOS;
+
+        setTimeout(()=>{
+          this.visibleIpt = false;
+
+          if(isiOS) {
+            document.activeElement && document.activeElement.scrollIntoViewIfNeeded(true);
+            window.scrollTo(0, 0);
+          }
+        }, 300)
+      },
+
+      /**
+       * @method enter发送
+       * @param
+       */
+      handleKeyup(evt) {
+        // 回车自动提交
+        if (evt.keyCode === 13 && this.danmuText) {
+          setTimeout(()=>{
+            this.handleSend();
+          }, 50)
+        }
+      },
+
+      /**
+       * @method 发送弹幕
+       */
+      handleSend(evt) {
+        let URL = API.student.SEND_DANMU;
+        const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
+        let params = {
+          'lessonID': this.$parent.lessonID,
+          'presentationID': this.$parent.presentationID,
+          'message': message
+        };
+
+        // 不能为空
+        if(!message) {
+          return this;
+        }
+
+        request.post(URL, params)
+        .then( (res) => {
+          if(res) {
+            // 弹幕返回数据结构 danmuID success
+            let data = res;
+            let danmuID = data && data.danmuID;
+
+            this.danmuText = '';
+            // this.myDanmus.push(danmuID);
+
+            this.$toast({
+              message: this.$i18n.t('sendsuccess') || '发送成功',
+              duration: 2000
+            });
+          }
+        });
+      }
     },
     created() {
       this.init();
+
+      let ua = navigator.userAgent;
+      let isiOS = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+      this.isiOS = isiOS;
     },
     beforeDestroy() {
       clearInterval(this.timer);
