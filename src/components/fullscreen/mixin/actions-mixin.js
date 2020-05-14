@@ -325,8 +325,7 @@ let actionsMixin = {
                   return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
                 })
 
-                Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
-                // targetIndex && this.cards.splice(targetIndex, 1, data);
+                Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false, index: hasPPT.index })
 
                 if(targetIndex > 0 && !data.isFetch) {
                   // 克隆版单独处理 上一个是重复ppt就不处理了
