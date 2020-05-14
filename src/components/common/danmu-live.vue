@@ -126,13 +126,10 @@
   .danmu__wrap {
     padding-bottom: 0.266667rem;
 
-    max-height: 6.0rem;
+    // max-height: 6.0rem;
+    max-height: 5.2rem;
     width: 6.36rem;
     overflow: hidden;
-
-    // &.publish-mode {
-    //   padding-bottom: 0.933333rem;
-    // }
   }
 
   .danmu__list {
