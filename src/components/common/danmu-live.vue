@@ -127,7 +127,7 @@
     padding-bottom: 0.266667rem;
 
     // max-height: 6.0rem;
-    max-height: 5.2rem;
+    max-height: 4.85rem;
     width: 6.36rem;
     overflow: hidden;
   }
