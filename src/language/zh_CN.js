@@ -152,6 +152,11 @@ let pages = {
   "liveaudioing": "语音直播中…",
   "liveaudioon": "点击收听",
   "liveloading": "加载中",
+  "danmume": "(我)",
+  "danmusend": "发送",
+  "danmusendtip": "点击发弹幕 …",
+  "danmuipttip": "说点什么",
+
 
   // socket event
   "LESSON_START": "上课啦！",
