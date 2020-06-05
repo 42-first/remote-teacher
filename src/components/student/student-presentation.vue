@@ -216,7 +216,8 @@
     <notice position="bottom"></notice>
 
     <!-- 弹幕直播 v-if="isLive" -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live>
+    <!--  <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live> -->
+    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
     <!-- 停服务通知 -->
     <livetip :id="lessonID" v-if="liveURL"></livetip>
@@ -499,6 +500,9 @@
             // 直播hls格式初始化
             let isWeb = this.isWeb;
             !isWeb && self.loadHLS();
+
+            // sentry 配置
+            // this.setSentry();
           }, 1500)
 
           setTimeout(()=>{
@@ -513,9 +517,6 @@
           }, 10000)
 
           self.bindTouchEvents();
-
-          // sentry 配置
-          this.setSentry();
 
           // 时间动态显示 每分钟更新一次
           setInterval(() => {
@@ -535,14 +536,11 @@
       * @method sentry ga 配置
       */
       setSentry() {
-        if(typeof Raven !== 'undefined') {
-          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-          Raven.setUserContext({ userid: this.userID });
-        } else {
-          setTimeout(() => {
-            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-            Raven.setUserContext({ userid: this.userID });
-          }, 1500)
+        if(window.Sentry) {
+          window.Sentry.init({ dsn: 'https://27f98c41f6584529b30068fe12a71241@mobile-sentry.xuetangonline.com/5' });
+          window.Sentry.configureScope((scope) => {
+            scope.setUser({ 'id': this.userID });
+          });
         }
       },
 

@@ -56,7 +56,7 @@ function socketProcessMessage(msg){
     let mapResult = self.idIndexMap[msg.slide ? msg.slide.sid : msg.slideid]
     msg.slideindex = mapResult ? mapResult : msg.slideindex
   }
-  
+
   let current = self.current - 1
 
   // 通杀，针对所有指令，并不只是hello
@@ -67,7 +67,7 @@ function socketProcessMessage(msg){
     // 这两个数据是基本型
     let oldAtAcitvity = !_state.isInitiativeCtrlMaskHidden && _state.initiativeCtrlMaskTpl === 'Activity'
     self.killMask()
-    
+
     oldAtAcitvity && self.showActivity()
     _state = null
   }
@@ -78,7 +78,7 @@ function socketProcessMessage(msg){
     remoteReset.call(self)
 
     self.isPPTVersionAboveOne = msg.addinversion > 1
-    
+
     if(msg.addinversion === -1){
       // 显示 '您的电脑存在连接异常\n请您检查网络连接状况'
       self.showPcErrorMask()
@@ -121,7 +121,7 @@ function socketProcessMessage(msg){
         // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
         self.showEscMask()
       }
-      
+
       return
     }
 
@@ -132,7 +132,7 @@ function socketProcessMessage(msg){
 
     // 初始化弹幕按钮
     msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
-    
+
     // TODO 初次联通，node有时会丢失msg.presentation
     // 有可能中间换课件，这时不要显示老的课件
     if (self.presentationid !== +msg.presentation) {
@@ -163,7 +163,7 @@ function socketProcessMessage(msg){
     if (msg.slideindex !== 0) { // 刚开始上课slideindex总为0，不管是不是从第一页开始放映
       self.$store.commit('set_isBrandNewPpt', false)
     }
-    
+
     if(msg.mask && msg.mask.type === 'qrcode'){
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
@@ -174,7 +174,7 @@ function socketProcessMessage(msg){
       self.$store.commit('set_isMsgMaskHidden', true)
       self.showQrcodeMask()
     }
-    
+
     self.fetchPPTData()
     return
   }
@@ -222,7 +222,7 @@ function socketProcessMessage(msg){
 
     // 无论是新ppt还是更新，都需要fetch数据
     self.$store.commit('set_presentationid', msg.presentation)
-    
+
     self.fetchPPTData()
     return
   }
@@ -268,12 +268,12 @@ function socketProcessMessage(msg){
     }else {
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
-    
+
     self.showWhichPage(msg)
     goHome.call(self)
     return
   }
-  
+
   //刷新了遥控器页面，且点击的是查看答案按钮
   if (msg.op == 'probleminfo') {
     // msg.dt 是发题的时间
@@ -441,7 +441,7 @@ function socketProcessMessage(msg){
     return
   }
 
-  
+
   if (msg.op == 'closedmask') {
 
     // 点击随机点名继续上课的回执
@@ -517,6 +517,11 @@ function socketProcessMessage(msg){
       T_PUBSUB.publish('danmu-msg.wordcloudshown', msg)
       self.$store.commit('set_postWordCloudOpen', false)
     }
+  }
+
+  // 投稿未读数目
+  if (msg.op == 'unreadpost') {
+    self.$store.commit('set_newtougao', msg.number || 0)
   }
 
 }

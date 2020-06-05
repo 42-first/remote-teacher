@@ -11,9 +11,9 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 提示 -->
-      <p class="lesson--tip" v-if="visibleTip">
+      <!--  <p class="lesson--tip" v-if="visibleTip">
         <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
-      </p>
+      </p> -->
 
       <!-- 消息通知 -->
       <msgbox></msgbox>
@@ -344,13 +344,13 @@
 
         this.iniTimeline(this.lessonID);
 
-        let key = 'lesson-tip-cloesed-' + this.lessonID;
-        let visibleTip = true;
-        if(isSupported(window.localStorage)) {
-          visibleTip = !localStorage.getItem(key);
-        }
+        // let key = 'lesson-tip-cloesed-' + this.lessonID;
+        // let visibleTip = true;
+        // if(isSupported(window.localStorage)) {
+        //   visibleTip = !localStorage.getItem(key);
+        // }
 
-        this.visibleTip = visibleTip;
+        // this.visibleTip = visibleTip;
       },
 
       /**
@@ -414,8 +414,10 @@
         let self = this;
 
         Promise.all([this.getPresentationList()]).then((res) => {
-          // sentry 配置
-          this.setSentry();
+          setTimeout(()=>{
+            // sentry 配置
+            this.setSentry();
+          }, 1000)
         });
       },
 
@@ -423,14 +425,11 @@
       * @method sentry ga 配置
       */
       setSentry() {
-        if(typeof Raven !== 'undefined') {
-          Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-          Raven.setUserContext({ userid: this.userID });
-        } else {
-          setTimeout(() => {
-            Raven.config('https://9f7d1b452e5a4457810f66486e6338c0@rain-sentry.xuetangx.com/12').install();
-            Raven.setUserContext({ userid: this.userID });
-          }, 1500)
+        if(window.Sentry) {
+          window.Sentry.init({ dsn: 'https://27f98c41f6584529b30068fe12a71241@mobile-sentry.xuetangonline.com/5' });
+          window.Sentry.configureScope((scope) => {
+            scope.setUser({ 'id': this.userID });
+          });
         }
       },
 
