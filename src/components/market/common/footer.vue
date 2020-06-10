@@ -27,7 +27,7 @@
             </div>
             <div class="link-us-qq fr">
               <div class="link-us-qqgroup">
-                <p>QQ:529448617（用户八群）</p>
+                <p>QQ:1032570053（用户九群）</p>
                 <p class="remark">雨课堂官方QQ群</p>
               </div>
               <img class="link-img" src="https://qn-sfe.yuketang.cn/o_1bfogaie01q2c1q53l811k74r62j.png" alt="qq" />
@@ -203,6 +203,7 @@
     padding: 20px 10px;
     margin-left: -105px;
     line-height: 30px;
+    white-space: nowrap;
   }
   .link-us-qqgroup .remark,
   .linkus-email-number .remark {
