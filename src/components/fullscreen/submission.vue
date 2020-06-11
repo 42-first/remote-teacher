@@ -629,7 +629,7 @@
       }
     },
     created() {
-      this.lessonID = +this.$route.params.lessonID;
+      this.lessonID = this.$route.params.lessonID;
       this.classroomid = this.$route.query.classroomid
 
       // 获取学生分组列表
