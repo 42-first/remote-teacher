@@ -251,7 +251,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      this.lessonID = +this.$route.params.lessonID;
+      this.lessonID = this.$route.params.lessonID;
       let cards = this.$parent.cards;
       this.card = cards[this.index];
 
