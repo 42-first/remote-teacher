@@ -49,7 +49,6 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             'GET_SUBMISSION': '/v/api/tougao/tougao_info',
             // 主观题分享
             'GET_SUBJECTIVE': '/v/lesson/subjective_problem_result_info',
-            'AUDIT_CLASSROOM': '/edu_admin/audit_classroom/',
             // 根据lesson返回老师信息
             'GET_TEACHER': '/v/lesson/lesson_teacher',
             // 用户引导设置完成
@@ -62,14 +61,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
             'GET_TEAM_DETAIL': '/group/student/get_team_detail/',
             // (学生端)获取互评的详情
             'GET_GROUP_REVIEW': '/v/lesson/get_problem_group_review_detail/',
-            // 查看单个主观题答案
-            'GET_PROBLEM_RESULT': '/v/lesson/subjective_problem_result_info',
             // (学生端)互评打分
             'SUBMIT_GROUP_REVIEW': '/v/lesson/submit_group_review_score/',
-
-            // 直播相关
-            'GET_LIVE_LIST': '/v/lesson/live/get_lesson_live_list/',
-            'GET_LIVE_URL': '/v/lesson/live/get_live_url/',
 
             // 白板收藏不懂
             'SET_BOARD_TAG': '/v/lesson/file_sharing/sharing_file_click_tag',

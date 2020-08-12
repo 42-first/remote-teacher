@@ -16,13 +16,6 @@
         <p class="student__header--back"></p>
       </header>
 
-      <!-- 定时时间 -->
-      <!-- <section class="exercise__timing" v-show="isShowOption && summary&&summary.limit>0&&sLeaveTime">
-        <img class="exercise__timing--icon" v-if="!timeOver" src="http://sfe.ykt.io/o_1bkbgjnktcp5182817bgn23rk9.png">
-        <img class="exercise__timing--icon" v-if="timeOver" src="http://sfe.ykt.io/o_1bkbgld3vari1isf12f21hsd1irle.png">
-        <p :class="['exercise__timing--number', timeOver ? 'over f45':'f60']">{{ sLeaveTime }}</p>
-      </section> -->
-
       <!-- 定时 续时等 -->
       <section class="exercise__tips" v-show="isShowOption">
         <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
@@ -227,12 +220,10 @@
             this.setOptions(option, true, true);
           });
 
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
         } else {
           // 开始启动定时
-          // data.limit > 0 && this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 

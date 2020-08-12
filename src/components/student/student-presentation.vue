@@ -462,7 +462,6 @@
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
-        // this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -570,42 +569,6 @@
         this.init();
         // 隐藏信息完善
         this.showInfo = false;
-      },
-
-      /*
-      * @method 测试环境初始化timeline
-      */
-      testTimeline() {
-        this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
-
-        this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
-
-        this.addProblem({ type: 3, pageIndex: 4, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
-      },
-
-      /*
-       * @method 用户权限
-       * @param  lessonID
-       */
-      getUserInfo(lessonID) {
-        let self = this;
-        let URL = API.GET_USER_INFO;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.userID = data.user_id;
-              self.avatar = data.avatar;
-              self.userAuth = data.user_auth;
-
-              return data;
-            }
-          });
       },
 
       /*
