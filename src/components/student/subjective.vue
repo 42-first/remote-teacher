@@ -121,9 +121,10 @@
 <script>
   import API from '@/util/api'
   import {compress} from '@/util/image'
-  import { isSupported } from '@/util/util'
+  import { isSupported, dataURLtoFile } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import upload from '@/util/upload'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
   const huawei = ua.match(/huaweiclt|huaweieml/i);
@@ -843,25 +844,82 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          let file = dataURLtoFile(data, fileName);
+          this.uploadFile(file).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
 
-              self.cacheResult();
-
-              return self.imageURL;
+              this.cacheResult();
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
+
+        // return request.post(URL, params)
+        //   .then( (res) => {
+        //     if(res && res.data) {
+        //       let data = res.data;
+
+        //       self.imageURL = data.pic_url;
+        //       self.imageThumbURL = data.thumb_url
+        //       self.sendStatus = 2;
+
+        //       self.cacheResult();
+
+        //       return self.imageURL;
+        //     }
+        //   }).catch(error => {
+        //     self.retryUpload(data, fileType);
+
+        //     return null;
+        //   });
       },
+
+      /**
+       * method 上传七牛
+       * params
+       */
+      uploadFile(file) {
+        let domain = upload.qiniuDomain;
+
+        return new Promise((resolve, reject)=>{
+          let observer = {
+            next(res) {
+              let total = res.total;
+              let percent = total.percent;
+
+              console.log("进度：" + percent + "% ");
+            },
+            error(err) {
+              console.log(err);
+              reject({ url: '' });
+            },
+            complete(res) {
+              console.log(res);
+              let url = domain + res.key;
+
+              console.log("url:" + url);
+              resolve({ url });
+            }
+          };
+
+          upload.upload(file, observer, '', false);
+        });
+      },
+
       /*
        * @method 上传图片失败重试策略
        * @param

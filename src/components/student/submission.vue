@@ -108,6 +108,8 @@
   import picker from '@/components/common/picker/index.vue'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import upload from '@/util/upload'
+  import { dataURLtoFile } from '@/util/util'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
   const huawei = ua.match(/huaweiclt|huaweieml/i);
@@ -275,23 +277,78 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
-
-              return self.imageURL;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          let file = dataURLtoFile(data, fileName);
+          this.uploadFile(file).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
+
+        // return request.post(URL, params)
+        //   .then( (res) => {
+        //     if(res && res.data) {
+        //       let data = res.data;
+
+        //       self.imageURL = data.pic_url;
+        //       self.imageThumbURL = data.thumb_url
+        //       self.sendStatus = 2;
+
+        //       return self.imageURL;
+        //     }
+        //   }).catch(error => {
+        //     self.retryUpload(data, fileType);
+
+        //     return null;
+        //   });
       },
+
+      /**
+       * method 上传七牛
+       * params
+       */
+      uploadFile(file) {
+        let domain = upload.qiniuDomain;
+
+        return new Promise((resolve, reject)=>{
+          let observer = {
+            next(res) {
+              let total = res.total;
+              let percent = total.percent;
+
+              console.log("进度：" + percent + "% ");
+            },
+            error(err) {
+              console.log(err);
+              reject({ url: '' });
+            },
+            complete(res) {
+              console.log(res);
+              let url = domain + res.key;
+
+              console.log("url:" + url);
+              resolve({ url });
+            }
+          };
+
+          upload.upload(file, observer, '', false);
+        });
+      },
+
       /*
        * @method 上传图片失败重试策略
        * @param
@@ -320,37 +377,7 @@
           this.retryTimes = 0;
         }
       },
-      compress2(res, fileType) {
-        let self = this;
-        let img = new Image();
-        // 需要处理下微信header高度
-        let maxHeight = window.innerHeight || 1214;
 
-        img.onload = function () {
-          let cvs = document.createElement('canvas'),
-            ctx = cvs.getContext('2d');
-
-          // if(img.height > maxHeight) {
-          //   img.width *= maxHeight / img.height;
-          //   img.height = maxHeight;
-          // }
-
-          cvs.width = img.width;
-          cvs.height = img.height;
-          ctx.clearRect(0, 0, cvs.width, cvs.height);
-          ctx.drawImage(img, 0, 0, img.width, img.height);
-
-          let dataUrl = cvs.toDataURL(fileType || 'image/jpeg', 0.6);
-          let imgEl = self.$el.querySelector('.J_preview_img');
-          imgEl.src = dataUrl;
-
-          // 上传图片
-          self.uploadImage(dataUrl, fileType);
-          self.hasImage = true;
-        }
-
-        img.src = res;
-      },
       handleChooseImageChange(evt) {
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
