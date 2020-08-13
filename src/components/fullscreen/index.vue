@@ -109,6 +109,34 @@
     <!-- 弹幕控制组件 -->
     <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
 
+    <!-- 图片放大结构 -->
+    <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="pswp__bg"></div>
+      <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+        </div>
+        <div class="pswp__ui pswp__ui--hidden">
+          <div class="pswp__top-bar">
+            <div class="pswp__counter"></div>
+            <div class="pswp__preloader">
+              <div class="pswp__preloader__icn">
+                <div class="pswp__preloader__cut">
+                  <div class="pswp__preloader__donut"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pswp__caption">
+            <div class="pswp__caption__center"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </section>
 </template>
 <script>
@@ -417,6 +445,11 @@
           setTimeout(()=>{
             // sentry 配置
             this.setSentry();
+
+            require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
+              window.PhotoSwipe = PhotoSwipe;
+              window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
+            })
           }, 1000)
         });
       },

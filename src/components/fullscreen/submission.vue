@@ -11,14 +11,6 @@
     <!-- 关闭页面 -->
     <div class="page__back" @click="handleBack">返回</div>
     <div class="submission-wrapper">
-      <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
-        <div class="title">选择分组</div>
-        <div class="handler-wrapper" @click="showPicker">
-          <span>{{ selectedVal }}</span>
-          <i class="iconfont icon-dakai ver-middle font20"></i>
-        </div>
-      </div> -->
-
       <div class="submission-inner">
         <!-- 文字编辑 -->
         <section class="submission__text">
@@ -106,6 +98,7 @@
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
+  import { dataURLtoFile } from '@/util/util'
   import $ from 'jquery'
 
 
@@ -280,22 +273,44 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
-
-              return self.imageURL;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          let file = dataURLtoFile(data, fileName);
+          this.uploadFile(file).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
+
+        // return request.post(URL, params)
+        //   .then( (res) => {
+        //     if(res && res.data) {
+        //       let data = res.data;
+
+        //       self.imageURL = data.pic_url;
+        //       self.imageThumbURL = data.thumb_url
+        //       self.sendStatus = 2;
+
+        //       return self.imageURL;
+        //     }
+        //   }).catch(error => {
+        //     self.retryUpload(data, fileType);
+
+        //     return null;
+        //   });
       },
 
       /*
