@@ -109,7 +109,7 @@
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
-  import { dataURLtoFile } from '@/util/util'
+  // import { dataURLtoFile } from '@/util/util'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
   const huawei = ua.match(/huaweiclt|huaweieml/i);
@@ -250,7 +250,7 @@
        * @method 上传图片
        * @param
        */
-      uploadImage(data, fileType, name) {
+      uploadImage(data, fileType) {
         let self = this;
         let URL = API.student.UPLOAD_PIC;
         let params = {
@@ -258,9 +258,9 @@
         };
 
         let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        let sBase64 = data.substr(data.indexOf(',') + 1);
-        params['pic_data'] = sBase64;
-        params['pic_type'] = picType;
+        // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // params['pic_data'] = sBase64;
+        // params['pic_type'] = picType;
 
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
@@ -281,11 +281,10 @@
         // 上传七牛
         Promise.all([upload.getToken()]).
         then(() => {
-          // let randomNumber = parseInt(Math.random()*10000, 10);
-          name = encodeURIComponent(name);
-          let fileName = `${this.lessonID}${data.length}${name}`;
-          let file = dataURLtoFile(data, fileName);
-          this.uploadFile(file).
+          // name = encodeURIComponent(name);
+          // let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          // let file = dataURLtoFile(data, fileName);
+          this.uploadFile(data).
           then((res)=>{
             if(res.url) {
               this.imageURL = res.url;
@@ -299,23 +298,6 @@
             this.retryUpload(data, fileType);
           });
         });
-
-        // return request.post(URL, params)
-        //   .then( (res) => {
-        //     if(res && res.data) {
-        //       let data = res.data;
-
-        //       self.imageURL = data.pic_url;
-        //       self.imageThumbURL = data.thumb_url
-        //       self.sendStatus = 2;
-
-        //       return self.imageURL;
-        //     }
-        //   }).catch(error => {
-        //     self.retryUpload(data, fileType);
-
-        //     return null;
-        //   });
       },
 
       /**
@@ -346,7 +328,7 @@
             }
           };
 
-          upload.upload(file, observer, '', false);
+          upload.upload(file, observer);
         });
       },
 
@@ -417,14 +399,15 @@
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
-        compress(file, options, function(dataUrl) {
-          if(dataUrl) {
-            self.fileData = dataUrl;
+        this.uploadImage(file, fileType);
+        // compress(file, options, function(dataUrl) {
+        //   if(dataUrl) {
+        //     self.fileData = dataUrl;
 
-            // 上传图片
-            self.uploadImage(dataUrl, fileType, file.name);
-          }
-        });
+        //     // 上传图片
+        //     self.uploadImage(dataUrl, fileType);
+        //   }
+        // });
 
       },
       handlelaodImg(evt) {
