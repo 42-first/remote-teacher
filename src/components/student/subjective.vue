@@ -817,7 +817,7 @@
        * @method 上传图片
        * @param
        */
-      uploadImage(data, fileType) {
+      uploadImage(data, fileType, name) {
         let self = this;
         let URL = API.student.UPLOAD_PIC;
         let params = {
@@ -848,8 +848,8 @@
         // 上传七牛
         Promise.all([upload.getToken()]).
         then(() => {
-          let randomNumber = parseInt(Math.random()*10000, 10);
-          let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          name = encodeURIComponent(name);
+          let fileName = `${this.lessonID}${data.length}${name}`;
           let file = dataURLtoFile(data, fileName);
           this.uploadFile(file).
           then((res)=>{
@@ -998,7 +998,7 @@
             self.fileData = dataUrl;
 
             // 上传图片
-            self.uploadImage(dataUrl, fileType);
+            self.uploadImage(dataUrl, fileType, file.name);
             // self.hasImage = true;
           }
         });
