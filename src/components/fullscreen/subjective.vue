@@ -259,6 +259,8 @@
       */
       reset() {
         this.text = '';
+        this.hasImage = false;
+        this.loading = false;
         this.imageURL = '';
         this.imageThumbURL = '';
         this.fileData = null;
