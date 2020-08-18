@@ -277,9 +277,10 @@
         // 上传七牛
         Promise.all([upload.getToken()]).
         then(() => {
-          // name = encodeURIComponent(name);
-          // let fileName = `${this.lessonID}${data.length}${name}`;
+          // let randomNumber = parseInt(Math.random()*10000, 10);
+          // let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
           // let file = dataURLtoFile(data, fileName);
+          // data.name = fileName;
           this.uploadFile(data).
           then((res)=>{
             if(res.url) {
@@ -294,23 +295,6 @@
             this.retryUpload(data, fileType);
           });
         });
-
-        // return request.post(URL, params)
-        //   .then( (res) => {
-        //     if(res && res.data) {
-        //       let data = res.data;
-
-        //       self.imageURL = data.pic_url;
-        //       self.imageThumbURL = data.thumb_url
-        //       self.sendStatus = 2;
-
-        //       return self.imageURL;
-        //     }
-        //   }).catch(error => {
-        //     self.retryUpload(data, fileType);
-
-        //     return null;
-        //   });
       },
 
       /*

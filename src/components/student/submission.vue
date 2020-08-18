@@ -281,8 +281,8 @@
         // 上传七牛
         Promise.all([upload.getToken()]).
         then(() => {
-          // name = encodeURIComponent(name);
-          // let fileName = `${this.lessonID}${data.length}${randomNumber}`;
+          // let randomNumber = parseInt(Math.random()*10000, 10);
+          // let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
           // let file = dataURLtoFile(data, fileName);
           this.uploadFile(data).
           then((res)=>{
@@ -400,14 +400,14 @@
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
         this.uploadImage(file, fileType);
-        // compress(file, options, function(dataUrl) {
-        //   if(dataUrl) {
-        //     self.fileData = dataUrl;
+        compress(file, options, function(dataUrl) {
+          if(dataUrl) {
+            self.fileData = dataUrl;
 
-        //     // 上传图片
-        //     self.uploadImage(dataUrl, fileType);
-        //   }
-        // });
+            // 上传图片
+            // self.uploadImage(dataUrl, fileType);
+          }
+        });
 
       },
       handlelaodImg(evt) {

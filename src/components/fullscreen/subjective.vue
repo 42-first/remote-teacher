@@ -866,9 +866,10 @@
         // 上传七牛
         Promise.all([upload.getToken()]).
         then(() => {
-          // name = encodeURIComponent(name);
-          // let fileName = `${this.lessonID}${data.length}${name}`;
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
           // let file = dataURLtoFile(data, fileName);
+          // data.name = fileName;
           this.uploadFile(data).
           then((res)=>{
             if(res.url) {
