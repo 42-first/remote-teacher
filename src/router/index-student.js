@@ -38,7 +38,7 @@ const studentRouter = new Router({
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
   routes: [
     {
-      path: '/',
+      path: '/v3/:lessonID',
       name: 'onfound',
       component: HongBao,
     },
