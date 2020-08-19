@@ -52,12 +52,6 @@
 
       <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
 
-      <section class="camera-list none">
-        <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
-        <a><input type=file accept="image/*" capture="camera" value="拍照" >拍照</a>
-        <a><input type=file accept="image/*" capture="user" value="自拍" >自拍</a>
-      </section>
-
     </div>
 
     <!-- 图片放大结构 -->

@@ -16,8 +16,8 @@ import axios from 'axios'
 
 const handleResponse = (res) => {
   // 从相应头中读取auth, 后面使用
-  if(res.headers && res.headers['set-auth']) {
-    window.Authorization = res.headers['set-auth'];
+  if(res.headers && res.headers['Set-Auth']) {
+    window.Authorization = res.headers['Set-Auth'];
   }
 
   let status = res.status;

@@ -37,7 +37,6 @@
         <ul class="hongbao__list">
 
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
-            <!-- <div :class="['rank', index < 3 ? 'hex': '']"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div> -->
             <div class="avatar">
               <img :src="item.profile.avatar" :alt="item.profile.name" />
               <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>

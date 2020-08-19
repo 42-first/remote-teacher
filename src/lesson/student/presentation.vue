@@ -215,8 +215,7 @@
     <!-- 停服务通知 -->
     <notice position="bottom"></notice>
 
-    <!-- 弹幕直播 v-if="isLive" -->
-    <!--  <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live> -->
+    <!-- 弹幕直播 -->
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
     <!-- 停服务通知 -->
@@ -224,7 +223,7 @@
   </section>
 </template>
 <script>
-  import request from '@/util/request'
+  import request from '@/util/request-v3'
   import API from '@/util/api'
   import '@/util/util'
   import { configWX } from '@/util/wx-util'
