@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 
 // 新版接口状态码定义 https://www.tapd.cn/42030465/documents/show/1142030465001001744
 // http status
@@ -16,8 +16,8 @@ import axios from 'axios'
 
 const handleResponse = (res) => {
   // 从相应头中读取auth, 后面使用
-  if(res.headers && res.headers['Set-Auth']) {
-    window.Authorization = res.headers['Set-Auth'];
+  if(res.headers && res.headers['set-auth']) {
+    window.Authorization = res.headers['set-auth'];
   }
 
   let status = res.status;
@@ -88,6 +88,10 @@ export default {
 
     // app h5 web desktop miniprogram
     axios.defaults.headers['X-Client'] = 'h5';
+
+    // todo: test 正式联调后删除
+    Cookies.set('sid', '1c5db47f09c19ae187f3f126773cfa01');
+    console.log(axios.defaults.headers['Cookie'])
 
     if(window.Authorization) {
       axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;

@@ -230,19 +230,20 @@
 
   import '@/util/directive-util'
 
-  import CardItemComponent from '@/components/common/card-item.vue'
-  import PopupComponent from '@/components/common/popup-box.vue'
-  import LangComponent from '@/components/common/change_lang_dialog.vue'
+  import CardItemComponent from '@/lesson/common/card-item.vue'
+  import PopupComponent from '@/lesson/common/popup-box.vue'
+  import LangComponent from '@/lesson/common/change_lang_dialog.vue'
 
-  import wsmixin from '@/components/student/student-socket'
-  import actionsmixin from '@/components/student/actions-mixin'
-  import exercisemixin from '@/components/student/exercise-mixin'
+  import wsmixin from '@/lesson/student/student-socket'
+  import actionsmixin from '@/lesson/student/actions-mixin'
+  import exercisemixin from '@/lesson/student/exercise-mixin'
+  import lessonmixin from '@/lesson/student/mixin/lesson-mixin'
 
-  import livemixin from '@/components/student/live-mixin'
-  import boardmixin from '@/components/common/board-mixin'
+  import livemixin from '@/lesson/student/live-mixin'
+  import boardmixin from '@/lesson/common/board-mixin'
 
-  import logmixin from '@/components/common/log-reporting'
-  import localstoragemixin from '@/components/common/localstorage-mixin'
+  import logmixin from '@/lesson/common/log-reporting'
+  import localstoragemixin from '@/lesson/common/localstorage-mixin'
 
 
   // 子组件不需要引用直接使用
@@ -403,13 +404,13 @@
     components: {
       CardItemComponent,
       PopupComponent,
-      information: () => import('@/components/common/information.vue'),
-      guide: () => import('@/components/common/guide.vue'),
+      information: () => import('@/lesson/common/information.vue'),
+      guide: () => import('@/lesson/common/guide.vue'),
       LangComponent,
-      auditorTips: () => import('@/components/student/auditor_tips.vue'),
-      notice: () => import('@/components/common/service-notice.vue'),
-      danmuLive: () => import('@/components/common/danmu-live.vue'),
-      livetip: () => import('@/components/common/live-tip.vue'),
+      auditorTips: () => import('@/lesson/student/auditor_tips.vue'),
+      notice: () => import('@/lesson/common/service-notice.vue'),
+      danmuLive: () => import('@/lesson/common/danmu-live.vue'),
+      livetip: () => import('@/lesson/common/live-tip.vue'),
     },
     computed: {
     },
@@ -446,7 +447,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, lessonmixin ],
     methods: {
       /*
        * @method 接收器初始化
@@ -460,7 +461,7 @@
         this.returnRemote = query && query.remote ? true : false
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
-        this.getSoftVersion(this.lessonID);
+        // this.getSoftVersion(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -487,7 +488,9 @@
       iniTimeline(lessonID) {
         let self = this;
 
-        Promise.all([this.getPresentationList()]).then((res) => {
+        // Promise.all([this.getPresentationList()]).
+        Promise.all([this.initLesson(lessonID)]).
+        then((res) => {
 
           setTimeout(()=>{
             require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
@@ -837,66 +840,6 @@
       },
 
       /*
-      * @method 格式化ppt数据
-      * @param
-      */
-      formatPresentation(presentation, presentationID) {
-        if(presentation) {
-          let pptData = presentation['Slides'];
-
-          if(pptData.length) {
-            pptData.forEach( (slide, index) => {
-              // 收藏 不懂
-              if( slide['tag'] && slide['tag'].length ) {
-                slide['tag'].forEach((tag)=>{
-                  tag === 1 && (slide['question'] = 1);
-                  tag === 2 && (slide['store'] = 1);
-                })
-              }
-
-              // 问题结果
-              if (slide['Problem'] && slide['Result']) {
-                slide['Problem']['Result'] = slide['Result'];
-              }
-            });
-
-            presentation['Slides'] = pptData;
-          }
-
-          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
-        }
-      },
-
-      /*
-       * @method 格式化ppt更新数据
-       * @param
-       */
-      formatUpdatePresentation(presentation, presentationID, oldPresentation) {
-        if(presentation) {
-          let pptDataResult = [];
-          let pptData = presentation['Slides'];
-          let oldSildes = oldPresentation && oldPresentation['Slides'];
-
-          if(pptData.length) {
-            pptDataResult = pptData.map( (slide, index) => {
-              // 是否存在旧的数据
-              if(oldSildes) {
-                let oldSlide = this.getSlideData(oldSildes, index + 1, slide.lessonSlideID);
-                oldSlide && (slide = Object.assign({}, oldSlide, slide));
-              }
-
-              return slide;
-            });
-
-            // 有可能存在更新的情况
-            presentation['Slides'] = pptDataResult;
-          }
-
-          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
-        }
-      },
-
-      /*
       * @method 下拉刷新回调
       * @param
       */
@@ -1126,7 +1069,7 @@
     beforeDestroy() {
       this.unbindTouchEvents();
 
-      this.saveSlideTag();
+      // this.saveSlideTag();
     }
   };
 </script>

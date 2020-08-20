@@ -150,12 +150,10 @@ var actionsMixin = {
      */
     getSlideData(slides, si, sid) {
       let slideData = slides && slides[si-1];
-
-      // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
-      if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0 && slides) {
+      if(slides) {
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide)=>{
-          return slide.lessonSlideID === sid;
+          return slide.id === sid;
         });
       }
 
@@ -169,11 +167,10 @@ var actionsMixin = {
     filterProblem(slides, problemID) {
       let hasProblem = true;
 
-      // 1.1 版本
-      if(+this.version >= 1.1 && problemID) {
+      if(problemID) {
         // ppt不一致 通过sid取slideData
         hasProblem = slides.find((slide) => {
-          return slide.Problem && slide.Problem.ProblemID === problemID;
+          return slide.problem && slide.problem.problemID === problemID;
         });
       }
 
@@ -199,32 +196,32 @@ var actionsMixin = {
     addPPT(data) {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation && presentation['Slides'];
+      let pptData = presentation && presentation['slides'];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = -1;
-      let cover = slideData && slideData['Cover'] || '';
+      let cover = slideData && slideData['cover'] || '';
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && data.presentationid && this.getUpdatePPTData(data.presentationid);
+        // !presentation && data.presentationid && this.updatePresentation(data.presentationid);
         return;
       }
 
       // 是否含有重复数据
       let hasPPT = this.cards.find((item)=>{
-        return item.type === 2 && item.slideID === slideData.lessonSlideID && item.presentationid === data.presentationid;
+        return item.type === 2 && item.slideID === slideData.id && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
-      if (!cover || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
+      if (!cover || slideData && slideData['problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
-      if (slideData['Cover']=='rain://error/upload-error') {
+      if (slideData['cover']=='rain://error/upload-error') {
         if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
-      } else if(slideData['Cover']=='rain://error/export-error'){
+      } else if(slideData['cover']=='rain://error/export-error'){
         if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
@@ -239,16 +236,16 @@ var actionsMixin = {
           }
         };
 
-        oImg.src = slideData['Cover'];
+        oImg.src = slideData['cover'];
 
         let cardItem = {
-          src: slideData['Cover'],
-          rate: presentation.Width / presentation.Height,
+          src: slideData['cover'],
+          rate: presentation.width / presentation.height,
           hasQuestion: slideData['question'] == 1 ? true : false,
           hasStore: slideData['store'] == 1 ? true : false,
-          Width: presentation.Width,
-          Height: presentation.Height,
-          slideID: slideData['lessonSlideID'],
+          Width: presentation.width,
+          Height: presentation.height,
+          slideID: slideData['id'],
           isRepeat: hasPPT ? true : false
         };
         // 是否web开课的动画 Shapes里面有动画步骤

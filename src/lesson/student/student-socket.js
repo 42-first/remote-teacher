@@ -8,7 +8,7 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pre-apple-ykt.xuetangonline.com' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
 
 var mixin = {
@@ -93,7 +93,7 @@ var mixin = {
             'op': 'hello',
             'userid': self.userID,
             'role': 'student',
-            'auth': self.userAuth,
+            'auth': self.token,
             'lessonid': self.lessonID
           }))
 
@@ -143,14 +143,11 @@ var mixin = {
 
             msg['presentation'] && (this.presentationID = msg['presentation'])
 
-            if(timeline && timeline.length === 0) {
-              // 服务端没有此presetationID,重新链接发送
-              // setTimeout(()=>{
-              //   this.initws(true);
-              // }, 10000)
-            } else if(timeline && timeline.length) {
-              this.cards = [];
-              this.setTimeline(timeline)
+            if(timeline && timeline.length) {
+              // this.cards = [];
+              // this.setTimeline(timeline)
+
+              this.getAllPres(msg);
             }
 
             break

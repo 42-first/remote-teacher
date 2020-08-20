@@ -3,6 +3,8 @@ var path = require('path')
 // var proxyUrl = 'http://10.0.3.3:9000'
 var proxyUrl = 'https://b.yuketang.cn'
 
+proxyUrl = 'https://pre-apple-ykt.xuetangonline.com'
+
 
 function proxyConfig () {
   return {
@@ -42,6 +44,7 @@ module.exports = {
       '/pc': proxyConfig(),
       '/v/api': proxyConfig(),
       '/v': proxyConfig(),
+      '/api/v3': proxyConfig(),
       '/v/quiz': proxyConfig(),
       '/group': proxyConfig(),
       '/api': proxyConfig(),
