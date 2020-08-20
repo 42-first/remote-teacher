@@ -454,7 +454,7 @@
       init() {
         let self = this;
         let query = this.$route.query;
-        this.lessonID = this.$route.params.lessonID || 3049;
+        this.lessonID = this.$route.params.lessonID;
         this.observerMode = query && query.force === 'lecture' ? true : false;
 
         this.returnRemote = query && query.remote ? true : false
