@@ -26,7 +26,7 @@
         <div class="content_wrapper">
           <p class="page-no f12"><span><!-- 第{{ summary&&summary.pageIndex }}页 -->{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
           <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
-            <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handlelaodImg(1, $event)" />
+            <img class="cover J_preview_img" :src="summary&&summary.cover" @click="handleScaleImage(1, $event)" @load="handleLoadImg(1, $event)" />
           </div>
         </div>
       </section>
@@ -62,7 +62,7 @@
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handlelaodImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handleLoadImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
             <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
             <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
             <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
@@ -74,7 +74,7 @@
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
           <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
-            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handlelaodImg(3, $event)" @click="handleScaleImage(3, $event)" />
+            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handleLoadImg(3, $event)" @click="handleScaleImage(3, $event)" />
           </div>
         </div>
         <!-- 打分显示 -->
@@ -119,11 +119,13 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from 'vuex';
   import API from '@/util/api'
   import {compress} from '@/util/image'
   import { isSupported } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import problemControl from '@/lesson/student/mixin/problem-control'
   import upload from '@/util/upload'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
@@ -136,6 +138,7 @@
         ispreview: false,
         opacity: 0,
         title: '主观题作答',
+        problemType: 5,
         // 是否作答完成
         isComplete: false,
         // 是否新的延时
@@ -194,6 +197,11 @@
     components: {
     },
     computed: {
+      ...mapState([
+        'lessonId',
+        'cards',
+        'observerMode'
+      ])
     },
     watch: {
       text(newValue, oldValue) {
@@ -230,8 +238,12 @@
     },
     filters: {
     },
-    mixins: [ imagemixin ],
+    mixins: [ imagemixin, problemControl ],
     methods: {
+      ...mapActions([
+        'setCards'
+      ]),
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
@@ -245,22 +257,19 @@
 
         this.problemID = problemID;
 
-        // TODO：检测这个问题是否分组
+        // 检测这个问题是否分组
         let isTeam = data.groupid || false;
         isTeam && this.getTeamInfo(problemID);
 
         // event消息订阅
         this.initPubSub();
 
-        // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
         // 问题分数
-        let score = this.oProblem['Score'];
+        let score = this.oProblem['score'];
         let getScore = this.oProblem['getScore'];
 
         if(score && getScore > 0) {
-          this.starCount = getScore / score * 5;
           this.getScore = getScore;
         }
 
@@ -274,9 +283,9 @@
           this.sendStatus = 5;
           this.ispreview = true;
 
-          this.result = this.oProblem['Result'];
+          this.result = this.oProblem['result'];
 
-          this.getScoreFn(problemID);
+          !getScore && this.getScoreFn(problemID);
 
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
@@ -304,10 +313,6 @@
 
             this.sendStatus = 2;
           }
-
-          if (process.env.NODE_ENV !== 'production') {
-            this.setTiming(data.limit)
-          }
         }
 
         setTimeout(()=>{
@@ -332,30 +337,6 @@
       },
 
       /*
-       * @method 初始化订阅事件
-       * @param
-       */
-      initPubSub() {
-        // 取消练习的订阅
-        PubSub && PubSub.unsubscribe('exercise');
-
-        // 订阅定时消息
-        PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
-          this.setProblemStatus(data);
-        });
-
-        // 订阅续时消息
-        PubSub && PubSub.subscribe( 'exercise.extendTime', ( topic, data ) => {
-          this.extendTime(data && data.problem);
-        });
-
-        // 订阅收题消息
-        PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
-          this.closedProblem(data && data.problemid);
-        });
-      },
-
-      /*
        * @method 是否小组作答，拉取小组列表，作答结果 是否可以提交答案
        * @param
        */
@@ -363,7 +344,7 @@
         let URL = API.student.GET_GROUP_STATUS;
         let param = {
           'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'lesson_id': this.lessonId
         };
 
         // 小组作答
@@ -446,7 +427,7 @@
         let URL = API.student.GET_GROUP_STATUS;
         let param = {
           'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'lesson_id': this.lessonId
         };
 
         request.get(URL, param)
@@ -496,68 +477,6 @@
       },
 
       /*
-      * @method 问题状态
-      * @param
-      */
-      setProblemStatus(data) {
-        let leaveTime = data && data.leaveTime;
-
-        // 不限时
-        if(data.limit === -1) {
-          this.limit = -1;
-
-          // 是否可以点亮提交按钮
-          this.canSubmitFn();
-        } else if(data.limit === 0) {
-          // 已收题
-          this.setTiming(0);
-        } else {
-          // 限时题目
-          this.limit = data.limit;
-          this.setTiming(data && data.leaveTime);
-        }
-      },
-
-      /*
-      * @method 设置计时器
-      * @param
-      */
-      setTiming(leaveTime) {
-        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
-
-        this.timer && clearInterval(this.timer)
-
-        if (leaveTime > 0) {
-          this.timer = setInterval(()=>{
-            this.leaveTime--;
-            let minutes = parseInt(this.leaveTime / 60, 10);
-            let seconds = parseInt(this.leaveTime % 60, 10);
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            this.sLeaveTime = minutes + ':' + seconds;
-
-            if(this.leaveTime === 0) {
-              this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
-
-              clearInterval(this.timer);
-              this.timeOver = true;
-              this.warning = false;
-            }
-
-            if(this.leaveTime <= 10 && this.leaveTime > 0) {
-              this.warning = true;
-            }
-
-          }, 1000)
-        } else {
-          // 时间到
-          this.timeOver = true;
-          this.sLeaveTime = this.$i18n && this.$i18n.t('receivertimeout') || '作答时间结束';
-        }
-      },
-
-      /*
        * @method 是否点亮提交按钮
        * @params problem
        */
@@ -570,61 +489,6 @@
       },
 
       /*
-       * @method 答题续时
-       * @params problem
-       */
-      extendTime(problem) {
-        if(problem) {
-          let id = problem.prob;
-          let extend = problem.extend;
-          // 续时 分钟 秒
-          let minutes = parseInt(extend / 60, 10);
-          let seconds = parseInt(extend % 60, 10);
-          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
-
-          if(extend === -1) {
-            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
-          }
-
-          // 同一个问题续时 切没有结束
-          if(id === this.problemID && !this.isComplete) {
-            this.hasNewExtendTime = true;
-            this.sExtendTimeMsg = sMsg;
-
-            this.limit = problem.limit;
-
-            if(extend > 0) {
-              let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
-              this.setTiming(leaveTime);
-            } else if(extend === -1) {
-              this.timer && clearInterval(this.timer)
-            }
-
-            // 是否可以点亮提交按钮
-            this.canSubmitFn();
-
-            //
-            this.timeOver === true && (this.timeOver = false);
-            this.warning === true && (this.warning = false);
-
-            setTimeout(()=>{
-              this.hasNewExtendTime = false;
-            }, 3000)
-          }
-        }
-      },
-
-      /*
-       * @method 收题
-       * @params problemid
-       */
-      closedProblem(problemid) {
-        if(problemid === this.problemID) {
-          this.setTiming(0);
-        }
-      },
-
-      /*
        * @method 获取主观题分数
        * @param
        */
@@ -632,7 +496,7 @@
         let URL = API.student.PROBLEM_SCORE;
         let param = {
           'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'lesson_id': this.lessonId
         };
 
         return request.get(URL, param)
@@ -678,9 +542,10 @@
       * @method 发送主观题
       * @param
       */
-      sendSubjective() {
+      async sendSubjective() {
         let self = this;
-        let problemID = this.summary.problemID;
+        let problemID = this.problemID;
+        let problem = this.$parent.problemMap.get(problemID);
         let URL = API.student.ANSWER_LESSON_PROBLEM;
         const content = this.text.replace(/^\s+|\s+$/g, '');
 
@@ -691,126 +556,80 @@
             duration: 3000
           });
 
-          self.sendStatus = 4;
+          this.sendStatus = 4;
           return this;
         }
 
         // 发送中
         this.sendStatus = 3;
 
-        const startTime = Math.ceil(this.summary.time/1000);
-        const endTime = Math.ceil(+new Date()/1000);
-        // 持续多少秒
-        const duration = endTime - startTime;
-        const retryTimes = 0;
-
-        let param = {
-          'duration': duration,
-          'startTime': startTime,
-          'submit_time': endTime,
-          'lesson_problem_id': problemID,
+        let params = {
+          'problemId': problemID,
+          'problemType': this.problemType,
+          'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': [ { 'pic': this.imageURL, 'thumb': this.imageThumbURL} ]},
-          'retry_times': retryTimes
+            'pics': [ { 'pic': this.imageURL, 'thumb': this.imageThumbURL} ]
+          }
         };
 
-        // this.oProblem['Result'] = param['result'];
-        let problem = self.$parent.problemMap.get(problemID)
+        const code = await this.submit(params);
+          if(code === 0) {
+            this.$toast({
+              message: this.$i18n.t('sendsuccess') || '提交成功',
+              duration: 2000
+            });
 
-        console.log(param);
+            this.summary = Object.assign(this.summary, {
+              status: this.$i18n.t('done') || '已完成',
+              isComplete: true
+            })
+            // 替换原来的数据
+            this.cards.splice(this.index, 1, this.summary);
+            this.setCards(this.cards);
 
-        return request.post(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              // 先处理异常状态
-              if(data.status_code === 4) {
-                // 此题已经作答过
-                this.$toast({
-                  message: '此题已经作答过',
-                  duration: 2000
-                });
-              } else if(data.status_code === 2) {
-                // 用户由于接口时间太长超时了
-                this.$toast({
-                  message: `提交失败(错误码：${data.status_code})`,
-                  duration: 2000
-                });
-
-                this.sendStatus = 4;
-                this.oProblem['Result'] = null;
-                return this;
-              } else {
-                this.$toast({
-                  message: this.$i18n.t('sendsuccess') || '提交成功',
-                  duration: 2000
-                });
-              }
-
-              self.sendStatus = 4;
-
-              self.oProblem['Result'] = param['result'];
-              self.summary = Object.assign(self.summary, {
-                status: this.$i18n.t('done') || '已完成',
-                isComplete: true
-              })
-
-              // 替换原来的数据
-              self.$parent.cards.splice(self.index, 1, self.summary);
-
-              problem = Object.assign(problem, {
-                'Problem': self.oProblem
-              })
-              self.$parent.problemMap.set(problemID, problem);
-
-              clearInterval(self.timer);
-
-              this.sLeaveTime = this.$i18n.t('done') || '已完成';
-              this.isComplete = true;
-
-              setTimeout(() => {
-                self.$router.back();
-              }, 2000)
-
-              return data;
+            if(problem['problem']) {
+              problem['problem']['result'] = params['result'];
+              this.$parent.problemMap.set(problemID, problem);
             }
-          })
-          .catch(error => {
+
+            this.sendStatus = 4;
+            this.sLeaveTime = this.$i18n.t('done') || '已完成';
+            this.isComplete = true;
+          } else if(code === 50028) {
+            this.$toast({
+              message: '此题已经作答过',
+              duration: 2000
+            });
+          } else if(code === -1) {
             // 提交失败保存本地
-            self.saveAnswer(param);
-            self.$toast({
-              message: self.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
+            this.saveAnswer(params);
+            this.$toast({
+              message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
               duration: 3000
             });
 
-            self.oProblem['Result'] = null;
-
-            setTimeout(() => {
-              self.$router.back();
-            }, 3000)
+            this.isComplete = true;
+            this.oProblem['result'] = null;
 
             // 统计失败率
-            typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed', {'pid': problemID});
-          });
-      },
+            typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
+          } else {
+            // 用户由于接口时间太长超时了
+            this.$toast({
+              message: `提交失败(错误码：${code})`,
+              duration: 2000
+            });
 
-      /*
-       * @method 保存习题答案
-       * @param
-       */
-      saveAnswer(data) {
-        let key = 'answer_problem';
+            this.sendStatus = 4;
+            this.oProblem['result'] = null;
 
-        if(isSupported(localStorage)) {
-          let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
-          data.retry_times = data.retry_times + 1;
-          answerPostList.push(data);
+            return this;
+          }
 
-          let value = JSON.stringify(answerPostList);
-          localStorage.setItem(key, value);
-        }
+          setTimeout(() => {
+            this.$router.back();
+          }, 2000)
       },
 
       /*
@@ -849,7 +668,7 @@
         Promise.all([upload.getToken()]).
         then(() => {
           let randomNumber = parseInt(Math.random()*10000, 10);
-          let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
+          let fileName = `${this.lessonId}${data.length}${randomNumber}.${picType}`;
           // let file = dataURLtoFile(data, fileName);
           this.uploadFile(data).
           then((res)=>{
@@ -1008,7 +827,7 @@
        * @method 选择拍照后触发事件
        * @param type 1 ppt图片 2 上传图片 3 完成后预览
        */
-      handlelaodImg(type, evt) {
+      handleLoadImg(type, evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
         let width = target.naturalWidth || target.width;
@@ -1107,7 +926,6 @@
 
         // Initializes and opens PhotoSwipe
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-
         gallery.init();
       },
       handleSend() {
@@ -1137,7 +955,7 @@
                 }
               });
             } else {
-              this.getTeamResult(this.summary.problemID);
+              this.getTeamResult(this.problemID);
             }
           } else {
             this.sendSubjective();
@@ -1180,8 +998,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      this.lessonID = this.$parent.lessonID;
-      let cards = this.$parent.cards;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {
