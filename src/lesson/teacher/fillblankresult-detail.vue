@@ -115,8 +115,8 @@
   // # 匿名投票Anonymous
   // PROBLEM_TYPE_ANONYMOUS_POLLING = 8
 
-  import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
   import analysismixin from '@/components/common/analysis-mixin'
 
   export default {

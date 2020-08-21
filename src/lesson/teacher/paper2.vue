@@ -66,9 +66,9 @@
 <script>
 
   import {mapGetters} from 'vuex'
-  import request from '@/util/request'
+  import request from '@/util/request-v3'
   import Moment from 'moment'
-  import API from '@/pages/teacher/config/api'
+  import API from '@/util/api'
 
   export default {
     name: 'Paper',

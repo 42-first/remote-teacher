@@ -208,6 +208,11 @@ const router = new Router({
       name: 'remote-fallback',
       component: RemoteList,
       meta
+    },
+    {
+      path: '/v3/:lessonid',
+      name: 'teacher-v3',
+      component: () => import('@/lesson/teacher/home')
     }
   ]
 })
@@ -218,7 +223,9 @@ router.beforeEach((to, from, next) => {
   pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
 
   // socket 无法使用的话，功能不正常，回根页面
-  if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send)) {
+  console.log(to);
+  
+  if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) && to.name.indexOf('v3') == -1) {
     next({name: 'home', params: {lessonid: STORE.state.lessonid}})
     return;
   }

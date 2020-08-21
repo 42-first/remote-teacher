@@ -81,8 +81,8 @@
 <script>
 	import 'mint-ui/lib/picker/style.css'
 	import Vue from 'vue'
-	import API from '@/pages/teacher/config/api'
-	import request from '@/util/request'
+	import API from '@/util/api'
+	import request from '@/util/request-v3'
 	import { Picker } from 'mint-ui';
 	import {mapGetters} from 'vuex'
 

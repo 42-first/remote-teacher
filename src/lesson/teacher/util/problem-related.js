@@ -3,8 +3,8 @@
  * @module 发试题相关：发送试题、查看答案、试题倒计时、刷新柱状图、获取柱状图数据、获取试题答题详情
  */
 
-import request from '@/util/request'
-import API from '@/pages/teacher/config/api'
+import request from '@/util/request-v3'
+import API from '@/util/api'
 
 // 发送试题
 import Problemtime from '@/components/teacher-restructure/common/problemtime'

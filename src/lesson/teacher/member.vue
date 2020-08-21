@@ -127,8 +127,8 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import request from '@/util/request'
-	import API from '@/pages/teacher/config/api'
+  import request from '@/util/request-v3'
+	import API from '@/util/api'
 	import { InfiniteScroll } from 'mint-ui';
 	import Vue from "vue";
 	Vue.use(InfiniteScroll);
