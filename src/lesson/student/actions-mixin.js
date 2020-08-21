@@ -26,8 +26,6 @@ var actionsMixin = {
             // 幻灯片换页通知
             case 'problem':
               this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
-
-              this.timeline['problem'][item['prob']] = item;
               break;
 
             // 试卷
@@ -140,8 +138,10 @@ var actionsMixin = {
         }
       }
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards);
+      }
     },
 
     /*
@@ -170,7 +170,7 @@ var actionsMixin = {
       if(problemID) {
         // ppt不一致 通过sid取slideData
         hasProblem = slides.find((slide) => {
-          return slide.problem && slide.problem.problemID === problemID;
+          return slide.problem && slide.problem.problemId === problemID;
         });
       }
 
@@ -198,12 +198,11 @@ var actionsMixin = {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['slides'];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
-      let index = -1;
       let cover = slideData && slideData['cover'] || '';
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && data.presentationid && this.updatePresentation(data.presentationid);
+        // !presentation && data.presentationid && this.updatePresentation(data.presentationid);
         return;
       }
 
@@ -228,14 +227,6 @@ var actionsMixin = {
       } else {
         // 预加载图片
         let oImg = new Image();
-        oImg.onload = (evt) => {
-          if(index !== -1) {
-            // 暂时去掉 因为目前很多使用 splice 导致顺序短时间内错乱
-            // let data = self.cards[index - 1];
-            // data.src = slideData['Cover'];
-          }
-        };
-
         oImg.src = slideData['cover'];
 
         let cardItem = {
@@ -249,7 +240,7 @@ var actionsMixin = {
           isRepeat: hasPPT ? true : false
         };
         // 是否web开课的动画 Shapes里面有动画步骤
-        let Shapes = slideData.Shapes;
+        let Shapes = slideData.shapes;
         let isWebLesson = this.isWebLesson;
 
         // 之前有动画隐藏蒙版
@@ -330,15 +321,13 @@ var actionsMixin = {
           this.cards.push(data);
         }
 
-        index = this.cards.length;
+        this.setCards(this.cards)
 
         // 第一张ppt显示在引导页
         if(!this.pptCover) {
-          this.pptCover = slideData['Cover'];
+          this.pptCover = slideData['cover'];
         }
       }
-
-      this.allEvents.push(data);
     },
 
     /*
@@ -363,11 +352,11 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      // data.isPopup && this.msgBoxs.push(data);
       data.isPopup && (this.msgBoxs = [data]);
-
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -410,17 +399,18 @@ var actionsMixin = {
       }
 
       // 问题类型
-      let problemType = slideData['problem']['problemType'];
-      let pageURL = `/${this.lessonID}/`;
+      let problem = slideData['problem'];
+      let problemType = problem['problemType'];
+      let pageURL = `/v3/${this.lessonID}/`;
 
       if(problemType) {
         switch (problemType) {
           // 主观题
-          case 'ShortAnswer':
+          case 5:
             pageURL += 'subjective/';
             break;
           // 填空题
-          case 'FillBlank':
+          case 4:
             pageURL += 'blank/';
             break;
           // 多选单选投票
@@ -436,10 +426,10 @@ var actionsMixin = {
         time: data.time,
         problemType: problemType,
         caption: problemType === 3 ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
-        status: slideData['problem']['result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
-        isComplete: slideData['problem']['result'] ? true : false,
-        problemID: slideData['problem']['problemId'],
-        options: slideData['problem']['bullets'],
+        status: problem['result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
+        isComplete: problem['result'] ? true : false,
+        problemID: problem['problemId'],
+        options: problem['bullets'] || problem['options'],
         cover: slideData['cover'],
         index,
         pageURL,
@@ -451,7 +441,7 @@ var actionsMixin = {
 
       // 预加载习题图片
       let oImg = new Image();
-      oImg.src = slideData && slideData['Cover'];
+      oImg.src = slideData && slideData['cover'];
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
@@ -463,12 +453,14 @@ var actionsMixin = {
         hasEvent.cover = slideData && slideData['cover'];
       }
 
-      !hasEvent && this.cards.push(data);
-      !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['problem']['problemId'], slideData);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        // 之前有动画隐藏蒙版
+        this.hideAnimationMask();
 
-      // 之前有动画隐藏蒙版
-      !hasEvent && this.hideAnimationMask();
+        this.setCards(this.cards)
+        slideData['problem'] && this.problemMap.set(slideData['problem']['problemId'], slideData);
+      }
     },
 
     /**
@@ -482,10 +474,10 @@ var actionsMixin = {
 
       if(slideData) {
         // 组织解析数据
-        let pageURL = `/${this.lessonID}/analysis/`;
+        let pageURL = `/v3/${this.lessonID}/analysis/`;
         Object.assign(data, {
           pageIndex: slideData.Index,
-          problemID: slideData['Problem']['ProblemID'],
+          problemID: slideData['problem']['problemId'],
           pageURL,
           caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
         })
@@ -495,10 +487,11 @@ var actionsMixin = {
           return item.type === 13 && item.problemID === data.problemID && data.isFetch;
         })
 
-        !hasEvent && this.cards.push(data);
-        this.allEvents.push(data);
+        if(!hasEvent) {
+          this.cards.push(data);
+          this.setCards(this.cards)
+        }
       }
-
     },
 
     /*
@@ -516,8 +509,10 @@ var actionsMixin = {
         isComplete: false
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -535,8 +530,10 @@ var actionsMixin = {
         isComplete: false
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -555,7 +552,6 @@ var actionsMixin = {
           leaveTime: leaveTime,
           limit: limit
         });
-
       }
     },
 
@@ -615,8 +611,10 @@ var actionsMixin = {
         }
       })
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -658,8 +656,10 @@ var actionsMixin = {
       // 消息box弹框
       data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -672,7 +672,10 @@ var actionsMixin = {
       })
 
       // 可以确认分组被取消了
-      targetIndex !== -1 && this.cards.splice(targetIndex, 1);
+      if(targetIndex !== -1) {
+        this.cards.splice(targetIndex, 1);
+        this.setCards(this.cards);
+      }
     },
 
     /*
@@ -689,6 +692,8 @@ var actionsMixin = {
         status: this.$i18n.t('undone'),
         isComplete:  true
       })
+
+      this.setCards(this.cards);
     },
 
     /*
@@ -708,9 +713,9 @@ var actionsMixin = {
       let slideData = this.problemMap.get(data.prob);
 
       Object.assign(data, {
-        pageIndex: slideData && slideData.Index,
-        cover: slideData && slideData['Cover'],
-        score: slideData && slideData['Problem'] && slideData['Problem']['Score'],
+        pageIndex: slideData && slideData.index,
+        cover: slideData && slideData['cover'],
+        score: slideData && slideData['problem'] && slideData['problem']['score'],
         status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
         isComplete,
         index
@@ -719,8 +724,10 @@ var actionsMixin = {
       // 消息box弹框
       data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -747,15 +754,17 @@ var actionsMixin = {
 
       let cardItem = {
         src: data.url,
-        rate: presentation.Width / presentation.Height,
-        Width: presentation.Width,
-        Height: presentation.Height,
+        rate: presentation.width / presentation.height,
+        Width: presentation.width,
+        Height: presentation.height,
       };
 
       data = Object.assign(data, cardItem)
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -783,15 +792,17 @@ var actionsMixin = {
 
       let cardItem = {
         src: url,
-        rate: presentation.Width / presentation.Height,
-        Width: presentation.Width,
-        Height: presentation.Height,
+        rate: presentation.width / presentation.height,
+        Width: presentation.width,
+        Height: presentation.height,
       };
 
       data = Object.assign(data, cardItem)
 
-      !hasEvent && this.cards.push(data);
-      this.allEvents.push(data);
+      if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
     },
 
     /*
@@ -920,8 +931,10 @@ var actionsMixin = {
         this.boardMap.set(id, data);
         this.boardInfo = data;
 
-        !hasEvent && this.cards.push(data);
-        this.allEvents.push(data);
+        if(!hasEvent) {
+          this.cards.push(data);
+          this.setCards(this.cards)
+        }
       }
     },
 

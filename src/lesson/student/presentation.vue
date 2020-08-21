@@ -24,7 +24,7 @@
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
-            <p class="action f17" @click="handleenterTeam" v-if="classroom &&classroom.classroomId">
+            <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
               <i class="iconfont icon-fenzu f25"></i>
               <span><!-- 我的分组 -->{{ $t('team.mygroup') }}</span>
             </p>
@@ -130,7 +130,7 @@
           </div>
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards" :key="index">
-            <Card-Item-Component :item="item" :index="index" :lessonid="lessonID" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+            <Card-Item-Component :item="item" :index="index" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
           <!-- 各类型中的空状态 -->
           <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">{{ $t('noslides') }}</div>
@@ -223,6 +223,8 @@
   </section>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex';
+
   import request from '@/util/request-v3'
   import API from '@/util/api'
   import '@/util/util'
@@ -262,7 +264,7 @@
   }
 
   export default {
-    name: 'student-page',
+    name: 'student',
 
     data() {
       return {
@@ -297,13 +299,10 @@
 
         // 是否有新消息
         hasMsg: false,
-        // 是否观看模式
-        observerMode: false,
         // 是否开启弹幕
         danmuStatus: false,
         // 课程是否结束
         lessonStatus: 0,
-        presentationList: null,
         presentationMap: new Map(),
         quizList: null,
         quizMap: new Map(),
@@ -311,27 +310,16 @@
         groupMap: new Map(),
         // 互评map
         groupReviewMap: new Map(),
-
         // 习题map
         problemMap: new Map(),
-
-        // timeline列表
-        cards: [],
 
         // 消息box数据
         msgBoxs: [],
 
-        // 记录全部的事件
-        allEvents: [],
-        // 时间轴数据
-        timeline: {
-          'problem': {}
-        },
         // 弹幕投稿是否展开
         isMore: false,
-        // todo: 是否新版本 隐藏功能
-        version: 0.9,
-        commitDiffURL: '/lesson/lesson_submit_difficulties',
+        // 是否新版本 隐藏功能
+        version: 1.4,
         backURL: '',
         pro_perm_info: {},
 
@@ -413,6 +401,10 @@
       livetip: () => import('@/lesson/common/live-tip.vue'),
     },
     computed: {
+      ...mapState([
+        'cards',
+        'observerMode'
+      ])
     },
     watch: {
       '$route' (to, from) {
@@ -424,7 +416,7 @@
           return this;
         }
 
-        if(from.name == 'student-danmu-page' || from.name == 'student-submission-page') {
+        if(from.name == 'student-danmu' || from.name == 'student-submission') {
           document.title = this.courseName && this.courseName;
           setTimeout(() => {
             typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
@@ -449,14 +441,23 @@
     },
     mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, lessonmixin ],
     methods: {
+      ...mapActions([
+        'setCards',
+        'setLessonId',
+        'setObserverMode',
+      ]),
+
       /*
        * @method 接收器初始化
        */
       init() {
         let self = this;
-        let query = this.$route.query;
         this.lessonID = this.$route.params.lessonID;
-        this.observerMode = query && query.force === 'lecture' ? true : false;
+        this.setLessonId(this.lessonID);
+
+        let query = this.$route.query;
+        let observerMode = query && query.force === 'lecture' ? true : false;
+        this.setObserverMode(observerMode);
 
         this.returnRemote = query && query.remote ? true : false
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
@@ -500,7 +501,7 @@
 
             // 直播hls格式初始化
             let isWeb = this.isWeb;
-            !isWeb && self.loadHLS();
+            !isWeb && this.loadHLS();
 
             // sentry 配置
             // this.setSentry();
@@ -514,10 +515,10 @@
 
           // 设置自动提交
           setInterval(() => {
-            self.autoSendAnswers();
+            this.autoSendAnswers();
           }, 10000)
 
-          self.bindTouchEvents();
+          this.bindTouchEvents();
 
           // 时间动态显示 每分钟更新一次
           setInterval(() => {
@@ -550,16 +551,6 @@
       */
       hideGuide() {
         this.showGuide = false;
-        let URL = API.student.SET_GUIDE;
-        let param = {
-          'lesson_id': this.lessonID
-        }
-
-        request.post(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-            }
-          });
       },
 
       /*
@@ -571,49 +562,6 @@
         this.init();
         // 隐藏信息完善
         this.showInfo = false;
-      },
-
-      /*
-       * @method 软件版本号
-       * @param  lessonID
-       */
-      getSoftVersion(lessonID) {
-        let self = this;
-        let URL = API.GET_SOFT_VERSION;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.version = +data.ppt_version;
-
-              return data;
-            }
-          });
-      },
-
-      /*
-       * @method 获取老师信息
-       * @param  lessonID
-       */
-      getTeacherName(lessonID) {
-        let URL = API.student.GET_TEACHER;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              this.teacherName = data.teacher_name;
-            }
-          });
       },
 
       /*
@@ -779,67 +727,6 @@
       },
 
       /*
-      * @method 获取实时更新的数据
-      * @param presentationID
-      */
-      getUpdatePPTData(presentationID) {
-        let self = this;
-        let URL = API.student.FETCH_PRESENTATION_DATA;
-        let param = {
-          lessonID: this.lessonID,
-          presentationID: presentationID,
-          userAuth: this.userAuth,
-          userID: this.userID
-        };
-
-        if (process.env.NODE_ENV === 'production') {
-          URL = URL + presentationID;
-        }
-
-        // 是否正在更新ppt, 防止重复请求压力
-        if(this.updatingPPT) {
-          return this;
-        } else {
-          this.updatingPPT = true;
-        }
-
-        self.presentationID = presentationID;
-
-        return request.get(URL, param).
-          then(function (res) {
-            if(res) {
-              let data = res;
-              let presentation = data.presentationData;
-
-              // set presentation map
-              let oldPresentation = self.presentationMap.get(presentationID);
-              self.formatUpdatePresentation(presentation, presentationID, oldPresentation);
-
-              // set title
-              presentation.Title && (self.title = presentation.Title);
-
-              // 更新ppt刷新timeline
-              self.socket.send(JSON.stringify({
-                'op': 'fetchtimeline',
-                'lessonid': self.lessonID,
-                'msgid': self.msgid++,
-                // 白板兼容老数据
-                'ver': 1
-              }));
-
-              // 更新完成
-              self.updatingPPT = false;
-
-              // 更新本地换粗
-              self.updateSlides(presentationID, presentation);
-
-              return presentation;
-            }
-          });
-
-      },
-
-      /*
       * @method 下拉刷新回调
       * @param
       */
@@ -953,7 +840,7 @@
         }
 
         if(this.danmuStatus) {
-          this.$router.push({ path: '/'+ this.lessonID +'/danmu' });
+          this.$router.push({ path: '/v3/'+ this.lessonID +'/danmu' });
         } else {
           // 引导学生去投稿
           let title = this.$i18n.t('bulletban') || '老师暂时未开放弹幕';
@@ -961,7 +848,7 @@
 
           this.$messagebox.confirm(message, title, msgOptions).then(action => {
             if(action === 'confirm') {
-              this.$router.push({ path: '/'+ this.lessonID +'/submission' });
+              this.$router.push({ path: '/v3/'+ this.lessonID +'/submission' });
             }
           });
         }
@@ -989,7 +876,7 @@
        *
        */
       handleenterTeam(evt) {
-        location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+        location.href = '/team/student/' + this.classroom.id + '?lessonid=' + this.lessonID;
       },
 
       /*
@@ -1034,7 +921,7 @@
         } else if(this.returnRemote){
           this.$router.back();
         } else if(this.classroom && this.classroom.courseId) {
-          // 学习日志 /v/index/course/normalcourse/manage_classroom/{{classroom.course_id}}/{{classroom.id}}
+          // 学习日志
           location.href = '/v/index/course/normalcourse/manage_classroom/'+ this.classroom.courseId + '/' + this.classroom.classroomId;
         } else {
           this.$router.back();
@@ -1068,8 +955,6 @@
     },
     beforeDestroy() {
       this.unbindTouchEvents();
-
-      // this.saveSlideTag();
     }
   };
 </script>

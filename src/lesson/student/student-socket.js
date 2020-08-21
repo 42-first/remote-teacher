@@ -142,11 +142,10 @@ var mixin = {
             timeline = msg['timeline']
 
             msg['presentation'] && (this.presentationID = msg['presentation'])
+            // 协议版本号
+            msg['addinversion'] && (this.version = msg['addinversion']);
 
             if(timeline && timeline.length) {
-              // this.cards = [];
-              // this.setTimeline(timeline)
-
               this.getAllPres(msg);
             }
 
@@ -165,7 +164,6 @@ var mixin = {
 
             if(item) {
               this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item, isPopup: true });
-              this.timeline['problem'][item['prob']] = item;
             }
 
             break

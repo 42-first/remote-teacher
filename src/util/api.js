@@ -97,6 +97,10 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       send_danmu: '/api/v3/danmu/send',
       // 答题
       answer_problem: '/api/v3/lesson/problem/answer',
+      // 答题重试
+      retry_answer_problem: '/api/v3/lesson/problem/retry',
+      // 添加投稿
+      add_tougao: '/api/v3/lesson/tougao/add',
 
 
       // 教师接口

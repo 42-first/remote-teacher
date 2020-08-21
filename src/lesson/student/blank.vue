@@ -31,7 +31,7 @@
       <!-- 问题内容 -->
       <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
         <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
-        <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handlelaodImg" />
+        <img class="cover" :src="summary&&summary.cover" @click="handleScaleImage" @load="handleLoadImg" />
       </section>
 
       <!-- 填空选项 -->
@@ -40,7 +40,7 @@
         <ul class="blanks__options">
           <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
             <div class="blank__order">{{ index + 1 }}</div>
-            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index + 1]" @input="handleinput" :data-index="index" :placeholder="$t('enteranswer')" ></textarea>
+            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index]" @input="handleinput" :data-index="index" :placeholder="$t('enteranswer')" ></textarea>
           </li>
         </ul>
       </section>
@@ -96,11 +96,13 @@
   </section>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex';
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
+  import problemControl from '@/lesson/student/mixin/problem-control'
 
   export default {
-    name: 'blanks-page',
+    name: 'blanks',
     data() {
       return {
         index: 0,
@@ -126,12 +128,10 @@
         // 提交状态 0:不能提交 1：可以提交 2：提交中 3:提交完成
         canSubmit: 0,
 
-        observerMode: false,
-
         // 选择的答案
         optionsSet: new Set(),
         // 问题类型
-        problemType: '',
+        problemType: 4,
 
         isShowSubmit: true,
         isShowOption: true,
@@ -141,9 +141,11 @@
         rate: 1
       };
     },
-    components: {
-    },
     computed: {
+      ...mapState([
+        'cards',
+        'observerMode'
+      ])
     },
     watch: {
     },
@@ -171,8 +173,12 @@
         return text;
       }
     },
-    mixins: [],
+    mixins: [ problemControl ],
     methods: {
+      ...mapActions([
+        'setCards'
+      ]),
+
       /*
       * @method 初始化习题页面
       * @param problemID 问题ID
@@ -190,14 +196,12 @@
         // event消息订阅
         this.initPubSub();
 
-        // 是否观察者模式
-        this.observerMode = this.$parent.observerMode;
-        this.oProblem = this.$parent.problemMap.get(problemID)['Problem'];
+        this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
         // 问题类型
-        this.problemType = this.oProblem['Type'];
-        this.result = this.oProblem['Result'] || this.result;
+        this.problemType = this.oProblem['problemType'];
+        this.result = this.oProblem['result'] || this.result;
         // 选项
-        let blanks = this.oProblem.Blanks;
+        let blanks = this.oProblem.blanks;
 
         // 是否观察者模式
         if(this.observerMode) {
@@ -217,13 +221,13 @@
 
           blanks.forEach((item, index) => {
             // 是否有作答
-            if(!this.result[index + 1]) {
-              this.result[index + 1] = '';
+            if(!this.result[index]) {
+              this.result[index] = '';
             }
           })
 
           if (process.env.NODE_ENV !== 'production') {
-            this.setTiming(data.limit)
+            // this.setTiming(data.limit)
           }
         }
 
@@ -248,91 +252,6 @@
       },
 
       /*
-       * @method 初始化订阅事件
-       * @param
-       */
-      initPubSub() {
-        // 取消练习的订阅
-        PubSub && PubSub.unsubscribe('exercise');
-
-        // 订阅定时消息
-        PubSub && PubSub.subscribe( 'exercise.setTiming', ( topic, data ) => {
-          this.setProblemStatus(data);
-        });
-
-        // 订阅续时消息
-        PubSub && PubSub.subscribe( 'exercise.extendTime', ( topic, data ) => {
-          this.extendTime(data && data.problem);
-        });
-
-        // 订阅收题消息
-        PubSub && PubSub.subscribe( 'exercise.closed', ( topic, data ) => {
-          this.closedProblem(data && data.problemid);
-        });
-      },
-
-      /*
-      * @method 问题状态
-      * @param
-      */
-      setProblemStatus(data) {
-        let leaveTime = data && data.leaveTime;
-
-        // 不限时
-        if(data.limit === -1) {
-          this.limit = -1;
-          // 是否可以点亮提交按钮
-          this.canSubmitFn();
-        } else if(data.limit === 0) {
-          // 已收题
-          this.setTiming(0);
-        } else {
-          // 限时题目
-          this.limit = data.limit;
-          this.setTiming(data && data.leaveTime);
-        }
-      },
-
-      /*
-      * @method 设置计时器
-      * @param
-      */
-      setTiming(leaveTime) {
-        this.leaveTime = leaveTime > 0 ? leaveTime : 0;
-
-        this.timer && clearInterval(this.timer)
-
-        if (leaveTime > 0) {
-          this.timer = setInterval(()=>{
-            this.leaveTime--;
-            let minutes = parseInt(this.leaveTime / 60, 10);
-            let seconds = parseInt(this.leaveTime % 60, 10);
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            this.sLeaveTime = minutes + ':' + seconds;
-
-            if(this.leaveTime === 0) {
-              this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
-
-              clearInterval(this.timer);
-              this.timeOver = true;
-              this.warning = false;
-            }
-
-            if(this.leaveTime <= 10 && this.leaveTime > 0) {
-              this.warning = true;
-            }
-
-          }, 1000)
-        } else {
-          // 时间到
-          this.timeOver = true;
-          this.sLeaveTime = this.$i18n.t('receivertimeout') || '作答时间结束';
-        }
-      },
-
-      /*
        * @method 是否点亮提交按钮
        * @params problem
        */
@@ -341,7 +260,7 @@
         let hasAnswer = false;
 
         hasAnswer = this.blanks.find((blank, index)=>{
-          return result[index + 1];
+          return result[index];
         });
 
         if(!this.isComplete && hasAnswer) {
@@ -351,62 +270,7 @@
         }
 
         // 保存作答记录
-        this.oProblem['Result'] = result;
-      },
-
-      /*
-       * @method 答题续时
-       * @params problem
-       */
-      extendTime(problem) {
-        if(problem) {
-          let id = problem.prob;
-          let extend = problem.extend;
-          // 续时 分钟 秒
-          let minutes = parseInt(extend / 60, 10);
-          let seconds = parseInt(extend % 60, 10);
-          let sMsg = minutes > 0 ? this.$i18n.t('extendmin', { minutes: minutes }) || `题目续时 ${minutes}分钟` : this.$i18n.t('extendsec', { seconds: seconds }) || `题目续时 ${seconds}秒`;
-
-          if(extend === -1) {
-            sMsg = this.$i18n.t('notimelimit') || '题目不限时';
-          }
-
-          // 同一个问题续时 切没有结束
-          if(id === this.problemID && !this.isComplete) {
-            this.hasNewExtendTime = true;
-            this.sExtendTimeMsg = sMsg;
-
-            this.limit = problem.limit;
-
-            if(extend > 0) {
-              let leaveTime = this.limit - Math.floor((problem['now'] - problem['dt'])/1000);
-              this.setTiming(leaveTime);
-            } else if(extend === -1) {
-              this.timer && clearInterval(this.timer)
-            }
-
-            // 是否可以点亮提交按钮
-            this.canSubmitFn();
-
-            //
-            this.timeOver === true && (this.timeOver = false);
-            this.warning === true && (this.warning = false);
-
-            setTimeout(()=>{
-              this.hasNewExtendTime = false;
-            }, 3000)
-          }
-        }
-      },
-
-      /*
-       * @method 收题
-       * @params problemid
-       */
-      closedProblem(problemid) {
-        if(problemid === this.problemID && !this.isComplete) {
-          this.setTiming(0);
-        }
+        this.oProblem['result'] = result;
       },
 
       /*
@@ -431,10 +295,9 @@
       /*
       * @method 提交答案
       */
-      submitProblem() {
-        let self = this;
-        let problemID = this.summary.problemID;
-        let URL = API.student.ANSWER_LESSON_PROBLEM;
+      async submitProblem() {
+        let problemID = this.problemID;
+        let problem = this.$parent.problemMap.get(problemID)
         let result = this.result;
 
         // 是否可以提交
@@ -451,98 +314,70 @@
 
           this.canSubmit = 2;
 
-          const startTime = Math.ceil(this.summary.time/1000);
-          const endTime = Math.ceil(+new Date()/1000);
-          // 持续多少秒
-          const duration = endTime - startTime;
-          const retryTimes = 0;
+          let params = {
+            'problemId': problemID,
+            'problemType': this.problemType,
+            'dt': +new Date(),
+            'result': Object.values(result)
+          };
 
-          let param = {
-            'duration': duration,
-            'startTime': startTime,
-            'submit_time': endTime,
-            'lesson_problem_id': problemID,
-            'result': result,
-            'retry_times': retryTimes
-          }
-
-          this.oProblem['Result'] = param['result'];
-          let problem = self.$parent.problemMap.get(problemID)
-
-          return request.post(URL, param)
-            .then((res) => {
-              if(res && res.data) {
-                let data = res.data;
-
-                // 先处理异常状态
-                if(data.status_code === 4) {
-                  // 此题已经作答过
-                  this.$toast({
-                    message: '此题已经作答过',
-                    duration: 2000
-                  });
-                } else if(data.status_code === 2) {
-                  // 用户由于接口时间太长超时了
-                  this.$toast({
-                    message: `提交失败(错误码：${data.status_code})`,
-                    duration: 2000
-                  });
-
-                  this.canSubmit = 0;
-                  this.oProblem['Result'] = null;
-                  return this;
-                } else {
-                  this.$toast({
-                    message: this.$i18n.t('sendsuccess') || '提交成功',
-                    duration: 2000
-                  });
-                }
-
-                self.summary = Object.assign(self.summary, {
-                  status: this.$i18n.t('done') || '已完成',
-                  isComplete: true
-                })
-
-                // 替换原来的数据
-                self.$parent.cards.splice(self.index, 1, self.summary);
-
-                problem = Object.assign(problem, {
-                  'Problem': self.oProblem
-                })
-                self.$parent.problemMap.set(problemID, problem);
-
-                self.canSubmit = 3;
-                clearInterval(self.timer);
-                this.sLeaveTime = this.$i18n.t('done') || '已完成';
-                this.isComplete = true;
-
-                setTimeout(() => {
-                  self.$router.back();
-                }, 2000)
-
-                return data;
-              }
-            })
-            .catch(error => {
-              // 提交失败保存本地
-              self.saveAnswer(param);
-              self.$toast({
-                message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
-                duration: 3000
-              });
-
-              self.isComplete = true;
-              self.oProblem['Result'] = null;
-
-              setTimeout(() => {
-                self.$router.back();
-              }, 3000)
-
-              // 统计失败率
-              typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
+          const code = await this.submit(params);
+          if(code === 0) {
+            this.$toast({
+              message: this.$i18n.t('sendsuccess') || '提交成功',
+              duration: 2000
             });
 
-          clearInterval(this.timer);
+            this.summary = Object.assign(this.summary, {
+              status: this.$i18n.t('done') || '已完成',
+              isComplete: true
+            })
+            // 替换原来的数据
+            this.cards.splice(this.index, 1, this.summary);
+            this.setCards(this.cards);
+
+            if(problem['problem']) {
+              problem['problem']['result'] = params['result'];
+              this.$parent.problemMap.set(problemID, problem);
+            }
+
+            this.canSubmit = 3;
+            this.sLeaveTime = this.$i18n.t('done') || '已完成';
+            this.isComplete = true;
+          } else if(code === 50028) {
+            this.$toast({
+              message: '此题已经作答过',
+              duration: 2000
+            });
+          } else if(code === -1) {
+            // 提交失败保存本地
+            this.saveAnswer(params);
+            this.$toast({
+              message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
+              duration: 3000
+            });
+
+            this.isComplete = true;
+            this.oProblem['result'] = null;
+
+            // 统计失败率
+            typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
+          } else {
+            // 用户由于接口时间太长超时了
+            this.$toast({
+              message: `提交失败(错误码：${code})`,
+              duration: 2000
+            });
+
+            this.canSubmit = 0;
+            this.oProblem['result'] = null;
+
+            return this;
+          }
+
+          setTimeout(() => {
+            this.$router.back();
+          }, 2000)
         }
       },
 
@@ -554,7 +389,7 @@
 
         // 检测是否所有的选项都作答了
         let hasNoAnswer = this.blanks.find((blank, index)=>{
-          return !result[index + 1];
+          return !result[index];
         });
 
         if(hasNoAnswer) {
@@ -578,7 +413,7 @@
       /*
       * @method 图片加载完成
       */
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
@@ -636,29 +471,7 @@
 
         // Initializes and opens PhotoSwipe
         let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-
         gallery.init();
-        this.$parent.gallery = gallery;
-      },
-
-      /*
-      * @method 保存习题答案
-      * @param
-      */
-      saveAnswer(data) {
-        let key = 'answer_problem';
-
-        if(isSupported(localStorage)) {
-          let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
-
-          data.retry_times = data.retry_times + 1;
-          answerPostList.push(data);
-
-          let value = JSON.stringify(answerPostList);
-
-          localStorage.setItem(key, value);
-        }
-
       },
 
       /*
@@ -693,7 +506,7 @@
     },
     created() {
       this.index = +this.$route.params.index;
-      let cards = this.$parent.cards;
+      let cards = this.cards;
       this.summary = cards[this.index];
 
       if(this.summary) {

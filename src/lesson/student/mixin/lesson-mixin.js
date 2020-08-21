@@ -91,15 +91,20 @@ let lessonMixin = {
         Promise.all(presRequestList).
         then(res => {
           console.log(res);
-          res && res.forEach((presentation)=>{
+          res && res.forEach((presentation, index)=>{
             this.formatPresentation(presentation, lessonTags);
+
+            if(index === 0) {
+              this.title = presentation.title;
+            }
           })
 
           // 渲染timeline
-          this.cards = [];
+          this.setCards([])
           this.setTimeline(timeline);
 
           // 防止请求中间数据遗漏
+          WebSocket.OPEN === this.socket.readyState &&
           this.socket.send(JSON.stringify({
             'op': 'fetchtimeline',
             'lessonid': this.lessonID,
@@ -107,7 +112,7 @@ let lessonMixin = {
           }));
         })
       } else {
-        this.cards = [];
+        this.setCards([])
         this.setTimeline(timeline);
       }
 
@@ -121,13 +126,23 @@ let lessonMixin = {
      * @param pid
      */
     async updatePresentation(pid) {
+      if(this.updatingPPT) {
+        return this;
+      } else {
+        this.updatingPPT = true;
+      }
+
       let pres = await this.getPresentation(pid);
 
       // set presentation map
       let oldPres = this.presentationMap.get(pid);
       this.formatUpdatePresentation(pres, oldPres);
 
+      // 更新完成
+      this.updatingPPT = false;
+
       // 更新ppt刷新timeline
+      WebSocket.OPEN === this.socket.readyState &&
       this.socket.send(JSON.stringify({
         'op': 'fetchtimeline',
         'lessonid': this.lessonID,
@@ -184,16 +199,16 @@ let lessonMixin = {
         'classroom_id': rid
       };
 
-      return request.get(URL, params).
+      request.get(URL, params).
       then( res => {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
+          data.classroomId = rid;
           console.log(data);
 
           // 课程title
           document.title = data.courseName;
-
-          return data;
+          this.classroom = data;
         }
       }).catch(error => {
         console.log('getClassroom:', error);
@@ -351,71 +366,6 @@ let lessonMixin = {
 
         this.presentationMap.set(id, presentation);
       }
-    },
-
-    /**
-     * @method ppt不懂,收藏
-     * @param tag 0不懂 1收藏
-     */
-    handleTag(evt) {
-      let target = evt.target;
-      let type = +target.dataset['tag'];
-      let sid = target.dataset['slideId'];
-      let pid = target.dataset['presentationid'];
-
-      let URL = API.lesson.post_tag;
-      let cards = this.app.student.cards;
-
-      // fix 回放没有显示之前的操作问题
-      let presentation = this.app.student.presentationMap.get(pid);
-      let slides = presentation && presentation['slides'];
-      let slideData = slides.find((item)=>{
-        return sid === item.id;
-      })
-
-      let ppts = cards.filter((card)=>{
-        return card.slideID === sid && card.presentationid === pid;
-      })
-
-      // 取消还是新增
-      let action = ppts.length && ppts[0].hasQuestion ? 0 : 1;
-      // 是否收藏
-      if(type === 1) {
-        action = ppts.length && ppts[0].hasStore ? 0 : 1;
-      }
-
-      let params = {
-        'type': type,
-        'action': action,
-        'presentationId': pid,
-        'objId': sid,
-        'objType': 0,
-      };
-
-      request.post({
-        url: URL,
-        data: params
-      }).
-      then((res)=>{
-        if(res && res.code === 0) {
-          let data = res.data;
-
-          ppts.forEach( (item) => {
-            if(type === 0) {
-              item.hasQuestion = action;
-              slideData && (slideData.question = action);
-            } else if(type === 1) {
-              item.hasStore = action;
-              slideData && (slideData.store = action);
-            }
-          });
-
-          this.setData({ cards: this.app.student.cards });
-        }
-      }).
-      catch(error => {
-        console.log('handleTag:', error);
-      })
     },
 
     /**

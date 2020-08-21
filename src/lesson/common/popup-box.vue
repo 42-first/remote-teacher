@@ -31,14 +31,6 @@
            </router-link>
           <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
         </div>
-        <!-- 客观题作答链接 -->
-        <!-- <div :class="['paper-info', 'xt', item.isComplete ? 'complete' : '']" v-else @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/'+lessonid+'/exercise/'+item.index" >
-            <p class="icon-wrapper"><i class="iconfont icon-ykq_shiti f32"></i></p>
-            <p class="paper-name">{{ item.caption }}</p>
-          </router-link>
-          <i class="iconfont gray icon-shiti_guanbitouping f25"></i>
-        </div> -->
       </div>
     </template>
     <!-- 分组模板 -->
@@ -58,7 +50,7 @@
     <template v-else-if="item.type==9">
      <div class="popup__paper">
         <div :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/'+lessonid+'/evaluation/'+item.index" >
+          <router-link class="paper-txt f17" :to="'/v3/'+lessonid+'/evaluation/'+item.index" >
             <p class="icon-wrapper"><i class="iconfont icon-huping f32"></i></p>
             <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
           </router-link>
@@ -79,7 +71,7 @@
         default: 0
       },
       lessonid: {
-        type: Number,
+        type: String,
         default: 0
       },
       item: {
@@ -110,7 +102,6 @@
       }
     },
     created() {
-      let msgBoxs = this.$parent.msgBoxs;
     },
     mounted() {
       let self = this;
