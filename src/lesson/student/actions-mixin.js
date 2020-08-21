@@ -203,7 +203,7 @@ var actionsMixin = {
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        // !presentation && data.presentationid && this.updatePresentation(data.presentationid);
+        !presentation && data.presentationid && this.updatePresentation(data.presentationid);
         return;
       }
 
@@ -376,7 +376,7 @@ var actionsMixin = {
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation && presentation['Slides'];
+      let pptData = presentation && presentation['slides'];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
@@ -410,7 +410,7 @@ var actionsMixin = {
       }
 
       // 问题类型
-      let problemType = slideData['Problem']['Type'];
+      let problemType = slideData['problem']['problemType'];
       let pageURL = `/${this.lessonID}/`;
 
       if(problemType) {
@@ -435,12 +435,12 @@ var actionsMixin = {
         presentationid: data.presentationid,
         time: data.time,
         problemType: problemType,
-        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
-        status: slideData['Problem']['Result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
-        isComplete: slideData['Problem']['Result'] ? true : false,
-        problemID: slideData['Problem']['ProblemID'],
-        options: slideData['Problem']['Bullets'],
-        cover: slideData['Cover'],
+        caption: problemType === 3 ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
+        status: slideData['problem']['result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
+        isComplete: slideData['problem']['result'] ? true : false,
+        problemID: slideData['problem']['problemId'],
+        options: slideData['problem']['bullets'],
+        cover: slideData['cover'],
         index,
         pageURL,
         groupid: data.event['groupid']
@@ -460,11 +460,11 @@ var actionsMixin = {
 
       // fixed cover为空
       if(hasEvent && !hasEvent.cover) {
-        hasEvent.cover = slideData && slideData['Cover'];
+        hasEvent.cover = slideData && slideData['cover'];
       }
 
       !hasEvent && this.cards.push(data);
-      !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+      !hasEvent && slideData['Problem'] && this.problemMap.set(slideData['problem']['problemId'], slideData);
       this.allEvents.push(data);
 
       // 之前有动画隐藏蒙版

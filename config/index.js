@@ -41,6 +41,14 @@ module.exports = {
     assetsSubDirectory: 'static/lesson/',
     assetsPublicPath: '/',
     proxyTable: {
+      '/wsapp/': {
+        target: 'ws://pre-apple-ykt.xuetangonline.com',
+        changeOrigin: true,
+        ws: true,
+        secure: false
+      },
+      '/web': proxyConfig(),
+      '/static': proxyConfig(),
       '/pc': proxyConfig(),
       '/v/api': proxyConfig(),
       '/v': proxyConfig(),

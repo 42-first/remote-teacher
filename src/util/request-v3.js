@@ -90,11 +90,17 @@ export default {
     axios.defaults.headers['X-Client'] = 'h5';
 
     // todo: test 正式联调后删除
-    Cookies.set('sid', '1c5db47f09c19ae187f3f126773cfa01');
+    // Cookies.set('sid', '1c5db47f09c19ae187f3f126773cfa01');
     console.log(axios.defaults.headers['Cookie'])
 
+    // 课上接收器 遥控器使用
     if(window.Authorization) {
       axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;
+    }
+
+    // 灰度发布需要
+    if(window.userid) {
+      axios.defaults.headers['X-UID'] = window.userid;
     }
 
     return axios
