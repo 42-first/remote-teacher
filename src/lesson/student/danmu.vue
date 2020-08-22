@@ -18,8 +18,6 @@
           </div>
         </div>
       </section>
-
-      <!-- 图片 -->
       <section class="danmu__tip f14">{{ $t('wordrvwtip') }}</section>
 
       <section :class="['danmu__submit', 'f17', sendStatus === 0 || sendStatus >= 3 ? 'disable': '']" @click="handelSend">{{ submitText }}</section>
@@ -85,39 +83,46 @@
       * @param
       */
       sendDanmu() {
-        let self = this;
-        let URL = API.student.SEND_DANMU;
-        // let socket = this.$parent.socket;
+        let URL = API.lesson.send_danmu;
         const message = this.text.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
         let params = {
-          'lessonID': this.lessonID,
-          'presentationID': this.$parent.presentationID,
-          'message': message
+          'biz': 1,
+          'resourceType': 1,
+          'resourceId': this.lessonID,
+          'action': 1,
+          'target': '',
+          'userName': '',
+          'message': message,
+          'extra': '',
+          'requiredCensor': false,
+          'wordCloud': true,
+          'showStatus': true,
+          'fromStart': '100',
         };
 
         // 发送中
         this.sendStatus = 2;
 
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res) {
-              // 弹幕返回数据结构 danmuID success
-              let data = res;
-              self.sendStatus = 3;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            this.sendStatus = 3;
 
-              self.$toast({
-                message: this.$i18n.t('sendsuccess') || '发送成功',
-                duration: 2000
-              });
+            this.$toast({
+              message: this.$i18n.t('sendsuccess') || '发送成功',
+              duration: 2000
+            });
 
-              setTimeout(() => {
-                self.handleBack();
-              }, 2000)
-
-              return data;
-            }
-          });
+            setTimeout(() => {
+              this.handleBack();
+            }, 2000)
+          }
+        }).
+        catch(error => {
+          console.log('send danmu:', error);
+        })
       },
+
       /*
       * @method 发送弹幕
       * @param problemID 问题ID
@@ -242,22 +247,6 @@
 
 
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -142,20 +142,19 @@
 <script>
   import { mapState, mapActions } from 'vuex';
 
-  import request from '@/util/request'
+  import request from '@/util/request-v3'
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
 
-  import wsmixin from '@/components/fullscreen/mixin/socket-mixin'
-  import actionsmixin from '@/components/fullscreen/mixin/actions-mixin'
-  // import livemixin from '@/components/fullscreen/mixin/live-mixin'
-  import livemixin from '@/components/fullscreen/mixin/live-kwai'
-  import eventmixin from '@/components/fullscreen/mixin/event-mixin'
+  import wsmixin from '@/lesson/fullscreen/mixin/socket-mixin'
+  import actionsmixin from '@/lesson/fullscreen/mixin/actions-mixin'
+  import livemixin from '@/lesson/fullscreen/mixin/live-kwai'
+  import eventmixin from '@/lesson/fullscreen/mixin/event-mixin'
 
-  import lessonmixin from '@/components/fullscreen/mixin/lesson-mixin'
+  import lessonmixin from '@/lesson/fullscreen/mixin/lesson-mixin'
 
-  import logmixin from '@/components/common/log-reporting'
-  import fullscreenMixin from '@/components/fullscreen/mixin/fullscreen'
+  import logmixin from '@/lesson/common/log-reporting'
+  import fullscreenMixin from '@/lesson/fullscreen/mixin/fullscreen'
 
 
   let screenfull = require('screenfull');
@@ -306,7 +305,7 @@
         });
 
         // 过滤当前放映PPT
-        if(slide.type === 2 || slide.type === 3 || slide.type === 12) {
+        if(slide && (slide.type === 2 || slide.type === 3 || slide.type === 12)) {
           setTimeout(()=>{
             this.setCurrSlide(slide);
           }, 100)
@@ -368,17 +367,9 @@
       init() {
         this.lessonID = this.$route.params.lessonID;
         // 签到方式
-        this.source = this.$route.query && this.$route.query.source || '';
+        this.source = this.$route.query && this.$route.query.source || 5;
 
         this.iniTimeline(this.lessonID);
-
-        // let key = 'lesson-tip-cloesed-' + this.lessonID;
-        // let visibleTip = true;
-        // if(isSupported(window.localStorage)) {
-        //   visibleTip = !localStorage.getItem(key);
-        // }
-
-        // this.visibleTip = visibleTip;
       },
 
       /**
@@ -439,9 +430,9 @@
        * @method 直播悬停反面等事件
        */
       iniTimeline(lessonID) {
-        let self = this;
-
-        Promise.all([this.getPresentationList()]).then((res) => {
+        // Promise.all([this.getPresentationList()]).
+        Promise.all([this.initLesson(lessonID)]).
+        then((res) => {
           setTimeout(()=>{
             // sentry 配置
             this.setSentry();
@@ -608,122 +599,6 @@
               // this.getTeacherName(this.lessonID);
             }
           });
-      },
-
-      /*
-      * @method 获取实时更新的数据
-      * @param presentationID
-      */
-      getUpdatePPTData(presentationID) {
-        let self = this;
-        let URL = API.student.FETCH_PRESENTATION_DATA;
-        let param = {
-          lessonID: this.lessonID,
-          presentationID: presentationID,
-          userAuth: this.userAuth,
-          userID: this.userID
-        };
-
-        if (process.env.NODE_ENV === 'production') {
-          URL = URL + presentationID;
-        }
-
-        // 是否正在更新ppt, 防止重复请求压力
-        if(this.updatingPPT) {
-          return this;
-        } else {
-          this.updatingPPT = true;
-        }
-
-        self.presentationID = presentationID;
-
-        return request.get(URL, param).
-          then(function (res) {
-            if(res) {
-              let data = res;
-              let presentation = data.presentationData;
-
-              // set presentation map
-              let oldPresentation = self.presentationMap.get(presentationID);
-              self.formatUpdatePresentation(presentation, presentationID, oldPresentation);
-
-              // set title
-              presentation.Title && (self.title = presentation.Title);
-
-              // 更新ppt刷新timeline
-              self.socket.send(JSON.stringify({
-                'op': 'fetchtimeline',
-                'lessonid': self.lessonID,
-                'msgid': self.msgid++
-              }));
-
-              // 更新完成
-              self.updatingPPT = false;
-
-              return presentation;
-            }
-          });
-
-      },
-
-      /*
-      * @method 格式化ppt数据
-      * @param
-      */
-      formatPresentation(presentation, presentationID) {
-        if(presentation) {
-          let pptData = presentation['Slides'];
-
-          if(pptData.length) {
-            pptData.forEach( (slide, index) => {
-              // 收藏 不懂
-              if( slide['tag'] && slide['tag'].length ) {
-                slide['tag'].forEach((tag)=>{
-                  tag === 1 && (slide['question'] = 1);
-                  tag === 2 && (slide['store'] = 1);
-                })
-              }
-
-              // 问题结果
-              if (slide['Problem'] && slide['Result']) {
-                slide['Problem']['Result'] = slide['Result'];
-              }
-            });
-
-            presentation['Slides'] = pptData;
-          }
-
-          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
-        }
-      },
-
-      /*
-       * @method 格式化ppt更新数据
-       * @param
-       */
-      formatUpdatePresentation(presentation, presentationID, oldPresentation) {
-        if(presentation) {
-          let pptDataResult = [];
-          let pptData = presentation['Slides'];
-          let oldSildes = oldPresentation && oldPresentation['Slides'];
-
-          if(pptData.length) {
-            pptDataResult = pptData.map( (slide, index) => {
-              // 是否存在旧的数据
-              if(oldSildes) {
-                let oldSlide = this.getSlideData(oldSildes, index + 1, slide.lessonSlideID);
-                oldSlide && (slide = Object.assign({}, oldSlide, slide));
-              }
-
-              return slide;
-            });
-
-            // 有可能存在更新的情况
-            presentation['Slides'] = pptDataResult;
-          }
-
-          this.presentationMap.set(presentationID || presentation.presentationID, presentation);
-        }
       },
 
       /**

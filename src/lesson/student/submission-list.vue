@@ -20,39 +20,37 @@
             </div>
 
             <div class="item__right">
-            <!-- 投稿内容 -->
-            <div class="item-content">
-              <div class="content__wrap">
-                <div class="f15">{{ item.text }}
-                  <template v-if="item.hasMore">
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse">
-                      <!-- 全文 -->{{ $t('fulltext') }}
-                      <span class="f12">({{ item.content.length }})</span>
-                    </span>
-                    <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
-                      <i class="iconfont icon-zhankai f21"></i>
-                      <!-- 收起 -->{{ $t('fold') }}
-                    </span>
-                  </template>
+              <!-- 投稿内容 -->
+              <div class="item-content">
+                <div class="content__wrap">
+                  <div class="f15">{{ item.text }}
+                    <template v-if="item.hasMore">
+                      <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-if="item.isCollapse">
+                        <!-- 全文 -->{{ $t('fulltext') }}
+                        <span class="f12">({{ item.content.length }})</span>
+                      </span>
+                      <span class="content__expand blue f16" @click="handleCollapse(index, !item.isCollapse)" v-else>
+                        <i class="iconfont icon-zhankai f21"></i>
+                        <!-- 收起 -->{{ $t('fold') }}
+                      </span>
+                    </template>
+                  </div>
+                </div>
+                <div class="image__wrap" v-if="item.picture" >
+                  <img class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="item.thumb||item.picture" :data-src="item.picture" />
+                </div>
+                <!-- 视频展示 -->
+                <div class="video__preview" v-if="item.video && item.video.url">
+                  <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+                </div>
+                <div v-if="item.is_group" @click="showCurGroupList(index)">
+                  <img-group :groupdata="item.team_info"></img-group>
                 </div>
               </div>
-              <div class="image__wrap" v-if="item.pic" >
-                <img class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="item.thumb||item.pic" :data-src="item.pic" />
-              </div>
-              <!-- 视频展示 -->
-              <div class="video__preview" v-if="item.video && item.video.url">
-                <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
-              </div>
-              <div v-if="item.is_group" @click="showCurGroupList(index)">
-                <img-group :groupdata="item.team_info"></img-group>
-              </div>
+
+              <!-- 更多删除入口 -->
+              <p class="item--more blue f20" @click="handleVisibleSheet(index)" >...</p>
             </div>
-
-            <!-- 更多删除入口 -->
-            <p class="item--more blue f20" @click="handleVisibleSheet(index)" >...</p>
-
-            </div>
-
           </li>
         </ul>
       </section>
@@ -170,37 +168,34 @@
       * @param
       */
       getMySubmission() {
-        let self = this;
-        let URL = API.student.GET_SUBMISSION_LIST;
+        let URL = API.lesson.get_tougao_list;
         let params = {
-          'start': 99999999999999999,
+          'start': -1,
           'count': 100,
-          'lesson_id': this.lessonID,
-          'direction': 0
-        }
+          'type': 1
+        };
 
-        return request.get(URL, params)
-        .then(function (res) {
-          if(res && res.data) {
+        request.get(URL, params)
+        .then( res =>{
+          if (res && res.code === 0 && res.data) {
             let data = res.data;
 
-            self.submissionlist = self.formatData(data.tougao_list);
-
-            if(!self.submissionlist.length) {
-              self.isEmpty = true;
+            if(data.totalNum) {
+              if (data.items && data.items.length) {
+                let list = this.formatData(data.items);
+                this.submissionlist = list;
+              }
+            } else {
+              this.isEmpty = true;
             }
-
-            return data;
           }
-        }).catch(e => {
-          console.log(e)
-          this.$toast({
-            message: e.msg,
-            duration: 3000
-          });
-          self.submissionlist = []
+        }).
+        catch(error => {
+          this.submissionlist = [];
+          console.log('getMySubmission:', error);
         });
       },
+
       /**
        *  展示本条投稿的分组成员列表
        */
@@ -212,12 +207,14 @@
           })
         }
       },
+
       /**
        *  展示本条投稿的分组成员列表
        */
       hideGroupList() {
         this.curGroupInfo = null
       },
+
       /*
        * @method 格式化投稿控制文字收起展开
        * @param
@@ -232,7 +229,6 @@
             item.text = item.content;
           }
         })
-        return data;
       },
 
       /*
@@ -269,32 +265,31 @@
       */
       deleteSubmission(id) {
         let self = this;
-        let URL = API.student.DELETE_SUBMISSION;
+        let URL = API.lesson.delete_tougao;
         let params = {
-          'tougao_id': id
-        }
+          'tougaoId': id
+        };
 
-        return request.post(URL, params)
-          .then(function (res) {
-            if(res) {
-              // 删除成功后 将列表数据更新
-              let data = [];
-              self.selectedCount > 0 && self.selectedCount--;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            this.selectedCount > 0 && this.selectedCount--;
 
-              self.submissionlist.forEach( (submission) => {
-                if(submission.id !== id) {
-                  data.push(submission);
-                }
-              });
+            let index = this.submissionlist.findIndex((item)=>{
+              return item.tougaoId === id;
+            })
 
-              self.submissionlist = data;
-
-              return res;
+            if(~index) {
+              this.submissionlist.splice(index, 1)
             }
-          });
+          }
+        }).
+        catch(error => {
+          console.log('delete_tougao:', error);
+        })
       },
 
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
         let src = target.dataset.src || target.src;
 
@@ -386,11 +381,11 @@
         let title = this.$i18n.t('recallconfirm') || '确定要撤回本条投稿吗？';
         let content = this.$i18n.t('recallresult') || '撤回后老师端将同时消失';
         let submission = this.submissionlist[index];
-        let id = submission && submission.id;
+        let id = submission && submission.tougaoId;
 
         this.$messagebox.confirm(content, title, msgOptions).then(action => {
           if(action === 'confirm' && id) {
-            this.deleteSubmission(+id);
+            this.deleteSubmission(id);
           }
         });
 

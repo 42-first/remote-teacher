@@ -79,7 +79,7 @@ let localstorageMixin = {
       let info = this.getLocalData();
 
       if(info && info['cards']) {
-        this.cards = info['cards'];
+        this.setCards(info['cards'])
       }
     },
   }

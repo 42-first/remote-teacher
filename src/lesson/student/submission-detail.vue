@@ -29,7 +29,7 @@
             <img-group :groupdata="result.team_info" :big="1"></img-group>
           </div>
           <p class="f15">{{ result.content }}</p>
-          <img v-if="result.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
+          <img v-if="result.pic" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
           <!-- 视频展示 -->
           <div class="video__preview" v-if="result.video && result.video.url">
             <video :src="result.video.url" :style="result.video|setStyle" controls ></video>
@@ -117,7 +117,7 @@
           });
       },
 
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = evt.target;
         let src = target.dataset.src || target.src;
 

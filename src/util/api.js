@@ -97,6 +97,16 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       send_danmu: '/api/v3/danmu/send',
       // 答题
       answer_problem: '/api/v3/lesson/problem/answer',
+      // 答题重试
+      retry_answer_problem: '/api/v3/lesson/problem/retry',
+      // 添加投稿
+      add_tougao: '/api/v3/lesson/tougao/add',
+      // 获取投稿列表
+      get_tougao_list: '/api/v3/lesson/tougao/list',
+      // 删除投稿
+      delete_tougao: '/api/v3/lesson/tougao/delete',
+      // 获取投稿详情
+      get_tougao: '/api/v3/lesson/tougao/detail',
 
 
       // 教师接口

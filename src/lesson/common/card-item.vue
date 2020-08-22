@@ -20,8 +20,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
-            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(2, item.slideID, item.presentationid)">{{ $t('favorite') }}</p>
+            <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(0, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('favorite') }}</p>
           </div>
         </div>
         <!-- 动画蒙版 -->
@@ -68,7 +68,7 @@
     <!-- 红包模板 -->
     <template v-else-if="item.type==5">
       <div class="timeline__paper">
-        <router-link :to="'/'+lessonid+'/hongbao/'+index">
+        <router-link :to="'/v3/'+lessonId+'/hongbao/'+index">
         <div :class="['paper-info', 'hongbao']">
             <div class="paper-txt f18">
               <p class="paper-name" data-language-complex="gainbonus" :data-number="item.length" v-if="item.length">{{ $t('gainbonus', { number: item.length }) }}</p>
@@ -104,7 +104,7 @@
     <!-- 投稿分享 -->
     <template v-else-if="item.type==6">
       <div class="timeline__paper">
-        <router-link class="paper-info submission" :to="'/'+lessonid+'/submission2/'+index">
+        <router-link class="paper-info submission" :to="'/v3/'+lessonId+'/submission2/'+index">
           <div class="paper-txt f18">
             <p class="paper-name"><!-- Hi, 老师正在分享课堂投稿 -->{{ $t('sharepostpush') }}</p>
           </div>
@@ -120,7 +120,7 @@
     <!-- 主观题答案分享 -->
     <template v-else-if="item.type==7">
       <div class="timeline__paper">
-        <router-link class="paper-info submission" :to="'/'+lessonid+'/subjective_share/'+index">
+        <router-link class="paper-info submission" :to="'/v3/'+lessonId+'/subjective_share/'+index">
           <div class="paper-txt f18">
             <p class="paper-name"><!-- Hi, 老师正在分享主观题答案 -->{{ $t('sharesubjective') }}</p>
           </div>
@@ -157,7 +157,7 @@
     <!-- 发起了互评 -->
     <template v-else-if="item.type==9">
       <div class="timeline__paper">
-        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/'+lessonid+'/evaluation/'+index" >
+        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/v3/'+lessonId+'/evaluation/'+index" >
           <div class="paper-txt f18">
             <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
             <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
@@ -183,8 +183,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
-            <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(2, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
+            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(0, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
           </div>
         </div>
       </div>
@@ -203,7 +203,6 @@
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <!-- <span class="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>
@@ -213,6 +212,7 @@
 
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex';
   import API from '@/util/api'
   import timeago from 'timeago.js';
 
@@ -235,10 +235,6 @@
         type: Number,
         default: 0
       },
-      lessonid: {
-        type: String,
-        default: 0
-      },
       item: {
         type: Object,
         default: null
@@ -248,9 +244,12 @@
       return {
       };
     },
-    watch: {
-    },
     computed: {
+      ...mapState([
+        'lessonId',
+        'cards',
+        'observerMode'
+      ])
     },
     filters: {
       getTimeago(time) {
@@ -262,6 +261,10 @@
       }
     },
     methods: {
+      ...mapActions([
+        'setCards'
+      ]),
+
       scaleImage(src, width, height, evt) {
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;;
         let pswpElement = document.querySelector('.J_pswp');
@@ -269,7 +272,7 @@
         let items = [];
 
         // build items array
-        let cards = this.$parent.$parent.cards;
+        let cards = this.cards;
 
         // ppt 截图分享 白板分享
         cards.map((card)=>{
@@ -334,75 +337,81 @@
             gallery.init();
           }, 1500)
         }
-
-        this.$parent.$parent.gallery = gallery;
       },
 
-      /*
+      /**
        * @method ppt不懂,收藏
-       * tag 1 不懂 2 收藏
+       * @param tag 0不懂 1收藏
        */
-      handleTag(tag, slideID, presentationid) {
-        let self = this;
-        let URL = API.student.SET_LEESON_SILDE_TAG;
-        let cards = this.$parent.$parent.cards;
+      handleTag(type, sid, pres) {
+        let URL = API.lesson.post_tag;
+        let cards = this.cards;
 
         // fix 回放没有显示之前的操作问题
-        let presentation = this.$parent.$parent.presentationMap.get(presentationid);
-        let pptData = presentation && presentation['Slides'];
-        let slideData = pptData && pptData[this.item.pageIndex-1];
-
-        let ppts = cards.filter((card, index)=>{
-          return card.slideID === slideID && card.presentationid === presentationid
+        let presentation = this.$parent.$parent.presentationMap.get(pres);
+        let slides = presentation && presentation['slides'];
+        let slideData = slides.find((item)=>{
+          return sid === item.id;
         })
 
-        // 确实是否不懂
-        let tagType = ppts.length && ppts[0].hasQuestion ? 'cancel' : 'add';
+        let ppts = cards.filter((card)=>{
+          return card.slideID === sid && card.presentationid === pres;
+        })
+
+        // 取消还是新增
+        let action = ppts.length && ppts[0].hasQuestion ? 1 : 0;
         // 是否收藏
-        if(tag === 2) {
-          tagType = ppts.length && ppts[0].hasStore ? 'cancel' : 'add';
+        if(type === 1) {
+          action = ppts.length && ppts[0].hasStore ? 1 : 0;
         }
 
-        let param = {
-          'tag': tag,
-          'lessonSlideID': slideID,
-          'tagType': tagType
-        }
+        let params = {
+          'type': type,
+          'action': action,
+          'presentationId': pres,
+          'objId': sid,
+          'objType': 0,
+        };
 
-        return request.post(URL, param).
-          then( (res) => {
-            if(res) {
-              if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
-                return;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            let data = res.data;
+
+            ppts.forEach( (item) => {
+              if(type === 0) {
+                item.hasQuestion = !item.hasQuestion;
+                slideData && (slideData.question = !item.hasQuestion);
+              } else if(type === 1) {
+                item.hasStore = !item.hasStore;
+                slideData && (slideData.store = !item.hasStore);
               }
+            });
 
-              ppts.forEach( (element, index) => {
-                tag === 1 && (element.hasQuestion = !element.hasQuestion);
-                tag === 2 && (element.hasStore = !element.hasStore);
-              });
-
-              tag === 1 && (slideData['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0);
-              tag === 2 && (slideData['store'] = ppts.length && ppts[0].hasStore ? 1 : 0);
-
-              return res;
-            }
-          });
+            this.setCards(cards);
+          }
+        }).
+        catch(error => {
+          console.log('handleTag:', error);
+        })
       },
 
       /*
        * @method 白板不懂,收藏
-       * boardid 白板ID tag 1 不懂 2 收藏
+       * boardid 白板ID type 0 不懂 1 收藏
        */
-      handleBoardTag(tag, boardid, value) {
-        let URL = API.student.SET_BOARD_TAG;
-        let params = {
-          'lesson_id': this.lessonid,
-          'sharing_file_id': boardid,
-          'tag': tag,
-          'tag_type': value ? 'cancel' : 'add'
-        };
-        let cards = this.$parent.$parent.cards;
+      handleBoardTag(type, boardid, value) {
+        let URL = API.lesson.post_tag;
+        let cards = this.cards;
         let boardMap = this.$parent.$parent.boardMap;
+        let action = value ? 1 : 0;
+        let params = {
+          'type': type,
+          'action': action,
+          // 'presentationId': pres,
+          'objId': boardid,
+          'objType': 0,
+        };
 
         // 同步白板信息 更新cards信息
         let boardInfo = cards.find((card, index)=>{
@@ -410,14 +419,17 @@
         })
 
         request.post(URL, params).
-        then( (res) => {
-          if(res && res.success) {
-            tag === 1 && (boardInfo.doubt = !boardInfo.doubt);
-            tag === 2 && (boardInfo.emphasis = !boardInfo.emphasis);
+        then((res)=>{
+          if(res && res.code === 0) {
+            type === 0 && (boardInfo.doubt = !boardInfo.doubt);
+            type === 1 && (boardInfo.emphasis = !boardInfo.emphasis);
 
             boardMap.set(boardid, boardInfo);
           }
-        });
+        }).
+        catch(error => {
+          console.log('handleBoardTag:', error);
+        })
       },
 
       /*
@@ -438,6 +450,7 @@
 
         return true;
       },
+
       /**
        * @method 进入试卷
       */
@@ -453,8 +466,6 @@
       }
     },
     created() {
-      // 观看者
-      this.observerMode = this.$parent.$parent.observerMode;
     },
     mounted() {
     },
@@ -697,12 +708,5 @@
 
 
 </style>
-
-
-
-
-
-
-
 
 

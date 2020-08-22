@@ -253,6 +253,7 @@
 
 </style>
 <script>
+  import request from '@/util/request'
 
   export default {
     props: {
