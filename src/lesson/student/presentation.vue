@@ -20,7 +20,7 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action line f17" v-if="version > 0.8">
+            <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action line f17">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
@@ -291,7 +291,6 @@
 
         // 权限相关
         userID: 0,
-        avatar: '',
         userAuth: 0,
 
         // 当前tab下标
@@ -408,10 +407,6 @@
     },
     watch: {
       '$route' (to, from) {
-        // 对路由变化作出响应...
-        console.log(from.name);
-        console.log(to.name);
-
         if (process.env.NODE_ENV !== 'production') {
           return this;
         }
@@ -462,7 +457,6 @@
         this.returnRemote = query && query.remote ? true : false
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
-        // this.getSoftVersion(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -735,7 +729,6 @@
           this.$refs.loadmore.onTopLoaded();
 
           if (this.socket && this.socket.readyState === 1) {
-            // console.log('readyState' + this.socket.readyState);
             this.socket.send(JSON.stringify({
               'op': 'fetchtimeline',
               'lessonid': this.lessonID,
@@ -886,7 +879,6 @@
       handleScrollToTop() {
         let timelineEl = this.$el.querySelector('.J_cards')
 
-        // timelineEl.scrollIntoView({block: 'start', behavior: 'smooth'});
         timelineEl.scrollIntoView();
         this.hasMsg = false;
       },
@@ -896,18 +888,15 @@
        *
        */
       handleReconnect() {
-        clearInterval(this.reconnectTimer)
+        this.reconnectTimer && clearInterval(this.reconnectTimer)
         this.countdown = 10;
         this.initws(true);
       },
 
       /*
        * @method 页面事件过滤
-       *
        */
       handleFilter(evt) {
-        let targetEl = typeof event !== 'undefined' && event.target || evt.target
-
         this.isMore = false;
       },
 

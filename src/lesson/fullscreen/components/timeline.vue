@@ -267,10 +267,6 @@
             }
           }
         }
-
-        // let pageName = this.$route.name;
-        // if(pageName === 'ppt-page') {
-        // }
       },
 
     },

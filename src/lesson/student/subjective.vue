@@ -171,8 +171,6 @@
         rate: 1,
         msgid: 0,
         summary: null,
-        // star count 获得星星的数量
-        starCount: 0,
         getScore: -1,
         // 个人作答还是小组作答 0 个人作答 1小组作答
         answerType: 0,
@@ -543,7 +541,6 @@
       * @param
       */
       async sendSubjective() {
-        let self = this;
         let problemID = this.problemID;
         let problem = this.$parent.problemMap.get(problemID);
         let URL = API.student.ANSWER_LESSON_PROBLEM;

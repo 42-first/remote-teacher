@@ -179,11 +179,10 @@ let actionsMixin = {
     getSlideData(slides, si, sid) {
       let slideData = slides && slides[si-1];
 
-      // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
-      if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0 && slides) {
+      if(typeof sid !== 'undefined' && sid > 0 && slides) {
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide)=>{
-          return slide.lessonSlideID === sid;
+          return slide.id === sid;
         });
       }
 
@@ -197,11 +196,10 @@ let actionsMixin = {
     filterProblem(slides, problemID) {
       let hasProblem = true;
 
-      // 1.1 版本
-      if(+this.version >= 1.1 && problemID) {
+      if(problemID) {
         // ppt不一致 通过sid取slideData
         hasProblem = slides.find((slide) => {
-          return slide.Problem && slide.Problem.ProblemID === problemID;
+          return slide.problem && slide.problem.problemId === problemID;
         });
       }
 
@@ -215,15 +213,14 @@ let actionsMixin = {
     addPPT(data) {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation && presentation['Slides'];
-      // let slideData = pptData && pptData[data.pageIndex-1];
+      let pptData = presentation && presentation['slides'];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
-      let cover = slideData && slideData['Cover'] || '';
+      let cover = slideData && slideData['cover'] || '';
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && this.getUpdatePPTData(data.presentationid);
+        !presentation && this.updatePresentation(data.presentationid);
         return;
       }
 
@@ -233,15 +230,15 @@ let actionsMixin = {
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
-      if (!cover || slideData && slideData['Problem'] || hasPPT && data.isFetch ) {
+      if (!cover || slideData && slideData['problem'] || hasPPT && data.isFetch ) {
         return;
       }
 
-      if (slideData['Cover']=='rain://error/upload-error') {
+      if (slideData['cover']=='rain://error/upload-error') {
         if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
-      } else if(slideData['Cover']=='rain://error/export-error'){
+      } else if(slideData['cover']=='rain://error/export-error'){
         if(!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
@@ -249,24 +246,19 @@ let actionsMixin = {
         // 预加载图片
         let oImg = new Image();
         oImg.onload = (evt) => {
-          if(index !== -1) {
-            // 暂时去掉 因为目前很多使用 splice 导致顺序短时间内错乱
-            // let data = self.cards[index - 1];
-            // data.src = slideData['Cover'];
-          }
         };
 
-        oImg.src = slideData['Cover'];
+        oImg.src = slideData['cover'];
 
         let cardItem = {
           index,
-          src: slideData['Cover'],
-          rate: presentation.Width / presentation.Height,
+          src: slideData['cover'],
+          rate: presentation.width / presentation.height,
           hasQuestion: slideData['question'] == 1 ? true : false,
           hasStore: slideData['store'] == 1 ? true : false,
-          Width: presentation.Width,
-          Height: presentation.Height,
-          slideID: slideData['lessonSlideID'],
+          Width: presentation.width,
+          Height: presentation.height,
+          slideID: slideData['id'],
           isRepeat: hasPPT ? true : false
         };
         // 是否web开课的动画 Shapes里面有动画步骤
@@ -395,8 +387,7 @@ let actionsMixin = {
     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
-      let pptData = presentation && presentation['Slides'];
-      // let slideData = pptData && pptData[data.pageIndex-1];
+      let pptData = presentation && presentation['slides'];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
@@ -411,44 +402,26 @@ let actionsMixin = {
         // 问题被删除了
         targetIndex !== -1 && this.cards.splice(targetIndex, 1);
 
-        // 删除消息
-        if(targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob']) {
-          this.msgBoxs = [];
-        } else if(this.msgBoxs.length && this.msgBoxs[0].problemID) {
-          // 矫正消息
-          let msgProblem = this.msgBoxs[0];
-          let msgIndex = this.cards.findIndex((item) => {
-            return item.type === 3 && item.problemID === msgProblem.problemID;
-          })
-
-          this.msgBoxs = [ Object.assign(msgProblem, {
-            index: msgIndex
-          }) ];
-        }
-
         return this;
       }
 
-      // slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       // 问题类型
-      let problemType = slideData['Problem']['Type'];
-      let pageURL = `/${this.lessonID}/`;
+      let problem = slideData['problem'];
+      let problemType = problem['problemType'];
+      let pageURL = `/v3/${this.lessonID}/`;
 
       if(problemType) {
         switch (problemType) {
           // 主观题
-          case 'ShortAnswer':
-            // pageURL += `subjective/${index}`;
+          case 5:
             pageURL += 'subjective/';
             break;
           // 填空题
-          case 'FillBlank':
-            // pageURL += `blank/${index}`;
+          case 4:
             pageURL += 'blank/';
             break;
           // 多选单选投票
           default:
-            // pageURL += `exercise/${index}`;
             pageURL += 'exercise/';
             break;
         }
@@ -459,13 +432,13 @@ let actionsMixin = {
         presentationid: data.presentationid,
         time: data.time,
         problemType: problemType,
-        caption: problemType === 'Polling' || problemType === 'AnonymousPolling' ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
-        status: slideData['Problem']['Result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
-        isComplete: slideData['Problem']['Result'] ? true : false,
-        problemID: slideData['Problem']['ProblemID'],
-        options: slideData['Problem']['Bullets'],
-        cover: slideData['Cover'],
-        src: slideData['Cover'],
+        caption: problemType ===3 ? this.$i18n.t('newvote') || 'Hi,你有新的投票' : this.$i18n.t('newprob') || 'Hi,你有新的课堂习题',
+        status: problem['result'] ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
+        isComplete: problem['result'] ? true : false,
+        problemID: problem['problemId'],
+        options: problem['bullets'] || problem['options'],
+        cover: slideData['cover'],
+        src: slideData['cover'],
         index,
         pageURL,
         groupid: data.event['groupid']
@@ -476,7 +449,7 @@ let actionsMixin = {
 
       // 预加载习题图片
       let oImg = new Image();
-      oImg.src = slideData && slideData['Cover'];
+      oImg.src = slideData && slideData['cover'];
 
       // 是否含有重复数据
       let hasEvent = this.cards.find((item)=>{
@@ -485,12 +458,12 @@ let actionsMixin = {
 
       // fixed cover为空
       if(hasEvent && !hasEvent.cover) {
-        hasEvent.cover = slideData && slideData['Cover'];
+        hasEvent.cover = slideData && slideData['cover'];
       }
 
       if(!hasEvent) {
         this.cards.push(data);
-        slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
+        problem && this.problemMap.set(problem['problemId'], slideData);
         this.setCards(this.cards)
       }
     },
@@ -507,10 +480,10 @@ let actionsMixin = {
 
       if(slideData) {
         // 组织解析数据
-        let pageURL = `/${this.lessonID}/analysis/`;
+        let pageURL = `/v3/${this.lessonID}/analysis/`;
         Object.assign(data, {
           pageIndex: slideData.Index,
-          problemID: slideData['Problem']['ProblemID'],
+          problemID: remark.prob,
           pageURL,
           caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析',
           index
@@ -766,8 +739,8 @@ let actionsMixin = {
 
       Object.assign(data, {
         pageIndex: slideData && slideData.Index,
-        cover: slideData && slideData['Cover'],
-        score: slideData && slideData['Problem'] && slideData['Problem']['Score'],
+        cover: slideData && slideData['cover'],
+        score: slideData && slideData['problem'] && slideData['problem']['score'],
         status: isComplete ? this.$i18n.t('done') : this.$i18n.t('undone'),
         isComplete,
         index
@@ -806,9 +779,9 @@ let actionsMixin = {
 
       let cardItem = {
         src: data.url,
-        rate: presentation.Width / presentation.Height,
-        Width: presentation.Width,
-        Height: presentation.Height,
+        rate: presentation.width / presentation.height,
+        Width: presentation.width,
+        Height: presentation.height,
       };
 
       data = Object.assign(data, cardItem)
@@ -844,9 +817,9 @@ let actionsMixin = {
 
       let cardItem = {
         src: url,
-        rate: presentation.Width / presentation.Height,
-        Width: presentation.Width,
-        Height: presentation.Height,
+        rate: presentation.width / presentation.height,
+        Width: presentation.width,
+        Height: presentation.height,
       };
 
       data = Object.assign(data, cardItem)

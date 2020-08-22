@@ -6,8 +6,6 @@
  *       课件读取，不懂收藏读取，数据格式化等
  */
 
-import { isSupported } from '@/util/util'
-
 
 let lessonMixin = {
   methods: {
@@ -366,53 +364,6 @@ let lessonMixin = {
 
         this.presentationMap.set(id, presentation);
       }
-    },
-
-    /**
-     * @method 白板不懂,收藏
-     * tag 1 不懂 2 收藏
-     */
-    handleBoardTag(evt) {
-      let target = evt.target;
-      let type = +target.dataset['tag'];
-      let boardid = +target.dataset['boardid'];
-      let action = target.dataset['value'];
-
-      let URL = API.lesson.post_tag;
-      let cards = this.app.student.cards;
-      let boardMap = this.app.student.boardMap;
-      let boards = cards.filter((card, index)=>{
-        return card && card.boardid === boardid;
-      })
-
-      let params = {
-        'type': type,
-        'action': action,
-        'objId': boardid,
-        'objType': 1,
-      };
-
-      request.post({
-        url: URL,
-        data: params
-      }).
-      then((res)=>{
-        if(res && res.code === 0) {
-          let boardInfo = null;
-          boards.forEach( (item) => {
-            tag === 0 && (item.doubt = !item.doubt);
-            tag === 1 && (item.emphasis = !item.emphasis);
-
-            boardInfo = item;
-          });
-
-          boardMap.set(boardid, boardInfo);
-          this.setData({ cards: cards });
-        }
-      }).
-      catch(error => {
-        console.log('handleBoardTag:', error);
-      })
     },
   }
 }

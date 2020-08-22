@@ -104,7 +104,6 @@
     created() {
     },
     mounted() {
-      let self = this;
     },
     beforeDestroy() {
     }
@@ -200,12 +199,4 @@
 
 
 </style>
-
-
-
-
-
-
-
-
 

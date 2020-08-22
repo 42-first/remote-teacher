@@ -183,8 +183,8 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
-            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
-            <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(2, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
+            <p :class="['ppt--action', item.doubt ? 'selected' : '']" @click="handleBoardTag(0, item.boardid, item.doubt)">{{ $t('unknown') }}</p>
+            <p :class="['ppt--action', item.emphasis ? 'selected' : '']" @click="handleBoardTag(1, item.boardid, item.emphasis)">{{ $t('favorite') }}</p>
           </div>
         </div>
       </div>
@@ -203,7 +203,6 @@
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
           <div class="f14">
-            <!-- <span class="status">{{ item.status }}</span> -->
           </div>
         </div>
       </div>
@@ -338,8 +337,6 @@
             gallery.init();
           }, 1500)
         }
-
-        this.$parent.$parent.gallery = gallery;
       },
 
       /**
@@ -401,18 +398,20 @@
 
       /*
        * @method 白板不懂,收藏
-       * boardid 白板ID tag 1 不懂 2 收藏
+       * boardid 白板ID type 0 不懂 1 收藏
        */
-      handleBoardTag(tag, boardid, value) {
-        let URL = API.student.SET_BOARD_TAG;
-        let params = {
-          'lesson_id': this.lessonId,
-          'sharing_file_id': boardid,
-          'tag': tag,
-          'tag_type': value ? 'cancel' : 'add'
-        };
-        let cards = this.$parent.$parent.cards;
+      handleBoardTag(type, boardid, value) {
+        let URL = API.lesson.post_tag;
+        let cards = this.cards;
         let boardMap = this.$parent.$parent.boardMap;
+        let action = value ? 1 : 0;
+        let params = {
+          'type': type,
+          'action': action,
+          // 'presentationId': pres,
+          'objId': boardid,
+          'objType': 0,
+        };
 
         // 同步白板信息 更新cards信息
         let boardInfo = cards.find((card, index)=>{
@@ -420,14 +419,17 @@
         })
 
         request.post(URL, params).
-        then( (res) => {
-          if(res && res.success) {
-            tag === 1 && (boardInfo.doubt = !boardInfo.doubt);
-            tag === 2 && (boardInfo.emphasis = !boardInfo.emphasis);
+        then((res)=>{
+          if(res && res.code === 0) {
+            type === 0 && (boardInfo.doubt = !boardInfo.doubt);
+            type === 1 && (boardInfo.emphasis = !boardInfo.emphasis);
 
             boardMap.set(boardid, boardInfo);
           }
-        });
+        }).
+        catch(error => {
+          console.log('handleBoardTag:', error);
+        })
       },
 
       /*

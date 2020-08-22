@@ -256,7 +256,6 @@
 
 </style>
 <script>
-  import request from '@/util/request'
   import { isSupported } from '@/util/util'
 
   export default {
@@ -309,41 +308,6 @@
        * @method 初始化状态
        */
       init() {
-        /*
-        this.danmuStatus = true;
-        this.visible = true;
-
-        let danmus = [{
-          "danmu": "一条弹幕",
-          "danmuid": 1122
-        }, {
-          "danmu": "第二条弹幕",
-          "danmuid": 1123
-        }, {
-          "danmu": "第三条弹幕第三条弹幕第三条弹幕第",
-          "danmuid": 1123
-        }, {
-          "danmu": "第四条弹幕第四条弹幕第四条弹幕第四条弹幕",
-          "danmuid": 1123
-        }, {
-          "danmu": "第二条弹幕",
-          "danmuid": 1123
-        }, {
-          "danmu": "第三条弹幕第三条弹幕第三条弹幕第三条弹幕第三条弹幕第三条弹幕",
-          "danmuid": 1123
-        }, {
-          "danmu": "第四条弹幕第四条弹幕第四条弹幕第四条弹幕",
-          "danmuid": 1123
-        }];
-
-        setInterval(()=>{
-          let index = parseInt(Math.random() * 7);
-          this.danmus.push(danmus[index]);
-        }, 2000)
-
-        this.danmus = danmus.slice(-5);
-        */
-
         let key = 'danmu-live-switchoff';
         if(isSupported(window.localStorage)) {
           let visible = localStorage.getItem(key);
@@ -491,35 +455,43 @@
        * @method 发送弹幕
        */
       handleSend(evt) {
-        let URL = API.student.SEND_DANMU;
+        let URL = API.lesson.send_danmu;
         const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
         let params = {
-          'lessonID': this.$parent.lessonID,
-          'presentationID': this.$parent.presentationID,
-          'message': message
+          'biz': 1,
+          'resourceType': 1,
+          'resourceId': this.$parent.lessonID,
+          'action': 1,
+          'target': '',
+          'userName': '',
+          'message': message,
+          'extra': '',
+          'requiredCensor': false,
+          'wordCloud': true,
+          'showStatus': true,
+          'fromStart': '50',
         };
+
 
         // 不能为空
         if(!message) {
           return this;
         }
 
-        request.post(URL, params)
-        .then( (res) => {
-          if(res) {
-            // 弹幕返回数据结构 danmuID success
-            let data = res;
-            let danmuID = data && data.danmuID;
-
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
             this.danmuText = '';
-            // this.myDanmus.push(danmuID);
 
             this.$toast({
               message: this.$i18n.t('sendsuccess') || '发送成功',
               duration: 2000
             });
           }
-        });
+        }).
+        catch(error => {
+          console.log('send danmu:', error);
+        })
       }
     },
     created() {
@@ -530,7 +502,7 @@
       this.isiOS = isiOS;
     },
     beforeDestroy() {
-      clearInterval(this.timer);
+      this.timer && clearInterval(this.timer);
     }
   }
 </script>

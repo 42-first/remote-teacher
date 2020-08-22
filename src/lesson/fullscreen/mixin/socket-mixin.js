@@ -79,9 +79,6 @@ var mixin = {
           self.isResetSocket = false;
           console.log('onopen');
 
-          // 心跳 取消心跳改用其他机制
-          // self.sendXinTiao();
-
           self.socket.onmessage = function (event) {
             if(event && event.data) {
               let msg = JSON.parse(event.data)
@@ -98,17 +95,10 @@ var mixin = {
           self.socket.send(JSON.stringify({
             'op': 'hello',
             'userid': self.userID,
-            'avatar': self.avatar,
             'role': 'student',
-            'auth': self.userAuth,
-            'lessonid': self.lessonID,
-            'presentation': self.presentationID,
-            // 白板兼容老数据
-            'ver': 1
+            'auth': self.token,
+            'lessonid': self.lessonID
           }))
-
-          // 记录socket打开
-          // window.Raven && Raven.captureException(`WebSocket hello userID:${self.userID} lessonID:${self.lessonID} time:${+new Date()}`);
         }
       } catch (error) {
         window.Sentry && window.Sentry.captureException(error);
@@ -133,14 +123,7 @@ var mixin = {
 
       console.log('reconnect')
     },
-    /*
-    * @method 发送心跳函数
-    */
-    sendXinTiao() {
-      this.xintiaoTimer = setInterval(()=>{
-        this.socket.send(JSON.stringify({ op: 'xintiao', lessonid: this.lessonID }))
-      }, 30000)
-    },
+
     /*
     * @method 根据websocket信息策略处理
     */
@@ -158,17 +141,12 @@ var mixin = {
           case 'hello':
             timeline = msg['timeline']
 
-            msg['presentation'] && (this.presentationID = msg['presentation'])
+            msg['presentation'] && (this.presentationID = msg['presentation']);
+            // 协议版本号
+            msg['addinversion'] && (this.version = msg['addinversion']);
 
-            if(timeline && timeline.length === 0) {
-              // 服务端没有此presetationID,重新链接发送
-              // setTimeout(()=>{
-              //   this.initws(true);
-              // }, 10000)
-            } else if(timeline && timeline.length) {
-              // this.cards = [];
-              this.setCards([])
-              this.setTimeline(timeline)
+           if(timeline && timeline.length) {
+              this.getAllPres(msg);
             }
 
             break

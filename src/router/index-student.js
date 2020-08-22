@@ -72,7 +72,7 @@ const studentRouter = new Router({
         },
         {
           path: 'submission',
-          name: 'student-submission',
+          name: 'submission',
           component: () => import('@/lesson/student/submission')
         },
         {
@@ -82,7 +82,7 @@ const studentRouter = new Router({
         },
         {
           path: 'danmu',
-          name: 'student-danmu',
+          name: 'danmu',
           component: () => import('@/lesson/student/danmu')
         },
         {

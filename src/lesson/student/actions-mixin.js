@@ -10,111 +10,112 @@
 var actionsMixin = {
   methods: {
     /*
-    * @method 创建更新timeline
-    * @param timeline isFetch
-    */
+     * @method 创建更新timeline
+     * @param timeline isFetch
+     */
     setTimeline(timeline, isFetch) {
       if (timeline && timeline.length) {
-        timeline.forEach( (item, index) => {
-          switch(item['type']) {
+        timeline.forEach((item, index) => {
+          switch (item['type']) {
             // ppt
             case 'slide':
               this.addPPT({ type: 2, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], event: item, isFetch: isFetch, isTimeline: true });
 
               break;
 
-            // 幻灯片换页通知
+              // 幻灯片换页通知
             case 'problem':
               this.addProblem({ type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item });
               break;
 
-            // 试卷
+              // 试卷
             case 'quiz':
-              this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
+              this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt'] });
 
               break;
 
-            // event
+              // event
             case 'event':
               this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
-            // 红包
+              // 红包
             case 'redpacket':
             case 'updateredpacket':
               this.addHongbao({ type: 5, redpacketID: item.redpacket, count: item.count, length: item.detail.length, time: item.dt, event: item });
 
               break;
 
-            // 投稿分享
+              // 投稿分享
             case 'post':
               this.addSubmission({ type: 6, postid: item['postid'], anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
-            // 分享协议合并 主观题分享20171204
+              // 分享协议合并 主观题分享20171204
             case 'share':
-              if(item['cat'] === 'post') {
+              if (item['cat'] === 'post') {
                 this.addSubmission({ type: 6, postid: item['postid'], anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
-              } else if(item['cat'] === 'subjective') {
+              } else if (item['cat'] === 'subjective') {
                 this.addSubjective({ type: 7, spid: item.spid, anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
-              } else if(item['cat'] === 'capture') {
+              } else if (item['cat'] === 'capture') {
                 this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
-              } else if(item['cat'] === 'board') {
+              } else if (item['cat'] === 'board') {
                 this.addBoard({ type: 11, board: item, time: item['dt'], event: item, isFetch: isFetch });
               }
 
               break;
 
-            // 分组创建分组
+              // 分组创建分组
             case 'group':
               this.launchGroup({ type: 8, teamid: item['teamid'], groupid: item['groupid'], cat: item['cat'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
-            // 分组互评
+              // 分组互评
             case 'review':
               this.launchReview({ type: 9, reviewid: item['reviewid'], prob: item['prob'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
-            // 白板创建
+              // 白板创建
             case 'board':
-              if(item.action === 'new') {
-                this.setBoardInfo( Object.assign(item, {type: 12, isFetch: isFetch}) );
-              } else if(item.action === 'nav') {
+              if (item.action === 'new') {
+                this.setBoardInfo(Object.assign(item, { type: 12, isFetch: isFetch }));
+              } else if (item.action === 'nav') {
                 this.boardNav(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
-              } else if(item.action === 'clear') {
+              } else if (item.action === 'clear') {
                 this.clearBoard(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
-              } else if(item.action === 'autosave') {
+              } else if (item.action === 'autosave') {
                 this.setBoardCover(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
               }
 
               break;
 
-            // 白板绘制
+              // 白板绘制
             case 'draw':
               this.setBoardline(Object.assign(item, { from: 'timeline', isFetch: isFetch }));
 
               break;
 
-            // 问题解析
+              // 问题解析
             case 'remark':
               this.addAnalysis({ type: 13, remark: item, time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
-            default: break;
+            default:
+              break;
           }
         });
       }
     },
 
     /*
-    * @method 新增提醒消息
-    * data: { type: 1, message: '', time: '', event: item, isFetch: false }
-    */
+     * @method 新增提醒消息
+     * data: { type: 1, message: '', time: '', event: item, isFetch: false }
+     */
     addMessage(data) {
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
@@ -125,7 +126,7 @@ var actionsMixin = {
       data.oriMessage = data.message;
 
       // 消息统一国际化
-      if(!hasEvent && data.event && data.event['code']) {
+      if (!hasEvent && data.event && data.event['code']) {
         let code = data.event && data.event['code'];
         let aReplace = data.event && data.event['replace'] || [];
         let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
@@ -133,12 +134,12 @@ var actionsMixin = {
         data.message = sMsg;
 
         // 标记这是一堂直播远程课 方便后面对直播远程课处理
-        if(code === 'LIVE_ON') {
+        if (code === 'LIVE_ON') {
           !this.isLive && (this.isLive = true);
         }
       }
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards);
       }
@@ -149,10 +150,10 @@ var actionsMixin = {
      * param: slides, si, sid
      */
     getSlideData(slides, si, sid) {
-      let slideData = slides && slides[si-1];
-      if(slides) {
+      let slideData = slides && slides[si - 1];
+      if (slides) {
         // ppt不一致 通过sid取slideData
-        slideData = slides.find((slide)=>{
+        slideData = slides.find((slide) => {
           return slide.id === sid;
         });
       }
@@ -167,7 +168,7 @@ var actionsMixin = {
     filterProblem(slides, problemID) {
       let hasProblem = true;
 
-      if(problemID) {
+      if (problemID) {
         // ppt不一致 通过sid取slideData
         hasProblem = slides.find((slide) => {
           return slide.problem && slide.problem.problemId === problemID;
@@ -183,16 +184,16 @@ var actionsMixin = {
      */
     hideAnimationMask() {
       this.cards.forEach((item) => {
-        if(item.type === 2 && item.animation === 1) {
+        if (item.type === 2 && item.animation === 1) {
           Object.assign(item, { animation: 0 });
         }
       })
     },
 
     /*
-    * @method 新增PPT
-    * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
-    */
+     * @method 新增PPT
+     * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
+     */
     addPPT(data) {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
@@ -207,21 +208,21 @@ var actionsMixin = {
       }
 
       // 是否含有重复数据
-      let hasPPT = this.cards.find((item)=>{
+      let hasPPT = this.cards.find((item) => {
         return item.type === 2 && item.slideID === slideData.id && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载
-      if (!cover || slideData && slideData['problem'] || hasPPT && data.isFetch ) {
+      if (!cover || slideData && slideData['problem'] || hasPPT && data.isFetch) {
         return;
       }
 
-      if (slideData['cover']=='rain://error/upload-error') {
-        if(!data.isFetch) {
+      if (slideData['cover'] == 'rain://error/upload-error') {
+        if (!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片上传失败' });
         }
-      } else if(slideData['cover']=='rain://error/export-error'){
-        if(!data.isFetch) {
+      } else if (slideData['cover'] == 'rain://error/export-error') {
+        if (!data.isFetch) {
           this.addMessage({ type: 1, message: '幻灯片解析失败' });
         }
       } else {
@@ -247,20 +248,20 @@ var actionsMixin = {
         this.hideAnimationMask();
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
-        if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
-          if(isWebLesson) {
+        if (data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
+          if (isWebLesson) {
             let step = data.event.step;
-            if(step <= Shapes.length) {
+            if (step <= Shapes.length) {
               let shape = Shapes[step];
 
               // 之前播放过的动画展示全部 最新两条数据不是当前PPT就认为之前播放过
-              if(hasPPT) {
+              if (hasPPT) {
                 let lastCards = this.cards.slice(-2);
                 let oldppt = lastCards.find((item) => {
                   return item.type === 2 && item.slideID === cardItem.slideID;
                 })
 
-                if(oldppt) {
+                if (oldppt) {
                   shape && Object.assign(oldppt, data, cardItem, { src: shape.url })
                 } else {
                   Object.assign(data, cardItem);
@@ -273,11 +274,11 @@ var actionsMixin = {
             }
           } else {
             // step === 0 开始动画 正常插入
-            if(data.event.step >= 0 && data.event.step < data.event.total) {
+            if (data.event.step >= 0 && data.event.step < data.event.total) {
               // 之前没有播放过这个ppt
-              if(!hasPPT) {
+              if (!hasPPT) {
                 // 直播默认动画不遮挡
-                if(this.liveurl && this.visibleAnimation) {
+                if (this.liveurl && this.visibleAnimation) {
                   data = Object.assign(data, cardItem, { animation: 0 })
                 } else {
                   data = Object.assign(data, cardItem, { animation: 1 })
@@ -290,9 +291,9 @@ var actionsMixin = {
               }
 
               !data.isFetch && this.cards.push(data);
-            } else if(data.event.step === -1 || data.event.step === data.event.total) {
+            } else if (data.event.step === -1 || data.event.step === data.event.total) {
               // step === -1 total > 1 动画结束 替换原来的数据 取到原来的ppt位置
-              if(hasPPT) {
+              if (hasPPT) {
                 // 需要替换的index
                 let targetIndex = this.cards.findIndex((item, i) => {
                   return item.type === 2 && item.slideID === cardItem.slideID && item.animation === 2;
@@ -301,16 +302,16 @@ var actionsMixin = {
                 Object.assign(hasPPT, data, cardItem, { animation: 2, isRepeat: false })
                 // targetIndex && this.cards.splice(targetIndex, 1, data);
 
-                if(targetIndex > 0 && !data.isFetch) {
+                if (targetIndex > 0 && !data.isFetch) {
                   // 克隆版单独处理 上一个是重复ppt就不处理了
-                  if(targetIndex < this.cards.length - 1) {
-                    Object.assign(data, cardItem, { animation: 2, isRepeat: false })
+                  if (targetIndex < this.cards.length - 1) {
+                    Object.assign(data, cardItem, { animation: 2, isRepeat: false });
                     this.cards.push(data);
                   }
                 }
               } else {
                 // 如果直接收到动画结束
-                data = Object.assign(data, cardItem, { animation: 2 })
+                data = Object.assign(data, cardItem, { animation: 2 });
                 !data.isFetch && this.cards.push(data);
               }
             }
@@ -324,20 +325,20 @@ var actionsMixin = {
         this.setCards(this.cards)
 
         // 第一张ppt显示在引导页
-        if(!this.pptCover) {
+        if (!this.pptCover) {
           this.pptCover = slideData['cover'];
         }
       }
     },
 
     /*
-    * @method 新增试卷
-    * data: { type: 4, quiz: 'quizID', title: '最新考试', total: '10', time: '' }
-    */
+     * @method 新增试卷
+     * data: { type: 4, quiz: 'quizID', title: '最新考试', total: '10', time: '' }
+     */
     addPaper(data) {
       let oQuiz = this.quizMap.get(data.quiz);
       // 是否含有重复数据
-      let hasEvent = this.cards.find((item)=>{
+      let hasEvent = this.cards.find((item) => {
         return item.type === 4 && item.quiz === data.quiz;
       })
 
@@ -353,16 +354,16 @@ var actionsMixin = {
 
       // 消息box弹框
       data.isPopup && (this.msgBoxs = [data]);
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
     },
 
     /*
-    * @method 新增习题
-    * { type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
-    */
+     * @method 新增习题
+     * { type: 3, sid: item['sid'], pageIndex: item['si'], time: item['dt'], presentationid: item['pres'], limit: item.limit, event: item }
+     */
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['slides'];
@@ -372,7 +373,7 @@ var actionsMixin = {
       // 过滤下 问题是否过期
       let hasProblem = this.filterProblem(pptData, data.event['prob']);
 
-      if(!slideData || !hasProblem) {
+      if (!slideData || !hasProblem) {
         let targetIndex = this.cards.findIndex((item) => {
           return item.type === 3 && item.problemID === data.event['prob'];
         })
@@ -381,18 +382,18 @@ var actionsMixin = {
         targetIndex !== -1 && this.cards.splice(targetIndex, 1);
 
         // 删除消息
-        if(targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob']) {
+        if (targetIndex !== -1 && this.msgBoxs.length && this.msgBoxs[0].problemID === data.event['prob']) {
           this.msgBoxs = [];
-        } else if(this.msgBoxs.length && this.msgBoxs[0].problemID) {
+        } else if (this.msgBoxs.length && this.msgBoxs[0].problemID) {
           // 矫正消息
           let msgProblem = this.msgBoxs[0];
           let msgIndex = this.cards.findIndex((item) => {
             return item.type === 3 && item.problemID === msgProblem.problemID;
           })
 
-          this.msgBoxs = [ Object.assign(msgProblem, {
+          this.msgBoxs = [Object.assign(msgProblem, {
             index: msgIndex
-          }) ];
+          })];
         }
 
         return this;
@@ -403,17 +404,17 @@ var actionsMixin = {
       let problemType = problem['problemType'];
       let pageURL = `/v3/${this.lessonID}/`;
 
-      if(problemType) {
+      if (problemType) {
         switch (problemType) {
           // 主观题
           case 5:
             pageURL += 'subjective/';
             break;
-          // 填空题
+            // 填空题
           case 4:
             pageURL += 'blank/';
             break;
-          // 多选单选投票
+            // 多选单选投票
           default:
             pageURL += 'exercise/';
             break;
@@ -444,22 +445,22 @@ var actionsMixin = {
       oImg.src = slideData && slideData['cover'];
 
       // 是否含有重复数据
-      let hasEvent = this.cards.find((item)=>{
+      let hasEvent = this.cards.find((item) => {
         return item.type === 3 && item.problemID === data.event['prob'];
       })
 
       // fixed cover为空
-      if(hasEvent && !hasEvent.cover) {
+      if (hasEvent && !hasEvent.cover) {
         hasEvent.cover = slideData && slideData['cover'];
       }
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         // 之前有动画隐藏蒙版
         this.hideAnimationMask();
 
         this.setCards(this.cards)
-        slideData['problem'] && this.problemMap.set(slideData['problem']['problemId'], slideData);
+        problem && this.problemMap.set(problem['problemId'], slideData);
       }
     },
 
@@ -472,22 +473,22 @@ var actionsMixin = {
       let remark = data.remark;
       let slideData = this.problemMap.get(remark.prob);
 
-      if(slideData) {
+      if (slideData) {
         // 组织解析数据
         let pageURL = `/v3/${this.lessonID}/analysis/`;
         Object.assign(data, {
           pageIndex: slideData.Index,
-          problemID: slideData['problem']['problemId'],
+          problemID: remark.prob,
           pageURL,
           caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'
         })
 
         // 是否含有重复数据
         let hasEvent = this.cards.find((item) => {
-          return item.type === 13 && item.problemID === data.problemID && data.isFetch;
+          return item.type === 13 && item.problemID === remark.prob && data.isFetch;
         })
 
-        if(!hasEvent) {
+        if (!hasEvent) {
           this.cards.push(data);
           this.setCards(this.cards)
         }
@@ -509,7 +510,7 @@ var actionsMixin = {
         isComplete: false
       })
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -530,20 +531,20 @@ var actionsMixin = {
         isComplete: false
       })
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
     },
 
     /*
-    * @method 计时习题 计算剩余时间
-    * @params
-    */
+     * @method 计时习题 计算剩余时间
+     * @params
+     */
     calcLeaveTime(leaveTime, probID, limit) {
       // 记录问题剩余时间并开始计时
       let oProblem = this.problemMap.get(probID);
-      if(oProblem) {
+      if (oProblem) {
         oProblem.leaveTime = leaveTime
 
         // 订阅发布定时
@@ -556,11 +557,11 @@ var actionsMixin = {
     },
 
     /*
-    * @method 答题续时
-    * @params problem
-    */
+     * @method 答题续时
+     * @params problem
+     */
     extendTime(problem) {
-      if(problem) {
+      if (problem) {
         // 订阅发布答题续时
         PubSub && PubSub.publish('exercise.extendTime', {
           msg: 'exercise.extendTime',
@@ -570,11 +571,11 @@ var actionsMixin = {
     },
 
     /*
-    * @method 收题
-    * @params problemid
-    */
+     * @method 收题
+     * @params problemid
+     */
     closedProblem(problemid) {
-      if(problemid) {
+      if (problemid) {
         // 订阅发布收题
         PubSub && PubSub.publish('exercise.closed', {
           msg: 'exercise.closed',
@@ -584,9 +585,9 @@ var actionsMixin = {
     },
 
     /*
-    * @method 新增红包
-    * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
-    */
+     * @method 新增红包
+     * data: { type: 5, redpacketID: 123, count: 6, length: '',  time: '', event: all }
+     */
     addHongbao(data) {
       let caption = this.$i18n.t('gainbonus', { number: data.length }) || data.length + '位同学已赢得课堂红包';
 
@@ -601,7 +602,7 @@ var actionsMixin = {
       // 是否含有重复数据 红包重复需要更新数目
       let hasEvent = false;
       this.cards.forEach((item) => {
-        if(item.type === 5 && item.redpacketID === data.redpacketID) {
+        if (item.type === 5 && item.redpacketID === data.redpacketID) {
           item = Object.assign(item, {
             caption: caption,
             event: data.event
@@ -611,7 +612,7 @@ var actionsMixin = {
         }
       })
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -628,7 +629,7 @@ var actionsMixin = {
         return item.type === 8 && item.groupid === data.groupid && data.isFetch;
       })
 
-      if(oGroup && oGroup.deleted) {
+      if (oGroup && oGroup.deleted) {
         return this;
       }
 
@@ -636,9 +637,9 @@ var actionsMixin = {
       let groupType = data.cat;
       let href = '';
       let lessonID = this.lessonID;
-      if(teamid) {
+      if (teamid) {
         href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
-      } else if(groupType === 'free') {
+      } else if (groupType === 'free') {
         href = `/team/join/${data.groupid}?lessonid=${lessonID}`;
       } else {
         href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
@@ -656,7 +657,7 @@ var actionsMixin = {
       // 消息box弹框
       data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -672,7 +673,7 @@ var actionsMixin = {
       })
 
       // 可以确认分组被取消了
-      if(targetIndex !== -1) {
+      if (targetIndex !== -1) {
         this.cards.splice(targetIndex, 1);
         this.setCards(this.cards);
       }
@@ -690,7 +691,7 @@ var actionsMixin = {
       group && Object.assign(group, {
         href: `/team/studentteam/${data.teamid}`,
         status: this.$i18n.t('undone'),
-        isComplete:  true
+        isComplete: true
       })
 
       this.setCards(this.cards);
@@ -724,7 +725,7 @@ var actionsMixin = {
       // 消息box弹框
       data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -761,7 +762,7 @@ var actionsMixin = {
 
       data = Object.assign(data, cardItem)
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -799,7 +800,7 @@ var actionsMixin = {
 
       data = Object.assign(data, cardItem)
 
-      if(!hasEvent) {
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }
@@ -818,26 +819,26 @@ var actionsMixin = {
         }}
      */
     startLive(data) {
-      if(data && data.liveurl) {
+      if (data && data.liveurl) {
         this.liveurl = data.liveurl;
         // 直播类型
         this.liveType = data.type;
         this.liveURL = data.liveurl.hls;
 
-        if(this.liveType === 1) {
+        if (this.liveType === 1) {
           let isWeb = this.isWeb;
-          if(isWeb) {
-            setTimeout(()=>{
+          if (isWeb) {
+            setTimeout(() => {
               this.supportFLV();
             }, 3000)
           } else {
-            setTimeout(()=>{
+            setTimeout(() => {
               this.needNew = true;
               this.Hls && this.supportHLS(this.Hls);
             }, 5000)
           }
-        } else if(this.liveType === 2) {
-          setTimeout(()=>{
+        } else if (this.liveType === 2) {
+          setTimeout(() => {
             this.supportFLV(true);
           }, 3000)
         }
@@ -859,16 +860,16 @@ var actionsMixin = {
      * @param
      */
     changeLive(data) {
-      if(data && data.url) {
+      if (data && data.url) {
         this.liveurl = data.url;
         // 直播类型
         this.liveType = data.type;
         this.liveURL = data.url.hls;
 
-        if(this.liveType === 1) {
+        if (this.liveType === 1) {
           this.Hls && this.supportHLS(this.Hls);
-        } else if(this.liveType === 2) {
-          setTimeout(()=>{
+        } else if (this.liveType === 2) {
+          setTimeout(() => {
             this.supportFLV(true);
           }, 3000)
         }
@@ -882,7 +883,7 @@ var actionsMixin = {
     endLive(data) {
       this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
 
-      setTimeout(()=>{
+      setTimeout(() => {
         this.handlestop();
 
         this.liveURL = '';
@@ -902,7 +903,7 @@ var actionsMixin = {
     setPresentationTitle(presentationID) {
       let presentation = this.presentationMap.get(presentationID);
 
-      if(presentation && presentation.Title) {
+      if (presentation && presentation.Title) {
         this.title = presentation.Title;
       }
     },
@@ -913,13 +914,13 @@ var actionsMixin = {
      */
     setBoardInfo(data) {
       let id = data.boardid;
-       // 是否含有重复数据
+      // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 12 && item.boardid === id && data.isFetch;
       });
       let boardInfo = this.boardMap.get(id);
 
-      if(data) {
+      if (data) {
         data = Object.assign(data, {
           rate: data.devwidth / data.devheight,
           time: data.dt,
@@ -931,7 +932,7 @@ var actionsMixin = {
         this.boardMap.set(id, data);
         this.boardInfo = data;
 
-        if(!hasEvent) {
+        if (!hasEvent) {
           this.cards.push(data);
           this.setCards(this.cards)
         }
@@ -943,11 +944,11 @@ var actionsMixin = {
      * @param
      */
     setBoardline(data) {
-      if(data && !data.isFetch) {
+      if (data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
         let boardInfo = this.boardMap.get(id);
 
-        if(boardInfo) {
+        if (boardInfo) {
           boardInfo = Object.assign({}, boardInfo);
           !boardInfo.lines && (boardInfo.lines = []);
           boardInfo.lines.push(data);
@@ -959,12 +960,12 @@ var actionsMixin = {
             return item.type === 12 && item.boardid === id;
           })
 
-          if(data.from !== 'timeline') {
+          if (data.from !== 'timeline') {
             this.simulationDrawing(null, data);
           }
 
           // 更新最新时间
-          if(data.dt > 0) {
+          if (data.dt > 0) {
             cardBoard && Object.assign(cardBoard, boardInfo, { time: data.dt })
           }
         }
@@ -977,7 +978,7 @@ var actionsMixin = {
      * @param { "type": "board", "action": "nav", "boardid": 1 }
      */
     boardNav(data) {
-      if(data && !data.isFetch) {
+      if (data && !data.isFetch) {
         let id = data.boardid;
         let boardInfo = this.boardMap.get(id);
 
@@ -991,7 +992,7 @@ var actionsMixin = {
      * @param
      */
     clearBoard(data) {
-      if(data && !data.isFetch) {
+      if (data && !data.isFetch) {
         let id = data.boardid || this.boardInfo.boardid;
         this.clearScreen(id, true);
       }
@@ -1002,11 +1003,11 @@ var actionsMixin = {
      * @param { "type": "board", "action": "nav", "boardid": 1, "url": "" }
      */
     setBoardCover(data) {
-      if(data && !data.isFetch) {
+      if (data && !data.isFetch) {
         let id = data.boardid;
         let boardInfo = this.boardMap.get(id);
 
-        if(boardInfo) {
+        if (boardInfo) {
           boardInfo = Object.assign({}, boardInfo, { url: data.url, lines: [] })
           this.boardMap.set(id, boardInfo);
 
@@ -1021,7 +1022,7 @@ var actionsMixin = {
      * @param
      */
     receiveDanmu(data) {
-      if(data && !data.isFetch) {
+      if (data && !data.isFetch) {
         this.danmus.push(data);
       }
     },
@@ -1031,27 +1032,27 @@ var actionsMixin = {
      * @param
      */
     clearDanmus(data) {
-      if(this.danmus && this.danmus.length) {
+      if (this.danmus && this.danmus.length) {
         this.danmus = [];
       }
     },
 
     /**
      * @method 更新视频状态提示
-    */
-    changeLiveStatusTips(status, voice){
+     */
+    changeLiveStatusTips(status, voice) {
       let self = this
       switch (status) {
         case 1:
-          if(this.liveVisible) {
-            if(this.lastStatus !== 1 && this.lastStatus !== -3){
+          if (this.liveVisible) {
+            if (this.lastStatus !== 1 && this.lastStatus !== -3) {
               this.needNew = true
             }
 
             this.liveStatusTips = ''
             if (this.liveType === 1) {
               let isWeb = this.isWeb;
-              if(isWeb) {
+              if (isWeb) {
                 if (this.flvPlayer) {
                   this.createFlvPlayer()
                 } else {
@@ -1090,7 +1091,7 @@ var actionsMixin = {
       this.lastStatus = status
 
       let liveEl = document.querySelector('#player')
-      if(status !== 1) {
+      if (status !== 1) {
         liveEl && (this.currentTime = liveEl.currentTime)
       }
 

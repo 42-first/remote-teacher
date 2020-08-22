@@ -9,13 +9,13 @@
 <template>
   <section class="page-submission">
     <div :class="['submission-wrapper', 'animated', opacity ? 'zoomIn': '']">
-      <div class="text-left contributor-wrapper" v-if="classroomid">
+      <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
         <div class="title">选择分组</div>
         <div class="handler-wrapper" @click="showPicker">
           <span>{{ selectedVal }}</span>
           <i class="iconfont icon-dakai ver-middle font20"></i>
         </div>
-      </div>
+      </div> -->
       <div class="submission-inner">
 
       <!-- 文字编辑 -->
@@ -36,7 +36,7 @@
           <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
-          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
+          <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handleLoadImg" @click="handleScaleImage" v-if="imageURL" />
           <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
@@ -50,7 +50,7 @@
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
-      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
+      <router-link :to="'/v3/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
 
     </div>
 
@@ -198,48 +198,43 @@
       */
       sendSubmission() {
         let self = this;
-        let URL = API.student.SEND_SUBMISSION;
+        let URL = API.lesson.add_tougao;
         const content = this.text.replace(/^\s+|\s+$/g, '');
         let params = {
           'content': content,
-          'pic': this.imageURL,
-          'thumb': this.imageThumbURL,
-          'lesson_id': this.lessonID,
-          'team_id': this.team_id,
-          'group_id': this.group_id
+          'picture': this.imageURL
+          // 'group_id': self.data.group_id,
+          // 'team_id': self.data.team_id,
         }
 
         // 发送中
         this.sendStatus = 3;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            this.sendStatus = 4;
 
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res) {
-              let data = res;
-              self.sendStatus = 4;
-
-              setTimeout(() => {
-                self.handleBack();
-              }, 2000)
-
-              self.$toast({
-                message: this.$i18n.t('sendsuccess') || '发送成功',
-                duration: 2000
-              });
-
-              return data;
-            }
-          }).catch(error => {
-            this.sendStatus = 2;
+            setTimeout(() => {
+              this.handleBack();
+            }, 2000)
 
             this.$toast({
-              message: this.$i18n.t('networkerror2') || '网络不佳，答案提交失败，请重试',
-              duration: 3000
+              message: this.$i18n.t('sendsuccess') || '发送成功',
+              duration: 2000
             });
+          }
+        }).
+        catch(error => {
+          console.log('add_tougao:', error);
+          this.sendStatus = 2;
 
-            return null;
+          this.$toast({
+            message: this.$i18n.t('networkerror2') || '网络不佳，答案提交失败，请重试',
+            duration: 3000
           });
+        })
       },
+
       /*
        * @method 上传图片
        * @param
@@ -404,7 +399,7 @@
         });
 
       },
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
@@ -572,7 +567,7 @@
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
       // 获取学生分组列表
-      this.pickerDataInit()
+      // this.pickerDataInit()
       // huawei 使用微信自己的图片选择
       if(this.huawei) {
         configWX();
