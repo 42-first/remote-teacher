@@ -42,9 +42,9 @@
           </li>
         </ul>
         <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="(problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 'Polling' || problemType === 'AnonymousPolling') && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(problemType === 'AnonymousPolling' && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
+        <p class="polling-count f20" v-if="(problemType === 3) && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
+        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 3) && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
+        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(anonymous && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
 
       <!-- 观看者提示文字 返回 -->

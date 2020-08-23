@@ -381,10 +381,10 @@
             ppts.forEach( (item) => {
               if(type === 0) {
                 item.hasQuestion = !item.hasQuestion;
-                slideData && (slideData.question = !item.hasQuestion);
+                slideData && (slideData.question = item.hasQuestion ? 1 : 0);
               } else if(type === 1) {
                 item.hasStore = !item.hasStore;
-                slideData && (slideData.store = !item.hasStore);
+                slideData && (slideData.store = item.hasStore ? 1 : 0);
               }
             });
 

@@ -571,62 +571,62 @@
         };
 
         const code = await this.submit(params);
-          if(code === 0) {
-            this.$toast({
-              message: this.$i18n.t('sendsuccess') || '提交成功',
-              duration: 2000
-            });
+        if(code === 0) {
+          this.$toast({
+            message: this.$i18n.t('sendsuccess') || '提交成功',
+            duration: 2000
+          });
 
-            this.summary = Object.assign(this.summary, {
-              status: this.$i18n.t('done') || '已完成',
-              isComplete: true
-            })
-            // 替换原来的数据
-            this.cards.splice(this.index, 1, this.summary);
-            this.setCards(this.cards);
+          this.summary = Object.assign(this.summary, {
+            status: this.$i18n.t('done') || '已完成',
+            isComplete: true
+          })
+          // 替换原来的数据
+          this.cards.splice(this.index, 1, this.summary);
+          this.setCards(this.cards);
 
-            if(problem['problem']) {
-              problem['problem']['result'] = params['result'];
-              this.$parent.problemMap.set(problemID, problem);
-            }
-
-            this.sendStatus = 4;
-            this.sLeaveTime = this.$i18n.t('done') || '已完成';
-            this.isComplete = true;
-          } else if(code === 50028) {
-            this.$toast({
-              message: '此题已经作答过',
-              duration: 2000
-            });
-          } else if(code === -1) {
-            // 提交失败保存本地
-            this.saveAnswer(params);
-            this.$toast({
-              message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
-              duration: 3000
-            });
-
-            this.isComplete = true;
-            this.oProblem['result'] = null;
-
-            // 统计失败率
-            typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
-          } else {
-            // 用户由于接口时间太长超时了
-            this.$toast({
-              message: `提交失败(错误码：${code})`,
-              duration: 2000
-            });
-
-            this.sendStatus = 4;
-            this.oProblem['result'] = null;
-
-            return this;
+          if(problem['problem']) {
+            problem['problem']['result'] = params['result'];
+            this.$parent.problemMap.set(problemID, problem);
           }
 
-          setTimeout(() => {
-            this.$router.back();
-          }, 2000)
+          this.sendStatus = 4;
+          this.sLeaveTime = this.$i18n.t('done') || '已完成';
+          this.isComplete = true;
+        } else if(code === 50028) {
+          this.$toast({
+            message: '此题已经作答过',
+            duration: 2000
+          });
+        } else if(code === -1) {
+          // 提交失败保存本地
+          this.saveAnswer(params);
+          this.$toast({
+            message: this.$i18n.t('neterrorpush') || '当前网络不畅，请检查系统已保存并将自动重复提交',
+            duration: 3000
+          });
+
+          this.isComplete = true;
+          this.oProblem['result'] = null;
+
+          // 统计失败率
+          typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
+        } else {
+          // 用户由于接口时间太长超时了
+          this.$toast({
+            message: `提交失败(错误码：${code})`,
+            duration: 2000
+          });
+
+          this.sendStatus = 4;
+          this.oProblem['result'] = null;
+
+          return this;
+        }
+
+        setTimeout(() => {
+          this.$router.back();
+        }, 2000)
       },
 
       /*

@@ -92,7 +92,7 @@ let lessonMixin = {
           res && res.forEach((presentation, index)=>{
             this.formatPresentation(presentation, lessonTags);
 
-            if(index === 0) {
+            if(index === 0 && presentation) {
               this.title = presentation.title;
             }
           })

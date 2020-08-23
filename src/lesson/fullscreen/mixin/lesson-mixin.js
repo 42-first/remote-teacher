@@ -44,7 +44,7 @@ var commandMixin = {
         switch (item.type) {
           // ppt
           case 2:
-            path = `/${this.lesson.lessonID}/ppt/${index}`;
+            path = `/v3/${this.lesson.lessonID}/ppt/${index}`;
 
             break;
 
@@ -52,7 +52,7 @@ var commandMixin = {
           case 10:
           case 11:
             // ppt
-            path = `/${this.lesson.lessonID}/ppt/${index}`;
+            path = `/v3/${this.lesson.lessonID}/ppt/${index}`;
 
             break;
 
@@ -64,49 +64,49 @@ var commandMixin = {
 
           // 试卷
           case 4:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/v3/${this.lesson.lessonID}/webview/${index}`;
 
             break;
 
           // 红包
           case 5:
-            path = `/${this.lesson.lessonID}/hongbao/${index}`;
+            path = `/v3/${this.lesson.lessonID}/hongbao/${index}`;
 
             break;
 
           // 投稿分享
           case 6:
-            path = `/${this.lesson.lessonID}/submission_share/${index}`;
+            path = `/v3/${this.lesson.lessonID}/submission_share/${index}`;
 
             break;
 
           // 主观题答案分享
           case 7:
-            path = `/${this.lesson.lessonID}/subjective_share/${index}`;
+            path = `/v3/${this.lesson.lessonID}/subjective_share/${index}`;
 
             break;
 
           // 发起了分组
           case 8:
-            path = `/${this.lesson.lessonID}/webview/${index}`;
+            path = `/v3/${this.lesson.lessonID}/webview/${index}`;
 
             break;
 
           // 发起了互评
           case 9:
-            path = `/${this.lesson.lessonID}/evaluation/${index}`;
+            path = `/v3/${this.lesson.lessonID}/evaluation/${index}`;
 
             break;
 
           // 白板
           case 12:
-            path = `/${this.lesson.lessonID}/board/${index}`;
+            path = `/v3/${this.lesson.lessonID}/board/${index}`;
 
             break;
 
           // 问题解析
           case 13:
-            path = `/${this.lesson.lessonID}/analysis/${index}`;
+            path = `/v3/${this.lesson.lessonID}/analysis/${index}`;
 
             break;
 
@@ -195,7 +195,7 @@ var commandMixin = {
           res && res.forEach((presentation, index)=>{
             this.formatPresentation(presentation, lessonTags);
 
-            if(index === 0) {
+            if(index === 0 && presentation) {
               this.title = presentation.title;
             }
           })

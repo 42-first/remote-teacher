@@ -12,16 +12,15 @@
     <!-- 内容区 -->
     <div class="cover__container box-center" v-if="slide">
       <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" />
-      <!-- <img class="cover" :src="slide.src" alt="" /> -->
     </div>
 
     <!-- 不懂收藏 -->
     <section class="ppt__opt f12 cfff" v-if="slide && slide.type===2" >
-      <div class="opt__action pb10" @click="handleTag(2)">
+      <div class="opt__action pb10" @click="handleTag(1)">
         <i class="iconfont f20 cfff" :class="[ slide.hasStore ? 'icon-shoucangjihuo-': 'icon-shoucang-' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
-      <div class="opt__action" @click="handleTag(1)">
+      <div class="opt__action" @click="handleTag(0)">
         <i class="iconfont f20 cfff" :class="[ slide.hasQuestion ? 'icon-budongjihuo': 'icon-budong-' ]"></i>
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
@@ -92,7 +91,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if(to && to.params && to.name === 'ppt-page') {
+      if(to && to.params && to.name === 'ppt') {
         let params = to.params;
         this.index = params.index
       }
@@ -175,53 +174,52 @@ export default {
      * @method 不懂收藏
      * @ tag 1 不懂 2 收藏
      */
-    handleTag(tag) {
-      let URL = API.student.SET_LEESON_SILDE_TAG;
+    handleTag(type) {
+      let URL = API.lesson.post_tag;
       let cards = this.cards;
       let slide = this.slide;
-      let slideID = slide.slideID;
+      let slideID = slide.id;
 
       let ppts = cards.filter((card, index)=>{
         return card.slideID === slideID;
       })
 
-      // 确实是否不懂
-      let tagType = ppts.length && ppts[0].hasQuestion ? 'cancel' : 'add';
+      // 取消还是新增
+      let action = ppts.length && ppts[0].hasQuestion ? 1 : 0;
       // 是否收藏
-      if(tag === 2) {
-        tagType = ppts.length && ppts[0].hasStore ? 'cancel' : 'add';
+      if(type === 1) {
+        action = ppts.length && ppts[0].hasStore ? 1 : 0;
       }
 
-      let param = {
-        'tag': tag,
-        'lessonSlideID': slideID,
-        'tagType': tagType
-      }
+      let params = {
+        'type': type,
+        'action': action,
+        'presentationId': slide.presentationid,
+        'objId': slideID,
+        'objType': 0,
+      };
 
-      request.post(URL, param).
-      then( (res) => {
-        if(res) {
-          if (res.msg === '标记已存在,不能反复提交' || res.msg === '标记不存在') {
-            return;
-          }
+      request.post(URL, params).
+      then((res)=>{
+        if(res && res.code === 0) {
+          let data = res.data;
 
-          ppts.forEach( (item, index) => {
-            tag === 1 && (item.hasQuestion = !item.hasQuestion);
-            tag === 2 && (item.hasStore = !item.hasStore);
+          ppts.forEach( (item) => {
+            if(type === 0) {
+              item.hasQuestion = !item.hasQuestion;
+              slide && (slide.question = item.hasQuestion ? 1 : 0);
+            } else if(type === 1) {
+              item.hasStore = !item.hasStore;
+              slide && (slide.store = item.hasStore ? 1 : 0);
+            }
           });
-
-          if(tag === 1) {
-            slide['question'] = ppts.length && ppts[0].hasQuestion ? 1 : 0;
-            slide.hasQuestion = ppts[0].hasQuestion;
-          } else if(tag === 2) {
-            slide['store'] = ppts.length && ppts[0].hasStore ? 1 : 0;
-            slide.store = ppts[0].hasStore;
-          }
 
           this.setCards(cards);
         }
-      });
-
+      }).
+      catch(error => {
+        console.log('handleTag:', error);
+      })
     },
 
   }
