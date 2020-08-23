@@ -94,33 +94,38 @@ export default {
     * @param
     */
     handleSend() {
-      if(this.danmuText.length > 50 || !this.danmuText) return
-      let self = this;
+      if(this.danmuText.length > 50 || !this.danmuText) return;
+
       let URL = API.student.SEND_DANMU;
-      // let socket = this.$parent.socket;
       const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
       let params = {
-        'lessonID': this.$parent.lessonID,
-        'presentationID': this.$parent.presentationID,
-        'message': message
+        'biz': 1,
+        'resourceType': 1,
+        'resourceId': this.$parent.lessonID,
+        'action': 1,
+        'target': '',
+        'userName': '',
+        'message': message,
+        'extra': '',
+        'requiredCensor': false,
+        'wordCloud': true,
+        'showStatus': true,
+        'fromStart': '100',
       };
 
-      return request.post(URL, params)
-        .then( (res) => {
-          if(res) {
-            // 弹幕返回数据结构 danmuID success
-            let data = res;
-            if(data.success){
-              self.danmuText = ''
-              self.showToast(true)
-            }else {
-              self.showToast(false)
-            }
-            return data;
-          }
-        }).catch(err => {
-          self.showToast(false)
-        });
+      request.post(URL, params).
+      then((res)=>{
+        if(res && res.code === 0) {
+          this.danmuText = ''
+          this.showToast(true)
+        } else {
+          this.showToast(false)
+        }
+      }).
+      catch(error => {
+        console.log('send danmu:', error);
+        this.showToast(false)
+      })
     },
     handleFocus(){
       this.$refs.danmuinput2.focus()

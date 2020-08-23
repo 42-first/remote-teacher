@@ -13,21 +13,21 @@
       <div class="submission__item">
         <!-- 投稿时间 -->
         <div class="item-avatar" v-if="result.anon || !result.is_group">
-          <img class="" :src="result.user_avatar_46" alt="" />
+          <img class="" :src="result.userAvatar" alt="" />
         </div>
         <!-- 投稿内容 -->
         <div class="item-content">
-          <p class="user-name f15" v-if="result.anon || !result.is_group">{{ result.user_name }}</p>
+          <p class="user-name f15" v-if="result.anon || !result.is_group">{{ result.userName }}</p>
           <div v-else @click="showCurGroupList(index)">
             <img-group :groupdata="result.team_info" :big="1"></img-group>
           </div>
           <p class="f15">{{ result.content }}</p>
-          <img v-if="result.pic" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.pic" alt="" />
+          <img v-if="result.picture" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.picture" alt="" />
           <!-- 视频展示 -->
           <div class="video__preview" v-if="result.video && result.video.url">
             <video :src="result.video.url" :style="result.video|setStyle" controls ></video>
           </div>
-          <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
+          <p class="date-time f15">{{ result.createTime|formatTime('HH:mm') }}</p>
         </div>
 
       </div>
@@ -73,7 +73,7 @@
     },
     watch: {
       '$route' (to, from) {
-        if(to && to.params && to.name === 'submission-detail-page') {
+        if(to && to.params && to.name === 'submission-detail') {
           let params = to.params;
           this.index = params.index
 
@@ -106,33 +106,33 @@
        * @method 获取主观题分数
        * @param
        */
-      getSubmission(submissionID) {
-        let URL = API.student.GET_SUBMISSION;
-        let param = {
-          'tougao_id': submissionID
+      getSubmission(tougaoId) {
+        let URL = API.lesson.get_tougao;;
+        let params = {
+          'tougaoId': tougaoId
         };
+        // 是否匿名
+        let anon = this.summary.anon;
 
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-              // 是否匿名
-              let anon = this.summary.anon;
+        request.get(URL, params).
+        then( res => {
+          if (res && res.code === 0 && res.data) {
+            let data = res.data;
 
-              anon && Object.assign(data, {
-                user_avatar_46: 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
-                user_name: this.$i18n.t('anonymous2') || '匿名',
-                anon: true
-              })
+            anon && Object.assign(data, {
+              userAvatar: 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
+              userName: this.$i18n.t('anonymous2') || '匿名',
+              anon: true
+            })
 
-              this.result = data;
-
-              return data;
-            }
-          });
+            this.result = data;
+          }
+        }).catch(error => {
+          console.log('getSubmission:', error);
+        })
       },
 
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = evt.target;
         let src = target.dataset.src || target.src;
 
