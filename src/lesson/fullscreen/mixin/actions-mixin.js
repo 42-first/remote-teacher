@@ -220,7 +220,7 @@ let actionsMixin = {
 
       if (!slideData) {
         // fixed 息屏切换ppt问题
-        !presentation && this.updatePresentation(data.presentationid);
+        // !presentation && this.updatePresentation(data.presentationid);
         return;
       }
 
