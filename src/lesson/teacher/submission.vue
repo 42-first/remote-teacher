@@ -272,19 +272,23 @@
         }
         console.log('上拉松手了')
 
-        let tailNow = self.dataList[self.dataList.length-1].id
+        if(this.isAllLoaded) return
 
-        self.fetchList(tailNow).then(jsonData => {
-          // 设置试卷详情数据
-          // response_num 当前请求返回的投稿数量
-          if (jsonData.data.response_num === 0) {
-            self.isAllLoaded = true
-            return
+        let tailNow = self.dataList[self.dataList.length-1].tougaoId
+
+        self.fetchList(tailNow).then(res => {
+          if(res && res.code === 0 && res.data){
+            // response_num 当前请求返回的投稿数量
+            if (res.data.response_num === 0) {
+              self.isAllLoaded = true
+              return
+            }
+            self.dataList = self.addFold(self.dataList.concat(res.data.items))
+
+            // this.$refs.Loadmore.onBottomLoaded()
+            self.onBottomLoaded()
           }
-          self.dataList = self.addFold(self.dataList.concat(jsonData.data.tougao_list))
-
-          // this.$refs.Loadmore.onBottomLoaded()
-          self.onBottomLoaded()
+          
         })
       },
       /**
@@ -308,19 +312,15 @@
        * 获取答案数据
        *
        * @param {Number} start 起始位置id，返回值不包括起始位置的值， 默认 -1， 即从最新无限大处开始
-       * @param {Number} direction 默认0 倒序，即向老的方向找去
-       * @param {Number} is_recount 默认0 不清理未读记录，1的话是清除未读记录
        */
-      fetchList(start = -1, direction = 0, is_recount = 0){
+      fetchList(start = -1){
         let self = this
-        let url = API.submissionlist
+        let url = API.lesson.get_tougao_list
 
         let data = {
-          start,
-          direction,
-          is_recount,
-          count: FENYE_COUNT,
-          lesson_id: self.lessonid,
+          'start': start,
+          'count': FENYE_COUNT,
+          'type': 2
         }
 
         // 单次刷新
@@ -332,13 +332,15 @@
        */
       pollingNewItem () {
         let self = this
-
-        let headNow = self.dataList[0] ? self.dataList[0].id : 0
-
-        self.fetchList(headNow, 1).then(jsonData => {
-          self.setData({
-            isShowNewHint: jsonData.data.response_num,
-          })
+        let URL = API.lesson.get_unread
+        return request.get(URL)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            const num = res.data.unreadNum
+            self.setData({
+              isShowNewHint: !!num
+            })
+          }
         })
       },
       /**
@@ -365,62 +367,66 @@
          * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
          * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
          */
-        self.fetchList(-1, 0, 1).then(jsonData => {
-          // 只要点击刷新按钮就去掉上方的有新弹幕的提示
-          self.isShowNewHint = false
+        self.fetchList(-1).then(res => {
+          if(res && res.code === 0 && res.data){
+            let data = res.data
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
 
-          setTimeout(() => {
-            self.isShowBtnBox = true
-          },500)
+            setTimeout(() => {
+              self.isShowBtnBox = true
+            },500)
 
-          let newList = jsonData.data.tougao_list
-          // 返回的条目的个数
-          let response_num = jsonData.data.response_num
-          // 有可能还一条都没有呢
-          let headNow = self.dataList[0] ? self.dataList[0].id : 0
-          let headIndex = newList.findIndex(item => item.id === headNow)
+            let newList = data.items
+            // 返回的条目的个数
+            let response_num = data.response_num
+            // 有可能还一条都没有呢
+            let headNow = self.dataList[0] ? self.dataList[0].id : 0
+            let headIndex = newList.findIndex(item => item.id === headNow)
 
-          // 假如没有新条目的话，显示没有新条目的提示
-          // 无论显示提示与否，2秒后不再显示提示
-          self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
+            // 假如没有新条目的话，显示没有新条目的提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
 
-          setTimeout(() => {
-            self.isShowNoNewItem = false
-          }, 2000)
+            setTimeout(() => {
+              self.isShowNoNewItem = false
+            }, 2000)
 
-          self.isFetching = false
+            self.isFetching = false
 
 
-          let isAllLoaded = self.isAllLoaded
-          if (response_num === 0) {
-            isAllLoaded = true
-          } else if (headNow === 0) {
+            let isAllLoaded = self.isAllLoaded
+            if (response_num === 0) {
+              isAllLoaded = true
+            } else if (headNow === 0) {
+              self.setData({
+                dataList: self.addFold(newList)
+              })
+
+              isAllLoaded = newList.length < FENYE_COUNT
+            } else if (~headIndex) {
+              // 包含
+              let _list = newList.slice(0, headIndex).concat(self.dataList)
+              self.setData({
+                dataList: self.addFold(_list)
+              })
+            } else {
+              self.setData({
+                dataList: self.addFold(newList)
+              })
+              isAllLoaded = false
+            }
             self.setData({
-              dataList: self.addFold(newList)
+              isAllLoaded
             })
 
-            isAllLoaded = newList.length < FENYE_COUNT
-          } else if (~headIndex) {
-            // 包含
-            let _list = newList.slice(0, headIndex).concat(self.dataList)
-            self.setData({
-              dataList: self.addFold(_list)
-            })
-          } else {
-            self.setData({
-              dataList: self.addFold(newList)
-            })
-            isAllLoaded = false
+            // 刷新的话回顶部，清零投稿未读数
+            setTimeout(() => {
+              self.$el.scrollTop = 0
+            }, 100)
+            self.$store.commit('set_newtougao', 0)
           }
-          self.setData({
-            isAllLoaded
-          })
-
-          // 刷新的话回顶部，清零投稿未读数
-          setTimeout(() => {
-            self.$el.scrollTop = 0
-          }, 100)
-          self.$store.commit('set_newtougao', 0)
+          
         })
 
       },

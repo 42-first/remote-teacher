@@ -38,7 +38,7 @@
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
-            <div class="time f15">{{item.time.substring(11)}}</div>
+            <div class="time f15">{{item.sendTime | formatTime}}</div>
             <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
             <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
           </div>
@@ -69,7 +69,7 @@
   import { InfiniteScroll } from 'mint-ui';
   Vue.use(InfiniteScroll);
 
-  let FENYE_COUNT = 60
+  let FENYE_COUNT = 20
 
   export default {
     name: 'Danmu',
@@ -85,7 +85,8 @@
         isToastSwitch: false,       // 显示弹幕开启关闭提示
         nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
         nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
-        timer: null
+        timer: null,
+        pageNum: 1
       }
     },
     computed: {
@@ -106,32 +107,21 @@
       self.refreshDataList(true);
       self.handlePubSub()
     },
+    filters: {
+      formatTime(time){
+        let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
+      }
+    },
     mounted () {
-      // let self = this
-      // let wh = window.innerHeight
-
-      // 如果搓到底了，不要到底，防止ios上搓露底
-      // let boxDom = document.querySelector('.danmu-box')
-      // boxDom.addEventListener('scroll', e => {
-      //   if (boxDom.scrollTop === boxDom.scrollHeight - boxDom.offsetHeight) {
-      //     boxDom.scrollTop = boxDom.scrollTop -2
-      //   }
-      // })
 
     },
     beforeDestroy(){
       this.closeDanmumask()
       T_PUBSUB.unsubscribe('danmu-msg')
     },
-    // watch: {
-    //   dataList: function() {
-    //     setTimeout(() => {
-    //       let sbh = document.querySelector('.danmu-box .list').offsetHeight
-    //       let wh = window.innerHeight
-    //       this.isContLonger = sbh >= wh
-    //     }, 100)
-    //   }
-    // },
     methods: {
       /**
        * 处理发布订阅
@@ -185,26 +175,20 @@
        */
       loadBottom () {
         let self = this
-
-        // if (!self.dataList[0]) {
-        //   setTimeout(() => {
-        //     self.onBottomLoaded()
-        //   }, 100)
-        //   return;
-        // }
-
-        let tailNow = self.dataList[self.dataList.length-1].id
-
-        self.fetchList(tailNow).then(jsonData => {
-          // 设置试卷详情数据
-          // response_num 当前请求返回的投稿数量
-          if (jsonData.data.response_num === 0) {
-            self.isAllLoaded = true
-            return
+        if(this.isAllLoaded) return
+        self.fetchList(this.pageNum).then(res => {
+          if(res && res.code === 0 && res.data){
+            let list = res.data.dataList
+            // response_num 当前请求返回的投稿数量
+            if (list.length === 0) {
+              self.isAllLoaded = true
+              return
+            }
+            self.dataList = self.dataList.concat(list)
+            this.pageNum++
+            // self.onBottomLoaded()
           }
-          self.dataList = self.dataList.concat(jsonData.data.danmu_list)
-
-          // self.onBottomLoaded()
+          
         })
       },
       /**
@@ -228,22 +212,23 @@
       /**
        * 获取弹幕数据
        *
-       * @param {Number} start 起始位置id，返回值不包括起始位置的值， 默认 -1， 即从最新无限大处开始
-       * @param {Number} direction 默认0 倒序，即向老的方向找去
+       * @param {Number} page 拉取弹幕第几页数据  默认第一页，加在更多page+1  如果有新的数据了 重新拉取第一页
        */
-      fetchList(start = -1, direction = 0){
+      fetchList(page = 1){
         let self = this
-        let url = API.danmulist2
+        let url = API.lesson.get_danmu_list
 
         let data = {
-          start,
-          direction,
-          count: FENYE_COUNT,
-          lesson_id: self.lessonid,
+          biz: 1,
+          resourceType: 1,
+          resourceId: this.lessonid,
+          action: 1,
+          pageNum: page,
+          pageSize: FENYE_COUNT
         }
 
         // 单次刷新
-        return request.post(url, data)
+        return request.get(url, data)
       },
       /**
        * 更新试题详情的数据
@@ -253,6 +238,8 @@
        */
       refreshDataList(isInit){
         let self = this
+
+        this.pageNum = 1
 
         // 如果已经有内容了就不要显示正在加载中了
         if (!self.dataList.length) {
@@ -270,61 +257,67 @@
          * 数据库中所有课的条目是往一张表中添加的，不是一堂课的 id 不断自增，所以不能用 id 相减
          * 的方法来判断新增了多少条条目，来查看到底从 start 处新增了多少条
          */
-        self.fetchList().then(jsonData => {
-          // 只要点击刷新按钮就去掉上方的有新弹幕的提示
-          self.isShowNewHint = false
-          
-          setTimeout(() => {
-            self.isShowBtnBox = true
-          },500)
+        self.fetchList().then(res => {
+          if(res && res.code === 0 && res.data){
+            let data = res.data
+            // 只要点击刷新按钮就去掉上方的有新弹幕的提示
+            self.isShowNewHint = false
+            
+            setTimeout(() => {
+              self.isShowBtnBox = true
+            },500)
 
-          let newList = jsonData.data.danmu_list
-          // 返回的条目的个数
-          let response_num = jsonData.data.response_num
-          // 有可能还一条都没有呢
-          let headNow = self.dataList[0] ? self.dataList[0].id : 0
-          let headIndex = newList.findIndex(item => item.id === headNow)
+            let newList = data.dataList
+            // 返回的条目的个数
+            let response_num = newList.length
+            // 有可能还一条都没有呢
+            let headNow = self.dataList[0] ? self.dataList[0].id : 0
+            let headIndex = newList.findIndex(item => item.id === headNow)
 
-          // 假如没有新条目的话，显示没有新条目的提示
-          // 无论显示提示与否，2秒后不再显示提示
-          self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
-          
-          setTimeout(() => {
-            self.isShowNoNewItem = false
-          }, 2000)
+            // 假如没有新条目的话，显示没有新条目的提示
+            // 无论显示提示与否，2秒后不再显示提示
+            self.isShowNoNewItem = !isInit && (!newList.length || newList[0].id === headNow)
+            
+            setTimeout(() => {
+              self.isShowNoNewItem = false
+            }, 2000)
 
-          self.isFetching = false
-          let isAllLoaded = self.isAllLoaded
-          if (response_num === 0) {
-            isAllLoaded = true
-          } else if (headNow === 0) {
+            self.isFetching = false
+            let isAllLoaded = self.isAllLoaded
+            if (response_num === 0) {
+              isAllLoaded = true
+            } else if (headNow === 0) {
+              self.setData({
+                dataList: newList
+              })
+
+              isAllLoaded = newList.length < FENYE_COUNT
+            } else if (~headIndex) {
+              // 包含
+              let _list = newList.slice(0, headIndex).concat(self.dataList)
+              self.setData({
+                dataList: _list
+              })
+            } else {
+              self.setData({
+                dataList: newList,
+                pageNum: ++this.pageNum
+              })
+              isAllLoaded = false
+            }
+
             self.setData({
-              dataList: newList
+              isAllLoaded,
+              pageNum: ++this.pageNum
             })
-
-            isAllLoaded = newList.length < FENYE_COUNT
-          } else if (~headIndex) {
-            // 包含
-            let _list = newList.slice(0, headIndex).concat(self.dataList)
-            self.setData({
-              dataList: _list
-            })
-          } else {
-            self.setData({
-              dataList: newList
-            })
-            isAllLoaded = false
+            // 刷新的话回顶部
+            setTimeout(() => {
+              // self.$refs.scrollTop = 0
+              const listDom = document.querySelector('.list');
+              listDom && (listDom.scrollTop = 0);
+            }, 100)
           }
-
-          self.setData({
-            isAllLoaded
-          })
-          // 刷新的话回顶部
-          setTimeout(() => {
-            // self.$refs.scrollTop = 0
-            const listDom = document.querySelector('.list');
-            listDom && (listDom.scrollTop = 0);
-          }, 100)
+          
         })
       },
       /**

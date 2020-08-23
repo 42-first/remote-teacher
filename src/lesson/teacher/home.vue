@@ -290,7 +290,16 @@
 	    self.polyfillIncludes()
 	    self.importPhotoswipe()
 	  },
-	  mixins: [switches, socketService, problemRelated],
+		mixins: [switches, socketService, problemRelated],
+		watch: {
+			'$route'(newVal){
+				if(newVal.name !== 'teacher-v3'){
+					clearInterval(pollingPresentationTagTimer)
+				}else {
+					this.pollingPresentationTag()
+				}
+			}
+		},
 	  methods: {
 			...mapActions([
 				'set_isCloneClass'

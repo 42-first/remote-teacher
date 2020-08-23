@@ -31,7 +31,7 @@
 			:class="{ 'list-wrapper-active': activeTab == 1 }"
 			>
 			<template v-if="participantList.length">
-				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
+				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div :class="['xuhao']">
 							<!--  :class="[{'star-box': index <= 2}, 'star'+ (index + 1)]" -->
@@ -39,10 +39,8 @@
 						</div>
 						<div class="alignCenter">
 							<div class="user">
-								<template v-if="item.profile">
-									<span class="user_name ellipsis-2line f17">{{item.name}}</span>
-									<span class="user_schoolnumber f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
-								</template>
+								<span class="user_name ellipsis-2line f17">{{item.name}}</span>
+								<span class="user_schoolnumber f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 							</div>
 							<div v-if="has_problems" class="score-box f14" :class="index < 2 ? 'orange' : ''">
 								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
@@ -80,7 +78,7 @@
 			:class="{ 'list-wrapper-active': activeTab == 2 }"
 		>
 			<template v-if="notParticipantList.length">
-				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.id)">
+				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div class="user">
 							<span class="name ellipsis-2line f17">{{item.name}}</span>
@@ -160,7 +158,7 @@
 				'classroomid'
       ])
 		},
-		filter: {
+		filters: {
 			formatTime(time){
 				let date = new Date(time)
 				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
@@ -266,7 +264,7 @@
 			},
 			goStudentDetail(userid){
 				this.$router.push({
-					name: 'stuexpression',
+					name: 'stuexpression_v3',
 					params: {
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid,
@@ -276,7 +274,7 @@
 			},
 			goSearch(){
 				this.$router.push({
-					name: 'search',
+					name: 'search_v3',
 					params: {
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid
