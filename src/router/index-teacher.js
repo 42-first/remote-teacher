@@ -212,8 +212,144 @@ const router = new Router({
     {
       path: '/v3/:lessonid',
       name: 'teacher-v3',
-      component: () => import('@/lesson/teacher/home')
+      component: () => import('@/lesson/teacher/home'),
+      meta,
+      children: [
+        {
+          path: '/objectiveresult/:problemid',
+          name: 'objectiveresult_v3',
+          component: () => import('@/lesson/teacher/objectiveresult'),
+          meta
+    
+        },
+        {
+          path: '/collumresult-detail/:problemid',
+          name: 'collumresult-detail_v3',
+          component: () => import('@/lesson/teacher/collumresult-detail'),
+          meta
+        },
+        {
+          path: '/fillblankresult-detail/:problemid',
+          name: 'fillblankresult-detail_v3',
+          component: () => import('@/lesson/teacher/fillblankresult-detail'),
+          meta
+        },
+        {
+          // 解决微信确认支付路径的时候，ios 取 Landing Page， Android 取 Current Page 导致微信支付合法url认定不一致的问题
+          // 微信会把 ? 后面的全给忽略掉，所以多长都不会占用路径层级了
+          // http://get.ftqq.com/8572.get
+          // path: '/redpacket?/:problemid',
+    
+          // 但是华为 p9 p10 手机却支付不了，干脆为了苹果的landing page 全都改为和landing page一样的一层路由好了，problemid 用 query 的方式传入
+          // 而且为了华为 P9 P10 要在下面 afterEach 中异步进行微信config
+          // https://github.com/vuejs/vue-router/issues/481
+          path: '/redpacketqueryproblemid',
+          name: 'redpacket_v3',
+          component: () => import('@/lesson/teacher/redpacket'),
+          meta
+        },
+        {
+          path: '/redpacketlist/:problemid',
+          name: 'redpacketlist_v3',
+          component: () => import('@/lesson/teacher/redpacketlist'),
+          meta
+        },
+        {
+          path: '/subjectiveresult/:problemid',
+          name: 'subjectiveresult_v3',
+          component: () => import('@/lesson/teacher/subjectiveresult'),
+          meta
+        },
+        {
+          // 随便加个后缀，避免刷新页面时“/member”匹配到 /:lessonid
+          path: '/member/xxx',
+          name: 'member_v3',
+          component: () => import('@/lesson/teacher/member'),
+          meta
+        },
+        {
+          path: '/randomcall/xxx',
+          name: 'randomcall_v3',
+          component: () => import('@/lesson/teacher/randomcall'),
+          meta
+        },
+        {
+          path: '/paper/xxx',
+          name: 'paper_v3',
+          component: () => import('@/lesson/teacher/paper'),
+          meta
+        },
+        {
+          path: '/paperfolder/:folderid',
+          name: 'paperfolder_v3',
+          component: () => import('@/lesson/teacher/paper-folder'),
+          meta
+        },
+        {
+          path: '/danmu/xxx',
+          name: 'danmu_v3',
+          component: () => import('@/lesson/teacher/danmu'),
+          meta
+        },
+        {
+          path: '/submission/xxx',
+          name: 'submission_v3',
+          component: () => import('@/lesson/teacher/submission'),
+          meta
+        },
+        {
+          path: '/postsubmission/:lessonID',
+          name: 'postsubmission_v3',
+          component: () => import('@/lesson/student/submission'),
+          meta
+        },
+        {
+          path: '/submission_list',
+          name: 'student-submissionlist-page_v3',
+          component: () => import('@/lesson/student/submission-list')
+        },
+        // 课堂动态设置
+        {
+          path: '/stateSet/xxx',
+          name: 'stateSet_v3',
+          component: () => import('@/lesson/teacher/stateSet'),
+          meta: {
+            keepAlive: false
+          }
+        },
+        {
+          path: '/quizresult/:quizid',
+          name: 'quizresult_v3',
+          component: () => import('@/lesson/teacher/quizresult'),
+          meta
+        },
+        {
+          path: '/quizresultdetail/:quizid',
+          name: 'quizresultdetail',
+          component: () => import('@/lesson/teacher/quizresultdetail'),
+          meta
+        },
+        {
+          path: '/boardlist/:lessonid',
+          name: 'boardlist_v3',
+          component: () => import('@/lesson/teacher/board-list'),
+          meta
+        },
+        {
+          path: '/stuexpression/:classroomid/:lessonid/:userid',
+          name: 'stuexpression_v3',
+          component: () => import('@/lesson/teacher/student_expression'),
+          meta
+        },
+        {
+          path: '/search/:classroomid/:lessonid',
+          name: 'search_v3',
+          component: () => import('@/lesson/teacher/search_student'),
+          meta
+        }
+      ]
     }
+    
   ]
 })
 

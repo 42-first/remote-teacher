@@ -32,9 +32,9 @@ export default {
       
       let current = self.current - 1
       let pptData = self.pptData
-      let problemid = pptData[current].Problem.ProblemID
+      let problemid = pptData[current].problem.problemId
 
-      problemType = pptData[current].Problem.Type
+      problemType = pptData[current].problem.problemType
       self.problemType = problemType
       if(self.isProblemPublished){
         // 查看答案
@@ -83,32 +83,33 @@ export default {
 
       let current = self.current - 1
       let pptData = self.pptData
-      let problemid = pptData[current].Problem.ProblemID
-      let limit = duration
+      let problemid = pptData[current].problem.problemId
+      let limit = +duration
 
       // 如果是正计时，timeLeft 可以为0或正数
       // 所以使用 0 判断是否时间到不能做题的话，不能让正计时时其值为0
       // 所以如果是正计时的话，将初始 timeLeft 设置为1
       let timeLeft = ~limit ? duration : 1
 
-      let postData = {
-        "lessonid": self.lessonid,
-        "presentation": self.presentationid,
-        "slideindex": self.current,
-        "problemid": problemid,
-        "limit": duration, // -1为不限时，以秒为单位，60为一分钟
-        "groupid": groupid
+      let URL = API.lesson.problem_unlock
+      let params = {
+        problemId: problemid,
+        slideIndex: self.current,
+        limit: limit
       }
-
-      request.post(API.publish_problem, postData)
-        .then(jsonData => {
-          // 打开柱状图页面
+  
+      return request.post(URL,params)
+      .then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
           if (self.isGuideDelayHidden) {
             self.showProblemResult(problemid, limit, timeLeft)
-          } else {
+          }else {
             self.goHome()
           }
-        })
+        }
+      }).catch(error => {
+      })
     },
 
     /**
@@ -127,18 +128,13 @@ export default {
       let name
 
       switch (problemType) {
-        case 'ShortAnswer':
-          name = 'subjectiveresult'
-          break;
-        // case 'FillBlank':
-        //   name = 'fillblankresult'
-        //   break;
-        // default:
-        // name = 'collumresult'
-        //   break;
-        default: 
-          name = 'objectiveresult'
-          break;
+        case 5:
+          name = 'subjectiveresult_v3'
+          break
+        case 4:
+        default:
+          name = 'objectiveresult_v3'
+          break
       }
       let to = {
         name,

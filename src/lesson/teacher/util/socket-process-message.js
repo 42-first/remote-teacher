@@ -10,8 +10,14 @@ import request from '@/util/request-v3'
 function goHome () {
   this.$store.commit('set_toolbarIndex', 0)
   this.goHome.call(this)
-  if (this.$route.name !== 'home') {
-    location.href = `/lesson/teacher/${window.LESSONID}`
+  if (this.$route.name.indexOf('v3') !== -1) {
+    if (this.$route.name !== 'teacher-v3') {
+      location.href = `/lesson/teacher/v3/${window.LESSONID}`
+    }
+  } else {
+    if (this.$route.name !== 'home') {
+      location.href = `/lesson/teacher/${window.LESSONID}`
+    }
   }
 }
 
@@ -120,10 +126,18 @@ function socketProcessMessage(msg){
 
     // TODO 初次联通，node有时会丢失msg.presentation
     // 有可能中间换课件，这时不要显示老的课件
-    if (self.presentationid !== +msg.presentation) {
-      self.$store.commit('set_pptData', [])
+    if(this.$route.name.indexOf('v3') == -1){
+      if (self.presentationid !== +msg.presentation) {
+        self.$store.commit('set_pptData', [])
+      }
+      self.$store.commit('set_presentationid', +msg.presentation)
+    }else {
+      if (self.presentationid !== msg.presentation) {
+        self.$store.commit('set_pptData', [])
+      }
+      self.$store.commit('set_presentationid', msg.presentation)
     }
-    self.$store.commit('set_presentationid', +msg.presentation)
+    
     // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     self.$store.commit('set_isToastCtrlMaskHidden', true)
 

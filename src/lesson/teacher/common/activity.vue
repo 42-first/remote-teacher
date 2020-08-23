@@ -7,7 +7,7 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <div class="head-link-wrap">
-        <router-link tag="div" :to="{name: 'member', query: {count: studentCount}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+        <router-link tag="div" :to="{name: 'member_v3', query: {count: studentCounts}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
           <div class="avatar-box">
             <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           </div>
@@ -22,7 +22,7 @@
       </div>
       
     </section>
-    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -33,7 +33,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link tag="div" :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
+    <router-link tag="div" :to="{name: 'danmu_v3'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -45,7 +45,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+    <router-link :to="{name: 'submission_v3'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -96,7 +96,6 @@
       return {
         participantList: [],
         participant_count: 0,
-        studentCount: 0
       }
     },
     computed: {
@@ -111,19 +110,21 @@
         'classroomid',
         'toolbarIndex',
 				'notParticipantList',
-        'isCloneClass'
+        'isCloneClass',
+        'studentCounts'
       ])
     },
     components: {
       Toolbar,
     },
+    watch: {
+      coursename (newVal) {
+        // 以防刷新后请求签到列表无权限
+        this.fetchParticipantList()
+      }
+    },
     created () {
-      let self = this
-      // 点击 课堂动态 按钮 父组件发送事件给本子组件，获取学生名单、投稿数等
-      // self.$on('Activity', function () {
-      //   self.fetchParticipantList()
-      // });
-      // 点击学生头像进入签到列表，返回的时候需要重新请求数据，干脆直接初始化的时候就请求
+      let self = this;
       this.fetchParticipantList();
     },
     methods: {
@@ -133,16 +134,25 @@
        */
       fetchParticipantList () {
         let self = this
-        let url = `${API.teaching_lesson_participant_count}/${self.lessonid}`;
-        request.get(url)
-          .then(jsonData => {
-            // self.$store.commit('set_participantList', jsonData.data.students)
-            const data = jsonData.data;
-            console.log(data)
-            this.participant_count = data.participant_count || 0;
-            this.participantList = data.avatars || [];
-            this.studentCount = data.students_count || 0
-          })
+        let URL = API.lesson.get_checkin_list
+        let params = {
+          page_size: 10,
+          current_page: 1
+        }
+        
+        return request.get(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let jsonData = res.data;
+            let avatars = jsonData.items.map((item) => {
+              return item.avatar
+            }).splice(0, 10)
+            this.participant_count = jsonData.totalNum || 0;
+            this.participantList = avatars || [];
+          }
+        }).catch(err => {
+
+        })
       },
       /**
        * 点击 遥控器 按钮

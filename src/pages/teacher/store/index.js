@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     courseid: '',                           // 课程id 以 八>了 班为例，是 八 的id
     classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
     coursename: '',                         // 课程名称 以 八>了 班为例，是 八
+    studentCounts: 0,                       // 班级人数
     socket: null,                           // 全局 Websocket 实例对象
     lessonid: 0,
     presentationid: 0,
@@ -87,6 +88,10 @@ const store = new Vuex.Store({
     set_coursename (state, coursename) {
       state.coursename = coursename
     },
+    set_studentCounts (state, count) {
+      state.studentCounts = count
+    },
+
     set_socket: (state, socket) => {
       state.socket = socket
     },
@@ -227,6 +232,7 @@ const store = new Vuex.Store({
       commit('set_courseid', payload.course.courseid)
       commit('set_classroomid', payload.classroom.classroomid)
       commit('set_coursename', payload.course.coursename)
+      payload.classroom.count && commit('set_studentCounts', payload.classroom.count)
 
       window.USERID = payload.user.user_id
     },
@@ -238,6 +244,7 @@ const store = new Vuex.Store({
       commit('set_courseid', '')
       commit('set_classroomid', '')
       commit('set_coursename', '')
+      commit('set_studentCounts', 0)
 
       // 在 socket-process-message.js 中第 104 行根据 msg.slideindex !== 0 再重新设置
       commit('set_isBrandNewPpt', true)

@@ -31,18 +31,6 @@
 			:class="{ 'list-wrapper-active': activeTab == 1 }"
 			>
 			<template v-if="participantList.length">
-				<!-- <div class="order-box">
-					<v-touch class="title f14" v-on:tap="openOrder">
-						{{orderType === 1 ? $t('behavior.dfygdd') : (orderType === 2 ? $t('behavior.dfyddg') : (orderType === 3 ? $t('behavior.qdsjpx') : $t('behavior.studentId')))}}
-						<div :class="['sanjiao', {'sanjiao-rev': isOrderOpen}]"></div>
-					</v-touch>
-					<ul class="choose-list" v-show="isOrderOpen">
-						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 1}]" v-on:tap="setOrder(1)">{{ $t('behavior.dfygdd') }}</v-touch>
-						<v-touch v-if="has_problems" tag="li" :class="['choose-item f15', {'active': orderType === 2}]" v-on:tap="setOrder(2)">{{ $t('behavior.dfyddg') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 3}]" v-on:tap="setOrder(3)">{{ $t('behavior.qdsjpx') }}</v-touch>
-						<v-touch tag="li" :class="['choose-item f15', {'active': orderType === 4}]" v-on:tap="setOrder(4)">{{ $t('behavior.studentId') }}</v-touch>
-					</ul>
-				</div> -->
 				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div :class="['xuhao']">
@@ -52,8 +40,8 @@
 						<div class="alignCenter">
 							<div class="user">
 								<template v-if="item.profile">
-									<span class="user_name ellipsis-2line f17">{{item.profile.name}}</span>
-									<span class="user_schoolnumber f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+									<span class="user_name ellipsis-2line f17">{{item.name}}</span>
+									<span class="user_schoolnumber f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 								</template>
 							</div>
 							<div v-if="has_problems" class="score-box f14" :class="index < 2 ? 'orange' : ''">
@@ -61,7 +49,7 @@
 							</div>
 							<div class="time-box f14">
 								<template v-if="item.attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</template>
-								<template v-else>{{item.time}}</template>
+								<template v-else>{{item.participate | formatTime}}</template>
 								<i class="iconfont icon-jinrucopy f25"></i>
 							</div>
 						</div>
@@ -95,8 +83,8 @@
 				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.id)">
 					<div class="info-box">
 						<div class="user">
-							<span class="name ellipsis-2line f17">{{item.profile.name}}</span>
-							<span class="stuid f14">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+							<span class="name ellipsis-2line f17">{{item.name}}</span>
+							<span class="stuid f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 						</div>
 						<div class="time-box f14">
 							<template v-if="item.attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</template>
@@ -151,9 +139,10 @@
 				signLoaded: !1, // 已签到数据是否已经拉取完
 				signNoLoaded: !1, // 未签到数据是否已经拉取完
 				signedPage: 1,    // 已签到页
-				notSignedPage: 1, // 未签到页
+				notSignedPage: 0, // 未签到页
 				participantList: [], // 签到列表
 				notParticipantList: [], // 未签到列表
+				memberNo_all: [], 	// 未签到不分页 前端自己分页
 				// 签到人数
 				partTotal: 0,
 				// 未签到人数
@@ -171,6 +160,14 @@
 				'classroomid'
       ])
 		},
+		filter: {
+			formatTime(time){
+				let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
+			}
+		},
 		mounted() {
 		},
     created () {
@@ -184,62 +181,41 @@
        *
        */
       fetchList (page = 1) {
-        let self = this
-
-        let url = API.teaching_lesson_participant_list + '/' + self.lessonid
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.teaching_lesson_participant_list + '/' + self.lessonid
-        }
-
-        request.get(url, {
-					// sort_type,
-					'classroomid': self.classroomid,
-					page,
+				let self = this
+				let URL = API.lesson.get_checkin_list
+				let params = {
 					page_size: 20,
-					uuid_code: this.uuidSign
-				}).then(jsonData => {
-						self.has_problems = jsonData.data.has_problems
-						self.has_unscored_subj = jsonData.data.has_unscored_subj
-						self.fetchListHandle(jsonData.data);
-						self.signedPage = page + 1
-						// self.orderType = jsonData.data.has_problems && sort_type == 1 ? 1 : (!jsonData.data.has_problems && sort_type == 1 ? 3 : sort_type)
-						// if(sort_type == 1){
-						// 	self.oData[1] = jsonData.data.students
-						// 	self.oData[1].forEach((item, index) => {
-						// 		item.index = index + 1
-						// 	})
-						// 	self.participantList = self.oData[1]
-							
-						// }else if(sort_type == 3) {
-						// 	this.oData[3] = jsonData.data.students
-						// 	self.oData[3].forEach((item, index) => {
-						// 		item.index = index + 1
-						// 	})
-            // 	self.participantList = this.oData[3]
-						// }else {
-						// 	this.oData[4] = jsonData.data.students
-						// 	self.oData[4].forEach((item, index) => {
-						// 		item.index = index + 1
-						// 	})
-            // 	self.participantList = this.oData[4]
-						// }
-          })
+					current_page: this.signedPage
+				}
+				// 获取班级签到列表
+				return request.get(URL,params)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						
+						self.fetchListHandle(res.data)
+						self.signedPage++
+					}
+				}).catch(error => {
+					console.log('fetchListError:' + error);
+					
+				})
 			},
-			fetchListHandle(jsonData, type = 0) {
-				let list = jsonData.students || [];
-				const total = jsonData.total - 0 || 0;
-				if (!type) {
-					this.participantList = this.participantList.concat(list);
+			fetchListHandle(jsonData, type = 0, index) {
+				if(!type){
+					const total = jsonData.totalNum || 0;
+					let list = jsonData.items || [];
+					this.participantList = this.participantList.concat(list)
 					this.signLoaded = list.length === 0 || this.participantList.length >= total;
-					this.uuidSign = jsonData.uuid_code
 					this.partTotal = total;
-				} else {
+				}else {
+					let list = this.memberNo_all[index]
+					let total = this.studentCount - this.partTotal
 					this.notParticipantList = this.notParticipantList.concat(list);
-					this.signNoLoaded = list.length === 0 || this.notParticipantList.length >= total;
-					this.uuidNotSign = jsonData.uuid_code;
+					this.signNoLoaded = index === this.memberNo_all.length - 1 || this.notParticipantList.length >= total;
 					this.notPartTotal = total;
 				}
+				
+				
 			},
 
 			/**
@@ -247,23 +223,22 @@
        *
        */
       not_participant_list(page = 1) {
-        let self = this
-        let url = API.lesson_not_participant_list
-        if (process.env.NODE_ENV === 'production') {
-          url = API.lesson_not_participant_list
-        }
-
-        request.get(url,{
-					'classroomid': self.classroomid,
-					'lesson_id': self.lessonid,
-					page,
-					page_size: 20,
-					uuid_code: this.uuidNotSign
-					})
-          .then(jsonData => {
-						self.fetchListHandle(jsonData.data, 1);
-						self.notSignedPage = page+1;
-          })
+				let self  = this
+				let URL = API.lesson.get_uncheckin_list
+				
+				return request.get(URL)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						let len = res.data.items.length
+						let page = len > 20 ? Math.floor(res.data.items.length / 20) : 1
+						let memberNo_all = []
+						for(let i = 0; i < page; i++){
+							memberNo_all.push(res.data.items.slice(i, 20*(i+1) - 1))
+						}
+						this.memberNo_all = memberNo_all
+						this.fetchListHandle(res.data, 1, this.notSignedPage)
+					}
+				})	
 			},
 			loadBottom() {
 				if (!this.timer) {
@@ -272,7 +247,8 @@
 						if (this.activeTab === 1) {
 							!this.signLoaded &&  this.fetchList(this.signedPage)
 						} else {
-							!this.signNoLoaded && this.not_participant_list(this.notSignedPage)
+							++this.notSignedPage
+							!this.signNoLoaded && this.fetchListHandle({}, 1, this.notSignedPage)
 						}
 					}, 800);
 				}
@@ -287,33 +263,6 @@
         if (type != self.activeTab) {
 					self.activeTab = type;
 				}
-			},
-			/**  
-			 * 
-			*/
-			setOrder(orderType){
-				let self = this
-				if (orderType === 3) {
-					let data3 = this.oData[3]
-					data3 ? (this.participantList = data3) : this.fetchList(3)
-				} else if(orderType !== 4){
-					orderType === 1 && (this.participantList = this.oData[1])
-					orderType === 2 && (this.participantList = this.oData[1].filter(() => true).reverse())
-				}else {
-					let data4 = this.oData[4]
-					data4 ? (this.participantList = data4) : this.fetchList(4)
-				}
-
-				this.orderType = orderType
-				setTimeout(() => {
-					self.isOrderOpen = false
-				}, 100)
-
-				
-			},
-			openOrder(){
-				// if(!this.has_problems) return false
-				this.isOrderOpen = !this.isOrderOpen
 			},
 			goStudentDetail(userid){
 				this.$router.push({

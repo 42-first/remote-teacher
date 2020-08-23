@@ -123,6 +123,7 @@
 				</div>
 			</div>
 		</div>
+		<router-view class="subContainer"></router-view>
   </div>
 </template>
 
@@ -427,7 +428,8 @@
 				
 				let data = {
 					classroom: {
-						classroomid: basic.classroomId
+						classroomid: basic.classroomId,
+						count: classroom.count
 					},
 					course: {
 						coursename: classroom.courseName,
@@ -508,22 +510,6 @@
 				})
 			},
 	    /**
-	     * 获取用户数据
-	     *
-	     */
-	    fetchUserInfo () {
-	      let self = this
-	      let url = API.userinfo
-	      return request.get(url, {'lesson_id': self.lessonid})
-				.then(jsonData => {
-					window.USERID = jsonData.data.user.user_id
-					self.$store.dispatch('saveUserInfo', jsonData.data)
-				})
-				.catch(() => {
-					console.error('获取用户信息失败')
-				})
-	    },
-	    /**
 	     * 获取ppt数据
 	     *
 	     */
@@ -583,7 +569,7 @@
 
 	      pptData.forEach((item, index) => {
 	        // idIndexMap[item.lessonSlideID] = item.Index
-	        idIndexMap[item.lessonSlideID] = index + 1
+	        idIndexMap[item.id] = index + 1
 	      })
 
 	      self.setData({
@@ -1072,4 +1058,11 @@
   .allLoaded .mint-loadmore-bottom {
     display: none;
   }
+	.subContainer {
+		position: absolute !important;
+		width: 100%;
+		top: 0;
+		left: 0;
+		z-index: 102;
+	}
 </style>

@@ -117,7 +117,7 @@
 
   import request from '@/util/request-v3'
   import API from '@/util/api'
-  import analysismixin from '@/components/common/analysis-mixin'
+  import analysismixin from '@/lesson/common/analysis-mixin'
 
   export default {
     name: 'FillblankresultDetail',
@@ -163,7 +163,7 @@
       init() {
         let self = this
 
-        self.problemid = +self.$route.params.problemid
+        self.problemid = self.$route.params.problemid
         self.refreshProblemResultDetail()
 
         this.getProlemById(this.problemid);
