@@ -12,25 +12,6 @@ import { isSupported } from '@/util/util'
 var exerciseMixin = {
   methods: {
     /*
-    * @method 保存习题答案
-    * @param
-    */
-    saveAnswer(data) {
-      let key = 'answer_problem';
-
-      if(isSupported(localStorage)) {
-        let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
-
-        data.retry_times = data.retry_times + 1;
-        answerPostList.push(data);
-
-        let value = JSON.stringify(answerPostList);
-
-        localStorage.setItem(key, value);
-      }
-    },
-
-    /*
     * @method 读取答案
     * @param
     */
@@ -69,7 +50,7 @@ var exerciseMixin = {
         isComplete: true
       })
 
-      problem['Problem']['Result'] = data['result'];
+      problem['problem']['result'] = data['result'];
       this.problemMap.set(problemID, problem);
 
       this.addMessage({ type: 1, message: this.$i18n.t('autosubmittip', { index: card.pageIndex }), time: +new Date() });
@@ -82,44 +63,35 @@ var exerciseMixin = {
     autoSendAnswers() {
       let self = this;
       let key = 'answer_problem';
-      let URL = API.student.RETRY_ANSWER_LESSON_PROBLEM;
+      let URL = API.lesson.retry_answer_problem;
       let answerPostList = this.getAnswer(key);
 
       if(answerPostList && answerPostList.length ) {
         let param = [];
         answerPostList.forEach((item) => {
-          param.push({
-            'lesson_problem_id': item['lesson_problem_id'],
-            'submit_time': item['submit_time'],
-            'result': item['result'],
-            'retry_times': item['retry_times']
-          });
+          params.push(item)
         })
 
-        return request.post(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-              let problemAnswers =  data.problem_answers;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            let successList = res.data.success;
+            if(successList) {
+              successList.forEach((pid)=>{
+                let problem = params.find((item)=>{
+                  return item.problemId === pid;
+                })
 
-              problemAnswers.forEach((answer, index) => {
-                if(answer['status_code'] === 0) {
-                  let problemID = answer['lesson_problem_id'];
-                  self.setProblemStatus(problemID, param[index]);
-                }
-              });
+                problem && this.setProblemStatus(pid, problem);
+              })
 
-              self.removeAnswer(key);
-
-              return problemAnswers;
+              this.removeAnswer(key);
             }
-          })
-          .catch(error => {
-            // self.removeAnswer(key);
-            // Raven && Raven.captureMessage("习题提交失败:" + error);
-          });
-      } else {
-        return this;
+          }
+        }).
+        catch(error => {
+          console.log('autoSendAnswers:', error);
+        })
       }
     }
   }

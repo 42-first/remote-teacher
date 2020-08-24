@@ -220,7 +220,7 @@ let lessonMixin = {
     checkin(source = 1, code) {
       let URL = API.lesson.checkin;
       let params = {
-        'source': source
+        'source': +source
       };
 
       if(code) {

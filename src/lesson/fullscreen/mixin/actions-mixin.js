@@ -226,7 +226,7 @@ let actionsMixin = {
 
       // 是否含有重复数据
       let hasPPT = this.cards.find((item)=>{
-        return item.type === 2 && item.slideID === slideData.lessonSlideID && item.presentationid === data.presentationid;
+        return item.type === 2 && item.slideID === slideData.id && item.presentationid === data.presentationid;
       })
 
       // 如果是习题图片，则不添加 ppt图片加载

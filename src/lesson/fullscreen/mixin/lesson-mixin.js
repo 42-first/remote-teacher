@@ -156,6 +156,11 @@ var commandMixin = {
       setTimeout(() => {
         this.initws();
       }, 20)
+
+      // 课程基本信息
+      this.setLesson({
+        lessonID: id
+      })
     },
 
     /**
@@ -323,7 +328,7 @@ var commandMixin = {
     checkin(source = 1, code) {
       let URL = API.lesson.checkin;
       let params = {
-        'source': source
+        'source': +source
       };
 
       if(code) {
