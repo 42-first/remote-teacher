@@ -364,6 +364,9 @@ router.beforeEach((to, from, next) => {
   if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) && to.name.indexOf('v3') == -1) {
     next({name: 'home', params: {lessonid: STORE.state.lessonid}})
     return;
+  }else if(!from.name && to.name !== 'teacher-v3'){
+    next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
+    return;
   }
   // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
   if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
