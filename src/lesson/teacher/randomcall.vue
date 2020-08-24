@@ -1,7 +1,7 @@
 <!-- 随机点名页 -->
 <template>
 	<div class="random-roll-box">
-    <slot name="ykt-msg"></slot>
+
     <div class="returnLesson f18" v-if="calledlist.length || nowchosen.name" @click="returnLesson">
       <!-- 继续上课 -->{{$t('behavior.backtoclass')}}
       <i class="iconfont icon-dakai f16"></i>

@@ -1,7 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="submission-box">
-    <slot name="ykt-msg"></slot>
+
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
 
     <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('recvpost') }}</v-touch>
@@ -27,7 +27,7 @@
 
         <section class="list">
 
-          <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.id">
+          <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.tougaoId">
             <div class="item">
               <div class="detail">
                 <div class="cont f18">
@@ -53,7 +53,7 @@
                         </span>
                     </span>
                   </div>
-                  <v-touch :id="'pic' + item.id" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
+                  <v-touch :id="'pic' + item.tougaoId" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
                   <!-- 视频展示 -->
                   <div class="video__preview" v-if="item.video && item.video.url">
                     <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
@@ -61,29 +61,29 @@
                 </div>
               </div>
               <div class="action-box">
-                <div class="time f15">{{item.create_time.substring(11)}}</div>
+                <div class="time f15">{{item.createTime | formatTime}}</div>
                 <div class="action f15">
                   <!-- 投屏的时候不显示收藏状态 -->
-                  <v-touch class="coll gray" v-show="item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 0)">
+                  <v-touch class="coll gray" v-show="item.collected && postingSubmissionid !== item.tougaoId" v-on:tap="collectSubmission(item.tougaoId, index, 0)">
                     <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
                     {{ $t('stared') }}
                   </v-touch>
-                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.is_collect && postingSubmissionid !== item.id" v-on:tap="collectSubmission(item.id, index, 1)">
+                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.collected && postingSubmissionid !== item.tougaoId" v-on:tap="collectSubmission(item.tougaoId, index, 1)">
                     <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
                     {{ $t('star') }}
                   </v-touch>
 
-                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.id" v-on:tap="postSubmission(item.id)">
+                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== item.tougaoId" v-on:tap="postSubmission(item.tougaoId)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     {{ $t('screenmode') }}
                   </v-touch>
-                  <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postingSubmissionid === item.id && !postingSubmissionSent" v-on:tap="fsqbHander(item.id)">
+                  <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postingSubmissionid === item.tougaoId && !postingSubmissionSent" v-on:tap="fsqbHander(item.tougaoId)">
                     {{ $t('postpublic') }}
                   </v-touch>
-                  <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === item.id && postingSubmissionSent">
+                  <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === item.tougaoId && postingSubmissionSent">
                     {{ $t('postpubliced') }}
                   </div>
-                  <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubmissionid === item.id" v-on:tap="closeSubmissionmask">
+                  <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubmissionid === item.tougaoId" v-on:tap="closeSubmissionmask">
                     <span class="fsqb-innerline"></span>
                     {{ $t('screenmodeoff') }}
                   </v-touch>
@@ -128,11 +128,11 @@
 
   import Loadmore from 'mint-ui/lib/loadmore'
   import Scale from './common/scale'
-  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
-  import groupList from '@/components/common/groupMembers/group-list.vue'
-  import imgGroup from '@/components/common/groupMembers/img-group.vue'
+  import hideSomeInfo from './common/hideSomeInfo'
+  import groupList from '@/lesson/common/groupMembers/group-list.vue'
+  import imgGroup from '@/lesson/common/groupMembers/img-group.vue'
 
-  let FENYE_COUNT = 10
+  let FENYE_COUNT = 5
 
   let WH = window.innerWidth/window.innerHeight
   let pollingTimer = null
@@ -219,6 +219,12 @@
         let sCss = `width: ${width}rem; height: ${height}rem;`;
 
         return sCss;
+      },
+      formatTime(time){
+        let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
       }
     },
     methods: {
@@ -279,7 +285,7 @@
         self.fetchList(tailNow).then(res => {
           if(res && res.code === 0 && res.data){
             // response_num 当前请求返回的投稿数量
-            if (res.data.response_num === 0) {
+            if (res.data.responseNum === 0) {
               self.isAllLoaded = true
               return
             }
@@ -379,10 +385,10 @@
 
             let newList = data.items
             // 返回的条目的个数
-            let response_num = data.response_num
+            let response_num = data.responseNum
             // 有可能还一条都没有呢
             let headNow = self.dataList[0] ? self.dataList[0].id : 0
-            let headIndex = newList.findIndex(item => item.id === headNow)
+            let headIndex = newList.findIndex(item => item.tougaoId === headNow)
 
             // 假如没有新条目的话，显示没有新条目的提示
             // 无论显示提示与否，2秒后不再显示提示
@@ -456,7 +462,7 @@
         },800)
 
         let info = this.dataList.find((item)=>{
-          return item.id === submissionid;
+          return item.tougaoId === submissionid;
         })
 
         let addinversion = Number(this.addinversion)
@@ -466,29 +472,23 @@
           let message = this.$i18n.t('tougaowarn');
           this.$messagebox.alert(message, title)
         }
-
-        let url = API.tougaostatus
-
+        let URL = API.lesson.share_tougao
         let postData = {
-          'lesson_id': self.lessonid,
-          'tougao_id': submissionid,
-          // 'hide': self.isHideName
+          'tougaoId': submissionid
         }
-        request.post(url, postData)
-          .then(jsonData => {
-            // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            // clearTimeout(postingTimer)
-            // self.isAskingItemStatus = false
-            if (jsonData.data.is_deleted) {
+        return request.post(URL,postData)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            if (res.data.deleted){
               self.isItemDeleted = true
               setTimeout(() => {
                 self.isItemDeleted = false
               }, 1000)
             }
-          })
-          .catch(() => {
-            self.isAskingItemStatus = false
-          })
+          }
+        }).catch(() => {
+          self.isAskingItemStatus = false
+        })
       },
       /**
        * 退出投稿投屏蒙版
@@ -533,19 +533,28 @@
        */
       collectSubmission (submissionid, index, status) {
         let self = this
-        let url = status ? API.collectsubmission : API.collectsubmission_cancel
+        let URL = API.lesson.post_tag
 
-        let postData = {
-          'tougao_id': submissionid
-        }
+        let action = status ? 0 : 1
 
-        request.post(url, postData)
-          .then(jsonData => {
-            // 不需要判断success，在request模块中判断如果success为false，会直接reject
-            self.dataList[index].is_collect = !!status
-          })
-      },
-      /**
+        let params = {
+          'type': 1,
+          'action': action,
+          'objId': submissionid,
+          'objType': 2,
+        };
+
+        request.post( URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            self.dataList[index].collected = !!status
+          }
+        }).
+        catch(error => {
+          console.log('collectSubmission:', error);
+        })
+        },
+        /**
        * 显示大图，使用 PhotoSwipe
        *
        * @event bindtap
@@ -615,10 +624,10 @@
           if (!e.is_group) {
             e = Object.assign(e, {
               team_info: {
-                team_name: e.user_name,
+                team_name: e.userName,
                 members: [
                   {
-                    avatar: e.user_avatar
+                    avatar: e.userAvatar
                   }
                 ]
               }

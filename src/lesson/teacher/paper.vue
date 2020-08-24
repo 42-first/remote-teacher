@@ -1,7 +1,7 @@
 <!-- 试卷列表 -->
 <template>
 	<div class="paper-box">
-    <slot name="ykt-msg"></slot>
+    
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">

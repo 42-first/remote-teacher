@@ -1,7 +1,7 @@
 <!--发题选择时间面板 被父组件 home.vue 引用-->
 <template>
 	<div class="rc-mask">
-		<template v-if="!['FillBlank', 'ShortAnswer'].includes(problemType)">
+		<template v-if="![4, 5].includes(problemType)">
 			<section class="problemtime-box">
 	      <div class="block">
 	      	<div class="btn-box">
@@ -19,22 +19,22 @@
 		</template>
 		<template v-else>
 			<section class="problemtime-box shortanswer-mask">
-				<div class="tab-box" v-show="!isYanshi && problemType !== 'FillBlank'">
+				<!-- <div class="tab-box" v-show="!isYanshi && problemType !== 'FillBlank'">
 	        <v-touch :class="['tab','f14', activeTab == 1 ? 'active' : '']" v-on:tap="toggleTab(1)">{{$t('team.answertype_person')}}</v-touch>
 	        <v-touch :class="['tab','f14', activeTab == 2 ? 'active' : '']" v-on:tap="toggleTab(2)">{{$t('team.answertype_group')}}</v-touch>
-	      </div>
-	      <div class="teams-info" v-if="activeTab == 2">
+	      </div> -->
+	      <!-- <div class="teams-info" v-if="activeTab == 2">
 	        <template v-if="teams.length">
 	          <v-touch class="choose-team" v-on:tap="handlepicker">
-							<p class="f17"><!-- 选择小组 -->{{$t('select_group')}}</p>
+							<p class="f17">选择小组{{$t('select_group')}}</p>
 	            <p class="team-name f18">{{selectTeam ? teams[selectIndex].value : $t('select')}}<i class="iconfont icon-dakai f20"></i></p>
 	          </v-touch>
 	        </template>
 	        <template v-else>
-	          <v-touch class="create-team noteams f17" v-on:tap="handleCreatGroup"><!-- 创建分组 -->{{$t('team.creategroup')}}</v-touch>
-	          <p class="f15 noteamtips"><!-- 暂无分组，可将学生分组以小组形式作答 -->{{$t('team.nogroup')}}</p>
+	          <v-touch class="create-team noteams f17" v-on:tap="handleCreatGroup">创建分组{{$t('team.creategroup')}}</v-touch>
+	          <p class="f15 noteamtips">暂无分组，可将学生分组以小组形式作答{{$t('team.nogroup')}}</p>
 	        </template>
-	      </div>
+	      </div> -->
 	      <div class="block" :class="{'personal': activeTab == 1, 'hasteams': activeTab == 2 && !isYanshi , 'isYanshi': isYanshi}">
 	      	<div class="btn-box f17">
 						<v-touch class="btn f17" :class="sendTime == 120 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(120)">2{{ $t('min') }}</v-touch>
@@ -132,7 +132,7 @@
 
 	  },
 		mounted() {
-			this.getGroupList();
+			// this.getGroupList();
 		},
 	  methods: {
 			/**

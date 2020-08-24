@@ -1,7 +1,7 @@
 <!-- 全部人员名单 -->
 <template>
 	<div class="member-box" id="member-box">
-    <slot name="ykt-msg"></slot>
+
     <!-- <div class="desc f18">
       {{ $t('totalstudent') }}<span class="f24">{{participantList.length}}</span> {{ $t('ren') }}
     </div> -->

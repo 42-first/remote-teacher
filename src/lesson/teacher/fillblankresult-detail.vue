@@ -1,7 +1,7 @@
 <!--填空题题作答详情面板 -->
 <template>
   <div class="problemresultdetail-box">
-    <slot name="ykt-msg"></slot>
+
     <template v-if="problemResultDetailData">
 
       <!-- <div class="tab">

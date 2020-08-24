@@ -1,7 +1,6 @@
 <!-- 弹幕控制页面 -->
 <template>
 	<div class="danmu-box">
-    <slot name="ykt-msg"></slot>
     <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
       <div class="left">
@@ -34,7 +33,7 @@
       <div class="item-with-gap" v-for="(item, index) in dataList" :key="index">
         <div class="item">
           <div class="detail">
-            <img :src="item.user_avatar_46" alt="">
+            <img :src="item.avatar" alt="">
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
@@ -262,6 +261,8 @@
             let data = res.data
             // 只要点击刷新按钮就去掉上方的有新弹幕的提示
             self.isShowNewHint = false
+
+            self.pageNum = ++this.pageNum
             
             setTimeout(() => {
               self.isShowBtnBox = true
@@ -300,15 +301,13 @@
               })
             } else {
               self.setData({
-                dataList: newList,
-                pageNum: ++this.pageNum
+                dataList: newList
               })
               isAllLoaded = false
             }
 
             self.setData({
-              isAllLoaded,
-              pageNum: ++this.pageNum
+              isAllLoaded
             })
             // 刷新的话回顶部
             setTimeout(() => {

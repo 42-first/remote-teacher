@@ -1,7 +1,7 @@
 <!-- 试卷列表 -->
 <template>
 	<div class="paper-box">
-    <slot name="ykt-msg"></slot>
+   
     
     <div>
       <!-- 试卷文件夹 -->

@@ -1,7 +1,6 @@
 <!--试题柱状图页-->
 <template>
 	<div class="problem-root">
-		<slot name="ykt-msg"></slot>
 		<!-- 教师遥控器引导查看答案、续时 -->
     <!-- <GuideDelay
       v-show="!isGuideDelayHidden"
@@ -10,19 +9,18 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
-			<Rolex
-        :limit="limit"
-        :newTime="newTime"
-        :durationLeft="durationLeft"
-        :total="total"
-        :members="members"
-				:problemid="problemid"
-				:isTouping="isTouping"
-				:problemtype="problemType"
-				@showresult = "showresult"
-        @yanshi="yanshi"
-        @shouti="shouti"
-      ></Rolex>
+			<section class="upper">
+				<Rolex
+					:limit="limit"
+					:newTime="newTime"
+					:durationLeft="durationLeft"
+					:problemid="problemid"
+					@yanshi="yanshi"
+					@shouti="shouti"
+				></Rolex>
+				<hide-some-info :isUserInfo="false" :problemtype="problemType" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
+			</section>
+			
       <!-- 填空题条形图 -->
       <template v-if="problemType === 4">
         <FillblankBox class="FillblankBox"
@@ -181,7 +179,8 @@
 			GuideDelay,
       FillblankBox,
       CollumBox,
-			Rolex
+			Rolex,
+			hideSomeInfo
 	  },
 	  created(){
 	  	this.init()
@@ -689,9 +688,6 @@
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
 			},
-			showresult(e) {
-				this.showAnswer = !!e
-			},
 
       /**
        * method 读取问题详情
@@ -747,6 +743,13 @@
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
+
+		.upper {
+			margin: 0 auto;
+			width: 9.7rem;
+			height: 4.0rem;
+			padding-top: 0.8rem; 
+		}
 
 	  /* 调整中间条形头的高度 */
 		.FillblankBox {

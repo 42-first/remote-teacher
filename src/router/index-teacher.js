@@ -216,20 +216,20 @@ const router = new Router({
       meta,
       children: [
         {
-          path: '/objectiveresult/:problemid',
+          path: 'objectiveresult/:problemid',
           name: 'objectiveresult_v3',
           component: () => import('@/lesson/teacher/objectiveresult'),
           meta
     
         },
         {
-          path: '/collumresult-detail/:problemid',
+          path: 'collumresult-detail/:problemid',
           name: 'collumresult-detail_v3',
           component: () => import('@/lesson/teacher/collumresult-detail'),
           meta
         },
         {
-          path: '/fillblankresult-detail/:problemid',
+          path: 'fillblankresult-detail/:problemid',
           name: 'fillblankresult-detail_v3',
           component: () => import('@/lesson/teacher/fillblankresult-detail'),
           meta
@@ -243,74 +243,74 @@ const router = new Router({
           // 但是华为 p9 p10 手机却支付不了，干脆为了苹果的landing page 全都改为和landing page一样的一层路由好了，problemid 用 query 的方式传入
           // 而且为了华为 P9 P10 要在下面 afterEach 中异步进行微信config
           // https://github.com/vuejs/vue-router/issues/481
-          path: '/redpacketqueryproblemid',
+          path: 'redpacketqueryproblemid',
           name: 'redpacket_v3',
           component: () => import('@/lesson/teacher/redpacket'),
           meta
         },
         {
-          path: '/redpacketlist/:problemid',
+          path: 'redpacketlist/:problemid',
           name: 'redpacketlist_v3',
           component: () => import('@/lesson/teacher/redpacketlist'),
           meta
         },
         {
-          path: '/subjectiveresult/:problemid',
+          path: 'subjectiveresult/:problemid',
           name: 'subjectiveresult_v3',
           component: () => import('@/lesson/teacher/subjectiveresult'),
           meta
         },
         {
           // 随便加个后缀，避免刷新页面时“/member”匹配到 /:lessonid
-          path: '/member/xxx',
+          path: 'member/xxx',
           name: 'member_v3',
           component: () => import('@/lesson/teacher/member'),
           meta
         },
         {
-          path: '/randomcall/xxx',
+          path: 'randomcall/xxx',
           name: 'randomcall_v3',
           component: () => import('@/lesson/teacher/randomcall'),
           meta
         },
         {
-          path: '/paper/xxx',
+          path: 'paper/xxx',
           name: 'paper_v3',
           component: () => import('@/lesson/teacher/paper'),
           meta
         },
         {
-          path: '/paperfolder/:folderid',
+          path: 'paperfolder/:folderid',
           name: 'paperfolder_v3',
           component: () => import('@/lesson/teacher/paper-folder'),
           meta
         },
         {
-          path: '/danmu/xxx',
+          path: 'danmu/xxx',
           name: 'danmu_v3',
           component: () => import('@/lesson/teacher/danmu'),
           meta
         },
         {
-          path: '/submission/xxx',
+          path: 'submission/xxx',
           name: 'submission_v3',
           component: () => import('@/lesson/teacher/submission'),
           meta
         },
         {
-          path: '/postsubmission/:lessonID',
+          path: 'postsubmission/:lessonID',
           name: 'postsubmission_v3',
           component: () => import('@/lesson/student/submission'),
           meta
         },
         {
-          path: '/submission_list',
+          path: 'submission_list',
           name: 'student-submissionlist-page_v3',
           component: () => import('@/lesson/student/submission-list')
         },
         // 课堂动态设置
         {
-          path: '/stateSet/xxx',
+          path: 'stateSet/xxx',
           name: 'stateSet_v3',
           component: () => import('@/lesson/teacher/stateSet'),
           meta: {
@@ -318,31 +318,31 @@ const router = new Router({
           }
         },
         {
-          path: '/quizresult/:quizid',
+          path: 'quizresult/:quizid',
           name: 'quizresult_v3',
           component: () => import('@/lesson/teacher/quizresult'),
           meta
         },
         {
-          path: '/quizresultdetail/:quizid',
+          path: 'quizresultdetail/:quizid',
           name: 'quizresultdetail',
           component: () => import('@/lesson/teacher/quizresultdetail'),
           meta
         },
         {
-          path: '/boardlist/:lessonid',
+          path: 'boardlist/:lessonid',
           name: 'boardlist_v3',
           component: () => import('@/lesson/teacher/board-list'),
           meta
         },
         {
-          path: '/stuexpression/:classroomid/:lessonid/:userid',
+          path: 'stuexpression/:classroomid/:lessonid/:userid',
           name: 'stuexpression_v3',
           component: () => import('@/lesson/teacher/student_expression'),
           meta
         },
         {
-          path: '/search/:classroomid/:lessonid',
+          path: 'search/:classroomid/:lessonid',
           name: 'search_v3',
           component: () => import('@/lesson/teacher/search_student'),
           meta

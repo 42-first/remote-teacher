@@ -136,8 +136,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_lesson_detail: '/api/v3/lesson/detail',
       // 获取授课邀请
       get_invitation: '/api/v3/lesson/get-invitation',
-      // 投稿状态
-      get_tougao_status: '/api/v3/lesson/tougao/status',
+      // 投稿投屏
+      share_tougao: '/api/v3/lesson/tougao/share-screen',
       // 获取主观题回答列表
       get_subj_list: '/api/v3/lesson/problem/subj-list',
       // 学生课堂表现加分备注页
@@ -149,7 +149,11 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 学生绑定标签
       bind_student: '/api/v3/lesson/assess/tag/bind_student',
       // 老师添加标签
-      created_tag: '/api/v3/lesson/assess/tag/created'
+      created_tag: '/api/v3/lesson/assess/tag/created',
+      // 主观题答案数量（轮询用）
+      get_subj_list_count: '/api/v3/lesson/problem/subj-list-count',
+      // 课上批改主观题
+      post_grade: '/api/v3/lesson/problem/grade'
     },
 
     /*------------------*\

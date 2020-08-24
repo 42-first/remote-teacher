@@ -96,6 +96,7 @@
       return {
         participantList: [],
         participant_count: 0,
+        retryCount: 0
       }
     },
     computed: {
@@ -149,6 +150,13 @@
             }).splice(0, 10)
             this.participant_count = jsonData.totalNum || 0;
             this.participantList = avatars || [];
+          }else if(res.code === 50000){
+            // 刷新页面后如果还在这个页面 请求接口会返回50000 
+            console.log('无权限')
+            !this.retryCount && setTimeout(() => {
+              this.fetchParticipantList()
+              this.retryCount = 1
+            }, 2000)
           }
         }).catch(err => {
 

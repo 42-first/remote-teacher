@@ -2,7 +2,7 @@
 <template>
 	<div class="wai">
     <div class="problem-root" @scroll="onScroll">
-      <slot name="ykt-msg"></slot>
+
       <!-- 教师遥控器引导查看答案、续时 -->
       <!-- <GuideDelay
         v-show="!isGuideDelayHidden"
@@ -27,28 +27,14 @@
 
           <!-- 上部时钟、人数统计 -->
           <section class="upper">
-            <div class="xitixushi" v-if="!problem_group_review_id">
-              <!-- 延时相关 -->
-              <div class="time-rel f15">
-                <v-touch v-if="newTime <= 0 || ~limit" class="tbtn green" v-on:tap="yanshi"><!-- 延时 -->{{ $t('extend') }}</v-touch>
-                <div v-else class="tbtn nobtn"><!-- 不限时 -->{{ $t('bxs') }}</div>
-              </div>
-
-              <div class="sjd f24" v-show="newTime <= 0"><!-- 作答时间结束 -->{{ $t('receivertimeout') }}</div>
-
-              <!-- 中间秒表 -->
-              <div v-show="newTime > 0" :class="['rolex', 'f36', {'warn': newTime <= 10 && ~limit}]">
-                <img v-if="!~limit" class="jishi" src="~images/teacher/jishi-zheng.png" alt="">
-                <img v-show="~limit && newTime > 10" class="jishi" src="~images/teacher/jishi-dao-w.png" alt="">
-                <img v-show="~limit && newTime <= 10" class="jishi" src="~images/teacher/jishi-dao-r.png" alt="">
-                <span class="time">{{durationLeft}}</span>
-              </div>
-
-              <!-- 收题相关 -->
-              <div v-show="newTime > 0" class="pro-rel f15">
-                <v-touch class="tbtn red" v-on:tap="shouti"><!-- 收题 -->{{$t('shouti')}}</v-touch>
-              </div>
-            </div>
+            <Rolex
+              :limit="limit"
+              :newTime="newTime"
+              :durationLeft="durationLeft"
+              :problemid="problemid"
+              @yanshi="yanshi"
+              @shouti="shouti"
+            ></Rolex>
 						<div class="faqihuping-box">
 							<div class="total-box">
 								<div :class="['f12', 'yjy']">
@@ -78,7 +64,7 @@
 								</template>
 							</div>
               <!-- v-if="problem_answer_type"  -->
-							<v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+							<v-touch v-if="false" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
 						</div>
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
@@ -109,26 +95,26 @@
 												</template>
 												<span class="author f15">{{item.team_name}}</span>
 											</v-touch>
-											<div class="time f15">{{item.end_time | formatTime}}</div>
+											<div class="time f15">{{item.time | formatTime}}</div>
 										</div>
 										<div class="student-info" v-else>
 											<div class="avatar-box">
-												<img :src="item.users[0].user_avatar_46" class="avatar" alt="">
-												<span class="author f15">{{item.users[0].user_name}}</span>
+												<img :src="item.user.avatar" class="avatar" alt="">
+												<span class="author f15">{{item.user.name}}</span>
 											</div>
-											<div class="time f15">{{item.end_time | formatTime}}</div>
+											<div class="time f15">{{item.time | formatTime}}</div>
 										</div>
 
                     <div class="cont f18">
                       <div class="cont-title">
-                        {{item.fold ? item.subj_result.foldContent : item.subj_result.content}}
-                        <!-- {{item.subj_result.content}} -->
+                        {{item.fold ? item.result.foldContent : item.result.content}}
+                        <!-- {{item.result.content}} -->
                         <span v-show="!item.hideFold">
                             <span v-show="item.fold" @click="item.fold = false">
                                 <span>...</span>
                                 <span class="color16">
                                   <span>{{$t('showall')}}</span>
-                                  <span class="color12">({{item.subj_result.content ? item.subj_result.content.length : 0}})</span>
+                                  <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
                                 </span>
                             </span>
                             <span v-show="!item.fold" @click="item.fold = true" class="color16">
@@ -137,16 +123,16 @@
                             </span>
                         </span>
                       </div>
-                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.subj_result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.subj_result.pics[0].pic, $event)"></v-touch>
+                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.source_score, index, item.remark)">
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.totalScore, index, item.comment && item.comment.content)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score.toFixed(1)}}</span>
+                        <span v-show="item.score !== -1">{{item.score ? item.score.toFixed(1) : '--'}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
@@ -248,12 +234,14 @@
   import Loadmore from 'mint-ui/lib/loadmore'
   import HupingPanel from './common/huping-panel'
   // 试题延时
-  import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  import Problemtime from '@/lesson/teacher/common/problemtime'
   // 教师遥控器引导查看答案、续时
-  import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
-  import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+  import GuideDelay from '@/lesson/teacher/common/guide-delay'
+  import hideSomeInfo from '@/lesson/teacher/common/hideSomeInfo'
   // 答案解析
-  import analysismixin from '@/components/common/analysis-mixin'
+  import analysismixin from '@/lesson/common/analysis-mixin'
+  // 时钟组件
+	import Rolex from '@/lesson/teacher/common/rolex'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -346,7 +334,8 @@
       GuideDelay,
       HupingPanel,
       hideSomeInfo,
-      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
+      analysis: () => import('@/lesson/teacher/common/analysis.vue'),
+      Rolex
 	  },
 	  created(){
       this.init()
@@ -413,23 +402,26 @@
        */
       yanshiProblem (duration) {
         let self = this
+        let URL = API.lesson.problem_delay
 
         setTimeout(() => {
           self.isProblemtimeHidden = true
         }, 100)
 
-        let postData = {
-          'op': 'extendtime',
+        let params = {
           'limit': duration,
-          'problemid': self.problemid
+          'problemId': self.problemid
         }
 
-        self.problemOperation(postData)
-          .then(() => {
-            console.log(duration, timeList[duration])
+        return request.post(URL,params)
+        .then((res) => {
+          if (res && res.code === 0 && res.data) {
             let msg = i18n.locale === 'zh_CN' ? `延时${duration > 0 ? duration / 60 + '分钟' : '不限时' }成功` : 'Successful'
             T_PUBSUB.publish('ykt-msg-toast', msg);
-          })
+          }
+        }).catch(error => {
+
+        })
       },
       /**
        * 复用页面，需要watch route
@@ -440,7 +432,7 @@
         let params = self.$route.params
         let query = self.$route.query
 
-        self.problemid = +params.problemid
+        self.problemid = params.problemid
         self.problemType = query.pt
 
         routeStamp = query._t
@@ -624,7 +616,7 @@
 
         // 从 node 传来，pc 延时事件
         T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
-          self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
+          self.problemid === msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
       },
       /**
@@ -667,19 +659,20 @@
 
         console.log('上拉松手了')
 
-        let tailNow = self.dataList[self.dataList.length-1].problem_result_id
+        let tailNow = self.dataList[self.dataList.length-1].index
 
-        self.fetchList(tailNow).then(jsonData => {
-          // 设置试卷详情数据
-          // response_num 当前请求返回的投稿数量
-          if (jsonData.data.response_num === 0) {
-            self.isAllLoaded = true
-            return
+        self.fetchList(tailNow).then(res => {
+          if(res && res.code === 0 && res.data){
+            // response_num 当前请求返回的投稿数量
+            if (res.data.list.length === 0) {
+              self.isAllLoaded = true
+              return
+            }
+            self.dataList = self.addFold(self.dataList.concat(res.data.list))
+            // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+
+            this.$refs.Loadmore.onBottomLoaded()
           }
-          self.dataList = self.addFold(self.dataList.concat(jsonData.data.problem_results_list))
-          // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
-
-          this.$refs.Loadmore.onBottomLoaded()
         })
       },
       /**
@@ -716,23 +709,19 @@
 	    /**
        * 获取答案数据
        *
-       * @param {Number} start 起始位置id，返回值不包括起始位置的值， 默认 -1， 即从最新无限大处开始
-       * @param {Number} direction 默认0 倒序，即向老的方向找去
+       * @param {Function} fn 回调函数
+       * @param {Number} start 起始位置index，返回值不包括起始位置的值， 默认 0， 即从最新无限大处开始
        */
-      fetchList(start = -1, direction = 0){
-        let self = this
-        let url = API.subjective_problem_result_list
+      fetchList(last_index = -1){
+        let URL = API.lesson.get_subj_list
 
-        let data = {
-          start,
-          direction,
-          count: FENYE_COUNT,
-          problem_id: self.problemid,
-          lesson_id: self.lessonid,
+        let params = {
+          problem_id: this.problemid,
+          last_index,
+          size: FENYE_COUNT
         }
 
-        // 单次刷新
-        return request.get(url, data)
+        return request.get(URL, params)
       },
 			/**
        * 获取已经互评了的数量
@@ -751,29 +740,41 @@
       pollingNewItem(){
         let self = this
 
-        let headNow = self.dataList[0] ? self.dataList[0].problem_result_id : 0
+        // let headNow = self.dataList[0] ? self.dataList[0].problem_result_id : 0
 
-        self.fetchList(headNow, 1).then(jsonData => {
-          self.setData({
-            isShowNewHint: jsonData.data.response_num,
-            total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num,
-						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-						problem_group_review_id: jsonData.data.group_review_id,
-						unfinished_count: jsonData.data.unfinished_count,
-						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
-          })
-					if(jsonData.data.group_review_id){
-						self.fetchHupingCount().then(res => {
-							self.setData({
-								group_review_total_num: res.data.group_review_total_num,
-								group_review_done_num: res.data.group_review_done_num,
-				        tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
-				        gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
-				        group_review_declaration: res.data.group_review_declaration
-							})
-						})
-					}
+        // self.fetchList(headNow, 1).then(jsonData => {
+        //   self.setData({
+        //     isShowNewHint: jsonData.data.response_num,
+        //     total_num: jsonData.data.total_num,
+        //     class_participant_num: jsonData.data.class_participant_num,
+				// 		team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+				// 		problem_group_review_id: jsonData.data.group_review_id,
+				// 		unfinished_count: jsonData.data.unfinished_count,
+				// 		unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
+        //   })
+				// 	if(jsonData.data.group_review_id){
+				// 		self.fetchHupingCount().then(res => {
+				// 			self.setData({
+				// 				group_review_total_num: res.data.group_review_total_num,
+				// 				group_review_done_num: res.data.group_review_done_num,
+				//         tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
+				//         gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
+				//         group_review_declaration: res.data.group_review_declaration
+				// 			})
+				// 		})
+				// 	}
+        // })
+        let URL = API.lesson.get_subj_list_count
+        let params = {
+          problem_id: self.problemid
+        }
+        return request.get(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            self.setData({
+              isShowNewHint: res.data.count - self.dataList.length > 0
+            })
+          }
         })
 
 
@@ -799,61 +800,64 @@
          *
          * 由于小组作答可能会出现小组成员覆盖原有答案，所以刷新列表后直接把列表赋新的值，不然需要每条数据去进行比较
          */
-        self.fetchList().then(jsonData => {
-          self.setData({
-            isShowNewHint: false,
-            total_num: jsonData.data.total_num,
-            class_participant_num: jsonData.data.class_participant_num,
-						problem_answer_type: jsonData.data.problem_answer_type,
-						group_name: jsonData.data.group_name ? jsonData.data.group_name : '',
-						team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-						problem_group_review_id: jsonData.data.group_review_id,
-						unfinished_count: jsonData.data.unfinished_count,
-						unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
-          })
-
-          let newList = jsonData.data.problem_results_list
-          // 返回的条目的个数
-          let response_num = jsonData.data.response_num
-          // 有可能还一条都没有呢
-          let headNow = self.dataList[0] ? self.dataList[0].problem_result_id : 0
-          let headIndex = newList.findIndex(item => item.problem_result_id === headNow)
-
-          let isAllLoaded = self.isAllLoaded
-          if (response_num === 0) {
-            isAllLoaded = true
-          } else {
+        self.fetchList().then(res => {
+          if(res && res.code === 0 && res.data){
             self.setData({
-              dataList: self.addFold(newList)
-              // dataList: newList
+              isShowNewHint: false,
+              // total_num: jsonData.data.total_num,
+              // class_participant_num: jsonData.data.class_participant_num,
+              // problem_answer_type: jsonData.data.problem_answer_type,
+              // group_name: jsonData.data.group_name ? jsonData.data.group_name : '',
+              // team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
+              // problem_group_review_id: jsonData.data.group_review_id,
+              // unfinished_count: jsonData.data.unfinished_count,
+              // unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
             })
-            setTimeout(() => {
-              this.dataList.map(e => {
-                e.fold = e.subj_result.content && this.getLength(e.subj_result.content) > 200
+
+            let newList = res.data.list
+            // 返回的条目的个数
+            let response_num = newList.length
+            // 有可能还一条都没有呢
+            let headNow = self.dataList[0] ? self.dataList[0].index : 0
+            let headIndex = newList.findIndex(item => item.index === headNow)
+
+            let isAllLoaded = self.isAllLoaded
+            if (response_num === 0) {
+              isAllLoaded = true
+            } else {
+              self.setData({
+                dataList: self.addFold(newList)
+                // dataList: newList
               })
-            }, 3e2)
-            isAllLoaded = newList.length < FENYE_COUNT
+              setTimeout(() => {
+                this.dataList.map(e => {
+                  e.fold = e.result.content && this.getLength(e.result.content) > 200
+                })
+              }, 3e2)
+              isAllLoaded = newList.length < FENYE_COUNT
+            }
+            self.setData({
+              isAllLoaded
+            })
+
+            // self.calcPageHeight()
+
+            // 刷新的话回顶部
+            self.back2Top()
+
+            // if(jsonData.data.group_review_id){
+            //   self.fetchHupingCount().then(res => {
+            //     self.setData({
+            //       group_review_total_num: res.data.group_review_total_num,
+            //       group_review_done_num: res.data.group_review_done_num,
+            //       tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
+            //       gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
+            //       group_review_declaration: res.data.group_review_declaration
+            //     })
+            //   })
+            // }
           }
-          self.setData({
-            isAllLoaded
-          })
-
-          // self.calcPageHeight()
-
-          // 刷新的话回顶部
-          self.back2Top()
-
-					if(jsonData.data.group_review_id){
-						self.fetchHupingCount().then(res => {
-							self.setData({
-								group_review_total_num: res.data.group_review_total_num,
-								group_review_done_num: res.data.group_review_done_num,
-				        tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
-				        gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
-				        group_review_declaration: res.data.group_review_declaration
-							})
-						})
-					}
+          
         })
 
       },
@@ -897,45 +901,19 @@
        * @event bindtap
        */
       shoutiConfirm () {
-        // 克隆班不能执行当前操作
-        if (!!this.isCloneClass) {
-          this.$toast({
-            message: this.$t('cloneTips'),
-            duration: 3e3
-          });
-          return
-        }
-        let self = this
-        let postData = {
-          'op': 'problemfinished',
-          'problemid': self.problemid
+        let URL = API.lesson.problem_finish
+        let params = {
+          'problemId': self.problemid
         }
 
-        self.problemOperation(postData)
-      },
-      /**
-       * 收题、延时等具体请求的执行
-       *
-       * @event bindtap
-       * @param {Object} postData 请求数据
-       */
-      problemOperation (postData) {
-        let self = this
+        return request.post(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
 
-        let url = API.delay_problem
-        return request.post(url, postData)
-          .then(jsonData => {
-            if (jsonData.success) {
-              let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
-              // 因为是单通，node会通知的，编码处理2遍，简单的解决是统一等node通知
-              // self.resetTiming(operationType[optype], postData.limit)
-            } else {
-              let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
-              throw new Error(str)
-            }
-          }).catch(error => {
-            console.error('error', error)
-          })
+          }
+        }).catch(error => {
+
+        })
       },
       /**
        * 试题主观题页面页面中的 投屏 按钮
@@ -1016,9 +994,9 @@
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, scoreTotal, index, remark) {
+	    initScore (answerid, score = -1, scoreTotal, index, remark = '') {
 	      let self = this
-				let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
+				// let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
 	      // 投屏时不可打分
 	      if (answerid === self.postingSubjectiveid) {return;}
 
@@ -1027,17 +1005,18 @@
         clearTimeout(scoreTapTimer)
         scoreTapTimer = setTimeout(() => {
           self.scoringIndex = index
-					return request.get(url)
-	          .then(jsonData => {
-	            if (jsonData.success) {
-								self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
-								self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
-	              self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
-	            }
-	          }).catch(error => {
-	            console.error('error', error)
-	          })
-          // self.$refs.StarPanel.$emit('enter', ...arguments)
+          // TODO:有互评的时候再开放这段
+					// return request.get(url)
+	        //   .then(jsonData => {
+	        //     if (jsonData.success) {
+					// 			self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
+					// 			self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
+	        //       self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
+	        //     }
+	        //   }).catch(error => {
+	        //     console.error('error', error)
+	        //   })
+          self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, score, -2, 100, 0, index, remark)
         }, 100)
 	    },
 	    /**
@@ -1056,28 +1035,27 @@
 	    		return;
 	    	}
 
-	      let url = API.subjective_problem_teacher_scorev2
+	      let url = API.lesson.post_grade
 	      let postData = {
-	        'lesson_id': self.lessonid,
-	        'problem_result_id': answerid,
-	        'score': teacherScore,
-					'group_review_score': groupReviewScore,
-					'problem_id': self.problemid,
-          remark
+          problemId: self.problemid,
+          score: teacherScore,
+          userId: self.dataList[self.scoringIndex].user.userId,
+          comment: {
+            content: remark
+          }
 	      }
 
-	      request.post(url, postData)
-	        .then(jsonData => {
-	          // 不需要判断success，在request模块中判断如果success为false，会直接reject
-	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-
-	          // 关闭打分页面
-	          console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-						self.dataList[self.scoringIndex].score = ((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))
-						self.dataList[self.scoringIndex].remark = remark
+	      return request.post(url, postData)
+	        .then(res => {
+            if(res && res.code === 0 && res.data){
+               // 关闭打分页面
+              console.log(`打过分啦${teacherScore}`, self.scoringIndex)
+              self.dataList[self.scoringIndex].score = teacherScore
+              self.dataList[self.scoringIndex].comment.content = remark
 
 
-	          self.$refs.StarPanel.$emit('leave')
+              self.$refs.StarPanel.$emit('leave')
+            }
 	        })
 	    },
       /**
@@ -1272,13 +1250,13 @@
       // 增加fold 属性
       addFold(list) {
           list.map(e => {
-              if(e.subj_result.content && this.getLength(e.subj_result.content)> 200) {
+              if(e.result.content && this.getLength(e.result.content)> 200) {
                   e.fold = false
               } else {
                   e.fold = false
                   e.hideFold = true
               }
-              e.subj_result.foldContent = e.subj_result.content.slice(0, 100)
+              e.result.foldContent = e.result.content.slice(0, 100)
           })
           return list
       },
@@ -1289,7 +1267,7 @@
       },
       // 是否有缩略图
       hasThumb(item) {
-        let sub = item.subj_result
+        let sub = item.result
         return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb)
       }
 	  }
