@@ -125,7 +125,7 @@ let fullscreenMixin = {
      * @params
      */
     handleVisibleSubmission(evt) {
-      let path = `/${this.lesson.lessonID}/submission`;
+      let path = `/v3/${this.lesson.lessonID}/submission`;
       this.$router.push({ path });
 
       // 将当前页设置为空 否则发投稿的时候可能自动翻页

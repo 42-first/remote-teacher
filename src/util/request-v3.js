@@ -2,6 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 // 新版接口状态码定义 https://www.tapd.cn/42030465/documents/show/1142030465001001744
+// 错误码翻译 http://git.sys.xuetangx.info/new-backend/grpc/-/blob/master/src/main/proto/error.json
 // http status
 
 /*-----------------------------------------------*\
@@ -29,7 +30,6 @@ const handleResponse = (res) => {
     //   "data": { ... }
     // }
 
-    // set-Auth
     // 是否需要过滤 没有权限 session丢失
     return Promise.resolve(res.data)
   } else {

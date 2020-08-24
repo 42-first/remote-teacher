@@ -131,6 +131,7 @@
         problemType: '',
         selectedPollingCount: 0,
         pollingCount: 0,
+        anonymous: false,
 
         isShowSubmit: true,
         isShowOption: true,

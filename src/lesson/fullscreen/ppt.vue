@@ -178,7 +178,7 @@ export default {
       let URL = API.lesson.post_tag;
       let cards = this.cards;
       let slide = this.slide;
-      let slideID = slide.id;
+      let slideID = slide.slideID;
 
       let ppts = cards.filter((card, index)=>{
         return card.slideID === slideID;

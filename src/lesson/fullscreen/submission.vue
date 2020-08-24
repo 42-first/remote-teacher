@@ -32,7 +32,7 @@
             <p class="submission__pic--remark f14">可上传一张图片或一个小视频</p>
           </div>
           <div class="pic-view" v-show="hasImage">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handlelaodImg" @click="handleScaleImage" v-if="imageURL" />
+            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handleLoadImg" @click="handleScaleImage" v-if="imageURL" />
             <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else-if="imageThumbURL" />
             <!-- 视频 -->
             <video class="video--preview" :src="video.url" controls :poster="video.thumb" v-if="video && video.url" >
@@ -96,14 +96,13 @@
   import {compress} from '@/util/image'
   import picker from '@/components/common/picker/index.vue'
   import { configWX } from '@/util/wx-util'
-  import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
   // import { dataURLtoFile } from '@/util/util'
   import $ from 'jquery'
 
 
   export default {
-    name: 'submission-page',
+    name: 'submission',
     data() {
       return {
         index: 0,
@@ -187,7 +186,7 @@
     },
     filters: {
     },
-    mixins: [ imagemixin ],
+    mixins: [ ],
     methods: {
       /*
       * @method 发送投稿
@@ -195,44 +194,43 @@
       */
       sendSubmission() {
         let self = this;
-        let URL = API.student.SEND_SUBMISSION;
+        let URL = API.lesson.add_tougao;
         const content = this.text.replace(/^\s+|\s+$/g, '');
         let params = {
           'content': content,
-          'pic': this.imageURL,
-          'thumb': this.imageThumbURL,
-          'lesson_id': this.lessonID,
-          'team_id': this.team_id,
-          'group_id': this.group_id,
+          'picture': this.imageURL,
           'video': this.video
+          // 'group_id': self.data.group_id,
+          // 'team_id': self.data.team_id,
         }
 
         // 发送中
         this.sendStatus = 3;
 
-        request.post(URL, params)
-        .then( (res) => {
-          if(res) {
-            let data = res;
-            self.sendStatus = 4;
+        request.post(URL, params).
+        then((res)=>{
+          if(res && res.code === 0) {
+            this.sendStatus = 4;
 
-            self.$toast({
+            setTimeout(() => {
+              this.handleBack();
+            }, 2000)
+
+            this.$toast({
               message: this.$i18n.t('sendsuccess') || '发送成功',
               duration: 2000
             });
-
-            setTimeout(() => {
-              self.$router.back();
-            }, 2000)
           }
-        }).catch(error => {
+        }).
+        catch(error => {
+          console.log('add_tougao:', error);
           this.sendStatus = 2;
 
           this.$toast({
             message: this.$i18n.t('networkerror2') || '网络不佳，答案提交失败，请重试',
             duration: 3000
           });
-        });
+        })
       },
 
       /*
@@ -473,7 +471,7 @@
         })
       },
 
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = typeof event !== 'undefined' && event.target || evt.target;
 
         this.width = target.naturalWidth || target.width;
@@ -633,7 +631,7 @@
       this.classroomid = this.$route.query.classroomid
 
       // 获取学生分组列表
-      this.pickerDataInit()
+      // this.pickerDataInit()
     },
     mounted() {
     },
