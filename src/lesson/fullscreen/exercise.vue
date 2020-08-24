@@ -191,6 +191,12 @@
         this.problemType = this.oProblem['problemType'];
         // 选项
         this.options = data.options;
+        // 选项做下兼容
+        if(data.options) {
+          data.options.forEach((item)=>{
+            item.label = item.label || item.key;
+          })
+        }
 
         // 投票类型
         if(this.problemType === 3) {

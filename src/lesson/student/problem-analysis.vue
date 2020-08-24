@@ -11,34 +11,34 @@
     <!-- 问题内容 -->
     <section class="problem__content" v-if="slide" >
       <p class="page-no f12"><span>{{ $t('pno', { number: slide.Index }) }}</span></p>
-      <img class="cover" :src="slide.Cover" :data-src="slide.Cove" @click="handlePreviewImage" alt="雨课堂,习题解析" />
+      <img class="cover" :src="slide.cover" :data-src="slide.cover" @click="handlePreviewImage" alt="雨课堂,习题解析" />
     </section>
 
     <!-- 客观题 问题选项 -->
-    <section class="analysis__answer" v-if="problemType === 'MultipleChoice' || problemType === 'MultipleChoiceMA' || problemType === 'Polling'">
+    <section class="analysis__answer" v-if="problemType === 1 || problemType === 2 || problemType === 3">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
       <ul class="exercise__options" v-if="result">
-        <li :class="['options-item', 'f45', problemType, pollingCount === 1 ? 'MultipleChoice': '']" v-for="item in options">
-          <p :class="['options-label', item.selected ? 'selected' : '' ]" :data-option="item.Label">{{ item.Label }}</p>
+        <li :class="['options-item', 'f45', problemType === 1 || pollingCount === 1 ? 'MultipleChoice': '']" v-for="item in options">
+          <p :class="['options-label', item.selected ? 'selected' : '' ]" :data-option="item.label">{{ item.label }}</p>
         </li>
       </ul>
       <div class="noanswered f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</div>
     </section>
 
     <!-- 填空题 选项 -->
-    <section class="analysis__answer" v-if="problemType === 'FillBlank'">
+    <section class="analysis__answer" v-if="problemType === 4">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
       <ul class="blanks__options" >
         <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
           <div class="blank__order">{{ index + 1 }}</div>
-          <p class="blank__input f17" v-if="result && result[index + 1]">{{ result[index + 1] }}</p>
+          <p class="blank__input f17" v-if="result && result[index]">{{ result[index] }}</p>
           <p class="blank__input f17" v-else><!-- 未作答 -->{{ $t('weizuoda') }}</p>
         </li>
        </ul>
     </section>
 
     <!-- 主观题内容 -->
-    <section class="analysis__answer" v-if="problemType === 'ShortAnswer'">
+    <section class="analysis__answer" v-if="problemType === 5">
       <header class="answer__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
       <div class="subjective__answer" v-if="result&&(result.content || result.pics&&result.pics.length)">
         <div class="answer__inner">
@@ -72,7 +72,7 @@
   import { isSupported } from '@/util/util'
 
   export default {
-    name: 'problem-analysis-page',
+    name: 'problem-analysis',
     data() {
       return {
         index: 0,
@@ -94,7 +94,7 @@
       };
     },
     components: {
-      analysis: () => import('@/components/common/analysis.vue'),
+      analysis: () => import('@/lesson/common/analysis.vue')
     },
     computed: {
     },
@@ -113,9 +113,9 @@
 
         this.problemID = problemID;
         this.slide = this.$parent.problemMap.get(problemID);
-        this.oProblem = this.slide && this.slide['Problem'];
+        this.oProblem = this.slide && this.slide['problem'];
         // 问题类型
-        this.problemType = this.oProblem['Type'];
+        this.problemType = this.oProblem['problemType'];
 
         // 根据问题类型组织对应的数据结构
         this.formatData(this.oProblem);
@@ -129,29 +129,36 @@
        * @param problem
        */
       formatData(problem) {
-        let problemType = problem['Type'];
-        this.result = problem['Result'];
-        this.hasRemark = problem['HasRemark']
+        let problemType = problem['problemType'];
+        this.result = problem['result'];
+        this.hasRemark = problem['hasRemark']
 
         if(problemType) {
           switch (problemType) {
-            case 'ShortAnswer':
+            case 5:
               console.info('主观题')
 
               this.getScore = problem.getScore;
               break;
-            case 'FillBlank':
+            case 4:
               console.info('填空题')
-              this.blanks = problem['Blanks'];
+              this.blanks = problem['blanks'];
               break;
-            case 'MultipleChoice':
-            case 'MultipleChoiceMA':
-            case 'Polling':
+            case 1:
+            case 2:
+            case 3:
               console.info('客观题')
-              problemType === 'Polling' && (this.pollingCount = parseInt(problem['Answer'], 10));
-              this.options = problem['Bullets'];
+              problemType === 3 && (this.pollingCount = problem['pollingCount']);
+              // 4.0和以后版本兼容下
+              let options = problem['bullets'] || problem['options'];
+              if(options && options.length) {
+                options.forEach((item)=>{
+                  item.label = item.label || item.key;
+                })
+              }
+              this.options = options;
 
-              this.result && this.result.split('').forEach((option) => {
+              this.result && this.result.forEach((option) => {
                 this.setOptions(option, true, true);
               });
 
@@ -162,7 +169,6 @@
           }
 
         }
-
       },
 
       /*
@@ -177,14 +183,14 @@
         options = options.map( (element, index) => {
           if(!isSelected) {
             // 取消
-            element.Label === option && (element.selected = isSelected);
+            element.label === option && (element.selected = isSelected);
           } else {
             if(multi) {
               // 多选
-              element.Label === option && (element.selected = isSelected);
+              element.label === option && (element.selected = isSelected);
             } else {
               // 单选
-              if(element.Label === option) {
+              if(element.label === option) {
                 element.selected = isSelected;
               } else {
                 element.selected = false;
