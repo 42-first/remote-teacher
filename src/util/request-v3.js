@@ -31,6 +31,10 @@ const handleResponse = (res) => {
     // }
 
     // 是否需要过滤 没有权限 session丢失
+    if(res.data && res.data.code) {
+      catchCode(res.data.code);
+    }
+
     return Promise.resolve(res.data)
   } else {
     // 50X
@@ -66,6 +70,23 @@ const handleResponse = (res) => {
   }
 }
 
+/**
+ * @method 状态码处理
+ * @desc 非正常状态码提示
+ *       国际化，上报
+ */
+const catchCode = (code) => {
+  if(code && window.$toast) {
+    $toast({
+      message: window.i18n && window.i18n.t(`code.${code}`) + `(${code})`,
+      duration: 3000
+    });
+
+    // todo: 后面可能上报
+  }
+}
+
+
 // 超时默认60s避免造成阻塞卡顿
 axios.defaults.timeout = 60000;
 
@@ -91,7 +112,7 @@ export default {
 
     // todo: test 正式联调后删除
     // Cookies.set('sid', '1c5db47f09c19ae187f3f126773cfa01');
-    console.log(axios.defaults.headers['Cookie'])
+    // console.log(axios.defaults.headers['Cookie'])
 
     // 课上接收器 遥控器使用
     if(window.Authorization) {

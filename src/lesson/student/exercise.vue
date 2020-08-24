@@ -432,11 +432,6 @@
             this.canSubmit = 3;
             this.sLeaveTime = this.$i18n.t('done') || '已完成';
             this.isComplete = true;
-          } else if(code === 50028) {
-            this.$toast({
-              message: '此题已经作答过',
-              duration: 2000
-            });
           } else if(code === -1) {
             // 提交失败保存本地
             this.saveAnswer(params);
@@ -451,7 +446,6 @@
             // 统计失败率
             typeof MtaH5 !== 'undefined' && MtaH5.clickStat('submissionfailed',{'pid': problemID});
           } else {
-            // 用户由于接口时间太长超时了
             this.$toast({
               message: `提交失败(错误码：${code})`,
               duration: 2000

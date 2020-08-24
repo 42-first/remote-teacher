@@ -28,6 +28,7 @@ Vue.use(Router)
 Vue.component('loadmore', Loadmore);
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
+window.$toast = Toast;
 
 document.addEventListener('touchstart', function(){},false);
 
