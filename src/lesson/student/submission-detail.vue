@@ -50,7 +50,7 @@
   import imgGroup from '@/components/common/groupMembers/img-group.vue'
 
   export default {
-    name: 'submission-detail-page',
+    name: 'submission-detail',
     data() {
       return {
         index: 0,

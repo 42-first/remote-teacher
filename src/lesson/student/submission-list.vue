@@ -16,7 +16,7 @@
           <li class="item" v-for="(item, index) in submissionlist" :key="index">
             <!-- 投稿时间 -->
             <div class="item-date">
-              <p class="date-time f15">{{ item.create_time|formatTime('HH:mm') }}</p>
+              <p class="date-time f15">{{ item.createTime|formatTime('HH:mm') }}</p>
             </div>
 
             <div class="item__right">
@@ -120,7 +120,7 @@
   Vue.component(Actionsheet.name, Actionsheet);
 
   export default {
-    name: 'submission-list-page',
+    name: 'submission-list',
     data() {
       return {
         isEmpty: false,
@@ -184,6 +184,8 @@
               if (data.items && data.items.length) {
                 let list = this.formatData(data.items);
                 this.submissionlist = list;
+
+                console.log('getMySubmission:', list);
               }
             } else {
               this.isEmpty = true;
@@ -229,6 +231,8 @@
             item.text = item.content;
           }
         })
+
+        return data;
       },
 
       /*
@@ -264,7 +268,6 @@
       * @param
       */
       deleteSubmission(id) {
-        let self = this;
         let URL = API.lesson.delete_tougao;
         let params = {
           'tougaoId': id

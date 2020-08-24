@@ -121,6 +121,15 @@
         text: '',
         imageURL: '',
         imageThumbURL: '',
+        // 视频部分
+        video: {
+          url: '',
+          // thumb: '',
+          duration: '',
+          size: '',
+          width: '',
+          height: ''
+        },
         // 本地图片base64/二进制
         fileData: null,
         hasImage: false,
@@ -202,7 +211,8 @@
         const content = this.text.replace(/^\s+|\s+$/g, '');
         let params = {
           'content': content,
-          'picture': this.imageURL
+          'picture': this.imageURL,
+          'video': this.video
           // 'group_id': self.data.group_id,
           // 'team_id': self.data.team_id,
         }
