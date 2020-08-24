@@ -14,10 +14,10 @@
 
     <!-- PPT 类型 -->
     <div v-show="tab === 1" class="scroll-box scroll-box1 allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.id" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)">
+        <span class="gridimg-holder" v-show="!item.thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
         <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
-        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.Thumbnail)" :style="{minHeight: realHeight + 'rem'}">
+        <img :src="item.thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :onload="hideHolder(index, item.thumbnail)" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
         <div class="f15 bdsz">{{doubtList[index] ? $t('unknown')+': '+doubtList[index] : ''}}</div>
       </v-touch>
@@ -26,22 +26,22 @@
     <!-- 不懂 类型 -->
     <section class="scroll-box scroll-box2 allowscrollcallback" v-show="tab === 2">
       <!-- 新增白板不懂入口 有数据显示没数据不显示  -->
-      <router-link tag="section" :to="{ name: 'boardlist', params: { lessonid: lessonid } }" class="board__box" v-if="boardTags && boardTags.board_track_doubt_count">
+      <router-link tag="section" :to="{ name: 'boardlist', params: { lessonid: lessonid } }" class="board__box" v-if="doubtBoard">
         <div class="board__left">
           <img class="board--image" alt="雨课堂,白板" src="http://sfe.ykt.io/o_1cs602ntrk81rnejl2im1n3s9.png" />
           <span class="board--title f14"><!-- 白板不懂 -->{{ $t('boardunknow') }}</span>
         </div>
         <p class="board__right">
-          <span class="board--unknow f15">{{ boardTags.board_track_doubt_count }}</span>
+          <span class="board--unknow f15">{{ doubtBoard }}</span>
           <i class="iconfont icon-jinrucopy f25"></i>
         </p>
       </router-link>
 
       <div class="">
         <v-touch v-for="item in doubtSorted" :id="'t' + (item.index+1)" :key="item.index" :class="['item', {'active': current === item.index + 1}]" v-on:tap="tapThumbnail(item.index+1)" v-if="item.val">
-        <span class="gridimg-holder" v-show="!pptData[item.index].Thumbnail || imgHolder[item.index]" :style="{height: realHeight + 'rem'}"></span>
+        <span class="gridimg-holder" v-show="!pptData[item.index].thumbnail || imgHolder[item.index]" :style="{height: realHeight + 'rem'}"></span>
         <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
-        <img :src="pptData[item.index].Thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
+        <img :src="pptData[item.index].thumbnail" v-show="!imgHolder[item.index]" alt="" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{item.index + 1}} / {{total}}</div>
         <div class="f15">{{ $t('unknown') }}: {{item.val}}</div>
         </v-touch>
@@ -50,10 +50,10 @@
 
     <!-- 习题 类型 -->
     <div v-show="tab === 3" class="scroll-box scroll-box3 allowscrollcallback">
-      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.lessonSlideID" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.Problem">
-        <span class="gridimg-holder" v-show="!item.Thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
+      <v-touch v-for="(item, index) in pptData" :id="'t' + (index+1)" :key="item.id" :class="['item', {'active': current === index + 1}]" v-on:tap="tapThumbnail(index+1)" v-if="item.problem">
+        <span class="gridimg-holder" v-show="!item.thumbnail || imgHolder[index]" :style="{height: realHeight + 'rem'}"></span>
         <span class="gridimg-holder holder-mask" :style="{height: realHeight + 'rem'}"></span>
-        <img :src="item.Thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
+        <img :src="item.thumbnail" alt="" v-show="!imgHolder[index]" class="gridimg" :style="{minHeight: realHeight + 'rem'}">
         <div class="gridlabel f18">{{index + 1}} / {{total}}</div>
       </v-touch>
     </div>
@@ -71,14 +71,14 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
 
   // 工具栏
   import Toolbar from './toolbar'
 
   export default {
-    name: 'Thumbnail',
+    name: 'thumbnail',
     props: ['isSocketConnected', 'cardWidth', 'cardHeight'],
     data () {
       return {
@@ -86,8 +86,8 @@
         doubtList: [],  // 不懂人员分布
         imgHolder: [],  // 图片加载成功前占位符, 1表示显示占位符
 				realHeight: null,
-        // 白板不懂数据
-        boardTags: null
+        // 白板不懂数
+        doubtBoard: 0
       }
     },
     computed: {
@@ -125,7 +125,7 @@
       let self = this
 
       // 点击 缩略图 按钮 父组件发送事件给本子组件，想要滚动到当前页
-      self.$on('Thumbnail', function () {
+      self.$on('thumbnail', function () {
         let container = self.$el.querySelector('.scroll-box1')
         let currentPage = container.querySelector('#t'+self.current)
         container.scrollTop = currentPage.offsetTop
@@ -226,18 +226,20 @@
        */
       fetchPresentationTag () {
         let self = this
+        let URL = API.lesson.get_presentation_tag
+				let params = {
+					presentation_id: self.presentationid
+				}
+				
+				return request.get(URL, params)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						self.doubtList = res.data.doubtCountList
+            self.doubtBoard = res.data.doubtFileSharingCount
+					}
+				}).catch(error => {
 
-        let url = API.presentation_tag
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.presentation_tag + '/' + self.presentationid + '/'
-        }
-
-        request.get(url)
-          .then(jsonData => {
-            self.doubtList = jsonData.data.doubt
-            self.boardTags = jsonData.data.board_track_tags
-          })
+				})
       },
       /**
        * 点击 遥控器 按钮

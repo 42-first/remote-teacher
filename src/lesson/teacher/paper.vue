@@ -1,7 +1,7 @@
 <!-- 试卷列表 -->
 <template>
 	<div class="paper-box">
-    <slot name="ykt-msg"></slot>
+    
     <div class="isFetching f21" v-show="isFetching">{{ $t('loading') }}...</div>
     <!-- 没有试卷 -->
     <div v-show="!isFetching && !paperList.length && !quizList.length" class="no-paper-box">
@@ -63,9 +63,9 @@
   }
 
   import {mapGetters} from 'vuex'
-  import request from '@/util/request'
+  import request from '@/util/request-v3'
   import Moment from 'moment'
-  import API from '@/pages/teacher/config/api'
+  import API from '@/util/api'
 
   export default {
     name: 'Paper',

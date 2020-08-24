@@ -32,6 +32,8 @@
   import MessageBoxMin from './common/messagebox.vue'
   import {mapGetters} from 'vuex'
   import picker from './common/picker.vue'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
 
   // 工具栏
   import Toolbar from './common/toolbar'
@@ -78,20 +80,17 @@
     },
     methods: {
       init () {
-        let url = 'pc/web_ppt_config'
-        axios.post(this.urlMock(url), {
-          'op': 'get_config'
-        }).then(e => {
-          let data = e.data
-          let info = data.data
-          if (data.success) {
+        let URL = API.lesson.get_user_config
+        return request.get(URL)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let info = res.data
             this.show_presentation = info.show_presentation
             this.showAnswer = info.problem_show_answer
             this.isHideName = !info.show_user_profile
+            this.loaded = true
           }
-          this.loaded = true
         })
-        this.addinversionRight && this.getShowUserInfo()
       },
       /**
        * 点击 遥控器 按钮
@@ -128,12 +127,18 @@
         }
 
         this.isHideName = !this.isHideName;
-        axios.post('/pc/web_ppt_config',{
-          "op": "set_config",
-          "set_data": {
-            "show_user_profile": !this.isHideName
-          },
-          "lesson_id": this.lessonid
+        let URL = API.lesson.update_config
+
+        let params = {
+          show_user_profile: !this.isHideName
+        }
+        return request.post(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+
+          }
+        }).catch(error => {
+
         })
       },
       showAnswerHandle() {
@@ -146,26 +151,20 @@
           return
         }
         this.showAnswer = !this.showAnswer
-        axios.post('/pc/web_ppt_config', {
-          "op": "set_config",
-          "set_data": {
-            "problem_show_answer": this.showAnswer,
-          },
-          "lesson_id": this.lessonid
-        })
-      },
-      // 获取是否投屏隐藏学生信息和习题是否显示答案
-      getShowUserInfo() {
-        const self = this
-        axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
-          let data = e.data.data
-          // console.log(data)
-          self.isHideName = !data.show_user_profile
-        })
-        axios.get('/v/lesson/get_problem_show_answer_config/').then(e => {
-          let data = e.data.data
-          // console.log(data)
-          self.showAnswer = data.problem_show_answer
+
+        let URL = API.lesson.update_config
+        let self = this
+
+        let params = {
+          problem_show_answer: this.showAnswer
+        }
+        return request.post(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+
+          }
+        }).catch(error => {
+          
         })
       },
       pickerfn() {
@@ -184,22 +183,27 @@
       // 设置ppt
       pcSet (name) {
         this.show_presentation = name
-        let url = 'pc/web_ppt_config'
-        axios.post(this.urlMock(url), {
-          'op': 'set_config',
-          'set_data': {
-            'show_presentation': name
-          },
-          'lesson_id': this.lessonid
+        let URL = API.lesson.update_config
+        let params = {
+          show_presentation: name
+        }
+
+        request.post(URL,params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+
+          }
+        }).catch(error => {
+
         })
-        let url1 = `v/lesson/config_presentation/${this.presentationid}/`;
-        axios.post(this.urlMock(url1), {
-          "op":"set_config",
-          "set_data": {
-            "show_presentation": name
-          },
-          'lesson_id': this.lessonid
-        })
+        // let url1 = `v/lesson/config_presentation/${this.presentationid}/`;
+        // axios.post(this.urlMock(url1), {
+        //   "op":"set_config",
+        //   "set_data": {
+        //     "show_presentation": name
+        //   },
+        //   'lesson_id': this.lessonid
+        // })
       },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {
@@ -222,7 +226,6 @@
     position: absolute;
     top: 0;
     width: 100%;
-    z-index: 4;
     .state-set-tollbar{
       position: absolute;
       width: 100%;

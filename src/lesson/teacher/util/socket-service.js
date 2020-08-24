@@ -7,8 +7,7 @@
  */
 
 import socketProcessMessage from './socket-process-message'
-import request from '@/util/request'
-import API from '@/pages/teacher/config/api'
+
 
 const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
@@ -47,15 +46,6 @@ let mixin = {
 
         return this
       } catch(e) {
-        let url = API.reporter
-        request.get(url, {
-          'user_id': self.userid,
-          'lesson_id': self.lessonid,
-          'socket_id': self.$store.state.socket.socket_id,
-          'type': 'closews-catch-e-h5-teacher',
-          'error': JSON.stringify(e),
-          'dt': Date.now()
-        })
       }
     },
     /*
@@ -72,15 +62,7 @@ let mixin = {
       }
 
       try {
-        let url = API.reporter
         if (self.$store.state.socket && self.$store.state.socket.send) {
-          request.get(url, {
-            'user_id': self.userid,
-            'lesson_id': self.lessonid,
-            'socket_id': self.$store.state.socket.socket_id,
-            'type': 'vuex-old-socket-still-exist-h5-teacher',
-            'dt': Date.now()
-          })
 
           // 之前反复自己踢自己的可能原因
           // closews 中的 socket.close() 是先执行的，可能它崩了
@@ -105,33 +87,12 @@ let mixin = {
 
         // 上报连接 socket 动作
 
-        request.get(url, {
-          'user_id': self.userid,
-          'lesson_id': self.lessonid,
-          'socket_id': self.socket.socket_id,
-          'type': 'connection-h5-teacher',
-          'dt': Date.now()
-        })
 
         this.socket.onerror = function(event) {
-          request.get(url, {
-            'user_id': self.userid,
-            'lesson_id': self.lessonid,
-            'socket_id': self.socket.socket_id,
-            'type': 'error-h5-teacher',
-            'dt': Date.now()
-          })
         }
 
         // 关闭
         this.socket.onclose = function(event) {
-          request.get(url, {
-            'user_id': self.userid,
-            'lesson_id': self.lessonid,
-            'socket_id': self.socket.socket_id,
-            'type': 'close-h5-teacher',
-            'dt': Date.now()
-          })
 
           self.closews()
           self.isSocketConnected = false
@@ -179,7 +140,7 @@ let mixin = {
             'userid': self.userid,
             'avatar': self.avatar,
             'role': 'lecturer',
-            'auth': self.auth,
+            'auth': self.token,
             'lessonid': self.lessonid
           }))
         }

@@ -91,7 +91,7 @@ export default {
       // 有可能打开遥控器的时候ppt还没有开始上课，此时hello返回的slideindex可能是0
       let current = msg.slideindex || 1
       // 防止一开始hello的时候数据还没有加载进来
-      let isProblem = self.pptData.length && typeof self.pptData[current - 1].Problem !== 'undefined'
+      let isProblem = self.pptData.length && typeof self.pptData[current - 1].problem !== 'undefined'
       // let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
       let isProblemPublished
 
@@ -142,7 +142,7 @@ export default {
 
       if (self.isDownImgError) {
         let si = msg.slideindex + 1
-        let sid = self.pptData[current].lessonSlideID
+        let sid = self.pptData[current].id
 
         sendUploadSocket.call(self, si, sid)
       }

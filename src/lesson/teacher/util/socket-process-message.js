@@ -5,13 +5,13 @@
 
 let isOldVersion = false               // 雨课堂软件是老版本
 import config from '@/pages/teacher/config/config'
-import request from '@/util/request'
+import request from '@/util/request-v3'
 
 function goHome () {
   this.$store.commit('set_toolbarIndex', 0)
   this.goHome.call(this)
-  if (this.$route.name !== 'home') {
-    location.href = `/lesson/teacher/${window.LESSONID}`
+  if (this.$route.name !== 'teacher-v3') {
+    location.href = `/lesson/teacher/v3/${window.LESSONID}`
   }
 }
 
@@ -120,10 +120,11 @@ function socketProcessMessage(msg){
 
     // TODO 初次联通，node有时会丢失msg.presentation
     // 有可能中间换课件，这时不要显示老的课件
-    if (self.presentationid !== +msg.presentation) {
+    if (self.presentationid !== msg.presentation) {
       self.$store.commit('set_pptData', [])
     }
-    self.$store.commit('set_presentationid', +msg.presentation)
+    self.$store.commit('set_presentationid', msg.presentation)
+    
     // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     self.$store.commit('set_isToastCtrlMaskHidden', true)
 
@@ -170,14 +171,6 @@ function socketProcessMessage(msg){
     self.openDeprive('notRobber', msg.byself)
     T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
 
-    let url = '/reporter/collect'
-    request.get(url, {
-      'user_id': self.userid,
-      'lesson_id': self.lessonid,
-      'socket_id': self.socket.socket_id,
-      'type': 'remotedeprived-h5-teacher',
-      'dt': Date.now()
-    })
     return
   }
 
@@ -275,19 +268,19 @@ function socketProcessMessage(msg){
 
   //习题柱状图投屏了
   if (msg.op == 'postproblemresult') {
-    T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: +msg.problemid});
+    T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: msg.problemid});
     return
   }
   //习题柱状图取消投屏了
   if (msg.op == 'closeproblemresult') {
-    T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: +msg.problemid});
+    T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: msg.problemid});
     localStorage.removeItem('posting-problem'+msg.problemid)
     return
   }
 
   //收题了
   if (msg.op == 'problemfinished') {
-    T_PUBSUB.publish('pro-msg.shoutipc', {problemid: +msg.prob});
+    T_PUBSUB.publish('pro-msg.shoutipc', {problemid: msg.prob});
     return
   }
 
@@ -334,7 +327,7 @@ function socketProcessMessage(msg){
 
   // 主观题投屏
   if (msg.op == 'sproblemshown') {
-    self.$store.commit('set_postingSubjectiveid', +msg.spid)
+    self.$store.commit('set_postingSubjectiveid', msg.spid)
     self.$store.commit('set_postingSubjectiveSent', msg.sent)
     return
   }
@@ -349,7 +342,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'postshown') {
     T_PUBSUB.publish('submission-msg.postshown', msg)
 
-    self.$store.commit('set_postingSubmissionid', +msg.postid)
+    self.$store.commit('set_postingSubmissionid', msg.postid)
     self.$store.commit('set_postingSubmissionSent', msg.sent)
     return
   }

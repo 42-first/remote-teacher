@@ -1,7 +1,6 @@
 <!--试题柱状图页-->
 <template>
 	<div class="problem-root">
-		<slot name="ykt-msg"></slot>
 		<!-- 教师遥控器引导查看答案、续时 -->
     <!-- <GuideDelay
       v-show="!isGuideDelayHidden"
@@ -10,21 +9,20 @@
 		<!--试题柱状图面板-->
 		<div class="problemresult-box">
 			<!-- 上部时钟、人数统计 -->
-			<Rolex
-        :limit="limit"
-        :newTime="newTime"
-        :durationLeft="durationLeft"
-        :total="total"
-        :members="members"
-				:problemid="problemid"
-				:isTouping="isTouping"
-				:problemtype="problemType"
-				@showresult = "showresult"
-        @yanshi="yanshi"
-        @shouti="shouti"
-      ></Rolex>
+			<section class="upper">
+				<Rolex
+					:limit="limit"
+					:newTime="newTime"
+					:durationLeft="durationLeft"
+					:problemid="problemid"
+					@yanshi="yanshi"
+					@shouti="shouti"
+				></Rolex>
+				<hide-some-info :isUserInfo="false" :problemtype="problemType" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
+			</section>
+			
       <!-- 填空题条形图 -->
-      <template v-if="problemType === 'FillBlank'">
+      <template v-if="problemType === 4">
         <FillblankBox class="FillblankBox"
           :total="total"
           :correctNum="correct_students.length"
@@ -45,7 +43,7 @@
 
 
 	    <!-- 下方按钮 -->
-	    <section :class="['group-btns', {'istoupiao': ~problemType.indexOf('Polling') || ~problemType.indexOf('FillBlank')}]">
+	    <section :class="['group-btns', {'istoupiao': problemType== 3 || problemType == 4}]">
 	      <v-touch class="btn-item" v-on:tap="handlePostProblemresult(isTouping)">
 	      	<div class="iconbox" style="background: #28CF6E;">
 	      	  <i class="iconfont icon-shiti_touping f28"></i>
@@ -53,7 +51,7 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-				<router-link v-if="problemType === 'FillBlank'" tag="div" :to="{name: 'fillblankresult-detail', params: { problemid: problemid }}" class="btn-item">
+				<router-link v-if="problemType === 4" tag="div" :to="{name: 'fillblankresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
             <!-- 是否有解析提示 -->
@@ -62,7 +60,7 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
-	      <router-link v-else tag="div" :to="{name: 'collumresult-detail', params: { problemid: problemid }}" class="btn-item">
+	      <router-link v-else tag="div" :to="{name: 'collumresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
             <!-- 是否有解析提示 -->
@@ -71,14 +69,14 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
-	      <div @click="sendCheckRed({name: 'redpacket', problemid: problemid, type: 0})" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
+	      <div @click="sendCheckRed({name: 'redpacket_v3', problemid: problemid, type: 0})" v-show="problemType !== 3 && !~RedEnvelopeID && problemType !== 4" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
 	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',RedEnvelopeID) }}</div>
 	      </div>
 
-	      <div @click="sendCheckRed({name: 'redpacketlist', redid: RedEnvelopeID, type: 1})" v-show="!~problemType.indexOf('Polling') && ~RedEnvelopeID" class="btn-item">
+	      <div @click="sendCheckRed({name: 'redpacketlist_v3', redid: RedEnvelopeID, type: 1})" v-show="problemType !== 3 && ~RedEnvelopeID" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
 	      	</div>
@@ -100,23 +98,23 @@
 <script>
 	import {mapGetters} from 'vuex'
 	import {sec2str} from './util/util'
-	import request from '@/util/request'
-	import API from '@/pages/teacher/config/api'
+	import request from '@/util/request-v3'
+	import API from '@/util/api'
 	import config from '@/pages/teacher/config/config'
 
 	// 时钟组件
-	import Rolex from '@/components/teacher-restructure/common/rolex'
+	import Rolex from '@/lesson/teacher/common/rolex'
   // 试题延时
-  import Problemtime from '@/components/teacher-restructure/common/problemtime'
+  import Problemtime from '@/lesson/teacher/common/problemtime'
   // 中间条形图
-  import FillblankBox from '@/components/teacher-restructure/common/fillblank-box'
+  import FillblankBox from '@/lesson/teacher/common/fillblank-box'
   // 中间柱状图
-	import CollumBox from '@/components/teacher-restructure/common/collum-box'
+	import CollumBox from '@/lesson/teacher/common/collum-box'
 
 	// 教师遥控器引导查看答案、续时
-	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	import GuideDelay from '@/lesson/teacher/common/guide-delay'
 
-	import hideSomeInfo from '@/components/teacher-restructure/common/hideSomeInfo'
+	import hideSomeInfo from '@/lesson/teacher/common/hideSomeInfo'
 
 	let durationTimer = null 			// 处理计时的定时器
 	let refProblemTimer = null    // 刷新试题柱状图的定时器
@@ -181,7 +179,8 @@
 			GuideDelay,
       FillblankBox,
       CollumBox,
-			Rolex
+			Rolex,
+			hideSomeInfo
 	  },
 	  created(){
 	  	this.init()
@@ -213,33 +212,35 @@
 	     * @param {number} duration -1为不限时，以秒为单位，60为一分钟
 	     */
 	    yanshiProblem (duration) {
-	      let self = this
+				let self = this
+				let URL = API.lesson.problem_delay
 
 	      setTimeout(() => {
 	      	self.isProblemtimeHidden = true
-	      }, 100)
+				}, 100)
+				
+				let params = {
+					'limit': duration,
+					'problemId': self.problemid
+				}
 
-	      let postData = {
-	      	'op': 'extendtime',
-	      	'limit': duration,
- 					'problemid': self.problemid
-	      }
-
-	      self.problemOperation(postData)
-	      	.then(() => {
-	      		console.log(duration, timeList[duration])
-	      		// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
+				return request.post(URL,params)
+				.then((res) => {
+					if (res && res.code === 0 && res.data) {
 						let time = ''
-						if(duration > 30){
+						if (duration > 30) {
 							time = duration / 60 + '分钟'
-						}else if(duration == 30) {
+						} else if (duration == 30) {
 							time = duration + '秒'
 						} else {
 							time = '不限时'
 						}
 						let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
 	      		T_PUBSUB.publish('ykt-msg-toast', msg);
-	      	})
+					}
+				}).catch(error => {
+
+				})
 	    },
 	  	/**
 	     * 复用页面，需要watch route
@@ -250,8 +251,8 @@
 		  	let params = self.$route.params
         let query = self.$route.query
 
-		    self.problemid = +params.problemid
-		    self.problemType = query.pt
+		    self.problemid = params.problemid
+		    self.problemType = +query.pt
 
 		    let storedPosting = localStorage.getItem('posting-problem'+self.problemid)
 
@@ -428,7 +429,7 @@
 
         // 从模态框组件传来，H5收题事件
         T_PUBSUB.subscribe('pro-msg.shoutih5', (_name, msg) => {
-          self.problemid === msg.problemid && self.shoutiConfirm()
+          self.problemid == msg.problemid && self.shoutiConfirm()
         })
 
         // 从 node 传来， 试题投屏事件
@@ -448,12 +449,12 @@
 
         // 从 node 传来，pc 延时事件
         T_PUBSUB.subscribe('pro-msg.yanshipc', (_name, msg) => {
-          self.problemid === +msg.prob && self.resetTiming(operationType['yanshi'], msg)
+          self.problemid === msg.prob && self.resetTiming(operationType['yanshi'], msg)
         })
 
         // 从 node 传来，有学生断网重连提交答案了
         T_PUBSUB.subscribe('pro-msg.newsubmit', (_name, msg) => {
-        	self.problemid === +msg.prob && self.getProblemResult()
+        	self.problemid === msg.prob && self.getProblemResult()
         })
       },
       /**
@@ -613,38 +614,21 @@
 	     * @event bindtap
 	     */
 	    shoutiConfirm () {
-	      let self = this
+				let self = this
+				
+				let URL = API.lesson.problem_finish
+				let params = {
+					'problemId': self.problemid
+				}
 
-	      let postData = {
-	      	'op': 'problemfinished',
- 					'problemid': self.problemid
-	      }
+				return request.post(URL,params)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
 
-	      self.problemOperation(postData)
-	    },
-	    /**
-	     * 收题、延时等具体请求的执行
-	     *
-	     * @event bindtap
-	     * @param {Object} postData 请求数据
-	     */
-	    problemOperation (postData) {
-	      let self = this
+					}
+				}).catch(error => {
 
-	      let url = API.delay_problem
-	      return request.post(url, postData)
-	      	.then(jsonData => {
-	      		if (jsonData.success) {
-	      			let optype = postData.op === 'extendtime' ? 'yanshi' : 'shouti'
-	      			// 因为是单通，node会通知的，编码处理2遍，简单的解决是统一等node通知
-	      			// self.resetTiming(operationType[optype], postData.limit)
-	      		} else {
-	      			let str = (postData.op === 'extendtime' ? '延时' : '收题')+ `失败${self.problemid}`
-	      			throw new Error(str)
-	      		}
-	      	}).catch(error => {
-	      		console.error('error', error)
-	      	})
+				})
 	    },
 	    /**
 	     * 试题柱状图页面中的 投屏 按钮
@@ -704,9 +688,6 @@
 	      refProblemTimerNum = 0
 	      clearInterval(durationTimer)
 			},
-			showresult(e) {
-				this.showAnswer = !!e
-			},
 
       /**
        * method 读取问题详情
@@ -715,10 +696,10 @@
       getProlemById(id) {
         if(this.pptData && this.pptData.length) {
           let card = this.pptData.find( (silde) => {
-            return silde && silde.Problem && id === silde.Problem.ProblemID;
+            return silde && silde.problem && id === silde.problem.problemId;
           });
 
-          this.problem = card.Problem;
+          this.problem = card.problem;
         }
 			},
 			/*
@@ -762,6 +743,13 @@
 	  text-align: center;
 	  color: $white;
 	  background: #000000;
+
+		.upper {
+			margin: 0 auto;
+			width: 9.7rem;
+			height: 4.0rem;
+			padding-top: 0.8rem; 
+		}
 
 	  /* 调整中间条形头的高度 */
 		.FillblankBox {

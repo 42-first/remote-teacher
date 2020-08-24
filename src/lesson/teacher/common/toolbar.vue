@@ -228,7 +228,7 @@
       },
       goSet () {
         this.$emit('stateSet', 1)
-        this.$router.push({name: 'stateSet'})
+        this.$router.push({name: 'stateSet_v3'})
       },
       // 延迟关闭当前浮窗
       closeMore() {
@@ -244,7 +244,7 @@
       },
       // 学生视角预览
       gotoStu(){
-        location.href = '/lesson/student/'+ this.lessonid +'?force=lecture&remote=1'
+        location.href = '/lesson/student/v3'+ this.lessonid +'?force=lecture&remote=1'
       }
     }
   }

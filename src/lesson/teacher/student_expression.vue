@@ -1,7 +1,7 @@
 <!-- 学生表现页 -->
 <template>
 	<section class="expression-wrapper">
-    <slot name="ykt-msg"></slot>
+
     <template v-if="isloaded">
       <div class="banner">
         <div class="round1"></div>
@@ -127,9 +127,9 @@
 <script>
 	
   import {mapGetters} from 'vuex'
-  import request from '@/util/request'
+  import request from '@/util/request-v3'
   import { getLength, substr } from '@/util/util'
-  import API from '@/pages/teacher/config/api'
+  import API from '@/util/api'
 	export default {
 	  name: 'Expression',
 	  data () {
@@ -189,21 +189,21 @@
       },
       getBehaviorStudent(){
         let self = this
-        let url = API.behavior_tag.student_about
+        let url = API.lesson.student_about
         let params = {
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
           student_id: this.userid
         }
-        request.get(url, params).then(res => {
-          if(res.success){
+        return request.get(url, params).then(res => {
+          if(res && res.code === 0 && res.data){
             self.user_profile = res.data.user_profile
-            self.tagList = res.data.tags
-            self.tagListTemp = res.data.tags
-            self.behavior_score = res.data.behavior_score
-            self.behavior_score_temp = res.data.behavior_score
-            self.participate = res.data.participate
-            self.attendance_status = res.data.attendance_status
+            self.tagList = res.data.assess_tags
+            self.tagListTemp = res.data.assess_tags
+            self.behavior_score = res.data.assess_score
+            self.behavior_score_temp = res.data.assess_score
+            // self.participate = res.data.participate
+            // self.attendance_status = res.data.attendance_status
             self.isloaded = true
           }
         })
@@ -223,7 +223,7 @@
           } 
         })
         
-        let URL = API.behavior_tag.bind_student
+        let URL = API.lesson.bind_student
         let params = {
           tag_ids: tag_ids,
           lesson_id: this.lessonid,
@@ -231,7 +231,7 @@
           student_id: this.userid
         }
         request.post(URL, params).then(res => {
-          if(res.success){
+          if(res && res.code === 0 && res.data){
             
           }
         })
@@ -239,7 +239,7 @@
       },
 	  	handleChangeStatus(){
         let self = this
-        let URL = API.behavior_tag.change_participate
+        let URL = API.lesson.change_participate
         let status = null
         if((this.participate.has_joined && (this.attendance_status == -1 || this.attendance_status == 1))|| (!this.participate.has_joined && this.attendance_status == 1)){
           status = 0
@@ -265,7 +265,7 @@
       },
       handleAddTag(){
         let self = this
-        let URL = API.behavior_tag.create_tag
+        let URL = API.lesson.created_tag
         let params = {
           name: this.tagText,
           classroom_id: this.classroomid,
@@ -284,7 +284,7 @@
           return
         }
         request.post(URL, params).then(res => {
-          if(res.success){
+          if(res && res.code === 0 && res.data){
             this.tagList.push(res.data)
             setTimeout(() => {
               self.addTagFlag = false
@@ -299,14 +299,14 @@
           this.isEdit = false
           return
         }
-        let URL = API.behavior_tag.deleted_tag
+        let URL = API.lesson.deleted_tag
         let params = {
           tag_ids: this.delete_ids,
           classroom_id: this.classroomid,
           lesson_id: this.lessonid
         }
         request.post(URL, params).then(res => {
-          if(res.success){
+          if(res && res.code === 0 && res.data){
             self.delete_ids = []
             self.isEdit = false
             self.tagListTemp = [...self.tagList]
@@ -342,7 +342,7 @@
       },
       handleAddScore(){
         let self = this
-        let URL = API.behavior_tag.change_score
+        let URL = API.lesson.change_score
         let params = {
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
@@ -350,7 +350,7 @@
           score: this.behavior_score_temp ? this.behavior_score_temp : 0
         }
         request.post(URL, params).then(res => {
-          if(res.success){
+          if(res && res.code === 0 && res.data){
             self.behavior_score = res.data.score
             self.addScoreFlag = false
             self.behavior_score_temp = res.data.score

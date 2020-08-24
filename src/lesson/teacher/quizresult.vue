@@ -1,7 +1,7 @@
 <!-- 已发试卷饼图页 -->
 <template>
 	<div class="quizresult-box">
-    <slot name="ykt-msg"></slot>
+
     <!-- 上部时钟 -->
     <section class="upper">
       <div class="f50">
@@ -60,8 +60,8 @@
   import {mapGetters} from 'vuex'
   import {sec2str} from './util/util'
   import {drawRingSolid} from './util/drawsvg'
-  import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
 
   export default {
     name: 'Quizresult',
