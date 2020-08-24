@@ -96,7 +96,7 @@ export default {
     handleSend() {
       if(this.danmuText.length > 50 || !this.danmuText) return;
 
-      let URL = API.student.SEND_DANMU;
+      let URL = API.lesson.send_danmu;
       const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
       let params = {
         'biz': 1,

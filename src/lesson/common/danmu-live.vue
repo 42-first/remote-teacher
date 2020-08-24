@@ -360,7 +360,7 @@
         let danmu = danmus.shift();
 
         if(danmu) {
-          let ismine = this.userid === danmu.userid ? true : false;
+          let ismine = this.userid == danmu.userid ? true : false;
 
           let newDanmu = Object.assign({}, danmu, { status: 1, ismine })
           this.danmuList.push(newDanmu);
