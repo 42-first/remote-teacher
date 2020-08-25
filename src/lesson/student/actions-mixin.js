@@ -921,12 +921,14 @@ var actionsMixin = {
       let boardInfo = this.boardMap.get(id);
 
       if (data) {
-        data = Object.assign(data, {
+        data = Object.assign({
           rate: data.devwidth / data.devheight,
           time: data.dt,
           doubt: false,
           emphasis: false
-        }, boardInfo);
+        }, data, boardInfo);
+
+        console.log('boardInfo:', data)
 
         // 记录当前白板信息
         this.boardMap.set(id, data);

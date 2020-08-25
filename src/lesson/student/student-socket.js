@@ -134,7 +134,7 @@ var mixin = {
 
       if(msg.op) {
         // 弹幕状态
-        msg["danmu"] && (this.danmuStatus = msg["danmu"])
+        msg["danmu"] === true && (this.danmuStatus = msg["danmu"]);
 
         switch(msg.op) {
           // 建立通信 时间轴事件

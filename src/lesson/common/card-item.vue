@@ -408,9 +408,8 @@
         let params = {
           'type': type,
           'action': action,
-          // 'presentationId': pres,
-          'objId': boardid,
-          'objType': 1,
+          'objId': new String(boardid),
+          'objType': 1
         };
 
         // 同步白板信息 更新cards信息
