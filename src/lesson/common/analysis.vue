@@ -10,27 +10,25 @@
 <template>
   <!-- 解析内容 -->
   <section class="analysis-inner J_analysis_inner">
-    <section class="analysis-anwser f16" v-if="problem.Type!=='ShortAnswer'"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
-    <section class="analysis__images" :style="problem.RemarkRich|setScale" v-if="problem.RemarkRich && problem.RemarkRich.Shapes">
+    <section class="analysis-anwser f16" v-if="problem.problemType!==5"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
+    <section class="analysis__images" :style="problem.remarkRich|setScale" v-if="problem.remarkRich && problem.remarkRich.shapes">
       <!-- 新的解析处理 -->
-      <div v-for="shape in problem.RemarkRich.Shapes">
+      <div v-for="shape in problem.remarkRich.shapes">
         <!-- 文字提取方式 新版 -->
-        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.Paragraphs" />
+        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.paragraphs" />
         <div class="analysis__shape" :style="shape|setShapeStyle" v-else>
-          <template v-for="paragraph in shape.Paragraphs" v-if="shape.Paragraphs">
-            <ol class="paragraph__wrap J_paragraph" :start="paragraph.Number">
-              <li class="analysis__shape shape__text" :style="paragraph.Bound|setShapeStyle">
-                <div class="analysis__shape paragragh__line" :style="line.Bound|setShapeStyle" v-html="line.Html" v-for="line in paragraph.Lines" v-if="paragraph.Lines"></div>
+          <template v-for="paragraph in shape.paragraphs" v-if="shape.paragraphs">
+            <ol class="paragraph__wrap J_paragraph" :start="paragraph.number">
+              <li class="analysis__shape shape__text" :style="paragraph.bound|setShapeStyle">
+                <div class="analysis__shape paragragh__line" :style="line.bound|setShapeStyle" v-html="line.html" v-for="line in paragraph.lines" v-if="paragraph.lines"></div>
               </li>
             </ol>
           </template>
         </div>
       </div>
-
     </section>
     <!-- 兼容老的解析处理 -->
-    <section class="remark f17" v-if="!problem.RemarkRich&&problem.Remark">{{ problem.Remark }}</section>
-
+    <section class="remark f17" v-if="!problem.remarkRich&&problem.remark">{{ problem.remark }}</section>
   </section>
 
 </template>
@@ -121,17 +119,14 @@
       // 设置答案解析的缩放
       setScale(remarkRich) {
         let sCss = '';
-        let px2rem = window.lib && window.lib['flexible'] && window.lib['flexible']['px2rem'];
+
         if(remarkRich) {
           let winWidth = window.innerWidth - 100;
-          // let width = remarkRich.Width*window.dpr;
-          // let height = remarkRich.Height*window.dpr;
           let width = remarkRich.Width;
           let height = remarkRich.Height;
           let scaleRate = winWidth/width;
-          // height = height * scaleRate;
+
           sCss = `width: ${width}px; height: ${height}px; transform: scale(${scaleRate});`;
-          // sCss = `width: ${px2rem(width)}rem; height: ${px2rem(height)}rem; transform: scale(${scaleRate});`;
         }
 
         return sCss;
@@ -143,12 +138,12 @@
        */
       init(problem) {
         // 结构中是否有Answer字段
-        let type = problem.Type;
+        let type = problem.problemType;
         let answers = [];
-        if(type === 'FillBlank' && !problem.Answer) {
+        if(type === 4 && !problem.Answer) {
           problem.Answer = '';
 
-          problem.Blanks.forEach( (blank) =>{
+          problem.blanks.forEach( (blank) =>{
             answers.push(blank.Answers.join('/'));
             // problem.Answer += ' ' + blank.Answers.join('/');
           });
