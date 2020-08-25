@@ -39,8 +39,8 @@
 
 <script>
   import {mapGetters} from 'vuex'
-	import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+	import request from '@/util/request-v3'
+  import API from '@/util/api'
   import config from '@/pages/teacher/config/config'
   // 工具栏
 	import Toolbar from '@/components/teacher-restructure/common/toolbar'

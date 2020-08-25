@@ -1,6 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root J_page J_tip">
+		<slot name="ykt-msg"></slot>
     <div id="rc-home" :class="['rc-home',{'shuban': isShuban}]" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
@@ -22,8 +23,8 @@
 
         	<img v-if="isUpImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
-        	<img v-if="pptData.length && !pptData[current - 1].Cover" class="img-error" :src="imgUploadingPath" />
-        	<img v-if="pptData.length && pptData[current - 1].Cover" class="card" :src="pptData[current - 1].Cover" />
+        	<img v-if="pptData.length && !pptData[current - 1].cover" class="img-error" :src="imgUploadingPath" />
+        	<img v-if="pptData.length && pptData[current - 1].cover" class="card" :src="pptData[current - 1].cover" />
 					<div class="note" v-if="pptData.length && pptData[current - 1].Note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
         </div>
 
@@ -33,8 +34,8 @@
         <div class="detail f14">{{ $t('nextslide') }}</div>
         <img v-if="isDownImgError && isPPTVersionAboveOne && !isUploadSlideCrash" class="img-error" src="~images/teacher/img-uploading.png" />
         <img v-if="isDownImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
-        <img v-if="pptData.length && !pptData[current].Cover" class="img-error" :src="imgUploadingPath" />
-        <img v-if="pptData.length && pptData[current].Cover" class="card" :src="pptData[current].Cover" />
+        <img v-if="pptData.length && !pptData[current].cover" class="img-error" :src="imgUploadingPath" />
+        <img v-if="pptData.length && pptData[current].cover" class="card" :src="pptData[current].cover" />
       </div>
 			<!-- 停服务通知 -->
     	<notice position="bottom" :style="{bottom: '1.706667rem'}"></notice>
@@ -123,6 +124,7 @@
 				</div>
 			</div>
 		</div>
+		<router-view class="subContainer"></router-view>
   </div>
 </template>
 
@@ -131,9 +133,9 @@
 
 	import { mapGetters, mapActions} from 'vuex'
 
-	import request from '@/util/request'
+	import request from '@/util/request-v3'
 	import {configWX} from '@/util/wx-util'
-	import API from '@/pages/teacher/config/api'
+	import API from '@/util/api'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -143,27 +145,27 @@
 
 	// 页面组件
 	// 工具栏
-	import Toolbar from '@/components/teacher-restructure/common/toolbar'
+	import Toolbar from '@/lesson/teacher/common/toolbar'
 	// 新手引导蒙版
-	import Guide from '@/components/teacher-restructure/common/guide'
+	import Guide from '@/lesson/teacher/common/guide'
 	// 教师遥控器引导查看答案、续时
-	import GuideDelay from '@/components/teacher-restructure/common/guide-delay'
+	import GuideDelay from '@/lesson/teacher/common/guide-delay'
 	// 错误蒙版
-	import Errormsg from '@/components/teacher-restructure/common/errormsg'
+	import Errormsg from '@/lesson/teacher/common/errormsg'
 	// 断网重连蒙版
-	import Reconnect from '@/components/teacher-restructure/common/reconnect'
+	import Reconnect from '@/lesson/teacher/common/reconnect'
 	// 夺权面板
-	import Deprive from '@/components/teacher-restructure/common/deprive'
+	import Deprive from '@/lesson/teacher/common/deprive'
 	// 二维码控制蒙版
-	import Qrcode from '@/components/teacher-restructure/common/qrcode'
+	import Qrcode from '@/lesson/teacher/common/qrcode'
 	// 缩略图面板
-	import Thumbnail from '@/components/teacher-restructure/common/thumbnail'
+	import Thumbnail from '@/lesson/teacher/common/thumbnail'
 	// 课堂动态面板
-	import Activity from '@/components/teacher-restructure/common/activity'
+	import Activity from '@/lesson/teacher/common/activity'
 
-	import change_lang_dialog from "@/components/common/change_lang_dialog.vue"
+	import change_lang_dialog from "@/lesson/common/change_lang_dialog.vue"
 
-	import endshow from '@/components/teacher-restructure/common/endshow'
+	import endshow from '@/lesson/teacher/common/endshow'
 
 	// 没有输出，而是给全局window加了函数 PreventMoveOverScroll
 	import './util/preventoverscroll'
@@ -214,14 +216,14 @@
 	      let pptData = self.pptData
 	      let current = self.current
 
-	      return pptData[current - 1] && (pptData[current - 1].Cover == 'rain://error/upload-error' || pptData[current - 1].Cover == 'rain://error/export-error')
+	      return pptData[current - 1] && (pptData[current - 1].cover == 'rain://error/upload-error' || pptData[current - 1].cover == 'rain://error/export-error')
 	    },
 	    isDownImgError () {
 	      let self = this
 	      let pptData = self.pptData
 	      let current = self.current
 
-	      return pptData[current] && (pptData[current].Cover == 'rain://error/upload-error' || pptData[current].Cover == 'rain://error/export-error')
+	      return pptData[current] && (pptData[current].cover == 'rain://error/upload-error' || pptData[current].cover == 'rain://error/export-error')
 	    },
 	    ...mapGetters([
 	    	'userid',
@@ -289,7 +291,16 @@
 	    self.polyfillIncludes()
 	    self.importPhotoswipe()
 	  },
-	  mixins: [switches, socketService, problemRelated],
+		mixins: [switches, socketService, problemRelated],
+		watch: {
+			'$route'(newVal){
+				if(newVal.name !== 'teacher-v3'){
+					clearInterval(pollingPresentationTagTimer)
+				}else {
+					this.pollingPresentationTag()
+				}
+			}
+		},
 	  methods: {
 			...mapActions([
 				'set_isCloneClass'
@@ -304,7 +315,7 @@
 	    init () {
 		  	let self = this
 
-		    let lessonid = +self.$route.params.lessonid
+		    let lessonid = self.$route.params.lessonid
 		    window.LESSONID = lessonid
 
 		    // 换课的话，要清掉持久化的旧 store
@@ -318,7 +329,7 @@
 
 		    // 获取本地不懂、投稿已读数
 		    oldDoubt = +(localStorage.getItem('oldDoubt'+self.lessonid) || 0)
-		    self.fetchUserInfo().then(self.initws.bind(self))
+				self.initLesson()
 
 		    self.pollingPresentationTag()
 
@@ -404,67 +415,157 @@
 	      })
 
 	      self.socket.send(str)
-	    },
-	    /**
-	     * 获取用户数据
-	     *
-	     */
-	    fetchUserInfo () {
-	      let self = this
-	      let url = API.userinfo
-	      return request.get(url, {'lesson_id': self.lessonid})
-				.then(jsonData => {
-					window.USERID = jsonData.data.user.user_id
-					self.$store.dispatch('saveUserInfo', jsonData.data)
+			},
+			/**
+			 * 初始化课堂数据
+			 * 
+			 */
+			async initLesson(){
+				let joined = await this.checkIn();
+				// TODO： 签到发现没有权限处理
+				if(joined.code !== 0) {
+					// 50004 lesson end
+					if(joined === 50004) {
+						this.goToLessonDetail(1)
+						return this;
+					}
+				}
+				let userInfo = await this.getUserInfo()
+
+				let lessonInfo = await this.getLessonInfo();
+				if(lessonInfo){
+					let {basic, classroom, invitation} = lessonInfo
+				
+				let data = {
+					classroom: {
+						classroomid: basic.classroomId,
+						count: classroom.count
+					},
+					course: {
+						coursename: classroom.courseName,
+						courseid: classroom.courseId
+					},
+					lesson: {
+						is_lesson_end: basic.endTime > 0,
+						user_role: joined.data.isTeacher ? 1 : 5,
+						invite_code: invitation.inviteCode
+					},
+					user: {
+						user_id: userInfo.id,
+						avatar: userInfo.avatar,
+						user_auth: joined.data.lessonToken
+					}
+				}
+
+				this.$store.dispatch('saveUserInfo', data)
+				}
+			 	
+
+				setTimeout(() => {
+					this.initws()
+				}, 20);
+			},
+			/** 
+			 * 教师签到
+			*/
+			checkIn(){
+				let self = this
+				let URL = API.lesson.checkin
+				let params = {
+					lessonId: this.lessonid,
+					source: 0
+				}
+				return request.post(URL,params)
+				.then((res)=>{
+					if(res && res.code === 0) {
+						let data = res.data;
+						self.token = data.lessonToken
+					}
+
+					return res;
+				}).
+				catch(error => {
+					console.log('checkin:', error);
+					return null;
 				})
-				.catch(() => {
-					console.error('获取用户信息失败')
+			},
+			/** 
+			 * 获取用户信息
+			*/
+			getUserInfo(){
+				let URL = API.lesson.get_user
+				return request.get(URL)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						window.USERID = res.data.id
+						return res.data
+					}
+				}).catch(error => {
+					console.log('UserInfo:' + error)
 				})
-	    },
+			},
+			/** 
+			 * 获取授课信息
+			*/
+			getLessonInfo(){
+				let URL = API.lesson.get_lesson_detail
+				return request.get(URL)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						let data = res.data
+						return res.data
+					}
+				}).catch(error => {
+					console.log('getLesson:', error);
+				})
+			},
 	    /**
 	     * 获取ppt数据
 	     *
 	     */
 	    fetchPPTData () {
 	      let self = this
-	      let url = API.fetch_presentation_data
+				let url = API.lesson.get_presentation
+				let params = {
+					presentation_id: self.$store.state.presentationid
+				}
 
 	      // 切换路由后，presentationcreated 触发的去设置 presentationid，
 	      // 在这不会立即反映到 self.presentationid 上，所以干脆这里直接使用 store 上的值
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.fetch_presentation_data + '/' + self.$store.state.presentationid + '/'
-	      } else {
-          url = API.fetch_presentation_data + '/' + self.$store.state.presentationid + '/'
-        }
+	      request.get(url,params)
+	        .then((res) => {
+						if(res && res.code === 0 && res.data){
+							let jsonData = res.data
+							let pptData = jsonData.slides
+							let current = self.current
+							let isProblem = (typeof pptData[current - 1].problem) !== 'undefined'
+							// let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
 
-	      request.get(url)
-	        .then(jsonData => {
-	          let pptData = jsonData.presentationData.Slides
-	          let current = self.current
-	          let isProblem = (typeof pptData[current - 1].Problem) !== 'undefined'
-	          // let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
+							let isProblemPublished
 
-	          let isProblemPublished
+							if (self.isPPTVersionAboveOne && isProblem) {
+								isProblemPublished = self.unlockedproblem.includes(pptData[current - 1].id)
+							} else {
+								isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
+							}
 
-	          if (self.isPPTVersionAboveOne && isProblem) {
-	            isProblemPublished = self.unlockedproblem.includes(pptData[current - 1].lessonSlideID)
-	          } else {
-	            isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
-	          }
+							// fetchPPTData的主要目的是获取pptData total
+							// 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
+							self.$store.commit('set_pptData', pptData)
+							self.$store.commit('set_total', pptData.length)
+							self.$store.commit('set_isPubCheckProblemBtnHidden', !isProblem)
+							self.$store.commit('set_isProblemPublished', isProblemPublished)
 
-	          // fetchPPTData的主要目的是获取pptData total
-	          // 后2个是因为一开始打开遥控器是没有pptData数据，在hello中并不能判断当前页有没有试题
-	          self.$store.commit('set_pptData', pptData)
-	          self.$store.commit('set_total', pptData.length)
-	          self.$store.commit('set_isPubCheckProblemBtnHidden', !isProblem)
-	          self.$store.commit('set_isProblemPublished', isProblemPublished)
-
-	          self.$store.commit('set_isEnterEnded', true)
-	          self.initCardHeight()
-	          self.filterSlideid(pptData)
-	          self.cardWidth = jsonData.presentationData.Width
-	          self.cardHeight = jsonData.presentationData.Height
-	        })
+							self.$store.commit('set_isEnterEnded', true)
+							self.initCardHeight()
+							self.filterSlideid(pptData)
+							self.cardWidth = jsonData.width
+							self.cardHeight = jsonData.height
+						}
+					}).catch(error => {
+						console.log('fetchPPTData:' + error)
+					})
+					
 	    },
 	    /**
 	     * 处理slideid 和 slideindex 的对应关系
@@ -478,7 +579,7 @@
 
 	      pptData.forEach((item, index) => {
 	        // idIndexMap[item.lessonSlideID] = item.Index
-	        idIndexMap[item.lessonSlideID] = index + 1
+	        idIndexMap[item.id] = index + 1
 	      })
 
 	      self.setData({
@@ -494,7 +595,7 @@
 	     */
 	    initCardHeight () {
 	      let self = this
-	      let _src = self.pptData[0].Cover
+	      let _src = self.pptData[0].cover
 	      let _img = new Image()
 
 	      _img.onload = function () {
@@ -563,37 +664,39 @@
 	     */
 	    fetchPresentationTag () {
 	      let self = this
-	      if (self.presentationid <= 0) {return;}
+				if (self.presentationid <= 0) {return;}
+				
+				let URL = API.lesson.get_presentation_tag
+				let params = {
+					presentation_id: self.presentationid
+				}
+				
+				return request.get(URL, params)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						let doubt = res.data.doubtCountList
+						doubtTotalSum = 0
+						let doubtBoard = res.data.doubtFileSharingCount
 
-	      let url = API.presentation_tag
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.presentation_tag + '/' + self.presentationid + '/'
-	      } else {
-          url = API.presentation_tag + '/' + self.presentationid + '/'
-        }
-	      request.get(url)
-	        .then(jsonData => {
-	          let doubt = jsonData.data.doubt
-	          doubtTotalSum = 0
-            let boardTags = jsonData.data.board_track_tags
+						doubt.forEach(item => {
+							doubtTotalSum += item
+						})
 
-	          doubt.forEach(item => {
-	            doubtTotalSum += item
-	          })
+						// 加上不懂的数据
+						if(doubtBoard) {
+							doubtTotalSum += doubtBoard
+						}
 
-            // 加上不懂的数据
-            if(boardTags) {
-              doubtTotalSum += boardTags.board_track_doubt_count;
-            }
+						// 学生能取消不懂的，有可能减成负数
+						if (doubtTotalSum < oldDoubt) {
+							oldDoubt = doubtTotalSum
+						}
 
-	          // 学生能取消不懂的，有可能减成负数
-	          if (doubtTotalSum < oldDoubt) {
-	            oldDoubt = doubtTotalSum
-	          }
+						self.$store.commit('set_newdoubt', doubtTotalSum - oldDoubt)
+					}
+				}).catch(error => {
 
-	          self.$store.commit('set_newdoubt', doubtTotalSum - oldDoubt)
-	          // 和小程序不同， doubtSorted doubtList 在 thumbnail.vue中
-	        })
+				})
 	    },
 	    /**
 	     * 获取投稿未读数 的信息
@@ -603,11 +706,14 @@
 	      let self = this
 	      if (self.lessonid <= 0) {return;}
 
-	      let url = API.submission_unread_num + '?lesson_id=' + self.lessonid
+	      let url = API.lesson.get_unread
 
-	      request.get(url).then(jsonData => {
-          self.$store.commit('set_newtougao', jsonData.data.unread_num)
-        })
+				request.get(url)
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						self.$store.commit('set_newtougao', res.data.unreadNum)
+					}
+				})
 	    },
 	    /**
 	     * 用户缩略图点击了 不懂 按钮，清零不懂数
@@ -962,4 +1068,11 @@
   .allLoaded .mint-loadmore-bottom {
     display: none;
   }
+	.subContainer {
+		position: absolute !important;
+		width: 100%;
+		top: 0;
+		left: 0;
+		z-index: 102;
+	}
 </style>

@@ -1,7 +1,7 @@
 <!-- 已发试卷详情页 -->
 <template>
 	<div class="quizresultdetail-box">
-    <slot name="ykt-msg"></slot>
+
     <div class="list-head f17">
       <div class="item f17" style="border-bottom: none;">
         <div class="name ellipsis">
@@ -32,8 +32,8 @@
 </template>
 
 <script>
-  import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
 
   export default {
     name: 'QuizresultDetail',

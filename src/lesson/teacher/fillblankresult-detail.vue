@@ -1,7 +1,7 @@
 <!--填空题题作答详情面板 -->
 <template>
   <div class="problemresultdetail-box">
-    <slot name="ykt-msg"></slot>
+
     <template v-if="problemResultDetailData">
 
       <!-- <div class="tab">
@@ -115,9 +115,9 @@
   // # 匿名投票Anonymous
   // PROBLEM_TYPE_ANONYMOUS_POLLING = 8
 
-  import request from '@/util/request'
-  import API from '@/pages/teacher/config/api'
-  import analysismixin from '@/components/common/analysis-mixin'
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
+  import analysismixin from '@/lesson/common/analysis-mixin'
 
   export default {
     name: 'FillblankresultDetail',
@@ -163,7 +163,7 @@
       init() {
         let self = this
 
-        self.problemid = +self.$route.params.problemid
+        self.problemid = self.$route.params.problemid
         self.refreshProblemResultDetail()
 
         this.getProlemById(this.problemid);

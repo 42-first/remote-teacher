@@ -33,6 +33,8 @@
   import {mapGetters} from 'vuex'
   import axios from 'axios'
   import explainbox from "@/components/teacher-restructure/common/explainbox"
+  import request from '@/util/request-v3'
+  import API from '@/util/api'
   export default {
     name: 'hideSomeInfo',
     props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype', 'position'],
@@ -60,7 +62,7 @@
       let type = this.problemtype
       console.log(num, this.addinversion, type)
       this.pptversion = num
-      this.showAnswerText = num && num >= 1.3 && type!=='Polling'&& type!=='AnonymousPolling'
+      this.showAnswerText = num && num >= 1.3 && type!==3
       if (num >= 1.3) {
         this.isUserInfo ? this.getShowUserInfo() : this.getShowAnswer()
       }
@@ -111,28 +113,41 @@
         // this.$emit('change', this.isHideName)
       },
       hideNameHandleConfig () {
-        axios.post('/pc/web_ppt_config',{
-          "op": "set_config",
-          "set_data": {
-            "show_user_profile": !this.isHideName
-          },
-          "lesson_id": this.lessonid
+        let URL = API.lesson.update_config
+
+        let params = {
+          show_user_profile: !this.isHideName
+        }
+        return request.post(URL, params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+
+          }
+        }).catch(error => {
+
         })
       },
       // 是否显示答案
       getShowAnswer() {
-        axios.get('/v/lesson/get_problem_show_answer_config/').then(e => {
-          let data = e.data.data
-          this.showAnswer = !!data.problem_show_answer
-          this.$emit('change', this.showAnswer)
+        let URL = API.lesson.get_user_config
+        return request.get(URL)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let info = res.data
+            this.showAnswer = !!info.problem_show_answer
+            this.$emit('change', this.showAnswer)
+          }
         })
       },
       // 是否显示用户信息
       getShowUserInfo() {
-        axios.get('/v/lesson/get_show_user_profile_config/').then(e => {
-          let data = e.data.data
-          this.isHideName = !data.show_user_profile
-          // this.$emit('change', this.isHideName)
+        let URL = API.lesson.get_user_config
+        return request.get(URL)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let info = res.data
+            this.isHideName = !info.show_user_profile
+          }
         })
       }
     },

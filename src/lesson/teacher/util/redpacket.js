@@ -8,10 +8,10 @@
  *
  */
 
-import request from '@/util/request'
+import request from '@/util/request-v3'
 import {wxpay} from '@/util/wx-util'
 import Promise from 'bluebird'
-import API from '@/pages/teacher/config/api'
+import API from '@/util/api'
 
 let OLD_NUM_INPUT_HIDDEN, OLD_PRICE_INPUT_HIDDEN // 记录之前input框状态，hack输入框层级最高的bug
 let payPromise = null      // 发红包的promise

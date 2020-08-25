@@ -1,7 +1,7 @@
 <!--试题课堂红包名单页-->
 <template>
 	<div class="redpacketlist-box">
-		<slot name="ykt-msg"></slot>
+
 		<!-- 顶部红色及文案 -->
     <div class="rp-redhead">
       <div class="oval"></div>
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-	import request from '@/util/request'
-	import API from '@/pages/teacher/config/api'
+	import request from '@/util/request-v3'
+	import API from '@/util/api'
 
 	export default {
 	  name: 'Redpacketlist',

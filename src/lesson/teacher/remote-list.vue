@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import request from '@/util/request'
-import API from '@/pages/teacher/config/api'
+import request from '@/util/request-v3'
+import API from '@/util/api'
 
 export default {
   name: 'remote-list',

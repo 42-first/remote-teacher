@@ -31,13 +31,13 @@ let analysisMixin = {
     getProlemById(id) {
       if(this.pptData && this.pptData.length) {
         let card = this.pptData.find( (silde) => {
-          return silde && silde.Problem && id === silde.Problem.ProblemID;
+          return silde && silde.problem && id === silde.problem.problemId;
         });
 
-        this.problem = card.Problem;
+        this.problem = card.problem;
         // 统一将 Answer 放在Problem下
-        if(card.Answer) {
-          this.problem.Answer = card.Answer;
+        if(card.answer) {
+          this.problem.Answer = card.answer;
         }
 
         console.info(this.problem);
