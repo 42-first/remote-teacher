@@ -79,8 +79,8 @@ var exerciseMixin = {
             let successList = res.data.success;
             if(successList) {
               successList.forEach((pid)=>{
-                let problem = params.find((item)=>{
-                  return item.problemId === pid;
+                let problem = problems.find((item)=>{
+                  return item.problemId == pid;
                 })
 
                 problem && this.setProblemStatus(pid, problem);

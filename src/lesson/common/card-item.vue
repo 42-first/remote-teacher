@@ -16,6 +16,10 @@
         <span class="ppt--pageno f14" >{{ $t('pno', { number: item.pageIndex }) }}</span>
         <div class="ppt__cover--wrapper" :style="{ minHeight: (10 - 0.906667)/item.rate + 'rem' }">
           <img class="cover" :src="item.src" @click="scaleImage(item.src, item.Width, item.Height, $event)">
+          <!-- <picture>
+            <source srcset="mdn-logo.svg" type="image/svg+xml">
+            <img src="mdn-logo.png" alt="MDN">
+          </picture> -->
         </div>
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
