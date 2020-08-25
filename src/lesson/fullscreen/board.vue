@@ -16,11 +16,11 @@
 
     <!-- 不懂收藏 -->
     <section class="ppt__opt f12 cfff" v-if="slide && slide.type===12" >
-      <div class="opt__action pb10" @click="handleBoardTag(2, slide.boardid, slide.emphasis)">
+      <div class="opt__action pb10" @click="handleBoardTag(1, slide.boardid, slide.emphasis)">
         <i class="iconfont f20" :class="[ slide.emphasis ? 'icon-shoucangjihuo-': 'icon-shoucang-' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
-      <div class="opt__action" @click="handleBoardTag(1, slide.boardid, slide.doubt)">
+      <div class="opt__action" @click="handleBoardTag(0, slide.boardid, slide.doubt)">
         <i class="iconfont f20 " :class="[ slide.doubt ? 'icon-budongjihuo': 'icon-budong-' ]"></i>
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
@@ -32,7 +32,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-import boardmixin from '@/components/fullscreen/mixin/board-mixin'
+import boardmixin from '@/lesson/fullscreen/mixin/board-mixin'
 
 
 export default {
@@ -75,7 +75,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if(to && to.params && to.name === 'board') {
+      if(to && to.params && to.name === 'board-v3') {
         let params = to.params;
         this.index = params.index
       }
@@ -139,16 +139,16 @@ export default {
      * @method 白板不懂,收藏
      * boardid 白板ID tag 1 不懂 2 收藏
      */
-    handleBoardTag(tag, boardid, value) {
-      let URL = API.student.SET_BOARD_TAG;
+    handleBoardTag(type, boardid, value) {
+      let URL = API.lesson.post_tag;
+      let action = value ? 1 : 0;
       let params = {
-        'lesson_id': this.lesson.lessonID,
-        'sharing_file_id': boardid,
-        'tag': tag,
-        'tag_type': value ? 'cancel' : 'add'
+        'type': type,
+        'action': action,
+        'objId': new String(boardid),
+        'objType': 1
       };
       let cards = this.cards;
-      // let boardMap = this.$parent.$parent.boardMap;
 
       // 同步白板信息 更新cards信息
       let boardInfo = cards.find((card)=>{
@@ -156,18 +156,18 @@ export default {
       })
 
       request.post(URL, params).
-      then( (res) => {
-        if(res && res.success) {
-          tag === 1 && (boardInfo.doubt = !boardInfo.doubt);
-          tag === 2 && (boardInfo.emphasis = !boardInfo.emphasis);
-
-          // boardMap.set(boardid, boardInfo);
+      then((res)=>{
+        if(res && res.code === 0) {
+          type === 0 && (boardInfo.doubt = !boardInfo.doubt);
+          type === 1 && (boardInfo.emphasis = !boardInfo.emphasis);
 
           this.setCards(cards);
-
           this.slide = boardInfo;
         }
-      });
+      }).
+      catch(error => {
+        console.log('handleBoardTag:', error);
+      })
     },
 
   }

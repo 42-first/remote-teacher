@@ -185,6 +185,15 @@ var commandMixin = {
           if(item.pres && !presSet.has(item.pres)) {
             presSet.add(item.pres);
           }
+
+          if(!this.presentationID) {
+            this.presentationID = item.pres;
+          }
+
+          // 格式化白板
+          if(item.type === 'board' && item.action === 'new') {
+            this.formatBoard(item, lessonTags);
+          }
         })
       }
 
@@ -433,8 +442,6 @@ var commandMixin = {
                 slide['store'] = 1;
               }
             }
-
-            // todo: 问题的作答结果
           });
 
           presentation['slides'] = slides;
@@ -472,7 +479,37 @@ var commandMixin = {
 
         this.presentationMap.set(id, presentation);
       }
-    }
+    },
+
+    /**
+     * @method 格式化白板数据
+     * @param
+     */
+    formatBoard(board, lessonTags) {
+      if(board) {
+        let { boardid, devheight, devwidth } = board;
+        let doubt = false;
+        let emphasis = false;
+
+        // 是否存在不懂
+        if(lessonTags && lessonTags.doubtFileSharingList) {
+          doubt = lessonTags.doubtFileSharingList.find((item)=>{
+            return item == boardid;
+          });
+        }
+
+        if(lessonTags && lessonTags.collectFileSharingList) {
+          emphasis = lessonTags.collectFileSharingList.find((item)=>{
+            return item == boardid;
+          });
+        }
+
+        board.doubt = !!doubt;
+        board.emphasis = !!emphasis;
+
+        this.boardMap.set(boardid, board);
+      }
+    },
 
   }
 }

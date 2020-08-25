@@ -424,6 +424,7 @@
             type === 1 && (boardInfo.emphasis = !boardInfo.emphasis);
 
             boardMap.set(boardid, boardInfo);
+            this.setCards(cards);
           }
         }).
         catch(error => {

@@ -63,7 +63,7 @@
     },
     watch: {
       '$route' (to, from) {
-        if(to && to.params && to.name === 'subjective-share-page') {
+        if(to && to.params && to.name === 'subjective-share') {
           let params = to.params;
           this.index = params.index
 
