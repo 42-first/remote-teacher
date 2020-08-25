@@ -58,7 +58,7 @@ var actionsMixin = {
               if (item['cat'] === 'post') {
                 this.addSubmission({ type: 6, postid: item['postid'], anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
               } else if (item['cat'] === 'subjective') {
-                this.addSubjective({ type: 7, spid: item.spid, anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
+                this.addSubjective({ type: 7, spid: item.spid, anon: item['anon'], time: item['dt'], pid: item['pid'], isFetch: isFetch });
               } else if (item['cat'] === 'capture') {
                 this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
               } else if (item['cat'] === 'board') {
@@ -232,6 +232,7 @@ var actionsMixin = {
 
         let cardItem = {
           src: slideData['cover'],
+          webp: slideData['coverAlt'],
           rate: presentation.width / presentation.height,
           hasQuestion: slideData['question'] == 1 ? true : false,
           hasStore: slideData['store'] == 1 ? true : false,
@@ -432,6 +433,7 @@ var actionsMixin = {
         problemID: problem['problemId'],
         options: problem['bullets'] || problem['options'],
         cover: slideData['cover'],
+        webp: slideData['coverAlt'],
         index,
         pageURL,
         groupid: data.event['groupid']
@@ -813,7 +815,7 @@ var actionsMixin = {
         "type": 1,    //1音频 2视频
         "code": "RainLive-8201d0bf-e0d441b3",
         "liveurl": {
-          "httpflv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
+          "flv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
           "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
           "rtmp": "rtmp://vdn-push.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3"
         }}

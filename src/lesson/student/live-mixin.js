@@ -47,7 +47,7 @@ let liveMixin = {
       if (flvjs && flvjs.isSupported() && liveEl) {
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: this.liveurl.httpflv,
+          url: this.liveurl.flv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
           hasAudio: this.isMute ? false : true,
@@ -57,7 +57,7 @@ let liveMixin = {
 
         this.flvPlayer = flvPlayer;
         // 上报记录直播地址
-        this.logLiveurl = this.liveurl.httpflv;
+        this.logLiveurl = this.liveurl.flv;
 
         try {
           // 展开播放模式下才开始拉流
@@ -85,7 +85,7 @@ let liveMixin = {
 
         // 初始化快手SDK 目前支持视频
         setTimeout(()=>{
-          this.initKwai(this.liveurl.httpflv);
+          this.initKwai(this.liveurl.flv);
         }, 0)
 
         // 心跳检测卡顿 flv只加视频
@@ -430,7 +430,7 @@ let liveMixin = {
 
         let flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: this.liveurl.httpflv,
+          url: this.liveurl.flv,
           hasVideo: this.liveType === 2 ? true : false,
           isLive: true,
           hasAudio: this.isMute ? false : true
@@ -483,7 +483,7 @@ let liveMixin = {
         } catch(e) {
         }
       } else {
-        liveEl.pause();
+        liveEl && liveEl.pause();
       }
 
       this.playState = 0;
@@ -491,7 +491,6 @@ let liveMixin = {
 
       // 快手上报 用户关闭直播
       if(this.qos && this.logLiveurl) {
-        // this.qos.sendSummary();
         this.qos.onEnd();
       }
     },

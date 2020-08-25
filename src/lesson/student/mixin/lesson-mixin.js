@@ -72,6 +72,10 @@ let lessonMixin = {
         presSet.add(pres);
       }
 
+      // 是否有直播
+      let liveid = data.liveid;
+      liveid && this.getLive(liveid);
+
       if(timeline && timeline.length) {
         timeline.forEach(item => {
           if(item.pres && !presSet.has(item.pres)) {
@@ -299,6 +303,45 @@ let lessonMixin = {
       catch(error => {
         console.log('getLessonTags:', error);
         return null;
+      })
+    },
+
+    /**
+     * @method 直播信息
+     * @param
+     */
+    getLive(id) {
+      let URL = API.lesson.get_live_info;
+      let params = {
+        'live_id': id
+      };
+
+      request.get(URL, params).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+
+          this.liveurl = data;
+          this.liveURL = data.hls;
+
+          this.liveType = data.type || 1;
+          if(this.liveType === 1) {
+            let isWeb = this.isWeb;
+            if(isWeb) {
+              setTimeout(()=>{
+                this.supportFLV();
+              }, 1000)
+            } else {
+              this.Hls && this.supportHLS(this.Hls);
+            }
+          } else if(this.liveType === 2) {
+            setTimeout(()=>{
+              this.supportFLV();
+            }, 3000)
+          }
+        }
+      }).catch(error => {
+        console.log('getLive:', error);
       })
     },
 
