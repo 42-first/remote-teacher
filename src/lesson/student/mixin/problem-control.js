@@ -159,8 +159,6 @@ let problemControl = {
 
       if(isSupported(localStorage)) {
         let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
-
-        data.retry_times = data.retry_times + 1;
         answerPostList.push(data);
 
         let value = JSON.stringify(answerPostList);

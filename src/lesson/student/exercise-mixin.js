@@ -61,16 +61,17 @@ var exerciseMixin = {
     * @param
     */
     autoSendAnswers() {
-      let self = this;
       let key = 'answer_problem';
       let URL = API.lesson.retry_answer_problem;
       let answerPostList = this.getAnswer(key);
 
       if(answerPostList && answerPostList.length ) {
-        let param = [];
+        let problems = [];
         answerPostList.forEach((item) => {
-          params.push(item)
+          problems.push(item)
         })
+
+        let params = { problems };
 
         request.post(URL, params).
         then((res)=>{

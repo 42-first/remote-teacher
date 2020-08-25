@@ -223,7 +223,7 @@ var mixin = {
             msg['presentation'] && (this.presentationID = msg['presentation']);
 
             let presentationID = msg["presentation"]
-            this.getUpdatePPTData(presentationID)
+            this.updatePresentation(presentationID)
             break
 
           // 试卷结束

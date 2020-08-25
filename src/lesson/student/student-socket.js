@@ -222,7 +222,7 @@ var mixin = {
 
             if(presentationID) {
               this.presentationID = presentationID;
-              this.getUpdatePPTData(presentationID)
+              this.updatePresentation(presentationID)
             }
 
             break
