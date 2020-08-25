@@ -125,7 +125,7 @@ let liveMixin = {
         this.hls.destroy();
       }
 
-      if(Hls.isSupported()) {
+      if(Hls && Hls.isSupported()) {
         let config = {
           maxBufferLength: 6,
           nudgeMaxRetry: 10
