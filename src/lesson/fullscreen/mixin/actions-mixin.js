@@ -910,8 +910,8 @@ let actionsMixin = {
     setPresentationTitle(presentationID) {
       let presentation = this.presentationMap.get(presentationID);
 
-      if(presentation && presentation.Title) {
-        this.title = presentation.Title;
+      if(presentation && presentation.title) {
+        this.title = presentation.title;
       }
     },
 
