@@ -75,7 +75,7 @@
        */
       getSubjective(spid) {
         let URL = API.lesson.get_subj_result;
-        let param = {
+        let params = {
           'problem_id': this.summary.pid,
           'index': spid
         };
