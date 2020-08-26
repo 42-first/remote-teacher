@@ -442,6 +442,12 @@
               window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
             })
           }, 1000)
+
+          setTimeout(()=>{
+            require(['moment'], function(moment) {
+              window.moment = moment;
+            })
+          }, 2500)
         });
       },
 

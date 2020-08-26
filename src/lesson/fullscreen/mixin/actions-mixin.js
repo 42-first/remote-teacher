@@ -59,7 +59,7 @@ let actionsMixin = {
               if(item['cat'] === 'post') {
                 this.addSubmission({ type: 6, postid: item['postid'], anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'subjective') {
-                this.addSubjective({ type: 7, spid: item.spid, anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
+                this.addSubjective({ type: 7, pid: item['pid'], spid: item.spid, anon: item['anon'], time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'capture') {
                 this.addCapture({ type: 10, cat: item['cat'], url: item['url'], time: item['dt'], event: item, isFetch: isFetch });
               } else if(item['cat'] === 'board') {

@@ -304,7 +304,7 @@ var mixin = {
           case 'sendsproblem':
             item = msg['problem'];
 
-            this.addSubjective({ type: 7, spid: item.spid, anon: item.anon, time: item.dt, event: item, isPopup: true  });
+            this.addSubjective({ type: 7, pid: item.pid, spid: item.spid, anon: item.anon, time: item.dt, event: item, isPopup: true  });
 
             break
 

@@ -19,9 +19,9 @@
         <!-- 投稿内容 -->
         <div class="item-content">
           <p class="user-name f15" v-if="name">{{ name }}</p>
-          <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
-          <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
-          <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
+          <p class="f15" v-if="result && result.content">{{ result.content }}</p>
+          <img v-if="result && result.pics && result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.pics[0].thumb||result.pics[0].pic" :data-src="result.pics[0].pic" alt="" />
+          <p class="date-time f15">{{ result.submitTime|formatTime('HH:mm') }}</p>
         </div>
       </div>
       </div>
@@ -34,7 +34,7 @@
   import API from '@/util/api'
 
   export default {
-    name: 'subjective-share-page',
+    name: 'subjective-share',
     data() {
       return {
         lessonID: 0,
@@ -90,39 +90,32 @@
        * @param 接口有变更 增加了个人作答还是小组作答信息
        */
       getSubjective(spid) {
-        let URL = API.student.GET_SUBJECTIVE;
-        let param = {
-          'lesson_id': this.lessonID,
-          'problem_result_id': spid
+        let URL = API.lesson.get_subj_result;
+        let params = {
+          'problem_id': this.summary.pid,
+          'index': spid
         };
 
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
+        request.get(URL, params).
+        then( res => {
+          if (res && res.code === 0 && res.data) {
+            let user = res.data.user;
 
-              this.result = data;
-
-              // 是否匿名
-              let anon = this.summary.anon;
-
-              if(anon) {
-                this.avatar = 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
-                this.name = this.$i18n.t('anonymous2') || '匿名';
-              } else {
-                if(data.group_answer) {
-                  this.name = data.team_name;
-                  // 后面使用小组头像 暂时使用个人头像
-                  this.avatar = this.teamAvatar;
-                } else {
-                  this.name = data.users[0].user_name;
-                  this.avatar = data.users[0].user_avatar;
-                }
-              }
-
-              return data;
+            // 是否匿名
+            let anon = this.summary.anon;
+            if(anon) {
+              this.avatar = 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
+              this.name = this.$i18n.t('anonymous2') || '匿名';
+            } else if(user) {
+              this.avatar = user.avatar;
+              this.name = user.name;
             }
-          });
+
+            this.result = res.data;
+          }
+        }).catch(error => {
+          console.log('getSubjective:', error);
+        })
       },
 
       handleLoadImg(evt) {
