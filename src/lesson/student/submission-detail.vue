@@ -105,7 +105,7 @@
             let data = res.data;
 
             anon && Object.assign(data, {
-              userAvatar: 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
+              userAvatar: 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
               userName: this.$i18n.t('anonymous2') || '匿名',
               anon: true
             })

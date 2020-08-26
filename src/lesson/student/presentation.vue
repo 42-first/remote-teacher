@@ -124,7 +124,7 @@
                 <!-- 其它定制 例如清华 -->
                 <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
                 <!-- 雨课堂 -->
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
+                <img class="qr-code" src="https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -256,11 +256,11 @@
   }
 
   const host = {
-    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
-    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
-    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
-    'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
-    'huanghe.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'www.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
   }
 
   export default {

@@ -14,7 +14,7 @@
     <!-- 第一步 欢迎页 -->
     <section class="guide__step1" v-show="step===1">
       <div class="guide__banner ">
-        <img class="banner" src="http://sfe.ykt.io/o_1c7gia6u4d8d1q801u071b1i1feb9.png">
+        <img class="banner" src="https://qn-sfe.yuketang.cn/o_1c7gia6u4d8d1q801u071b1i1feb9.png">
         <h3 class="step1__title"><!-- 欢迎来到雨课堂 -->{{ $t('guide.welcome') }}</h3>
         <div class="step1__intro" v-html="$t('guide.welcomeintro')">这是一个可以用手机直接参与互动的<br>智慧课堂</div>
       </div>
@@ -47,7 +47,7 @@
 
       <!-- content -->
       <div class="step3__arrow">
-        <img class="arrow__img" src="http://sfe.ykt.io/o_1c7ijl41pqvehgse841h3vo34e.png">
+        <img class="arrow__img" src="https://qn-sfe.yuketang.cn/o_1c7ijl41pqvehgse841h3vo34e.png">
         <h3 class="arrow__title"><!-- 这里可以发弹幕和投稿 -->{{ $t('guide.howsenddanmu') }}</h3>
       </div>
 
@@ -85,7 +85,7 @@
       <div class="step5__intro">
         <h3 class="intro__title"><!-- 可以点击不懂或收藏进行标注 -->{{ $t('guide.howmarkppt') }}</h3>
         <div class="intro__desc" v-html="$t('guide.unknownanonymous')">不懂是匿名发送给老师的噢<br>收藏仅自己可见</div>
-        <img class="intro__arrow" src="http://sfe.ykt.io/o_1c7iqttup2j31t8g1o8k13no1r929.png">
+        <img class="intro__arrow" src="https://qn-sfe.yuketang.cn/o_1c7iqttup2j31t8g1o8k13no1r929.png">
         <div class="ppt__opt f15">
           <div class="opt__wrap">
             <p class="ppt--action" >{{ $t('unknown') }}</p>
@@ -129,7 +129,7 @@
     font-weight: bolder;
     color: #333;
 
-    background-image: url(http://sfe.ykt.io/o_1c7il47hqna51cta14facr6bv9.png);
+    background-image: url(https://qn-sfe.yuketang.cn/o_1c7il47hqna51cta14facr6bv9.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -225,7 +225,7 @@
       width: 4.666667rem;
       height: 5.266667rem;
 
-      background-image: url(http://sfe.ykt.io/o_1c7ij49f756rnam1asj1es714779.png);
+      background-image: url(https://qn-sfe.yuketang.cn/o_1c7ij49f756rnam1asj1es714779.png);
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
@@ -288,7 +288,7 @@
       font-weight: bolder;
       color: #333;
 
-      background-image: url(http://sfe.ykt.io/o_1c7il47hqna51cta14facr6bv9.png);
+      background-image: url(https://qn-sfe.yuketang.cn/o_1c7il47hqna51cta14facr6bv9.png);
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;

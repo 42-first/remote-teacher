@@ -53,7 +53,7 @@
         // 被分享者的信息
         avatar: '',
         name: '',
-        teamAvatar: 'http://sfe.ykt.io/o_1cfcr67hc3l11c0a1cit11beav89.png',
+        teamAvatar: 'https://qn-sfe.yuketang.cn/o_1cfcr67hc3l11c0a1cit11beav89.png',
       };
     },
     components: {
@@ -88,7 +88,7 @@
             // 是否匿名
             let anon = this.summary.anon;
             if(anon) {
-              this.avatar = 'http://sfe.ykt.io/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
+              this.avatar = 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
               this.name = this.$i18n.t('anonymous2') || '匿名';
             } else if(user) {
               this.avatar = user.avatar;

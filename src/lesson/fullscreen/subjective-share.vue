@@ -20,7 +20,7 @@
         <div class="item-content">
           <p class="user-name f15" v-if="name">{{ name }}</p>
           <p class="f15" v-if="result.subj_result && result.subj_result.content">{{ result.subj_result.content }}</p>
-          <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handlelaodImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
+          <img v-if="result.subj_result && result.subj_result.pics && result.subj_result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.subj_result.pics[0].thumb" :data-src="result.subj_result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.create_time|formatTime('HH:mm') }}</p>
         </div>
       </div>
@@ -125,7 +125,7 @@
           });
       },
 
-      handlelaodImg(evt) {
+      handleLoadImg(evt) {
         let target = evt.target;
         let src = target.dataset.src || target.src;
 

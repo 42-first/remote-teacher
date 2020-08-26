@@ -27,7 +27,7 @@
               <template v-else-if="participate.has_joined && attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
               <template v-else-if="!participate.has_joined && attendance_status == -1 || attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
               <template v-else-if="!participate.has_joined && attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.changethestate2')}}</template>
-              
+
             </div>
           </div>
           <div class="points-box flexbetween">
@@ -75,7 +75,7 @@
                 + <!-- 添加标签 -->{{$t('behavior.addtag')}}
               </span>
             </div>
-            
+
           </div>
         </div>
         <div class="tips f12"><span class="corange">*</span> <!-- 此备注课下可在课后小结中查看 -->{{$t('behavior.afterclasstips')}}</div>
@@ -120,12 +120,12 @@
         </div>
       </section>
     </template>
-    
+
   </section>
 </template>
 
 <script>
-	
+
   import {mapGetters} from 'vuex'
   import request from '@/util/request-v3'
   import { getLength, substr } from '@/util/util'
@@ -154,7 +154,7 @@
 	    }
 	  },
 	  computed: {
-      
+
     },
 	  created(){
       this.userid = +this.$route.params.userid
@@ -163,7 +163,7 @@
       this.init()
     },
     mounted() {
-      
+
     },
     watch: {
       tagText(newVal){
@@ -220,9 +220,9 @@
           }
           if(item.is_visible){
             tag_ids.push(item.id)
-          } 
+          }
         })
-        
+
         let URL = API.lesson.bind_student
         let params = {
           tag_ids: tag_ids,
@@ -232,7 +232,7 @@
         }
         request.post(URL, params).then(res => {
           if(res && res.code === 0 && res.data){
-            
+
           }
         })
 
@@ -327,9 +327,9 @@
         }
       },
       handleBlur(e){
-        window.scrollTo({ 
-            top: 0, 
-            behavior: "smooth" 
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
         });
         e.preventDefault()
       },
@@ -414,15 +414,15 @@
     .icon {
       width: 0.64rem;
       height: 0.64rem;
-      background: url('http://sfe.ykt.io/o_1d60d5hgm1cloft113n79jf1nbld.png') no-repeat 0 0/contain;
+      background: url('https://qn-sfe.yuketang.cn/o_1d60d5hgm1cloft113n79jf1nbld.png') no-repeat 0 0/contain;
       &.icon-unsign {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgm11umdgl1oga50v1tb8f.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgm11umdgl1oga50v1tb8f.png');
       }
       &.icon-points {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgmv1mbpq1m7oq051s74c.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgmv1mbpq1m7oq051s74c.png');
       }
       &.icon-unpoints {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgmhj1ioadg5ea31gp2e.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgmhj1ioadg5ea31gp2e.png');
       }
       &.mt-2 {
         margin-top: -0.05333333rem;
@@ -478,7 +478,7 @@
             transform: translateX(-50%);
             box-shadow: 0 0.02666667rem 0.18666667rem 0 rgba(80, 150, 245, 0.5);
           }
-          
+
         }
         .user-name {
           margin-top: 0.4rem;
@@ -647,9 +647,9 @@
               border: none;
               outline: none;
             }
-            
+
           }
-          
+
         }
       }
     }
@@ -705,7 +705,7 @@
                 }
               }
             }
-            
+
           }
           .score {
             justify-content: space-around;
@@ -719,7 +719,7 @@
             border-radius: 0.42666667rem;
             color: #5096F5;
           }
-          
+
         }
       }
     }
