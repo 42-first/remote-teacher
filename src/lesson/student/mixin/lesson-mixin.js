@@ -247,6 +247,10 @@ let lessonMixin = {
         if(res && res.code === 0) {
           let data = res.data;
           this.token = data.lessonToken;
+
+          if(data.role) {
+            this.role = data.role;
+          }
         }
 
         return res.code;

@@ -201,7 +201,7 @@
     </section>
 
     <router-view></router-view>
-    <auditor-tips v-if="pro_perm_info && pro_perm_info.is_can_audit"></auditor-tips>
+    <auditor-tips v-if="role===6"></auditor-tips>
 
     <!-- 填写个人信息 -->
     <information :show-info.sync="showInfo" :gostep="gostep" v-if="showInfo"></information>
@@ -291,7 +291,8 @@
 
         // 权限相关
         userID: 0,
-        userAuth: 0,
+        // 5: 学生 6：旁听生
+        role: 5,
 
         // 当前tab下标
         currTabIndex: 1,

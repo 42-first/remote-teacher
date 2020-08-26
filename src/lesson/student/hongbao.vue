@@ -13,14 +13,11 @@
       <section class="hongbao__header">
         <div class="hongbao__banner">
           <p class="hongbao__title f18">{{ title }}</p>
-          <!-- <p class="hongbao__close" @click="handleBack"><i class="iconfont icon-wrong f25"></i></p> -->
         </div>
         <!-- 头像 -->
         <div :class="['hongbao__user', mine ? '' : 'mb100']">
           <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher&&teacher.name})">
-            <!-- <span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包 -->
-          </p>
+          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher&&teacher.name})"></p>
         </div>
       </section>
 
@@ -62,7 +59,7 @@
   import API from '@/util/api'
 
   export default {
-    name: 'hongbao-page',
+    name: 'hongbao',
     data() {
       return {
         index: 0,
@@ -80,11 +77,10 @@
       // 不！能！获取组件实例 `this`
       // 因为当钩子执行前，组件实例还没被创建
 
-      if(from.name === 'student-presentation-page') {
+      if(from.name === 'student-presentation') {
          next();
       } else {
         next(vm => {
-          // history.back()
           vm.$router.go(-1)
         })
       }
@@ -111,11 +107,17 @@
       */
       formatData(data) {
         // 随机文案
-        let titleAry = [ this.$i18n.t('receiverexcellent') || "答对了！你真棒！", this.$i18n.t('receiverthumbsup') || "答对了！赞一个！",
-          this.$i18n.t('receiverwonderful') || "答得漂亮~再接再厉~", this.$i18n.t('receivergoodforu') || "是的，必须奖励下你！",
-          this.$i18n.t('receiverfabulous') || "答题小能手，红包接好~", this.$i18n.t('receiverbrilliant') || "答题小能手，我记住你了~",
-          this.$i18n.t('receiverawesome') || "机智如你，必须奖励~", this.$i18n.t('receiverwelldone') || "聪颖如你，必须奖励~",
-          this.$i18n.t('receiversuperb') || "好样的，答得又快又准！", this.$i18n.t('receiverbravo') || "真棒！答得又快又准！"];
+        let titleAry = [
+          this.$i18n.t('receiverexcellent') || "答对了！你真棒！",
+          this.$i18n.t('receiverthumbsup') || "答对了！赞一个！",
+          this.$i18n.t('receiverwonderful') || "答得漂亮~再接再厉~",
+          this.$i18n.t('receivergoodforu') || "是的，必须奖励下你！",
+          this.$i18n.t('receiverfabulous') || "答题小能手，红包接好~",
+          this.$i18n.t('receiverbrilliant') || "答题小能手，我记住你了~",
+          this.$i18n.t('receiverawesome') || "机智如你，必须奖励~",
+          this.$i18n.t('receiverwelldone') || "聪颖如你，必须奖励~",
+          this.$i18n.t('receiversuperb') || "好样的，答得又快又准！",
+          this.$i18n.t('receiverbravo') || "真棒！答得又快又准！" ];
 
         //
         let mine = data.event && data.event.detail.find((item)=>{
@@ -128,8 +130,6 @@
         if(mine) {
           this.title = this.$i18n.t('receiveclassbonus') || '你收到一个课堂红包';
           mine.praise = titleAry[parseInt(Math.random()*9, 10)];
-        } else {
-
         }
 
         setTimeout(()=>{
@@ -428,23 +428,4 @@
   }
 
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
