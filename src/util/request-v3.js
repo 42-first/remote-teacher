@@ -96,7 +96,8 @@ export default {
 
     let queryString = []
 
-    Object.keys(params).forEach(key => params[key] && queryString.push(`${key}=${params[key]}`))
+    // Object.keys(params).forEach(key => params[key] && queryString.push(`${key}=${params[key]}`))
+    Object.keys(params).forEach(key => queryString.push(`${key}=${params[key]}`))
 
     if (queryString.length > 0) {
       queryString = queryString.join('&')

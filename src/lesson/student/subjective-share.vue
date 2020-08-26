@@ -26,7 +26,7 @@
         <div class="item-content">
           <p class="user-name f15" v-if="name">{{ name }}</p>
           <p class="f15" v-if="result.content">{{ result.content }}</p>
-          <img v-if="result.pics && result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.pics[0].thumb" :data-src="result.pics[0].pic" alt="" />
+          <img v-if="result.pics && result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.pics[0].thumb||result.pics[0].pic" :data-src="result.pics[0].pic" alt="" />
           <p class="date-time f15">{{ result.submitTime|formatTime('HH:mm') }}</p>
         </div>
       </div>
