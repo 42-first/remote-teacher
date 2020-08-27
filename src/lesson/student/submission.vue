@@ -122,14 +122,7 @@
         imageURL: '',
         imageThumbURL: '',
         // 视频部分
-        video: {
-          url: '',
-          // thumb: '',
-          duration: '',
-          size: '',
-          width: '',
-          height: ''
-        },
+        video: null,
         // 本地图片base64/二进制
         fileData: null,
         hasImage: false,
@@ -213,7 +206,7 @@
         let params = {
           'content': content,
           'picture': this.imageURL,
-          'video': this.video
+          // 'video': this.video
           // 'group_id': self.data.group_id,
           // 'team_id': self.data.team_id,
         }

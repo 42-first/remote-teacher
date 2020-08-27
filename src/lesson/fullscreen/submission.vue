@@ -114,14 +114,7 @@
         imageURL: '',
         imageThumbURL: '',
         // 视频部分
-        video: {
-          url: '',
-          // thumb: '',
-          duration: '',
-          size: '',
-          width: '',
-          height: ''
-        },
+        video: null,
         // 本地图片base64/二进制
         fileData: null,
         hasImage: false,
@@ -200,9 +193,13 @@
         let params = {
           'content': content,
           'picture': this.imageURL,
-          'video': this.video
+          // 'video': this.video
           // 'group_id': self.data.group_id,
           // 'team_id': self.data.team_id,
+        };
+
+        if(this.video) {
+          params['video'] = this.video;
         }
 
         // 发送中
@@ -490,13 +487,7 @@
         this.hasImage = false;
         this.imageURL = '';
         this.imageThumbURL = '';
-        this.video = {
-          url: '',
-          duration: '',
-          size: '',
-          width: '',
-          height: ''
-        };
+        this.video = null;
 
         !this.text && (this.sendStatus = 0);
         this.cacheResult();
@@ -570,7 +561,6 @@
 
           result['imageURL'] = this.imageURL;
           result['imageThumbURL'] = this.imageThumbURL;
-          result['video'] = this.video;
 
           if(isSupported) {
             localStorage.removeItem(key);
