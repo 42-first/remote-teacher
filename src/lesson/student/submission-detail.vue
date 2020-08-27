@@ -92,9 +92,9 @@
        * @param
        */
       getSubmission(tougaoId) {
-        let URL = API.lesson.get_tougao;;
+        let URL = API.lesson.get_tougao_by_index;;
         let params = {
-          'tougaoId': tougaoId
+          'tougaoIndex': tougaoId
         };
         // 是否匿名
         let anon = this.summary.anon;
