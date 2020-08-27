@@ -103,7 +103,7 @@
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
-  // import { dataURLtoFile } from '@/util/util'
+  import { isSupported } from '@/util/util'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
   const huawei = ua.match(/huaweiclt|huaweieml/i);
@@ -122,14 +122,7 @@
         imageURL: '',
         imageThumbURL: '',
         // 视频部分
-        video: {
-          url: '',
-          // thumb: '',
-          duration: '',
-          size: '',
-          width: '',
-          height: ''
-        },
+        video: null,
         // 本地图片base64/二进制
         fileData: null,
         hasImage: false,
@@ -175,7 +168,8 @@
         this.text = value;
 
         if(this.count) {
-           this.sendStatus === 0 && (this.sendStatus = 2);
+          this.sendStatus === 0 && (this.sendStatus = 2);
+          this.cacheResult();
         } else {
           !this.hasImage && (this.sendStatus = 0);
         }
@@ -212,7 +206,7 @@
         let params = {
           'content': content,
           'picture': this.imageURL,
-          'video': this.video
+          // 'video': this.video
           // 'group_id': self.data.group_id,
           // 'team_id': self.data.team_id,
         }
@@ -232,6 +226,8 @@
               message: this.$i18n.t('sendsuccess') || '发送成功',
               duration: 2000
             });
+
+            this.removeCache();
           }
         }).
         catch(error => {
@@ -289,6 +285,8 @@
               this.imageURL = res.url;
               this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
               this.sendStatus = 2;
+
+              this.cacheResult();
             } else {
               this.retryUpload(data, fileType);
             }
@@ -432,6 +430,7 @@
             self.imageThumbURL = '';
 
             !self.text && (self.sendStatus = 0);
+            self.cacheResult();
           }
         });
       },
@@ -487,6 +486,68 @@
       handleSend() {
         this.sendStatus === 2 && this.sendSubmission();
       },
+
+      /*
+       * @method 缓存投稿
+       * @param
+       */
+      cacheResult() {
+        // 定时保存
+        this.cacheTimer && clearTimeout(this.cacheTimer);
+        this.cacheTimer = setTimeout(() => {
+          // 缓存到本地
+          let key = 'lessontougao' + this.lessonID;
+          let result = {
+            'text': this.text
+          };
+
+          result['imageURL'] = this.imageURL;
+          result['imageThumbURL'] = this.imageThumbURL;
+
+          if(isSupported) {
+            localStorage.removeItem(key);
+            localStorage.setItem(key, JSON.stringify(result));
+          }
+        }, 3000)
+      },
+
+      /*
+       * @method 删除缓存
+       * @param
+       */
+      removeCache() {
+        let key = 'lessontougao' + this.lessonID;
+        if(isSupported) {
+          localStorage.removeItem(key);
+        }
+      },
+
+      /*
+       * @method 恢复作答结果
+       * @param
+       */
+      restore() {
+        // 恢复作答结果
+        let sResult = localStorage.getItem('lessontougao' + this.lessonID);
+        if(sResult) {
+          let result = JSON.parse(sResult);
+          this.text = result.text;
+          // 是否有图片
+          if(result.imageURL) {
+            this.hasImage = true;
+            this.imageURL = result.imageURL;
+            this.imageThumbURL = result.imageThumbURL;
+
+            setTimeout(()=>{
+              let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+              imgEl.src = this.imageURL;
+            }, 300)
+          }
+
+          this.sendStatus = 2;
+        }
+      },
+
       handleBack() {
         this.$router.back();
       },
@@ -576,6 +637,8 @@
       this.classroomid = this.$route.query.classroomid
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
+      this.restore();
+
       // 获取学生分组列表
       // this.pickerDataInit()
       // huawei 使用微信自己的图片选择
