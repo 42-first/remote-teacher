@@ -145,7 +145,7 @@ var mixin = {
             // 协议版本号
             msg['addinversion'] && (this.version = msg['addinversion']);
 
-           if(timeline && timeline.length) {
+            if(timeline && timeline.length) {
               this.getAllPres(msg);
             }
 
