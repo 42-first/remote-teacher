@@ -129,7 +129,7 @@
         isPanelHidden: true,     // 面板隐藏
         studentScore: -1,        // 学生当前分数
         scoreTotal: '--',        // 当前题目总分
-        answerid: -1,            // 当前正在打分的 answer 的 id
+        answerindex: -1,            // 当前正在打分的 answer 的 index
         errorInfo1: '',          // 教师评分错误验证
         errorInfo2: '',          // 互评评分错误验证
         remark: '',              // 教师评语
@@ -175,20 +175,20 @@
        * 父组件呼出面板
        *
        * @event bindtap
-       * @params {number} answerid 将要打分的主观题答案的id
+       * @params {number} answerindex 将要打分的主观题答案的index
        * @params {number} studentScore 当前分值
        * @params {number} scoreTotal 总分
        * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
        */
-      enter (answerid, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
+      enter (answerindex, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
         let self = this
 
         self.isPanelHidden = false
         self.isSummoned = true
         self.isScored = +teacherScore !== -1
 
-        self.answerid = answerid
+        self.answerindex = answerindex
         self.teacherScore = +teacherScore === -1 ? '' : +teacherScore
         self.groupReviewScore = +groupReviewScore === -2 ? -2 :  (+groupReviewScore === -1) ? '' : +groupReviewScore
         self.scoreTotal = scoreTotal
@@ -276,9 +276,9 @@
       decide (evt) {
         let self = this
         if (self.problem_group_review_id){
-          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
         }else {
-          self.validate('teacherScore') && self.$emit('giveScore', self.answerid, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
         }
 
 

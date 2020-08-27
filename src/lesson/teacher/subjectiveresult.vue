@@ -128,27 +128,27 @@
                   </div>
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="initScore(item.problem_result_id, item.score, item.totalScore, index, item.comment && item.comment.content)">
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.score, item.totalScore, index, item.comment && item.comment.content)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score ? item.score.toFixed(1) : '--'}}</span>
+                        <span v-show="item.score !== -1">{{item.score ? Math.floor(item.score/100).toFixed(1) : '--'}}</span>
                       </div>
                     </v-touch>
-                    <div class="zhanweifu" v-show="postingSubjectiveid === item.problem_result_id"></div>
+                    <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
 
                     <div class="action f14">
-                      <v-touch class="gray" v-show="postingSubjectiveid !== item.problem_result_id" v-on:tap="postSubjective(item.problem_result_id)">
+                      <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
                         <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
                         <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                       </v-touch>
-                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.problem_result_id && !postingSubjectiveSent" v-on:tap="fsqbHander(item.problem_result_id)">
+                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
                         <!-- 发送全班 -->{{ $t('postpublic') }}
                       </v-touch>
-                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.problem_result_id && postingSubjectiveSent">
+                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.index && postingSubjectiveSent">
                         <!-- 已发全班 -->{{ $t('postpubliced') }}
                       </div>
-                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.problem_result_id" v-on:tap="closeSubjectivemask">
+                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
                         <span class="fsqb-innerline"></span>
                         <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
                       </v-touch>
@@ -971,7 +971,8 @@
           'op': 'sendsproblem',
           'lessonid': self.lessonid,
           'spid': subjectiveid,
-          'msgid': 1234
+          'msgid': 1234,
+          'pid': self.problemid
         })
 
         self.socket.send(str)
@@ -994,12 +995,14 @@
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
 	     */
-	    initScore (answerid, score = -1, scoreTotal, index, remark = '') {
+	    initScore (answerindex, score = -1, scoreTotal, index, remark = '') {
 	      let self = this
 				// let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
 	      // 投屏时不可打分
-	      if (answerid === self.postingSubjectiveid) {return;}
-
+        if (answerindex === self.postingSubjectiveid) {return;}
+        
+        score = Math.floor(score/100)
+        scoreTotal = Math.floor(scoreTotal/100)
 
         // 防止用户频繁点击
         clearTimeout(scoreTapTimer)
@@ -1016,18 +1019,18 @@
 	        //   }).catch(error => {
 	        //     console.error('error', error)
 	        //   })
-          self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, score, -2, 100, 0, index, remark)
+          self.$refs.StarPanel.$emit('enter', answerindex, scoreTotal, score, -2, 100, 0, index, remark)
         }, 100)
 	    },
 	    /**
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event
-	     * @params {Number} answerid 将要打分的主观题答案的id
+	     * @params {Number} answerid 将要打分的主观题答案的index
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerid, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
+	    giveScore (answerindex, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
 	    	let self = this
 
 	    	if (teacherScore === -1) {
@@ -1038,7 +1041,7 @@
 	      let url = API.lesson.post_grade
 	      let postData = {
           problemId: self.problemid,
-          score: teacherScore,
+          score: Math.floor(teacherScore*100),
           userId: self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark
@@ -1050,7 +1053,7 @@
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = teacherScore
+              self.dataList[self.scoringIndex].score = Math.floor(teacherScore*100)
               self.dataList[self.scoringIndex].comment.content = remark
 
 

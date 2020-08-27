@@ -1,7 +1,7 @@
 <!--单选多选柱状图组件 -->
 <template>
   <section class="histogram-with-mahint">
-    <section class="mahint" v-if="problemType === 'MultipleChoiceMA'">
+    <section class="mahint" v-if="problemType === 2">
       <div class="mahint-item f12">
         <i style="background: #F5A623;"></i>
         {{ $t('standardans') }}
@@ -19,15 +19,15 @@
     </section>
 
     <section class="histogram-box">
-      <div class="histogram-item" v-if="problemType === 'MultipleChoiceMA'">
-        <div class="bar maright" :style="{height: ma_right_count.value/total*100+'%'}">
-          <span class="value f18">{{ma_right_count.value}}</span>
-          <span class="label f18">{{ma_right_count.label}}</span>
+      <div class="histogram-item" v-if="problemType === 2">
+        <div class="bar maright" :style="{height: correctNum/total*100+'%'}">
+          <span class="value f18">{{correctNum}}</span>
+          <span class="label f18">{{answer}}</span>
         </div>
       </div>
       <div class="histogram-item" v-for="(item, index) in graph" :key="index">
-        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.value === 0 ? 0 : item.value/total*100+'%'}">
-          <span class="value f18">{{item.value}}</span>
+        <div :class="['bar', {'right': item.isRight}]" :style="{height: item.count === 0 ? 0 : item.count/total*100+'%'}">
+          <span class="value f18">{{item.count}}</span>
           <span class="label f18">{{item.label}}</span>
         </div>
       </div>
@@ -38,7 +38,7 @@
 <script>
 	export default {
 	  name: 'CollumBox',
-	  props: ['problemType', 'graph', 'total', 'ma_right_count'],
+	  props: ['problemType', 'graph', 'total', 'correctNum', 'answer'],
 	  data () {
 	    return {
 	    }

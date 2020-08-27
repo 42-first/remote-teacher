@@ -1,9 +1,9 @@
 <!--试题作答详情面板 -->
 <template>
   <div class="problemresultdetail-box">
-    <div v-if="problemResultDetailData">
+    <div v-if="loaded">
 
-      <div class="title f18">{{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('votemost') : $t('standardopt')}}</div>
+      <div class="title f18">{{problem.problemType === 3 ? $t('votemost') : $t('standardopt')}}</div>
       <div :class="['answer-box', {'toomany': answerList.length > 4}]">
         <template v-if="answerList.length">
   	    	<div v-for="(item, index) in answerList" :class="['anser-item', answerList.length > 4 ? 'f36' : 'f50']" :key="index">{{item}}</div>
@@ -11,36 +11,35 @@
 
         <div v-else-if="!isFetching"><!-- 还没有学生提交 -->{{$t('nosubmit')}}</div>
       </div>
-      <div v-if="problemResultDetailData.problem_type === 8" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
+      <div v-if="problem.problemType === 3 && problem.anonymous" class="anonymous-hint f12"><!-- 本题为匿名投票，不显示投票人 -->{{$t('anonymouspoll')}}</div>
 
       <!-- 有解析显示解析入口 -->
-      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+      <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 
       <div class="tab">
         <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">
-          {{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('yitoupiao') : $t('yizuoda')}}
+          {{problem.problemType === 3 ? $t('yitoupiao') : $t('yizuoda')}}
           <span class="f12">({{answeredNum}}人)</span>
         </v-touch>
         <v-touch :class="['tab-item', activeTab == 2 ? 'active f16' : 'f17']" v-on:tap="toggleTab(2)">
-          {{problemResultDetailData.problem_type === 3 || problemResultDetailData.problem_type === 8 ? $t('weitoupiao') : $t('weizuoda')}}
+          {{problem.problemType === 3 ? $t('weitoupiao') : $t('weizuoda')}}
           <span class="f12">({{not_answeredList.length}}人)</span>
         </v-touch>
       </div>
       <div class="choice-list" v-show="activeTab === 1">
-        <template v-if="problemResultDetailData.data.length">
-  				<div class="choice-item" v-for="(choiceItem, index) in problemResultDetailData.data" :key="index">
+        <template v-if="answeredList.length">
+  				<div class="choice-item" v-for="(choiceItem, index) in answeredList" :key="index">
   	        <v-touch class="item-hd" v-on:tap="toggleChoiceItem(index)">
-  	          <template v-if="problemResultDetailData.problem_type !== 3 && problemResultDetailData.problem_type !== 8">
-  			      	<i v-if="!choiceItem.members[0].result_type" :class="['iconfont', 'f20', choiceItem.label === problemResultDetailData.answer ? 'icon-correct' : 'icon-wrong']"></i>
-  			      	<i v-if="choiceItem.members[0].result_type === 1" :class="['iconfont', 'f20', 'icon-correct']"></i>
-  			      	<i v-if="choiceItem.members[0].result_type === 2" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
-  			      	<i v-if="choiceItem.members[0].result_type === 3" :class="['iconfont', 'f20', 'icon-wrong']"></i>
+  	          <template v-if="problem.problemType !== 3">
+  			      	<i v-if="choiceItem.status === 'correct'" :class="['iconfont', 'f20', 'icon-correct']"></i>
+  			      	<i v-if="choiceItem.status === 'half'" :class="['iconfont', 'f20', 'icon-banduibancuo']"></i>
+  			      	<i v-if="choiceItem.status === 'wrong'" :class="['iconfont', 'f20', 'icon-wrong']"></i>
 		      		</template>
-              <span class="f18 asw">{{choiceItem.label}}</span>
-              <span class="f14" style="color: #9B9B9B;">{{choiceItem.members.length}}{{ $t('ren') }}</span>
-              <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="problemResultDetailData.problem_type !== 8"></i>
+              <span class="f18 asw">{{choiceItem.option}}</span>
+              <span class="f14" style="color: #9B9B9B;">{{choiceItem.students.length}}{{ $t('ren') }}</span>
+              <i :class="['iconfont', 'right', 'f20', index === showingIndex ? 'icon-fold' : 'icon-unfold']" v-if="!problem.anonymous"></i>
             </v-touch>
-            <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="problemResultDetailData.problem_type !== 8">
+            <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="!problem.anonymous">
               <div class="sort-wrapper">
                 <span @click="sortActive(index)">
                   <span class="color6">作答时长</span>
@@ -50,17 +49,17 @@
                   </div>
                 </span>
               </div>
-              <div class="stu" v-for="(stu, sindex) in choiceItem.members" :key="sindex">
+              <div class="stu" v-for="(stu, sindex) in choiceItem.students" :key="sindex">
                 <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
                 <div class="name-number-wrapper">
                   <div class="name-duration">
                     <div class="text-ellipsis name">{{stu.name}}</div>
                     <span class="duration">
-                      {{ stu.cost|duration }}
+                      {{ stu.duration| formatDuration }}
                     </span>
                   </div>
                   <div class="number">
-                    {{ stu.school_number }}
+                    {{ stu.number }}
                   </div>
                 </div>
               </div>
@@ -70,16 +69,16 @@
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
-            <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanweida') : $t('quanweitoupiao')}}</p>
+            <img v-if="problem.problemType === 1 || problem.problemType === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problem.problemType === 3 && !problem.anonymous" src="~images/teacher/quantoupiao.png">
+            <img v-if="problem.problemType === 3 && problem.anonymous" src="~images/teacher/nimingtoupiao.png">
+            <p class="f12">{{problem.problemType === 1 || problem.problemType === 2 ? $t('quanweida') : $t('quanweitoupiao')}}</p>
           </div>
         </template>
       </div>
 
       <div class="notAnswerList" v-show="activeTab === 2">
-        <template v-if="not_answeredList.length && problemResultDetailData.problem_type !== 8">
+        <template v-if="not_answeredList.length && !problem.anonymous">
           <div class="gap"></div>
           <div class="item-bd">
   					<div class="stu" v-for="(stu, index) in not_answeredList" :key="index">
@@ -89,26 +88,22 @@
                   <div class="text-ellipsis name">{{stu.name}}</div>
                 </div>
                 <div class="number">
-                  {{ stu.school_number }}
+                  {{ stu.number }}
                 </div>
               </div>
   	        </div>
           </div>
         </template>
-        <template v-else-if="not_answeredList.length && problemResultDetailData.problem_type === 8">
-          <div class="gap"></div>
-          <div class="empty">
-            <img src="~images/teacher/nimingtoupiao.png">
-            <p class="f12">{{$t('nimingtoupiao')}}</p>
-          </div>
-        </template>
         <template v-else>
           <div class="gap"></div>
           <div class="empty">
-            <img v-if="problemResultDetailData.problem_type === 3" src="~images/teacher/quantoupiao.png">
-            <img v-if="problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2" src="~images/teacher/quanzuoda.png">
-            <img v-if="problemResultDetailData.problem_type === 8" src="~images/teacher/nimingtoupiao.png">
-            <p class="f12">{{problemResultDetailData.problem_type === 1 || problemResultDetailData.problem_type === 2 ? $t('quanyida') : $t('quantoupiao')}}</p>
+            <img v-if="problem.problemType === 3 && !problem.anonymous" src="~images/teacher/quantoupiao.png">
+            <img v-if="problem.problemType === 1 || problem.problemType === 2" src="~images/teacher/quanzuoda.png">
+            <img v-if="problem.problemType === 3 && problem.anonymous" src="~images/teacher/nimingtoupiao.png">
+            <p class="f12">
+              <template v-if="problem.problemType !== 3">$t('quanyida')</template>
+              <template v-else>{{problem.anonymous ? $t('nimingtoupiao') : $t('quantoupiao')}}</template>
+            </p>
           </div>
         </template>
       </div>
@@ -151,14 +146,16 @@
         showingIndex: -1, // 正在展示的题目的序号
         answerList: [],
         not_answeredList: [],
+        answeredList: [],
         isBottomBtnFixed: false,
         isFetching: true,
         activeTab: 1, // 已投票1，未投票2
-        answeredNum: 0    //已作答人数
+        answeredNum: 0,    //已作答人数
+        loaded: false
       }
     },
     components: {
-      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
+      analysis: () => import('@/lesson/teacher/common/analysis.vue'),
     },
     mixins: [ analysismixin ],
     created() {
@@ -215,35 +212,37 @@
        */
       refreshProblemResultDetail() {
         let self = this
-        let url = API.problem_result_detail + '/' + self.problemid + '/'
 
-        if (process.env.NODE_ENV === 'production') {
-          url = API.problem_result_detail + '/' + self.problemid + '/'
+        let URL = API.lesson.get_choice_detail
+        let params = {
+          problem_id: self.problemid
         }
+        return request.get(URL,params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let jsonData = res.data
+            let result = [...jsonData.display]
+            let answered_count = 0
+            jsonData.distribution.forEach(item => {
+              answered_count += item.students.length
+            })
 
-        // 单次刷新
-        request.get(url)
-          .then(jsonData => {
-            // 多选题判分
-            // https://www.tapd.cn/20392061/prong/stories/view/1120392061001001309
-            // result_type 0 默认类型；1 多选题全对；2 多选题半对；3 多选题错误
-            // 设置试卷详情数据
-            self.problemResultDetailData = jsonData
+            self.answeredList = jsonData.distribution
+            self.answerList = result
+            self.answeredNum = answered_count
+            self.not_answeredList = jsonData.unfinished
+            self.loaded = true
 
-
-            // 投票类型每回要算投票数最多的
-            if (jsonData.problem_type === 3 || jsonData.problem_type === 8) {
-              self.findBigPoll()
-            } else {
+            if(this.problem.problemType !== 3){
               // 投票类型不打开默认选项
-              self.openRightItem(jsonData)
-              self.answerList = [...jsonData.answer]
-
+              self.openRightItem(jsonData.distribution)
             }
-
-            self.answeredNum = jsonData.answered_count
-            self.not_answeredList = [...jsonData.not_answered]
-          })
+            
+          }
+        }).catch(error => {
+          console.log('getResultDetail:' + error);
+          
+        })
       },
       /**
        * 找到默认打开那一条：投票类型：人数最多；普通题目：正确选项
@@ -263,52 +262,10 @@
       findRightAnswer(jsonData) {
         let self = this
 
-        for (let i = 0; i < jsonData.data.length; i++) {
-          if (jsonData.data[i].label === jsonData.answer) {
-            return i
-          }
-        }
-      },
-      /**
-       * 算出投票类型的票数最多的选项
-       *
-       */
-      findBigPoll() {
-        let self = this
-        let url = API.problem_statistics
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.problem_statistics + '/' + self.problemid + '/'
-        }
-
-        // 单次刷新
-        request.get(url)
-          .then(jsonData => {
-            let GD = jsonData.graph.data // 柱状图的数据
-            let result = {
-              'label': '',
-              'value': -1
-            }
-            for (var i = 0; i < GD.length; i++) {
-              if (result.value === GD[i].value) {
-                result.label += GD[i].label
-              } else if (result.value < GD[i].value) {
-                result = {
-                  'label': GD[i].label,
-                  'value': GD[i].value
-                }
-              }
-            }
-
-            self.isFetching = false
-            self.problemResultDetailData.answer = result.label
-            // self.answerList = [...result.label]
-            if (result.value === 0) {
-              self.answerList = []
-            } else {
-              self.answerList = [...result.label]
-            }
-          })
+        let index = jsonData.findIndex(item => {
+          return item.status == 'correct'
+        })
+        return index
       },
 
       /**
@@ -325,11 +282,11 @@
       * 变更顺序
       */
      sortActive(index) {
-       this.problemResultDetailData.data.map((a, i) => {
+       this.answeredList.map((a, i) => {
          if (index === i) {
            return Object.assign(a, {
              sortType: !a.sortType,
-             members: a.members.reverse()
+             students: a.students.reverse()
            })
          }
          return a
@@ -337,7 +294,7 @@
      }
     },
     filters: {
-      duration(cost = 120) {
+      formatDuration(cost = 120) {
         const second = cost - Math.floor(cost/60) * 60
         const hours = Math.floor(cost/(60*60))
         const minutes = (cost - second - hours*60*60)/60
