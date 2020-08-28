@@ -123,7 +123,7 @@
                             </span>
                         </span>
                       </div>
-                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.problem_result_id" tag="img" v-lazy="item.result.pics[0].thumb" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
+                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
                     </div>
                   </div>
                   <div class="action-box f14">
@@ -739,31 +739,6 @@
        */
       pollingNewItem(){
         let self = this
-
-        // let headNow = self.dataList[0] ? self.dataList[0].problem_result_id : 0
-
-        // self.fetchList(headNow, 1).then(jsonData => {
-        //   self.setData({
-        //     isShowNewHint: jsonData.data.response_num,
-        //     total_num: jsonData.data.total_num,
-        //     class_participant_num: jsonData.data.class_participant_num,
-				// 		team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-				// 		problem_group_review_id: jsonData.data.group_review_id,
-				// 		unfinished_count: jsonData.data.unfinished_count,
-				// 		unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
-        //   })
-				// 	if(jsonData.data.group_review_id){
-				// 		self.fetchHupingCount().then(res => {
-				// 			self.setData({
-				// 				group_review_total_num: res.data.group_review_total_num,
-				// 				group_review_done_num: res.data.group_review_done_num,
-				//         tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
-				//         gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
-				//         group_review_declaration: res.data.group_review_declaration
-				// 			})
-				// 		})
-				// 	}
-        // })
         let URL = API.lesson.get_subj_list_count
         let params = {
           problem_id: self.problemid
@@ -772,7 +747,9 @@
         .then((res) => {
           if(res && res.code === 0 && res.data){
             self.setData({
-              isShowNewHint: res.data.count - self.dataList.length > 0
+              isShowNewHint: res.data.count - self.dataList.length > 0,
+              total_num: res.data.count,
+              unfinished_count: res.data.unfinishedCount
             })
           }
         })
@@ -804,14 +781,8 @@
           if(res && res.code === 0 && res.data){
             self.setData({
               isShowNewHint: false,
-              // total_num: jsonData.data.total_num,
-              // class_participant_num: jsonData.data.class_participant_num,
-              // problem_answer_type: jsonData.data.problem_answer_type,
-              // group_name: jsonData.data.group_name ? jsonData.data.group_name : '',
-              // team_num: jsonData.data.problem_answer_type == 1 ? jsonData.data.group_team_num + jsonData.data.student_not_in_team : '',
-              // problem_group_review_id: jsonData.data.group_review_id,
-              // unfinished_count: jsonData.data.unfinished_count,
-              // unfinished_team_count: jsonData.data.problem_answer_type == 1 ? jsonData.data.unfinished_team_count : 0
+              total_num: res.data.total_num,
+              unfinished_count: res.data.unfinished
             })
 
             let newList = res.data.list
@@ -845,17 +816,6 @@
             // 刷新的话回顶部
             self.back2Top()
 
-            // if(jsonData.data.group_review_id){
-            //   self.fetchHupingCount().then(res => {
-            //     self.setData({
-            //       group_review_total_num: res.data.group_review_total_num,
-            //       group_review_done_num: res.data.group_review_done_num,
-            //       tProportion: self.parsePriceValue(res.data.teacher_score_proportion * 100),
-            //       gProportion: self.parsePriceValue(res.data.group_review_score_proportion * 100),
-            //       group_review_declaration: res.data.group_review_declaration
-            //     })
-            //   })
-            // }
           }
           
         })
@@ -1271,7 +1231,7 @@
       // 是否有缩略图
       hasThumb(item) {
         let sub = item.result
-        return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb)
+        return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb || sub.pics[0].pic)
       }
 	  }
 	}

@@ -10,7 +10,7 @@
       <div class="expression-container">
         <div class="user-box">
           <div class="user-avatar">
-            <img :src="user_profile.avatar_96" alt="">
+            <img :src="user_profile.avatar" alt="">
           </div>
           <p class="user-name f17">{{user_profile.name}}</p>
           <p class="school-number f14">{{user_profile.school_number ? user_profile.school_number : $t('weishezhixuehao')}}</p>
@@ -54,7 +54,7 @@
           <div class="tag-list" v-if="!isEdit">
             <template v-for="(item, index) in tagList">
               <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleSelect(index)" :key="item.id">
-                <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
+                <span class="tag-label f12" :class="item.visible ? 'active': ''">{{item.name}}</span>
               </div>
             </template>
             <div class="tag-item" @click="addTagFlag = true">
@@ -66,8 +66,8 @@
           <div class="tag-list" v-else>
             <template v-for="(item, index) in tagList">
               <div class="tag-item" :class="item.name.length >= 20 && (index + 1 < tagList.length && tagList[index + 1].name.length >= 20) ? 'nomargin' : ''" @click="handleDelete(index)" :key="item.id">
-                <span class="tag-label f12" :class="item.is_visible ? 'active': ''">{{item.name}}</span>
-                <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.is_default"></i>
+                <span class="tag-label f12" :class="item.visible ? 'active': ''">{{item.name}}</span>
+                <i class="delete-tag iconfont icon-guanbi f16" v-if="isEdit && !item.default"></i>
               </div>
             </template>
             <div class="tag-item" @click="addTagFlag = true">
@@ -157,9 +157,9 @@
 
     },
 	  created(){
-      this.userid = +this.$route.params.userid
-      this.lessonid = +this.$route.params.lessonid
-      this.classroomid = +this.$route.params.classroomid
+      this.userid = this.$route.params.userid
+      this.lessonid = this.$route.params.lessonid
+      this.classroomid = this.$route.params.classroomid
       this.init()
     },
     mounted() {
@@ -178,7 +178,9 @@
         if(newVal > 100){
           this.behavior_score_temp = 100
         }
-        this.behavior_score_temp = +(newVal.replace(/\D/g,''))
+        if(typeof newVal !== 'number'){
+          this.behavior_score_temp = +(newVal.replace(/\D/g,''))
+        }
       }
     },
 	  methods: {
@@ -210,15 +212,15 @@
       },
       handleSelect(index){
         let tag_ids = []
-        this.tagList[index].is_visible = !this.tagList[index].is_visible
+        this.tagList[index].visible = !this.tagList[index].visible
         let id = this.tagList[index].id
         this.tagList.forEach((item, idx) => {
           if(idx < 3 && index < 3){
-            if(item.is_default && idx !== index){
-              item.is_visible = false
+            if(item.default && idx !== index){
+              item.visible = false
             }
           }
-          if(item.is_visible){
+          if(item.visible){
             tag_ids.push(item.id)
           }
         })
@@ -259,7 +261,7 @@
         })
       },
       handleDelete(index){
-        if(this.tagList[index].is_default) return false;
+        if(this.tagList[index].default) return false;
         this.delete_ids.push(this.tagList[index].id)
         this.tagList.splice(index, 1)
       },
@@ -380,6 +382,7 @@
     left: 0;
     z-index: 200;
     overflow: auto;
+    background: #fff;
     .banner {
       width: 100%;
       height: 4.76rem;

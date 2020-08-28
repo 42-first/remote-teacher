@@ -425,10 +425,13 @@
 				// TODO： 签到发现没有权限处理
 				if(joined.code !== 0) {
 					// 50004 lesson end
-					if(joined === 50004) {
-						this.goToLessonDetail(1)
+					if(joined.code === 50004) {
+						this.goTocode(1)
 						return this;
 					}
+				}
+				if(!joined.data.isTeacher){
+					location.href = `/student/v3/${this.$route.params.lessonid}`
 				}
 				let userInfo = await this.getUserInfo()
 
