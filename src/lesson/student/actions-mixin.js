@@ -479,7 +479,7 @@ var actionsMixin = {
         // 组织解析数据
         let pageURL = `/v3/${this.lessonID}/analysis/`;
         Object.assign(data, {
-          pageIndex: slideData.Index,
+          pageIndex: slideData.index,
           problemID: remark.prob,
           pageURL,
           caption: this.$i18n.t('answerpublished') || '老师公布了习题的答案解析'

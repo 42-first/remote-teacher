@@ -10,7 +10,7 @@
   <section class="analysis__page">
     <!-- 问题内容 -->
     <section class="problem__content" v-if="slide" >
-      <p class="page-no f12"><span>{{ $t('pno', { number: slide.Index }) }}</span></p>
+      <p class="page-no f12"><span>{{ $t('pno', { number: slide.index }) }}</span></p>
       <img class="cover" :src="slide.cover" :data-src="slide.cover" @click="handlePreviewImage" alt="雨课堂,习题解析" />
     </section>
 
