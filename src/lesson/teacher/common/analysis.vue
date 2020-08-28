@@ -114,7 +114,11 @@
     computed: {
       ...mapGetters([
         'lessonid',
-        'isCloneClass'
+        'isCloneClass',
+        'socket',
+        'presentationid',
+        'current',
+        'pptData'
       ])
     },
     components: {
@@ -125,10 +129,29 @@
        * @method 组件初始化
        */
       init() {
-        let key = 'analysis-sendstatus-' + this.problem.ProblemID;
+        let key = 'analysis-sendstatus-' + this.problem.problemId;
         if(isSupported(window.localStorage)) {
           this.sendStatus = +localStorage.getItem(key);
         }
+      },
+
+      /** 
+       * @method 处理发布订阅
+      */
+      initPubSub(){
+        PubSub.unsubscribe('problem-remark')
+
+        PubSub.subscribe('remark-msg.send', (msg, data) => {
+          // 发送成功
+          
+          this.sendStatus = 2
+          
+          // 这里记录是否发送
+          let key = 'analysis-sendstatus-' + this.problem.problemId;
+          if(isSupported(window.localStorage)) {
+            localStorage.setItem(key, this.sendStatus);
+          }
+        })
       },
 
       /**
@@ -154,12 +177,6 @@
           return
         }
 
-        let url = API.publish_remark;
-        let params = {
-          'problem_id': this.problem.ProblemID,
-          'lesson_id': this.lessonid
-        };
-
         if(this.sendStatus > 0) {
           return this;
         }
@@ -167,24 +184,20 @@
         // 禁止重复发送
         this.sendStatus = 1;
 
-        request.post(url, params)
-        .then(res => {
-          if(res && res.success) {
-            // 发送成功
-            this.sendStatus = 2;
-
-            // 这里记录是否发送
-            let key = 'analysis-sendstatus-' + this.problem.ProblemID;
-            if(isSupported(window.localStorage)) {
-              localStorage.setItem(key, this.sendStatus);
-            }
-          }
-
+        let str = JSON.stringify({
+          'op': 'sendremark',
+          'lessonid': this.lessonid,
+          'prob': this.problem.problemId,
+          'pres': this.presentationid,
+          'sid': this.pptData[this.current].id
         })
+
+		    self.socket.send(str)
       }
 
     },
     created() {
+      this.initPubSub()
       this.init();
     }
   }
