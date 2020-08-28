@@ -82,6 +82,7 @@
         title: '习题',
         card: null,
         slide: null,
+        pollingCount: 0,
         // 问题类型 单选 多选 投票 填空 主观题
         problemType: '',
         hasRemark: true,
@@ -96,7 +97,7 @@
       };
     },
     components: {
-      analysis: () => import('@/lesson/fullscreen/components/analysis.vue'),
+      analysis: () => import('@/lesson/common/analysis.vue'),
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -228,35 +229,33 @@
        */
       getProblemResult() {
         let problemID = this.problemID;
-        let URL = API.student.GET_PROBLEM_RESULT;
+        let URL = API.lesson.get_problem_answer;
         let param = {
-          'problem_id': problemID,
-          'lesson_id': this.lessonID
-        }
+          'problem_id': problemID
+        };
 
         request.get(URL, param)
         .then((res) => {
-          if(res && res.data) {
+          if(res && res.code === 0 && res.data) {
             let data = res.data;
 
             // 客观题
-            // data.answer && (this.oProblem.Answer = data.answer);
-            if(data.answer) {
-              this.$set(this.oProblem, 'Answer', data.answer);
+            if(data.answer && this.problemType !== 5) {
+              data.Answer = data.answer.join(',');
             }
 
-            // 填空题
-            this.result = data.result
             // 主观题
-            if(this.problemType === 'ShortAnswer' || this.problemType === 'FillBlank') {
-              this.result = data.subj_result
+            if(this.problemType === 5 && data.score) {
+              this.getScore = data.score;
             }
-            this.getScore = data.result_score;
+
+            this.oProblem = Object.assign({}, this.oProblem, data);
+
+            console.log(this.oProblem);
           }
         })
         .catch(error => {
         });
-
       },
 
       /*
