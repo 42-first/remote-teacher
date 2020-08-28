@@ -80,6 +80,7 @@
         title: '习题',
         card: null,
         slide: null,
+        pollingCount: 0,
         // 问题类型 单选 多选 投票 填空 主观题
         problemType: '',
         hasRemark: true,
@@ -220,14 +221,18 @@
             let data = res.data;
 
             // 客观题
-            if(data.answer && this.problemType !==5) {
-              this.$set(this.oProblem, 'Answer', data.answer.join(','));
+            if(data.answer && this.problemType !== 5) {
+              data.Answer = data.answer.join(',');
             }
 
             // 主观题
             if(this.problemType === 5 && data.score) {
               this.getScore = data.score;
             }
+
+            this.oProblem = Object.assign({}, this.oProblem, data);
+
+            console.log(this.oProblem);
           }
         })
         .catch(error => {

@@ -140,12 +140,12 @@
         // 结构中是否有Answer字段
         let type = problem.problemType;
         // 全部题型答案目前都在answers字段内
-        if(!problem.Answer) {
+        if(!problem.Answer && problem.answer) {
           problem.Answer = '';
 
-          problem.Answer = type == 4 ? problem.answers.join(';') : problem.answers.join('');
+          problem.Answer = type == 4 ? problem.answer.join(';') : problem.answer.join('');
 
-          console.log(problem.Answer);
+          console.log(problem);
           this.problem = problem;
         }
       }
