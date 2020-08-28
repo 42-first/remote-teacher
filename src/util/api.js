@@ -114,6 +114,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_problem_answer: '/api/v3/lesson/problem/fetch-answer',
       // 获取直播信息
       get_live_info: '/api/v3/lesson/live/get-info',
+      // 获取抢红包信息
+      get_redenvelope: '/api/v3/lesson/redenvelope/issue-list',
 
 
       // 教师接口

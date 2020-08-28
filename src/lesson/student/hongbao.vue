@@ -31,26 +31,26 @@
       <!-- 红包列表 -->
       <section class="hongbao__list-wrapper" v-if="hongbaoList&&summary">
         <div class="hongbao--count f18">{{ $t('numopenedbonus', { count: hongbaoList&&hongbaoList.length, total: summary && summary.count }) }}</div>
-        <ul class="hongbao__list">
 
+        <ul class="hongbao__list">
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
             <div class="avatar">
-              <img :src="item.profile.avatar" :alt="item.profile.name" />
-              <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>
+              <img :src="item.avatar" :alt="item.userName" />
+              <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]">
+                <p class="rank-order" v-if="index<3">{{ index + 1 }}</p>
+              </div>
             </div>
             <div class="hongbao-item--content">
               <div class="name-time">
-                <p class="name f14">{{ item.profile.name }}</p>
-                <p class="time f12">{{ item.time|formatTime }}</p>
+                <p class="name f14">{{ item.userName }}</p>
+                <p class="time f12">{{ item.createTime|formatTime }}</p>
               </div>
-              <p class="f14">￥ {{ (item.amount/100).toFixed(2) }}</p>
+              <p class="f14">￥ {{ (item.issueAmount/100).toFixed(2) }}</p>
             </div>
           </li>
 
         </ul>
       </section>
-
-
     </div>
 
   </section>
@@ -163,6 +163,30 @@
           });
 
       },
+
+      /**
+       * @method 红包详情
+       * @param problemID 问题ID
+       */
+      getRedEnvelop(redpacketID) {
+        let URL = API.lesson.get_redenvelope;
+        let params = {
+          'redEnvelopeId': redpacketID
+        };
+
+        request.get(URL, params)
+        .then( res => {
+          if (res && res.code === 0 && res.data) {
+            let data = res.data;
+
+            // this.teacher = data.issuer.profile;
+            this.hongbaoList = data.issueList;
+          }
+        }).catch(error => {
+          console.log('getRedEnvelop:', error);
+        })
+      },
+
       handleBack() {
         this.$router.back();
       }
