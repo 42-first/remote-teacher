@@ -173,7 +173,8 @@
         this.text = value;
 
         if(this.count) {
-           this.sendStatus === 0 && (this.sendStatus = 2);
+          this.sendStatus === 0 && (this.sendStatus = 2);
+          this.cacheResult();
         } else {
           !this.hasImage && (this.sendStatus = 0);
         }
@@ -231,6 +232,8 @@
             setTimeout(() => {
               self.$router.back();
             }, 2000)
+
+            self.removeCache();
           }
         }).catch(error => {
           this.sendStatus = 2;
@@ -288,6 +291,8 @@
               self.imageURL = data.pic_url;
               self.imageThumbURL = data.thumb_url
               self.sendStatus = 2;
+
+              self.cacheResult();
 
               return self.imageURL;
             }
@@ -466,6 +471,8 @@
               this.hasImage = true;
               this.sendStatus = 2;
               this.video = video;
+
+              this.cacheResult();
             }
           },
           error: (xhr, type) => {
@@ -494,6 +501,7 @@
         };
 
         !this.text && (this.sendStatus = 0);
+        this.cacheResult();
       },
       handleScaleImage() {
         let targetEl = event.target;
@@ -546,6 +554,72 @@
       },
       handleSend() {
         this.sendStatus === 2 && this.sendSubmission();
+      },
+
+      /*
+       * @method 缓存投稿
+       * @param
+       */
+      cacheResult() {
+        // 定时保存
+        this.cacheTimer && clearTimeout(this.cacheTimer);
+        this.cacheTimer = setTimeout(() => {
+          // 缓存到本地
+          let key = 'lessontougao' + this.lessonID;
+          let result = {
+            'text': this.text
+          };
+
+          result['imageURL'] = this.imageURL;
+          result['imageThumbURL'] = this.imageThumbURL;
+          result['video'] = this.video;
+
+          if(isSupported) {
+            localStorage.removeItem(key);
+            localStorage.setItem(key, JSON.stringify(result));
+          }
+        }, 3000)
+      },
+
+      /*
+       * @method 删除缓存
+       * @param
+       */
+      removeCache() {
+        let key = 'lessontougao' + this.lessonID;
+        if(isSupported) {
+          localStorage.removeItem(key);
+        }
+      },
+
+      /*
+       * @method 恢复作答结果
+       * @param
+       */
+      restore() {
+        // 恢复作答结果
+        let sResult = localStorage.getItem('lessontougao' + this.lessonID);
+        if(sResult) {
+          let result = JSON.parse(sResult);
+          this.text = result.text;
+          // 是否有图片
+          if(result.imageURL) {
+            this.hasImage = true;
+            this.imageURL = result.imageURL;
+            this.imageThumbURL = result.imageThumbURL;
+
+            setTimeout(()=>{
+              let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+              imgEl.src = this.imageURL;
+            }, 300)
+          }
+
+          if(result.video) {
+            this.video = result.video;
+          }
+
+          this.sendStatus = 2;
+        }
       },
 
       /**
@@ -630,7 +704,9 @@
     },
     created() {
       this.lessonID = this.$route.params.lessonID;
-      this.classroomid = this.$route.query.classroomid
+      this.classroomid = this.$route.query.classroomid;
+
+      this.restore();
 
       // 获取学生分组列表
       this.pickerDataInit()
