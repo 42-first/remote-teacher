@@ -147,6 +147,11 @@ export default {
       this.$el.focus();
       this.$el.addEventListener('keydown', (e) => {
         console.dir(e);
+        let target = e.target;
+        let tagName = target.tagName.toLowerCase()
+        if(tagName === 'input' || tagName === 'textarea') {
+          return this;
+        }
 
         if(e.keyCode) {
           this.mapKeyCode(e);

@@ -878,6 +878,11 @@ var actionsMixin = {
             this.supportFLV(true);
           }, 3000)
         }
+
+        // 增加提示
+        if(this.liveVisible) {
+          this.liveStatusTips = 'loading...';
+        }
       }
     },
 

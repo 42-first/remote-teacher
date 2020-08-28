@@ -410,7 +410,7 @@
         }
       })
 
-      this.lessonID = +this.$route.params.lessonID;
+      this.lessonID = this.$route.params.lessonID;
       this.getMySubmission();
 
     },

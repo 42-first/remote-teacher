@@ -561,7 +561,7 @@
       }
     },
     created() {
-      this.lessonID = +this.$route.params.lessonID;
+      this.lessonID = this.$route.params.lessonID;
       document.title = this.$i18n.t('post') || '投稿';
       this.classroomid = this.$route.query.classroomid
       // 课程结束啦
@@ -582,7 +582,7 @@
 
 <style lang="scss" scoped>
   @import "~@/style/common_rem";
-  /* 
+  /*
     设置投稿人
   */
   .contributor-wrapper{

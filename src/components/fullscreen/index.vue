@@ -426,7 +426,7 @@
       */
       setSentry() {
         if(window.Sentry) {
-          window.Sentry.init({ dsn: 'https://27f98c41f6584529b30068fe12a71241@mobile-sentry.xuetangonline.com/5' });
+          window.Sentry.init({ dsn: 'https://3d89296280c84e499c8022dc77217999@mobile-sentry.xuetangonline.com/3' });
           window.Sentry.configureScope((scope) => {
             scope.setUser({ 'id': this.userID });
           });
