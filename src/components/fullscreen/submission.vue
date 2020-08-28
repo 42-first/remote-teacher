@@ -106,6 +106,7 @@
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
+  import { isSupported } from '@/util/util'
   import $ from 'jquery'
 
 
