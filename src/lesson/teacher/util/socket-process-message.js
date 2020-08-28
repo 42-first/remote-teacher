@@ -490,6 +490,11 @@ function socketProcessMessage(msg){
     self.$store.commit('set_newtougao', msg.number || 0)
   }
 
+  // 发送答案解析回执
+  if (msg.op == 'problemremark'){
+    T_PUBSUB.publish('remark-msg.send', msg)
+  }
+
 }
 
 export default socketProcessMessage
