@@ -33,7 +33,7 @@
     
     <!-- 真实数据 -->
     <div class="realdata f14">
-      <div class="real-item real-item-qb" v-if="Object.keys(result_graph).length > 2">
+      <div class="real-item real-item-qb" v-if="result_graph.length > 2">
         <div class="left-bar">
           <span class="desc"><!-- 全部 -->{{ $t('total') }}</span>
           <div class="fill" :style="{width: `${correctNum/total*100}%`}"></div>
@@ -41,13 +41,13 @@
         <div class="rightnum f17">{{correctNum}}</div>	
       </div>
 
-      <div class="real-item" v-for="key in Object.keys(result_graph)" :key="key">
+      <div class="real-item" v-for="(item, index) in result_graph" :key="index">
         <div class="left-bar">
-          <span class="desc">{{key}}</span>
-          <div class="fill" :style="{width: `${result_graph[key].count/total*100}%`}"></div>
-          <div class="answer ellipsis">{{result_graph[key].answer}}</div>
+          <span class="desc">{{index + 1}}</span>
+          <div class="fill" :style="{width: `${item.count/total*100}%`}"></div>
+          <div class="answer ellipsis">{{item.label}}</div>
         </div>
-        <div class="rightnum f17">{{result_graph[key].count}}</div>
+        <div class="rightnum f17">{{item.count}}</div>
       </div>
 
     </div>

@@ -196,14 +196,6 @@
         }).catch(error => {
 
         })
-        // let url1 = `v/lesson/config_presentation/${this.presentationid}/`;
-        // axios.post(this.urlMock(url1), {
-        //   "op":"set_config",
-        //   "set_data": {
-        //     "show_presentation": name
-        //   },
-        //   'lesson_id': this.lessonid
-        // })
       },
       urlMock (url) {
         if (process.env.NODE_ENV !== 'production') {

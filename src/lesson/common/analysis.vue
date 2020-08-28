@@ -28,7 +28,7 @@
       </div>
     </section>
     <!-- 兼容老的解析处理 -->
-    <section class="remark f17" v-if="!problem.remarkRich&&problem.remark">{{ problem.remark }}</section>
+    <section class="remark f17" v-if="!problem.remarkRich.shape&&problem.remark">{{ problem.remark }}</section>
   </section>
 
 </template>
@@ -139,15 +139,11 @@
       init(problem) {
         // 结构中是否有Answer字段
         let type = problem.problemType;
-        let answers = [];
-        if(type === 4 && !problem.Answer) {
+        // 全部题型答案目前都在answers字段内
+        if(!problem.Answer) {
           problem.Answer = '';
 
-          problem.blanks.forEach( (blank) =>{
-            answers.push(blank.Answers.join('/'));
-            // problem.Answer += ' ' + blank.Answers.join('/');
-          });
-          problem.Answer = answers.join(';');
+          problem.Answer = type == 4 ? problem.answers.join(';') : problem.answers.join('');
 
           console.log(problem.Answer);
           this.problem = problem;

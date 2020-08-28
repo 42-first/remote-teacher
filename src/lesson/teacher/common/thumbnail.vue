@@ -26,7 +26,7 @@
     <!-- 不懂 类型 -->
     <section class="scroll-box scroll-box2 allowscrollcallback" v-show="tab === 2">
       <!-- 新增白板不懂入口 有数据显示没数据不显示  -->
-      <router-link tag="section" :to="{ name: 'boardlist', params: { lessonid: lessonid } }" class="board__box" v-if="doubtBoard">
+      <router-link tag="section" :to="{ name: 'boardlist_v3', params: { lessonid: lessonid } }" class="board__box" v-if="doubtBoard">
         <div class="board__left">
           <img class="board--image" alt="雨课堂,白板" src="http://sfe.ykt.io/o_1cs602ntrk81rnejl2im1n3s9.png" />
           <span class="board--title f14"><!-- 白板不懂 -->{{ $t('boardunknow') }}</span>

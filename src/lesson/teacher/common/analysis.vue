@@ -118,7 +118,7 @@
       ])
     },
     components: {
-      analysis: () => import('@/components/common/analysis.vue'),
+      analysis: () => import('@/lesson/common/analysis.vue'),
     },
     methods: {
       /**

@@ -18,25 +18,26 @@
 					@yanshi="yanshi"
 					@shouti="shouti"
 				></Rolex>
-				<hide-some-info :isUserInfo="false" :problemtype="problemType" :isTouping="isTouping" @change="showAnswerChange" :total="total" :members="members" :problemid="problemid"></hide-some-info>
+				<hide-some-info :isUserInfo="false" :problemtype="problemType" :isTouping="isTouping" @change="showAnswerChange" :total="finishedCount" :members="checkinCount" :problemid="problemid"></hide-some-info>
 			</section>
 			
       <!-- 填空题条形图 -->
       <template v-if="problemType === 4">
         <FillblankBox class="FillblankBox"
-          :total="total"
-          :correctNum="correct_students.length"
-          :result_graph="result_graph"
+          :total="checkinCount"
+          :correctNum="correctCount"
+          :result_graph="graph"
         ></FillblankBox>
       </template>
 
 	    <!-- 单选多选 中间柱状图 -->
       <template v-else>
         <CollumBox class="CollumBox"
-          :total="total"
+          :total="checkinCount"
           :problemType="problemType"
           :graph="graph"
-					:ma_right_count="ma_right_count"
+					:correctNum="correctCount"
+        	:answer="ma_answer"
         ></CollumBox>
       </template>
 
@@ -147,11 +148,12 @@
 	    return {
 	    	problemid: -1,
 		    problemType: '',               // 当前页题目的类型 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
-		    durationLeft: '--:--',         // 题目的倒计时剩余时间
-		    total: '--',                   // 提交的人数
-		    members: '--',                 // 参与上课的人数
+				durationLeft: '--:--',         // 题目的倒计时剩余时间
+				correctCount: '--',							// 正确人数
+		    finishedCount: '--',            // 提交的人数
+		    checkinCount: '--',            // 参与上课的人数
 		    graph: [],                     // 柱状图数据
-		    ma_right_count: {},            // 多选题答案及人数
+		    ma_answer: '',            		// 多选题答案
 		    limit: '',                     // 设置的限时 -1 为未限时 单位 秒
 		    RedEnvelopeID: -1,             // 红包的id
 		    newTime: 100,									 // 当前剩余时间，用于判读是否剩余5秒
@@ -159,8 +161,6 @@
 				isTouping: false,							 // 当前正在投屏
         showAnswer: false,             // 投屏现实答案
         is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
-				result_graph: {},
-				correct_students: [],
         // 问题详细信息
         problem: null
 	    }
@@ -525,54 +525,35 @@
 		   *
 		   */
 		  getProblemResult(){
-		    let self = this
+				let self = this
 
-        let url = ''
+				let URL = API.lesson.get_problem_histogram
+				let params = {
+					problem_id: self.problemid
+				}
 
-        if(self.problemType === 'FillBlank') {
-          url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
-        }else {
-          url = API.problem_statistics + '/' + self.problemid + '/'
-        }
-
-	      // if (process.env.NODE_ENV === 'production') {
-	      //   url = url + '/' + self.problemid + '/'
-	      // }
-
-	      request.get(url)
-	      	.then(jsonData => {
-            if(self.problemType === 'FillBlank'){
-              jsonData = jsonData.data
-	      		  self.setData({
-	      		    total: jsonData.total,
-	      		    members: jsonData.members,
-								RedEnvelopeID: jsonData.RedEnvelopeID || -1,
-								is_sensitive: jsonData.is_sensitive,
-								result_graph: jsonData.result_graph,
-								correct_students: jsonData.correct_students,
-	      		  })
-            }else {
-              let _answer = jsonData.answer
-              let _graph = jsonData.graph.data
-              _graph.forEach(item => {
-                item.isRight = new RegExp(item.label).test(_answer)
-                return item
-              })
-
-              if(jsonData.success){
-                self.setData({
-                  total: jsonData.total,
-                  members: jsonData.members,
-                  graph: _graph,
-                  ma_right_count: jsonData.graph.ma_right_count,
-                  RedEnvelopeID: jsonData.RedEnvelopeID || -1
-                })
-              }
-            }
-
-	      	}).catch(error => {
-	      		console.error('error', error)
-	      	})
+				return request.get(URL,params)    
+				.then((res) => {
+					if(res && res.code === 0 && res.data){
+						let jsonData = res.data
+						let _answer = jsonData.answer.join('')
+						let _graph = [...jsonData.graph]
+						if(self.problemType !== 4){
+							_graph.forEach(item => {
+								item.isRight = new RegExp(item.label).test(_answer)
+								return item
+							})
+						}
+						self.setData({
+							correctCount: jsonData.correctCount,
+							checkinCount: jsonData.checkInCount,
+							graph: _graph,
+							ma_answer: _answer,
+							finishedCount: jsonData.finishedCount,
+							RedEnvelopeID: jsonData.RedEnvelopeID || -1,
+						})
+					}
+				})
 		  },
       /**
 	     * 延时

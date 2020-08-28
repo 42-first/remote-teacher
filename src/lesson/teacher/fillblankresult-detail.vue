@@ -2,7 +2,7 @@
 <template>
   <div class="problemresultdetail-box">
 
-    <template v-if="problemResultDetailData">
+    <template v-if="loaded">
 
       <!-- <div class="tab">
         <header class="scroll-wrapper" :style="{width: `${(Object.keys(answer).length + 1.5) * 2.1333}rem`}">
@@ -19,18 +19,18 @@
       <section class="correct-box">
         <header class="header f18"><!-- 正确答案 -->{{ $t('correctanswer') }}</header>
         <ul class="list">
-          <li class="item" v-for="(value, key) in answer" :key="key">
+          <li class="item" v-for="(item, index) in answer" :key="index">
             <div class="index f14">
-              <p class="wenzi">{{key}}</p>
+              <p class="wenzi">{{index + 1}}</p>
             </div>
-            <span class="cont f17">{{value.join('/')}}</span>
+            <span class="cont f17">{{item}}</span>
           </li>
 
         </ul>
       </section>
 
       <!-- 有解析显示解析入口 -->
-      <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+      <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 
       <section class="choice-list">
         <!-- 正确统计 -->
@@ -39,11 +39,11 @@
             <i :class="['iconfont', 'f20', 'icon-correct']"></i>
 
             <span class="f18 asw"><!-- 正确 -->{{ $t('zhengque') }}</span>
-            <span class="f14" style="color: #9B9B9B;">{{problemResultDetailData.correct_students.length}}{{ $t('ren') }}</span>
+            <span class="f14" style="color: #9B9B9B;">{{correct.length}}{{ $t('ren') }}</span>
             <i :class="['iconfont', 'right', 'f20', 0 === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
           </v-touch>
           <div :class="['item-bd', {'item-hidden': 0 !== showingIndex}]" >
-            <div class="stu" v-for="stu in problemResultDetailData.correct_students" :key="stu.user_id">
+            <div class="stu" v-for="stu in correct" :key="stu.userId">
               <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="ellipsis">{{stu.name}}</div>
             </div>
@@ -56,16 +56,16 @@
             <i :class="['iconfont', 'f20', 'icon-wrong']"></i>
 
             <span class="f18 asw"><!-- 错误 -->{{ $t('cuowu') }}</span>
-            <span class="f14" style="color: #9B9B9B;">{{problemResultDetailData.incorrect_students.length}}{{ $t('ren') }}</span>
+            <span class="f14" style="color: #9B9B9B;">{{incorrect.length}}{{ $t('ren') }}</span>
             <i :class="['iconfont', 'right', 'f20', 1 === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
           </v-touch>
           <div :class="['wrong-bd correct', {'item-hidden': 1 !== showingIndex}]" >
-            <div class="stu" v-for="stu in problemResultDetailData.incorrect_students" :key="stu.user_id">
+            <div class="stu" v-for="stu in incorrect" :key="stu.user_id">
               <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="cont f15">
                 <div class="name">{{stu.name}}</div>
                 <div class="stu-answer">
-                  <span v-for="(value, key) in stu.result" :key="key" :class="{'wrong': !stu.correct_blanks.includes(+key)}">{{value}};</span>
+                  <span v-for="(value, index) in stu.result" :key="index" :class="{'wrong': !stu.blankStatus[index]}">{{value}};</span>
                 </div>
               </div>
             </div>
@@ -78,11 +78,11 @@
             <i :class="['iconfont', 'f20', 'icon-weiwancheng', 'color63']"></i>
 
             <span class="f18 asw"><!-- 未答 -->{{ $t('weida') }}</span>
-            <span class="f14" style="color: #9B9B9B;">{{problemResultDetailData.not_answered.length}}{{ $t('ren') }}</span>
+            <span class="f14" style="color: #9B9B9B;">{{unfinished.length}}{{ $t('ren') }}</span>
             <i :class="['iconfont', 'right', 'f20', 2 === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
           </v-touch>
           <div :class="['item-bd correct', {'item-hidden': 2 !== showingIndex}]" >
-            <div class="stu" v-for="stu in problemResultDetailData.not_answered" :key="stu.user_id">
+            <div class="stu" v-for="stu in unfinished" :key="stu.user_id">
               <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="ellipsis">{{stu.name}}</div>
             </div>
@@ -124,16 +124,20 @@
     data() {
       return {
         problemid: 0,
-        problemResultDetailData: null, // 试题柱状图详情页数据
         showingIndex: 0, // 正在展示的类型的序号 0正确 1错误 2未答
         answer: {},
         isBottomBtnFixed: false,
         isFetching: true,
         activeTab: -1, // 全部 填空1 ...
+        answer: [],
+        correct: [],
+        incorrect: [],
+        unfinished: [],
+        loaded: false
       }
     },
     components: {
-      analysis: () => import('@/components/teacher-restructure/common/analysis.vue'),
+      analysis: () => import('@/lesson/teacher/common/analysis.vue'),
     },
     mixins: [ analysismixin ],
     created() {
@@ -190,20 +194,23 @@
        */
       refreshProblemResultDetail() {
         let self = this
-        let url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
-
-        if (process.env.NODE_ENV === 'production') {
-          url = API.fill_blank_problem_statistics + '/' + self.problemid + '/'
+        let URL = API.lesson.get_blank_detail
+        let params = {
+          problem_id: self.problemid
         }
-
-        // 单次刷新
-        request.get(url)
-          .then(jsonData => {
-            jsonData = jsonData.data
-            // 设置试卷详情数据
-            self.problemResultDetailData = jsonData
+        return request.get(URL,params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let jsonData = res.data
             self.answer = jsonData.answer
-          })
+            self.correct = jsonData.correct
+            self.incorrect = jsonData.incorrect
+            self.unfinished = jsonData.unfinished
+            self.loaded = true
+          }
+        }).catch(error => {
+          console.log('getResult:' + error);
+        })
       },
       /**
        * 切换答题状态

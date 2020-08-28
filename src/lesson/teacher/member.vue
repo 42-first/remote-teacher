@@ -209,8 +209,7 @@
 					let list = this.memberNo_all[index]
 					let total = this.studentCount - this.partTotal
 					this.notParticipantList = this.notParticipantList.concat(list);
-					this.signNoLoaded = index === this.memberNo_all.length - 1 || this.notParticipantList.length >= total;
-					this.notPartTotal = total;
+					this.signNoLoaded = index === this.memberNo_all.length - 1 || this.notParticipantList.length >= this.notPartTotal;
 				}
 				
 				
@@ -234,6 +233,7 @@
 							memberNo_all.push(res.data.items.slice(i, 20*(i+1) - 1))
 						}
 						this.memberNo_all = memberNo_all
+						this.notPartTotal = res.data.totalNum
 						this.fetchListHandle(res.data, 1, this.notSignedPage)
 					}
 				})	

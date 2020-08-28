@@ -7,20 +7,14 @@
 <template>
   <section class="board__wrap">
 
-    <!-- 白板绘制 -->
-    <div class="timeline__ppt" v-for="board in boards">
-      <!-- 如果是图片 -->
-      <div class="ppt__cover--wrapper" v-if="board.type==='cover'">
+    <div class="timeline__ppt" v-for="board in boards" :key="board.id">
+      <div class="ppt__cover--wrapper">
         <img class="border--cover" :src="board.cover" />
-      </div>
-      <!-- 白板屏幕宽高 -->
-      <div class="ppt__cover--wrapper" :style="{ height: (10 - 0.906667)/board.rate + 'rem' }" v-else >
-        <canvas :id="'canvas_'+board.board_id" class="board__container" :width="board.content.width" :height="board.content.height" :style="board.content|scaleCanvas" v-canvas="board"></canvas>
       </div>
       <div class="ppt-footer">
         <p class="ppt__time f16 c9b">{{ $t('pno', { number: board.index }) }}</p>
         <div class="ppt__opt f15 c33" >
-          <p><span>{{ $t('unknown') }}:</span><span class="pl10">{{ board.doubt_count }}</span></p>
+          <p><span>{{ $t('unknown') }}:</span><span class="pl10">{{ board.count }}</span></p>
         </div>
       </div>
     </div>
@@ -59,56 +53,20 @@
       /*
        * @method 读取白板数据
        */
-      getBoardList(lessonid) {
-        let url = API.get_board_list;
-        let params = {
-          'lesson_id': lessonid
-        };
+      getBoardList() {
+        let url = API.lesson.get_file_sharing;
 
-        request.get(url, params)
+        request.get(url)
         .then(res => {
-          if(res && res.success) {
-            let data = res.data;
+          if(res && res.code === 0 && res.data) {
 
-            this.boards = this.formatData(data && data.doubt_board_list);
+            this.boards = res.data;
           }
         })
       },
-
-      /*
-       * @method 白板数据格式化
-       */
-      formatData(list) {
-        let width = 1200;
-        let height = 800;
-
-        if(list) {
-          list.forEach((board) => {
-            // 白板是否已生成图片
-            if(board.type === 'cover') {
-              board.cover = board.content && board.content.cover;
-            } else if(board.type === 'track') {
-              board.content.width = board.content.width || width;
-              board.content.height = board.content.height || height;
-
-              board.rate = board.content.width/board.content.height;
-              board.lines = board.content && board.content.track_history;
-            }
-
-            // board.content.width = board.content.width || width;
-            // board.content.height = board.content.height || height;
-
-            // board.rate = board.content.width/board.content.height;
-            // board.lines = board.content && board.content.track_history;
-          })
-        }
-
-        return list;
-      }
     },
     created() {
-      this.lessonid = +this.$route.params.lessonid;
-      this.getBoardList(this.lessonid);
+      this.getBoardList();
     },
     mounted() {
     },

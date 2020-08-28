@@ -134,7 +134,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 课堂不懂收藏列表（老师）
       get_presentation_tag: '/api/v3/lesson/tag/lesson/teacher',
       // 查看lesson弹幕列表
-      get_danmu_list: '/api/v3/danmu/lesson/get',
+      get_danmu_list: '/api/v3/lesson/danmu/lesson/get',
       // 投稿未读数查询
       get_unread: '/api/v3/lesson/tougao/unread',
       // 获取设置
@@ -162,7 +162,15 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 主观题答案数量（轮询用）
       get_subj_list_count: '/api/v3/lesson/problem/subj-list-count',
       // 课上批改主观题
-      post_grade: '/api/v3/lesson/problem/grade'
+      post_grade: '/api/v3/lesson/problem/grade',
+      // 客观题答题统计
+      get_problem_histogram: '/api/v3/lesson/problem/histogram',
+      // 课上选择题详情
+      get_choice_detail: '/api/v3/lesson/problem/choice-detail',
+      // 课上填空题详情
+      get_blank_detail: '/api/v3/lesson/problem/blank-detail',
+      // 课堂板书不懂列表（老师）
+      get_file_sharing: '/api/v3/lesson/tag/lesson/teacher/file-sharing'
     },
 
     /*------------------*\
