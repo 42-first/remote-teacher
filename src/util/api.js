@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 班级基本信息
       get_classroom: '/api/v3/classroom/basic-info',
       // 发送弹幕
-      send_danmu: '/api/v3/danmu/send',
+      send_danmu: '/api/v3/lesson/danmu/send',
       // 答题
       answer_problem: '/api/v3/lesson/problem/answer',
       // 答题重试
