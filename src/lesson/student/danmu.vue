@@ -86,10 +86,7 @@
         let URL = API.lesson.send_danmu;
         const message = this.text.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
         let params = {
-          'biz': 1,
-          'resourceType': 1,
-          'resourceId': this.lessonID,
-          'action': 1,
+          'lessonId': this.lessonID,
           'target': '',
           'userName': '',
           'message': message,

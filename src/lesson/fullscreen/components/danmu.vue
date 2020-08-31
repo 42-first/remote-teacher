@@ -99,10 +99,7 @@ export default {
       let URL = API.lesson.send_danmu;
       const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
       let params = {
-        'biz': 1,
-        'resourceType': 1,
-        'resourceId': this.$parent.lessonID,
-        'action': 1,
+        'lessonId': this.$parent.lessonID,
         'target': '',
         'userName': '',
         'message': message,
