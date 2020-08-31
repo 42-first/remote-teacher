@@ -64,26 +64,26 @@
                 <div class="time f15">{{item.createTime | formatTime}}</div>
                 <div class="action f15">
                   <!-- 投屏的时候不显示收藏状态 -->
-                  <v-touch class="coll gray" v-show="item.collected && postingSubmissionid !== postDetail.tougaoIndex" v-on:tap="collectSubmission(item.tougaoId, index, 0)">
+                  <v-touch class="coll gray" v-show="item.collected && postDetail.tougaoId !== item.tougaoId" v-on:tap="collectSubmission(item.tougaoId, index, 0)">
                     <i class="iconfont icon-tougao_shoucang1 f20" style="color: #E1142D; margin-right: 0.1rem;"></i>
                     {{ $t('stared') }}
                   </v-touch>
-                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.collected && postingSubmissionid !== postDetail.tougaoIndex" v-on:tap="collectSubmission(item.tougaoId, index, 1)">
+                  <v-touch class="coll gray J_ga" data-category="9" data-label="投稿页" v-show="!item.collected && postDetail.tougaoId !== item.tougaoId" v-on:tap="collectSubmission(item.tougaoId, index, 1)">
                     <i class="iconfont icon-tougao_bushoucang f20" style=" margin-right: 0.1rem;"></i>
                     {{ $t('star') }}
                   </v-touch>
 
-                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postingSubmissionid !== postDetail.tougaoIndex" v-on:tap="postSubmission(item.tougaoId)">
+                  <v-touch class="gray J_ga" data-category="10" data-label="投稿页" v-show="postDetail.tougaoId !== item.tougaoId" v-on:tap="postSubmission(item.tougaoId)">
                     <i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>
                     {{ $t('screenmode') }}
                   </v-touch>
-                  <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postingSubmissionid === postDetail.tougaoIndex && postDetail.tougaoId === item.tougaoId && !postingSubmissionSent" v-on:tap="fsqbHander()">
+                  <v-touch class="cancel-post-btn f14 J_ga" data-category="17" data-label="投稿列表页" v-show="postDetail.tougaoId === item.tougaoId && !postingSubmissionSent" v-on:tap="fsqbHander()">
                     {{ $t('postpublic') }}
                   </v-touch>
-                  <div class="cancel-post-btn yfqb f14" v-show="postingSubmissionid === postDetail.tougaoIndex && postDetail.tougaoId === item.tougaoId && postingSubmissionSent">
+                  <div class="cancel-post-btn yfqb f14" v-show="postDetail.tougaoId === item.tougaoId && postingSubmissionSent">
                     {{ $t('postpubliced') }}
                   </div>
-                  <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubmissionid === postDetail.tougaoIndex && postDetail.tougaoId === item.tougaoId" v-on:tap="closeSubmissionmask">
+                  <v-touch class="cancel-post-btn f14 qxtp" v-show="postDetail.tougaoId === item.tougaoId" v-on:tap="closeSubmissionmask">
                     <span class="fsqb-innerline"></span>
                     {{ $t('screenmodeoff') }}
                   </v-touch>
@@ -512,6 +512,8 @@
         })
 
         self.socket.send(str)
+        this.postDetail.tougaoId = ''
+        this.postDetail.tougaoIndex = ''
       },
       /**
        * 发送全班按钮

@@ -16,18 +16,14 @@
           <p class="school-number f14">{{user_profile.school_number ? user_profile.school_number : $t('weishezhixuehao')}}</p>
           <div class="participant-box flexbetween">
             <div class="participant-info flexcenter">
-              <i class="icon mt-1" :class="participate.has_joined ? 'icon-sign' : 'icon-unsign'"></i>
-              <span class="status f14" :class="participate.has_joined ? 'cblue' : 'cred'">{{ participate.has_joined ? $t('yiqiandao') : $t('weiqiandao')}}</span>
-              <span class="source f12" v-if="participate.has_joined && attendance_status !== 0 ">{{participate.source_name}}{{participate.time}}</span>
-              <span class="source cred f12" v-else-if="participate.has_joined && attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</span>
-              <span class="source cblue f12" v-else-if="!participate.has_joined && attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</span>
+              <i class="icon mt-2" :class="checkinDetail.source >= 0 ? 'icon-sign' : 'icon-unsign'"></i>
+              <span class="status f14" :class="checkinDetail.source >= 0 ? 'cblue' : 'cred'">{{ checkinDetail.source >= 0 ? $t('yiqiandao') : $t('weiqiandao')}}</span>
+              <span class="source f12" v-if="checkinDetail.source >= 0">{{checkinDetail.source_name}} {{checkinDetail.participate | formatTime}}</span>
+              <span class="source f12" v-else-if="checkinDetail.source == -2">教师手动修改</span>
             </div>
             <div class="participant-option f12" @click="handleChangeStatus">
-              <template v-if="participate.has_joined && attendance_status == -1 || attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.changethestate2')}}</template>
-              <template v-else-if="participate.has_joined && attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
-              <template v-else-if="!participate.has_joined && attendance_status == -1 || attendance_status == 0"><!-- 修改为已出勤-->{{ $t('behavior.changethestate1')}}</template>
-              <template v-else-if="!participate.has_joined && attendance_status == 1"><!-- 修改为未出勤-->{{ $t('behavior.changethestate2')}}</template>
-
+              <template v-if="checkinDetail.source >= 0">修改为未签到</template>
+              <template v-else>修改为已签到</template>
             </div>
           </div>
           <div class="points-box flexbetween">
@@ -150,7 +146,8 @@
         delete_ids: [],
         attendance_status: -1,
         addScoreFlag: false,
-        behavior_score_temp: 0
+        behavior_score_temp: 0,
+        checkinDetail: null
 	    }
 	  },
 	  computed: {
@@ -164,6 +161,14 @@
     },
     mounted() {
 
+    },
+    filters: {
+      formatTime(time){
+        let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
+      }
     },
     watch: {
       tagText(newVal){
@@ -186,7 +191,55 @@
 	  methods: {
       init(){
         this.$nextTick(() => {
-          this.getBehaviorStudent()
+          Promise.all([this.getBehaviorStudent(),this.getCheckinDetail()])
+          .then((res) => {
+            if(res[0] === 0 && res[1] === 0){
+              this.isloaded = true
+            }
+          })
+          
+        })
+      },
+      /**
+       * @method 获取签到详情
+       */
+      getCheckinDetail(){
+        let URL = API.lesson.get_checkin_detail
+        let params = {
+          identityId: this.userid
+        }
+        return request.get(URL,params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            let source_name = ''
+            switch (res.data.source) {
+              case 0:
+                source_name = '教师手动修改'
+                break;
+              case 1:
+                source_name = '扫二维码'
+                break;
+              case 2:
+              case 6:
+                source_name = '课堂暗号'
+                break;
+              case 3:
+              case 4:
+              case 5:
+              case 7:
+              case 8:
+                source_name = '“正在上课”提示'
+                break;
+              case 9:
+                source_name = '转发分享'
+                break;
+            }
+            res.data['source_name'] = source_name
+            this.checkinDetail = res.data
+            return res.code
+          }
+        }).catch(error => {
+          console.log('getCheckinDetail:' + error)
         })
       },
       getBehaviorStudent(){
@@ -204,9 +257,8 @@
             self.tagListTemp = res.data.assess_tags
             self.behavior_score = res.data.assess_score
             self.behavior_score_temp = res.data.assess_score
-            // self.participate = res.data.participate
-            // self.attendance_status = res.data.attendance_status
-            self.isloaded = true
+
+            return res.code
           }
         })
       },
@@ -241,22 +293,20 @@
       },
 	  	handleChangeStatus(){
         let self = this
-        let URL = API.lesson.change_participate
-        let status = null
-        if((this.participate.has_joined && (this.attendance_status == -1 || this.attendance_status == 1))|| (!this.participate.has_joined && this.attendance_status == 1)){
-          status = 0
-        }else if((this.participate.has_joined && this.attendance_status == 0) || (!this.participate.has_joined && (this.attendance_status == -1 || this.attendance_status == 0))){
-          status = 1
+        let URL = ''
+        let status = this.checkinDetail.source >= 0
+        if(status) {
+          URL = API.lesson.cancel_checkin
+        }else {
+          URL = API.lesson.revise_checkin
         }
         let params = {
-          lesson_id: this.lessonid,
-          classroom_id: this.classroomid,
-          student_id: this.userid,
-          status: status
+          identityId: this.userid
         }
-        request.post(URL, params).then(res => {
-          if(res.success){
-            self.attendance_status = res.data.attendance_status
+        return request.post(URL,params)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            this.getCheckinDetail()
           }
         })
       },

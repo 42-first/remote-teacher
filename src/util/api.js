@@ -170,7 +170,13 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 课上填空题详情
       get_blank_detail: '/api/v3/lesson/problem/blank-detail',
       // 课堂板书不懂列表（老师）
-      get_file_sharing: '/api/v3/lesson/tag/lesson/teacher/file-sharing'
+      get_file_sharing: '/api/v3/lesson/tag/lesson/teacher/file-sharing',
+      // 获取签到详情
+      get_checkin_detail: '/api/v3/lesson/checkin/detail',
+      // 取消签到
+      cancel_checkin: '/api/v3/lesson/checkin/delete',
+      // 补签到
+      revise_checkin: '/api/v3/lesson/checkin/revise'
     },
 
     /*------------------*\
