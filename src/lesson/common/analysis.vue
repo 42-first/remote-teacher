@@ -11,16 +11,16 @@
   <!-- 解析内容 -->
   <section class="analysis-inner J_analysis_inner">
     <section class="analysis-anwser f16" v-if="problem.problemType!==5"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
-    <section class="analysis__images" :style="problem.remarkRich|setScale" v-if="problem.remarkRich && problem.remarkRich.shapes">
+    <section class="analysis__images" :style="problem.remarkRich|setScale" v-if="problem.remarkRich && problem.remarkRich.Shapes">
       <!-- 新的解析处理 -->
-      <div v-for="shape in problem.remarkRich.shapes">
+      <div v-for="shape in problem.remarkRich.Shapes">
         <!-- 文字提取方式 新版 -->
-        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.paragraphs" />
+        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.Paragraphs" />
         <div class="analysis__shape" :style="shape|setShapeStyle" v-else>
-          <template v-for="paragraph in shape.paragraphs" v-if="shape.paragraphs">
-            <ol class="paragraph__wrap J_paragraph" :start="paragraph.number">
-              <li class="analysis__shape shape__text" :style="paragraph.bound|setShapeStyle">
-                <div class="analysis__shape paragragh__line" :style="line.bound|setShapeStyle" v-html="line.html" v-for="line in paragraph.lines" v-if="paragraph.lines"></div>
+          <template v-for="paragraph in shape.Paragraphs" v-if="shape.Paragraphs">
+            <ol class="paragraph__wrap J_paragraph" :start="paragraph.Number">
+              <li class="analysis__shape shape__text" :style="paragraph.Bound|setShapeStyle">
+                <div class="analysis__shape paragragh__line" :style="line.Bound|setShapeStyle" v-html="line.Html" v-for="line in paragraph.Lines" v-if="paragraph.Lines"></div>
               </li>
             </ol>
           </template>
@@ -28,7 +28,7 @@
       </div>
     </section>
     <!-- 兼容老的解析处理 -->
-    <section class="remark f17" v-if="!problem.remarkRich.shape&&problem.remark">{{ problem.remark }}</section>
+    <section class="remark f17" v-if="!problem.remarkRich.Shapes&&problem.remark">{{ problem.remark }}</section>
   </section>
 
 </template>
