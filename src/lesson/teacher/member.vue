@@ -16,7 +16,7 @@
 					<span class="f14 count">({{notPartTotal}})</span>
 				</v-touch>
 			</div>
-			<div class="search" @click="goSearch" v-if="studentCount <= 500"><i class="iconfont icon-sousuo f19"></i></div>
+			<div class="search" @click="goSearch"><i class="iconfont icon-sousuo f19"></i></div>
 		</div>
 		<!-- 当有主观题未批改时，此排名可能不是最终排名 -->
 		<!-- <div class="fenhint f12" v-if="has_unscored_subj && activeTab == 1">
@@ -30,7 +30,7 @@
 			infinite-scroll-distance="10"
 			:class="{ 'list-wrapper-active': activeTab == 1 }"
 			>
-			<template v-if="participantList.length">
+			<template v-if="participantList.length && studentCount <= 100000">
 				<div class="item" v-for="(item, index) in participantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div :class="['xuhao']">
@@ -64,6 +64,11 @@
 				<div class="load-wrapper" v-if="!signLoaded">{{$t('toploading')}}</div>
 				<div class="load-wrapper" v-else>—— END ——</div>
 			</template>
+			<template v-else-if="participantList.length && studentCount > 100000">
+				<div class="empty too-much">
+					当前签到人数太多，暂不支持查看名单
+				</div>
+			</template>
 			<template v-else>
 				<div class="empty">
 					<img :src="qiandaonodata" alt="没有学生签到">
@@ -77,7 +82,7 @@
 			infinite-scroll-distance="10"
 			:class="{ 'list-wrapper-active': activeTab == 2 }"
 		>
-			<template v-if="notParticipantList.length">
+			<template v-if="notParticipantList.length && studentCount <= 2000">
 				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div class="user">
@@ -101,6 +106,11 @@
 	      </div>
 				<div class="load-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
 				<div class="load-wrapper" v-else>—— END ——</div>
+			</template>
+			<template v-else-if="studentCount > 2000">
+				<div class="empty too-much">
+					当前未签到人数太多，暂不支持查看名单
+				</div>
 			</template>
 			<template v-else>
 				<div class="empty">
@@ -273,13 +283,17 @@
 				})
 			},
 			goSearch(){
-				this.$router.push({
-					name: 'search_v3',
-					params: {
-						'classroomid': this.classroomid,
-						'lessonid': this.lessonid
-					}
-				})
+				// this.$router.push({
+				// 	name: 'search_v3',
+				// 	params: {
+				// 		'classroomid': this.classroomid,
+				// 		'lessonid': this.lessonid
+				// 	}
+				// })
+				this.$toast({
+          message: '该功能暂时下线维护，稍后回归，敬请期待~',
+          duration: 3e3
+        });
       }
 
 		}
@@ -378,6 +392,12 @@
 		}
 		.list-wrapper-active{
 			z-index: 1;
+		}
+		.too-much {
+			height: 60%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
     .participantList {
       padding: 0 0.4rem px2rem(60px) 0;
