@@ -426,11 +426,12 @@
 				if(joined.code !== 0) {
 					// 50004 lesson end
 					if(joined.code === 50004) {
-						this.goTocode(1)
+						console.log('下课了')
 						return this;
 					}
 				}
-				if(!joined.data.isTeacher){
+				let studentRoles = [4, 5, 6]
+				if(studentRoles.includes(joined.data.role)){
 					location.href = `/student/v3/${this.$route.params.lessonid}`
 				}
 				let userInfo = await this.getUserInfo()

@@ -64,19 +64,18 @@
 	  name: 'search',
 	  data () {
 	    return {
-				lessonid: '',
-				classroomid: -1,
 				search: '',
 				studentList: [],
 				searched: false
 	    }
 	  },
 	  computed: {
-
+			...mapGetters([
+        'lessonid',
+        'classroomid'
+      ])
     },
 	  created(){
-			this.lessonid = this.$route.params.lessonid
-			this.classroomid = this.$route.params.classroomid
 	  },
 	  methods: {
 			goDetail(user_id){

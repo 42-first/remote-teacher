@@ -52,12 +52,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
-						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
-						<template v-if="item.behavior_tags && item.behavior_tags.length">
+					<div class="tag-box" v-if="item.assessScore || (item.assessTags && item.assessTags.length)">
+						<span class="score f12" v-if="item.assessScore"><!-- +{{item.assessScore}}分 -->{{$t('behavior.addpoints', {count: item.assessScore})}}</span>
+						<template v-if="item.assessTags && item.assessTags.length">
 							<span class="tag f12" 
-							:class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" 
-							v-for="(tag, idx) in item.behavior_tags" :key="idx">{{tag}}</span>
+							:class="tag.length >= 20 && (idx + 1 < item.assessTags.length && item.assessTags[idx + 1].length >= 20) ? 'nomargin' : ''" 
+							v-for="(tag, idx) in item.assessTags" :key="idx">{{tag}}</span>
 						</template>
 					</div>
 	      </div>
@@ -82,7 +82,7 @@
 			infinite-scroll-distance="10"
 			:class="{ 'list-wrapper-active': activeTab == 2 }"
 		>
-			<template v-if="notParticipantList.length && studentCount <= 2000">
+			<template v-if="notParticipantList.length && studentCount <= 3000">
 				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div class="user">
@@ -95,11 +95,11 @@
 						</div>
 						
 					</div>
-					<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
-						<span class="score f12" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
-						<template v-if="item.behavior_tags && item.behavior_tags.length">
+					<div class="tag-box" v-if="item.assessScore || (item.assessTags && item.assessTags.length)">
+						<span class="score f12" v-if="item.assessScore"><!-- +{{item.assessScore}}分 -->{{$t('behavior.addpoints', {count: item.assessScore})}}</span>
+						<template v-if="item.assessTags && item.assessTags.length">
 							<span class="tag f12" 
-							:class="tag.length >= 20 && (idx + 1 < item.behavior_tags.length && item.behavior_tags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.behavior_tags" 
+							:class="tag.length >= 20 && (idx + 1 < item.assessTags.length && item.assessTags[idx + 1].length >= 20) ? 'nomargin' : ''" v-for="(tag, idx) in item.assessTags" 
 							:key="idx">{{tag}}</span>
 						</template>
 					</div>
@@ -107,7 +107,7 @@
 				<div class="load-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
 				<div class="load-wrapper" v-else>—— END ——</div>
 			</template>
-			<template v-else-if="studentCount > 2000">
+			<template v-else-if="studentCount > 3000">
 				<div class="empty too-much">
 					当前未签到人数太多，暂不支持查看名单
 				</div>

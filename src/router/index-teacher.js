@@ -330,19 +330,19 @@ const router = new Router({
           meta
         },
         {
-          path: 'boardlist/:lessonid',
+          path: 'boardlist',
           name: 'boardlist_v3',
           component: () => import('@/lesson/teacher/board-list'),
           meta
         },
         {
-          path: 'stuexpression/:classroomid/:lessonid/:userid',
+          path: 'stuexpression/:userid',
           name: 'stuexpression_v3',
           component: () => import('@/lesson/teacher/student_expression'),
           meta
         },
         {
-          path: 'search/:classroomid/:lessonid',
+          path: 'search',
           name: 'search_v3',
           component: () => import('@/lesson/teacher/search_student'),
           meta
