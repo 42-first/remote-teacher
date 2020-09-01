@@ -81,6 +81,12 @@
     padding-left: 0.2rem;
   }
 
+  .board__wrap {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+  }
+
   /*--------------------*\
     $ 白板列表
   \*--------------------*/

@@ -82,7 +82,7 @@
 			infinite-scroll-distance="10"
 			:class="{ 'list-wrapper-active': activeTab == 2 }"
 		>
-			<template v-if="notParticipantList.length && studentCount <= 2000">
+			<template v-if="notParticipantList.length && studentCount <= 3000">
 				<div class="item" v-for="(item, index) in notParticipantList" :key="index" @click="goStudentDetail(item.identityId)">
 					<div class="info-box">
 						<div class="user">
@@ -107,7 +107,7 @@
 				<div class="load-wrapper" v-if="!signNoLoaded">{{$t('toploading')}}</div>
 				<div class="load-wrapper" v-else>—— END ——</div>
 			</template>
-			<template v-else-if="studentCount > 2000">
+			<template v-else-if="studentCount > 3000">
 				<div class="empty too-much">
 					当前未签到人数太多，暂不支持查看名单
 				</div>

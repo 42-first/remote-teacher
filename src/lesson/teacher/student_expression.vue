@@ -131,8 +131,6 @@
 	  data () {
 	    return {
         userid: 0,
-        lessonid: 0,
-        classroomid: 0,
         isEdit: false,
         selectTag: [],
         addTagFlag: false,
@@ -151,12 +149,13 @@
 	    }
 	  },
 	  computed: {
-
+      ...mapGetters([
+        'lessonid',
+        'classroomid'
+      ])
     },
 	  created(){
       this.userid = this.$route.params.userid
-      this.lessonid = this.$route.params.lessonid
-      this.classroomid = this.$route.params.classroomid
       this.init()
     },
     mounted() {
