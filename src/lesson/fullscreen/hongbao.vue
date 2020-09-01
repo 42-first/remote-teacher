@@ -15,11 +15,9 @@
           <p class="hongbao__title f18">{{ title }}</p>
         </div>
         <!-- 头像 -->
-        <div :class="['hongbao__user', mine ? '' : 'mb100']">
-          <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher&&teacher.name})">
-            <!-- <span class="teacher_name">{{ teacher&&teacher.name }}</span>的课堂红包 -->
-          </p>
+        <div :class="['hongbao__user', mine ? '' : 'mb100']" v-if="teacher">
+          <img class="user-avatar" :src="teacher.avatar" :alt="teacher.name" >
+          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher.name})"></p>
         </div>
       </section>
 
@@ -37,15 +35,17 @@
 
           <li class="hongbao-item" v-for="(item, index) in hongbaoList">
             <div class="avatar">
-              <img :src="item.profile.avatar" :alt="item.profile.name" />
-              <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]"><p class="rank-order" v-if="index<3">{{ index + 1 }}</p></div>
+              <img :src="item.avatar" :alt="item.userName" />
+              <div :class="['rank', index < 3 ? 'hex': '', 'hex' + index ]">
+                <p class="rank-order" v-if="index<3">{{ index + 1 }}</p>
+              </div>
             </div>
             <div class="hongbao-item--content">
               <div class="name-time">
-                <p class="name f14">{{ item.profile.name }}</p>
-                <p class="time f12">{{ item.time|formatTime }}</p>
+                <p class="name f14">{{ item.name }}</p>
+                <p class="time f12">{{ item.createTime|formatTime }}</p>
               </div>
-              <p class="f14">￥ {{ (item.amount/100).toFixed(2) }}</p>
+              <p class="f14">￥ {{ (item.issueAmount/100).toFixed(2) }}</p>
             </div>
           </li>
 
@@ -156,6 +156,33 @@
           });
 
       },
+
+      /**
+       * @method 红包详情
+       * @param problemID 问题ID
+       */
+      getRedEnvelop(redpacketID) {
+        let URL = API.lesson.get_redenvelope;
+        let params = {
+          'redEnvelopeId': redpacketID
+        };
+
+        request.get(URL, params)
+        .then( res => {
+          if (res && res.code === 0 && res.data) {
+            let data = res.data;
+
+            this.teacher = {
+              name: data.teacherName,
+              avatar: data.teacherAvatar
+            };
+            this.hongbaoList = data.issueList;
+          }
+        }).catch(error => {
+          console.log('getRedEnvelop:', error);
+        })
+      },
+
       handleBack() {
         this.$router.back();
       }
@@ -171,7 +198,7 @@
         console.log(this.summary);
 
         this.formatData(this.summary);
-        this.getRedEnvelopDetail(this.summary.redpacketID);
+        this.getRedEnvelop(this.summary.redpacketID);
       }
 
     },

@@ -15,9 +15,9 @@
           <p class="hongbao__title f18">{{ title }}</p>
         </div>
         <!-- 头像 -->
-        <div :class="['hongbao__user', mine ? '' : 'mb100']">
-          <img class="user-avatar" :src="teacher&&teacher.avatar_96" :alt="teacher&&teacher.name" >
-          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher&&teacher.name})"></p>
+        <div :class="['hongbao__user', mine ? '' : 'mb100']" v-if="teacher">
+          <img class="user-avatar" :src="teacher.avatar" :alt="teacher.name" >
+          <p class="user-name f14" v-html="$t('whosebonus', {name: teacher.name})"></p>
         </div>
       </section>
 
@@ -77,7 +77,7 @@
       // 不！能！获取组件实例 `this`
       // 因为当钩子执行前，组件实例还没被创建
 
-      if(from.name === 'student-presentation') {
+      if(from.name === 'student-v3') {
          next();
       } else {
         next(vm => {
@@ -179,7 +179,10 @@
           if (res && res.code === 0 && res.data) {
             let data = res.data;
 
-            // this.teacher = data.issuer.profile;
+            this.teacher = {
+              name: data.teacherName,
+              avatar: data.teacherAvatar
+            };
             this.hongbaoList = data.issueList;
           }
         }).catch(error => {
@@ -202,7 +205,7 @@
         console.log(this.summary);
 
         this.formatData(this.summary);
-        this.getRedEnvelopDetail(this.summary.redpacketID);
+        this.getRedEnvelop(this.summary.redpacketID);
       }
 
     },
