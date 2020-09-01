@@ -218,10 +218,7 @@
         let url = API.lesson.get_danmu_list
 
         let data = {
-          biz: 1,
-          resourceType: 1,
-          resourceId: this.lessonid,
-          action: 1,
+          lessonId: this.lessonid,
           pageNum: page,
           pageSize: FENYE_COUNT
         }

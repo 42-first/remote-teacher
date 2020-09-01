@@ -22,7 +22,9 @@
       </div>
       
     </section>
-    <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <!-- 暂时下线试卷&分组功能 -->
+    <!-- <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页"> -->
+    <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -32,7 +34,8 @@
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </router-link>
+    </v-touch>
+    <!-- </router-link> -->
     <router-link tag="div" :to="{name: 'danmu_v3'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
@@ -57,7 +60,8 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+		<!-- <v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页"> -->
+    <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #08BC72;">
           <i class="iconfont icon-fenzu1 f21"></i>
@@ -204,6 +208,15 @@
           return
         }
         this.$refs.Toolbar.callWakeup(e)
+      },
+      /** 
+       * 下线功能提示
+      */
+      showToast(){
+        this.$toast({
+          message: '该功能暂时下线维护，稍后回归，敬请期待~',
+          duration: 3e3
+        });
       }
     },
     beforeRouteEnter (to, from, next) {

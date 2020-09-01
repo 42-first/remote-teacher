@@ -65,11 +65,12 @@
 							</div>
               <!-- v-if="problem_answer_type"  -->
 							<v-touch v-if="false" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+              <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch>
 						</div>
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
           <!-- 有解析显示解析入口 -->
-          <p class="analysis--btn f17" v-if="problem && problem.HasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+          <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
 					<template v-if="group_name">
             <div class="gap"></div>
 						<div class="group_name f14">
@@ -781,7 +782,7 @@
           if(res && res.code === 0 && res.data){
             self.setData({
               isShowNewHint: false,
-              total_num: res.data.total_num,
+              total_num: res.data.count,
               unfinished_count: res.data.unfinished
             })
 
@@ -1232,6 +1233,13 @@
       hasThumb(item) {
         let sub = item.result
         return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb || sub.pics[0].pic)
+      },
+      // 下线功能提示
+      showToast(){
+        this.$toast({
+          message: '该功能暂时下线维护，稍后回归，敬请期待~',
+          duration: 3e3
+        });
       }
 	  }
 	}
