@@ -457,6 +457,11 @@
 
         this.returnRemote = query && query.remote ? true : false
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
+
+        if(query.source) {
+          this.source = query.source;
+        }
+
         this.iniTimeline(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
