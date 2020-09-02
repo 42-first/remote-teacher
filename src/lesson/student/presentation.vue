@@ -20,7 +20,7 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action line f17">
+            <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action f17">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
