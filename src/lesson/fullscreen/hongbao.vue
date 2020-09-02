@@ -113,7 +113,7 @@
 
         //
         let mine = data.event && data.event.detail.find((item)=>{
-          return item.uid === this.userID;
+          return item.uid == this.userID;
         });
 
         console.log(mine);
