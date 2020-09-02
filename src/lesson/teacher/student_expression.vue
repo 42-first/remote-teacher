@@ -213,25 +213,31 @@
             let source_name = ''
             switch (res.data.source) {
               case 0:
-                source_name = '教师手动修改'
+                source_name = i18n.locale === 'zh_CN' ? '其他' : 'Other'
                 break;
               case 1:
-                source_name = '扫二维码'
+              case 21:
+                source_name = i18n.locale === 'zh_CN' ? '扫二维码' : 'Scan QR code'
                 break;
               case 2:
               case 6:
-                source_name = '课堂暗号'
+              case 22:
+                source_name = i18n.locale === 'zh_CN' ? '课堂暗号' : 'Class Code'
                 break;
               case 3:
               case 4:
               case 5:
               case 7:
               case 8:
-                source_name = '“正在上课”提示'
+              case 23:
+              case 24:
+                source_name = i18n.locale === 'zh_CN' ? '“正在上课”提示' : 'Class Tip'
                 break;
               case 9:
-                source_name = '转发分享'
+                source_name = i18n.locale === 'zh_CN' ? '转发分享' : 'Share'
                 break;
+              case 25:
+                source_name = i18n.locale === 'zh_CN' ? '教师手动修改' : 'Manual mark'
             }
             res.data['source_name'] = source_name
             this.checkinDetail = res.data
