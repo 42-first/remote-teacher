@@ -64,7 +64,6 @@
     data() {
       return {
         index: 0,
-        opacity: 0,
         title: this.$i18n.t('classbonus') || '课堂红包',
         summary: null,
         mine: null,
@@ -124,37 +123,6 @@
           this.title = this.$i18n.t('receiveclassbonus') || '你收到一个课堂红包';
           mine.praise = titleAry[parseInt(Math.random()*9, 10)];
         }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-      },
-
-      /*
-      * @method 红包详情
-      * @param problemID 问题ID
-      */
-      getRedEnvelopDetail(redpacketID) {
-        let self = this;
-        let URL = API.student.GET_RED_ENVELOPE_DETAIL;
-
-
-        if (process.env.NODE_ENV === 'production') {
-          URL = URL + redpacketID;
-        }
-
-        return request.get(URL)
-          .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.teacher = data.issuer.profile;
-              self.hongbaoList = data.issued_user_list;
-
-              return data;
-            }
-          });
-
       },
 
       /**
