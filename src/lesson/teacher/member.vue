@@ -42,12 +42,11 @@
 								<span class="user_name ellipsis-2line f17">{{item.name}}</span>
 								<span class="user_schoolnumber f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 							</div>
-							<div v-if="has_problems" class="score-box f14" :class="index < 2 ? 'orange' : ''">
-								<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
+							<div v-if="hasProblem" class="score-box f14" :class="index < 2 ? 'orange' : ''">
+								<span class='f30'>{{item.problemScore/100 >= 0 ? item.problemScore/100 : '--'}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
-								<template v-if="item.attendance_status == 0"><!-- 未出勤-->{{ $t('behavior.absent')}}</template>
-								<template v-else>{{item.participate | formatTime}}</template>
+								{{item.participate | formatTime}}
 								<i class="iconfont icon-jinrucopy f25"></i>
 							</div>
 						</div>
@@ -90,7 +89,6 @@
 							<span class="stuid f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 						</div>
 						<div class="time-box f14">
-							<template v-if="item.attendance_status == 1"><!-- 已出勤-->{{ $t('behavior.present')}}</template>
 							<i class="iconfont icon-jinrucopy f25"></i>
 						</div>
 						
@@ -139,7 +137,7 @@
 				activeTab: 1, //1 已签到， 2 未签到
 				qiandaonodata: require(`images/teacher/qiandao${i18n.t('qiandaoafterfix')}.png`),
 				weqiandaonodata: require(`images/teacher/weiqiandao${i18n.t('weiqiandaoafterfix')}.png`),
-				has_problems: false,
+				hasProblem: false,
 				isOrderOpen: false,
 				orderType: 1,
 				has_unscored_subj: false,
@@ -215,9 +213,9 @@
 					this.participantList = this.participantList.concat(list)
 					this.signLoaded = list.length === 0 || this.participantList.length >= total;
 					this.partTotal = total;
+					this.hasProblem = jsonData.hasProblem
 				}else {
 					let list = this.memberNo_all[index]
-					let total = this.studentCount - this.partTotal
 					this.notParticipantList = this.notParticipantList.concat(list);
 					this.signNoLoaded = index === this.memberNo_all.length - 1 || this.notParticipantList.length >= this.notPartTotal;
 				}
