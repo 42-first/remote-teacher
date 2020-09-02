@@ -137,33 +137,6 @@
         }, 20)
       },
 
-      /*
-      * @method 红包详情
-      * @param problemID 问题ID
-      */
-      getRedEnvelopDetail(redpacketID) {
-        let self = this;
-        let URL = API.student.GET_RED_ENVELOPE_DETAIL;
-
-
-        if (process.env.NODE_ENV === 'production') {
-          URL = URL + redpacketID;
-        }
-
-        return request.get(URL)
-          .then(function (res) {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.teacher = data.issuer.profile;
-              self.hongbaoList = data.issued_user_list;
-
-              return data;
-            }
-          });
-
-      },
-
       /**
        * @method 红包详情
        * @param problemID 问题ID
@@ -200,14 +173,12 @@
       this.userID = this.$parent.userID;
 
       this.summary = cards[this.index];
-
       if(this.summary) {
         console.log(this.summary);
 
         this.formatData(this.summary);
         this.getRedEnvelop(this.summary.redpacketID);
       }
-
     },
     mounted() {
     },
