@@ -94,9 +94,9 @@
         <p class="action-btn action-tip" @click="handleVisibleSubmission" data-tip="投稿">
           <i class="iconfont icon-ykq_tab_tougao f32"></i>
         </p>
-        <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">
+        <!-- <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">
           <i class="iconfont icon-fenzu1 f32"></i>
-        </p>
+        </p> -->
       </div>
       <p class="action-btn action-tip" @click="handleVisibleMore(false)" data-tip="收起" v-if="visibleMore">
         <i class="iconfont icon--shuangjiantouxiangxia f24"></i>

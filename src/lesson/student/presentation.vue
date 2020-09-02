@@ -24,10 +24,10 @@
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
-            <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
+            <!-- <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
               <i class="iconfont icon-fenzu f25"></i>
-              <span><!-- 我的分组 -->{{ $t('team.mygroup') }}</span>
-            </p>
+              <span>{{ $t('team.mygroup') }}</span>
+            </p> -->
           </div>
         </div>
       </header>
