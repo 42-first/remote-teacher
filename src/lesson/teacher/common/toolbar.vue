@@ -244,7 +244,7 @@
       },
       // 学生视角预览
       gotoStu(){
-        location.href = '/lesson/student/v3'+ this.lessonid +'?force=lecture&remote=1'
+        location.href = '/lesson/student/v3/'+ this.lessonid +'?force=lecture&remote=1'
       }
     }
   }
