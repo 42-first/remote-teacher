@@ -9,7 +9,7 @@
  */
 
 import request from '@/util/request-v3'
-import {wxpay} from '@/util/wx-util'
+import {wxpay} from './wx-util'
 import Promise from 'bluebird'
 import API from '@/util/api'
 
@@ -209,30 +209,30 @@ export default {
 	   */
 	  fetchStuBank (fn) {
 	    let self = this
-	    let url = API.prepare_red_envelope
+	    let URL = API.lesson.redenvelope_prepare
+			let params = {
+				resourceId: this.lessonid,
+				type: 1,
+				rid: this.problemid
+			}
 
-      if (process.env.NODE_ENV === 'production') {
-        url = API.prepare_red_envelope + '/' + self.problemid
-      }
+			return request.post( URL, params )
+			.then((res) => {
+				if(res && res.code === 0 && res.data){
+					let stuNumer = res.data.lessonStudentCount
+					let bankLeft = res.data.balance/100;
+	
+					bankLeft = bankLeft.toFixed(2);
+	
+					self.stuNumer = stuNumer
+					self.bankLeft = bankLeft
 
-      // 单次刷新
-      request.get(url)
-        .then(jsonData => {
-        	if (jsonData.success) {
-        		let stuNumer = jsonData.data.classroom_students_count
-	          let bankLeft = jsonData.data.balance/100
-
-	          bankLeft = bankLeft.toFixed(2)
-	          self.stuNumer = stuNumer
-	          self.bankLeft = bankLeft
-
-	          fn && fn()
-        	}else{
-        		throw new Error('获取学生人数、钱包余额失败')
-        	}
-        }).catch(error => {
-        	console.error(error)
-        })
+					fn && fn()
+				}
+			}).catch(error => {
+				console.log('getRedPrepare:' + error);
+				
+			})
 	  },
 	  /**
 	   * 在试题的设置红包页面，点击 “不赏了，返回” 按钮
@@ -341,7 +341,7 @@ export default {
 	  wxpayCallback (out_trade_no) {
 	    let self = this
 
-	    let url = API.payquery_proxy
+	    let url = API.lesson.node_proxy
 	    let postData = {
 	    	op: 'query',
 	      request_key: Date.now(),
@@ -372,18 +372,25 @@ export default {
 	    let bonusTotal = self.bonusTotal
 	    let bonusNumber = self.bonusNumber
 
-	    let postData = {
-	      'cid': 1,
-	      'rid': self.problemid,
-	      'amount': parseInt((bonusTotal*100).toFixed(0)),
-	      'quality': bonusNumber
-	    }
+			let URL = API.lesson.redenvelope_create
 
-	    request.post(API.create_red_envelope, postData)
-        .then(jsonData => {
-        	// 不需要判断success，在request模块中判断如果success为false，会直接reject
-          payPromiseMethod.resolve(jsonData)
-        })
+			let postData = {
+				"resourceId": this.lessonid,  //lessonId
+				"type":1,                     //固定为1
+				"rid":this.problemid,         //problemId
+				"totalAmount": parseInt((bonusTotal*100).toFixed(0)),  //红包总金额，单位为分
+				"totalNumber": bonusNumber,
+				"mod":1                       //模式，1平均，2随机，暂时固定为1
+			}
+	
+			return request.post(URL, postData)
+			.then((res) => {
+				if(res && res.code === 0 && res.data){
+					payPromiseMethod.resolve(res.data);
+				}else {
+					payPromiseMethod.reject('支付失败')
+				}
+			})
 	  },
 	  /**
 	   * 向雨课堂钱包发起的支付成功了（最终的成功）之后的回调函数
@@ -399,7 +406,7 @@ export default {
 	    console.log('支付成了')
 
 	    // 重置钱包余额
-	    self.fetchStuBank()
+	    self.resetStuBank()
 	  },
 	  /**
 	   * 在试题的红包页面，最终确认后，成功，点击“确认”按钮
@@ -444,6 +451,34 @@ export default {
 	    // 恢复输入框的老状态
 	    self.isNumInputHidden = OLD_NUM_INPUT_HIDDEN
 	    self.isPriceInputHidden = OLD_PRICE_INPUT_HIDDEN
-	  }
+		},
+		
+		/** 
+		 * 查询用户账户余额
+		*/
+		resetStuBank(){
+			let self = this
+			let URL = API.lesson.node_proxy
+			let postData = {
+				op: 'balance',
+				request_key: Date.now(),
+			}
+
+			return request.post(URL, postData)
+			.then((res) => {
+				if(res && res.code === 0 && res.data){
+					if(res.data.status === 0){
+						let bankLeft = res.data.balance/100;
+						bankLeft = bankLeft.toFixed(2);
+
+						self.bankLeft = bankLeft
+					}
+					
+				}
+			}).catch(error => {
+				console.log('resetStuBank:' + error);
+				
+			})
+		}
   }
 }

@@ -108,6 +108,7 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
   import {configWX} from '@/util/wx-util'
 	// js功能模块，放到 mixins 中
 	// 红包相关函数
@@ -149,7 +150,7 @@
 		  	let self = this
 
 		  	// self.problemid = +self.$route.params.problemid
-		  	self.problemid = +self.$route.query.problemid
+		  	self.problemid = self.$route.query.problemid
 		  	self.fetchStuBank()
 
 		  	// wx.ready(() => {
@@ -172,7 +173,12 @@
 	        self[attr] = newData[attr]
 	      })
 	    },
-	  }
+		},
+		computed: {
+			...mapGetters([
+				'lessonid',
+			])
+		},
 	}
 </script>
 

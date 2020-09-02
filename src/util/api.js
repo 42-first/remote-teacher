@@ -176,7 +176,15 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 取消签到
       cancel_checkin: '/api/v3/lesson/checkin/delete',
       // 补签到
-      revise_checkin: '/api/v3/lesson/checkin/revise'
+      revise_checkin: '/api/v3/lesson/checkin/revise',
+      // 准备红包
+      redenvelope_prepare: '/api/v3/lesson/redenvelope/prepare',
+      // 发起红包
+      redenvelope_create: '/api/v3/lesson/redenvelope/create',
+      // 获取抢红包信息
+      redenvelope_issue_list: '/api/v3/lesson/redenvelope/issue-list',
+      // 代理node支付
+      node_proxy: '/api/v3/pay/proxy'
     },
 
     /*------------------*\

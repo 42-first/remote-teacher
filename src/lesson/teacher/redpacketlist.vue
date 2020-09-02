@@ -13,15 +13,15 @@
         {{ $t('opened') }} {{issued_count}}/{{totalNum}}, ¥{{issued_money}}/{{totalMoney}}
       </div>
       <div class="list">
-        <div class="item f17" v-for="item in list">
+        <div class="item f17" v-for="(item, index) in list" :key="index">
         	<div class="left">
-        		<img :src="item.profile.avatar" alt="">
+        		<img :src="item.avatar" alt="">
         		<div class="desc ellipsis">
-        			{{item.profile.name}}<br>
-        			<span class="f14">{{item.time2.substring(5)}}</span>
+        			{{item.userName}}<br>
+        			<span class="f14">{{item.createTime | formatTime}}</span>
         		</div>
         	</div>
-        	<div class="right">{{price}}{{ $t('cny') }}</div>
+        	<div class="right">{{item.issueAmount | formatPrice}}{{ $t('cny') }}</div>
         </div>
       </div>
     </div>
@@ -59,7 +59,18 @@
 	  	'$route' () {
 	  		this.init()
 	  	}
-	  },
+		},
+		filters: {
+			formatTime(time){
+				let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
+			},
+			formatPrice(val){
+				return (val/100).toFixed(2)
+			}
+		},
 	  methods: {
 	  	/**
 	     * 复用页面，需要watch route
@@ -67,7 +78,7 @@
 	     */
 	    init () {
 		  	let self = this
-		  	self.redid = +self.$route.params.redid
+		  	self.redid = self.$route.params.redid
 		  	self.refreshRedPacketDetail()
 	    },
 		  /**
@@ -81,16 +92,14 @@
 		    self.resetRedPacketDetail()
 		    
 		    self.getBonusWinner(function(data){
-		    	let issued_count = data.issued_count
-	        let price = data.amount/(data.quality*100)
-	        let issued_money = Number(issued_count * price).toFixed(2)
+		    	let issued_count = data.getNumber
+	        let issued_money = (data.getAmount/100).toFixed(2)
 
 	        self.issued_count = issued_count
-		    	self.totalNum = data.quality
+		    	self.totalNum = data.totalNumber
 		    	self.issued_money = issued_money
-		    	self.totalMoney = (data.amount/100).toFixed(2)
-		    	self.price = price
-		      self.list = data.issued_user_list
+		    	self.totalMoney = (data.totalAmount/100).toFixed(2)
+		      self.list = data.issueList
 		    })
 		  },
 		  /**
@@ -112,16 +121,17 @@
 		   */
 		  getBonusWinner (fn) {
 		    let self = this
-		    let url = API.red_envelope_detail
-
-	      if (process.env.NODE_ENV === 'production') {
-	        url = API.red_envelope_detail + '/' + self.redid
-	      }
+				let url = API.lesson.redenvelope_issue_list
+				let params = {
+					redEnvelopeId: this.redid
+				}
 
 		    // 单次刷新
-	      request.get(url)
-	        .then(jsonData => {
-	        	fn && fn(jsonData.data)
+	      request.get(url, params)
+	        .then(res => {
+						if(res && res.code === 0 && res.data){
+							fn && fn(res.data)
+						}
 	        })
 		  },
 	  }

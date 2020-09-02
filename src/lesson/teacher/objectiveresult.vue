@@ -550,7 +550,7 @@
 							graph: _graph,
 							ma_answer: _answer,
 							finishedCount: jsonData.finishedCount,
-							RedEnvelopeID: jsonData.RedEnvelopeID || -1,
+							RedEnvelopeID: jsonData.redEnvelopeId || -1,
 						})
 					}
 				})
