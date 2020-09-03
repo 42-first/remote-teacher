@@ -43,7 +43,7 @@
   import API from '@/util/api'
   import config from '@/pages/teacher/config/config'
   // 工具栏
-	import Toolbar from '@/components/teacher-restructure/common/toolbar'
+	import Toolbar from './toolbar'
 
 	export default {
 	  name: 'RcMaskErrormsg',

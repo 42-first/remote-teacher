@@ -56,7 +56,7 @@
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
             <!-- 是否有解析提示 -->
-            <p class="analysis--tip" v-if="problem && problem.HasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
+            <p class="analysis--tip" v-if="problem && problem.hasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
@@ -65,7 +65,7 @@
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
             <!-- 是否有解析提示 -->
-            <p class="analysis--tip" v-if="problem && problem.HasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
+            <p class="analysis--tip" v-if="problem && problem.hasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
