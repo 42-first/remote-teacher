@@ -296,6 +296,10 @@ let lessonMixin = {
     getLessonTags() {
       let URL = API.lesson.get_lesson_tag;
 
+      if(this.observerMode) {
+        return {};
+      }
+
       return request.get(URL).
       then((res)=>{
         if(res && res.code === 0) {
