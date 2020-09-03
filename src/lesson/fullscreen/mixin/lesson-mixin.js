@@ -355,6 +355,11 @@ var commandMixin = {
         if(res && res.code === 0) {
           let data = res.data;
           this.token = data.lessonToken;
+
+          let role = data.role;
+          if(role === 2 || role === 3) {
+            this.setObserverMode(true);
+          }
         }
 
         return res.code;
