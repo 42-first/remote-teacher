@@ -39,6 +39,12 @@
         <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 3) && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
         <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(anonymous && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
       </section>
+
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
+      </section>
     </div>
 
   </section>

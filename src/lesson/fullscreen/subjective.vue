@@ -312,6 +312,11 @@
           this.getScore = getScore;
         }
 
+        // 是否观察者模式
+        if(this.observerMode) {
+          this.sendStatus = 5;
+        }
+
         // 是否完成
         if(data.isComplete) {
           this.sendStatus = 5;

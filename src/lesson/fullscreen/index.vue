@@ -366,8 +366,11 @@
        */
       init() {
         this.lessonID = this.$route.params.lessonID;
+        let query = this.$route.query;
         // 签到方式
-        this.source = this.$route.query && this.$route.query.source || 5;
+        this.source = query && query.source || 5;
+        let observerMode = query && query.teacher ? true : false;
+        this.setObserverMode(observerMode);
 
         this.iniTimeline(this.lessonID);
       },

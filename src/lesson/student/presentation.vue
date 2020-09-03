@@ -529,7 +529,12 @@
 
           // 订阅发布重置
           let pubSub = window.parent && window.parent.PubSub || null;
-          pubSub && pubSub.publish('fullscreen', { msg: 'fullscreen', lessonID: this.lessonID, type: 'v3' });
+          pubSub && pubSub.publish('fullscreen', {
+            msg: 'fullscreen',
+            lessonID: this.lessonID,
+            type: 'v3',
+            teacher: this.observerMode
+          });
 
         });
       },
