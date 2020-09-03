@@ -99,7 +99,7 @@
         //   return
         // }
 		  	let self = this
-		    location.href = '/lesson/student/'+ self.lessonid +'?force=lecture'
+		    location.href = '/lesson/student/v3/'+ self.lessonid +'?force=lecture'
 		  },
 	  }
 	}
