@@ -501,7 +501,7 @@
 				return request.get(URL)
 				.then((res) => {
 					if(res && res.code === 0 && res.data){
-						window.USERID = res.data.id
+						window.userid = window.USERID = res.data.id
 						return res.data
 					}
 				}).catch(error => {
