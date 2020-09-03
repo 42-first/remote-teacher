@@ -226,7 +226,7 @@
             }
 
             // 主观题
-            if(this.problemType === 5 && data.score) {
+            if(this.problemType === 5 && typeof data.score !== 'undefined') {
               this.getScore = data.score;
             }
 
