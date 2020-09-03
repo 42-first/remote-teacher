@@ -53,7 +53,7 @@
                         </span>
                     </span>
                   </div>
-                  <v-touch :id="'pic' + item.tougaoId" tag="img" :src="item.thumb" v-if="item.thumb" class="pic" alt="" v-on:tap="scaleImage(item.pic, $event)"></v-touch>
+                  <v-touch :id="'pic' + item.tougaoId" tag="img" :src="item.picture+'?imageView2/2/w/568'" v-if="item.thumb || item.picture" class="pic" alt="" v-on:tap="scaleImage(item.picture, $event)"></v-touch>
                   <!-- 视频展示 -->
                   <div class="video__preview" v-if="item.video && item.video.url">
                     <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>

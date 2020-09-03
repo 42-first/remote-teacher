@@ -101,7 +101,7 @@
             <img v-if="problem.problemType === 1 || problem.problemType === 2" src="~images/teacher/quanzuoda.png">
             <img v-if="problem.problemType === 3 && problem.anonymous" src="~images/teacher/nimingtoupiao.png">
             <p class="f12">
-              <template v-if="problem.problemType !== 3">$t('quanyida')</template>
+              <template v-if="problem.problemType !== 3">{{$t('quanyida')}}</template>
               <template v-else>{{problem.anonymous ? $t('nimingtoupiao') : $t('quantoupiao')}}</template>
             </p>
           </div>
