@@ -238,6 +238,7 @@
                 break;
               case 25:
                 source_name = i18n.locale === 'zh_CN' ? '教师手动修改' : 'Manual mark'
+                break;
             }
             res.data['source_name'] = source_name
             this.checkinDetail = res.data
