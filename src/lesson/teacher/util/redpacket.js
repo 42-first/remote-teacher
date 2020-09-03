@@ -339,29 +339,30 @@ export default {
 	   * @param {number} out_trade_no 微信支付返回id
 	   */
 	  wxpayCallback (out_trade_no) {
-	    let self = this
-
-	    let url = API.lesson.node_proxy
-	    let postData = {
-	    	op: 'query',
-	      request_key: Date.now(),
-	      data: {
-	        "out_trade_no": out_trade_no
-	      }
-	    }
-
-	    request.post(url, postData)
-	    	.then(jsonData => {
-        	// 不需要判断success，在request模块中判断如果success为false，会直接reject
-	        if(jsonData.status === 0 && jsonData.data.trade_state === 'SUCCESS'){
-	          self.connectLittleBank()
-	        }else{
-	          payPromiseMethod.reject('支付失败')
-	        }
-        	
-        }).catch(() => {
-        	payPromiseMethod.reject('支付失败')
-        })
+			let self = this
+			
+			let url = API.lesson.node_proxy
+			let postData = {
+				op: 'query',
+				request_key: Date.now(),
+				data: {
+					"out_trade_no": out_trade_no
+				}
+			}
+	
+			return request.post(url, postData)
+			.then((res) => {
+				if(res && res.code === 0 && res.data){
+					if(res.data.status === 0 && res.data.trade_state === 'SUCCESS'){
+						self.connectLittleBank()
+					}else{
+						payPromiseMethod.reject('支付失败')
+					}
+				}
+			}).catch(error => {
+				console.log('queryProxy:' + error);
+				payPromiseMethod.reject('支付失败')
+			})
 	  },
 	  /**
 	   * 向django后端发起红包支付
@@ -370,7 +371,7 @@ export default {
 	  connectLittleBank () {
 	    let self = this
 	    let bonusTotal = self.bonusTotal
-	    let bonusNumber = self.bonusNumber
+	    let bonusNumber = +self.bonusNumber
 
 			let URL = API.lesson.redenvelope_create
 
