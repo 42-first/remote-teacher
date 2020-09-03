@@ -607,7 +607,7 @@
 
         // 从模态框组件传来，H5收题事件
         T_PUBSUB.subscribe('pro-msg.shoutih5', (_name, msg) => {
-          self.problemid === msg.problemid && self.shoutiConfirm()
+          self.problemid == msg.problemid && self.shoutiConfirm()
         })
 
         // 从 node 传来， pc收题事件
@@ -864,7 +864,7 @@
       shoutiConfirm () {
         let URL = API.lesson.problem_finish
         let params = {
-          'problemId': self.problemid
+          'problemId': this.problemid
         }
 
         return request.post(URL, params)
