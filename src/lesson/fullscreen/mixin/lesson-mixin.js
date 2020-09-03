@@ -138,7 +138,7 @@ var commandMixin = {
         }
       }
 
-      this.getUser();
+      let user = await this.getUser();
       let lesson = await this.getLesson();
       // 是否下课
       if(lesson && lesson.endTime > 0) {
