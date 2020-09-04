@@ -11,16 +11,16 @@
   <!-- 解析内容 -->
   <section class="analysis-inner J_analysis_inner">
     <section class="analysis-anwser f16" v-if="problem.problemType!==5"><!-- 正确答案 -->{{ $t('correctanswer') }}: {{ problem.Answer }}</section>
-    <section class="analysis__images" :style="problem.remarkRich|setScale" v-if="problem.remarkRich && problem.remarkRich.Shapes">
+    <section class="analysis__images" :style="problem.remarkRich|setScale" v-if="problem.remarkRich && problem.remarkRich.shapes">
       <!-- 新的解析处理 -->
-      <div v-for="shape in problem.remarkRich.Shapes">
+      <div v-for="shape in problem.remarkRich.shapes">
         <!-- 文字提取方式 新版 -->
-        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.URL" v-if="!shape.Paragraphs" />
+        <img class="analysis__shape" :style="shape|setShapeStyle" :src="shape.url" v-if="!shape.paragraphs" />
         <div class="analysis__shape" :style="shape|setShapeStyle" v-else>
-          <template v-for="paragraph in shape.Paragraphs" v-if="shape.Paragraphs">
-            <ol class="paragraph__wrap J_paragraph" :start="paragraph.Number">
-              <li class="analysis__shape shape__text" :style="paragraph.Bound|setShapeStyle">
-                <div class="analysis__shape paragragh__line" :style="line.Bound|setShapeStyle" v-html="line.Html" v-for="line in paragraph.Lines" v-if="paragraph.Lines"></div>
+          <template v-for="paragraph in shape.paragraphs" v-if="shape.paragraphs">
+            <ol class="paragraph__wrap J_paragraph" :start="paragraph.number">
+              <li class="analysis__shape shape__text" :style="paragraph.bound|setShapeStyle">
+                <div class="analysis__shape paragragh__line" :style="line.bound|setShapeStyle" v-html="line.html" v-for="line in paragraph.lines" v-if="paragraph.lines"></div>
               </li>
             </ol>
           </template>
@@ -28,7 +28,7 @@
       </div>
     </section>
     <!-- 兼容老的解析处理 -->
-    <section class="remark f17" v-if="!problem.remarkRich.Shapes&&problem.remark">{{ problem.remark }}</section>
+    <section class="remark f17" v-if="!problem.remarkRich.shapes&&problem.remark">{{ problem.remark }}</section>
   </section>
 
 </template>
@@ -96,21 +96,21 @@
     filters: {
       setShapeStyle(shape) {
         var astyle = [
-          'width:'+ (shape.Width)+'px;',
-          'min-height:'+ shape.Height +'px;',
-          'left:'+ shape.Left +'px;',
-          'top:'+ shape.Top +'px;',
-          'z-index:'+ shape.ZOrderPosition + ';',
-          'transform: rotate('+ shape.Rotation + 'deg);',
-          'webkit-transform: rotate('+ shape.Rotation + 'deg);',
+          'width:'+ (shape.width)+'px;',
+          'min-height:'+ shape.height +'px;',
+          'left:'+ shape.left +'px;',
+          'top:'+ shape.top +'px;',
+          'z-index:'+ shape.zOrderPosition + ';',
+          'transform: rotate('+ shape.rotation + 'deg);',
+          'webkit-transform: rotate('+ shape.rotation + 'deg);',
         ];
 
-        if(shape.FontSize){
-          astyle.push('font-size:'+ shape.FontSize + 'px;');
+        if(shape.fontSize){
+          astyle.push('font-size:'+ shape.fontSize + 'px;');
         }
 
-        if(shape.Fill && shape.Fill.Visble && !shape.Fill.Transparency){
-          astyle.push('background-color:'+ shape.Fill.BackColor +';');
+        if(shape.fill && shape.fill.visible && !shape.fill.transparency){
+          astyle.push('background-color:'+ shape.fill.backColor +';');
         }
 
         return astyle.join('');
@@ -122,8 +122,8 @@
 
         if(remarkRich) {
           let winWidth = window.innerWidth - 100;
-          let width = remarkRich.Width;
-          let height = remarkRich.Height;
+          let width = remarkRich.width;
+          let height = remarkRich.height;
           let scaleRate = winWidth/width;
 
           sCss = `width: ${width}px; height: ${height}px; transform: scale(${scaleRate});`;
