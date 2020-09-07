@@ -125,7 +125,7 @@
       let self = this
 
       // 点击 缩略图 按钮 父组件发送事件给本子组件，想要滚动到当前页
-      self.$on('thumbnail', function () {
+      self.$on('Thumbnail', function () {
         let container = self.$el.querySelector('.scroll-box1')
         let currentPage = container.querySelector('#t'+self.current)
         container.scrollTop = currentPage.offsetTop
