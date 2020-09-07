@@ -50,9 +50,9 @@ let lessonMixin = {
       }, 20)
 
       // 是否新用户
-      // if(app.getGlobalData('isLackRegisterInfo')) {
-      //   this.setData({ showGuide: true })
-      // }
+      if(user.edited === false) {
+        this.showGuide = true;
+      }
     },
 
     /**
