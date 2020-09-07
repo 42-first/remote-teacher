@@ -325,7 +325,7 @@ const router = new Router({
         },
         {
           path: 'quizresultdetail/:quizid',
-          name: 'quizresultdetail',
+          name: 'quizresultdetail_v3',
           component: () => import('@/lesson/teacher/quizresultdetail'),
           meta
         },
@@ -361,38 +361,67 @@ router.beforeEach((to, from, next) => {
   // socket 无法使用的话，功能不正常，回根页面
   console.log(to);
   
-  if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) && to.name.indexOf('v3') == -1) {
-    next({name: 'home', params: {lessonid: STORE.state.lessonid}})
-    return;
-  }else if(!from.name && to.name !== 'teacher-v3'){
-    next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
-    return;
+  if(to.name.indexOf('v3') == -1){
+    if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send)) {
+      next({name: 'home', params: {lessonid: STORE.state.lessonid}})
+      return;
+    }
+    // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
+    if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
+      let str = JSON.stringify({
+        'op': 'closequizresult',
+        'lessonid': STORE.state.lessonid,
+        'quizid': from.params.quizid
+      })
+      localStorage['isTouping'+from.params.quizid] = false
+  
+      STORE.state.socket.send(str)
+    }
+  
+    // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
+    let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    if (isObjectiveresultClose) {
+      let str = JSON.stringify({
+        'op': 'closeproblemresult',
+        'lessonid': STORE.state.lessonid,
+        'problemid': from.params.problemid
+      })
+  
+      STORE.state.socket.send(str)
+    }
+    next()
+  }else {
+    if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send)){
+      next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
+      return;
+    }
+    // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
+    if (from.name === 'quizresult_v3' && to.name !== 'quizresultdetail_v3') {
+      let str = JSON.stringify({
+        'op': 'closequizresult',
+        'lessonid': STORE.state.lessonid,
+        'quizid': from.params.quizid
+      })
+      localStorage['isTouping'+from.params.quizid] = false
+  
+      STORE.state.socket.send(str)
+    }
+  
+    // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
+    let isObjectiveresultClose = from.name === 'objectiveresult_v3' && to.name !== 'collumresult-detail_v3' && to.name !== 'fillblankresult-detail_v3' && to.name !== 'redpacket_v3' && to.name !== 'redpacketlist_v3'
+    // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    if (isObjectiveresultClose) {
+      let str = JSON.stringify({
+        'op': 'closeproblemresult',
+        'lessonid': STORE.state.lessonid,
+        'problemid': from.params.problemid
+      })
+  
+      STORE.state.socket.send(str)
+    }
+    next()
   }
-  // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
-  if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
-    let str = JSON.stringify({
-      'op': 'closequizresult',
-      'lessonid': STORE.state.lessonid,
-      'quizid': from.params.quizid
-    })
-    localStorage['isTouping'+from.params.quizid] = false
-
-    STORE.state.socket.send(str)
-  }
-
-  // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
-  let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  if (isObjectiveresultClose) {
-    let str = JSON.stringify({
-      'op': 'closeproblemresult',
-      'lessonid': STORE.state.lessonid,
-      'problemid': from.params.problemid
-    })
-
-    STORE.state.socket.send(str)
-  }
-  next()
 })
 
 router.afterEach(function (to, from){
