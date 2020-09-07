@@ -554,6 +554,11 @@ let pages = {
   "offsilentmood": "老师即将开启声音...",
 
   "cloneTips": "当前为克隆班级，无法进行该操作",
+  "signintoomuch": "当前签到人数太多，暂不支持查看名单",
+  "notsignintoomuch": "当前未签到人数太多，暂不支持查看名单",
+  "backsoon": "该功能暂时下线维护，稍后回归，敬请期待~",
+  "changetosignin": "修改为已签到",
+  "changetonotsignin": "修改为未签到",
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"

@@ -551,6 +551,12 @@ let pages = {
 
   "cloneTips": "Unavailable in Clone Class",
 
+  "signintoomuch": "There are too many people signed in, we can't provide the list yet.",
+  "notsignintoomuch": "There are too many people unsigned in, we can't provide the list yet.",
+  "backsoon": "This feature is temporarily offline for maintenance and will be back soon.",
+  "changetosignin": "Present",
+  "changetonotsignin": "Absent",
+
   // 图片国际化
   imgs: {
     "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"

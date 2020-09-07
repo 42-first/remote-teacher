@@ -19,11 +19,11 @@
               <i class="icon mt-2" :class="checkinDetail.source >= 0 ? 'icon-sign' : 'icon-unsign'"></i>
               <span class="status f14" :class="checkinDetail.source >= 0 ? 'cblue' : 'cred'">{{ checkinDetail.source >= 0 ? $t('yiqiandao') : $t('weiqiandao')}}</span>
               <span class="source f12" v-if="checkinDetail.source >= 0">{{checkinDetail.source_name}} {{checkinDetail.participate | formatTime}}</span>
-              <span class="source f12" v-else-if="checkinDetail.source == -2">教师手动修改</span>
+              <span class="source f12" v-else-if="checkinDetail.source == -2">{{checkinDetail.source_name}}</span>
             </div>
             <div class="participant-option f12" @click="handleChangeStatus">
-              <template v-if="checkinDetail.source >= 0">修改为未签到</template>
-              <template v-else>修改为已签到</template>
+              <template v-if="checkinDetail.source >= 0"><!-- 修改为未签到 -->{{$t('changetonotsignin')}}</template>
+              <template v-else><!-- 修改为已签到 --> {{ $t('changetosignin') }} </template>
             </div>
           </div>
           <div class="points-box flexbetween">
@@ -236,7 +236,8 @@
               case 9:
                 source_name = i18n.locale === 'zh_CN' ? '转发分享' : 'Share'
                 break;
-              case 25:
+              case 99:
+              case -2:
                 source_name = i18n.locale === 'zh_CN' ? '教师手动修改' : 'Manual mark'
                 break;
             }

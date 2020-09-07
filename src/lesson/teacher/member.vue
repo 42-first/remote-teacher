@@ -65,7 +65,7 @@
 			</template>
 			<template v-else-if="participantList.length && studentCount > 100000">
 				<div class="empty too-much">
-					当前签到人数太多，暂不支持查看名单
+					<!-- 当前签到人数太多，暂不支持查看名单 --> {{$t('signintoomuch')}}
 				</div>
 			</template>
 			<template v-else>
@@ -107,7 +107,7 @@
 			</template>
 			<template v-else-if="studentCount > 3000">
 				<div class="empty too-much">
-					当前未签到人数太多，暂不支持查看名单
+					<!-- 当前未签到人数太多，暂不支持查看名单 -->{{$t('notsignintoomuch')}}
 				</div>
 			</template>
 			<template v-else>
@@ -289,7 +289,7 @@
 				// 	}
 				// })
 				this.$toast({
-          message: '该功能暂时下线维护，稍后回归，敬请期待~',
+          message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
           duration: 3e3
         });
       }
