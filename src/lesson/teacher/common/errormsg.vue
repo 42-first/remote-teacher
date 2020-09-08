@@ -77,19 +77,16 @@
 		   */
 		  endLesson () {
 		    let self = this
-		    let url = API.end_lesson
+		    let url = API.lesson.end_lesson
 
-	      let postData = {
-	        'lesson_id': self.lessonid
-	      }
+	      return request.post(url)
+        .then((res) => {
+          if(res && res.code === 0 && res.data){
+            location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + self.lessonid
+          }
+        }).catch(error => {
 
-	      request.post(url, postData)
-	        .then(jsonData => {
-	          // 不需要判断success，在request模块中判断如果success为false，会直接reject
-	          // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-	          // 跳转到课程小结页
-	          location.href = '/v/index/course/normalcourse/teaching_lesson_detail/' + self.lessonid
-	        })
+        })
 		  },
 	  }
 	}
