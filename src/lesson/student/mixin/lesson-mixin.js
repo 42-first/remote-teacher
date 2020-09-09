@@ -25,9 +25,9 @@ let lessonMixin = {
         // 50004 lesson end
         if(joined === 50004) {
           location.href = '/v/index/lessonend';
-
-          return this;
         }
+
+        return this;
       }
 
       let user = await this.getUser();
