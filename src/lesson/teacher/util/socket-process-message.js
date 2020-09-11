@@ -415,8 +415,7 @@ function socketProcessMessage(msg){
       // 随机点名页面关闭时触发的，不需要响应
       // T_PUBSUB.publish('call-msg.callpaused', msg)
       // 随机点名的时候，继续上课没有搞懂为啥回来就存在面板遮盖，这里强制刷新一次解决
-      // 暂时注掉 由于进入课堂表现页会收到此条消息 此时reload的话课堂表现页不能正常使用
-      // location.reload()
+      location.reload()
       return
     }
 

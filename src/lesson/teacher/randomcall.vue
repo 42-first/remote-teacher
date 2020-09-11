@@ -112,8 +112,16 @@
       self.handlePubSub()
     },
     beforeDestroy(){
+      // T_PUBSUB.unsubscribe('call-msg')
+      // this.giveupRoll()
+    },
+    beforeRouteLeave (to, from, next) {
+      // ...
       T_PUBSUB.unsubscribe('call-msg')
-      this.giveupRoll()
+      if(to.name !== 'stuexpression_v3'){
+        this.giveupRoll()
+      }
+      next()
     },
     methods: {
       /**
@@ -218,7 +226,7 @@
       },
       goStudentDetail(id){
         this.$router.push({
-          name: 'stuexpression',
+          name: 'stuexpression_v3',
 					params: {
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid,
