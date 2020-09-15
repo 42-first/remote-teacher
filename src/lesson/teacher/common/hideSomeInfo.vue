@@ -116,7 +116,8 @@
         let URL = API.lesson.update_config
 
         let params = {
-          show_user_profile: !this.isHideName
+          show_user_profile: !this.isHideName,
+          lessonId: this.lessonid
         }
         return request.post(URL, params)
         .then((res) => {

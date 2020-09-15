@@ -713,7 +713,7 @@
           return
         }
         this.$router.push({
-          name: 'postsubmission',
+          name: 'postsubmission_v3',
           params: {
             'lessonID': this.lessonid
           }

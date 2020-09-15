@@ -130,7 +130,8 @@
         let URL = API.lesson.update_config
 
         let params = {
-          show_user_profile: !this.isHideName
+          show_user_profile: !this.isHideName,
+          lessonId: this.lessonid
         }
         return request.post(URL, params)
         .then((res) => {
@@ -156,7 +157,8 @@
         let self = this
 
         let params = {
-          problem_show_answer: this.showAnswer
+          problem_show_answer: this.showAnswer,
+          lessonId: this.lessonid
         }
         return request.post(URL, params)
         .then((res) => {

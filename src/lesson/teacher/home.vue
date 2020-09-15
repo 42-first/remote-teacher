@@ -1077,6 +1077,6 @@
 		width: 100%;
 		top: 0;
 		left: 0;
-		z-index: 102;
+		z-index: 102 !important;
 	}
 </style>
