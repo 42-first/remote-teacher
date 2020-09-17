@@ -155,7 +155,7 @@
       ])
     },
 	  created(){
-      this.userid = this.$route.params.userid
+      this.userid = ''+ this.$route.params.userid
       this.init()
     },
     mounted() {
