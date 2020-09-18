@@ -133,7 +133,7 @@
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score ? Math.floor(item.score/100).toFixed(1) : '--'}}</span>
+                        <span v-show="item.score !== -1">{{item.score ? (item.score/100).toFixed(1) : '--'}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
@@ -962,8 +962,8 @@
 	      // 投屏时不可打分
         if (answerindex === self.postingSubjectiveid) {return;}
         
-        score = Math.floor(score/100)
-        scoreTotal = Math.floor(scoreTotal/100)
+        score = score/100
+        scoreTotal = scoreTotal/100
 
         // 防止用户频繁点击
         clearTimeout(scoreTapTimer)
@@ -1002,7 +1002,7 @@
 	      let url = API.lesson.post_grade
 	      let postData = {
           problemId: self.problemid,
-          score: Math.floor(teacherScore*100),
+          score: Math.round(teacherScore*100),
           userId: self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark
@@ -1014,7 +1014,7 @@
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = Math.floor(teacherScore*100)
+              self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
               self.dataList[self.scoringIndex].comment.content = remark
 
 
