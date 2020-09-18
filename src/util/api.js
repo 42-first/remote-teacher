@@ -88,7 +88,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 拉取Presentation
       get_presentation: '/api/v3/lesson/presentation/fetch',
       // 点击不懂收藏
-      post_tag: '/api/v3/lesson/tag/',
+      post_tag: '/api/v3/lesson/tag',
       // 学生课堂不懂收藏列表
       get_lesson_tag: '/api/v3/lesson/tag/lesson',
       // 班级基本信息
