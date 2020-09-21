@@ -962,7 +962,7 @@
 	      // 投屏时不可打分
         if (answerindex === self.postingSubjectiveid) {return;}
         
-        score = score/100
+        score = score > -1 ? score/100 : -1
         scoreTotal = scoreTotal/100
 
         // 防止用户频繁点击
