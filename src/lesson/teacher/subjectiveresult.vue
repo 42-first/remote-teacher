@@ -133,7 +133,7 @@
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score ? (item.score/100).toFixed(1) : '--'}}</span>
+                        <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
                       </div>
                     </v-touch>
                     <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
