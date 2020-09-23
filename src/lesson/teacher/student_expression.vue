@@ -255,15 +255,15 @@
         let params = {
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
-          student_id: this.userid
+          student_identity_id: this.userid
         }
         return request.get(url, params).then(res => {
           if(res && res.code === 0 && res.data){
-            self.user_profile = res.data.user_profile
-            self.tagList = res.data.assess_tags
-            self.tagListTemp = res.data.assess_tags
-            self.behavior_score = res.data.assess_score
-            self.behavior_score_temp = res.data.assess_score
+            self.user_profile = res.data.userProfile
+            self.tagList = res.data.assessTags
+            self.tagListTemp = res.data.assessTags
+            self.behavior_score = res.data.assessScore
+            self.behavior_score_temp = res.data.assessScore
 
             return res.code
           }
@@ -289,7 +289,7 @@
           tag_ids: tag_ids,
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
-          student_id: this.userid
+          student_identity_id: this.userid
         }
         request.post(URL, params).then(res => {
           if(res && res.code === 0 && res.data){
@@ -329,7 +329,7 @@
           name: this.tagText,
           classroom_id: this.classroomid,
           lesson_id: this.lessonid,
-          student_id: this.userid
+          student_identity_id: this.userid
         }
         let canSubmit = true
         this.tagList.forEach(item => {
@@ -405,7 +405,7 @@
         let params = {
           lesson_id: this.lessonid,
           classroom_id: this.classroomid,
-          student_id: this.userid,
+          student_identity_id: this.userid,
           score: this.behavior_score_temp ? this.behavior_score_temp : 0
         }
         request.post(URL, params).then(res => {
