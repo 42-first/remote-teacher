@@ -189,7 +189,7 @@
           'lessonid': this.lessonid,
           'prob': this.problem.problemId,
           'pres': this.presentationid,
-          'sid': this.pptData[this.current].id
+          'sid': this.pptData[this.current-1].id
         })
 
 		    self.socket.send(str)
