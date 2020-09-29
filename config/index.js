@@ -42,7 +42,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/wsapp/': {
-        target: 'ws://pre-apple-ykt.xuetangonline.com',
+        target: 'wss://pre-apple-ykt.xuetangonline.com',
         changeOrigin: true,
         ws: true,
         secure: false
