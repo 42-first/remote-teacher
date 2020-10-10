@@ -237,7 +237,7 @@
               // 投票类型不打开默认选项
               self.openRightItem(jsonData.distribution)
             }
-            
+            self.isFetching = false
           }
         }).catch(error => {
           console.log('getResultDetail:' + error);
