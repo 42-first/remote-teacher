@@ -42,10 +42,29 @@
             <span class="f14" style="color: #9B9B9B;">{{correct.length}}{{ $t('ren') }}</span>
             <i :class="['iconfont', 'right', 'f20', 0 === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
           </v-touch>
-          <div :class="['item-bd', {'item-hidden': 0 !== showingIndex}]" >
-            <div class="stu" v-for="stu in correct" :key="stu.userId">
-              <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
-              <div class="ellipsis">{{stu.name}}</div>
+          <div :class="['wrong-bd', 'mt20',  {'item-hidden': 0 !== showingIndex}]" >
+            <div class="sort-wrapper">
+              <span @click="sortActive">
+                <span class="color6">作答时长</span>
+                <div class="inline-block icon-wrapper">
+                  <i :class="{active: !sortType}"></i>
+                  <i :class="{active: sortType}"></i>
+                </div>
+              </span>
+            </div>
+            <div class="stu" v-for="(stu, sindex) in correct" :key="sindex">
+              <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+              <div class="name-number-wrapper">
+                <div class="name-duration">
+                  <div class="text-ellipsis name">{{stu.name}}</div>
+                  <span class="duration">
+                    {{ stu.duration| formatDuration }}
+                  </span>
+                </div>
+                <div class="number">
+                  {{ stu.number }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -81,7 +100,7 @@
             <span class="f14" style="color: #9B9B9B;">{{unfinished.length}}{{ $t('ren') }}</span>
             <i :class="['iconfont', 'right', 'f20', 2 === showingIndex ? 'icon-fold' : 'icon-unfold']"></i>
           </v-touch>
-          <div :class="['item-bd correct', {'item-hidden': 2 !== showingIndex}]" >
+          <div :class="['wrong-bd correct', {'item-hidden': 2 !== showingIndex}]" >
             <div class="stu" v-for="stu in unfinished" :key="stu.user_id">
               <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="ellipsis">{{stu.name}}</div>
@@ -133,7 +152,8 @@
         correct: [],
         incorrect: [],
         unfinished: [],
-        loaded: false
+        loaded: false,
+        sortType: 0
       }
     },
     components: {
@@ -158,6 +178,17 @@
           boxDom.scrollTop = boxDom.scrollTop - 2
         }
       })
+    },
+    filters: {
+      formatDuration(cost = 120) {
+        const second = cost - Math.floor(cost/60) * 60
+        const hours = Math.floor(cost/(60*60))
+        const minutes = (cost - second - hours*60*60)/60
+        const hoursStr = !!hours ? `${hours}`.padStart(2, 0) + ':' : ''
+        const minutesStr = `${minutes}`.padStart(2, 0) + ':'
+        const secondStr = `${second}`.padStart(2, 0)
+        return `${hoursStr}${minutesStr}${secondStr}`
+      }
     },
     methods: {
       /**
@@ -222,6 +253,14 @@
         // console.log(type);
         self.activeTab = type
       },
+
+      /*
+      * 变更顺序
+      */
+      sortActive() {
+        this.sortType = !this.sortType
+        this.correct.reverse()
+      }
 
     }
   }
@@ -362,37 +401,50 @@
         border-top: 0;
       }
 
-      .item-bd {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        width: 9.066667rem;
-        margin: 0.533333rem auto 0;
-        overflow: hidden;
-
-        .stu {
-          text-align: center;
-          margin-right: 0.57687496rem;
-          margin-bottom: 0.8rem;
-          width: 1.266667rem;
-          img {
-            width: 0.986667rem;
-            height: 0.986667rem;
-            border-radius: 50%;
-            margin-bottom: 0.386667rem;
-          }
-          &:nth-child(5n) {
-            margin-right: 0;
-          }
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
+      .mt20 {
+        margin-top: px2rem(20px);
       }
 
       .wrong-bd {
         padding: 0 0.533333rem;
         overflow: hidden;
+
+        .sort-wrapper{
+          font-size: px2rem(28px);
+          height: px2rem(40px);
+          line-height: px2rem(40px);
+          text-align: right;
+          padding: 0 px2rem(20px);
+          .icon-wrapper{
+            position: relative;
+            height: 100%;
+            vertical-align: middle;
+            padding-left: px2rem(20px);
+            i{
+              border-color: #d8d8d8;
+              display: block;
+              box-sizing: border-box;
+              border-left-width:  px2rem(10px);
+              border-right-width:  px2rem(10px);
+              border-left-color: transparent !important;
+              border-right-color: transparent !important;
+              border-style: solid;
+            }
+            i:first-child{
+              margin-top:  px2rem(2px);
+              border-bottom-width: px2rem(15px);
+              border-top-width: 0;
+            }
+            i:last-child{
+              border-bottom-width: 0;
+              border-top-width: px2rem(15px);
+              margin-top: px2rem(2px);
+            }
+            i.active{
+              border-color: #639ef4;
+            }
+          }
+        }
 
         .stu {
           display: flex;
@@ -426,6 +478,31 @@
               .wrong {
                 color: #F84F41;
               }
+            }
+          }
+
+          .name-number-wrapper{
+            flex: 1;
+            text-align: left;
+            padding-left: px2rem(26px);
+            width: px2rem(300px);
+            .name-duration{
+              line-height: px2rem(45px);
+              font-size: px2rem(32px);
+              color: #333;
+              display: flex;
+              .name{
+                flex: 1;
+              }
+              .duration{
+                font-size: px2rem(24px);
+                color: #9b9b9b;
+              }
+            }
+            .number{
+              line-height: px2rem(40px);
+              font-size: px2rem(28px);
+              color: #9b9b9b;
             }
           }
 

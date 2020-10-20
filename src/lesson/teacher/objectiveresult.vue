@@ -52,11 +52,11 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-				<router-link v-if="problemType === 4" tag="div" :to="{name: 'fillblankresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
+				<!-- <router-link v-if="problemType === 4" tag="div" :to="{name: 'fillblankresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
-            <!-- 是否有解析提示 -->
-            <p class="analysis--tip" v-if="problem && problem.hasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
+            是否有解析提示
+            <p class="analysis--tip" v-if="problem && problem.hasRemark">看解析{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
@@ -64,11 +64,20 @@
 	      <router-link v-else tag="div" :to="{name: 'collumresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
 	        <div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
+            是否有解析提示
+            <p class="analysis--tip" v-if="problem && problem.hasRemark">看解析{{ $t('viewanswer') }}</p>
+	      	</div>
+	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
+	      </router-link> -->
+
+				<div class="btn-item" @click="toProblemDetail">
+					<div class="iconbox" style="background: #EEBC28;">
+	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
             <!-- 是否有解析提示 -->
             <p class="analysis--tip" v-if="problem && problem.hasRemark"><!-- 看解析 -->{{ $t('viewanswer') }}</p>
 	      	</div>
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
-	      </router-link>
+				</div>
 
 	      <div @click="sendCheckRed({name: 'redpacket_v3', problemid: problemid, type: 0})" v-show="problemType !== 3 && !~RedEnvelopeID && problemType !== 4" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
@@ -702,6 +711,24 @@
 				// 红包列表 
 				else {
 					this.$router.push({name, params: { redid }});
+				}
+			},
+
+			/** 
+			 * @method 查看详情 签到人数超3000人不可以进入
+			*/
+			toProblemDetail(){
+				if(this.checkinCount > 3000){
+					this.$toast({
+						message: '当前签到人数太多，暂不支持查看详情',
+						duration: 3e3
+					});
+					return
+				}
+				if(this.problemType === 4){
+					this.$router.push({name: 'fillblankresult-detail_v3', params: { problemid: this.problemid }})
+				}else {
+					this.$router.push({name: 'collumresult-detail_v3', params: { problemid: this.problemid }})
 				}
 			}
 	  }
