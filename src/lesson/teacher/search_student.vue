@@ -13,30 +13,28 @@
 			<template v-if="studentList.length">
 				<ul class="studentList">
 					<template v-for="item in studentList">
-						<li class="item" @click="goDetail(item.id)">
+						<li class="item" @click="goDetail(item.identityId)">
 							<div class="user-box flexbetween">
 								<div class="user-info">
 									<span class="name f15 color3 mb10">
-										<template v-for="str in item.profile.nameArr">
+										<template v-for="str in item.nameArr">
 											<template v-if="search.indexOf(str.name) >= 0"><span class="cblue">{{str.name}}</span></template><template v-else>{{str.name}}</template>
 										</template>
 									</span>
-									<span class="school_number f14 color6">{{item.profile.school_number ? item.profile.school_number : $t('weishezhixuehao')}}</span>
+									<span class="school_number f14 color6">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 								</div>
-								<div class="user-score f14 cblue" v-if="item.score">
-									<span class='f30'>{{item.score}}</span>{{$t('behavior.points')}}
+								<div class="user-score f14 cblue" v-if="item.problemScore">
+									<span class='f30'>{{item.problemScore/100}}</span>{{$t('behavior.points')}}
 								</div>
 								<div class="time color-9b f14">
-									<span v-if="item.time && item.attendance_status !== 0">{{item.time}}</span>
-									<span v-else-if="item.attendance_status === 0">{{ $t('behavior.absent') }}</span>
-									<span v-else-if="!item.time && item.attendance_status === 1">{{ $t('behavior.present') }}</span>
+									<span v-if="item.participate">{{item.participate | formatTime}}</span>
 									<i class="iconfont icon-jinrucopy f25"></i>
 								</div>
 							</div>
-							<div class="tag-box" v-if="item.behavior_score || (item.behavior_tags && item.behavior_tags.length)">
-								<span class="score" v-if="item.behavior_score"><!-- +{{item.behavior_score}}分 -->{{$t('behavior.addpoints', {count: item.behavior_score})}}</span>
-								<template v-if="item.behavior_tags && item.behavior_tags.length">
-									<template v-for="tag in item.behavior_tags">
+							<div class="tag-box" v-if="item.assessScore || (item.assessTags && item.assessTags.length)">
+								<span class="score" v-if="item.assessScore"><!-- +{{item.assessScore}}分 -->{{$t('behavior.addpoints', {count: item.assessScore})}}</span>
+								<template v-if="item.assessTags && item.assessTags.length">
+									<template v-for="tag in item.assessTags">
 										<span class="tag">{{tag}}</span>
 									</template>
 								</template>
@@ -76,11 +74,19 @@
       ])
     },
 	  created(){
-	  },
+		},
+		filters: {
+			formatTime(time){
+				let date = new Date(time)
+				let hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours()
+				let mins = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()
+				return `${hours}:${mins}`
+			}
+		},
 	  methods: {
 			goDetail(user_id){
 				this.$router.push({
-					name: 'stuexpression',
+					name: 'stuexpression_v3',
 					params: {
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid,
@@ -98,21 +104,19 @@
 			},
 			getStudentS(){
 				let self = this
-				let URL = API.behavior_tag.search_classroom_student
+				let URL = API.lesson.search_member
 				let params = {
-					classroom_id: this.classroomid,
-					lesson_id: this.lessonid,
-					search: this.search
+					query: this.search
 				}
-				request.get(URL, params).then((res) => {
-					if(res.success){
-						res.data.forEach((item,index) => {
+				return request.get(URL, params).then((res) => {
+					if(res && res.code === 0 && res.data){
+						res.data.items.forEach((item,index) => {
 							let result = []
 							let nameArr = []
-							if (item.profile.name.match(/\ud83c[\udf00-\udfff]|\ud83d[\udc00-\ude4f]|\ud83d[\ude80-\udeff]/g) != null){
-								nameArr = [...item.profile.name]
+							if (item.name.match(/\ud83c[\udf00-\udfff]|\ud83d[\udc00-\ude4f]|\ud83d[\ude80-\udeff]/g) != null){
+								nameArr = [...item.name]
 							}else {
-								nameArr = item.profile.name.split('')
+								nameArr = item.name.split('')
 							}
 							nameArr.forEach((item, index) => {
 								result.push({
@@ -120,9 +124,9 @@
 									id: index
 								})
 							})
-							item.profile.nameArr = result
+							item.nameArr = result
 						})
-						self.studentList = res.data
+						self.studentList = res.data.items
 						self.searched = true
 					}
 				})

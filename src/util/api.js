@@ -184,7 +184,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 获取抢红包信息
       redenvelope_issue_list: '/api/v3/lesson/redenvelope/issue-list',
       // 代理node支付
-      node_proxy: '/api/v3/pay/proxy'
+      node_proxy: '/api/v3/pay/proxy',
+      // 搜索成员列表
+      search_member: '/api/v3/lesson/search-member'
     },
 
     /*------------------*\

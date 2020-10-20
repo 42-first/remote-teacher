@@ -42,7 +42,7 @@
 								<span class="user_name ellipsis-2line f17">{{item.name}}</span>
 								<span class="user_schoolnumber f14">{{item.schoolNumber ? item.schoolNumber : $t('weishezhixuehao')}}</span>
 							</div>
-							<div v-if="hasProblem" class="score-box f14" :class="index < 2 ? 'orange' : ''">
+							<div v-if="hasProblem" class="score-box f14" :class="index < 3 ? 'orange' : ''">
 								<span class='f30'>{{item.problemScore/100 >= 0 ? item.problemScore/100 : '--'}}</span>{{$t('behavior.points')}}
 							</div>
 							<div class="time-box f14">
@@ -281,17 +281,13 @@
 				})
 			},
 			goSearch(){
-				// this.$router.push({
-				// 	name: 'search_v3',
-				// 	params: {
-				// 		'classroomid': this.classroomid,
-				// 		'lessonid': this.lessonid
-				// 	}
-				// })
-				this.$toast({
-          message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
-          duration: 3e3
-        });
+				this.$router.push({
+					name: 'search_v3',
+					params: {
+						'classroomid': this.classroomid,
+						'lessonid': this.lessonid
+					}
+				})
       }
 
 		}
