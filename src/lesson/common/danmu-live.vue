@@ -456,7 +456,7 @@
        */
       handleSend(evt) {
         let URL = API.lesson.send_danmu;
-        const message = this.danmuText.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
+        const message = this.danmuText.replace(/(\r\n|\n|\r)/gm, ' ').replace(/^\s+|\s+$/g, '');
         let params = {
           'lessonId': this.$parent.lessonID,
           'target': '',
