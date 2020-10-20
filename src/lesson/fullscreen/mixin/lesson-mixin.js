@@ -387,7 +387,7 @@ var commandMixin = {
           data.id = pid;
 
           // TODO：测试
-          this.presentationMap.set(pid, data);
+          // this.presentationMap.set(pid, data);
 
           return data;
         }
