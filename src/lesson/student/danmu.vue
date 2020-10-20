@@ -84,7 +84,8 @@
       */
       sendDanmu() {
         let URL = API.lesson.send_danmu;
-        const message = this.text.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
+        // const message = this.text.replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, ' ');
+        const message = this.text && this.text.replace(/(\r\n|\n|\r)/gm, ' ').replace(/^\s+|\s+$/g, '');
         let params = {
           'lessonId': this.lessonID,
           'target': '',
@@ -96,6 +97,10 @@
           'showStatus': true,
           'fromStart': '100',
         };
+
+        if(!message) {
+          return this;
+        }
 
         // 发送中
         this.sendStatus = 2;

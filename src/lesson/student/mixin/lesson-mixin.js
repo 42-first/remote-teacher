@@ -358,11 +358,11 @@ let lessonMixin = {
      * @param
      */
     formatPresentation(presentation, lessonTags) {
-      if(presentation && lessonTags) {
+      if(presentation) {
         let id = presentation.id;
         let slides = presentation['slides'];
 
-        if(slides.length) {
+        if(slides.length && lessonTags) {
           slides.forEach( (slide) => {
             // 不懂
             if(lessonTags.doubtSlideList) {
