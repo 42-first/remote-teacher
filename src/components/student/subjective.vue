@@ -93,8 +93,13 @@
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn f18" @click="handleBack">{{ $t('back') }}</p>
+      </section>
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" v-else ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
 
@@ -168,8 +173,6 @@
         rate: 1,
         msgid: 0,
         summary: null,
-        // star count 获得星星的数量
-        starCount: 0,
         getScore: -1,
         // 个人作答还是小组作答 0 个人作答 1小组作答
         answerType: 0,
@@ -188,7 +191,9 @@
         // 是否旁听生
         isGuestStudent: false,
         // 是否华为特殊手机
-        huawei: !!huawei
+        huawei: !!huawei,
+        // 是否观察者模式
+        observerMode: false,
       };
     },
     components: {
@@ -260,7 +265,6 @@
         let getScore = this.oProblem['getScore'];
 
         if(score && getScore > 0) {
-          this.starCount = getScore / score * 5;
           this.getScore = getScore;
         }
 

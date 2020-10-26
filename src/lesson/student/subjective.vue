@@ -93,8 +93,13 @@
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn f18" @click="handleBack">{{ $t('back') }}</p>
+      </section>
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" v-else><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
 
