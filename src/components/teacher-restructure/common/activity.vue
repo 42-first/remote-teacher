@@ -9,7 +9,7 @@
       <div class="head-link-wrap">
         <router-link tag="div" :to="{name: 'member', query: {count: studentCount}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
           <div class="avatar-box">
-            <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+            <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           </div>
           <span class="dqxs f14">
             {{ $t('activeno', { activeno: participant_count }) }}

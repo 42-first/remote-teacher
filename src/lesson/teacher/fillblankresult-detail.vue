@@ -53,7 +53,7 @@
               </span>
             </div>
             <div class="stu" v-for="(stu, sindex) in correct" :key="sindex">
-              <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+              <img :src="stu.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
               <div class="name-number-wrapper">
                 <div class="name-duration">
                   <div class="text-ellipsis name">{{stu.name}}</div>
@@ -80,7 +80,7 @@
           </v-touch>
           <div :class="['wrong-bd correct', {'item-hidden': 1 !== showingIndex}]" >
             <div class="stu" v-for="stu in incorrect" :key="stu.user_id">
-              <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+              <img :src="stu.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="cont f15">
                 <div class="name">{{stu.name}}</div>
                 <div class="stu-answer">
@@ -102,7 +102,7 @@
           </v-touch>
           <div :class="['wrong-bd correct', {'item-hidden': 2 !== showingIndex}]" >
             <div class="stu" v-for="stu in unfinished" :key="stu.user_id">
-              <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+              <img :src="stu.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
               <div class="ellipsis">{{stu.name}}</div>
             </div>
           </div>

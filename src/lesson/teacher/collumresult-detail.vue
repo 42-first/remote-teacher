@@ -50,7 +50,7 @@
                 </span>
               </div>
               <div class="stu" v-for="(stu, sindex) in choiceItem.students" :key="sindex">
-                <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+                <img :src="stu.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
                 <div class="name-number-wrapper">
                   <div class="name-duration">
                     <div class="text-ellipsis name">{{stu.name}}</div>
@@ -82,7 +82,7 @@
           <div class="gap"></div>
           <div class="item-bd">
   					<div class="stu" v-for="(stu, index) in not_answeredList" :key="index">
-  	          <img :src="stu.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
+  	          <img :src="stu.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'">
   	          <div class="name-number-wrapper">
                 <div class="name-duration">
                   <div class="text-ellipsis name">{{stu.name}}</div>

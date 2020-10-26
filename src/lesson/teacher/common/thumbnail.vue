@@ -28,7 +28,7 @@
       <!-- 新增白板不懂入口 有数据显示没数据不显示  -->
       <router-link tag="section" :to="{ name: 'boardlist_v3', params: { lessonid: lessonid } }" class="board__box" v-if="doubtBoard">
         <div class="board__left">
-          <img class="board--image" alt="雨课堂,白板" src="http://sfe.ykt.io/o_1cs602ntrk81rnejl2im1n3s9.png" />
+          <img class="board--image" alt="雨课堂,白板" src="https://qn-sfe.yuketang.cn/o_1cs602ntrk81rnejl2im1n3s9.png" />
           <span class="board--title f14"><!-- 白板不懂 -->{{ $t('boardunknow') }}</span>
         </div>
         <p class="board__right">

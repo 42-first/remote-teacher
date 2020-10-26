@@ -17,7 +17,7 @@
       <div v-show="!quizResultDetailData.length" class="hmy f18">{{ $t('nosubmit') }}</div>
       <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
         <div class="name ellipsis">
-          <img :src="item.avatar || 'http://sfe.ykt.io/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
+          <img :src="item.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           <span>{{item.name}}</span>
         </div>
         <div class="detail">

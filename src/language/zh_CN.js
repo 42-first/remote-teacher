@@ -561,7 +561,7 @@ let pages = {
   "changetonotsignin": "修改为未签到",
   // 图片国际化
   imgs: {
-    "tougaoempty": "http://sfe.ykt.io/o_1bjmrkmlfar01uvmuden911mgj9.png"
+    "tougaoempty": "https://qn-sfe.yuketang.cn/o_1bjmrkmlfar01uvmuden911mgj9.png"
   },
 
   code: {

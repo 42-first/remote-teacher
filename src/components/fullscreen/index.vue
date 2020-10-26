@@ -252,7 +252,7 @@
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
-        // currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
+        // currSlide: { src: 'https://qn-sfe.yuketang.cn/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video

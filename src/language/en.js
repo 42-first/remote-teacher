@@ -559,7 +559,7 @@ let pages = {
 
   // 图片国际化
   imgs: {
-    "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
+    "tougaoempty": "https://qn-sfe.yuketang.cn/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
   },
 
   code: {
