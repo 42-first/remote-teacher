@@ -227,7 +227,7 @@
 
             // 主观题
             if(this.problemType === 5 && typeof data.score !== 'undefined') {
-              this.getScore = data.score;
+              this.getScore = data.score > 0 ? data.score/100 : data.score;
             }
 
             this.oProblem = Object.assign({}, this.oProblem, data);

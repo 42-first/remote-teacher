@@ -273,7 +273,7 @@
         let getScore = this.oProblem['getScore'];
 
         if(score && getScore > 0) {
-          this.getScore = getScore;
+          this.getScore = getScore/100;
         }
 
         // 是否观察者模式
@@ -496,22 +496,21 @@
        * @param
        */
       getScoreFn(problemID) {
-        let URL = API.student.PROBLEM_SCORE;
+        let URL = API.lesson.get_problem_answer;
         let param = {
-          'problem_id': problemID,
-          'lesson_id': this.lessonId
+          'problem_id': problemID
         };
 
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
+        request.get(URL, param)
+        .then((res) => {
+          if(res && res.code === 0 && res.data) {
+            let data = res.data;
 
-              this.getScore = data.score;
-
-              return data;
-            }
-          });
+            this.getScore = data.score > 0 ? data.score/100 : data.score;
+          }
+        })
+        .catch(error => {
+        });
       },
 
       /*
