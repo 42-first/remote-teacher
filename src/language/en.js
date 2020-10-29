@@ -594,7 +594,7 @@ let pages = {
     '50029': 'You requested too often, please retry later.',
     '50030': 'The class is not over yet.',
     '50031': 'Your post has no content.',
-    '50032': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50032': 'You can not visit deleted post~',
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',
