@@ -33,6 +33,7 @@ const Team = resolve => require(['@/components/fullscreen/team'], resolve)
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
+window.$toast = Toast;
 
 // FastClick.attach(document.body)
 document.addEventListener('touchstart', function(){},false);
