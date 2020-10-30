@@ -215,15 +215,8 @@
     <!-- 停服务通知 -->
     <notice position="bottom"></notice>
 
-    <!-- 弹幕直播 v-if="isLive" -->
-    <!--  <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="isLive"></danmu-live> -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
-
-    <!-- 停服务通知 -->
-    <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
-
     <!-- 打开小程序 -->
-    <div class="weapp__wrap" v-if="weappConfig">
+    <div class="weapp__wrap" v-show="weappConfig">
       <a href="javascript:;" ontouchstart class="open-btn"><!-- 小程序内打开 -->{{ $t('openmini') }}</a>
       <wx-open-launch-weapp class="weapp__container" id="J_launch-weapp"
         :username="weappConfig.id"
@@ -231,8 +224,10 @@
         <script type="text/wxtag-template">
           <style>
             .btn {
-              width: 3.75rem;
+              width: 3rem;
+              line-height: 1rem;
               height: 1rem;
+              font-size: 0.35rem;
             }
           </style>
           <div class="btn" v-html="小程序内打开"></div>
@@ -240,6 +235,11 @@
       </wx-open-launch-weapp>
     </div>
 
+    <!-- 弹幕直播 v-if="isLive" -->
+    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
+
+    <!-- 停服务通知 -->
+    <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
   </section>
 </template>
 <script>
@@ -1577,7 +1577,6 @@
 
 
   .weapp__wrap {
-    z-index: 2;
     position: fixed;
     left: 0;
     right: 0;
@@ -1603,16 +1602,15 @@
 
       text-decoration: none;
     }
-
   }
 
   .weapp__container {
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 
-    z-index: 2;
     opacity: 1;
 
     display: flex;
