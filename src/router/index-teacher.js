@@ -235,20 +235,6 @@ const router = new Router({
           meta
         },
         {
-          // 解决微信确认支付路径的时候，ios 取 Landing Page， Android 取 Current Page 导致微信支付合法url认定不一致的问题
-          // 微信会把 ? 后面的全给忽略掉，所以多长都不会占用路径层级了
-          // http://get.ftqq.com/8572.get
-          // path: '/redpacket?/:problemid',
-    
-          // 但是华为 p9 p10 手机却支付不了，干脆为了苹果的landing page 全都改为和landing page一样的一层路由好了，problemid 用 query 的方式传入
-          // 而且为了华为 P9 P10 要在下面 afterEach 中异步进行微信config
-          // https://github.com/vuejs/vue-router/issues/481
-          path: 'redpacketqueryproblemid',
-          name: 'redpacket_v3',
-          component: () => import('@/lesson/teacher/redpacket'),
-          meta
-        },
-        {
           path: 'redpacketlist/:problemid',
           name: 'redpacketlist_v3',
           component: () => import('@/lesson/teacher/redpacketlist'),
@@ -348,6 +334,12 @@ const router = new Router({
           meta
         }
       ]
+    },
+    {
+      path: '/v3/redpacketqueryproblemid',
+      name: 'redpacket_v3',
+      component: () => import('@/lesson/teacher/redpacket'),
+      meta
     }
     
   ]
