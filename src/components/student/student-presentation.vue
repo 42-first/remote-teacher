@@ -116,7 +116,7 @@
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->
-           <div class="timeline-wrapper" v-if="classroom && !classroom.isPro">
+           <div class="timeline-wrapper" v-if="classroom && !classroom.isPro && !weappConfig">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
@@ -220,13 +220,32 @@
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
     <!-- 停服务通知 -->
-    <livetip :id="lessonID" v-if="liveURL"></livetip>
+    <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
+
+    <!-- 打开小程序 -->
+    <div class="weapp__wrap" v-if="weappConfig">
+      <a href="javascript:;" ontouchstart class="open-btn"><!-- 小程序内打开 -->{{ $t('openmini') }}</a>
+      <wx-open-launch-weapp class="weapp__container" id="J_launch-weapp"
+        :username="weappConfig.id"
+        :path="weappConfig.path" >
+        <script type="text/wxtag-template">
+          <style>
+            .btn {
+              width: 3.75rem;
+              height: 1rem;
+            }
+          </style>
+          <div class="btn" v-html="小程序内打开"></div>
+        </script>
+      </wx-open-launch-weapp>
+    </div>
+
   </section>
 </template>
 <script>
   import request from '@/util/request'
   import API from '@/util/api'
-  import '@/util/util'
+  import { compareVersion } from '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import '@/util/directive-util'
@@ -254,11 +273,19 @@
   }
 
   const host = {
-    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
-    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
-    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
-    'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
-    'huanghe.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'www.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+  };
+
+  const miniAppIds = {
+    'www.yuketang.cn': 'gh_01b0a27d2e24',
+    'b.yuketang.cn': 'gh_8c9a30cf152f',
+    'pro.yuketang.cn': 'gh_b8eff085064f',
+    'changjiang.yuketang.cn': 'gh_731c9c765693',
+    'huanghe.yuketang.cn': 'gh_67c3b8305643',
   }
 
   export default {
@@ -399,6 +426,8 @@
         liveDetection: {},
         // 小程序码
         miniCode: '',
+        // 小程序分享信息
+        weappConfig: null
       };
     },
     components: {
@@ -462,7 +491,6 @@
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
-        // this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -570,42 +598,6 @@
         this.init();
         // 隐藏信息完善
         this.showInfo = false;
-      },
-
-      /*
-      * @method 测试环境初始化timeline
-      */
-      testTimeline() {
-        this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
-
-        this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
-
-        this.addProblem({ type: 3, pageIndex: 4, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
-      },
-
-      /*
-       * @method 用户权限
-       * @param  lessonID
-       */
-      getUserInfo(lessonID) {
-        let self = this;
-        let URL = API.GET_USER_INFO;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.userID = data.user_id;
-              self.avatar = data.avatar;
-              self.userAuth = data.user_auth;
-
-              return data;
-            }
-          });
       },
 
       /*
@@ -1079,6 +1071,38 @@
         }
       },
 
+      /**
+       * @method 检测微信版本
+       */
+      checkWechat(ua) {
+        ua = ua || window.navigator.userAgent;
+
+        let lessonid = this.lessonID;
+        let config = {
+          id: miniAppIds[location.host] || '',
+          path: `/pages/remotecontrol/student/presentation/presentation.html?id=${lessonid}&source=5`
+        };
+
+        // 检测微信版本号 iOS android系统
+        // 微信版本要求为：7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上
+        let version = ua.replace(/^.*micromessenger\/([\d.]+).*$/, "$1");
+        if(version !== ua && compareVersion(version, '7.0.12') >= 0) {
+          this.weappConfig = config;
+
+          setTimeout(()=>{
+            var weappEl = document.getElementById('J_launch-weapp');
+
+            weappEl.addEventListener('launch', (e) => {
+              console.log('success');
+            });
+
+            weappEl.addEventListener('error', (e) => {
+              console.log('fail', e.detail);
+            });
+          }, 1000)
+        }
+      },
+
       /*
        * @method 进入分组
        *
@@ -1157,6 +1181,8 @@
 
       setTimeout(()=>{
         this.checkInWindowsApp(ua, isWeixin);
+        // 是否可以直接使用小程序打开
+        isWeixin && this.checkWechat(ua);
       }, 500)
     },
     updated() {
@@ -1547,6 +1573,57 @@
   }
   video::-webkit-media-controls-current-time-display {
     visibility: hidden;
+  }
+
+
+  .weapp__wrap {
+    z-index: 2;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0.8rem;
+    text-align: center;
+
+    .open-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 3rem;
+      line-height: 1rem;
+      height: 1rem;
+      font-size: 0.35rem;
+      margin: 0 auto;
+      color: #fff;
+      background: -webkit-linear-gradient(left, #4294ea 0, #52b4eb 100%);
+      background: linear-gradient(to right, #4294ea 0, #52b4eb 100%);
+      border: 0 solid transparent;
+      text-decoration: none;
+      border-radius: 50%/1.5rem;
+
+      text-decoration: none;
+    }
+
+  }
+
+  .weapp__container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 2;
+    opacity: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 auto;
+    width: 3rem;
+    height: 1rem;
+    font-size: 0.35rem;
+    margin: 0 auto;
   }
 
 </style>
