@@ -1102,9 +1102,12 @@
           }, 1000)
 
           let openmini = this.$i18n.t('openmini') || '小程序内打开';
+          let rem2px = window.lib && window.lib['flexible'] && window.lib['flexible']['rem2px'];
+          let height = rem2px && rem2px(1) || 35;
           let script = document.createElement('script');
           script.type = 'text/wxtag-template';
-          script.text = `<div style="width:100%;height:100%;display:flex;justify-content:center;align-items: center;">&nbsp;</div>`;
+           script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
+          // script.text = `<div style="width:100%;height:100%;min-height:75px;display:flex;justify-content:center;align-items: center;background:red;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
           // script.text = `<div style="width:100%;height:100%;font-size:1rem;opacity:1;">${openmini}</div>`;
 
           let weappEl = document.createElement('wx-open-launch-weapp');
@@ -1632,8 +1635,7 @@
 
     width: 3rem;
     height: 1rem;
-    // color: #fff;
-    // text-align: center;
+    // font-size: 24px;
   }
 
 </style>
