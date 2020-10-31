@@ -216,9 +216,9 @@
     <notice position="bottom"></notice>
 
     <!-- 打开小程序 -->
-    <div class="weapp__wrap" v-show="weappConfig">
+    <div class="weapp__wrap" ref="openweapp" v-show="weappConfig">
       <a href="javascript:;" ontouchstart class="open-btn"><!-- 小程序内打开 -->{{ $t('openmini') }}</a>
-      <wx-open-launch-weapp class="weapp__container" id="J_launch-weapp"
+      <!--  <wx-open-launch-weapp class="weapp__container" id="J_launch-weapp"
         :username="weappConfig.id"
         :path="weappConfig.path" >
         <script type="text/wxtag-template">
@@ -232,7 +232,7 @@
           </style>
           <div class="btn" v-html="小程序内打开"></div>
         </script>
-      </wx-open-launch-weapp>
+      </wx-open-launch-weapp> -->
     </div>
 
     <!-- 弹幕直播 v-if="isLive" -->
@@ -1100,6 +1100,20 @@
               console.log('fail', e.detail);
             });
           }, 1000)
+
+          let openmini = this.$i18n.t('openmini') || '小程序内打开';
+          let script = document.createElement('script');
+          script.type = 'text/wxtag-template';
+          script.text = `<div style="width:100%;height:100%;display:flex;justify-content:center;align-items: center;">&nbsp;</div>`;
+          // script.text = `<div style="width:100%;height:100%;font-size:1rem;opacity:1;">${openmini}</div>`;
+
+          let weappEl = document.createElement('wx-open-launch-weapp');
+          weappEl.setAttribute('id', 'J_launch-weapp');
+          weappEl.setAttribute('class', 'weapp__container');
+          weappEl.setAttribute('username', config.id);
+          weappEl.setAttribute('path', config.path);
+          weappEl.innerHTML = script.outerHTML;
+          this.$refs.openweapp.appendChild(weappEl);
         }
       },
 
@@ -1583,21 +1597,22 @@
     bottom: 0.8rem;
     text-align: center;
 
+    margin: 0 auto;
+    width: 3rem;
+    height: 1rem;
+
     .open-btn {
       display: flex;
       justify-content: center;
       align-items: center;
 
       width: 3rem;
-      line-height: 1rem;
       height: 1rem;
       font-size: 0.35rem;
-      margin: 0 auto;
       color: #fff;
       background: -webkit-linear-gradient(left, #4294ea 0, #52b4eb 100%);
       background: linear-gradient(to right, #4294ea 0, #52b4eb 100%);
       border: 0 solid transparent;
-      text-decoration: none;
       border-radius: 50%/1.5rem;
 
       text-decoration: none;
@@ -1608,8 +1623,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
 
     opacity: 1;
 
@@ -1617,11 +1630,10 @@
     justify-content: center;
     align-items: center;
 
-    margin: 0 auto;
     width: 3rem;
     height: 1rem;
-    font-size: 0.35rem;
-    margin: 0 auto;
+    // color: #fff;
+    // text-align: center;
   }
 
 </style>
