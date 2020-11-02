@@ -595,6 +595,7 @@ let pages = {
     '50030': 'The class is not over yet.',
     '50031': 'Your post has no content.',
     '50032': 'You can not visit deleted post~',
+    '50042': `There are too many people, we can't provide the details yet.`,
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',

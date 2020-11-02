@@ -718,13 +718,13 @@
 			 * @method 查看详情 签到人数超3000人不可以进入
 			*/
 			toProblemDetail(){
-				if(this.checkinCount > 3000){
-					this.$toast({
-						message: '当前签到人数太多，暂不支持查看详情',
-						duration: 3e3
-					});
-					return
-				}
+				// if(this.checkinCount > 3000){
+				// 	this.$toast({
+				// 		message: '当前签到人数太多，暂不支持查看详情',
+				// 		duration: 3e3
+				// 	});
+				// 	return
+				// }
 				if(this.problemType === 4){
 					this.$router.push({name: 'fillblankresult-detail_v3', params: { problemid: this.problemid }})
 				}else {

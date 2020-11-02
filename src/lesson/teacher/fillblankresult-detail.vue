@@ -238,6 +238,17 @@
             self.incorrect = jsonData.incorrect
             self.unfinished = jsonData.unfinished
             self.loaded = true
+          }else if(res.code){
+            if(res.code === 50042){
+              this.$toast({
+                message: i18n.t('code.50042'),
+                duration: 3e3
+              });
+              setTimeout(() => {
+                this.$router.back()
+              }, 3500);
+              
+            }
           }
         }).catch(error => {
           console.log('getResult:' + error);

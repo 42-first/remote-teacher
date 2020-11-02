@@ -238,6 +238,17 @@
               self.openRightItem(jsonData.distribution)
             }
             self.isFetching = false
+          }else if(res.code){
+            if(res.code === 50042){
+              this.$toast({
+                message: i18n.t('code.50042'),
+                duration: 3e3
+              });
+              setTimeout(() => {
+                this.$router.back()
+              }, 3500);
+              
+            }
           }
         }).catch(error => {
           console.log('getResultDetail:' + error);
