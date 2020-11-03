@@ -214,7 +214,7 @@
       */
       showToast(){
         this.$toast({
-          message: '该功能暂时下线维护，稍后回归，敬请期待~',
+          message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
           duration: 3e3
         });
       }
