@@ -4,7 +4,7 @@
     <div class="search-header flexbetween">
 			<div class="search-box">
 				<i class="iconfont icon-sousuo search"></i>
-				<input class="f14" type="text" v-model="search" placeholder="输入学生姓名">
+				<input class="f14" type="text" v-model="search" :placeholder="$t('behavior.entername')">
 				<i class="iconfont icon-guanbi delete" v-if="search" @click="handleDelete"></i>
 			</div>
 			<span class="cancel f16 color6" @click="goback"><!-- 取消 -->{{$t('cancel')}}</span>
