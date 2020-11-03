@@ -116,7 +116,7 @@
 
         <section class="student__timeline J_cards">
           <!-- 小程序二维码 -->
-           <div class="timeline-wrapper" v-if="classroom && !classroom.isPro && !weappConfig">
+           <div class="timeline-wrapper" v-if="classroom && !classroom.isPro && !weappConfig" v-show="visibleMiniCode">
             <section class="timeline-item">
               <div class="f15 timeline__ppt">
                 <p class="pb15"><!-- 雨课堂小程序上线啦 -->{{ $t('minilaunchpush') }}<br><!-- 长按识别图中小程序码开始体验 -->{{ $t('entermini') }}</p>
@@ -216,23 +216,8 @@
     <notice position="bottom"></notice>
 
     <!-- 打开小程序 -->
-    <div class="weapp__wrap" ref="openweapp" v-show="weappConfig">
+    <div class="weapp__wrap" :class="[ danmuStatus ? 'moveup' : '' ]" ref="openweapp" v-show="weappConfig">
       <a href="javascript:;" ontouchstart class="open-btn"><!-- 小程序内打开 -->{{ $t('openmini') }}</a>
-      <!--  <wx-open-launch-weapp class="weapp__container" id="J_launch-weapp"
-        :username="weappConfig.id"
-        :path="weappConfig.path" >
-        <script type="text/wxtag-template">
-          <style>
-            .btn {
-              width: 3rem;
-              line-height: 1rem;
-              height: 1rem;
-              font-size: 0.35rem;
-            }
-          </style>
-          <div class="btn" v-html="小程序内打开"></div>
-        </script>
-      </wx-open-launch-weapp> -->
     </div>
 
     <!-- 弹幕直播 v-if="isLive" -->
@@ -426,8 +411,9 @@
         liveDetection: {},
         // 小程序码
         miniCode: '',
+        visibleMiniCode: false,
         // 小程序分享信息
-        weappConfig: null
+        weappConfig: null,
       };
     },
     components: {
@@ -1106,9 +1092,7 @@
           let height = rem2px && rem2px(1) || 35;
           let script = document.createElement('script');
           script.type = 'text/wxtag-template';
-           script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
-          // script.text = `<div style="width:100%;height:100%;min-height:75px;display:flex;justify-content:center;align-items: center;background:red;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
-          // script.text = `<div style="width:100%;height:100%;font-size:1rem;opacity:1;">${openmini}</div>`;
+          script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
 
           let weappEl = document.createElement('wx-open-launch-weapp');
           weappEl.setAttribute('id', 'J_launch-weapp');
@@ -1117,6 +1101,8 @@
           weappEl.setAttribute('path', config.path);
           weappEl.innerHTML = script.outerHTML;
           this.$refs.openweapp.appendChild(weappEl);
+        } else {
+          this.visibleMiniCode = true;
         }
       },
 
@@ -1603,6 +1589,10 @@
     margin: 0 auto;
     width: 3rem;
     height: 1rem;
+
+    &.moveup {
+      bottom: 1.5rem;
+    }
 
     .open-btn {
       display: flex;
