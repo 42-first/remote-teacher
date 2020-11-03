@@ -556,6 +556,7 @@ let pages = {
   "backsoon": "This feature is temporarily offline for maintenance and will be back soon.",
   "changetosignin": "Present",
   "changetonotsignin": "Absent",
+  "zuodashichang": "Length of response time",
 
   // 图片国际化
   imgs: {

@@ -559,6 +559,7 @@ let pages = {
   "backsoon": "该功能暂时下线维护，稍后回归，敬请期待~",
   "changetosignin": "修改为已签到",
   "changetonotsignin": "修改为未签到",
+  "zuodashichang": "作答时长",
   // 图片国际化
   imgs: {
     "tougaoempty": "https://qn-sfe.yuketang.cn/o_1bjmrkmlfar01uvmuden911mgj9.png"

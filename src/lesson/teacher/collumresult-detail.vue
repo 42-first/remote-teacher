@@ -19,11 +19,11 @@
       <div class="tab">
         <v-touch :class="['tab-item', activeTab == 1 ? 'active f16' : 'f17']" v-on:tap="toggleTab(1)">
           {{problem.problemType === 3 ? $t('yitoupiao') : $t('yizuoda')}}
-          <span class="f12">({{answeredNum}}人)</span>
+          <span class="f12">({{answeredNum}}<!--人-->{{$t('ren')}})</span>
         </v-touch>
         <v-touch :class="['tab-item', activeTab == 2 ? 'active f16' : 'f17']" v-on:tap="toggleTab(2)">
           {{problem.problemType === 3 ? $t('weitoupiao') : $t('weizuoda')}}
-          <span class="f12">({{not_answeredList.length}}人)</span>
+          <span class="f12">({{not_answeredList.length}}<!--人-->{{$t('ren')}})</span>
         </v-touch>
       </div>
       <div class="choice-list" v-show="activeTab === 1">
@@ -42,7 +42,7 @@
             <div :class="['item-bd', {'item-hidden': index !== showingIndex}]" v-if="!problem.anonymous">
               <div class="sort-wrapper">
                 <span @click="sortActive(index)">
-                  <span class="color6">作答时长</span>
+                  <span class="color6"><!--作答时长-->{{$t('zuodashichang')}}</span>
                   <div class="inline-block icon-wrapper">
                     <i :class="{active: !choiceItem.sortType}"></i>
                     <i :class="{active: choiceItem.sortType}"></i>

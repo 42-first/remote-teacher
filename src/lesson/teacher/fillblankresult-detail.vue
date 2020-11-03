@@ -45,7 +45,7 @@
           <div :class="['wrong-bd', 'mt20',  {'item-hidden': 0 !== showingIndex}]" >
             <div class="sort-wrapper">
               <span @click="sortActive">
-                <span class="color6">作答时长</span>
+                <span class="color6"><!--作答时长-->{{$t('zuodashichang')}}</span>
                 <div class="inline-block icon-wrapper">
                   <i :class="{active: !sortType}"></i>
                   <i :class="{active: sortType}"></i>
