@@ -132,7 +132,7 @@
       formatData(problem) {
         let problemType = problem['problemType'];
         this.result = problem['result'];
-        this.hasRemark = problem['hasRemark']
+        // this.hasRemark = problem['hasRemark']
 
         if(problemType) {
           switch (problemType) {
