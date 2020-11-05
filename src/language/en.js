@@ -322,7 +322,7 @@ let pages = {
   "release": "Release",
 
   "totalstudent": "Active Students: ",
-  "attendingno": '<span class="randomcall-num f32">{attendingno}</span> students in the class<br>Random Roll Call is about to begin',
+  "attendingno": '<span class="randomcall-num f32">{attendingno}</span> student(s) in the class<br>Random Roll Call is about to begin',
   "toberolling": "Random Roll Call is about to begin",
   "rolling": "Rolling",
   "pause": "Pause",
