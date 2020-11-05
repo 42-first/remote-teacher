@@ -518,6 +518,7 @@
       removeCache() {
         let key = 'lessontougao' + this.lessonID;
         if(isSupported) {
+          this.cacheTimer && clearTimeout(this.cacheTimer);
           localStorage.removeItem(key);
         }
       },
