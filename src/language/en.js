@@ -270,7 +270,7 @@ let pages = {
   "slide": "PPT",
   "unknown": "Unclear",
   "prob": "Question",
-  "activeno": "{activeno} Active Students",
+  "activeno": "{activeno} Active student(s)",
   "quiz": "Quiz",
   "bullet": "Danmu",
   "post": "Post",
