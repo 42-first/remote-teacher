@@ -132,7 +132,7 @@
   import groupList from '@/lesson/common/groupMembers/group-list.vue'
   import imgGroup from '@/lesson/common/groupMembers/img-group.vue'
 
-  let FENYE_COUNT = 5
+  let FENYE_COUNT = 20
 
   let WH = window.innerWidth/window.innerHeight
   let pollingTimer = null
