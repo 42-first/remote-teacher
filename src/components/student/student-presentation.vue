@@ -124,7 +124,7 @@
                 <!-- 其它定制 例如清华 -->
                 <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
                 <!-- 雨课堂 -->
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
+                <img class="qr-code" src="https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
@@ -254,11 +254,11 @@
   }
 
   const host = {
-    'www.yuketang.cn': 'http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
-    'b.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
-    'pro.yuketang.cn': 'http://sfe.ykt.io/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
-    'changjiang.yuketang.cn': 'http://sfe.ykt.io/o_1e1mahsin1302iubd1e94difd9.png',
-    'huanghe.yuketang.cn': 'http://sfe.ykt.io/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'www.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
   }
 
   export default {
@@ -462,7 +462,6 @@
         this.returnRemote && (this.title = this.$i18n.t('viewasstudent'))
         this.iniTimeline(this.lessonID);
         this.getSoftVersion(this.lessonID);
-        // this.getLiveList(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
         configWX();
@@ -570,42 +569,6 @@
         this.init();
         // 隐藏信息完善
         this.showInfo = false;
-      },
-
-      /*
-      * @method 测试环境初始化timeline
-      */
-      testTimeline() {
-        this.addMessage({ type: 1, message: "开课啦", event: { code: "LESSON_START" } });
-
-        this.addPPT({ type: 2, pageIndex:1, time: 1497431046048, presentationid: this.presentationID });
-
-        this.addProblem({ type: 3, pageIndex: 4, time: 1497431446048, presentationid: this.presentationID, limit: 60 });
-      },
-
-      /*
-       * @method 用户权限
-       * @param  lessonID
-       */
-      getUserInfo(lessonID) {
-        let self = this;
-        let URL = API.GET_USER_INFO;
-        let param = {
-          'lesson_id': lessonID
-        }
-
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-
-              self.userID = data.user_id;
-              self.avatar = data.avatar;
-              self.userAuth = data.user_auth;
-
-              return data;
-            }
-          });
       },
 
       /*
