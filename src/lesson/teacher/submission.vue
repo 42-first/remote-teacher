@@ -290,15 +290,16 @@
 
         self.fetchList(tailNow).then(res => {
           if(res && res.code === 0 && res.data){
-            // response_num 当前请求返回的投稿数量
-            if (res.data.responseNum === 0) {
+            self.dataList = self.addFold(self.dataList.concat(res.data.items))
+
+            self.onBottomLoaded()
+
+            // 这里判断的是剩余未展示条数  所以判断要放在列表拼接之后
+            // restNum 剩余投稿数量
+            if (res.data.restNum === 0) {
               self.isAllLoaded = true
               return
             }
-            self.dataList = self.addFold(self.dataList.concat(res.data.items))
-
-            // this.$refs.Loadmore.onBottomLoaded()
-            self.onBottomLoaded()
           }
           
         })
@@ -339,7 +340,7 @@
         return request.get(url, data)
       },
       /**
-       * 轮询有没有新的投稿, 根据 response_num 来判断
+       * 轮询有没有新的投稿, 根据 unreadNum 来判断
        *
        */
       pollingNewItem () {
@@ -427,7 +428,6 @@
               isAllLoaded = false
             }
 
-            isAllLoaded = newList.length < FENYE_COUNT
             self.setData({
               isAllLoaded
             })
