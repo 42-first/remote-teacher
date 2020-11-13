@@ -447,9 +447,11 @@
         }
 
         // 打开小程序path变化需要重新授权
-        if(to.name === 'student-presentation-page') {
-          this.weappConfig && configWX();
-        }
+        // if(to.name === 'student-presentation-page') {
+        //   this.weappConfig && configWX();
+        // }
+
+        this.weappConfig && configWX();
       },
       lessonStatus (newValue, oldValue) {
         // 下课啦
