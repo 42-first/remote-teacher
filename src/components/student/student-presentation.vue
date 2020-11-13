@@ -1072,7 +1072,7 @@
         // 检测微信版本号 iOS android系统
         // 微信版本要求为：7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上
         let version = ua.replace(/^.*micromessenger\/([\d.]+).*$/, "$1");
-        if(version !== ua && compareVersion(version, '7.0.12') >= 0) {
+        if(version !== ua && compareVersion(version, '7.0.12') >= 0 && !this.observerMode) {
           this.weappConfig = config;
 
           setTimeout(()=>{
