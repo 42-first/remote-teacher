@@ -4,7 +4,6 @@ import 'mint-ui/lib/message-box/style.css'
 
 import Vue from 'vue'
 import Router from 'vue-router'
-// import FastClick from 'fastclick'
 import Loadmore from 'mint-ui/lib/loadmore'
 import Toast from 'mint-ui/lib/toast'
 import MessageBox from 'mint-ui/lib/message-box';
@@ -29,8 +28,8 @@ Vue.use(Router)
 Vue.component('loadmore', Loadmore);
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
+window.$toast = Toast;
 
-// FastClick.attach(document.body)
 document.addEventListener('touchstart', function(){},false);
 
 const studentRouter = new Router({
@@ -38,9 +37,66 @@ const studentRouter = new Router({
   mode: process.env.NODE_ENV === 'production' ? 'history' : 'hash',
   routes: [
     {
-      path: '/',
-      name: 'onfound',
-      component: HongBao,
+      path: '/v3/:lessonID',
+      name: 'student-v3',
+      component: () => import('@/lesson/student/presentation'),
+      children: [
+        {
+          path: 'hongbao/:index',
+          name: 'student-hongbao',
+          component: () => import('@/lesson/student/hongbao')
+        },
+        {
+          path: 'exercise/:index',
+          name: 'student-exercise',
+          component: () => import('@/lesson/student/exercise')
+        },
+        {
+          path: 'subjective/:index',
+          name: 'student-subjective',
+          component: () => import('@/lesson/student/subjective')
+        },
+        {
+          path: 'blank/:index',
+          name: 'student-blank',
+          component: () => import('@/lesson/student/blank')
+        },
+        {
+          path: 'subjective_share/:index',
+          name: 'subjective-share',
+          component: () => import('@/lesson/student/subjective-share')
+        },
+        {
+          path: 'submission2/:index',
+          name: 'submission-detail',
+          component: () => import('@/lesson/student/submission-detail')
+        },
+        {
+          path: 'submission',
+          name: 'submission',
+          component: () => import('@/lesson/student/submission')
+        },
+        {
+          path: 'submission_list',
+          name: 'submissionlist',
+          component: () => import('@/lesson/student/submission-list')
+        },
+        {
+          path: 'danmu',
+          name: 'danmu',
+          component: () => import('@/lesson/student/danmu')
+        },
+        {
+          path: 'evaluation/:index',
+          name: 'mutual-evaluation',
+          component: () => import('@/lesson/student/mutual-evaluation')
+        },
+        {
+          path: 'analysis/:index',
+          name: 'analysis',
+          component: () => import('@/lesson/student/problem-analysis')
+        },
+      ]
     },
     {
       path: '/:lessonID',

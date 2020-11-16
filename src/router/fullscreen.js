@@ -33,6 +33,7 @@ const Team = resolve => require(['@/components/fullscreen/team'], resolve)
 Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
+window.$toast = Toast;
 
 // FastClick.attach(document.body)
 document.addEventListener('touchstart', function(){},false);
@@ -42,6 +43,78 @@ const fullscreenRouter = new Router({
   base: isProd ? '/lesson/fullscreen' : '/',
   mode: isProd ? 'history' : 'hash',
   routes: [
+    {
+      path: '/v3/:lessonID',
+      name: 'fullscreen',
+      component: () => import('@/lesson/fullscreen/index'),
+      children: [
+        {
+          path: 'ppt/:index',
+          name: 'ppt',
+          component: () => import('@/lesson/fullscreen/ppt')
+        },
+        {
+          path: 'hongbao/:index',
+          name: 'hongbao',
+          component: () => import('@/lesson/fullscreen/hongbao')
+        },
+        {
+          path: 'webview/:index',
+          name: 'webview',
+          component: () => import('@/lesson/fullscreen/webview')
+        },
+        {
+          path: 'exercise/:index',
+          name: 'exercise',
+          component: () => import('@/lesson/fullscreen/exercise')
+        },
+        {
+          path: 'subjective/:index',
+          name: 'subjective',
+          component: () => import('@/lesson/fullscreen/subjective')
+        },
+        {
+          path: 'blank/:index',
+          name: 'blank',
+          component: () => import('@/lesson/fullscreen/blank')
+        },
+        {
+          path: 'subjective_share/:index',
+          name: 'subjective-share',
+          component: () => import('@/lesson/fullscreen/subjective-share')
+        },
+        {
+          path: 'submission',
+          name: 'submission',
+          component: () => import('@/lesson/fullscreen/submission')
+        },
+        {
+          path: 'submission_share/:index',
+          name: 'submission-detail',
+          component: () => import('@/lesson/fullscreen/submission-detail')
+        },
+        {
+          path: 'evaluation/:index',
+          name: 'evaluation',
+          component: () => import('@/lesson/fullscreen/mutual-evaluation')
+        },
+        {
+          path: 'analysis/:index',
+          name: 'analysis',
+          component: () => import('@/lesson/fullscreen/problem-analysis')
+        },
+        {
+          path: 'board/:index',
+          name: 'board-v3',
+          component: () => import('@/lesson/fullscreen/board')
+        },
+        {
+          path: 'team',
+          name: 'team-v3',
+          component: () => import('@/lesson/fullscreen/team')
+        }
+      ]
+    },
     {
       path: '/:lessonID',
       name: 'student-fullscreen',

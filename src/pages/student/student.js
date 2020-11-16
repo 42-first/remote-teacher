@@ -6,6 +6,7 @@ import Cookies from 'js-cookie'
 
 import App from '@/pages/student/student.vue'
 import router from '@/router/index-student'
+import store from './store'
 // 引入订阅发布解决路由子组件和父组件通信问题
 import('pubsub-js').then(res => {
   window.PubSub = res
@@ -38,6 +39,7 @@ new Vue({
   i18n,
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

@@ -153,13 +153,6 @@ var actionsMixin = {
 
       // 1.1 版本统一使用sid替换pageIndex, 之前版本还是使用si
       if(+this.version >= 1.1 && typeof sid !== 'undefined' && sid > 0 && slides) {
-        // if(slideData && slideData.lessonSlideID !== sid) {
-        //   // ppt不一致 通过sid取slideData
-        //   slideData = slides.find((slide)=>{
-        //     return slide.lessonSlideID === sid;
-        //   });
-        // }
-
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide)=>{
           return slide.lessonSlideID === sid;
@@ -207,7 +200,6 @@ var actionsMixin = {
       let self = this;
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      // let slideData = pptData && pptData[data.pageIndex-1];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = -1;
       let cover = slideData && slideData['Cover'] || '';
@@ -388,7 +380,6 @@ var actionsMixin = {
     addProblem(data) {
       let presentation = this.presentationMap.get(data.presentationid);
       let pptData = presentation && presentation['Slides'];
-      // let slideData = pptData && pptData[data.pageIndex-1];
       let slideData = this.getSlideData(pptData, data.pageIndex, data.sid);
       let index = this.cards.length;
 
@@ -421,7 +412,6 @@ var actionsMixin = {
         return this;
       }
 
-      // slideData['Problem'] && this.problemMap.set(slideData['Problem']['ProblemID'], slideData);
       // 问题类型
       let problemType = slideData['Problem']['Type'];
       let pageURL = `/${this.lessonID}/`;
@@ -430,17 +420,14 @@ var actionsMixin = {
         switch (problemType) {
           // 主观题
           case 'ShortAnswer':
-            // pageURL += `subjective/${index}`;
             pageURL += 'subjective/';
             break;
           // 填空题
           case 'FillBlank':
-            // pageURL += `blank/${index}`;
             pageURL += 'blank/';
             break;
           // 多选单选投票
           default:
-            // pageURL += `exercise/${index}`;
             pageURL += 'exercise/';
             break;
         }
@@ -463,7 +450,6 @@ var actionsMixin = {
       })
 
       // 消息box弹框
-      // data.isPopup && this.msgBoxs.push(data);
       data.isPopup && (this.msgBoxs = [data]);
 
       // 预加载习题图片

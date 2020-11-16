@@ -124,7 +124,7 @@
                 <!-- 其它定制 例如清华 -->
                 <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
                 <!-- 雨课堂 -->
-                <img class="qr-code" src="http://sfe.ykt.io/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
+                <img class="qr-code" src="https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg" alt="雨课堂小程序" v-else />
               </div>
             </section>
           </div>
