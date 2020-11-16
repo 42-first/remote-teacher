@@ -156,6 +156,7 @@ let pages = {
   "danmusend": "发送",
   "danmusendtip": "点击发弹幕 …",
   "danmuipttip": "说点什么",
+  "openmini": "小程序内打开",
 
 
   // socket event

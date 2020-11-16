@@ -157,6 +157,7 @@ let pages = {
   "danmusend": "Send",
   "danmusendtip": "Tap to send Danmu …",
   "danmuipttip": "Say something",
+  "openmini": "Open in MiniProgram",
 
   // socket event
   "LESSON_START": "Start Class!",

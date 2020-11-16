@@ -167,3 +167,51 @@ export function substr(str, maxLength) {
 
   return str.substr(0, index);
 }
+
+/**
+ * @method 将base64转换为文件
+ * @params
+ */
+export function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(',');
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}
+
+
+/**
+ * @method 版本号比较
+ * @params
+ */
+export function compareVersion(v1, v2) {
+  v1 = v1.split('.')
+  v2 = v2.split('.')
+  const len = Math.max(v1.length, v2.length)
+
+  while (v1.length < len) {
+    v1.push('0')
+  }
+  while (v2.length < len) {
+    v2.push('0')
+  }
+
+  for (let i = 0; i < len; i++) {
+    const num1 = parseInt(v1[i])
+    const num2 = parseInt(v2[i])
+
+    if (num1 > num2) {
+      return 1
+    } else if (num1 < num2) {
+      return -1
+    }
+  }
+
+  return 0
+}
+
