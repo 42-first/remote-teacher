@@ -1082,7 +1082,11 @@
 
         // 特殊版本禁止跳到小程序
         let specialVersion = iOS && version === '7.0.18';
-        if(version !== ua && compareVersion(version, '7.0.12') >= 0 && !this.observerMode && !specialVersion) {
+        if(specialVersion) {
+          return this;
+        }
+
+        if(version !== ua && compareVersion(version, '7.0.12') >= 0 && !this.observerMode) {
           this.weappConfig = config;
 
           setTimeout(()=>{
