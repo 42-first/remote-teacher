@@ -447,11 +447,9 @@
         }
 
         // 打开小程序path变化需要重新授权
-        // if(to.name === 'student-presentation-page') {
-        //   this.weappConfig && configWX();
-        // }
-
-        this.weappConfig && configWX();
+        if(this.weappConfig && this.platform === 'android') {
+          configWX();
+        }
       },
       lessonStatus (newValue, oldValue) {
         // 下课啦
@@ -1079,7 +1077,12 @@
         // 检测微信版本号 iOS android系统
         // 微信版本要求为：7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上
         let version = ua.replace(/^.*micromessenger\/([\d.]+).*$/, "$1");
-        if(version !== ua && compareVersion(version, '7.0.12') >= 0 && !this.observerMode) {
+        let iOS = !!ua.match(/\(i[^;]+;( u;)? cpu.+mac os x/);
+        this.platform = iOS ? 'ios' : 'android';
+
+        // 特殊版本禁止跳到小程序
+        let specialVersion = iOS && version === '7.0.18';
+        if(version !== ua && compareVersion(version, '7.0.12') >= 0 && !this.observerMode && !specialVersion) {
           this.weappConfig = config;
 
           setTimeout(()=>{
