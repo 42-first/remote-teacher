@@ -46,7 +46,7 @@ let lessonMixin = {
 
       // 初始化websocket
       setTimeout(() => {
-        this.initws();
+        this.token && this.initws();
       }, 20)
 
       // 是否新用户

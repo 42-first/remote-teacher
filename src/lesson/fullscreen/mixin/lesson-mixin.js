@@ -154,7 +154,7 @@ var commandMixin = {
 
       // 初始化websocket
       setTimeout(() => {
-        this.initws();
+        this.token && this.initws();
       }, 20)
 
       // 课程基本信息
