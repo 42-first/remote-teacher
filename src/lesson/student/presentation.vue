@@ -232,7 +232,7 @@
 
   import request from '@/util/request-v3'
   import API from '@/util/api'
-  import '@/util/util'
+    import { compareVersion } from '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import '@/util/directive-util'
