@@ -1096,7 +1096,6 @@
     height: 1.33rem;
     color: #2A2A2A;
     background: #EDF2F6;
-    /* box-shadow: 0 4px 6px rgba(0,0,0, 0.2); */
 
     .student__header--back, .student__header--more {
       width: 1.0rem;
