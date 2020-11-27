@@ -271,6 +271,7 @@
     'pro.yuketang.cn': 'gh_b8eff085064f',
     'changjiang.yuketang.cn': 'gh_731c9c765693',
     'huanghe.yuketang.cn': 'gh_67c3b8305643',
+    'pre-apple-ykt.xuetangonline.com': 'gh_b82950979ac8'
   }
 
   export default {

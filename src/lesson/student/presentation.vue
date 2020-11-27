@@ -438,9 +438,9 @@
         }
 
         // 打开小程序path变化需要重新授权
-        // if(this.weappConfig && this.platform === 'android') {
-        //   configWX();
-        // }
+        if(this.weappConfig && this.platform === 'android') {
+          configWX();
+        }
       },
       lessonStatus (newValue, oldValue) {
         // 下课啦
