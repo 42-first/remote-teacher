@@ -232,7 +232,7 @@
 
   import request from '@/util/request-v3'
   import API from '@/util/api'
-    import { compareVersion } from '@/util/util'
+  import { compareVersion } from '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import '@/util/directive-util'
@@ -256,6 +256,7 @@
   // 子组件不需要引用直接使用
   window.request = request;
   window.API = API;
+  window.compareVersion = compareVersion;
   if (process.env.NODE_ENV !== 'production') {
     // request.post = request.get
   }
