@@ -950,7 +950,7 @@
           let height = rem2px && rem2px(1) || 35;
           let script = document.createElement('script');
           script.type = 'text/wxtag-template';
-          script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
+          script.text = `<div id="J_weapp_btn" style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
 
           let weappEl = document.createElement('wx-open-launch-weapp');
           weappEl.setAttribute('id', 'J_launch-weapp');
@@ -974,7 +974,7 @@
         });
 
         // 打开小程序
-        var weappEl = document.getElementById('J_launch-weapp');
+        var weappEl = document.getElementById('J_weapp_btn');
         if(weappEl) {
           weappEl.click();
         }
