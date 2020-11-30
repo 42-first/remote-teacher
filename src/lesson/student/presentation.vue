@@ -974,8 +974,9 @@
         });
 
         // 打开小程序
-        if(this.$refs.openweapp) {
-          this.$refs.openweapp.click();
+        var weappEl = document.getElementById('J_launch-weapp');
+        if(weappEl) {
+          weappEl.click();
         }
       },
 

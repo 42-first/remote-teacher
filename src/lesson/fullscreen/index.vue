@@ -112,7 +112,7 @@
         <!-- 小程序二维码 -->
         <section class="mini-code__wrap">
           <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
-          <div class="c666" v-html="$t('scanjoininteraction')"></div>
+          <div class="c666 bold" v-html="$t('scanjoininteraction')"></div>
         </section>
       </div>
     </section>
@@ -1024,20 +1024,17 @@
       cursor: pointer;
     }
 
-    .join__wrap:hover {
-      .mini-code__wrap {
-        height: 242px;
-        opacity: 1;
-        transition: height ease-out 0.35s;
-      }
-    }
-
     .meeting__join {
       width: 36px;
       height: 36px;
 
       border-radius: 50%;
       background: #08BC72;
+    }
+
+    .meeting__join:hover +.mini-code__wrap {
+      opacity: 1;
+      transition: opacity ease-out 1.25s;
     }
 
     .mini-code__wrap {
@@ -1048,12 +1045,17 @@
 
       padding: 16px 20px;
       width: 200px;
-      height: 1px;
+      height: 242px;
 
       border-radius: 4px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.1);
       transition: all ease-in 0.35s;
-      overflow: hidden;
+      background: #fff;
+
+      // &:hover {
+      //   opacity: 1;
+      //   transition: opacity ease-out 1.25s;
+      // }
 
       .qr-code {
         width: 160px;
