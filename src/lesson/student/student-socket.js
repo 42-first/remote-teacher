@@ -145,8 +145,36 @@ var mixin = {
             // 协议版本号
             msg['addinversion'] && (this.version = msg['addinversion']);
 
+            // 是否开启了互动 加入会议
+            if(msg.interactive) {
+              // 学生可自行加入会议
+              this.hasMeeting = true;
+            }
+
             if(timeline && timeline.length) {
               this.getAllPres(msg);
+            }
+
+            break
+
+          // 开启互动 { op: 'startinteractive', lessonid }
+          case 'startinteractive':
+            if(msg.lessonid) {
+              this.hasMeeting = true;
+
+              item = msg['event'];
+              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
+            }
+
+            break
+
+          // 结束互动 { op: 'endinteractive', lessonid }
+          case 'endinteractive':
+            if(msg.lessonid) {
+              this.hasMeeting = false;
+
+              item = msg['event'];
+              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
             }
 
             break

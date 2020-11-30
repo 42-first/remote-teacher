@@ -157,6 +157,8 @@ let pages = {
   "danmusendtip": "点击发弹幕 …",
   "danmuipttip": "说点什么",
   "openmini": "小程序内打开",
+  "interactiontip": "请在小程序内打开后再加入互动",
+  "scanjoininteraction": "微信扫一扫<br>在小程序中加入互动",
 
 
   // socket event
@@ -172,6 +174,8 @@ let pages = {
   "RANDOM_GROUP_CANCEL": "老师取消了随机分组",
   "LIVE_ON": "老师开启了直播",
   "LIVE_OFF": "老师结束了直播",
+  "INTERACTIVE_ON": "老师已开启互动",
+  "INTERACTIVE_OFF": "老师已关闭互动",
 
   // 个人信息完善
   "merealname": '真实姓名',
