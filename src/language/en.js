@@ -174,8 +174,8 @@ let pages = {
   "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
   "LIVE_ON": "Live On",
   "LIVE_OFF": "Live Off",
-  "INTERACTIVE_ON": "The teacher starts real-time interaction",
-  "INTERACTIVE_OFF": "The teacher stops real-time interaction",
+  "INTERACTIVE_ON": "Interactive On",
+  "INTERACTIVE_OFF": "Interactive Off",
 
   // 个人信息完善
   "merealname": "Name",
