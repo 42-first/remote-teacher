@@ -119,9 +119,9 @@
       // 设置答案解析的缩放
       setScale(remarkRich) {
         let sCss = '';
-
+        
         if(remarkRich) {
-          let winWidth = window.innerWidth - 100;
+          let winWidth = document.querySelector('.analysis__page').clientWidth - 100
           let width = remarkRich.width;
           let height = remarkRich.height;
           let scaleRate = winWidth/width;
