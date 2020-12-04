@@ -53,7 +53,7 @@
         <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
-      <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div>
+      <!-- <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div> -->
 
     </div>
 
