@@ -119,9 +119,9 @@
       // 设置答案解析的缩放
       setScale(remarkRich) {
         let sCss = '';
-        
+        let isFullScreen = location.href.indexOf('fullscreen') != -1
         if(remarkRich) {
-          let winWidth = document.querySelector('.analysis__page').clientWidth - 100
+          let winWidth = isFullScreen ? 275 : window.innerWidth - 100
           let width = remarkRich.width;
           let height = remarkRich.height;
           let scaleRate = winWidth/width;

@@ -116,6 +116,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_live_info: '/api/v3/lesson/live/get-info',
       // 获取抢红包信息
       get_redenvelope: '/api/v3/lesson/redenvelope/issue-list',
+      // 获取会议信息（加入时使用）
+      get_meeting_config: '/api/v3/lesson/meeting/get-config',
 
 
       // 教师接口

@@ -354,6 +354,28 @@ let lessonMixin = {
     },
 
     /**
+     * @method 获取会议基本信息 token channel
+     * @param
+     */
+    getMeeting() {
+      let URL = API.lesson.get_meeting_config;
+
+      request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+
+          // 腾讯 SDK
+          if(data && data.provider === 2) {
+            this.meeting = data;
+          }
+        }
+      }).catch(error => {
+        return {};
+      })
+    },
+
+    /**
      * @method 格式化ppt数据
      * @param
      */

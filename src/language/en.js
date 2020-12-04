@@ -158,6 +158,8 @@ let pages = {
   "danmusendtip": "Tap to send Danmu …",
   "danmuipttip": "Say something",
   "openmini": "Open in MiniProgram",
+  "interactiontip": "Open in mini program and join the interaction.",
+  "scanjoininteraction": "Scan with WeChat <br> Join the interaction in mini program",
 
   // socket event
   "LESSON_START": "Start Class!",
@@ -172,6 +174,8 @@ let pages = {
   "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
   "LIVE_ON": "Live On",
   "LIVE_OFF": "Live Off",
+  "INTERACTIVE_ON": "Interactive On",
+  "INTERACTIVE_OFF": "Interactive Off",
 
   // 个人信息完善
   "merealname": "Name",

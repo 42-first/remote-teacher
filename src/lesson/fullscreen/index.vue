@@ -77,7 +77,7 @@
     <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
 
     <!-- 更多操作 -->
-    <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore }" >
+    <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore && !hasMeeting }" >
       <div class="" v-show="danmuStatus" >
         <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕：开" v-if="visibleDanmu">
           <i class="iconfont icon-danmukai f32"></i>
@@ -104,6 +104,17 @@
       <p class="action-btn action-tip" @click="handleVisibleMore(true)" data-tip="更多" v-else>
         <i class="iconfont icon--gengduocaozuo f24"></i>
       </p>
+      <!-- 加入会议 -->
+      <div class="action-btn join__wrap" v-if="hasMeeting">
+        <div class="meeting__join box-center" >
+          <i class="iconfont icon-48-jieru f28 cfff"></i>
+        </div>
+        <!-- 小程序二维码 -->
+        <section class="mini-code__wrap">
+          <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
+          <div class="c666 bold" v-html="$t('scanjoininteraction')"></div>
+        </section>
+      </div>
     </section>
 
     <!-- 弹幕控制组件 -->
@@ -171,6 +182,15 @@
   // 子组件不需要引用直接使用
   window.request = request;
   window.API = API;
+
+  const host = {
+    'www.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    'b.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
+    'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
+    'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg'
+  }
 
   export default {
     name: 'fullscreen',
@@ -271,7 +291,11 @@
         liveStatusTips: '',
         // 显示更多操作
         visibleMore: false,
-        currentTime: 0
+        currentTime: 0,
+        // 小程序码
+        miniCode: '',
+        // 是否有会议
+        hasMeeting: false
       };
     },
     components: {
@@ -644,6 +668,8 @@
     mounted() {
       setTimeout(()=>{
         this.initDanmu();
+
+        this.miniCode = host[location.host] || 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg';
       }, 1000)
     },
     updated() {
@@ -996,6 +1022,55 @@
 
       height: 42px;
       cursor: pointer;
+    }
+
+    .meeting__join {
+      width: 36px;
+      height: 36px;
+
+      border-radius: 50%;
+      background: #08BC72;
+    }
+
+    .meeting__join:hover +.mini-code__wrap {
+      opacity: 1;
+      transition: opacity ease-out 1.25s;
+    }
+
+    .mini-code__wrap {
+      opacity: 0;
+      position: absolute;
+      right: calc(100% + 20px);
+      bottom: 0;
+
+      padding: 16px 20px;
+      width: 200px;
+      height: 242px;
+
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      transition: all ease-in 0.35s;
+      background: #fff;
+
+      // &:hover {
+      //   opacity: 1;
+      //   transition: opacity ease-out 1.25s;
+      // }
+
+      .qr-code {
+        width: 160px;
+        height: 160px;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        right: -18px;
+        bottom: 15px;
+
+        border: 10px solid transparent;
+        border-left-color: #fff;
+      }
     }
 
     .action-tip:hover:before {

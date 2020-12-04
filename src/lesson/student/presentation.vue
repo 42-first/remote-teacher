@@ -223,6 +223,11 @@
     <!-- 弹幕直播 -->
     <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
+    <!-- 加入会议 -->
+    <div class="meeting__join box-center" @click="handleJoin" v-if="hasMeeting">
+      <i class="iconfont icon-48-jieru f28 cfff"></i>
+    </div>
+
     <!-- 停服务通知 -->
     <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
   </section>
@@ -267,6 +272,7 @@
     'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
     'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
     'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
+    'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg'
   }
 
   const miniAppIds = {
@@ -405,6 +411,8 @@
         visibleMiniCode: false,
         // 小程序分享信息
         weappConfig: null,
+        // 是都有会议
+        hasMeeting: false
       };
     },
     components: {
@@ -942,7 +950,7 @@
           let height = rem2px && rem2px(1) || 35;
           let script = document.createElement('script');
           script.type = 'text/wxtag-template';
-          script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
+          script.text = `<div id="J_weapp_btn" style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center;font-size:24px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>`;
 
           let weappEl = document.createElement('wx-open-launch-weapp');
           weappEl.setAttribute('id', 'J_launch-weapp');
@@ -953,6 +961,22 @@
           this.$refs.openweapp.appendChild(weappEl);
         } else {
           this.visibleMiniCode = true;
+        }
+      },
+
+      /*
+       * @method 加入会议
+       */
+      handleJoin(evt) {
+        this.$toast({
+          message: this.$i18n.t('interactiontip'),
+          duration: 2000
+        });
+
+        // 打开小程序
+        var weappEl = document.getElementById('J_weapp_btn');
+        if(weappEl) {
+          weappEl.click();
         }
       },
 
@@ -1467,6 +1491,18 @@
 
     width: 3rem;
     height: 1rem;
+  }
+
+  .meeting__join {
+    position: fixed;
+    bottom: 0.4rem;
+    right: 0.133333rem;
+
+    width: 1.333333rem;
+    height: 1.333333rem;
+
+    border-radius: 50%;
+    background: #08BC72;
   }
 
 </style>
