@@ -161,6 +161,8 @@ var commandMixin = {
       this.setLesson({
         lessonID: id
       })
+
+      window.user = user;
     },
 
     /**

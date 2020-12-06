@@ -10,11 +10,6 @@
   <section class="page">
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
-      <!-- 提示 -->
-      <!--  <p class="lesson--tip" v-if="visibleTip">
-        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
-      </p> -->
-
       <!-- 消息通知 -->
       <msgbox></msgbox>
 
@@ -148,6 +143,8 @@
       </div>
     </section>
 
+    <!-- 会议演讲者模式 v-if="hasMeeting" -->
+    <meeting ></meeting>
   </section>
 </template>
 <script>
@@ -177,6 +174,8 @@
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';
   import videomsg from './components/video-msg';
+
+  import meeting from '@/components/meeting/meeting'
 
 
   // 子组件不需要引用直接使用
@@ -303,7 +302,8 @@
       danmuCmp,
       volume,
       msgbox,
-      videomsg
+      videomsg,
+      meeting
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
