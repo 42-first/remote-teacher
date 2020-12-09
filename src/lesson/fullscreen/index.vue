@@ -100,7 +100,7 @@
         <i class="iconfont icon--gengduocaozuo f24"></i>
       </p>
       <!-- 加入会议 -->
-      <div class="action-btn join__wrap" v-if="hasMeeting">
+      <div class="action-btn join__wrap" v-if="hasMeeting" @click="handleJoin">
         <div class="meeting__join box-center" >
           <i class="iconfont icon-48-jieru f28 cfff"></i>
         </div>
@@ -143,8 +143,8 @@
       </div>
     </section>
 
-    <!-- 会议演讲者模式 v-if="hasMeeting" -->
-    <meeting ></meeting>
+    <!-- 会议演讲者模式 -->
+    <meeting v-if="hasMeeting && joined"></meeting>
   </section>
 </template>
 <script>
@@ -294,7 +294,9 @@
         // 小程序码
         miniCode: '',
         // 是否有会议
-        hasMeeting: false
+        hasMeeting: false,
+        // 是否已进入会议
+        joined: false,
       };
     },
     components: {
@@ -648,6 +650,13 @@
       */
       handleSetVolume(volume){
         document.querySelector('#player').volume = volume
+      },
+
+      /**
+       * @member 加入会议
+       */
+      handleJoin() {
+        this.joined = !this.joined;
       }
     },
     created() {

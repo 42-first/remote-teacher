@@ -8,33 +8,51 @@
 
 <template>
   <!-- 操作栏 -->
-  <section class="actions__wrap" tabindex="1">
+  <section class="meeting__actions" tabindex="1">
     <section class="box-center" >
       <section class="actions__item" @click="handleSetAudio">
         <div class="actions__btn box-center">
-          <svg class="icon f20 cfff" aria-hidden="true">
+          <svg class="icon f28 cfff" aria-hidden="true">
             <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
             <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
           </svg>
         </div>
-        <p class="pt5 f12 cfff">静音</p>
+        <p class="pt5 f12 c7a">静音</p>
       </section>
       <section class="actions__item" @click="handleSetVideo">
         <div class="actions__btn box-center">
-          <svg class="icon f20 cfff" aria-hidden="true">
+          <svg class="icon f28 cfff" aria-hidden="true">
             <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
             <use xlink:href="#icon20-guanbishipin-01" v-else></use>
           </svg>
         </div>
-        <p class="pt5 f12 cfff">开启摄像头</p>
+        <p class="pt5 f12 c7a">开启摄像头</p>
       </section>
       <section class="actions__item" @click="handleShareScreen">
         <div class="actions__btn box-center">
-          <svg class="icon f20 cfff" aria-hidden="true">
+          <svg class="icon f28 cfff" aria-hidden="true">
             <use xlink:href="#icon20-gongxiangpingmu" ></use>
           </svg>
         </div>
-        <p class="pt5 f12 cfff">{{ meeting.screen ? "结束共享" : "共享屏幕" }}</p>
+        <p class="pt5 f12 c7a">{{ meeting.screen ? "结束共享" : "共享屏幕" }}</p>
+      </section>
+      <div class="line"></div>
+      <section class="actions__item" @click="handleShareScreen">
+        <div class="actions__btn box-center">
+          <svg class="icon f28 cfff" aria-hidden="true">
+            <use xlink:href="#icon32-chengyuan1" ></use>
+          </svg>
+        </div>
+        <p class="pt5 f12 c7a">全员静音</p>
+      </section>
+      <div class="line"></div>
+      <section class="actions__item" @click="">
+        <div class="actions__btn over box-center">
+          <svg class="icon f28 cfff" aria-hidden="true">
+            <use xlink:href="#icon20-jieshu" ></use>
+          </svg>
+        </div>
+        <p class="pt5 f12 c7a">结束互动</p>
       </section>
     </section>
   </section>
@@ -64,9 +82,6 @@ export default {
   created() {
   },
   mounted() {
-    setTimeout(()=>{
-      this.init();
-    }, 1000)
   },
   updated() {},
   beforeDestroy() {
@@ -117,32 +132,15 @@ export default {
 };
 </script>
 
-<style>
-  .icon {
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
-  }
-</style>
 <style lang="scss" scoped>
-  .f12 {
-    font-size: 12px;
-  }
-  .cfff {
-    color: #fff;
-  }
-
-  .actions__wrap {
-    position: fixed;
+  .meeting__actions {
+    z-index: 2;
+    position: absolute;
     bottom: 10px;
-    left: 0;
-    right: 0;
 
     margin: 0 auto;
     padding: 0 50px;
-    width: 350px;
+    // width: 549px;
     height: 80px;
     outline: none;
 
@@ -151,7 +149,6 @@ export default {
     background: rgba(0,0,0, 0.8);
     box-shadow: 0 5px 20px rgba(2,2,2,0.47);
     border: 1px solid #000;
-    border-radius: 40px/50%;
   }
 
 
@@ -168,76 +165,13 @@ export default {
     position: relative;
     padding: 8px 10px 0;
 
-    &:hover {
-      .actions__more {
-        display: flex;
-      }
-      .media__setting {
-        display: block;
-      }
-    }
-
     .actions__btn {
       width: 64px;
       height: 34px;
 
-      border-radius: 17px/50%;
-      background: rgba(255, 255, 255, 0.08);
-
       &.over {
         background: #F34848;
       }
-
-      &.join {
-        background: #08BC72;
-      }
-    }
-
-    .media__setting {
-      display: none;
-      position: absolute;
-      bottom: 88px;
-      left: 50%;
-      transform: translateX(-50%);
-
-      width: 160px;
-      padding: 0 10px;
-      border-radius: 4px;
-      background: rgba(0,0,0,.8);
-      border: 1px solid #000;
-      box-shadow: 0 5px 20px 0 rgba(2,2,2,0.47);
-      color: #DDDDDD;
-
-      .setting_item {
-        padding: 5px 0;
-        text-align: left;
-        &:not(:last-of-type) {
-          border-bottom: 1px solid #414141;
-        }
-        .label {
-          line-height: 17px;
-        }
-        .item {
-          height: 32px;
-          .text {
-            width: 120px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-        }
-      }
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -50px;
-        left: 0;
-
-        height: 60px;
-        width: 160px;
-      }
-
     }
   }
 </style>

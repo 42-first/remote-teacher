@@ -102,7 +102,6 @@ let localMeeting = {
 
       this.rtcEngine = rtcEngine;
       window.rtcEngine = rtcEngine;
-      console.log('rtcEngine:', rtcEngine);
 
       this.subEvents(rtcEngine);
 
@@ -314,7 +313,6 @@ let localMeeting = {
     onUserScreenAvailableLocal({uid, available, consumer}) {
       console.log('onUserScreenAvailableLocal:', available, consumer)
 
-      let { id } = consumer;
       let meeting = this.meeting;
       meeting.otherscreen = available;
 
@@ -330,10 +328,10 @@ let localMeeting = {
 
       if(available) {
         setTimeout(()=>{
-          // let { id, appData } = consumer;
+          let { id } = consumer;
           let consumers = this.rtcEngine.getConsumers();
           let { track } = consumers.get(id);
-          let shareEl = document.querySelector(`#localScreen`)
+          let shareEl = document.querySelector(`#J_screenshare`)
 
           console.log('onUserScreen track:', track, shareEl, id)
 
@@ -397,8 +395,12 @@ let localMeeting = {
 
         if(user[data.type] !== data.value) {
           user[data.type] = data.value;
-          speakers.splice(index, 1, user);
 
+          if(data.type === 'audio' && !data.value) {
+            user.active = false;
+          }
+
+          speakers.splice(index, 1, user);
           this.setSpeakers(speakers);
         }
       }

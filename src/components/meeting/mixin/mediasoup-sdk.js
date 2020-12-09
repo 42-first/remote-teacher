@@ -37,8 +37,8 @@ const VIDEO_SVC_ENCODINGS = [
 ];
 
 function getProtooUrl({ roomId = '666666', peerId, forceH264, forceVP9 }) {
-	// const hostname = 'b.yuketang.cn/wswebrtc';
-  const hostname = 'v3demo.mediasoup.org:4443' || 'b.yuketang.cn/wswebrtc';
+	const hostname = 'b.yuketang.cn/wswebrtc';
+  // const hostname = 'v3demo.mediasoup.org:4443' || 'b.yuketang.cn/wswebrtc';
   // wss://v3demo.mediasoup.org:4443/?roomId=5agep09w&peerId=lo8b4bkf
 	let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}`;
 

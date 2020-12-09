@@ -1,36 +1,34 @@
 /*
- * @page：布局模式用户头像
- * @author: tuqiushuang
- * @update: 2020.7.29
+ * @page：用户展示
+ * @author:
+ * @update: 2020.12.08
  * @desc
  *
  */
 
 
 <template>
-  <section class="user-item" >
-    <div class="avatar-wrap">
+  <section class="user-item box-center" :class="{ 'fullscreen': fullscreen }" >
+    <div class="avatar-wrap box-center">
       <img class="user--avatar" :src="member.avatar" alt="头像" v-show="!member.video">
       <video class="user--video" :id="'uid-'+member.id" v-show="member.video"></video>
       <audio class="user--audio" :id="'audio-'+member.id" v-show="member.audio"></audio>
     </div>
-    <div class="user-info box-start">
-      <div class="user-name box-center">
-        <p class="user-status box-center">
-          <svg class="icon f16 cfff" aria-hidden="true">
-            <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
-            <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
-          </svg>
-        </p>
+    <div class="user-info box-between">
+      <div class="user-name box-center cfff">
+        <svg class="icon f16 cfff" aria-hidden="true">
+          <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
+          <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
+        </svg>
         <span class="name f12">{{ member.name }}</span>
       </div>
-    </div>
-    <div class="active__audio line-scale-pulse-out" v-if="member.active">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div class="active__audio line-scale-pulse-out" v-if="member.active">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   </section>
 </template>
@@ -42,7 +40,7 @@
     name: 'avatar-local',
     props: {
       member: Object,
-      index: Number,
+      fullscreen: Boolean,
     },
     data() {
       return {
@@ -197,20 +195,47 @@
   }
 </script>
 <style lang='scss' scoped>
-  .f12 {
-    font-size: 12px;
-  }
   .user-item {
     position: relative;
     width: 100%;
     height: 100%;
 
+    flex-flow: column;
+
+    &.fullscreen {
+      .avatar-wrap {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+
+        .user--avatar {
+          width: 100px;
+          height: 100px;
+        }
+      }
+
+      .user-info {
+        position: absolute;
+        bottom: 0;
+
+        padding: 0 5px 0 0;
+
+        .user-name {
+          padding: 0 5px;
+          height: 100%;
+          background: rgba(0,0,0,0.7);
+        }
+      }
+    }
+
     .avatar-wrap {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
       position: relative;
-      // border-radius: 4px;
+      width: calc(100% - 6px);
+      // height: 100%;
+      height: 144px;
+      overflow: hidden;
+
+      background: #3a3a3a;
 
       .user--video,
       .user--avatar {
@@ -233,52 +258,26 @@
       }
 
       .user--avatar {
-        // width: 100px;
-        // height: 100px;
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
       }
     }
 
     .user-info {
-      z-index: 1;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
+      padding: 0 10px;
       width: 100%;
-      height: 29px;
+      height: 26px;
 
-      color: #ffff;
-      font-size: 12px;
       white-space: nowrap;
 
-      .user-name {
-        align-self: flex-end;
-        height: 22px;
-
-        background: rgba(0,0,0,.7);
-        .name {
-          height: 100%;
-          line-height: 22px;
-          padding: 0 5px 0 0;
-        }
-      }
-
-      .user-status {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
+      .name {
+        padding: 0 5px;
       }
     }
   }
 
   .active__audio {
-    position: absolute;
-    bottom: 2px;
-    right: 5px;
-
     font-size: 0;
   }
 
