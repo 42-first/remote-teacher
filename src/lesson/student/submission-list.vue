@@ -475,6 +475,7 @@
       line-height: 1.466667rem;
       color: #fff;
       background: #639EF4;
+      text-align: center;
     }
   }
 
