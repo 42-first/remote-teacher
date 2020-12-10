@@ -399,6 +399,14 @@
         this.setObserverMode(observerMode);
 
         this.iniTimeline(this.lessonID);
+
+        // 调试模式
+        if(query && query.debug) {
+          // 是否模拟会议
+          if(query.meeting) {
+            this.hasMeeting = true;
+          }
+        }
       },
 
       /**
