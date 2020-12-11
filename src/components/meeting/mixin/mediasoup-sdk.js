@@ -11,13 +11,13 @@ import * as mediasoupClient from 'mediasoup-client';
 
 
 const VIDEO_CONSTRAINS = {
-  qvga: { width: { ideal: 320 }, height: { ideal: 240 } },
-  vga: { width: { ideal: 640 }, height: { ideal: 480 } },
-  hd: { width: { ideal: 1280 }, height: { ideal: 720 } }
+  qvga: { width: { ideal: 320 }, height: { ideal: 240 }, frameRate: { ideal: 10, max: 15 } },
+  vga: { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 10, max: 15 } },
+  hd: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 10, max: 15 } }
 };
 
 const PC_PROPRIETARY_CONSTRAINTS = {
-   optional: [{ googDscp: true }]
+  optional: [{ googDscp: true }]
 };
 
 const VIDEO_SIMULCAST_ENCODINGS = [
@@ -742,12 +742,26 @@ export default class RoomClient {
 
         logger.debug('enableWebcam() | calling getUserMedia()');
 
+        // 视频约束条件
+        let videoConstraints = {
+          ...VIDEO_CONSTRAINS[resolution]
+        };
+
+        // 是否有置顶的设备
+        if(device && device.deviceId) {
+          videoConstraints.deviceId = device.deviceId;
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            deviceId: { exact: device.deviceId },
-            ...VIDEO_CONSTRAINS[resolution]
-          }
+          video: videoConstraints
         });
+
+        // const stream = await navigator.mediaDevices.getUserMedia({
+        //   video: {
+        //     deviceId: { exact: device.deviceId },
+        //     ...VIDEO_CONSTRAINS[resolution]
+        //   }
+        // });
 
         track = stream.getVideoTracks()[0];
       } else {
@@ -889,8 +903,6 @@ export default class RoomClient {
     } catch (error) {
       logger.error('changeWebcam() | failed: %o', error);
     }
-
-    store.dispatch(stateActions.setWebcamInProgress(false));
   }
 
   async changeWebcamResolution() {
