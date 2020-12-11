@@ -1495,7 +1495,7 @@
 
   .meeting__join {
     position: fixed;
-    bottom: 0.4rem;
+    bottom: 0.8rem;
     right: 0.133333rem;
 
     width: 1.333333rem;
