@@ -3,6 +3,8 @@ var path = require('path')
 // var proxyUrl = 'http://10.0.3.3:9000'
 var proxyUrl = 'https://b.yuketang.cn'
 
+proxyUrl = 'https://pre-apple-ykt.xuetangonline.com'
+
 
 function proxyConfig () {
   return {
@@ -19,7 +21,7 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: '', //static
     assetsPublicPath: '/static/lesson/',
-    productionSourceMap: true,
+    productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
     // Before setting to `true`, make sure to:
@@ -39,9 +41,18 @@ module.exports = {
     assetsSubDirectory: 'static/lesson/',
     assetsPublicPath: '/',
     proxyTable: {
+      '/wsapp/': {
+        target: 'wss://pre-apple-ykt.xuetangonline.com',
+        changeOrigin: true,
+        ws: true,
+        secure: false
+      },
+      '/web': proxyConfig(),
+      '/static': proxyConfig(),
       '/pc': proxyConfig(),
       '/v/api': proxyConfig(),
       '/v': proxyConfig(),
+      '/api/v3': proxyConfig(),
       '/v/quiz': proxyConfig(),
       '/group': proxyConfig(),
       '/api': proxyConfig(),

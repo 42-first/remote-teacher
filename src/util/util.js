@@ -214,4 +214,3 @@ export function compareVersion(v1, v2) {
 
   return 0
 }
-

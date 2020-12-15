@@ -11,14 +11,6 @@
     <!-- 关闭页面 -->
     <div class="page__back" @click="handleBack">返回</div>
     <div class="submission-wrapper">
-      <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
-        <div class="title">选择分组</div>
-        <div class="handler-wrapper" @click="showPicker">
-          <span>{{ selectedVal }}</span>
-          <i class="iconfont icon-dakai ver-middle font20"></i>
-        </div>
-      </div> -->
-
       <div class="submission-inner">
         <!-- 文字编辑 -->
         <section class="submission__text">
@@ -174,8 +166,8 @@
         this.text = value;
 
         if(this.count) {
-          this.sendStatus === 0 && (this.sendStatus = 2);
-          this.cacheResult();
+           this.sendStatus === 0 && (this.sendStatus = 2);
+           this.cacheResult();
         } else {
           !this.hasImage && (this.sendStatus = 0);
         }
@@ -234,7 +226,7 @@
               self.$router.back();
             }, 2000)
 
-            self.removeCache();
+            this.removeCache();
           }
         }).catch(error => {
           this.sendStatus = 2;
@@ -265,9 +257,9 @@
         };
 
         let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        let sBase64 = data.substr(data.indexOf(',') + 1);
-        params['pic_data'] = sBase64;
-        params['pic_type'] = picType;
+        // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // params['pic_data'] = sBase64;
+        // params['pic_type'] = picType;
 
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
@@ -284,24 +276,30 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          // let randomNumber = parseInt(Math.random()*10000, 10);
+          // let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
+          // let file = dataURLtoFile(data, fileName);
+          // data.name = fileName;
+          this.uploadFile(data).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
 
-              self.cacheResult();
-
-              return self.imageURL;
+              this.cacheResult();
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
       },
 
       /*
@@ -392,14 +390,15 @@
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
-        compress(file, options, function(dataUrl) {
-          if(dataUrl) {
-            self.fileData = dataUrl;
+        this.uploadImage(file, fileType);
+        // compress(file, options, function(dataUrl) {
+        //   if(dataUrl) {
+        //     self.fileData = dataUrl;
 
-            // 上传图片
-            self.uploadImage(dataUrl, fileType);
-          }
-        });
+        //     // 上传图片
+        //     self.uploadImage(dataUrl, fileType, file.name);
+        //   }
+        // });
 
       },
 
@@ -935,6 +934,7 @@
     background: #639EF4;
 
     border-radius: 4px;
+    cursor: pointer;
   }
 
   .submission__submit.disable {

@@ -158,6 +158,8 @@ let pages = {
   "danmusendtip": "Tap to send Danmu …",
   "danmuipttip": "Say something",
   "openmini": "Open in MiniProgram",
+  "interactiontip": "Open in mini program and join the interaction.",
+  "scanjoininteraction": "Scan with WeChat <br> Join the interaction in mini program",
 
   // socket event
   "LESSON_START": "Start Class!",
@@ -172,6 +174,8 @@ let pages = {
   "RANDOM_GROUP_CANCEL": "Random grouping has been cancelled",
   "LIVE_ON": "Live On",
   "LIVE_OFF": "Live Off",
+  "INTERACTIVE_ON": "Interactive On",
+  "INTERACTIVE_OFF": "Interactive Off",
 
   // 个人信息完善
   "merealname": "Name",
@@ -271,7 +275,7 @@ let pages = {
   "slide": "PPT",
   "unknown": "Unclear",
   "prob": "Question",
-  "activeno": "{activeno} Active Students",
+  "activeno": "{activeno} Active student(s)",
   "quiz": "Quiz",
   "bullet": "Danmu",
   "post": "Post",
@@ -323,7 +327,7 @@ let pages = {
   "release": "Release",
 
   "totalstudent": "Active Students: ",
-  "attendingno": '<span class="randomcall-num f32">{attendingno}</span> students in the class<br>Random Roll Call is about to begin',
+  "attendingno": '<span class="randomcall-num f32">{attendingno}</span> student(s) in the class<br>Random Roll Call is about to begin',
   "toberolling": "Random Roll Call is about to begin",
   "rolling": "Rolling",
   "pause": "Pause",
@@ -552,9 +556,55 @@ let pages = {
 
   "cloneTips": "Unavailable in Clone Class",
 
+  "signintoomuch": "There are too many people signed in, we can't provide the list yet.",
+  "notsignintoomuch": "There are too many people unsigned in, we can't provide the list yet.",
+  "backsoon": "This feature is temporarily offline for maintenance and will be back soon.",
+  "changetosignin": "Present",
+  "changetonotsignin": "Absent",
+  "zuodashichang": "Length of response time",
+
   // 图片国际化
   imgs: {
-    "tougaoempty": "http://sfe.ykt.io/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
+    "tougaoempty": "https://qn-sfe.yuketang.cn/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
+  },
+
+  code: {
+    '50000': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50002': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50003': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50004': 'Class is over.',
+    '50005': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50006': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50007': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50008': 'The slides that you requested does not exist or you do not have such permissions.',
+    '50009': 'The slides that you requested does not exist or you do not have such permissions.',
+    '50010': 'The slides that you requested does not exist or you do not have such permissions.',
+    '50011': 'The slides that you requested does not exist or you do not have such permissions.',
+    '50012': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50013': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50014': 'The answering is over.',
+    '50015': 'You have not bound any school.',
+    '50016': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50017': 'You have not bound any school.',
+    '50018': 'You are not allowed to join.',
+    '50019': 'You are not allowed to join.',
+    '50020': 'You are not allowed to join.',
+    '50021': 'You are not allowed to join.',
+    '50022': 'You are not allowed to join.',
+    '50023': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50024': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50025': 'You requested too often, please retry later.',
+    '50026': 'The answering is over',
+    '50027': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50028': 'The answer had been submitted.',
+    '50029': 'You requested too often, please retry later.',
+    '50030': 'The class is not over yet.',
+    '50031': 'Your post has no content.',
+    '50032': 'You can not visit deleted post~',
+    '50042': `There are too many people, we can't provide the details yet.`,
+
+    '60000': 'Something is wrong, please try again later.',
+    '60001': 'Something is wrong, please try again later.',
   }
 };
 

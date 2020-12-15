@@ -49,7 +49,7 @@
 				</ul>
 			</template>
 			<template v-else>
-				<img class="empty" src="http://sfe.ykt.io/o_1cmrpffkeq51bteo4m1p7a1epp9.png" alt="">
+				<img class="empty" src="https://qn-sfe.yuketang.cn/o_1cmrpffkeq51bteo4m1p7a1epp9.png" alt="">
 				<p class="f17 color-9b textcenter"><!-- 没有符合的学生 -->{{$t('behavior.noeligiblestudents')}}</p>
 			</template>
 		</template>
