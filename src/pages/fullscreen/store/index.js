@@ -11,6 +11,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
+import meeting from './modules/meeting'
+
 
 Vue.use(Vuex)
 
@@ -123,6 +125,10 @@ const store = new Vuex.Store({
       commit('setObserverMode', slide)
     },
   },
+
+  modules: {
+    meeting
+  }
 
 })
 

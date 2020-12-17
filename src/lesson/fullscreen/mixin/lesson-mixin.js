@@ -161,6 +161,8 @@ var commandMixin = {
       this.setLesson({
         lessonID: id
       })
+
+      window.user = user;
     },
 
     /**
@@ -440,6 +442,28 @@ var commandMixin = {
         }
       }).catch(error => {
         console.log('getLive:', error);
+      })
+    },
+
+    /**
+     * @method 获取会议基本信息 token channel
+     * @param
+     */
+    getMeeting() {
+      let URL = API.lesson.get_meeting_config;
+
+      request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+
+          // 本地会议？
+          if(data && data.provider === 3) {
+            this.meeting = data;
+          }
+        }
+      }).catch(error => {
+        return {};
       })
     },
 
