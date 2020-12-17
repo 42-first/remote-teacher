@@ -26,7 +26,7 @@
       <section class='speakers__container'>
         <!-- 共享 -->
         <section class="member__container" v-show="meeting.otherscreen">
-          <video class="video" id="J_screenshare" @click="handlePreviewVideo"></video>
+          <video class="video" id="J_screenshare"></video>
           <div class="share-info box-between">
             <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
           </div>
@@ -76,18 +76,6 @@
         </section>
       </footer>
     </section>
-
-    <!-- 点击视频 大屏显示 -->
-    <section class="fullscreen__video" v-if="visibleFullVideo">
-      <div class="fullscreen__closed" @click="handleClosedPreviewVideo">
-        <svg class="icon f24 cfff" aria-hidden="true">
-          <use xlink:href="#icon16-guanbi"></use>
-        </svg>
-      </div>
-      <section class="video__wrap box-center">
-        <video class="fullscreen--video" id="J_fullvideo"></video>
-      </section>
-    </section>
   </section>
 </template>
 
@@ -96,6 +84,7 @@ import { mapState, mapActions } from 'vuex';
 import avatar from './avatar-local'
 import fullscreen from './fullscreen'
 
+import meeting from './mixin/meeting'
 // 本地视频
 import localMeeting from './mixin/local-meeting'
 import move from './mixin/move'
@@ -116,7 +105,7 @@ export default {
     avatar,
     fullscreen
   },
-  mixins: [ localMeeting, move ],
+  mixins: [ meeting, localMeeting, move ],
   computed: {
     ...mapState([
       'baseInfo',
@@ -129,6 +118,8 @@ export default {
       'meeting',
       // 会议成员
       'speakers',
+      // SDK类型
+      'meetingSDK',
     ]),
   },
   created() {
@@ -146,11 +137,7 @@ export default {
   },
   watch: {
     visibleFullscreen(newVal) {
-
     },
-    visibleFullVideo(newVal) {
-
-    }
   },
   methods: {
     ...mapActions([
@@ -162,17 +149,19 @@ export default {
       'setUser',
       'setSpeakers',
       'setMeeting',
+      'setMeetingSDK',
     ]),
 
     /**
      * @method 互动课初始化
      * @params
      */
-    init() {
+    async init() {
       // 获取会议基本信息 token 房间号等
       // let { userid, avatar, userName } = this.baseInfo;
       let { id, avatar, name } = window.user;
-      let { audio, video, active } = this.meeting;
+      let meeting = this.meeting;
+      let { audio, video, active } = meeting;
       let user = {
         id: id,
         name: name,
@@ -183,10 +172,40 @@ export default {
       this.setLocal(id);
       this.setSpeakers([]);
 
-      // let roomId = this.lesson && this.lesson.lessonid;
-      let roomId = this.lesson && this.lesson.lessonID;
-      console.log('lesson:', this.lesson)
-      this.initLocalMeeting(Object.assign(user, { roomId }));
+
+      let data = await this.getMeeting();
+      if(data) {
+        console.log('joinMeeting:', data);
+
+        if(data.provider === 2) {
+          this.setMeetingSDK('tencent');
+        } else if(data.provider === 3) {
+          this.setMeetingSDK('local');
+        }
+
+        // 目前如果有人在分享
+        if(data.shareInfo && data.shareInfo.shareId) {
+          meeting.otherscreen = true;
+          let shareInfo = data.shareInfo;
+          shareInfo.uid = shareInfo.identityId;
+        }
+
+        this.setMeeting(Object.assign({}, this.meeting, data));
+
+        setTimeout(()=>{
+          // 初始化视频通话SDK
+          if(this.meetingSDK === 'tencent') {
+            this.initTencentMeeting(this.meeting);
+          } else if(this.meetingSDK === 'local'){
+            // this.initLocalMeeting(this.meeting);
+            let roomId = this.lesson && this.lesson.lessonID;
+            this.initLocalMeeting(Object.assign(user, this.meeting, { roomId }));
+          }
+        }, 0)
+      }
+
+      // let roomId = this.lesson && this.lesson.lessonID;
+      // this.initLocalMeeting(Object.assign(user, { roomId }));
 
       this.initEvent();
     },
@@ -231,32 +250,6 @@ export default {
      */
     handleEnd() {
       this.setEnableInteractive(false);
-    },
-
-    /**
-     * @method 预览视频
-     * @params
-     */
-    handlePreviewVideo(evt) {
-      let target = evt.target || evt.srcElement;
-      this.visibleFullVideo = true;
-
-      if(target) {
-        setTimeout(()=>{
-          let fullVideoEl = this.$el.querySelector('#J_fullvideo');
-          if(fullVideoEl) {
-            fullVideoEl.srcObject = target.srcObject;
-
-            fullVideoEl.oncanplay = () => fullVideoEl.play();
-            fullVideoEl.onplay = () =>{
-              fullVideoEl.play().catch((error) => console.warn('fullVideoEl.play() failed:%o', error));
-            };
-            fullVideoEl.play().catch((error) => console.warn('fullVideoEl.play() failed:%o', error));
-
-            console.log('shareStream:', target.srcObject)
-          }
-        }, 0)
-      }
     },
 
     /**
@@ -418,36 +411,6 @@ export default {
           background: rgba(0, 0, 0, 0.7);
         }
       }
-    }
-  }
-
-
-  .fullscreen__video {
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    width: 100vw;
-    height: 100vh;
-
-    background: rgba(0,0,0,0.5);
-
-    .fullscreen__closed {
-      z-index: 1;
-      position: absolute;
-      top: 15px;
-      right: 15px;
-    }
-
-    .video__wrap {
-      width: 100%;
-      height: 100%;
-    }
-
-    .fullscreen--video {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: cover;
     }
   }
 

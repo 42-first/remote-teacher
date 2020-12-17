@@ -22,10 +22,14 @@ const meeting = {
       // 0: 无分享屏幕  1: 开启屏幕分享 开启新的分享screen++
       screen: false,
       // 别人是否分享了屏幕
-      otherscreen: false
+      otherscreen: false,
+      // 分享基本信息
+      shareInfo: null
     },
     // 发言列表
     speakers: [],
+    // 视频通话使用的SDK kwai: 快手 tencent：腾讯 local:本地
+    meetingSDK: '',
   },
   mutations: {
     // 重置课堂信息
@@ -61,6 +65,10 @@ const meeting = {
     setSpeakers(state, data) {
       state.speakers = data;
     },
+
+    setMeetingSDK(state, data) {
+      state.meetingSDK = data;
+    },
   },
 
   actions: {
@@ -82,6 +90,10 @@ const meeting = {
 
     setSpeakers({commit}, data) {
       commit('setSpeakers', data)
+    },
+
+    setMeetingSDK({commit}, data) {
+      commit('setMeetingSDK', data)
     },
 
   }

@@ -118,6 +118,18 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_redenvelope: '/api/v3/lesson/redenvelope/issue-list',
       // 获取会议信息（加入时使用）
       get_meeting_config: '/api/v3/lesson/meeting/get-config',
+      // 加入会议
+      join_meeting: '/api/v3/lesson/meeting/join',
+      // 离开会议
+      leave_meeting: '/api/v3/lesson/meeting/leave',
+      // 音视频管理（当前设备状态）
+      manage_device: '/api/v3/lesson/meeting/device',
+      // 开启共享屏幕
+      start_share: '/api/v3/lesson/meeting/share',
+      // 关闭桌面共享
+      end_share: '/api/v3/lesson/meeting/share/cancel',
+      // 获取发言列表
+      get_talk_list: '/api/v3/lesson/meeting/talk-list',
 
 
       // 教师接口
