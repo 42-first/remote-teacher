@@ -360,6 +360,11 @@ var commandMixin = {
           if(role === 2 || role === 3) {
             this.setObserverMode(true);
           }
+
+          // 设置当前userid 专业版是虚ID 基础本是实ID
+          if(data.identityId) {
+            this.identityId = data.identityId;
+          }
         }
 
         return res.code;

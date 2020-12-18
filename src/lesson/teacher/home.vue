@@ -418,7 +418,7 @@
 			},
 			/**
 			 * 初始化课堂数据
-			 * 
+			 *
 			 */
 			async initLesson(){
 				let joined = await this.checkIn();
@@ -439,7 +439,7 @@
 				let lessonInfo = await this.getLessonInfo();
 				if(lessonInfo){
 					let {basic, classroom, invitation} = lessonInfo
-				
+
 				let data = {
 					classroom: {
 						classroomid: basic.classroomId,
@@ -463,13 +463,13 @@
 
 				this.$store.dispatch('saveUserInfo', data)
 				}
-			 	
+
 
 				setTimeout(() => {
 					this.initws()
 				}, 20);
 			},
-			/** 
+			/**
 			 * 教师签到
 			*/
 			checkIn(){
@@ -484,6 +484,11 @@
 					if(res && res.code === 0) {
 						let data = res.data;
 						self.token = data.lessonToken
+
+            // 设置当前userid 专业版是虚ID 基础本是实ID
+            if(data.identityId) {
+              self.identityId = data.identityId;
+            }
 					}
 
 					return res;
@@ -493,7 +498,7 @@
 					return null;
 				})
 			},
-			/** 
+			/**
 			 * 获取用户信息
 			*/
 			getUserInfo(){
@@ -508,7 +513,7 @@
 					console.log('UserInfo:' + error)
 				})
 			},
-			/** 
+			/**
 			 * 获取授课信息
 			*/
 			getLessonInfo(){
@@ -569,7 +574,7 @@
 					}).catch(error => {
 						console.log('fetchPPTData:' + error)
 					})
-					
+
 	    },
 	    /**
 	     * 处理slideid 和 slideindex 的对应关系
@@ -669,12 +674,12 @@
 	    fetchPresentationTag () {
 	      let self = this
 				if (self.presentationid <= 0) {return;}
-				
+
 				let URL = API.lesson.get_presentation_tag
 				let params = {
 					presentation_id: self.presentationid
 				}
-				
+
 				return request.get(URL, params)
 				.then((res) => {
 					if(res && res.code === 0 && res.data){
