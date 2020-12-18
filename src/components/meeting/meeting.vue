@@ -195,7 +195,7 @@ export default {
         setTimeout(()=>{
           // 初始化视频通话SDK
           if(this.meetingSDK === 'tencent') {
-            this.initTencentMeeting(this.meeting);
+            this.initTencent(this.meeting);
           } else if(this.meetingSDK === 'local'){
             // this.initLocalMeeting(this.meeting);
             let roomId = this.lesson && this.lesson.lessonID;
