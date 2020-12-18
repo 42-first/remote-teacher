@@ -845,7 +845,10 @@ var actionsMixin = {
           }, 3000)
         }
 
-        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+        // 互动场景 timeline === false
+        if(data.timeline !== false) {
+          this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+        }
 
         // 标记这是一堂远程课
         !this.isLive && this.liveURL && (this.isLive = true);
@@ -883,7 +886,10 @@ var actionsMixin = {
      * @param
      */
     endLive(data) {
-      this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+      // 互动场景 timeline === false
+      if(data.timeline !== false) {
+        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+      }
 
       setTimeout(() => {
         this.handlestop();

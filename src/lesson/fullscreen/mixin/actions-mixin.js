@@ -849,7 +849,12 @@ let actionsMixin = {
         this.liveType = data.type;
         this.liveURL = data.liveurl.flv;
 
-        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+        // 互动场景 timeline === false
+        if(data.timeline !== false) {
+          this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
+        }
+
+        // this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
 
         // 标记这是一堂远程课
         !this.isLive && this.liveURL && (this.isLive = true);
@@ -879,7 +884,11 @@ let actionsMixin = {
      * @param
      */
     endLive(data) {
-      this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+      // this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+      // 互动场景 timeline === false
+      if(data.timeline !== false) {
+        this.addMessage({ type: 1, message: this.$i18n.t('LIVE_OFF'), event: data });
+      }
 
       setTimeout(()=>{
         // 快手上报

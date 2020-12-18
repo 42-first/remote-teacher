@@ -150,6 +150,8 @@ var mixin = {
             if(msg.interactive) {
               // 学生可自行加入会议
               this.hasMeeting = true;
+              // 标记这是一堂直播远程课 方便后面对直播远程课处理
+              !this.isLive && (this.isLive = true);
             }
 
             if(timeline && timeline.length) {
