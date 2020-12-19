@@ -92,9 +92,10 @@ var mixin = {
           }
 
           // 握手开始通信
+          let userId = self.identityId || self.userID;
           self.socket.send(JSON.stringify({
             'op': 'hello',
-            'userid': self.userID,
+            'userid': userId,
             'role': 'student',
             'auth': self.token,
             'lessonid': self.lessonID
@@ -149,6 +150,8 @@ var mixin = {
             if(msg.interactive) {
               // 学生可自行加入会议
               this.hasMeeting = true;
+              // 标记这是一堂直播远程课 方便后面对直播远程课处理
+              !this.isLive && (this.isLive = true);
             }
 
             if(timeline && timeline.length) {

@@ -135,9 +135,10 @@ let mixin = {
           }
 
           // 握手开始通信
+          let userId = self.identityId || self.userid;
           self.socket.send(JSON.stringify({
             'op': 'hello',
-            'userid': self.userid,
+            'userid': userId,
             'avatar': self.avatar,
             'role': 'lecturer',
             'auth': self.token,
