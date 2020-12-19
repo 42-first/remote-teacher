@@ -69,12 +69,15 @@ export default class RtcClient {
       console.log('join room success');
       this.isJoined = true;
 
+      return true;
     } catch (e) {
       console.error('join room failed! ' + e);
+
+      return false;
     }
 
-    //更新成员状态
-    let states = this.client_.getRemoteMutedState();
+    // 更新成员状态
+    let states = this.client.getRemoteMutedState();
     for (let state of states) {
       if (state.audioMuted) {
         state.userId
@@ -84,9 +87,11 @@ export default class RtcClient {
         state.userId
       }
     }
+  }
 
-    // 监听自己的声音大小
-    this.setVolumeInterval(this.localStream_);
+  getRemoteMutedState() {
+    let states = this.client.getRemoteMutedState();
+    return states;
   }
 
   /**
@@ -98,7 +103,7 @@ export default class RtcClient {
       // not to specify cameraId/microphoneId to avoid OverConstrainedError
       this.localStream = TRTC.createStream({
         audio: true,
-        video: true,
+        video: false,
         userId: this.uid,
         mirror: true
       });
@@ -114,7 +119,9 @@ export default class RtcClient {
       // publish the local stream
       await this.publish();
 
-      // this.localStream_.play('main-video');
+      // this.localStream.play('main-video');
+      // 监听自己的声音大小
+      this.setVolumeInterval(this.localStream);
     } catch (e) {
       console.error('failed to initialize local stream - ' + e);
     }
@@ -185,12 +192,51 @@ export default class RtcClient {
     this.setVolumeInterval(this.localStream);
   }
 
+  // muteLocalVideo() {
+  //   this.localStream.muteVideo();
+  // }
+
+  // unmuteLocalVideo() {
+  //   this.localStream.unmuteVideo();
+  // }
+
   muteLocalVideo() {
-    this.localStream.muteVideo();
+    let localStream = this.localStream;
+
+    try {
+      const videoTrack = localStream.getVideoTrack();
+      if (videoTrack) {
+        localStream.removeTrack(videoTrack).
+        then(() => {
+          console.log('remove video call success');
+          // 关闭摄像头
+          videoTrack.stop();
+        });
+      }
+    } catch (e) {
+      console.error('failed to muteLocalVideo ' + e);
+    }
   }
 
   unmuteLocalVideo() {
-    this.localStream.unmuteVideo();
+    // 打开摄像头，增加视频通话
+    let localStream = this.localStream;
+
+    try {
+      const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
+      videoStream.initialize().
+      then(() => {
+        console.log('camera video stream init success');
+
+        // 增加视频通话
+        localStream.addTrack(videoStream.getVideoTrack()).
+        then(() => {
+          console.log('add video call success');
+        });
+      });
+    } catch (e) {
+      console.error('failed to muteLocalVideo ' + e);
+    }
   }
 
   resumeStreams() {

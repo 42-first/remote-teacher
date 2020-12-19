@@ -10,7 +10,10 @@
 import { mapState, mapActions } from 'vuex';
 import TRTC from 'trtc-js-sdk';
 
+import RTCClient from '../tencent/rtc-client';
+
 let log = console;
+let shareUserId = null;
 
 let tencentMixin = {
   methods: {
@@ -22,12 +25,15 @@ let tencentMixin = {
       let appId = Number(info && info.appId);
       this.appId = appId;
       let token = info && info.token;
-      let channel = Number(info && info.channel);
+      let roomId = Number(info && info.channel);
       let privateMapKey = info && info.privateMapKey;
 
       // 确保当前用户
-      this.roomId = Number(info && info.teacherUserId) || channel;
+      roomId = Number(info && info.teacherUserId) || roomId;
       let uid = this.user && this.user.id;
+      // 设置本地分享的UID
+      shareUserId = uid;
+      this.shareUserId = uid;
 
       // 1、检测
       // 基本参数检测
@@ -41,51 +47,187 @@ let tencentMixin = {
         if (!checkResult.result) {
           console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
           // todo: 根据用户设备类型建议用户使用 SDK 支持的浏览器
+        } else {
+          let options = {
+            appId,
+            token,
+            uid,
+            roomId,
+            privateMapKey
+          };
+          let rtcEngine = new RTCClient(options);
+          this.rtcEngine = rtcEngine;
+          window.rtcEngine = rtcEngine;
+
+          if(rtcEngine.client) {
+            this.subscribeEvents(rtcEngine.client);
+          }
+
+          console.log('rtcEngine:', rtcEngine);
         }
       })
-
-      // 2、mac授权
-
-      // param.sdkAppId = appId;
-      // param.userSig = token;
-      // param.roomId = this.roomId;
-      // param.userId = uid;
-      // param.privateMapKey = privateMapKey || ''; // 房间签名（非必填），7.1.157 版本以上（含），可以忽略此参数，7.1.157 之前的版本建议赋值为空字符串
-
-      console.log('rtcEngine:', rtcEngine);
     },
 
     /**
      * @method 事件监听
      * @params
      */
-    subscribeEvents(rtcEngine) {
-      if(!rtcEngine) {
+    subscribeEvents(client) {
+      if(!client) {
         return this;
       }
 
-      // rtcEngine.on('onStatistics', (statis)=>{logger.log('onStatistics', statis);});
-      rtcEngine.on('onEnterRoom', this.onEnterRoom.bind(this));
-      rtcEngine.on('onExitRoom', this.onExitRoom.bind(this));
-      rtcEngine.on('onUserVideoAvailable', this.onUserVideoAvailable.bind(this));
-      rtcEngine.on('onUserAudioAvailable', this.onUserAudioAvailable.bind(this));
-      rtcEngine.on('onRemoteUserEnterRoom', this.onRemoteUserEnterRoom.bind(this));
-      rtcEngine.on('onRemoteUserLeaveRoom', this.onRemoteUserLeaveRoom.bind(this));
-      rtcEngine.on('onUserSubStreamAvailable', this.onUserSubStreamAvailable.bind(this));
+      client.on('error', this.onError.bind(this));
+      client.on('client-banned', this.onBanned.bind(this));
 
-      rtcEngine.on('onFirstVideoFrame', this.onFirstVideoFrame.bind(this));
+      client.on('peer-join', this.onRemoteUserEnterRoom.bind(this));
+
+      client.on('peer-join', this.onUserVideoAvailable.bind(this));
+      client.on('onUserAudioAvailable', this.onUserAudioAvailable.bind(this));
+
+      client.on('onRemoteUserLeaveRoom', this.onRemoteUserLeaveRoom.bind(this));
+      client.on('onUserSubStreamAvailable', this.onUserSubStreamAvailable.bind(this));
 
       // 活跃用户
-      rtcEngine.on('onUserVoiceVolume', this.onUserVoiceVolume.bind(this));
+      client.on('onUserVoiceVolume', this.onUserVoiceVolume.bind(this));
+    },
 
-      // onSendFirstLocalVideoFrame
+    onError(err) {
+      console.error(err);
+    },
+
+    onBanned() {
+      // 您已被踢出房间
+      console.error('client has been banned for ' + err);
+    },
+
+    handleEvents() {
+      // fired when a remote peer is joining the room
+      this.client.on('peer-join', evt => {
+        const userId = evt.userId;
+        console.log('peer-join ' + userId);
+        if (userId !== shareUserId) {
+          // addMemberView(userId);
+        }
+      });
+      // fired when a remote peer is leaving the room
+      this.client.on('peer-leave', evt => {
+        const userId = evt.userId;
+        console.log('peer-leave ' + userId);
+      });
+      // fired when a remote stream is added
+      this.client.on('stream-added', evt => {
+        const remoteStream = evt.stream;
+        const id = remoteStream.getId();
+        const userId = remoteStream.getUserId();
+        this.members.set(userId, remoteStream);
+        console.log(`remote stream added: [${userId}] ID: ${id} type: ${remoteStream.getType()}`);
+
+        if (remoteStream.getUserId() === shareUserId) {
+          // don't need screen shared by us
+          this.client.unsubscribe(remoteStream);
+        } else {
+          console.log('subscribe to this remote stream');
+          this.client.subscribe(remoteStream);
+        }
+      });
+      // fired when a remote stream has been subscribed
+      this.client.on('stream-subscribed', evt => {
+        const uid = evt.userId;
+        const remoteStream = evt.stream;
+        const id = remoteStream.getId();
+        this.remoteStreams.push(remoteStream);
+
+        remoteStream.on('player-state-changed', event => {
+          console.log(`${event.type} player is ${event.state}`);
+          if (event.type == 'video' && event.state == 'STOPPED') {
+          }
+
+          if (event.type == 'video' && event.state == 'PLAYING') {
+          }
+        });
+
+        if (remoteStream.userId_ && remoteStream.userId_.indexOf('share_') > -1) {
+          remoteStream.play(id, { objectFit: 'contain' }).then(() => {
+            // Firefox，当video的controls设置为true的时候，video-box无法监听到click事件
+            // if (getBrowser().browser === 'Firefox') {
+            //   return;
+            // }
+            remoteStream.videoPlayer_.element_.controls = true;
+          });
+        } else {
+          remoteStream.play(id);
+        }
+
+        if (!remoteStream.hasVideo()) {
+
+        }
+        console.log('stream-subscribed ID: ', id);
+      });
+      // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
+      this.client.on('stream-removed', evt => {
+        const remoteStream = evt.stream;
+        const id = remoteStream.getId();
+        remoteStream.stop();
+        this.remoteStreams = this.remoteStreams.filter(stream => {
+          return stream.getId() !== id;
+        });
+
+        // 删除对声音大小的监听
+        this.deleteVolumeInterval(remoteStream.getUserId());
+        console.log(`stream-removed ID: ${id}  type: ${remoteStream.getType()}`);
+      });
+
+      this.client.on('stream-updated', evt => {
+        const remoteStream = evt.stream;
+        let uid = this.getUidByStreamId(remoteStream.getId());
+        if (!remoteStream.hasVideo()) {
+
+        }
+
+        console.log(
+          'type: ' +
+            remoteStream.getType() +
+            ' stream-updated hasAudio: ' +
+            remoteStream.hasAudio() +
+            ' hasVideo: ' +
+            remoteStream.hasVideo() +
+            ' uid: ' +
+            uid
+        );
+      });
+
+      this.client.on('mute-audio', evt => {
+        console.log(evt.userId + ' mute audio');
+
+        this.deleteVolumeInterval(evt.userId);
+      });
+      this.client.on('unmute-audio', evt => {
+        console.log(evt.userId + ' unmute audio');
+
+        this.setVolumeInterval(this.remoteStreams.find(stream => stream.getUserId() === evt.userId));
+      });
+      this.client.on('mute-video', evt => {
+        console.log(evt.userId + ' mute video');
+
+      });
+      this.client.on('unmute-video', evt => {
+        console.log(evt.userId + ' unmute video');
+
+        const stream = this.members.get(evt.userId);
+        if (stream) {
+          let streamId = stream.getId();
+          if (streamId) {
+          }
+        }
+      });
     },
 
     /**
      * @method 本地用户加入通道成功
      * @params result - 进房结果， 大于 0 时，为进房间消耗的时间，这表示进进房成功。如果为 -1 ，则表示进房失败。
      */
-    onEnterRoom(result) {
+    enterRoom(result) {
       log.info('[onEnterRoom] result:%s', result);
 
       const rtcEngine = this.rtcEngine;
@@ -157,8 +299,12 @@ let tencentMixin = {
      * @method 远端用户加入通道成功
      * @params
      */
-    onRemoteUserEnterRoom(uid) {
-      log.info('[onRemoteUserEnterRoom] uid:%s', uid);
+    onRemoteUserEnterRoom(evt) {
+      const userId = evt.userId;
+      console.log('peer-join ' + userId);
+      if (userId === shareUserId) {
+        return this;
+      }
 
       // websocket 不通暂时模拟用户登录
       let user = {
