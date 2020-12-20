@@ -6,6 +6,8 @@
  */
 
 
+import TRTC from 'trtc-js-sdk';
+
 // 使用requestAnimationFrame重写setInterval，进行性能优化
 function setAnimationFrame(render) {
   // 计时器ID
@@ -51,8 +53,6 @@ export default class RtcClient {
       userSig: token,
       privateMapKey
     });
-
-    this.handleEvents();
   }
 
   async join() {
@@ -64,7 +64,8 @@ export default class RtcClient {
     try {
       // join the room
       await this.client.join({
-        roomId: this.roomId
+        roomId: this.roomId,
+        privateMapKey: this.privateMapKey
       });
       console.log('join room success');
       this.isJoined = true;
@@ -98,7 +99,7 @@ export default class RtcClient {
    * @method 初始化本地流
    * @params
    */
-  initLocalStream() {
+  async initLocalStream() {
     try {
       // not to specify cameraId/microphoneId to avoid OverConstrainedError
       this.localStream = TRTC.createStream({
@@ -107,6 +108,9 @@ export default class RtcClient {
         userId: this.uid,
         mirror: true
       });
+
+      // 使用预定义Profile设置 640*360 15 800
+      this.localStream.setVideoProfile('360p');
 
       // initialize the local stream and the stream will be populated with audio/video
       await this.localStream.initialize();
@@ -119,7 +123,6 @@ export default class RtcClient {
       // publish the local stream
       await this.publish();
 
-      // this.localStream.play('main-video');
       // 监听自己的声音大小
       this.setVolumeInterval(this.localStream);
     } catch (e) {
@@ -222,21 +225,27 @@ export default class RtcClient {
     // 打开摄像头，增加视频通话
     let localStream = this.localStream;
 
-    try {
-      const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
-      videoStream.initialize().
-      then(() => {
-        console.log('camera video stream init success');
-
-        // 增加视频通话
-        localStream.addTrack(videoStream.getVideoTrack()).
+    return new Promise((resolve, reject) => {
+      try {
+        const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
+        videoStream.initialize().
         then(() => {
-          console.log('add video call success');
+          console.log('camera video stream init success');
+
+          // 增加视频通话
+          localStream.addTrack(videoStream.getVideoTrack()).
+          then(() => {
+            console.log('add video call success');
+            // 播放本地视频
+            localStream.play(this.uid);
+            resolve(true);
+          });
         });
-      });
-    } catch (e) {
-      console.error('failed to muteLocalVideo ' + e);
-    }
+      } catch (e) {
+        console.error('failed to muteLocalVideo ' + e);
+        reject(e);
+      }
+    });
   }
 
   resumeStreams() {
@@ -245,137 +254,6 @@ export default class RtcClient {
     for (let stream of this.remoteStreams) {
       stream.resume();
     }
-  }
-
-  handleEvents() {
-    this.client.on('error', err => {
-      console.error(err);
-
-    });
-    this.client.on('client-banned', err => {
-      console.error('client has been banned for ' + err);
-
-      // alert('您已被踢出房间');
-    });
-    // fired when a remote peer is joining the room
-    this.client.on('peer-join', evt => {
-      const userId = evt.userId;
-      console.log('peer-join ' + userId);
-      if (userId !== shareUserId) {
-        // addMemberView(userId);
-      }
-    });
-    // fired when a remote peer is leaving the room
-    this.client.on('peer-leave', evt => {
-      const userId = evt.userId;
-      console.log('peer-leave ' + userId);
-    });
-    // fired when a remote stream is added
-    this.client.on('stream-added', evt => {
-      const remoteStream = evt.stream;
-      const id = remoteStream.getId();
-      const userId = remoteStream.getUserId();
-      this.members.set(userId, remoteStream);
-      console.log(`remote stream added: [${userId}] ID: ${id} type: ${remoteStream.getType()}`);
-
-      if (remoteStream.getUserId() === shareUserId) {
-        // don't need screen shared by us
-        this.client.unsubscribe(remoteStream);
-      } else {
-        console.log('subscribe to this remote stream');
-        this.client.subscribe(remoteStream);
-      }
-    });
-    // fired when a remote stream has been subscribed
-    this.client.on('stream-subscribed', evt => {
-      const uid = evt.userId;
-      const remoteStream = evt.stream;
-      const id = remoteStream.getId();
-      this.remoteStreams.push(remoteStream);
-
-      remoteStream.on('player-state-changed', event => {
-        console.log(`${event.type} player is ${event.state}`);
-        if (event.type == 'video' && event.state == 'STOPPED') {
-        }
-
-        if (event.type == 'video' && event.state == 'PLAYING') {
-        }
-      });
-
-      if (remoteStream.userId_ && remoteStream.userId_.indexOf('share_') > -1) {
-        remoteStream.play(id, { objectFit: 'contain' }).then(() => {
-          // Firefox，当video的controls设置为true的时候，video-box无法监听到click事件
-          // if (getBrowser().browser === 'Firefox') {
-          //   return;
-          // }
-          remoteStream.videoPlayer_.element_.controls = true;
-        });
-      } else {
-        remoteStream.play(id);
-      }
-
-      if (!remoteStream.hasVideo()) {
-
-      }
-      console.log('stream-subscribed ID: ', id);
-    });
-    // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
-    this.client.on('stream-removed', evt => {
-      const remoteStream = evt.stream;
-      const id = remoteStream.getId();
-      remoteStream.stop();
-      this.remoteStreams = this.remoteStreams.filter(stream => {
-        return stream.getId() !== id;
-      });
-
-      // 删除对声音大小的监听
-      this.deleteVolumeInterval(remoteStream.getUserId());
-      console.log(`stream-removed ID: ${id}  type: ${remoteStream.getType()}`);
-    });
-
-    this.client.on('stream-updated', evt => {
-      const remoteStream = evt.stream;
-      let uid = this.getUidByStreamId(remoteStream.getId());
-      if (!remoteStream.hasVideo()) {
-
-      }
-
-      console.log(
-        'type: ' +
-          remoteStream.getType() +
-          ' stream-updated hasAudio: ' +
-          remoteStream.hasAudio() +
-          ' hasVideo: ' +
-          remoteStream.hasVideo() +
-          ' uid: ' +
-          uid
-      );
-    });
-
-    this.client.on('mute-audio', evt => {
-      console.log(evt.userId + ' mute audio');
-
-      this.deleteVolumeInterval(evt.userId);
-    });
-    this.client.on('unmute-audio', evt => {
-      console.log(evt.userId + ' unmute audio');
-
-      this.setVolumeInterval(this.remoteStreams.find(stream => stream.getUserId() === evt.userId));
-    });
-    this.client.on('mute-video', evt => {
-      console.log(evt.userId + ' mute video');
-
-    });
-    this.client.on('unmute-video', evt => {
-      console.log(evt.userId + ' unmute video');
-
-      const stream = this.members.get(evt.userId);
-      if (stream) {
-        let streamId = stream.getId();
-        if (streamId) {
-        }
-      }
-    });
   }
 
   showStreamState(stream) {

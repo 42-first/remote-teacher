@@ -144,7 +144,7 @@
     </section>
 
     <!-- 会议演讲者模式 -->
-    <meeting v-if="hasMeeting && joined"></meeting>
+    <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
   </section>
 </template>
 <script>
@@ -385,6 +385,7 @@
         'setCurrSlide',
         'setBoardMsg',
         'setVisibleDanmuSend',
+        'setTeacher',
       ]),
 
       /*

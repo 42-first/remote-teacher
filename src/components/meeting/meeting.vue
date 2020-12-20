@@ -8,7 +8,7 @@
 
 <template>
   <!-- 主页面布局 -->
-  <section class="meeting__wrap J_meeting" :class="{ 'preview': visibleFullscreen || visibleFullVideo }" tabindex="1">
+  <section class="meeting__wrap J_meeting" :class="{ 'preview': visibleFullscreen }" tabindex="1">
     <fullscreen v-if="visibleFullscreen"></fullscreen>
     <!-- 会议悬浮框 -->
     <section class="meeting__container" v-else >
@@ -26,7 +26,10 @@
       <section class='speakers__container'>
         <!-- 共享 -->
         <section class="member__container" v-show="meeting.otherscreen">
-          <video class="video" id="J_screenshare"></video>
+          <template v-if="meetingSDK === 'local'">
+            <video class="video" id="J_screenshare"></video>
+          </template>
+          <div class="video" id="J_screenshare" v-else></div>
           <div class="share-info box-between">
             <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
           </div>
@@ -87,6 +90,8 @@ import fullscreen from './fullscreen'
 import meeting from './mixin/meeting'
 // 本地视频
 import localMeeting from './mixin/local-meeting'
+// 腾讯
+import tencentMeeting from './mixin/tencent-meeting'
 import move from './mixin/move'
 
 
@@ -96,8 +101,6 @@ export default {
     return {
       // 显示全屏模式
       visibleFullscreen: false,
-      visibleFullVideo: false,
-      //
 
     };
   },
@@ -105,14 +108,16 @@ export default {
     avatar,
     fullscreen
   },
-  mixins: [ meeting, localMeeting, move ],
+  mixins: [ meeting, localMeeting, tencentMeeting, move ],
   computed: {
     ...mapState([
       'baseInfo',
       'lesson',
+      'teacher',
     ]),
 
     ...mapState('meeting', [
+      'local',
       'user',
       // 会议状态
       'meeting',
@@ -120,6 +125,7 @@ export default {
       'speakers',
       // SDK类型
       'meetingSDK',
+      'lcalSharing',
     ]),
   },
   created() {
@@ -131,7 +137,11 @@ export default {
   },
   updated() {},
   beforeDestroy() {
-    window.rtcEngine && window.rtcEngine.close();
+    if(this.meetingSDK === 'tencent') {
+      this.exitRoomTencent();
+    } else if(this.meetingSDK === 'local') {
+      window.rtcEngine && window.rtcEngine.close();
+    }
   },
   filters: {
   },
@@ -150,6 +160,7 @@ export default {
       'setSpeakers',
       'setMeeting',
       'setMeetingSDK',
+      'setLocalSharing',
     ]),
 
     /**
@@ -157,22 +168,21 @@ export default {
      * @params
      */
     async init() {
-      // 获取会议基本信息 token 房间号等
-      // let { userid, avatar, userName } = this.baseInfo;
       let { id, avatar, name } = window.user;
       let meeting = this.meeting;
       let { audio, video, active } = meeting;
+      let uid = window.identityId || id;
       let user = {
-        id: id,
+        id: uid,
         name: name,
         avatar, audio, video, active
       };
 
       this.setUser(user);
-      this.setLocal(id);
+      this.setLocal(uid);
       this.setSpeakers([]);
 
-
+      // 获取会议基本信息 token 房间号等
       let data = await this.getMeeting();
       if(data) {
         console.log('joinMeeting:', data);
@@ -271,16 +281,10 @@ export default {
       let meeting = this.meeting;
       if(meeting.otherscreen) {
         setTimeout(()=>{
-          let shareEl = document.querySelector('#J_screenshare');
-
-          if(shareEl && window.shareStream) {
-            shareEl.srcObject = window.shareStream;
-
-            shareEl.oncanplay = () => shareEl.play();
-            shareEl.onplay = () =>{
-              shareEl.play().catch((error) => console.warn('shareEl.play() failed:%o', error));
-            };
-            shareEl.play().catch((error) => console.warn('shareEl.play() failed:%o', error));
+          if(this.meetingSDK === 'tencent') {
+            this.joinRemoteScreenSharing();
+          } else if(this.meetingSDK === 'local') {
+            this.joinRemoteScreenSharingLocal();
           }
         }, 0)
       }

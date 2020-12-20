@@ -44,21 +44,21 @@ function getDeviceInfo(){
 }
 
 let localMeeting = {
-  watch: {
-    // 音频控制
-    'meeting.audio'(newVal, oldVal) {
-      this.setAudioLocal(newVal);
-    },
-    // 视频控制
-    'meeting.video'(newVal, oldVal) {
-      this.setVideoLocal(newVal);
-    },
-    // 我自己开启了屏幕共享
-    'meeting.screen'(newVal, oldVal) {
-      this.setShareScreenLocal(newVal);
-    },
+  // watch: {
+  //   // 音频控制
+  //   'meeting.audio'(newVal, oldVal) {
+  //     this.setAudioLocal(newVal);
+  //   },
+  //   // 视频控制
+  //   'meeting.video'(newVal, oldVal) {
+  //     this.setVideoLocal(newVal);
+  //   },
+  //   // 我自己开启了屏幕共享
+  //   'meeting.screen'(newVal, oldVal) {
+  //     this.setShareScreenLocal(newVal);
+  //   },
 
-  },
+  // },
   methods: {
     /**
      * @method 进入会议初始化操作
@@ -476,6 +476,24 @@ let localMeeting = {
         }
       } catch (error) {
         console.error('[setShareScreenLocal] error:%s', JSON.stringify(error.message));
+      }
+    },
+
+    /**
+     * @method 用户接收共享屏幕
+     * @params
+     */
+    joinRemoteScreenSharingLocal() {
+      let shareEl = document.querySelector('#J_screenshare');
+
+      if(shareEl && window.shareStream) {
+        shareEl.srcObject = window.shareStream;
+
+        shareEl.oncanplay = () => shareEl.play();
+        shareEl.onplay = () =>{
+          shareEl.play().catch((error) => console.warn('shareEl.play() failed:%o', error));
+        };
+        shareEl.play().catch((error) => console.warn('shareEl.play() failed:%o', error));
       }
     },
 

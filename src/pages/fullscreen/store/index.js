@@ -22,6 +22,8 @@ const store = new Vuex.Store({
   state: {
     // 课程信息 lessonID 课程ID classroomID presentationid, sid si
     lesson: {},
+    // 老师信息
+    teacher: null,
     // 课堂cards
     cards: [],
     // timeline列表
@@ -47,6 +49,7 @@ const store = new Vuex.Store({
       state.lesson = {};
       state.cards = [];
       state.lines = [];
+      state.teacher = null;
     },
 
     setLines(state, lines) {
@@ -83,6 +86,10 @@ const store = new Vuex.Store({
 
     setObserverMode(state, data) {
       state.observerMode = data;
+    },
+
+    setTeacher(state, data) {
+      state.teacher = data;
     },
   },
 
@@ -123,6 +130,10 @@ const store = new Vuex.Store({
 
     setObserverMode({commit}, slide) {
       commit('setObserverMode', slide)
+    },
+
+    setTeacher({commit}, data) {
+      commit('setTeacher', data)
     },
   },
 

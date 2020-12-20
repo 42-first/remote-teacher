@@ -132,6 +132,7 @@ var mixin = {
       let timeline;
       let item;
       let hasMsg = true;
+      let userId = this.identityId || this.userID;
 
       if(msg.op) {
         // 弹幕状态
@@ -178,6 +179,43 @@ var mixin = {
 
               item = msg['event'];
               this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
+            }
+
+            break
+
+          // 用户加入会议
+          // { op: 'userjoin', uid: '101', meetinguid: 2110, name: '', avatar: '', role: 'teacher', video: true/false, audio: true/false  }
+          case 'userjoin':
+            if(msg.uid !== userId) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.joinUser(msg, 'ws');
+              }
+            }
+
+            break
+
+          // 请求关闭/启用音视频
+          case 'controldevice':
+            // { op: 'controldevice', type: 'audio/video', value: true/false, uid: ['101'] }
+            // 是否让我禁言还是全员禁言 老师不需要
+            // if(msg.uid && msg.uid.includes(this.user.id)) {
+            //   let meeting = this.meeting;
+            //   meeting[msg.type] = msg.value;
+
+            //   this.setMeeting(meeting);
+            // }
+
+            break
+
+          // 共享桌面
+          case 'sharescreen':
+            // { op: 'sharescreen', shareid: 0, sharename, type: '', width: 0, height: 0, uid: 0 }
+            if(msg.uid && msg.uid != userId) {
+              // let meeting = this.meeting;
+              // meeting.otherscreen = true;
+
+              // this.setMeeting(meeting);
             }
 
             break

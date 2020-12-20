@@ -25,7 +25,11 @@
          <!-- 共享 -->
         <section class="member__wrap" :class="{ 'preview': visibleLargeScreen }" v-show="meeting.otherscreen">
           <div class="member__container box-center" @click="handlePreviewVideo">
-            <video class="video" id="J_screenshare"></video>
+            <!-- <video class="video" id="J_screenshare"></video> -->
+            <template v-if="meetingSDK === 'local'">
+              <video class="video" id="J_screenshare"></video>
+            </template>
+            <div class="video" id="J_screenshare" v-else></div>
             <div class="share-info box-between">
               <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
             </div>
@@ -55,7 +59,6 @@ export default {
   name: "meeting-fullscreen",
   data() {
     return {
-      list: [1,2,3,4,5,6,7,8],
       visibleLargeScreen: false
     };
   },
@@ -70,6 +73,7 @@ export default {
       'meeting',
       // 会议成员
       'speakers',
+      'meetingSDK',
     ]),
   },
   created() {

@@ -50,13 +50,67 @@ let meetingMixin = {
 
         setTimeout(() => {
           if(this.meetingSDK === 'tencent') {
-            this.joinRemoteScreenSharing(newVal.uid );
+            this.joinRemoteScreenSharing(newVal.uid);
           }
         }, 500);
       }
     },
   },
   methods: {
+    /**
+     * @method 通过ws命令加入会议更新姓名和头像
+     * @param
+     */
+    joinUser(data, from) {
+      let speakers = this.speakers;
+      let { uid, name, avatar, role, video, audio } = data;
+      let index = speakers.findIndex((user)=>{
+        return user.id == uid;
+      })
+
+      let user = { id: uid, uid, name, avatar, role, video, audio, active: false };
+
+      // 存在用户
+      if(~index) {
+        // SDK远端加入没有name和avatar
+        if(from === 'ws') {
+          user = speakers[index];
+          Object.assign(user, {
+            name, avatar, role
+          })
+
+          speakers.splice(index, 1, user);
+        }
+      } else {
+        // 教师放在最前面
+        if(data.role === 'lecturer' || data.role === 'collaborator') {
+          speakers.unshift(user);
+        } else {
+          speakers.push(user);
+        }
+      }
+
+      this.setSpeakers(speakers);
+    },
+
+    updataUser(data, key) {
+      let speakers = this.speakers;
+      let { uid } = data;
+      let index = speakers.findIndex((user)=>{
+        return user.id == uid;
+      })
+
+      if(~index) {
+        user = speakers[index];
+        Object.assign(user, {
+          key: data[key]
+        })
+
+        speakers.splice(index, 1, user);
+        this.setSpeakers(speakers);
+      }
+    },
+
     /**
      * @method 获取会议基本信息 token channel
      * @param
@@ -91,9 +145,7 @@ let meetingMixin = {
       request.post(URL, params).
       then( res => {
         if (res && res.code === 0) {
-          setTimeout(()=>{
-            this.getSpeakers();
-          }, 500)
+         this.getSpeakers();
         }
       }).
       catch(error => {
@@ -117,8 +169,9 @@ let meetingMixin = {
           let speakers = this.speakers;
           if(items && items.length) {
             items.forEach((item)=>{
-              let { identityId, meetingUID, name, avatar, role, video, audio } = item;
-              let user = { id: identityId, uid: meetingUID, name, avatar, role, video, audio, active: false };
+              let { identityId, name, avatar, role, video, audio } = item;
+              let active = audio ? true : false;
+              let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == identityId;

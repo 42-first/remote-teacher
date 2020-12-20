@@ -11,8 +11,12 @@
   <section class="user-item box-center" :class="{ 'fullscreen': fullscreen }" >
     <div class="avatar-wrap box-center">
       <img class="user--avatar" :src="member.avatar" alt="头像" v-show="!member.video">
-      <video class="user--video" :id="'uid-'+member.id" v-show="member.video"></video>
-      <audio class="user--audio" :id="'audio-'+member.id" v-show="member.audio"></audio>
+      <!-- 本地会议 -->
+      <template v-if="meetingSDK === 'local'">
+        <video class="user--video" :id="'uid-'+member.id" v-show="member.video"></video>
+        <audio class="user--audio" :id="'audio-'+member.id" v-show="member.audio"></audio>
+      </template>
+      <div class="user--video" :id="member.id" v-show="member.video" v-else></div>
     </div>
     <div class="user-info box-between">
       <div class="user-name box-center cfff">
@@ -51,6 +55,7 @@
     computed: {
       ...mapState('meeting', [
         'local',
+        'meetingSDK'
       ]),
     },
     watch: {
@@ -58,7 +63,7 @@
         console.log('member.video', newVal);
 
         setTimeout(()=>{
-          this.initLocalVideo();
+          this.init();
         }, 2000)
       },
       'member.audio'(newVal) {
@@ -78,8 +83,10 @@
     },
     methods: {
       init() {
-        this.initLocalVideo();
-        this.initLocalAudio();
+        if(this.meetingSDK === 'local') {
+          this.initLocalVideo();
+          this.initLocalAudio();
+        }
       },
 
       /**
