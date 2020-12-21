@@ -14,6 +14,7 @@ const meeting = {
     // }
     // 会议状态
     meeting: {
+      joined: true,
       // 是否开启音频
       audio: false,
       // 是否开启音频

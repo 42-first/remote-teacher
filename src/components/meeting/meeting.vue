@@ -72,7 +72,7 @@
             <p class="action-tip c666">{{ meeting.screen ? "关闭共享" : "共享屏幕" }}</p>
           </section>
         </section>
-        <section class="hangup__btn box-center" @click="handleEnd">
+        <section class="hangup__btn box-center" @click="handleHangup">
           <svg class="icon f20 ccc" aria-hidden="true">
             <use xlink:href="#icon20-jieshu"></use>
           </svg>
@@ -200,7 +200,7 @@ export default {
           shareInfo.uid = shareInfo.identityId;
         }
 
-        this.setMeeting(Object.assign({}, this.meeting, data));
+        this.setMeeting(Object.assign({ joined: true }, this.meeting, data));
 
         setTimeout(()=>{
           // 初始化视频通话SDK
@@ -252,14 +252,6 @@ export default {
 
       meeting.video = video;
       this.setMeeting(meeting);
-    },
-
-    /**
-     * @method 结束互动
-     * @params
-     */
-    handleEnd() {
-      this.setEnableInteractive(false);
     },
 
     /**

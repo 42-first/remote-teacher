@@ -12,7 +12,10 @@ import { mapState, mapActions } from 'vuex';
 
 let meetingMixin = {
   watch: {
-    'meeting.status'(newVal) {
+    'meeting.joined'(newVal, oldVal) {
+      if(!newVal) {
+        this.handleHangup();
+      }
     },
     // 音频控制
     'meeting.audio'(newVal, oldVal) {
@@ -57,6 +60,35 @@ let meetingMixin = {
     },
   },
   methods: {
+    /**
+     * @method 挂断
+     * @param
+     */
+    async handleHangup() {
+      let result = await this.leavedChanel();
+
+      if(this.meetingSDK === 'tencent') {
+        this.exitRoomTencent();
+      } else if(this.meetingSDK === 'local') {
+        this.stopLocaleeting();
+      }
+
+      this.$parent.joined = false;
+    },
+
+    /**
+     * @method 强制静音
+     * @param
+     */
+    forceMute(msg) {
+      let meeting = this.meeting;
+      meeting.audio = false;
+
+      this.setMeeting(meeting);
+
+      this.$toast({ type: 1, message: '全员静音', duration: 2000 });
+    },
+
     /**
      * @method 通过ws命令加入会议更新姓名和头像
      * @param
@@ -174,7 +206,7 @@ let meetingMixin = {
               let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
 
               let index = speakers.findIndex((speaker)=>{
-                return speaker.id == identityId;
+                return speaker.id == user.id;
               })
 
               // 存在用户
@@ -256,14 +288,16 @@ let meetingMixin = {
       let URL = API.lesson.leave_meeting
       let params = {
       }
-      request.post(URL, params).
+
+      return request.post(URL, params).
       then(res => {
         if(res && res.code === 0){
-
+          return true;
         }
       }).
       catch(error => {
         console.error('leave_meeting:', error);
+        return false;
       })
     },
 

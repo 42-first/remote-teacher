@@ -221,31 +221,48 @@ export default class RtcClient {
     }
   }
 
-  unmuteLocalVideo() {
+  async unmuteLocalVideo() {
     // 打开摄像头，增加视频通话
     let localStream = this.localStream;
 
-    return new Promise((resolve, reject) => {
-      try {
-        const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
-        videoStream.initialize().
-        then(() => {
-          console.log('camera video stream init success');
+    // return new Promise((resolve, reject) => {
+    try {
+      const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
+      videoStream.setVideoProfile('360p');
+      videoStream.initialize().
+      then(() => {
+        console.log('camera video stream init success');
 
-          // 增加视频通话
-          localStream.addTrack(videoStream.getVideoTrack()).
-          then(() => {
-            console.log('add video call success');
-            // 播放本地视频
-            localStream.play(this.uid);
-            resolve(true);
-          });
+        // 增加视频通话
+        localStream.addTrack(videoStream.getVideoTrack()).
+        then(() => {
+          console.log('add video call success');
+          // 播放本地视频
+          localStream.play(this.uid);
+          // resolve(true);
         });
-      } catch (e) {
-        console.error('failed to muteLocalVideo ' + e);
-        reject(e);
-      }
-    });
+      }).catch((error)=>{
+        console.error('failed to initialize: ' + error);
+
+        // const stream = await navigator.mediaDevices.getUserMedia({
+        //   video: { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 10, max: 15 } }
+        // });
+
+        // 本地流初始化失败
+        switch (error.name) {
+          case 'NotReadableError':
+            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
+            break;
+          default:
+            console.error('initialize: ' + error.name);
+            break;
+        }
+      });
+    } catch (e) {
+      console.error('failed to muteLocalVideo ' + e);
+      // reject(e);
+    }
+    // });
   }
 
   resumeStreams() {

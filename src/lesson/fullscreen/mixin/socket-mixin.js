@@ -197,14 +197,13 @@ var mixin = {
 
           // 请求关闭/启用音视频
           case 'controldevice':
-            // { op: 'controldevice', type: 'audio/video', value: true/false, uid: ['101'] }
-            // 是否让我禁言还是全员禁言 老师不需要
-            // if(msg.uid && msg.uid.includes(this.user.id)) {
-            //   let meeting = this.meeting;
-            //   meeting[msg.type] = msg.value;
-
-            //   this.setMeeting(meeting);
-            // }
+            // { op: 'controldevice', type: 'audio/video', value: true/false }
+            if(msg.type === 'audio') {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.forceMute(msg);
+              }
+            }
 
             break
 

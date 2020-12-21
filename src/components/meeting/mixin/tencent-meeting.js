@@ -116,13 +116,10 @@ let tencentMixin = {
       client.on('stream-updated', this.onUserStreamUpdated.bind(this));
       // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
       client.on('stream-removed', this.onUserStreamRemoved.bind(this));
-
-      // 活跃用户
-      client.on('onUserVoiceVolume', this.onUserVoiceVolume.bind(this));
     },
 
     onError(err) {
-      console.error(err);
+      console.error('client onError: ' + err);
     },
 
     onBanned(evt) {
@@ -157,6 +154,15 @@ let tencentMixin = {
         // rtcEngine.muteLocalAudio();
         this.joinedMeeting(user);
       }, 0)
+
+      let states = rtcEngine.getRemoteMutedState();
+      if(states && states.length) {
+        console.log('states:', states);
+
+        states.forEach((item)=>{
+          let uid = item.userId;
+        })
+      }
     },
 
     /**
@@ -171,7 +177,7 @@ let tencentMixin = {
      */
     onRemoteUserEnterRoom(evt) {
       const uid = evt.userId;
-      console.log('peer-join ' + uid);
+      console.log('peer-join:' + uid);
       if (uid === shareUserId) {
         return this;
       }
@@ -352,6 +358,7 @@ let tencentMixin = {
       const rtcEngine = this.rtcEngine;
       const remoteStream = evt.stream;
       const id = remoteStream.getId();
+      const userId = remoteStream.getUserId();
       const type = remoteStream.getType();
       remoteStream.stop();
       rtcEngine.remoteStreams = rtcEngine.remoteStreams.filter(stream => {
@@ -364,7 +371,7 @@ let tencentMixin = {
       }
 
       // 删除对声音大小的监听
-      rtcEngine.deleteVolumeInterval(remoteStream.getUserId());
+      rtcEngine.deleteVolumeInterval(userId);
       console.log(`stream-removed ID: ${id}  type: ${type}`);
     },
 
@@ -507,9 +514,9 @@ let tencentMixin = {
       try {
         let rtcEngine = this.rtcEngine;
         if(video) {
-          rtcEngine.unmuteLocalVideo().then(()=>{
-
-          });
+          rtcEngine.unmuteLocalVideo()
+          // .then(()=>{
+          // });
         } else {
           rtcEngine.muteLocalVideo();
         }
@@ -567,6 +574,7 @@ let tencentMixin = {
      */
     joinRemoteScreenSharing() {
       let shareStream = this.shareStream;
+      shareStream && shareStream.stop();
       setTimeout(()=>{
         let view = document.querySelector(`#J_screenshare`)
 
@@ -576,7 +584,7 @@ let tencentMixin = {
             shareStream.videoPlayer_.element_.controls = true;
           });
         }
-      }, 0)
+      }, 500)
     },
 
     /**

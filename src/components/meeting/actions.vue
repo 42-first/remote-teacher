@@ -37,16 +37,16 @@
         <p class="pt5 f12 c7a">{{ meeting.screen ? "结束共享" : "共享屏幕" }}</p>
       </section>
       <div class="line"></div>
-      <section class="actions__item" @click="handleShareScreen">
+      <!-- <section class="actions__item" @click="handleShareScreen">
         <div class="actions__btn box-center">
           <svg class="icon f28 cfff" aria-hidden="true">
             <use xlink:href="#icon32-chengyuan1" ></use>
           </svg>
         </div>
         <p class="pt5 f12 c7a">全员静音</p>
-      </section>
+      </section> -->
       <div class="line"></div>
-      <section class="actions__item" @click="">
+      <section class="actions__item" @click="handleHangup">
         <div class="actions__btn over box-center">
           <svg class="icon f28 cfff" aria-hidden="true">
             <use xlink:href="#icon20-jieshu" ></use>
@@ -94,6 +94,17 @@ export default {
     ...mapActions('meeting', [
       'setMeeting',
     ]),
+
+    /**
+     * @method 挂断
+     * @param
+     */
+    handleHangup(evt) {
+      let meeting = this.meeting;
+      meeting.joined = false;
+
+      this.setMeeting(meeting);
+    },
 
     /**
      * @method 屏幕共享

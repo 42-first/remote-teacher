@@ -28,8 +28,8 @@
       </audio>
     </section>
 
-    <!-- 直播入口 视频直播 -->
-    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
+    <!-- 直播入口 视频直播 加入会议不再显示直播 -->
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2 && !joined">
       <!-- 定制video -->
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
@@ -105,10 +105,10 @@
           <i class="iconfont icon-48-jieru f28 cfff"></i>
         </div>
         <!-- 小程序二维码 -->
-        <section class="mini-code__wrap">
+        <!-- <section class="mini-code__wrap">
           <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
           <div class="c666 bold" v-html="$t('scanjoininteraction')"></div>
-        </section>
+        </section> -->
       </div>
     </section>
 
