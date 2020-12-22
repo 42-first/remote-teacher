@@ -298,7 +298,14 @@ let tencentMixin = {
       console.log('stream-subscribed uid: ', uid);
 
       remoteStream.on('player-state-changed', event => {
-        console.log(`${event.type} player is ${event.state}`);
+        console.log(`${event.type} player is ${event.state}`, event);
+        let user = {
+          id: uid,
+          type: event.type,
+          value: event.state == 'PLAYING' ? true : false
+        };
+        this.updateMeetingStatus(user);
+
         if (event.type == 'video' && event.state == 'STOPPED') {
         }
 
@@ -372,6 +379,8 @@ let tencentMixin = {
       // 屏幕分享流
       if(type === 'auxiliary') {
         this.setSubStreamAvailable(userId, false);
+      } else {
+
       }
 
       // 删除对声音大小的监听
@@ -568,12 +577,13 @@ let tencentMixin = {
           this.startShare(msg);
         } else {
           // todo: 不支持
+          this.$toast({ type: 1, message: '当前浏览器不支持屏幕共享', duration: 2000 });
         }
       } else {
         shareClient.leave();
 
-        this.setLocalSharing(false);
         this.endShare();
+        this.setLocalSharing(false);
       }
     },
 

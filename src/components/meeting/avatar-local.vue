@@ -104,7 +104,7 @@
 
           console.log('initTencent:', stream)
 
-          if(stream) {
+          if(stream && (member.audio || member.video)) {
             stream.stop()
             stream.play(uid)
             .catch(err => {

@@ -523,7 +523,11 @@
        * @member 加入会议
        */
       handleJoin() {
-        this.joined = !this.joined;
+        if(this.liveType === 2) {
+          this.handlestopVideo();
+        }
+
+        this.joined = true;
       }
     },
     created() {

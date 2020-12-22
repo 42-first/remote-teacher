@@ -27,7 +27,7 @@ const meeting = {
       // 分享基本信息
       shareInfo: null
     },
-    lcalSharing: false,
+    localSharing: false,
     // 发言列表
     speakers: [],
     // 视频通话使用的SDK kwai: 快手 tencent：腾讯 local:本地
@@ -50,7 +50,7 @@ const meeting = {
         otherscreen: false
       };
       state.speakers = [];
-      state.lcalSharing = false;
+      state.localSharing = false;
     },
 
     setLocal(state, data) {
@@ -74,7 +74,7 @@ const meeting = {
     },
 
     setLocalSharing(state, data) {
-      state.lcalSharing = data;
+      state.localSharing = data;
     },
   },
 
@@ -104,7 +104,7 @@ const meeting = {
     },
 
     setLocalSharing({commit}, data) {
-      commit('setLcalSharing', data)
+      commit('setLocalSharing', data)
     },
 
   }

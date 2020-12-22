@@ -125,7 +125,7 @@ export default {
       'speakers',
       // SDK类型
       'meetingSDK',
-      'lcalSharing',
+      'localSharing',
     ]),
   },
   created() {

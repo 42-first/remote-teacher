@@ -263,7 +263,7 @@ let meetingMixin = {
         this.requestLoading = true;
       }
 
-      return request.post(URL, params).
+      return request.get(URL, params).
       then( res => {
         if (res && res.code === 0) {
           let data = res.data;
