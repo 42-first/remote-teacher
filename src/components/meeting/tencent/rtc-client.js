@@ -100,7 +100,7 @@ export default class RtcClient {
       // not to specify cameraId/microphoneId to avoid OverConstrainedError
       this.localStream = TRTC.createStream({
         audio: true,
-        video: false,
+        video: true,
         userId: this.uid,
         mirror: true
       });
@@ -118,6 +118,9 @@ export default class RtcClient {
 
       // publish the local stream
       await this.publish();
+
+      this.muteLocalAudio();
+      this.muteLocalVideo();
 
       // 监听自己的声音大小
       this.setVolumeInterval(this.localStream);
@@ -191,16 +194,10 @@ export default class RtcClient {
     this.setVolumeInterval(this.localStream);
   }
 
-  // muteLocalVideo() {
-  //   this.localStream.muteVideo();
-  // }
-
-  // unmuteLocalVideo() {
-  //   this.localStream.unmuteVideo();
-  // }
-
   muteLocalVideo() {
     let localStream = this.localStream;
+
+    // localStream.muteVideo();
 
     try {
       const videoTrack = localStream.getVideoTrack();
@@ -221,6 +218,10 @@ export default class RtcClient {
     // 打开摄像头，增加视频通话
     let localStream = this.localStream;
 
+    // localStream.unmuteVideo();
+    // localStream.play(this.uid);
+
+    await this.unpublish();
     // return new Promise((resolve, reject) => {
     try {
       const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
@@ -233,7 +234,10 @@ export default class RtcClient {
         localStream.addTrack(videoStream.getVideoTrack()).
         then(() => {
           console.log('add video call success');
+
+          this.publish();
           // 播放本地视频
+          localStream.stop();
           localStream.play(this.uid);
           // resolve(true);
         });

@@ -149,7 +149,7 @@ let tencentMixin = {
      * @method 本地用户加入通道成功
      * @params result - 进房结果， 大于 0 时，为进房间消耗的时间，这表示进进房成功。如果为 -1 ，则表示进房失败。
      */
-    enterRoom() {
+    async enterRoom() {
       log.info('[onEnterRoom] result:%s');
 
       const rtcEngine = this.rtcEngine;
@@ -167,9 +167,8 @@ let tencentMixin = {
         this.setSpeakers(speakers);
       }
 
-      rtcEngine.initLocalStream();
+      await rtcEngine.initLocalStream();
       setTimeout(()=>{
-        // rtcEngine.muteLocalAudio();
         this.joinedMeeting(user);
       }, 0)
 
