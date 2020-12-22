@@ -396,8 +396,8 @@ let localMeeting = {
         if(user[data.type] !== data.value) {
           user[data.type] = data.value;
 
-          if(data.type === 'audio' && !data.value) {
-            user.active = false;
+          if(data.type === 'audio') {
+            user.active = data.value;
           }
 
           speakers.splice(index, 1, user);
