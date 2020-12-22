@@ -268,8 +268,12 @@ let tencentMixin = {
         // don't need screen shared by us
         client.unsubscribe(remoteStream);
       } else {
-        members.set(userId, remoteStream);
-        rtcEngine.setMembers(members);
+        if(type === 'main') {
+          members.set(userId, remoteStream);
+          rtcEngine.setMembers(members);
+        } else if(type === 'auxiliary') {
+          this.shareStream = remoteStream;
+        }
 
         console.log('subscribe to this remote stream');
         client.subscribe(remoteStream);
@@ -314,7 +318,7 @@ let tencentMixin = {
 
       // 屏幕分享流
       if(type === 'auxiliary') {
-        this.shareStream = remoteStream;
+        // this.shareStream = remoteStream;
         this.setSubStreamAvailable(uid, true);
       } else {
         remoteStream.play(uid);
