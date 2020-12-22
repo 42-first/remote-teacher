@@ -55,6 +55,14 @@ export default class RtcClient {
     });
   }
 
+  setMembers(members) {
+    this.members = members;
+  }
+
+  setRemoteStreams(remoteStreams) {
+    this.remoteStreams = remoteStreams;
+  }
+
   async join() {
     if (this.isJoined) {
       console.warn('duplicate RtcClient.join() observed');
@@ -75,18 +83,6 @@ export default class RtcClient {
       console.error('join room failed! ' + e);
 
       return false;
-    }
-
-    // 更新成员状态
-    let states = this.client.getRemoteMutedState();
-    for (let state of states) {
-      if (state.audioMuted) {
-        state.userId
-      }
-
-      if (state.videoMuted) {
-        state.userId
-      }
     }
   }
 

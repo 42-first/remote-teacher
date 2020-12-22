@@ -32,6 +32,7 @@ let tencentMixin = {
 
       // 确保当前用户
       roomId = Number(info && info.teacherUserId) || roomId;
+      this.roomId = roomId;
       let uid = this.user && this.user.id;
       // 设置本地分享的UID
       shareUserId = `share-${uid}`;
@@ -74,19 +75,36 @@ let tencentMixin = {
         }
       })
 
-      // 屏幕分享
-      let canShere = TRTC.isScreenShareSupported();
-      if(canShere) {
-        let shareOptions = {
-          appId,
-          token,
-          uid: shareUserId,
-          roomId,
-          privateMapKey
-        };
-        let shareClient = new ShareClient(shareOptions);
-        this.shareClient = shareClient;
-        window.shareClient = shareClient;
+      // 屏幕分享是否支持
+      this.isScreenShareSupported = TRTC.isScreenShareSupported();
+    },
+
+    /**
+     * @method 初始化分享
+     * @params
+     */
+    async initTencentShare() {
+      if(this.isScreenShareSupported ) {
+        let shareConfig = await this.getShareConfig();
+
+        if(shareConfig && shareConfig.token) {
+          let { shareId, token, privateMapKey } = shareConfig;
+          let shareOptions = {
+            appId: this.appId,
+            uid: shareId,
+            roomId: this.roomId,
+            token,
+            privateMapKey
+          };
+
+          let shareClient = new ShareClient(shareOptions);
+          this.shareClient = shareClient;
+          window.shareClient = shareClient;
+
+          return shareClient;
+        }
+      } else {
+        return null;
       }
     },
 
@@ -208,17 +226,7 @@ let tencentMixin = {
       const uid = evt.userId;
       console.log('peer-leave ' + uid);
 
-      // 移除发言列表中用户
-      let speakers = this.speakers;
-      let index = speakers.findIndex((user)=>{
-        return uid == user.uid;
-      })
-
-      // 存在用户
-      if(~index) {
-        speakers.splice(index, 1);
-        this.setSpeakers(speakers);
-      }
+      // 这里不是真正的离开 需要走自己的业务判读是都离开
     },
 
     /**
@@ -248,25 +256,24 @@ let tencentMixin = {
      */
     onUserStreamAdded(evt) {
       const rtcEngine = this.rtcEngine;
+      const members = rtcEngine.members;
       const client = rtcEngine.client;
       const remoteStream = evt.stream;
       const id = remoteStream.getId();
       const userId = remoteStream.getUserId();
       const type = remoteStream.getType();
-      rtcEngine.members.set(userId, remoteStream);
+
       console.log(`remote stream added: [${userId}] ID: ${id} type: ${type}`);
 
       if (userId === shareUserId) {
         // don't need screen shared by us
         client.unsubscribe(remoteStream);
       } else {
+        members.set(userId, remoteStream);
+        rtcEngine.setMembers(members);
+
         console.log('subscribe to this remote stream');
         client.subscribe(remoteStream);
-
-        // 屏幕分享流
-        // if(type === 'auxiliary') {
-        //   this.setSubStreamAvailable(userId, true);
-        // }
       }
     },
 
@@ -275,6 +282,7 @@ let tencentMixin = {
      * @params
      */
     onUserStreamSubscribed(evt) {
+      console.log('stream-subscribed: ', evt);
       const rtcEngine = this.rtcEngine;
       const client = rtcEngine.client;
 
@@ -282,7 +290,10 @@ let tencentMixin = {
       const type = remoteStream.getType();
       const streamId = remoteStream.getId();
       let uid = rtcEngine.getUidByStreamId(streamId);
-      rtcEngine.remoteStreams.push(remoteStream);
+
+      const remoteStreams = rtcEngine.remoteStreams
+      remoteStreams.push(remoteStream);
+      rtcEngine.setRemoteStreams(remoteStreams);
 
       console.log('stream-subscribed uid: ', uid);
 
@@ -303,23 +314,8 @@ let tencentMixin = {
         remoteStream.play(uid);
       }
 
-      // if (remoteStream.userId_ && remoteStream.userId_.indexOf('share_') > -1) {
-      //   remoteStream.play(uid, { objectFit: 'contain' }).
-      //   then(() => {
-      //     // Firefox，当video的controls设置为true的时候，video-box无法监听到click事件
-      //     // if (getBrowser().browser === 'Firefox') {
-      //     //   return;
-      //     // }
-      //     remoteStream.videoPlayer_.element_.controls = true;
-      //   });
-      // } else {
-      //   remoteStream.play(uid);
-      // }
-
       if (!remoteStream.hasVideo()) {
       }
-
-      console.log('stream-subscribed streamId: ', streamId);
     },
 
     /**
@@ -331,20 +327,25 @@ let tencentMixin = {
 
       const rtcEngine = this.rtcEngine;
       const remoteStream = evt.stream;
+      const type = remoteStream.getType();
+      let hasAudio = remoteStream.hasAudio();
+      let hasVideo = remoteStream.hasVideo();
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
-      if (!remoteStream.hasVideo()) {
+      if (remoteStream.hasVideo() && type === 'main') {
+        // remoteStream.stop();
+        // remoteStream.play(uid);
+      }
 
+      // 更新流替换
+      if(type === 'main' && (hasAudio || hasVideo)) {
+        rtcEngine.members.set(uid, remoteStream);
       }
 
       console.log(
-        'type: ' +
-          remoteStream.getType() +
-          ' stream-updated hasAudio: ' +
-          remoteStream.hasAudio() +
-          ' hasVideo: ' +
-          remoteStream.hasVideo() +
-          ' uid: ' +
-          uid
+        'type: ' +type +
+          ' stream-updated hasAudio: ' +hasAudio +
+          ' hasVideo: ' + hasVideo +
+          ' uid: ' + uid
       );
     },
 
@@ -361,9 +362,12 @@ let tencentMixin = {
       const userId = remoteStream.getUserId();
       const type = remoteStream.getType();
       remoteStream.stop();
-      rtcEngine.remoteStreams = rtcEngine.remoteStreams.filter(stream => {
+
+      let remoteStreams = rtcEngine.remoteStreams;
+      remoteStreams = remoteStreams.filter(stream => {
         return stream.getId() !== id;
       });
+      rtcEngine.setRemoteStreams(remoteStreams);
 
       // 屏幕分享流
       if(type === 'auxiliary') {
@@ -544,6 +548,11 @@ let tencentMixin = {
       console.log('setScreenShare:', screen);
       let shareClient = this.shareClient;
 
+      // 没有实例化分享
+      if(!shareClient) {
+        shareClient = await this.initTencentShare();
+      }
+
       const user = this.user;
       const userId = user.id;
 
@@ -558,7 +567,7 @@ let tencentMixin = {
           let msg = { shareId: Number(userId), shareName: user.name, type: String(type), width: 0, height: 0 };
           this.startShare(msg);
         } else {
-
+          // todo: 不支持
         }
       } else {
         shareClient.leave();

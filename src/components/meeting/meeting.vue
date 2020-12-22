@@ -255,14 +255,6 @@ export default {
     },
 
     /**
-     * @method 关闭预览视频
-     * @params
-     */
-    handleClosedPreviewVideo() {
-      this.visibleFullVideo = false;
-    },
-
-    /**
      * @method 显示全屏模式
      * @params
      */

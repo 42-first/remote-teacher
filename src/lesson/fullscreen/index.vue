@@ -69,7 +69,7 @@
     </section>
 
     <!-- 实时弹幕列表 -->
-    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
+    <!-- <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section> -->
 
     <!-- 更多操作 -->
     <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore && !hasMeeting }" >
@@ -142,6 +142,9 @@
 
       </div>
     </section>
+
+    <!-- 实时弹幕列表 -->
+    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
 
     <!-- 会议演讲者模式 -->
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
@@ -905,46 +908,41 @@
       background: #08BC72;
     }
 
-    .meeting__join:hover +.mini-code__wrap {
-      opacity: 1;
-      transition: opacity ease-out 1.25s;
-    }
+    // .meeting__join:hover +.mini-code__wrap {
+    //   opacity: 1;
+    //   transition: opacity ease-out 1.25s;
+    // }
 
-    .mini-code__wrap {
-      opacity: 0;
-      position: absolute;
-      right: calc(100% + 20px);
-      bottom: 0;
+    // .mini-code__wrap {
+    //   opacity: 0;
+    //   position: absolute;
+    //   right: calc(100% + 20px);
+    //   bottom: 0;
 
-      padding: 16px 20px;
-      width: 200px;
-      height: 242px;
+    //   padding: 16px 20px;
+    //   width: 200px;
+    //   height: 242px;
 
-      border-radius: 4px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-      transition: all ease-in 0.35s;
-      background: #fff;
+    //   border-radius: 4px;
+    //   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    //   transition: all ease-in 0.35s;
+    //   background: #fff;
 
-      // &:hover {
-      //   opacity: 1;
-      //   transition: opacity ease-out 1.25s;
-      // }
+    //   .qr-code {
+    //     width: 160px;
+    //     height: 160px;
+    //   }
 
-      .qr-code {
-        width: 160px;
-        height: 160px;
-      }
+    //   &:after {
+    //     content: '';
+    //     position: absolute;
+    //     right: -18px;
+    //     bottom: 15px;
 
-      &:after {
-        content: '';
-        position: absolute;
-        right: -18px;
-        bottom: 15px;
-
-        border: 10px solid transparent;
-        border-left-color: #fff;
-      }
-    }
+    //     border: 10px solid transparent;
+    //     border-left-color: #fff;
+    //   }
+    // }
 
     .action-tip:hover:before {
       content: '';

@@ -64,13 +64,13 @@
 
         setTimeout(()=>{
           this.init();
-        }, 2000)
+        }, 1000)
       },
       'member.audio'(newVal) {
         console.log('member.audio', newVal);
 
         setTimeout(()=>{
-          this.initLocalAudio();
+          this.init();
         }, 1000)
       },
       'member.id'(newVal) {
@@ -86,6 +86,34 @@
         if(this.meetingSDK === 'local') {
           this.initLocalVideo();
           this.initLocalAudio();
+        } else if(this.meetingSDK === 'tencent') {
+          this.initTencent();
+        }
+      },
+
+      /**
+       * @method 初始化腾讯会议播放
+       */
+      initTencent() {
+        let rtcEngine = window.rtcEngine;
+        let member = this.member;
+        let uid = String(member && member.id);
+
+        if(rtcEngine && uid) {
+          let stream = rtcEngine.members.get(uid);
+
+          console.log('initTencent:', stream)
+
+          if(stream) {
+            stream.stop()
+            stream.play(uid)
+            .catch(err => {
+              let errCode = err.getCode()
+              if (errCode === 0x4043) {
+                stream.stop()
+              }
+            });
+          }
         }
       },
 
@@ -189,11 +217,11 @@
       },
     },
     created() {
-    },
-    mounted() {
       setTimeout(()=>{
         this.init();
       }, 500)
+    },
+    mounted() {
     },
     updated() {},
     beforeDestroy() {

@@ -195,6 +195,18 @@ var mixin = {
 
             break
 
+          // 用户离开会议
+          // { op: 'userleave', uid: 101 }
+          case 'userleave':
+            if(userId !== msg.uid) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.userLeave(msg);
+              }
+            }
+
+            break
+
           // 请求关闭/启用音视频
           case 'controldevice':
             // { op: 'controldevice', type: 'audio/video', value: true/false }

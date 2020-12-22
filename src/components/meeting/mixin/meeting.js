@@ -125,20 +125,21 @@ let meetingMixin = {
       this.setSpeakers(speakers);
     },
 
-    updataUser(data, key) {
+    /**
+     * @method 通过ws命令加入会议更新姓名和头像
+     * @param
+     */
+    userLeave(data) {
+      let uid = data.uid;
+      // 移除发言列表中用户
       let speakers = this.speakers;
-      let { uid } = data;
       let index = speakers.findIndex((user)=>{
-        return user.id == uid;
+        return uid == user.id;
       })
 
+      // 存在用户
       if(~index) {
-        user = speakers[index];
-        Object.assign(user, {
-          key: data[key]
-        })
-
-        speakers.splice(index, 1, user);
+        speakers.splice(index, 1);
         this.setSpeakers(speakers);
       }
     },
@@ -240,6 +241,45 @@ let meetingMixin = {
       }).
       catch(error => {
         console.error('changeDeviceStatus:', error);
+      })
+    },
+
+    /**
+     * @method 分享用户token信息
+     * @param
+     */
+    getShareConfig() {
+      let URL = API.lesson.get_share_config;
+      let params = {};
+
+      if(window.shareConfig) {
+        return window.shareConfig;
+      }
+
+      // 防止重复请求
+      if(this.requestLoading) {
+        return null;
+      } else {
+        this.requestLoading = true;
+      }
+
+      return request.post(URL, params).
+      then( res => {
+        if (res && res.code === 0) {
+          let data = res.data;
+
+          window.shareConfig = data;
+
+          return data;
+        } else if(res && res.code === 50029) {
+          // 稍后重试
+        }
+
+        this.requestLoading = false;
+      }).
+      catch(error => {
+        console.error('getShareConfig:', error);
+        this.requestLoading = false;
       })
     },
 

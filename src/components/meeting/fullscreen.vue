@@ -201,58 +201,5 @@ export default {
     }
   }
 
-  .actions__wrap {
-    position: fixed;
-    bottom: 10px;
-    left: 0;
-    right: 0;
 
-    margin: 0 auto;
-    padding: 0 50px;
-    width: 350px;
-    height: 80px;
-    outline: none;
-
-    display: flex;
-
-    background: rgba(0,0,0, 0.8);
-    box-shadow: 0 5px 20px rgba(2,2,2,0.47);
-    border: 1px solid #000;
-    border-radius: 40px/50%;
-  }
-
-  .line {
-    margin: 0 10px;
-    width: 1px;
-    height: 30px;
-
-    background: #414141;
-  }
-
-  .actions__item {
-    cursor: pointer;
-    position: relative;
-    padding: 8px 10px 0;
-
-    &:hover {
-      .actions__more {
-        display: flex;
-      }
-      .media__setting {
-        display: block;
-      }
-    }
-
-    .actions__btn {
-      width: 64px;
-      height: 34px;
-
-      border-radius: 17px/50%;
-      background: rgba(255, 255, 255, 0.08);
-
-      &.over {
-        background: #F34848;
-      }
-    }
-  }
 </style>

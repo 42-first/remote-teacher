@@ -36,7 +36,7 @@
         </div>
         <p class="pt5 f12 c7a">{{ meeting.screen ? "结束共享" : "共享屏幕" }}</p>
       </section>
-      <div class="line"></div>
+      <!-- <div class="line"></div> -->
       <!-- <section class="actions__item" @click="handleShareScreen">
         <div class="actions__btn box-center">
           <svg class="icon f28 cfff" aria-hidden="true">
@@ -45,7 +45,7 @@
         </div>
         <p class="pt5 f12 c7a">全员静音</p>
       </section> -->
-      <div class="line"></div>
+      <!-- <div class="line"></div> -->
       <section class="actions__item" @click="handleHangup">
         <div class="actions__btn over box-center">
           <svg class="icon f28 cfff" aria-hidden="true">
@@ -150,7 +150,8 @@ export default {
     bottom: 10px;
 
     margin: 0 auto;
-    padding: 0 50px;
+    padding: 0 20px;
+    // padding: 0 50px;
     // width: 549px;
     height: 80px;
     outline: none;

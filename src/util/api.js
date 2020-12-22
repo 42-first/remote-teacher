@@ -130,6 +130,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       end_share: '/api/v3/lesson/meeting/share/cancel',
       // 获取发言列表
       get_talk_list: '/api/v3/lesson/meeting/talk-list',
+      // 获取共享屏幕信息
+      get_share_config: '/api/v3/lesson/meeting/share-config',
 
 
       // 教师接口
