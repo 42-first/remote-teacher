@@ -49,7 +49,19 @@ let tencentMixin = {
       then(checkResult => {
         if (!checkResult.result) {
           console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
-          // todo: 根据用户设备类型建议用户使用 SDK 支持的浏览器
+          // 点击之后判断当前浏览器版本是否支持RTC，不支持的话，弹窗提示用户换浏览器或进入直播模式上课
+          let msgOptions = {
+            confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
+            cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
+          };
+          let message = '建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课';
+
+          this.$messagebox.confirm(message, msgOptions)
+          .then( action => {
+            if(action === 'confirm') {
+              this.$parent.joined = false;
+            }
+          });
         } else {
           let options = {
             appId,
@@ -170,6 +182,7 @@ let tencentMixin = {
       await rtcEngine.initLocalStream();
       setTimeout(()=>{
         this.joinedMeeting(user);
+        this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
       }, 0)
 
       let states = rtcEngine.getRemoteMutedState();

@@ -52,7 +52,7 @@
             <use xlink:href="#icon20-jieshu" ></use>
           </svg>
         </div>
-        <p class="pt5 f12 c7a">结束互动</p>
+        <p class="pt5 f12 c7a">退出互动</p>
       </section>
     </section>
   </section>
