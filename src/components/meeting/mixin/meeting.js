@@ -145,6 +145,21 @@ let meetingMixin = {
     },
 
     /**
+     * @method 通过ws命令通知有人共享了屏幕
+     * @param
+     */
+    shareScreen(data) {
+      let meeting = this.meeting;
+      meeting = Object.assign({}, meeting, {
+        otherscreen: true,
+        shareId: data.uid,
+        shareName: data.sharename
+      })
+
+      this.setMeeting(meeting);
+    },
+
+    /**
      * @method 获取会议基本信息 token channel
      * @param
      */

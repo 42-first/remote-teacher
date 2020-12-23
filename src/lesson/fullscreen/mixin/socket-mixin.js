@@ -222,11 +222,11 @@ var mixin = {
           // 共享桌面
           case 'sharescreen':
             // { op: 'sharescreen', shareid: 0, sharename, type: '', width: 0, height: 0, uid: 0 }
-            if(msg.uid && msg.uid != userId) {
-              // let meeting = this.meeting;
-              // meeting.otherscreen = true;
-
-              // this.setMeeting(meeting);
+            if(msg.uid != userId) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.shareScreen(msg);
+              }
             }
 
             break

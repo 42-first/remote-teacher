@@ -25,7 +25,6 @@
          <!-- 共享 -->
         <section class="member__wrap" :class="{ 'preview': visibleLargeScreen }" v-show="meeting.otherscreen">
           <div class="member__container box-center" @click="handlePreviewVideo">
-            <!-- <video class="video" id="J_screenshare"></video> -->
             <template v-if="meetingSDK === 'local'">
               <video class="video" id="J_screenshare"></video>
             </template>

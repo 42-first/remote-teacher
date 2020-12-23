@@ -64,21 +64,21 @@
 
         setTimeout(()=>{
           this.init();
-        }, 1000)
+        }, 100)
       },
       'member.audio'(newVal) {
         console.log('member.audio', newVal);
 
         setTimeout(()=>{
           this.init();
-        }, 1000)
+        }, 100)
       },
       'member.id'(newVal) {
         console.log('change uid:', newVal)
 
         setTimeout(()=>{
           this.init();
-        }, 1000)
+        }, 100)
       }
     },
     methods: {
@@ -101,8 +101,6 @@
 
         if(rtcEngine && uid) {
           let stream = rtcEngine.members.get(uid);
-
-          console.log('initTencent:', stream)
 
           if(stream && (member.audio || member.video)) {
             stream.stop()

@@ -207,15 +207,11 @@ export default {
           if(this.meetingSDK === 'tencent') {
             this.initTencent(this.meeting);
           } else if(this.meetingSDK === 'local'){
-            // this.initLocalMeeting(this.meeting);
             let roomId = this.lesson && this.lesson.lessonID;
             this.initLocalMeeting(Object.assign(user, this.meeting, { roomId }));
           }
         }, 0)
       }
-
-      // let roomId = this.lesson && this.lesson.lessonID;
-      // this.initLocalMeeting(Object.assign(user, { roomId }));
 
       this.initEvent();
     },
