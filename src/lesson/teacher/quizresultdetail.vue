@@ -15,7 +15,7 @@
     <div class="gap"></div>
     <section class="list">
       <div v-show="!quizResultDetailData.length" class="hmy f18">{{ $t('nosubmit') }}</div>
-      <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userID">
+      <div v-show="quizResultDetailData.length" class="item f17" v-for="item in quizResultDetailData" :key="item.userId">
         <div class="name ellipsis">
           <img :src="item.avatar || 'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           <span>{{item.name}}</span>
@@ -58,7 +58,7 @@
        */
       init () {
         let self = this
-        self.quizid = +self.$route.params.quizid
+        self.quizid = self.$route.params.quizid
 
         self.refreshQuizResultDetail()
       },
@@ -68,15 +68,18 @@
        */
       refreshQuizResultDetail(){
         let self = this
-        let url = API.quiz_results_detail
+        let url = API.lesson.quiz_results_detail
 
-        if (process.env.NODE_ENV === 'production') {
-          url = API.quiz_results_detail + '/' + self.quizid + '/'
+        let params = {
+          quiz_id: this.quizid
         }
 
-        request.get(url)
-          .then(jsonData => {
-            self.quizResultDetailData = jsonData.data
+        request.get(url, params)
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              self.quizResultDetailData = res.data.result
+            }
+            
           })
       },
     }

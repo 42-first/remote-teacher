@@ -40,7 +40,7 @@
         <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
       </v-touch>
 
-      <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail', params: { quizid: quizid }}">
+      <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail_v3', params: { quizid: quizid }}">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>
@@ -203,55 +203,59 @@
        */
       getPaperResult(){
         let self = this
-        let url = API.quiz_results_statistics
+        let url = API.lesson.quiz_statistics
 
-        if (process.env.NODE_ENV === 'production') {
-          url = API.quiz_results_statistics + '/' + self.quizid + '/'
+        let params = {
+          quiz_id: this.quizid
         }
 
         // 单次刷新
-        request.get(url)
-          .then(jsonData => {
-            // 时间更新处理
-            jsonData.time = Math.floor(jsonData.time)
-            // quizTimeBellCount跟上真实计时
-            if (Math.abs(quizTimeBellCount - jsonData.time) > 2) {
-              quizTimeBellCount = jsonData.time
-            }
-            // 如果已经收卷就直接塞时间
-            if (self.isPaperCollected) {
-              self.paperTimePassed = self.sec2str(quizTimeBellCount)
+        request.get(url, params)
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              let jsonData = res.data
+              // 时间更新处理
+              jsonData.time = Math.floor(jsonData.time)
+              // quizTimeBellCount跟上真实计时
+              if (Math.abs(quizTimeBellCount - jsonData.time) > 2) {
+                quizTimeBellCount = jsonData.time
+              }
+              // 如果已经收卷就直接塞时间
+              if (self.isPaperCollected) {
+                self.paperTimePassed = self.sec2str(quizTimeBellCount)
+              }
+              
+              self.stuCommited = jsonData.total
+              self.stuTotal = jsonData.members
+
+              //没人做题就不画饼图
+              if(jsonData.total === 0){
+                self.isSVGHidden = true
+                return
+              }
+
+              //全部为投票题就不画饼图
+              if(jsonData.totalScore === 0){
+                self.isAllPoll = true
+                self.isSVGHidden = true
+                return
+              }
+
+              // 设置试卷详情数据
+              self.isSVGHidden = false
+              
+              var range = [];
+              var arr1 = [];
+
+              for (var i = 0; i < jsonData.data.length; i++) {
+                  var item = jsonData.data[i];
+                  range.push(item.from + '~' + item.to);
+                  arr1.push(item.count);
+              };
+
+              drawRingSolid('#quizpie', range,arr1);
             }
             
-            self.stuCommited = jsonData.total
-            self.stuTotal = jsonData.members
-
-            //没人做题就不画饼图
-            if(jsonData.total === 0){
-              self.isSVGHidden = true
-              return
-            }
-
-            //全部为投票题就不画饼图
-            if(jsonData.total_score === 0){
-              self.isAllPoll = true
-              self.isSVGHidden = true
-              return
-            }
-
-            // 设置试卷详情数据
-            self.isSVGHidden = false
-            
-            var range = [];
-            var arr1 = [];
-
-            for (var i = 0; i < jsonData.data.length; i++) {
-                var item = jsonData.data[i];
-                range.push(item.from + '~' + item.to);
-                arr1.push(item.count);
-            };
-
-            drawRingSolid('#quizpie', range,arr1);
           })
       },
       /**
@@ -285,7 +289,7 @@
           return
         }
         let self = this
-        let url = API.quiz_finish
+        let url = API.lesson.quiz_finish
 
         if (isCollecting || self.isPaperCollected) {
           return
@@ -293,17 +297,18 @@
         isCollecting = true
 
         let postData = {
-          'quizID': self.quizid
+          'quizId': self.quizid + ''
         }
 
         request.post(url, postData)
-          .then(jsonData => {
-            console.log('quiz_finish', jsonData)
-            // 不需要判断success，在request模块中判断如果success为false，会直接reject
-
-            isCollecting = false
-            self.isPaperCollected = true
-            self.endTimers()
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              console.log('quiz_finish', res)
+              isCollecting = false
+              self.isPaperCollected = true
+              self.endTimers()
+            }
+            
           })
       },
       /**

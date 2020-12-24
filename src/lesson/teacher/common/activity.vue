@@ -22,9 +22,9 @@
       </div>
       
     </section>
-    <!-- 暂时下线试卷&分组功能 -->
-    <!-- <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页"> -->
-    <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <!-- 恢复课上试卷功能 -->
+    <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <!-- <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页"> -->
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -34,8 +34,8 @@
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
-    <!-- </router-link> -->
+    <!-- </v-touch> -->
+    </router-link>
     <router-link tag="div" :to="{name: 'danmu_v3'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">

@@ -188,7 +188,19 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 代理node支付
       node_proxy: '/api/v3/pay/proxy',
       // 搜索成员列表
-      search_member: '/api/v3/lesson/search-member'
+      search_member: '/api/v3/lesson/search-member',
+      // 试卷列表
+      get_quiz_list: '/api/v3/lesson/quiz/list',
+      // 获取课上试卷某个文件夹
+      quiz_dir: '/api/v3/lesson/quiz/dir',
+      // 课上发布旧试卷
+      publish_quiz: '/api/v3/lesson/quiz/publish',
+      // 成绩统计
+      quiz_statistics: '/api/v3/lesson/quiz/statistics',
+      // 收卷
+      quiz_finish: '/api/v3/lesson/quiz/finish',
+      // 成绩详情
+      quiz_results_detail: '/api/v3/lesson/quiz/result'
     },
 
     /*------------------*\

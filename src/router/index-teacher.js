@@ -262,7 +262,7 @@ const router = new Router({
         {
           path: 'paper/xxx',
           name: 'paper_v3',
-          component: () => import('@/lesson/teacher/paper'),
+          component: () => import('@/lesson/teacher/paper2'),
           meta
         },
         {
