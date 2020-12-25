@@ -71,49 +71,11 @@
     <!-- 实时弹幕列表 -->
     <!-- <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section> -->
 
-    <!-- 更多操作 -->
-    <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore && !hasMeeting }" >
-      <div class="" v-show="danmuStatus" >
-        <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕：开" v-if="visibleDanmu">
-          <i class="iconfont icon-danmukai f32"></i>
-        </p>
-        <p class="action-btn action-tip" @click="setVisibleDanmu(true)" data-tip="弹幕：关" v-else >
-          <i class="iconfont icon-danmuguan f32 c666"></i>
-        </p>
-        <p class="action-btn action-tip" @click="handleVisibleDanmu" data-tip="发弹幕">
-          <i class="iconfont icon-fadanmu f32"></i>
-        </p>
-      </div>
-      <div class="" v-if="visibleMore">
-        <p class="line" v-show="danmuStatus" ></p>
-        <p class="action-btn action-tip" @click="handleVisibleSubmission" data-tip="投稿">
-          <i class="iconfont icon-ykq_tab_tougao f32"></i>
-        </p>
-        <!-- <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">
-          <i class="iconfont icon-fenzu1 f32"></i>
-        </p> -->
-      </div>
-      <p class="action-btn action-tip" @click="handleVisibleMore(false)" data-tip="收起" v-if="visibleMore">
-        <i class="iconfont icon--shuangjiantouxiangxia f24"></i>
-      </p>
-      <p class="action-btn action-tip" @click="handleVisibleMore(true)" data-tip="更多" v-else>
-        <i class="iconfont icon--gengduocaozuo f24"></i>
-      </p>
-      <!-- 加入会议 -->
-      <div class="action-btn join__wrap" v-if="hasMeeting" @click="handleJoin">
-        <div class="meeting__join box-center" >
-          <i class="iconfont icon-48-jieru f28 cfff"></i>
-        </div>
-        <!-- 小程序二维码 -->
-        <!-- <section class="mini-code__wrap">
-          <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
-          <div class="c666 bold" v-html="$t('scanjoininteraction')"></div>
-        </section> -->
-      </div>
-    </section>
+    <!-- 更多操作 新 -->
+    <actions-cmp></actions-cmp>
 
     <!-- 弹幕控制组件 -->
-    <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
+    <!--  <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp> -->
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -143,9 +105,6 @@
       </div>
     </section>
 
-    <!-- 实时弹幕列表 -->
-    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
-
     <!-- 会议演讲者模式 -->
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
   </section>
@@ -171,6 +130,7 @@
   let screenfull = require('screenfull');
   import Danmaku from 'danmaku';
 
+  import actionsCmp from './components/actions-bar.vue'
   import danmuCmp from './components/danmu.vue'
   import volume from './components/video_volume.vue'
 
@@ -227,10 +187,6 @@
 
         // 是否有新消息
         hasMsg: false,
-        // 是否开启弹幕
-        danmuStatus: false,
-        // 是否显示弹幕
-        visibleDanmu: true,
         // 课程是否结束
         lessonStatus: 0,
         presentationList: null,
@@ -268,8 +224,6 @@
         boardMap: new Map(),
         // 白板不懂收藏
         boardList: null,
-        // 弹幕直播
-        danmus: [],
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
@@ -296,10 +250,6 @@
         currentTime: 0,
         // 小程序码
         miniCode: '',
-        // 是否有会议
-        hasMeeting: false,
-        // 是否已进入会议
-        joined: false,
       };
     },
     components: {
@@ -308,6 +258,7 @@
       volume,
       msgbox,
       videomsg,
+      actionsCmp,
       meeting
     },
     computed: {
@@ -316,6 +267,16 @@
         'lesson',
         'cards',
         'lines',
+        // 是否开启弹幕
+        'danmuStatus',
+        // 是否显示弹幕
+        'visibleDanmu',
+        // 是否有会议
+        'hasMeeting',
+        // 是否已进入会议
+        'joined',
+        // 弹幕直播
+        'danmus',
       ])
     },
     watch: {
@@ -351,24 +312,12 @@
           this.liveType === 2 && this.initEvent();
         }, 1000)
       },
-      danmus(newVal, oldVal) {
-        if(newVal && newVal.length) {
-          let danmu = newVal.shift();
-          if(danmu) {
-            this.emitDanmu(danmu.danmu)
-          }
-        }
-      },
       visibleDanmu(newVal, oldVal) {
         // 视频全屏开启弹幕
         if(newVal && this.videoFullscreen) {
           setTimeout(()=>{
             this.initVideoDanmu();
           }, 500)
-        } else if(newVal) {
-          setTimeout(()=>{
-            // this.initDanmu();
-          }, 200)
         }
       }
     },
@@ -389,6 +338,11 @@
         'setBoardMsg',
         'setVisibleDanmuSend',
         'setTeacher',
+        'setDanmuStatus',
+        'setVisibleDanmu',
+        'setHasMeeting',
+        'setJoined',
+        'setDanmus',
       ]),
 
       /*
@@ -459,14 +413,6 @@
         }
       },
 
-      /**
-       * @method 是否显示弹幕
-       * @params
-       */
-      setVisibleDanmu(visible) {
-        this.visibleDanmu = visible;
-      },
-
       /*
        * @method 直播悬停反面等事件
        */
@@ -527,7 +473,7 @@
           this.handlestopVideo();
         }
 
-        this.joined = true;
+        this.setJoined(true);
       }
     },
     created() {
@@ -1069,8 +1015,6 @@
   .submit-btn.can:active {
     background: rgba(99,158,244,0.7);
   }
-
-
 
 
 </style>

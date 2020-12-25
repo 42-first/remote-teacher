@@ -41,7 +41,18 @@ const store = new Vuex.Store({
     // 白板命令
     boardMsg: null,
     // 是否显示弹幕发送
-    visibleDanmuSend: false
+    visibleDanmuSend: false,
+
+    // 是否开启弹幕
+    danmuStatus: false,
+    // 是否显示弹幕
+    visibleDanmu: true,
+    // 弹幕
+    danmus: [],
+    // 是否有会议
+    hasMeeting: false,
+    // 是否已进入会议
+    joined: false,
   },
   mutations: {
     // 重置课堂信息
@@ -50,6 +61,11 @@ const store = new Vuex.Store({
       state.cards = [];
       state.lines = [];
       state.teacher = null;
+      state.danmuStatus = false;
+      state.visibleDanmu = true;
+      state.hasMeeting = false;
+      state.joined = false;
+      state.danmus = [];
     },
 
     setLines(state, lines) {
@@ -90,6 +106,26 @@ const store = new Vuex.Store({
 
     setTeacher(state, data) {
       state.teacher = data;
+    },
+
+    setDanmuStatus(state, data) {
+      state.danmuStatus = data;
+    },
+
+    setVisibleDanmu(state, data) {
+      state.visibleDanmu = data;
+    },
+
+    setHasMeeting(state, data) {
+      state.hasMeeting = data;
+    },
+
+    setJoined(state, data) {
+      state.joined = data;
+    },
+
+    setDanmus(state, data) {
+      state.danmus = data;
     },
   },
 
@@ -134,6 +170,26 @@ const store = new Vuex.Store({
 
     setTeacher({commit}, data) {
       commit('setTeacher', data)
+    },
+
+    setDanmuStatus({commit}, data) {
+      commit('setDanmuStatus', data)
+    },
+
+    setVisibleDanmu({commit}, data) {
+      commit('setVisibleDanmu', data)
+    },
+
+    setHasMeeting({commit}, data) {
+      commit('setHasMeeting', data)
+    },
+
+    setJoined({commit}, data) {
+      commit('setJoined', data)
+    },
+
+    setDanmus({commit}, data) {
+      commit('setDanmus', data)
     },
   },
 
