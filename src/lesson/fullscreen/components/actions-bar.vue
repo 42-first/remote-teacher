@@ -131,8 +131,6 @@
       danmuStatus(newVal) {
         if(newVal) {
 
-        } else {
-
         }
       },
       hasMeeting(newVal) {
@@ -183,6 +181,14 @@
       },
 
       /**
+       * @method 加入会议
+       * @param
+       */
+      handleJoin() {
+        this.setJoined(true);
+      },
+
+      /**
        * @method 挂断
        * @param
        */
@@ -191,6 +197,8 @@
         meeting.joined = false;
 
         this.setMeeting(meeting);
+
+        this.setJoined(false);
       },
 
       /**

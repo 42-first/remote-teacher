@@ -13,7 +13,7 @@
     <section class="fullscreen__header box-between">
       <div></div>
       <div class="action__back box-center" @click="handleVisibleFullScreen(false)">
-        <svg class="icon f28 cc8" aria-hidden="true">
+        <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icon20-bofangqi-quanping"></use>
         </svg>
       </div>
@@ -44,7 +44,7 @@
     </section>
 
     <!-- 会议基本操作 -->
-    <actions></actions>
+    <!-- <actions></actions> -->
   </section>
 </template>
 
@@ -52,7 +52,7 @@
 import { mapState, mapActions } from 'vuex';
 
 import avatar from './avatar-local'
-import actions from './actions'
+// import actions from './actions'
 
 export default {
   name: "meeting-fullscreen",
@@ -62,8 +62,7 @@ export default {
     };
   },
   components: {
-    avatar,
-    actions
+    avatar
   },
   mixins: [ ],
   computed: {
@@ -124,7 +123,7 @@ export default {
     width: 100vw;
     height: 100vh;
 
-    background: #202022;
+    background: #fff;
   }
 
   .fullscreen__header {
@@ -132,7 +131,7 @@ export default {
     width: 100%;
     height: 44px;
 
-    background: #18191A;
+    background: #fff;
 
     .action__back {
       cursor: pointer;

@@ -39,6 +39,7 @@ const meeting = {
       state.local = null;
       state.user = null;
       state.meeting = {
+        joined: true,
         // 是否开启音频
         audio: false,
         // 是否开启音频

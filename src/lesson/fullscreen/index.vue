@@ -18,7 +18,7 @@
     </section>
 
     <!-- 直播入口 音频直播 -->
-    <section class="live" v-if="liveURL && liveType === 1">
+    <section class="live" v-if="liveURL && liveType === 1 && !hasMeeting">
       <div class="live__audio">
         <i class="iconfont icon-quxiaojingyinx" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-jingyin" v-else @click="handleplay"></i>
@@ -29,7 +29,7 @@
     </section>
 
     <!-- 直播入口 视频直播 加入会议不再显示直播 -->
-    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2 && !joined">
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && !hasMeeting">
       <!-- 定制video -->
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
@@ -464,17 +464,6 @@
       handleSetVolume(volume){
         document.querySelector('#player').volume = volume
       },
-
-      /**
-       * @member 加入会议
-       */
-      handleJoin() {
-        if(this.liveType === 2) {
-          this.handlestopVideo();
-        }
-
-        this.setJoined(true);
-      }
     },
     created() {
       this.init();

@@ -367,7 +367,7 @@ var commandMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
-            window.identityId = identityId;
+            window.identityId = data.identityId;
           }
         }
 

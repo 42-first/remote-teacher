@@ -18,7 +18,7 @@
       </template>
       <div class="user--video" :id="member.id" v-show="member.video" v-else></div>
     </div>
-    <div class="user-info box-between">
+    <div class="user__status box-between">
       <div class="user-name box-center cfff">
         <svg class="icon f16 cfff" aria-hidden="true">
           <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
@@ -247,11 +247,12 @@
         }
       }
 
-      .user-info {
+      .user__status {
         position: absolute;
         bottom: 0;
 
         padding: 0 5px 0 0;
+        background: transparent;
 
         .user-name {
           padding: 0 5px;
@@ -263,9 +264,9 @@
 
     .avatar-wrap {
       position: relative;
-      width: calc(100% - 6px);
-      // height: 100%;
-      height: 144px;
+      width: 100%;
+      height: 100%;
+      // height: 144px;
       overflow: hidden;
 
       background: #3a3a3a;
@@ -297,10 +298,15 @@
       }
     }
 
-    .user-info {
-      padding: 0 10px;
+    .user__status {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      padding: 0 5px;
       width: 100%;
       height: 26px;
+      background: rgba(0,0,0,0.6);
 
       white-space: nowrap;
 

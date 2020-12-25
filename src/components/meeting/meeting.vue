@@ -17,13 +17,13 @@
         <!-- 展开收起 -->
         <div></div>
         <div class="action__full box-center" @click="handleVisibleFullScreen(true)">
-          <svg class="icon f28 cc8" aria-hidden="true">
+          <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon20-bofangqi-quanping"></use>
           </svg>
         </div>
       </header>
       <!-- 演讲者模式 -->
-      <section class='speakers__container'>
+      <section class='speakers__container box-start'>
         <!-- 共享 -->
         <section class="member__container" v-show="meeting.otherscreen">
           <template v-if="meetingSDK === 'local'">
@@ -35,49 +35,10 @@
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container mt10" v-for="member in speakers">
-          <avatar :member="member"></avatar>
+        <section class="member__container " v-for="member in speakers">
+          <avatar :member="member" :mode="1"></avatar>
         </section>
       </section>
-      <!-- 操作栏 -->
-      <footer class="meeting__actions box-between">
-        <section class="box-center" >
-          <section class="actions__item line " @click="handleSetAudio">
-            <div class="actions__btn box-center">
-              <svg class="icon f24 ccc" aria-hidden="true">
-                <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
-                <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
-              </svg>
-            </div>
-            <!-- 提示信息 -->
-            <p class="action-tip c666">{{ meeting.audio ? "关闭声音" : "开启声音" }}</p>
-          </section>
-          <section class="actions__item line" @click="handleSetVideo">
-            <div class="actions__btn box-center">
-              <svg class="icon f24 ccc" aria-hidden="true">
-                <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
-                <use xlink:href="#icon20-guanbishipin-01" v-else></use>
-              </svg>
-            </div>
-            <!-- 提示信息 -->
-            <p class="action-tip c666">{{ meeting.video ? "关闭视频" : "开启视频" }}</p>
-          </section>
-          <section class="actions__item" @click="handleShareScreen">
-            <div class="actions__btn box-center">
-              <svg class="icon f24 ccc" aria-hidden="true">
-                <use xlink:href="#icon20-gongxiangpingmu" ></use>
-              </svg>
-            </div>
-            <!-- 提示信息 -->
-            <p class="action-tip c666">{{ meeting.screen ? "关闭共享" : "共享屏幕" }}</p>
-          </section>
-        </section>
-        <section class="hangup__btn box-center" @click="handleHangup">
-          <svg class="icon f20 ccc" aria-hidden="true">
-            <use xlink:href="#icon20-jieshu"></use>
-          </svg>
-        </section>
-      </footer>
     </section>
   </section>
 </template>
@@ -114,6 +75,8 @@ export default {
       'baseInfo',
       'lesson',
       'teacher',
+      // 是否已进入会议
+      'joined',
     ]),
 
     ...mapState('meeting', [
@@ -133,7 +96,7 @@ export default {
   mounted() {
     setTimeout(()=>{
       this.init();
-    }, 1000)
+    }, 0)
   },
   updated() {},
   beforeDestroy() {
@@ -151,7 +114,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setEnableInteractive'
+      'setJoined',
     ]),
 
     ...mapActions('meeting', [
@@ -200,7 +163,7 @@ export default {
           shareInfo.uid = shareInfo.identityId;
         }
 
-        this.setMeeting(Object.assign({ joined: true }, this.meeting, data));
+        this.setMeeting(Object.assign(this.meeting, data, { joined: true }));
 
         setTimeout(()=>{
           // 初始化视频通话SDK
@@ -214,40 +177,6 @@ export default {
       }
 
       this.initEvent();
-    },
-
-    /**
-     * @method 屏幕共享
-     * @params
-     */
-    handleShareScreen(evt) {
-      let meeting = this.meeting;
-      meeting.screen = !meeting.screen;
-      this.setMeeting(meeting);
-    },
-
-    /**
-     * @method 设置音频
-     * @params
-     */
-    handleSetAudio(evt) {
-      let meeting = this.meeting;
-      let audio = !meeting.audio;
-
-      meeting.audio = audio;
-      this.setMeeting(meeting);
-    },
-
-    /**
-     * @method 设置视频
-     * @params
-     */
-    handleSetVideo(evt) {
-      let meeting = this.meeting;
-      let video = !meeting.video;
-
-      meeting.video = video;
-      this.setMeeting(meeting);
     },
 
     /**
@@ -275,13 +204,12 @@ export default {
 
 <style lang="scss" scoped>
   .meeting__wrap {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     top: 45px;
-    right: 24px;
+    right: 34px;
 
     &.preview {
-      // position: static;
       top: 0;
       left: 0;
       transform: translate(0, 0);
@@ -296,89 +224,44 @@ export default {
     display: flex;
     flex-flow: column;
 
-    width: 264px;
-    background: #18191A;
+    max-width: 450px;
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      .meeting__header {
+        display: flex;
+      }
+    }
   }
 
   .meeting__header {
+    display: none;
     padding: 0 16px;
     width: 100%;
     height: 44px;
 
-    background: #18191A;
+    // background: #18191A;
     cursor: move;
 
     .action__full {
       cursor: pointer;
-      .icon {
-        // color: rgba(0, 0, 0, 0.2);
-      }
     }
   }
 
-  .meeting__actions {
-    padding-right: 8px;
-    width: 100%;
-    height: 48px;
-    background: #18191A;
-    border-top: 1px solid #3a3a3a;
-
-    .actions__item {
-      position: relative;
-      cursor: pointer;
-      width: 62px;
-
-      &.line {
-        border-right: 1px solid #ddd;
-      }
-
-      .action-tip {
-        opacity: 0;
-        z-index: 2;
-        position: absolute;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        padding: 3px 10px;
-        border-radius: 2px;
-        background: #eee;
-
-        white-space: nowrap;
-      }
-
-      &:hover .action-tip {
-        opacity: 1;
-      }
-    }
-
-    .hangup__btn {
-      position: relative;
-      width: 52px;
-      height: 28px;
-      background: #F34848;
-      cursor: pointer;
-    }
-  }
 
   .speakers__container {
-    display: flex;
-    flex-flow: column;
-
     width: 100%;
-    // height: 100%;
-    min-height: 124px;
-    max-height: 80vh;
+    max-width: 450px;
+    height: 150px;
 
-    overflow-y: auto;
+    overflow: hidden;
 
     .member__container {
       position: relative;
-      width: 264px;
-      height: 170px;
-
-      // box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-      // border-bottom: 1px solid #3a3a3a;
+      padding: 0 3px;
+      width: 150px;
+      height: 150px;
 
       .video {
         width: 100%;
