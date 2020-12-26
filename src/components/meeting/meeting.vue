@@ -10,6 +10,7 @@
   <!-- 主页面布局 -->
   <section class="meeting__wrap J_meeting" :class="{ 'preview': meetingLayout }" tabindex="1">
     <fullscreen v-if="meetingLayout === MeetingMode.JIUGONGGE"></fullscreen>
+    <speaker v-if="meetingLayout === MeetingMode.SPEAKER"></speaker>
     <!-- 会议悬浮框 -->
     <section class="meeting__container" v-else-if="meetingLayout === MeetingMode.DEFAULT" >
       <!-- 最小化 列表模式 可以切到全屏模式 模式浮窗模式 -->
@@ -47,7 +48,10 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import avatar from './avatar-local'
+// 九宫格
 import fullscreen from './fullscreen'
+// 演讲者
+import speaker from './speaker'
 
 import meeting from './mixin/meeting'
 // 本地视频
@@ -79,7 +83,8 @@ export default {
   },
   components: {
     avatar,
-    fullscreen
+    fullscreen,
+    speaker
   },
   mixins: [ meeting, localMeeting, tencentMeeting, move ],
   computed: {
@@ -237,18 +242,31 @@ export default {
 
     &:hover {
       .meeting__header {
-        display: flex;
+        height: 44px;
+        transition: height ease-out 0.1s 0.35s;
+        // transition: height ease-in 0.35s;
+
+        > * {
+          opacity: 1;
+          transition: opacity ease-out 0.1s 0.35s;
+        }
       }
     }
   }
 
   .meeting__header {
-    display: none;
     padding: 0 16px;
     width: 100%;
-    height: 44px;
+    height: 0;
 
     cursor: move;
+
+    transition: height ease-in 0.35s;
+
+    > * {
+      opacity: 0;
+      transition: opacity ease-in 0.35s;
+    }
 
     .action__full {
       cursor: pointer;

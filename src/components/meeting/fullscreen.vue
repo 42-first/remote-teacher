@@ -279,20 +279,24 @@ export default {
     .action__wrap {
       width: 50px;
       height: 100px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.2);
+
+      &:hover {
+        background: rgba(0,0,0,0.7);
+      }
 
       cursor: pointer;
 
       &.disable {
         .icon {
-          color: #666;
+          color: #999;
         }
       }
     }
 
     .action__pages {
       font-family: din;
-      background: rgba(0,0,0,0.2);
+      // background: rgba(0,0,0,0.2);
     }
   }
 
