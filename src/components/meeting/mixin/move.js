@@ -26,8 +26,6 @@ let eventMixin = {
       let meetingEl = document.querySelector('.J_meeting');
 
       meetingEl.addEventListener('mousedown', (evt) => {
-        // TODO: 这里处理不能自动播放问题
-        // https://trtc-1252463788.file.myqcloud.com/web/docs/tutorial-11-advanced-auto-play-policy.html
         this.canMove = true;
 
         const cssStyles = getComputedStyle(meetingEl);

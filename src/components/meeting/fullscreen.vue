@@ -42,7 +42,7 @@
           </div>
         </section>
         <!-- 成员 -->
-        <div class="member__wrap" v-for="member in members">
+        <div class="member__wrap" :class="{ 'half' : members.length < 3 }" v-for="member in members">
           <div class="member__container">
             <avatar :member="member" :fullscreen="true"></avatar>
           </div>
@@ -229,6 +229,11 @@ export default {
       padding: 10px;
       width: 33.33%;
       height: 33.33%;
+
+      &.half {
+        width: 50%;
+        height: 50%;
+      }
 
       &.preview {
         z-index: 1;

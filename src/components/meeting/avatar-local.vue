@@ -79,7 +79,7 @@
         setTimeout(()=>{
           this.init();
         }, 100)
-      }
+      },
     },
     methods: {
       init() {
@@ -89,6 +89,12 @@
         } else if(this.meetingSDK === 'tencent') {
           this.initTencent();
         }
+      },
+
+      initEvent() {
+        // TODO: 这里处理不能自动播放问题
+        // https://trtc-1252463788.file.myqcloud.com/web/docs/tutorial-11-advanced-auto-play-policy.html
+        // document.addEventListener('mousedown', this.retryPlay);
       },
 
       /**
@@ -110,9 +116,39 @@
               if (errCode === 0x4043) {
                 stream.stop()
               }
+
+              document.addEventListener('mousedown', this.retryPlay);
             });
           }
         }
+      },
+
+      /**
+       * @method 尝试播放
+       * @param
+       */
+      retryPlay() {
+        let rtcEngine = window.rtcEngine;
+        let member = this.member;
+        let uid = String(member && member.id);
+
+        if(rtcEngine && uid) {
+          let stream = rtcEngine.members.get(uid);
+
+          if(stream && (member.audio || member.video)) {
+            stream.stop()
+            stream.play(uid, { muted: false })
+            .catch(err => {
+              let errCode = err.getCode()
+              if (errCode === 0x4043) {
+                stream.stop()
+              }
+            });
+          }
+        }
+
+        // 移除用户鼠标事件监听
+        document.removeEventListener('mousedown', this.retryPlay);
       },
 
       /**
@@ -215,11 +251,11 @@
       },
     },
     created() {
-      setTimeout(()=>{
-        this.init();
-      }, 500)
     },
     mounted() {
+      setTimeout(()=>{
+        this.init();
+      }, 0)
     },
     updated() {},
     beforeDestroy() {

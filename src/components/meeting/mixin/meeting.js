@@ -130,7 +130,7 @@ let meetingMixin = {
         return user.id == uid;
       })
 
-      let user = { id: uid, uid, name, avatar, role, video, audio, active: false };
+      let user = { id: uid, uid, name, avatar, role, video, audio, active: false, tryTimes: 0 };
 
       // 存在用户
       if(~index) {
@@ -172,6 +172,28 @@ let meetingMixin = {
         speakers.splice(index, 1);
         this.setSpeakers(speakers);
       }
+    },
+
+    /**
+     * @method 尝试播放
+     * @param
+     */
+    retryPlay() {
+      if(this.meetingSDK !== 'tencent') {
+        return this;
+      }
+
+      let speakers = this.speakers;
+      speakers.forEach((member)=>{
+        if(member.audio || member.video) {
+          member.tryTimes += 1;
+        }
+      })
+
+      this.setSpeakers(speakers);
+
+      // 移除用户鼠标事件监听
+      document.removeEventListener('mousedown', this.replay);
     },
 
     /**

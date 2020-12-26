@@ -178,7 +178,7 @@ let tencentMixin = {
         speakers.push(user);
 
         // todo: test
-        for(let i =1; i<23; i++) {
+        for(let i =1; i<2; i++) {
           speakers.push(user);
         }
 
