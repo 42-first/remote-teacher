@@ -68,14 +68,8 @@
       <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
     </section>
 
-    <!-- 实时弹幕列表 -->
-    <!-- <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section> -->
-
     <!-- 更多操作 新 -->
     <actions-cmp></actions-cmp>
-
-    <!-- 弹幕控制组件 -->
-    <!--  <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp> -->
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">

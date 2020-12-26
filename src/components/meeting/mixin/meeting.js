@@ -103,7 +103,7 @@ let meetingMixin = {
         this.stopLocaleeting();
       }
 
-      this.$parent.joined = false;
+      this.setJoined(false);
     },
 
     /**

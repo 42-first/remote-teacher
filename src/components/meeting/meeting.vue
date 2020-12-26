@@ -35,7 +35,7 @@
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container " v-for="member in activeSpeakers">
+        <section class="member__container " :class="{ 'none': index > 2 }" v-for="(member, index) in activeSpeakers" >
           <avatar :member="member" :mode="1"></avatar>
         </section>
       </section>
@@ -205,11 +205,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .none {
+    display: none !important;
+  }
+
   .meeting__wrap {
     z-index: 1;
     position: fixed;
     top: 45px;
     right: 34px;
+    outline: none;
 
     &.preview {
       top: 0;
@@ -243,7 +248,6 @@ export default {
     width: 100%;
     height: 44px;
 
-    // background: #18191A;
     cursor: move;
 
     .action__full {
@@ -253,9 +257,10 @@ export default {
 
 
   .speakers__container {
+    padding: 5px 0;
     width: 100%;
     max-width: 450px;
-    height: 150px;
+    height: 160px;
 
     overflow: hidden;
 
