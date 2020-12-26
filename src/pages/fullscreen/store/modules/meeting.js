@@ -32,6 +32,8 @@ const meeting = {
     speakers: [],
     // 视频通话使用的SDK kwai: 快手 tencent：腾讯 local:本地
     meetingSDK: '',
+    // 会议模式 0: 默认上课布局 1: 宫格模式  2: 演讲模
+    meetingLayout: 0,
   },
   mutations: {
     // 重置课堂信息
@@ -52,6 +54,7 @@ const meeting = {
       };
       state.speakers = [];
       state.localSharing = false;
+      state.meetingLayout = 0;
     },
 
     setLocal(state, data) {
@@ -76,6 +79,10 @@ const meeting = {
 
     setLocalSharing(state, data) {
       state.localSharing = data;
+    },
+
+    setMeetingLayout(state, data) {
+      state.meetingLayout = data
     },
   },
 
@@ -106,6 +113,10 @@ const meeting = {
 
     setLocalSharing({commit}, data) {
       commit('setLocalSharing', data)
+    },
+
+    setMeetingLayout({commit}, data) {
+      commit('setMeetingLayout', data)
     },
 
   }

@@ -12,7 +12,7 @@
     <!-- header -->
     <section class="fullscreen__header box-between">
       <div></div>
-      <div class="action__back box-center" @click="handleVisibleFullScreen(false)">
+      <div class="action__back box-center" @click="setMeetingLayout(MeetingMode.DEFAULT)">
         <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icon20-bofangqi-quanping"></use>
         </svg>
@@ -52,12 +52,22 @@
 import { mapState, mapActions } from 'vuex';
 
 import avatar from './avatar-local'
-// import actions from './actions'
+
+// 会议模式
+const MeetingMode = {
+  // 默认 default
+  DEFAULT: 0,
+  // 九宫格 Jiugongge
+  JIUGONGGE: 1,
+  // 发言者模式
+  SPEAKER: 2
+};
 
 export default {
   name: "meeting-fullscreen",
   data() {
     return {
+      MeetingMode,
       visibleLargeScreen: false
     };
   },
@@ -94,16 +104,13 @@ export default {
   methods: {
     ...mapActions('meeting', [
       'setMeeting',
+      'setMeetingLayout',
     ]),
 
     /**
-     * @method 退出大屏
+     * @method 预览
      * @params
      */
-    handleVisibleFullScreen() {
-      this.$parent.handleVisibleFullScreen(false);
-    },
-
     handlePreviewVideo() {
       this.visibleLargeScreen = !this.visibleLargeScreen;
     },

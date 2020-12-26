@@ -325,7 +325,8 @@ let tencentMixin = {
         if (event.type == 'video' && event.state == 'STOPPED') {
         }
 
-        if (event.type == 'video' && event.state == 'PLAYING') {
+        if (event.type == 'audio' && event.state == 'PAUSED') {
+          remoteStream.play(uid);
         }
       });
 
@@ -589,8 +590,10 @@ let tencentMixin = {
           await shareClient.join();
           this.setLocalSharing(true);
 
-          let msg = { shareId: Number(userId), shareName: user.name, type: String(type), width: 0, height: 0 };
-          this.startShare(msg);
+          if(shareClient.isPublished) {
+            let msg = { shareId: Number(userId), shareName: user.name, type: String(type), width: 0, height: 0 };
+            this.startShare(msg);
+          }
         } else {
           // todo: 不支持
           this.$toast({ type: 1, message: '当前浏览器不支持屏幕共享', duration: 2000 });

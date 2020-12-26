@@ -8,21 +8,21 @@
 
 <template>
   <!-- 主页面布局 -->
-  <section class="meeting__wrap J_meeting" :class="{ 'preview': visibleFullscreen }" tabindex="1">
-    <fullscreen v-if="visibleFullscreen"></fullscreen>
+  <section class="meeting__wrap J_meeting" :class="{ 'preview': meetingLayout }" tabindex="1">
+    <fullscreen v-if="meetingLayout === MeetingMode.JIUGONGGE"></fullscreen>
     <!-- 会议悬浮框 -->
-    <section class="meeting__container" v-else >
+    <section class="meeting__container" v-else-if="meetingLayout === MeetingMode.DEFAULT" >
       <!-- 最小化 列表模式 可以切到全屏模式 模式浮窗模式 -->
       <header class="meeting__header box-between">
         <!-- 展开收起 -->
         <div></div>
-        <div class="action__full box-center" @click="handleVisibleFullScreen(true)">
+        <div class="action__full box-center" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon20-bofangqi-quanping"></use>
           </svg>
         </div>
       </header>
-      <!-- 演讲者模式 -->
+      <!-- 浮窗模式 -->
       <section class='speakers__container box-start'>
         <!-- 共享 -->
         <section class="member__container" v-show="meeting.otherscreen">
@@ -35,10 +35,11 @@
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container " v-for="member in speakers">
+        <section class="member__container " v-for="member in activeSpeakers">
           <avatar :member="member" :mode="1"></avatar>
         </section>
       </section>
+      <!-- 浮窗最小化 -->
     </section>
   </section>
 </template>
@@ -55,14 +56,25 @@ import localMeeting from './mixin/local-meeting'
 import tencentMeeting from './mixin/tencent-meeting'
 import move from './mixin/move'
 
+// 会议模式
+const MeetingMode = {
+  // 默认 default
+  DEFAULT: 0,
+  // 九宫格 Jiugongge
+  JIUGONGGE: 1,
+  // 发言者模式
+  SPEAKER: 2
+};
+
+
 
 export default {
   name: "meeting",
   data() {
     return {
-      // 显示全屏模式
-      visibleFullscreen: false,
-
+      MeetingMode,
+      // 正在说话的列表 包含老师和自己
+      activeSpeakers: [],
     };
   },
   components: {
@@ -89,6 +101,7 @@ export default {
       // SDK类型
       'meetingSDK',
       'localSharing',
+      'meetingLayout',
     ]),
   },
   created() {
@@ -109,8 +122,7 @@ export default {
   filters: {
   },
   watch: {
-    visibleFullscreen(newVal) {
-    },
+
   },
   methods: {
     ...mapActions([
@@ -124,6 +136,7 @@ export default {
       'setMeeting',
       'setMeetingSDK',
       'setLocalSharing',
+      'setMeetingLayout',
     ]),
 
     /**
@@ -186,17 +199,6 @@ export default {
     handleVisibleFullScreen(visible) {
       this.visibleFullscreen = visible;
 
-      // 处理共享
-      let meeting = this.meeting;
-      if(meeting.otherscreen) {
-        setTimeout(()=>{
-          if(this.meetingSDK === 'tencent') {
-            this.joinRemoteScreenSharing();
-          } else if(this.meetingSDK === 'local') {
-            this.joinRemoteScreenSharingLocal();
-          }
-        }, 0)
-      }
     },
   }
 };

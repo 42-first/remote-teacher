@@ -58,6 +58,36 @@ let meetingMixin = {
         }, 500);
       }
     },
+    // 切换布局
+    meetingLayout(newVal) {
+      // 处理共享
+      let meeting = this.meeting;
+      if(meeting.otherscreen) {
+        setTimeout(()=>{
+          if(this.meetingSDK === 'tencent') {
+            this.joinRemoteScreenSharing();
+          } else if(this.meetingSDK === 'local') {
+            this.joinRemoteScreenSharingLocal();
+          }
+        }, 0)
+      }
+    },
+    // 正常说话列表
+    speakers(newVal) {
+      let activeSpeakers = [];
+      // 老师自己
+      if(newVal && newVal.length) {
+        newVal.forEach((member)=>{
+          if(member.role === 'lecturer' || member.id == this.local) {
+            activeSpeakers.push(member);
+          } else if(member.audio) {
+            activeSpeakers.push(member);
+          }
+        })
+
+        this.activeSpeakers = activeSpeakers;
+      }
+    },
   },
   methods: {
     /**
@@ -361,4 +391,3 @@ let meetingMixin = {
 
 
 export default meetingMixin;
-
