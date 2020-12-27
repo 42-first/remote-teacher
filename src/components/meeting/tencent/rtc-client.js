@@ -285,6 +285,10 @@ export default class RtcClient {
     }
   }
 
+  getVolumeLevelMap() {
+    return this.volumeLevelMap;
+  }
+
   // 监听用户的声音大小，每次浏览器刷新时渲染一次
   setVolumeInterval(stream) {
     if (!stream) return;

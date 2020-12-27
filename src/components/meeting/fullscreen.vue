@@ -36,8 +36,13 @@
               <video class="video" id="J_screenshare"></video>
             </template>
             <div class="video" id="J_screenshare" v-else></div>
-            <div class="share-info box-between">
-              <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
+            <div class="share-info">
+              <div class="share-name cfff box-center" v-if="meeting.shareName">
+                <svg class="icon f20 cfff" aria-hidden="true">
+                  <use xlink:href="#icon20-gongxiangpingmu"></use>
+                </svg>
+                <span class="pl5 f12">{{meeting.shareName}}的共享窗口</span>
+              </div>
             </div>
           </div>
         </section>
@@ -266,7 +271,7 @@ export default {
         left: 0;
 
         .share-name {
-          padding: 0 3px;
+          padding: 0 5px;
           background: rgba(0, 0, 0, 0.7);
         }
       }

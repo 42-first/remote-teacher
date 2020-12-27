@@ -32,11 +32,16 @@
           </template>
           <div class="video" id="J_screenshare" v-else></div>
           <div class="share-info box-between">
-            <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
+            <div class="share-name cfff box-center" v-if="meeting.shareName">
+              <svg class="icon f20 cfff" aria-hidden="true">
+                <use xlink:href="#icon20-gongxiangpingmu"></use>
+              </svg>
+              <span class="pl5 f12">{{meeting.shareName}}的共享窗口</span>
+            </div>
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container " :class="{ 'none': index > 2 }" v-for="(member, index) in activeSpeakers" >
+        <section class="member__container" :class="{ 'none': meeting.otherscreen && index > 1 || !meeting.otherscreen && index > 2 }" v-for="(member, index) in activeSpeakers" >
           <avatar :member="member" :mode="1"></avatar>
         </section>
       </section>
@@ -181,7 +186,7 @@ export default {
           shareInfo.uid = shareInfo.identityId;
         }
 
-        this.setMeeting(Object.assign(this.meeting, data, { joined: true }));
+        this.setMeeting(Object.assign(this.meeting, data, data.shareInfo, { joined: true }));
 
         setTimeout(()=>{
           // 初始化视频通话SDK

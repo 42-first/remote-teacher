@@ -54,6 +54,12 @@
     max-height: 296px;
 
     box-sizing: border-box;
+
+    &:hover {
+      background: rgba(255, 255,255, 0.6);
+      border-radius: 4px;
+      border: 1px solid #E5E5E5;
+    }
   }
 
   .danmu__closed {

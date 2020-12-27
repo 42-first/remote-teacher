@@ -18,14 +18,21 @@
       <section class="speaker__container box-center">
         <!-- 共享 -->
         <section class="speaker__wrap box-center" v-show="meeting.otherscreen" >
-          <video class="video" id="J_screenshare" v-if="meetingSDK === 'local'"></video>
-          <div class="video" id="J_screenshare" v-else></div>
+          <div class="video__wrap box-center">
+            <video class="video" id="J_screenshare" v-if="meetingSDK === 'local'"></video>
+            <div class="video" id="J_screenshare" v-else></div>
 
-          <div class="share-info box-between">
-            <div class="share-name cfff f12" v-if="meeting.shareName">{{meeting.shareName}}的共享窗口</div>
+            <div class="share-info">
+              <div class="share-name cfff f12 box-center" v-if="meeting.shareName">
+                <svg class="icon f20 cfff" aria-hidden="true">
+                  <use xlink:href="#icon20-gongxiangpingmu" ></use>
+                </svg>
+                <span class="pl5">{{meeting.shareName}}的共享窗口</span>
+              </div>
+            </div>
           </div>
         </section>
-        <section class="speaker__wrap box-center" >
+        <section class="speaker__wrap box-center" v-show="!meeting.otherscreen">
           <avatar :member="members[0]"></avatar>
         </section>
       </section>
@@ -218,9 +225,14 @@ export default {
     width: 100%;
     height: 100%;
 
+    .video__wrap {
+      position: relative;
+      width: 100%;
+    }
+
     .video {
       width: 100%;
-      // object-fit: cover;
+      max-height: 100%;
       object-fit: contain;
     }
 
@@ -230,7 +242,7 @@ export default {
       left: 0;
 
       .share-name {
-        padding: 0 3px;
+        padding: 0 5px;
         background: rgba(0, 0, 0, 0.7);
       }
     }

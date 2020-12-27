@@ -146,6 +146,11 @@ let tencentMixin = {
       client.on('stream-updated', this.onUserStreamUpdated.bind(this));
       // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
       client.on('stream-removed', this.onUserStreamRemoved.bind(this));
+
+      this.volumeTimer && clearInterval(this.volumeTimer);
+      this.volumeTimer = setInterval(()=>{
+        this.detectUserVoiceVolume();
+      }, 1000*5)
     },
 
     onError(err) {
@@ -490,31 +495,54 @@ let tencentMixin = {
     },
 
     /**
-     * @method userId 对应的成员语音音量
+     * @method 检测成员语音音量
      * @params
      */
-    onUserVoiceVolume(userVolumes, userVolumesCount, totalVolume) {
-      log.info('[onUserVoiceVolume]:', userVolumes, userVolumesCount);
+    detectUserVoiceVolume() {
+      log.info('[detectUserVoiceVolume]');
 
+      let rtcEngine = this.rtcEngine;
+      let userVolumeMap = rtcEngine.getVolumeLevelMap();
+
+      let teacherAndMine = [];
+      let others = [];
       let speakers = this.speakers;
       speakers.forEach((user)=>{
-        let userVolume = userVolumes && userVolumes.find((item)=>{
-          // 本地用户找userId为空的 远端用户直接根据userId查找
-          return user.id == item.userId || (user.id == this.local && item.userId === '');
-        })
+        let userVolume = userVolumeMap.get(user.id);
 
-        if(userVolume && userVolume.volume) {
+        if(user.audio && userVolume && userVolume.volume) {
           user.active = true;
           user.volume = userVolume.volume;
         } else if(user.active) {
           user.active = false;
           user.volume = 0;
         }
+
+        // 老师
+        if(user.role === 'lecturer' || user.role === 'collaborator') {
+          teacherAndMine.push(user);
+        }
+
+        // 自己
+        if(user.id === this.local) {
+          teacherAndMine.push(user);
+        }
       })
 
-      //然后根据音量排序
+      // 然后根据音量排序
       speakers = speakers.sort((a, b) => { return b.volume - a.volume; })
-      this.setSpeakers(speakers);
+
+      // 正在说话列表
+      this.activeSpeakers = speakers.filter((user)=>{
+        return user.audio && user.volume;
+      });
+
+      // 其他学生
+      others = speakers.filter((user)=>{
+        return user.role !== 'lecturer' && user.role !== 'collaborator' && user.id !== this.local;
+      })
+
+      this.setSpeakers([...teacherAndMine, ...others]);
     },
 
     /**
@@ -645,6 +673,8 @@ let tencentMixin = {
       if (this.localSharing) {
         this.setShareScreen(false);
       }
+
+      this.volumeTimer && clearInterval(this.volumeTimer);
     },
 
   }
