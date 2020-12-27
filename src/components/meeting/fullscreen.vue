@@ -31,7 +31,7 @@
       <section class="members__list box-center">
         <!-- 共享 -->
         <section class="member__wrap" :class="{ 'preview': visibleLargeScreen }" v-show="meeting.otherscreen">
-          <div class="member__container box-center" @click="handlePreviewVideo">
+          <div class="member__container box-center share" @click="handlePreviewVideo">
             <template v-if="meetingSDK === 'local'">
               <video class="video" id="J_screenshare"></video>
             </template>
@@ -258,6 +258,10 @@ export default {
       height: 100%;
       background: #4a4a4a;
       overflow: hidden;
+
+      &.share {
+        border-radius: 4px;
+      }
 
       .video {
         width: 100%;
