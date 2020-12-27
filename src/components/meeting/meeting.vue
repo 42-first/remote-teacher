@@ -248,12 +248,11 @@ export default {
     &:hover {
       .meeting__header {
         height: 44px;
-        transition: height ease-out 0.1s 0.35s;
-        // transition: height ease-in 0.35s;
+        transition: height ease-in 0.35s;
 
         > * {
           opacity: 1;
-          transition: opacity ease-out 0.1s 0.35s;
+          transition: opacity ease-in 0.1s 0.35s;
         }
       }
     }
@@ -266,11 +265,11 @@ export default {
 
     cursor: move;
 
-    transition: height ease-in 0.35s;
+    transition: height ease-out 0.15s 0.5s;
 
     > * {
       opacity: 0;
-      transition: opacity ease-in 0.35s;
+      transition: opacity ease-out 0.35s;
     }
 
     .action__full {

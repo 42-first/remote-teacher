@@ -520,7 +520,8 @@ let tencentMixin = {
 
         // 老师
         if(user.role === 'lecturer' || user.role === 'collaborator') {
-          teacherAndMine.push(user);
+          // teacherAndMine.push(user);
+          teacherAndMine.unshift(user);
         }
 
         // 自己
