@@ -71,6 +71,8 @@ let meetingMixin = {
           }
         }, 0)
       }
+
+      this.getSpeakers();
     },
     // 正常说话列表
     speakers(newVal) {
@@ -245,7 +247,7 @@ let meetingMixin = {
       request.post(URL, params).
       then( res => {
         if (res && res.code === 0) {
-         this.getSpeakers();
+          this.getSpeakers();
         }
       }).
       catch(error => {
