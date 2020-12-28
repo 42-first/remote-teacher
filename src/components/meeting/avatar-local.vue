@@ -20,6 +20,9 @@
     </div>
     <div class="user__status box-between">
       <div class="user-name box-center cfff">
+        <svg class="icon f16 cfff mr3" aria-hidden="true" v-if="member.role === 'lecturer' || member.role === 'collaborator'">
+          <use xlink:href="#iconlaoshi" ></use>
+        </svg>
         <svg class="icon f16 cfff" aria-hidden="true">
           <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
           <use xlink:href="#icon20-yuyin-weifasheng" v-else></use>
@@ -264,6 +267,10 @@
   }
 </script>
 <style lang='scss' scoped>
+  .mr3 {
+    margin-right: 3px;
+  }
+
   .user-item {
     position: relative;
     width: 100%;

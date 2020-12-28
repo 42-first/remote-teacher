@@ -70,9 +70,6 @@ export default {
   created() {
   },
   mounted() {
-    setTimeout(()=>{
-      // this.init();
-    }, 1000)
   },
   updated() {},
   beforeDestroy() {
@@ -81,8 +78,8 @@ export default {
   },
   watch: {
     // 我自己开启了屏幕共享
-    'meeting.otherscreen'(newVal, oldVal) {
-    },
+    // 'meeting.otherscreen'(newVal, oldVal) {
+    // },
   },
   methods: {
     ...mapActions('meeting', [
