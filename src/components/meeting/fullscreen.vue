@@ -30,8 +30,8 @@
 
       <section class="members__list box-center">
         <!-- 共享 -->
-        <section class="member__wrap" :class="{ 'preview': visibleLargeScreen }" v-show="meeting.otherscreen">
-          <div class="member__container box-center share" @click="handlePreviewVideo">
+        <section class="member__wrap" v-show="meeting.otherscreen">
+          <div class="member__container box-center share">
             <template v-if="meetingSDK === 'local'">
               <video class="video" id="J_screenshare"></video>
             </template>
@@ -78,9 +78,9 @@ export default {
   name: "meeting-fullscreen",
   data() {
     return {
-      visibleLargeScreen: false,
       // 当前页显示的成员列表
       members: [],
+      teacherStream: null,
       // 分页
       totalCount: 1,
       totalPage: 1,
@@ -118,6 +118,13 @@ export default {
         this.initPages();
       }
     },
+    'meeting.otherscreen'(newVal) {
+      if(newVal) {
+        this.pageSize = 8;
+      } else {
+        this.pageSize = 9;
+      }
+    }
   },
   methods: {
     ...mapActions('meeting', [
@@ -181,15 +188,6 @@ export default {
         console.log('handlePrev');
       }
     },
-
-    /**
-     * @method 预览
-     * @params
-     */
-    handlePreviewVideo() {
-      this.visibleLargeScreen = !this.visibleLargeScreen;
-    },
-
   }
 };
 </script>

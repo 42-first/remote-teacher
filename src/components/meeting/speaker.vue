@@ -32,8 +32,9 @@
             </div>
           </div>
         </section>
+        <!-- 如果没有共享屏幕就展示老师 -->
         <section class="speaker__wrap box-center" v-show="!meeting.otherscreen">
-          <avatar :member="members[0]"></avatar>
+          <avatar :member="activeStream"></avatar>
         </section>
       </section>
 
@@ -71,6 +72,7 @@ export default {
     return {
       // 当前页显示的成员列表
       members: [],
+      activeStream: null,
       // 分页
       totalCount: 1,
       totalPage: 1,
@@ -128,6 +130,10 @@ export default {
       if(speakers && speakers.length) {
         this.totalCount = speakers.length;
         this.totalPage = Math.ceil(this.totalCount/this.pageSize);
+
+        this.activeStream = speakers.find((user)=>{
+          return user.role === 'lecturer';
+        })
       }
     },
 

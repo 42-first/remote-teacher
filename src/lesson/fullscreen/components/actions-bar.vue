@@ -255,6 +255,8 @@
   }
 
   .actions__container {
+    z-index: 1;
+    position: relative;
     box-sizing: border-box;
 
     padding: 0 15px;

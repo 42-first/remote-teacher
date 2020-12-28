@@ -17,7 +17,7 @@
       <header class="meeting__header box-between">
         <!-- 展开收起 -->
         <div></div>
-        <div class="action__full box-center" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+        <div class="action__full box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon20-bofangqi-quanping"></use>
           </svg>

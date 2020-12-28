@@ -30,7 +30,7 @@
 
     <!-- 发送弹幕组件 -->
     <section class="publish__wrap" >
-      <section class="danmu__publish f14">
+      <section class="danmu__publish f14 J_publish">
         <input class="danmu__ipt J_input f12 cfff" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @keyup="handleKeyup" />
         <p class="danmu__send box-center cfff" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
       </section>
@@ -58,13 +58,14 @@
     &:hover {
       background: rgba(255, 255,255, 0.6);
       border-radius: 4px;
-      border: 1px solid #E5E5E5;
+      // border: 1px solid #E5E5E5;
+      outline: 1px solid #E5E5E5;
     }
   }
 
   .danmu__closed {
     position: absolute;
-    top: 0;
+    top: 10px;
     right: 10px;
 
     width: 16px;
@@ -272,7 +273,9 @@
         let danmuEl = this.$el;
 
         danmuEl.addEventListener('mousedown', (evt) => {
-          // evt.preventDefault();
+          if(evt.target.parentElement.className.indexOf('J_publish') != -1) return;
+
+          evt.preventDefault();
 
           this.canMove = true;
 

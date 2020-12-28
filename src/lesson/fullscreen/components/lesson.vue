@@ -56,6 +56,15 @@ import { mapState, mapActions } from 'vuex'
 
 import timeline from './timeline';
 
+// 会议模式
+const MeetingMode = {
+  // 默认 default
+  DEFAULT: 0,
+  // 九宫格 Jiugongge
+  JIUGONGGE: 1,
+  // 发言者模式
+  SPEAKER: 2
+};
 
 export default {
   name: "lesson-content",
@@ -82,6 +91,10 @@ export default {
       'slideIndex',
       'msg',
       'currSlide'
+    ]),
+
+    ...mapState('meeting', [
+      'meetingLayout',
     ]),
   },
   components: {
@@ -196,6 +209,12 @@ export default {
     autoJump(index, slide) {
       // 自动跳转策略
       // 当前页是是放映页 PPT或者白板 新消息是PPT习题白板自动跳
+
+      // todo: 会议全屏模式不自动跳转
+      if(this.meetingLayout !== MeetingMode.DEFAULT) {
+        return this;
+      }
+
       let curr = this.currSlide;
       // 当前页是放映也
       if(curr && curr.index === this.slideIndex) {
