@@ -511,11 +511,11 @@ let tencentMixin = {
       let others = [];
       let speakers = this.speakers;
       speakers.forEach((user)=>{
-        let userVolume = userVolumeMap.get(user.id);
+        let userVolume = userVolumeMap.get(String(user.id));
 
-        if(user.audio && userVolume && userVolume.volume) {
+        if(user.audio && userVolume) {
           user.active = true;
-          user.volume = userVolume.volume;
+          user.volume = userVolume;
         } else if(user.active) {
           user.active = false;
           user.volume = 0;
