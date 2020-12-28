@@ -174,6 +174,7 @@ export default {
   methods: {
     ...mapActions([
       'setJoined',
+      'setHasMeeting',
     ]),
 
     ...mapActions('meeting', [
@@ -324,7 +325,8 @@ export default {
     .action {
       cursor: pointer;
 
-      &.active {
+      &.active,
+      &:hover {
         .icon {
           color: #5096f5;
         }

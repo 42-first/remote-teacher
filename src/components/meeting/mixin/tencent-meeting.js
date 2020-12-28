@@ -59,7 +59,12 @@ let tencentMixin = {
           this.$messagebox.confirm(message, msgOptions)
           .then( action => {
             if(action === 'confirm') {
-              this.$parent.joined = false;
+              this.setJoined(false);
+              this.setHasMeeting(false);
+
+              setTimeout(()=>{
+                this.$parent.initKwai();
+              }, 20)
             }
           });
         } else {

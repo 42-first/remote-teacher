@@ -10,7 +10,7 @@
   <!-- header -->
   <section class="top-bar__container box-between">
     <div class="box-center">
-      <div class="box-center pointer" @click="setMeetingLayout(MeetingMode.DEFAULT)">
+      <div class="action__back box-center pointer" @click="setMeetingLayout(MeetingMode.DEFAULT)">
         <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icon16-zuo"></use>
         </svg>
@@ -103,10 +103,17 @@ export default {
       width: 45px;
       cursor: pointer;
 
-      &.active {
+      &.active,
+      &:hover {
         .icon {
           color: #5096F5;
         }
+      }
+    }
+
+    .action__back:hover {
+      .icon {
+        color: #5096F5;
       }
     }
   }
