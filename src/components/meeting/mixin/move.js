@@ -27,7 +27,7 @@ let eventMixin = {
 
       meetingEl.addEventListener('mousedown', (evt) => {
         if(evt.target.parentElement.className.indexOf('J_action') != -1) return;
-        evt.preventDefault();
+        // evt.preventDefault();
 
         this.canMove = true;
 

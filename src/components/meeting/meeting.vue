@@ -14,17 +14,29 @@
     <!-- 会议悬浮框 -->
     <section class="meeting__container" v-else-if="meetingLayout === MeetingMode.DEFAULT" >
       <!-- 最小化 列表模式 可以切到全屏模式 模式浮窗模式 -->
-      <header class="meeting__header box-between">
+      <header class="meeting__header box-between" :class="{ 'bbl': tab === 'mini' }">
         <!-- 展开收起 -->
-        <div></div>
-        <div class="action__full box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+        <div class="box-center">
+          <div class="action box-center J_action" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')">
+            <svg class="icon f24 c666" aria-hidden="true">
+              <use xlink:href="#icon16-shang"></use>
+            </svg>
+          </div>
+          <div class="action box-center pl5 J_action" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')">
+            <svg class="icon f24 c666" aria-hidden="true">
+              <use xlink:href="#icon16-xia"></use>
+            </svg>
+          </div>
+        </div>
+        <!-- 全屏展开 -->
+        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon20-bofangqi-quanping"></use>
           </svg>
         </div>
       </header>
       <!-- 浮窗模式 -->
-      <section class='speakers__container box-start'>
+      <section class='speakers__container box-start' v-show="tab === 'default'">
         <!-- 共享 -->
         <section class="member__container" v-show="meeting.otherscreen">
           <template v-if="meetingSDK === 'local'">
@@ -46,6 +58,19 @@
         </section>
       </section>
       <!-- 浮窗最小化 -->
+      <section class="speakers__mini box-start" v-if="tab === 'mini'">
+        <section class="line-scale-pulse-out" >
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </section>
+        <section class="box-center f14 c333">
+          <span class="active__names">{{ activeNames }}</span>
+          <span>正在发言</span>
+        </section>
+      </section>
     </section>
   </section>
 </template>
@@ -76,7 +101,6 @@ const MeetingMode = {
 };
 
 
-
 export default {
   name: "meeting",
   data() {
@@ -84,6 +108,8 @@ export default {
       MeetingMode,
       // 正在说话的列表 包含老师和自己
       activeSpeakers: [],
+      // 浮窗操作 mini default
+      tab: 'default',
     };
   },
   components: {
@@ -113,6 +139,16 @@ export default {
       'localSharing',
       'meetingLayout',
     ]),
+
+    activeNames() {
+      let names = [];
+
+      names = this.activeSpeakers.map((user)=>{
+        return user.name;
+      })
+
+      return names.join(',')
+    },
   },
   created() {
   },
@@ -203,13 +239,21 @@ export default {
     },
 
     /**
+     * @method 浮窗最小化
+     * @params
+     */
+    handleSetTab(tab) {
+      this.tab = tab;
+    },
+
+    /**
      * @method 显示全屏模式
      * @params
      */
     handleVisibleFullScreen(visible) {
       this.visibleFullscreen = visible;
-
     },
+
   }
 };
 </script>
@@ -267,13 +311,23 @@ export default {
 
     transition: height ease-out 0.15s 0.5s;
 
+    &.bbl {
+      border-bottom: 1px solid #ddd;
+    }
+
     > * {
       opacity: 0;
       transition: opacity ease-out 0.35s;
     }
 
-    .action__full {
+    .action {
       cursor: pointer;
+
+      &.active {
+        .icon {
+          color: #5096f5;
+        }
+      }
     }
   }
 
@@ -310,6 +364,18 @@ export default {
     }
   }
 
+  .speakers__mini {
+    padding: 15px;
+    width: 264px;
+    height: 40px;
+
+    cursor: move;
+
+    .active__names {
+      padding: 0 5px;
+    }
+  }
+
 </style>
 <style>
   .meeting__wrap {
@@ -325,5 +391,35 @@ export default {
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
+  }
+
+  .line-scale-pulse-out {
+    font-size: 0;
+  }
+
+  .line-scale-pulse-out > div {
+    background-color: #08BC72;
+    margin: 0 1px;
+    width: 2px;
+    height: 15px;
+    border-radius: 2px;
+    animation-fill-mode: both;
+    display: inline-block;
+    animation: line-scale-pulse-out 0.9s -0.6s infinite cubic-bezier(0.85, 0.25, 0.37, 0.85);
+  }
+  .line-scale-pulse-out > div:nth-child(2), .line-scale-pulse-out > div:nth-child(4) {
+    animation-delay: -0.4s !important;
+  }
+  .line-scale-pulse-out > div:nth-child(1), .line-scale-pulse-out > div:nth-child(5) {
+    animation-delay: -0.2s !important;
+  }
+
+  @keyframes line-scale-pulse-out {
+    0% {
+      transform: scaley(1); }
+    50% {
+      transform: scaley(0.4); }
+    100% {
+      transform: scaley(1); }
   }
 </style>
