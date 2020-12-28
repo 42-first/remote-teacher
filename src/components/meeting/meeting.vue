@@ -99,6 +99,7 @@ const MeetingMode = {
   // 发言者模式
   SPEAKER: 2
 };
+window.MeetingMode = MeetingMode;
 
 
 export default {

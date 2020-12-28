@@ -9,7 +9,14 @@
 <template>
   <!-- header -->
   <section class="top-bar__container box-between">
-    <div></div>
+    <div class="box-center">
+      <div class="box-center pointer" @click="setMeetingLayout(MeetingMode.DEFAULT)">
+        <svg class="icon f28 c666" aria-hidden="true">
+          <use xlink:href="#icon16-zuo"></use>
+        </svg>
+      </div>
+      <p class="f14 c333">返回课件</p>
+    </div>
     <section class="box-center">
       <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.SPEAKER }" @click="setMeetingLayout(MeetingMode.SPEAKER)">
         <svg class="icon f28 c666" aria-hidden="true">

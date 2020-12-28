@@ -265,9 +265,12 @@ let tencentMixin = {
         }, 0);
 
         meeting.otherscreen = true;
+
+        this.setMeetingLayout(MeetingMode.SPEAKER)
       } else {
         meeting.otherscreen = false;
         this.shareStream = null;
+        this.setMeetingLayout(MeetingMode.JIUGONGGE)
       }
 
       this.setMeeting(meeting);
