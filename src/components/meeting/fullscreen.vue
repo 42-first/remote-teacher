@@ -47,7 +47,7 @@
           </div>
         </section>
         <!-- 成员 -->
-        <div class="member__wrap" :class="{ 'half' : members.length < 3 }" v-for="member in members">
+        <div class="member__wrap" :class="{ 'half' : !meeting.otherscreen &&members.length < 3 }" v-for="member in members">
           <div class="member__container">
             <avatar :member="member" :fullscreen="true"></avatar>
           </div>
