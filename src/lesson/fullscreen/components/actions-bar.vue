@@ -11,7 +11,7 @@
 
 <template>
   <!-- 操作栏 -->
-  <section class="actions__cmp" :class="{ 'center': joined }" tabindex="1">
+  <section class="actions__cmp" :class="{ 'center': hasMeeting && joined }" tabindex="1">
     <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting }">
       <!-- 会议基本操作 -->
       <section class="meeting__actions box-center" v-if="hasMeeting && joined">
