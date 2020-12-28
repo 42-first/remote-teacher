@@ -300,11 +300,12 @@ let tencentMixin = {
         // don't need screen shared by us
         client.unsubscribe(remoteStream);
       } else {
-        if(type === 'main') {
+        // web共享兼容 ~String(stream.userID).indexOf('share')
+        if(type === 'auxiliary' || ~String(userId).indexOf('share')) {
+          this.shareStream = remoteStream;
+        } else if(type === 'main') {
           members.set(userId, remoteStream);
           rtcEngine.setMembers(members);
-        } else if(type === 'auxiliary') {
-          this.shareStream = remoteStream;
         }
 
         console.log('subscribe to this remote stream');
@@ -350,8 +351,8 @@ let tencentMixin = {
       });
 
       // 屏幕分享流
-      if(type === 'auxiliary') {
-        // this.shareStream = remoteStream;
+      // web共享兼容 ~String(stream.userID).indexOf('share')
+      if(type === 'auxiliary' || ~String(uid).indexOf('share')) {
         this.setSubStreamAvailable(uid, true);
       } else {
         remoteStream.play(uid);
