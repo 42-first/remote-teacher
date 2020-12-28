@@ -20,18 +20,18 @@
     <section class="box-center">
       <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.SPEAKER }" @click="setMeetingLayout(MeetingMode.SPEAKER)">
         <svg class="icon f28 c666" aria-hidden="true">
-          <use xlink:href="#icon20-ketanggongneng1"></use>
+          <use xlink:href="#iconyanjiangzhemoshi-xian2x"></use>
         </svg>
       </div>
       <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.JIUGONGGE }" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
         <svg class="icon f28 c666" aria-hidden="true">
-          <use xlink:href="#icon20-ketanggongneng1"></use>
+          <use xlink:href="#icongonggemoshi-xian2x"></use>
         </svg>
       </div>
       <div class="line"></div>
       <div class="action box-center" @click="setMeetingLayout(MeetingMode.DEFAULT)">
         <svg class="icon f28 c666" aria-hidden="true">
-          <use xlink:href="#icon20-bofangqi-quanping"></use>
+          <use xlink:href="#icon16-shouqiquanping"></use>
         </svg>
       </div>
     </section>

@@ -19,19 +19,19 @@
         <div class="box-center">
           <div class="action box-center J_action" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')">
             <svg class="icon f24 c666" aria-hidden="true">
-              <use xlink:href="#icon16-shang"></use>
+              <use xlink:href="#iconyincangshipinsuolvetu2x1"></use>
             </svg>
           </div>
           <div class="action box-center pl5 J_action" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')">
             <svg class="icon f24 c666" aria-hidden="true">
-              <use xlink:href="#icon16-xia"></use>
+              <use xlink:href="#iconkandanren2x"></use>
             </svg>
           </div>
         </div>
         <!-- 全屏展开 -->
         <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
           <svg class="icon f28 c666" aria-hidden="true">
-            <use xlink:href="#icon20-bofangqi-quanping"></use>
+            <use xlink:href="#icon16-quanping1"></use>
           </svg>
         </div>
       </header>

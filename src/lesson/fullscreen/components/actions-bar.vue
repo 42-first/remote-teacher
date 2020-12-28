@@ -19,7 +19,7 @@
           <div class="actions__btn box-center">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
-              <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
+              <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
             </svg>
           </div>
         </section>
@@ -27,7 +27,7 @@
           <div class="actions__btn box-center">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
-              <use xlink:href="#icon20-guanbishipin-01" v-else></use>
+              <use xlink:href="#icon48-guanbishipin" v-else></use>
             </svg>
           </div>
         </section>

@@ -22,7 +22,7 @@
       <div class="user-name box-center cfff">
         <svg class="icon f16 cfff" aria-hidden="true">
           <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
-          <use xlink:href="#icon20-yuyin-jingyin-01" v-else></use>
+          <use xlink:href="#icon20-yuyin-weifasheng" v-else></use>
         </svg>
         <span class="name f12">{{ member.name }}</span>
       </div>
