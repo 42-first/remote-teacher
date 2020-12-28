@@ -76,6 +76,9 @@ let lessonMixin = {
       let liveid = data.liveid;
       liveid && this.getLive(liveid);
 
+      // 是否有试卷
+      let hasQuiz = false
+
       if(timeline && timeline.length) {
         timeline.forEach(item => {
           if(item.pres && !presSet.has(item.pres)) {
@@ -90,8 +93,15 @@ let lessonMixin = {
           if(item.type === 'board' && item.action === 'new') {
             this.formatBoard(item, lessonTags);
           }
+
+          if(item.type === 'quiz') {
+            hasQuiz = true
+          }
         })
       }
+
+      // 有试卷
+      hasQuiz && this.getQuizStatus()
 
       // 有课件
       if(presSet.size) {
@@ -482,6 +492,25 @@ let lessonMixin = {
         this.boardMap.set(boardid, board);
       }
     },
+
+    /**
+     * @method 获取已交卷的试卷id
+     */
+    getQuizStatus(){
+      let URL = API.lesson.get_quiz_status
+
+      return request.get(URL)
+      .then(res => {
+        if(res && res.code === 0 && res.data){
+          res.data.answered.forEach(item => {
+            let quizObJ = {
+              answered:true
+            }
+            this.quizMap.set(+item, quizObJ);
+          })
+        }
+      })
+    }
   }
 }
 

@@ -118,6 +118,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_redenvelope: '/api/v3/lesson/redenvelope/issue-list',
       // 获取会议信息（加入时使用）
       get_meeting_config: '/api/v3/lesson/meeting/get-config',
+      // 学生课上试卷状态
+      get_quiz_status: '/api/v3/lesson/quiz/status',
 
 
       // 教师接口
