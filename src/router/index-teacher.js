@@ -354,7 +354,7 @@ router.beforeEach((to, from, next) => {
   console.log(to);
   
   if(to.name.indexOf('v3') == -1){
-    if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send)) {
+    if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'home' && to.path.indexOf('redpacketqueryproblemid') != -1)) {
       next({name: 'home', params: {lessonid: STORE.state.lessonid}})
       return;
     }
@@ -384,7 +384,7 @@ router.beforeEach((to, from, next) => {
     }
     next()
   }else {
-    if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send)){
+    if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'teacher-v3' && to.path.indexOf('redpacketqueryproblemid') != -1)){
       next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
       return;
     }
