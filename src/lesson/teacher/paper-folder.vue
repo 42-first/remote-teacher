@@ -174,7 +174,7 @@
         self.isPubmodalHidden = true
 
         request.post(url, postData)
-          .then(jsonData => {
+          .then(res => {
             if(res && res.code === 0 && res.data){
               // 显示饼图页
               self.showQuizResult(res.data.quizId);
