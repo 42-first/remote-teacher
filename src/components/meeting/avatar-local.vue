@@ -112,16 +112,20 @@
           let stream = rtcEngine.members.get(uid);
 
           if(stream && (member.audio || member.video)) {
-            stream.stop()
-            stream.play(uid)
-            .catch(err => {
-              let errCode = err.getCode()
-              if (errCode === 0x4043) {
-                stream.stop()
-              }
+            try {
+              stream.stop()
+              stream.play(uid)
+              .catch(err => {
+                let errCode = err.getCode()
+                if (errCode === 0x4043) {
+                  stream.stop()
+                }
 
-              document.addEventListener('mousedown', this.retryPlay);
-            });
+                document.addEventListener('mousedown', this.retryPlay);
+              });
+            } catch (error) {
+              console.error('Stream play exception:%s', error.message);
+            }
           }
         }
       },
@@ -139,14 +143,18 @@
           let stream = rtcEngine.members.get(uid);
 
           if(stream && (member.audio || member.video)) {
-            stream.stop()
-            stream.play(uid, { muted: false })
-            .catch(err => {
-              let errCode = err.getCode()
-              if (errCode === 0x4043) {
-                stream.stop()
-              }
-            });
+            try {
+              stream.stop()
+              stream.play(uid, { muted: false })
+              .catch(err => {
+                let errCode = err.getCode()
+                if (errCode === 0x4043) {
+                  stream.stop()
+                }
+              });
+            } catch (error) {
+              console.error('Stream play exception:%s', error.message);
+            }
           }
         }
 

@@ -355,7 +355,11 @@ let tencentMixin = {
       if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(uid, true);
       } else if(uid) {
-        remoteStream.play(uid);
+        try {
+          remoteStream.play(uid);
+        } catch (error) {
+          console.error('Stream play exception:%s', error.message);
+        }
       }
 
       if (!remoteStream.hasVideo()) {
@@ -662,10 +666,14 @@ let tencentMixin = {
         let view = document.querySelector(`#J_screenshare`)
 
         if(view) {
-          shareStream.play('J_screenshare', { objectFit: 'contain' }).
-          then(() => {
-            shareStream.videoPlayer_.element_.controls = true;
-          });
+          try {
+            shareStream.play('J_screenshare', { objectFit: 'contain' }).
+            then(() => {
+              shareStream.videoPlayer_.element_.controls = true;
+            });
+          } catch (error) {
+            console.error('Stream play exception:%s', error.message);
+          }
         }
       }, 500)
     },
