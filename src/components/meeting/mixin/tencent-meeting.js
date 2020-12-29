@@ -275,7 +275,7 @@ let tencentMixin = {
       } else {
         meeting.otherscreen = false;
         this.shareStream = null;
-        this.setMeetingLayout(MeetingMode.JIUGONGGE)
+        this.setMeetingLayout(MeetingMode.DEFAULT)
       }
 
       this.setMeeting(meeting);
@@ -414,7 +414,8 @@ let tencentMixin = {
       rtcEngine.setRemoteStreams(remoteStreams);
 
       // 屏幕分享流
-      if(type === 'auxiliary') {
+      // web共享兼容 ~String(remoteStream.userId_).indexOf('share')
+      if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(userId, false);
       } else {
 
