@@ -116,6 +116,7 @@ export default {
     'speakers'(newVal, oldVal) {
       if(newVal && newVal.length) {
         this.initPages();
+        this.getMembers(this.page);
       }
     },
     'meeting.otherscreen'(newVal) {
