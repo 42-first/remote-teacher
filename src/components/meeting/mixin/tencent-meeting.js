@@ -179,7 +179,7 @@ let tencentMixin = {
       let { audio, video, active } = this.meeting;
       // 用户视频状态是否支持离线
       let speakers = this.speakers;
-      let user = Object.assign({}, this.user, { role: 2, audio, video, active });
+      let user = Object.assign({}, this.user, { role: 'student', audio, video, active });
       let index = speakers.findIndex((item)=>{
         return item.id == user.id;
       })
@@ -224,7 +224,7 @@ let tencentMixin = {
     onRemoteUserEnterRoom(evt) {
       const uid = evt.userId;
       console.log('peer-join:' + uid);
-      if (uid === shareUserId) {
+      if (uid === shareUserId || ~String(uid).indexOf('share')) {
         return this;
       }
 
@@ -266,7 +266,7 @@ let tencentMixin = {
 
       if (available) {
         setTimeout(() => {
-          this.joinRemoteScreenSharing(uid);
+          this.joinRemoteScreenSharing();
         }, 0);
 
         meeting.otherscreen = true;
@@ -351,10 +351,10 @@ let tencentMixin = {
       });
 
       // 屏幕分享流
-      // web共享兼容 ~String(stream.userID).indexOf('share')
-      if(type === 'auxiliary' || ~String(uid).indexOf('share')) {
+      // web共享兼容 ~String(remoteStream.userId_).indexOf('share')
+      if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(uid, true);
-      } else {
+      } else if(uid) {
         remoteStream.play(uid);
       }
 
