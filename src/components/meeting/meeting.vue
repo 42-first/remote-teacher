@@ -67,8 +67,8 @@
           <div></div>
         </section>
         <section class="box-center f14 c333">
+          <span>正在发言:</span>
           <span class="active__names">{{ activeNames }}</span>
-          <span>正在发言</span>
         </section>
       </section>
     </section>
@@ -144,8 +144,10 @@ export default {
     activeNames() {
       let names = [];
 
-      names = this.activeSpeakers.map((user)=>{
-        return user.name;
+      this.activeSpeakers.forEach((user)=>{
+        if(user.audio && user.name){
+          names.push(user.name);
+        }
       })
 
       return names.join(',')

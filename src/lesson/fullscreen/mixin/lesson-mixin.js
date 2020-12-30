@@ -159,9 +159,9 @@ var commandMixin = {
       }, 20)
 
       // 课程基本信息
-      this.setLesson({
+      this.setLesson(Object.assign(lesson, {
         lessonID: id
-      })
+      }));
 
       window.user = user;
     },

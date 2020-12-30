@@ -316,6 +316,8 @@ export default {
     height: 100vh;
 
     background: radial-gradient(circle at 100% 100%, #0D1F39, #224372 80%, #284D83 100%);
+
+    user-select: none;
   }
 
   .lesson__wrap {

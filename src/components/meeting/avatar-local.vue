@@ -118,12 +118,15 @@
               .catch(err => {
                 let errCode = err.getCode()
                 if (errCode === 0x4043) {
-                  stream.stop()
+                  // stream.stop()
+                  stream.resume()
+                  console.log('stream.play 0x4043 自动播放失败');
                 }
 
                 document.addEventListener('mousedown', this.retryPlay);
               });
             } catch (error) {
+              stream.play(uid)
               console.error('Stream play exception:%s', error.message);
             }
           }
@@ -149,7 +152,9 @@
               .catch(err => {
                 let errCode = err.getCode()
                 if (errCode === 0x4043) {
-                  stream.stop()
+                  // stream.stop()
+                  stream.resume()
+                  console.log('retryPlay stream.play 0x4043 自动播放失败');
                 }
               });
             } catch (error) {

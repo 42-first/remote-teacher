@@ -195,10 +195,12 @@ let tencentMixin = {
         this.setSpeakers(speakers);
       }
 
+      this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
+
       await rtcEngine.initLocalStream();
       setTimeout(()=>{
         this.joinedMeeting(user);
-        this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
+        // this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
       }, 0)
 
       let states = rtcEngine.getRemoteMutedState();
@@ -346,7 +348,8 @@ let tencentMixin = {
         }
 
         if (event.type == 'audio' && event.state == 'PAUSED') {
-          remoteStream.play(uid);
+          remoteStream.resume();
+          // remoteStream.play(uid);
         }
       });
 

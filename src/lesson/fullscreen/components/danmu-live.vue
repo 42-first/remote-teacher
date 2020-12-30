@@ -459,10 +459,10 @@
           if(res && res.code === 0) {
             this.danmuText = '';
 
-            this.$toast({
-              message: this.$i18n.t('sendsuccess') || '发送成功',
-              duration: 2000
-            });
+            // this.$toast({
+            //   message: this.$i18n.t('sendsuccess') || '发送成功',
+            //   duration: 2000
+            // });
           }
         }).
         catch(error => {
