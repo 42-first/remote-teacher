@@ -16,7 +16,7 @@
       <!-- 会议基本操作 -->
       <section class="meeting__actions box-center" v-if="hasMeeting && joined">
         <section class="actions__item" @click="handleSetAudio">
-          <div class="actions__btn box-center">
+          <div class="actions__btn box-center action__tips" :data-tips="meeting.audio ? '点击静音' : '点击解除静音'">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
               <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
@@ -24,7 +24,7 @@
           </div>
         </section>
         <section class="actions__item" @click="handleSetVideo">
-          <div class="actions__btn box-center">
+          <div class="actions__btn box-center action__tips" :data-tips="meeting.video ? '点击关闭摄像头' : '点击开启摄像头'">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
               <use xlink:href="#icon48-guanbishipin" v-else></use>
@@ -376,6 +376,7 @@
     position: relative;
 
     .actions__btn {
+      position: relative;
       width: 52px;
       height: 34px;
 
@@ -387,6 +388,35 @@
         width: 64px;
         border-radius: 17px;
         background: #F34848;
+      }
+    }
+
+    .action__tips {
+      &:hover:before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+
+        border: 5px solid transparent;
+        border-top-color: #333;
+      }
+
+      &:hover:after {
+        content: attr(data-tips);
+        position: absolute;
+        bottom: calc(100% + 10px);
+
+        display: block;
+        padding: 0 5px;
+        min-width: 50px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        white-space: nowrap;
+
+        color: #fff;
+        background: #333;
+        border-radius: 4px;
       }
     }
   }
