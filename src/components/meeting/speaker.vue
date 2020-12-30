@@ -261,8 +261,8 @@ export default {
     height: 100%;
 
     flex-flow: column;
-    align-content: start;
-    justify-content: flex-start;
+    align-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
 
     overflow-y: auto;

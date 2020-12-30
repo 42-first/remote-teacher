@@ -54,11 +54,11 @@
     max-height: 296px;
 
     box-sizing: border-box;
+    cursor: move;
 
     &:hover {
       background: rgba(255, 255,255, 0.6);
       border-radius: 4px;
-      // border: 1px solid #E5E5E5;
       outline: 1px solid #E5E5E5;
     }
   }
@@ -79,7 +79,6 @@
     flex: 1;
     width: 100%;
 
-    // overflow: hidden;
     cursor: move;
   }
 
@@ -288,8 +287,6 @@
           const x = evt.clientX - xVal;
           const y = evt.clientY - yVal;
           this.lastPoint = { x, y };
-
-          console.dir(cssStyles);
         }, true)
 
         danmuEl.addEventListener('mouseup', (evt) => {

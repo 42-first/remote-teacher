@@ -21,20 +21,19 @@
     <div class="user__status box-between">
       <div class="user-name box-center cfff">
         <svg class="icon f16 cfff mr3" aria-hidden="true" v-if="member.role === 'lecturer' || member.role === 'collaborator'">
-          <use xlink:href="#iconlaoshi" ></use>
+          <use xlink:href="#iconlaoshi"></use>
         </svg>
-        <svg class="icon f16 cfff" aria-hidden="true">
-          <use xlink:href="#icon20-yuyin" v-if="member.audio"></use>
-          <use xlink:href="#icon20-yuyin-weifasheng" v-else></use>
+        <div class="active__audio line-scale-pulse-out" v-if="member.audio">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <svg class="icon f16 cfff" aria-hidden="true" v-else>
+          <use xlink:href="#icon20-yuyin-weifasheng"></use>
         </svg>
         <span class="name f12">{{ member.name }}</span>
-      </div>
-      <div class="active__audio line-scale-pulse-out" v-if="member.active">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
       </div>
     </div>
   </section>
@@ -376,30 +375,15 @@
     font-size: 0;
   }
 
-  // .line-scale-pulse-out > div {
-  //   background-color: #08BC72;
-  //   margin: 0 1px;
-  //   width: 2px;
-  //   height: 15px;
-  //   border-radius: 2px;
-  //   animation-fill-mode: both;
-  //   display: inline-block;
-  //   animation: line-scale-pulse-out 0.9s -0.6s infinite cubic-bezier(0.85, 0.25, 0.37, 0.85);
-  // }
-  // .line-scale-pulse-out > div:nth-child(2), .line-scale-pulse-out > div:nth-child(4) {
-  //   animation-delay: -0.4s !important;
-  // }
-  // .line-scale-pulse-out > div:nth-child(1), .line-scale-pulse-out > div:nth-child(5) {
-  //   animation-delay: -0.2s !important;
-  // }
-
-  // @keyframes line-scale-pulse-out {
-  //   0% {
-  //     transform: scaley(1); }
-  //   50% {
-  //     transform: scaley(0.4); }
-  //   100% {
-  //     transform: scaley(1); }
-  // }
+  .line-scale-pulse-out > div {
+    background-color: #08BC72;
+    margin: 0 1px;
+    width: 1px;
+    height: 12px;
+    border-radius: 1px;
+    animation-fill-mode: both;
+    display: inline-block;
+    animation: line-scale-pulse-out 0.9s -0.6s infinite cubic-bezier(0.85, 0.25, 0.37, 0.85);
+  }
 
 </style>

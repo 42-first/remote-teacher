@@ -167,7 +167,6 @@ var mixin = {
           // 开启互动 { op: 'startinteractive', lessonid }
           case 'startinteractive':
             if(msg.lessonid) {
-              // this.hasMeeting = true;
               this.setHasMeeting(true);
 
               item = msg['event'];
@@ -179,7 +178,8 @@ var mixin = {
           // 结束互动 { op: 'endinteractive', lessonid }
           case 'endinteractive':
             if(msg.lessonid) {
-              // this.hasMeeting = false;
+              // 不显示直播
+              this.liveURL = '';
               this.setHasMeeting(false);
 
               item = msg['event'];

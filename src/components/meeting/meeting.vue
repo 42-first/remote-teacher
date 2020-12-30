@@ -17,12 +17,12 @@
       <header class="meeting__header box-between" :class="{ 'bbl': tab === 'mini' }">
         <!-- 展开收起 -->
         <div class="box-center">
-          <div class="action box-center J_action" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')">
+          <div class="action box-center J_action action__tips" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')" data-tips="最小化">
             <svg class="icon f24 c666" aria-hidden="true">
               <use xlink:href="#iconyincangshipinsuolvetu2x1"></use>
             </svg>
           </div>
-          <div class="action box-center pl5 J_action" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')">
+          <div class="action box-center pl5 J_action action__tips" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')" data-tips="展开">
             <svg class="icon f24 c666" aria-hidden="true">
               <use xlink:href="#iconkandanren2x"></use>
             </svg>
@@ -162,11 +162,7 @@ export default {
   },
   updated() {},
   beforeDestroy() {
-    if(this.meetingSDK === 'tencent') {
-      this.exitRoomTencent();
-    } else if(this.meetingSDK === 'local') {
-      window.rtcEngine && window.rtcEngine.close();
-    }
+    this.handleHangup();
   },
   filters: {
   },
@@ -325,6 +321,7 @@ export default {
     }
 
     .action {
+      position: relative;
       cursor: pointer;
 
       &.active,
@@ -332,6 +329,35 @@ export default {
         .icon {
           color: #5096f5;
         }
+      }
+    }
+
+    .action__tips {
+      &:hover:before {
+        content: '';
+        position: absolute;
+        bottom: 80%;
+
+        border: 5px solid transparent;
+        border-top-color: #333;
+      }
+
+      &:hover:after {
+        content: attr(data-tips);
+        position: absolute;
+        bottom: calc(80% + 10px);
+
+        display: block;
+        padding: 0 5px;
+        min-width: 50px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        white-space: nowrap;
+
+        color: #fff;
+        background: #333;
+        border-radius: 4px;
       }
     }
   }

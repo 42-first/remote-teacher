@@ -97,13 +97,13 @@ let meetingMixin = {
      * @param
      */
     async handleHangup() {
-      let result = await this.leavedChanel();
-
       if(this.meetingSDK === 'tencent') {
         this.exitRoomTencent();
       } else if(this.meetingSDK === 'local') {
         this.stopLocaleeting();
       }
+
+      await this.leavedChanel();
 
       this.setJoined(false);
     },
