@@ -567,12 +567,22 @@ let tencentMixin = {
      * @method 设置音频
      * @params
      */
-    setAudioByTencent(audio = false) {
+    async setAudioByTencent(audio = false) {
       let rtcEngine = this.rtcEngine;
-      if(audio) {
-        rtcEngine.unmuteLocalAudio();
-      } else {
-        rtcEngine.muteLocalAudio();
+
+      try {
+        if(audio) {
+          await rtcEngine.unmuteLocalAudio();
+        } else {
+          rtcEngine.muteLocalAudio();
+        }
+      } catch(error) {
+        console.error('设置音频 error: ' + error);
+        let meeting = this.meeting;
+        meeting.audio = !audio;
+        this.setMeeting(meeting);
+
+        return this;
       }
 
       const user = {
@@ -604,6 +614,7 @@ let tencentMixin = {
         }
       } catch(error) {
         log.error('[setVideo] error:%s', JSON.stringify(error.message));
+        return this;
       }
 
       const user = {

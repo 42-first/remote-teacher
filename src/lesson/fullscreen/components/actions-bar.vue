@@ -56,10 +56,10 @@
             <i class="iconfont icon-ykq_tab_tougao f20"></i>
             <p class="pl10 f14">投稿</p>
           </section>
-          <section class="action__menu box-start c333" data-tip="分组">
+          <!--  <section class="action__menu box-start c333" data-tip="分组">
             <i class="iconfont icon-fenzu1 f20"></i>
             <p class="pl10 f14">分组</p>
-          </section>
+          </section> -->
         </section>
       </section>
 
@@ -245,6 +245,8 @@
     position: fixed;
     bottom: 20px;
     right: 34px;
+
+    user-select: none;
 
     &.center {
       right: 50%;

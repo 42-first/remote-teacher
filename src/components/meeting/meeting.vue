@@ -67,7 +67,7 @@
           <div></div>
         </section>
         <section class="box-center f14 c333">
-          <span>正在发言:</span>
+          <span class="pl5">正在发言:</span>
           <span class="active__names">{{ activeNames }}</span>
         </section>
       </section>

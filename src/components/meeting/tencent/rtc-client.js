@@ -109,7 +109,32 @@ export default class RtcClient {
       this.localStream.setVideoProfile('360p');
 
       // initialize the local stream and the stream will be populated with audio/video
-      await this.localStream.initialize();
+      await this.localStream.initialize().
+      catch((error) => {
+        // 本地流初始化失败
+        switch (error.name) {
+          case 'NotAllowedError':
+            // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
+            console.error(error, error.name);
+
+            window.$toast && window.$toast({
+              type: 1,
+              message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
+              duration: 3000 })
+            break;
+          case 'NotReadableError':
+            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
+            window.$toast && window.$toast({
+              type: 1,
+              message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
+              duration: 3000 })
+            break;
+          default:
+            console.error(error);
+            break;
+        }
+      });
+
       console.log('initialize local stream success');
 
       this.localStream.on('player-state-changed', event => {
@@ -162,12 +187,11 @@ export default class RtcClient {
     }
     try {
       await this.client.publish(this.localStream);
+      this.isPublished = true;
     } catch (e) {
       console.error('failed to publish local stream ' + e);
       this.isPublished = false;
     }
-
-    this.isPublished = true;
   }
 
   async unpublish() {
@@ -184,14 +208,26 @@ export default class RtcClient {
     this.isPublished = false;
   }
 
-  muteLocalAudio() {
-    this.localStream.muteAudio();
-    this.deleteVolumeInterval(this.uid);
+  async muteLocalAudio() {
+    console.log('isPublished:', this.isPublished);
+
+    try {
+      this.localStream.muteAudio();
+      this.deleteVolumeInterval(this.uid);
+    } catch(error) {
+    }
   }
 
-  unmuteLocalAudio() {
+  async unmuteLocalAudio() {
+    console.log('isPublished:', this.isPublished);
+
+    if(!this.isPublished) {
+      await this.initLocalStream();
+    }
+
     this.localStream.unmuteAudio();
     this.setVolumeInterval(this.localStream);
+
   }
 
   muteLocalVideo() {
@@ -215,6 +251,11 @@ export default class RtcClient {
   }
 
   async unmuteLocalVideo() {
+    console.log('isPublished:', this.isPublished);
+    if(!this.isPublished) {
+      await this.initLocalStream();
+    }
+
     // 打开摄像头，增加视频通话
     let localStream = this.localStream;
 
