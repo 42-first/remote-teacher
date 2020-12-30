@@ -48,7 +48,7 @@
 
       <!-- 更多 -->
       <section class="action action-tip box-center" title="更多" >
-        <i class="iconfont icon--gengduocaozuo f24 blue"></i>
+        <i class="iconfont icon--gengduocaozuo f24 c666"></i>
 
         <!-- 更多操作 -->
         <section class="action__more">
@@ -283,6 +283,12 @@
 
       cursor: pointer;
 
+      &:hover {
+        .icon--gengduocaozuo {
+          color: #5096f5;
+        }
+      }
+
       &.action-tip:hover {
         &:before {
           content: '';
@@ -385,7 +391,7 @@
       }
 
       &.meeting__exit {
-        width: 64px;
+        width: 72px;
         border-radius: 17px;
         background: #F34848;
       }

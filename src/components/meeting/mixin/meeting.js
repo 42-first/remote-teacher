@@ -109,6 +109,32 @@ let meetingMixin = {
     },
 
     /**
+     * @method 修改成员列表中会议状态
+     * @param
+     */
+    updateMeetingStatus(data) {
+      let speakers = this.speakers;
+      let index = speakers.findIndex((user)=>{
+        return user.id == data.id;
+      })
+
+      if(~index) {
+        let user = speakers[index];
+
+        if(user[data.type] !== data.value) {
+          user[data.type] = data.value;
+
+          if(data.type === 'audio') {
+            user.active = data.value;
+          }
+
+          speakers.splice(index, 1, user);
+          this.setSpeakers(speakers);
+        }
+      }
+    },
+
+    /**
      * @method 强制静音
      * @param
      */
@@ -133,6 +159,10 @@ let meetingMixin = {
       })
 
       let user = { id: uid, uid, name, avatar, role, video, audio, active: false, tryTimes: 0 };
+
+      if(this.meetingSDK === 'local') {
+        Object.assign(user, { audioConsumer: null, videoConsumer: null });
+      }
 
       // 存在用户
       if(~index) {

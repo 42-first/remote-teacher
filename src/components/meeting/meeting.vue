@@ -215,8 +215,6 @@ export default {
           this.setMeetingSDK('local');
         }
 
-        // this.setMeetingSDK('local');
-
         // 目前如果有人在分享
         if(data.shareInfo && data.shareInfo.shareId) {
           meeting.otherscreen = true;

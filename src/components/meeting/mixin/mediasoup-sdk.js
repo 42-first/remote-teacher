@@ -1422,7 +1422,7 @@ export default class RoomClient {
         .catch(errback);
 
         // 本地用户加入成功
-        this.fire('joinedChannel', { code: 1, id });
+        // this.fire('joinedChannel', { code: 1});
       });
 
       this._sendTransport.on('produce', async ({ kind, rtpParameters, appData }, callback, errback) => {
@@ -1488,6 +1488,9 @@ export default class RoomClient {
         rtpCapabilities: this._mediasoupDevice.rtpCapabilities,
         sctpCapabilities: this._mediasoupDevice.sctpCapabilities
       });
+
+      // 本地用户加入成功
+      this.fire('joinedChannel', { code: 1});
 
       console.log('peers:', peers);
 

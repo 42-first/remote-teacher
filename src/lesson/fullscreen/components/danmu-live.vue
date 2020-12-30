@@ -40,8 +40,8 @@
 <style lang="scss" scoped>
   .danmu__cmp {
     position: absolute;
-    bottom: 60px;
-    right: 0;
+    bottom: 0;
+    right: calc(100% + 10px);
 
     display: flex;
     flex-flow: column;
@@ -153,8 +153,8 @@
   .publish__wrap {
     margin-top: 10px;
 
-    width: 266px;
-    height: 32px;
+    width: 270px;
+    height: 40px;
   }
 
   .danmu__publish {
@@ -176,15 +176,15 @@
       outline: none;
       border: none;
 
-      border-radius: 16px 0 0 16px;
+      border-radius: 20px 0 0 20px;
       background: rgba(0,0,0,0.7);
     }
 
     .danmu__send {
-      width: 53px;
+      width: 62px;
       height: 100%;
 
-      border-radius: 0 16px 16px 0;
+      border-radius: 0 20px 20px 0;
       background: #5096F5;
 
       cursor: pointer;

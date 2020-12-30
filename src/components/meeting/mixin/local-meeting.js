@@ -77,12 +77,12 @@ let localMeeting = {
 			setTimeout(()=>{
 				rtcEngine.join();
 
-        const speakers = this.speakers;
-        let { audio, video, active } = this.meeting;
-        let user = Object.assign({ audioConsumer: null, videoConsumer: null }, this.user, { audio, video, active });
-        speakers.push(user);
+        // const speakers = this.speakers;
+        // let { audio, video, active } = this.meeting;
+        // let user = Object.assign({ audioConsumer: null, videoConsumer: null }, this.user, { audio, video, active });
+        // speakers.push(user);
 
-        this.setSpeakers(speakers);
+        // this.setSpeakers(speakers);
 			}, 1000)
 
       this.rtcEngine = rtcEngine;
@@ -151,6 +151,8 @@ let localMeeting = {
           // 是否启用音频视频
           // rtcEngine.enableLocalAudio();
           // rtcEngine.enableWebcam();
+
+          this.joinedMeeting(user);
         } catch(error) {
           log.error('onEnterRoom error:%s', JSON.stringify(error.message));
         }
@@ -165,7 +167,6 @@ let localMeeting = {
       log.info('[onUserJoinedForLocal] uid:%s', peer);
 
       let defaultAvatar = 'http://wx.qlogo.cn/mmopen/OUicWJdJoz3HNVF1oYxOQYibUZicpTD55udhicFPk9RBUuicwxiahv5nUJBx7MZPbl7tTkeZRlptRuhhMpaPNPxyplWQ/96';
-
       let { id, displayName, avatar } = peer;
       let user = {
         id: id,
@@ -175,16 +176,8 @@ let localMeeting = {
         audio: false, video: false, active: false,
         audioConsumer: null, videoConsumer: null
       };
-      let speakers = this.speakers;
-      let index = speakers.findIndex((user)=>{
-        return user.id == id;
-      })
 
-      // 不存在 加入
-      if(index === -1) {
-        speakers.push(user);
-        this.setSpeakers(speakers);
-      }
+      this.joinUser(user, 'SDK');
     },
 
     /**
@@ -332,12 +325,12 @@ let localMeeting = {
             };
 
             shareEl.play().catch((error) => console.warn('shareEl.play() failed:%o', error));
-
-            console.log('stream track:', stream)
           }
         }, 0)
-      } else {
 
+        this.setMeetingLayout(MeetingMode.SPEAKER)
+      } else {
+        this.setMeetingLayout(MeetingMode.DEFAULT)
       }
     },
 
@@ -366,32 +359,6 @@ let localMeeting = {
     },
 
     /**
-     * @method 修改成员列表中会议状态
-     * @param
-     */
-    updateMeetingStatus(data) {
-      let speakers = this.speakers;
-      let index = speakers.findIndex((user)=>{
-        return user.id == data.id;
-      })
-
-      if(~index) {
-        let user = speakers[index];
-
-        if(user[data.type] !== data.value) {
-          user[data.type] = data.value;
-
-          if(data.type === 'audio') {
-            user.active = data.value;
-          }
-
-          speakers.splice(index, 1, user);
-          this.setSpeakers(speakers);
-        }
-      }
-    },
-
-    /**
      * @method 设置音频
      * @params
      */
@@ -410,6 +377,9 @@ let localMeeting = {
         value: audio
       };
       this.updateMeetingStatus(user);
+
+      let device = { audio };
+      this.changeDeviceStatus(device);
 
       this.$toast({ type: 1, message: audio ? '麦克风已开启': '麦克风已静音', duration: 2000 });
     },
@@ -439,6 +409,9 @@ let localMeeting = {
       };
       this.updateMeetingStatus(user);
 
+      let device = { video };
+      this.changeDeviceStatus(device);
+
       this.$toast({ type: 1, message: video ? '视频已开启': '视频已关闭', duration: 2000 });
     },
 
@@ -456,8 +429,12 @@ let localMeeting = {
 
         if(screen) {
           rtcEngine && rtcEngine.enableShare();
+
+          let msg = { shareId: Number(userId), shareName: user.name, type: String(1), width: 0, height: 0 };
+          this.startShare(msg);
         } else {
           rtcEngine && rtcEngine.disableShare();
+          this.endShare();
         }
       } catch (error) {
         console.error('[setShareScreenLocal] error:%s', JSON.stringify(error.message));

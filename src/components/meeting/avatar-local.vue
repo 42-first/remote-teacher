@@ -234,6 +234,8 @@
         let local = this.local || this.user && this.user.id;
         if(local == uid) {
           role = 'local';
+
+          return this;
         }
 
         let videoEl = this.$el.querySelector(`#audio-${uid}`);
