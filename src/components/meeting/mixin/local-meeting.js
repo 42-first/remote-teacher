@@ -44,21 +44,6 @@ function getDeviceInfo(){
 }
 
 let localMeeting = {
-  // watch: {
-  //   // 音频控制
-  //   'meeting.audio'(newVal, oldVal) {
-  //     this.setAudioLocal(newVal);
-  //   },
-  //   // 视频控制
-  //   'meeting.video'(newVal, oldVal) {
-  //     this.setVideoLocal(newVal);
-  //   },
-  //   // 我自己开启了屏幕共享
-  //   'meeting.screen'(newVal, oldVal) {
-  //     this.setShareScreenLocal(newVal);
-  //   },
-
-  // },
   methods: {
     /**
      * @method 进入会议初始化操作
@@ -426,7 +411,7 @@ let localMeeting = {
       };
       this.updateMeetingStatus(user);
 
-      // this.$toast({ type: 1, message: audio ? '麦克风已开启': '麦克风已静音', duration: 2000 });
+      this.$toast({ type: 1, message: audio ? '麦克风已开启': '麦克风已静音', duration: 2000 });
     },
 
     /**
@@ -454,7 +439,7 @@ let localMeeting = {
       };
       this.updateMeetingStatus(user);
 
-      // this.$toast({ type: 1, message: video ? '视频已开启': '视频已关闭', duration: 2000 });
+      this.$toast({ type: 1, message: video ? '视频已开启': '视频已关闭', duration: 2000 });
     },
 
     /**

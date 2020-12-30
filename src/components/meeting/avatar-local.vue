@@ -45,8 +45,14 @@
   export default {
     name: 'avatar-local',
     props: {
-      member: Object,
-      fullscreen: Boolean,
+      member: {
+        type: Object,
+        default: {}
+      },
+      fullscreen: {
+        type: Boolean,
+        default: false
+      },
     },
     data() {
       return {
@@ -64,16 +70,32 @@
       'member.video'(newVal) {
         console.log('member.video', newVal);
 
-        setTimeout(()=>{
+        if(this.meetingSDK === 'local') {
+          setTimeout(()=>{
+            this.initLocalVideo();
+          }, 2000)
+        } else if(this.meetingSDK === 'tencent') {
+          setTimeout(()=>{
+            this.initTencent();
+          }, 100)
+        } else {
           this.init();
-        }, 100)
+        }
       },
       'member.audio'(newVal) {
         console.log('member.audio', newVal);
 
-        setTimeout(()=>{
+        if(this.meetingSDK === 'local') {
+          setTimeout(()=>{
+            this.initLocalAudio();
+          }, 1000)
+        } else if(this.meetingSDK === 'tencent') {
+          setTimeout(()=>{
+            this.initTencent();
+          }, 100)
+        } else {
           this.init();
-        }, 100)
+        }
       },
       'member.id'(newVal) {
         console.log('change uid:', newVal)
