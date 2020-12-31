@@ -9,8 +9,8 @@
 <template>
   <!-- header -->
   <section class="top-bar__container box-between">
-    <div class="box-center" @click="setMeetingLayout(MeetingMode.DEFAULT)">
-      <div class="action__back box-center pointer">
+    <div class="box-center pointer" @click="setMeetingLayout(MeetingMode.DEFAULT)">
+      <div class="action__back box-center">
         <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icon16-zuo"></use>
         </svg>
