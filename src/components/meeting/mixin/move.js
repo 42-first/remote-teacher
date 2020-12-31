@@ -41,46 +41,60 @@ let eventMixin = {
         const y = evt.clientY - yVal;
         this.lastPoint = { x, y };
 
-        console.dir(cssStyles);
-      }, true)
-
-      meetingEl.addEventListener('mouseup', (evt) => {
-        evt.preventDefault();
-
-        this.canMove = false;
-      }, true)
-
-      meetingEl.addEventListener('mouseout', (evt) => {
-        evt.preventDefault();
-
-        this.canMove = false;
-      }, true)
-
-      meetingEl.addEventListener('mousemove', (evt)=>{
-        evt.preventDefault();
-
-        if(this.canMove) {
-          let lastPoint = this.lastPoint;
-          let x = evt.clientX - lastPoint.x;
-          let y = evt.clientY - lastPoint.y;
-          let offset = { x, y };
-
-          if(Math.abs(x) > 10 || Math.abs(y) > 10) {
-            this.translateContent(offset);
-          }
-
-          return false;
-        }
+        this.addEventListeners();
       }, true)
     },
 
     translateContent(offset) {
-      let meetingEl = document.querySelector('.J_meeting');
+      let meetingEl = this.$el;
       let offsetX = offset.x;
       let offsetY = offset.y;
 
+      meetingEl.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
       meetingEl.style.setProperty('--x', offsetX + 'px');
       meetingEl.style.setProperty('--y', offsetY + 'px');
+    },
+
+    addEventListeners() {
+      this.$el.addEventListener('mousemove', this.handleMove)
+      this.$el.addEventListener('mouseup', this.handleMoveEnd)
+
+      document.addEventListener('mousemove', this.handleMove)
+      document.addEventListener('mouseup', this.handleMoveEnd)
+    },
+
+    removeEventListeners() {
+      this.$el.removeEventListener('mousemove', this.handleMove)
+      this.$el.removeEventListener('mouseup', this.handleMoveEnd)
+
+      document.removeEventListener('mousemove', this.handleMove)
+      document.removeEventListener('mouseup', this.handleMoveEnd)
+    },
+
+    /**
+     * @method shape移动
+     * @params
+     */
+    handleMove(evt) {
+      evt.preventDefault();
+
+      if(!this.canMove) {
+        return false;
+      }
+
+      let lastPoint = this.lastPoint;
+      let x = evt.clientX - lastPoint.x;
+      let y = evt.clientY - lastPoint.y;
+      let offset = { x, y };
+
+      if(Math.abs(x) + Math.abs(y) > 5) {
+        this.translateContent(offset);
+      }
+    },
+
+    handleMoveEnd(evt) {
+      this.removeEventListeners();
+      this.canMove = false;
     },
 
   }

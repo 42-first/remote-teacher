@@ -273,7 +273,7 @@ export default {
     &.preview {
       top: 0;
       left: 0;
-      transform: translate(0, 0);
+      transform: translate(0, 0) !important;
 
       .meeting__container {
         opacity: 0;

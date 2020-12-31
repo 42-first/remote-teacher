@@ -259,9 +259,7 @@
       init() {
         this.initEvent();
 
-        console.log('lesson:', this.lesson);
-
-        this.userid = this.lesson.userID;
+        this.userid = window.identityId;
       },
 
        /**
@@ -272,9 +270,8 @@
         let danmuEl = this.$el;
 
         danmuEl.addEventListener('mousedown', (evt) => {
-          if(evt.target.parentElement.className.indexOf('J_publish') != -1) return;
-
-          evt.preventDefault();
+          // if(evt.target.parentElement.className.indexOf('J_publish') != -1) return;
+          // evt.preventDefault();
 
           this.canMove = true;
 
@@ -287,35 +284,8 @@
           const x = evt.clientX - xVal;
           const y = evt.clientY - yVal;
           this.lastPoint = { x, y };
-        }, true)
 
-        danmuEl.addEventListener('mouseup', (evt) => {
-          evt.preventDefault();
-
-          this.canMove = false;
-        }, true)
-
-        danmuEl.addEventListener('mouseout', (evt) => {
-          evt.preventDefault();
-
-          this.canMove = false;
-        }, true)
-
-        danmuEl.addEventListener('mousemove', (evt)=>{
-          evt.preventDefault();
-
-          if(this.canMove) {
-            let lastPoint = this.lastPoint;
-            let x = evt.clientX - lastPoint.x;
-            let y = evt.clientY - lastPoint.y;
-            let offset = { x, y };
-
-            if(Math.abs(x) > 10 || Math.abs(y) > 10) {
-              this.translateContent(offset);
-            }
-
-            return false;
-          }
+          this.addEventListeners();
         }, true)
       },
 
@@ -324,8 +294,52 @@
         let offsetX = offset.x;
         let offsetY = offset.y;
 
+        danmuEl.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
         danmuEl.style.setProperty('--x', offsetX + 'px');
         danmuEl.style.setProperty('--y', offsetY + 'px');
+      },
+
+      addEventListeners() {
+        this.$el.addEventListener('mousemove', this.handleMove)
+        this.$el.addEventListener('mouseup', this.handleMoveEnd)
+
+        document.addEventListener('mousemove', this.handleMove)
+        document.addEventListener('mouseup', this.handleMoveEnd)
+      },
+
+      removeEventListeners() {
+        this.$el.removeEventListener('mousemove', this.handleMove)
+        this.$el.removeEventListener('mouseup', this.handleMoveEnd)
+
+        document.removeEventListener('mousemove', this.handleMove)
+        document.removeEventListener('mouseup', this.handleMoveEnd)
+      },
+
+      /**
+       * @method shape移动
+       * @params
+       */
+      handleMove(evt) {
+        evt.preventDefault();
+
+        if(!this.canMove) {
+          return false;
+        }
+
+        let lastPoint = this.lastPoint;
+        let x = evt.clientX - lastPoint.x;
+        let y = evt.clientY - lastPoint.y;
+        let offset = { x, y };
+
+        if(Math.abs(x) + Math.abs(y) > 5) {
+          this.translateContent(offset);
+        }
+      },
+
+      handleMoveEnd(evt) {
+        this.removeEventListeners();
+        this.canMove = false;
       },
 
       /**

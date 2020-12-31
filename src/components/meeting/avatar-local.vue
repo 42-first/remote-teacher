@@ -9,7 +9,7 @@
 
 <template>
   <section class="user-item box-center" :class="{ 'fullscreen': fullscreen }" >
-    <div class="avatar-wrap box-center">
+    <div class="avatar-wrap box-center" v-if="member">
       <img class="user--avatar" :src="member.avatar" alt="头像" v-show="!member.video">
       <!-- 本地会议 -->
       <template v-if="meetingSDK === 'local'">
@@ -18,7 +18,7 @@
       </template>
       <div class="user--video" :id="member.id" v-show="member.video" v-else></div>
     </div>
-    <div class="user__status box-between">
+    <div class="user__status box-between" v-if="member">
       <div class="user-name box-center cfff">
         <svg class="icon f16 cfff mr3" aria-hidden="true" v-if="member.role === 'lecturer' || member.role === 'collaborator'">
           <use xlink:href="#iconlaoshi"></use>
