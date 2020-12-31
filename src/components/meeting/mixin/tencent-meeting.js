@@ -577,9 +577,9 @@ let tencentMixin = {
           rtcEngine.muteLocalAudio();
         }
       } catch(error) {
-        console.error('设置音频 error: ' + error);
+        console.error('设置音频 audio: ' + audio, error);
         let meeting = this.meeting;
-        meeting.audio = !audio;
+        meeting.audio = false;
         this.setMeeting(meeting);
 
         return this;
@@ -602,18 +602,27 @@ let tencentMixin = {
      * @method 设置视频
      * @params
      */
-    setVideoByTencent(video = false) {
+    async setVideoByTencent(video = false) {
+      let meeting = this.meeting;
+      let result = false;
+
       try {
         let rtcEngine = this.rtcEngine;
         if(video) {
-          rtcEngine.unmuteLocalVideo()
-          // .then(()=>{
-          // });
+          await rtcEngine.unmuteLocalVideo()
         } else {
-          rtcEngine.muteLocalVideo();
+          result = await rtcEngine.muteLocalVideo();
+
+          if(!result) {
+            return this;
+          }
         }
       } catch(error) {
         log.error('[setVideo] error:%s', JSON.stringify(error.message));
+
+        meeting.video = false;
+        this.setMeeting(meeting);
+
         return this;
       }
 

@@ -208,14 +208,22 @@ export default class RtcClient {
     this.isPublished = false;
   }
 
-  async muteLocalAudio() {
-    console.log('isPublished:', this.isPublished);
+  muteLocalAudio() {
+    this.localStream.muteAudio();
+    this.deleteVolumeInterval(this.uid);
 
-    try {
-      this.localStream.muteAudio();
-      this.deleteVolumeInterval(this.uid);
-    } catch(error) {
-    }
+    // return new Promise((resolve, reject) => {
+    //   try {
+    //     this.localStream.muteAudio();
+    //     this.deleteVolumeInterval(this.uid);
+
+    //     resolve(true);
+    //   } catch (e) {
+    //     console.error('failed to muteLocalAudio ' + e);
+
+    //     reject(false);
+    //   }
+    // });
   }
 
   async unmuteLocalAudio() {
@@ -233,25 +241,28 @@ export default class RtcClient {
   muteLocalVideo() {
     let localStream = this.localStream;
 
-    // localStream.muteVideo();
+    return new Promise((resolve, reject) => {
+      try {
+        const videoTrack = localStream.getVideoTrack();
+        if (videoTrack) {
+          localStream.removeTrack(videoTrack).
+          then(() => {
+            console.log('remove video call success');
+            // 关闭摄像头
+            videoTrack.stop();
 
-    try {
-      const videoTrack = localStream.getVideoTrack();
-      if (videoTrack) {
-        localStream.removeTrack(videoTrack).
-        then(() => {
-          console.log('remove video call success');
-          // 关闭摄像头
-          videoTrack.stop();
-        });
+            resolve(true);
+          });
+        }
+      } catch (e) {
+        console.error('failed to muteLocalVideo ' + e);
+
+        reject(false);
       }
-    } catch (e) {
-      console.error('failed to muteLocalVideo ' + e);
-    }
+    });
   }
 
   async unmuteLocalVideo() {
-    console.log('isPublished:', this.isPublished);
     if(!this.isPublished) {
       await this.initLocalStream();
     }
@@ -259,51 +270,21 @@ export default class RtcClient {
     // 打开摄像头，增加视频通话
     let localStream = this.localStream;
 
-    // localStream.unmuteVideo();
-    // localStream.play(this.uid);
-
     await this.unpublish();
-    // return new Promise((resolve, reject) => {
-    try {
-      const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
-      videoStream.setVideoProfile('360p');
-      videoStream.initialize().
-      then(() => {
-        console.log('camera video stream init success');
 
-        // 增加视频通话
-        localStream.addTrack(videoStream.getVideoTrack()).
-        then(() => {
-          console.log('add video call success');
+    const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
+    videoStream.setVideoProfile('360p');
+    await videoStream.initialize();
 
-          this.publish();
-          // 播放本地视频
-          localStream.stop();
-          localStream.play(this.uid);
-          // resolve(true);
-        });
-      }).catch((error)=>{
-        console.error('failed to initialize: ' + error);
+    await localStream.addTrack(videoStream.getVideoTrack());
 
-        // const stream = await navigator.mediaDevices.getUserMedia({
-        //   video: { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 10, max: 15 } }
-        // });
+    this.publish();
 
-        // 本地流初始化失败
-        switch (error.name) {
-          case 'NotReadableError':
-            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
-            break;
-          default:
-            console.error('initialize: ' + error.name);
-            break;
-        }
-      });
-    } catch (e) {
-      console.error('failed to muteLocalVideo ' + e);
-      // reject(e);
-    }
-    // });
+    this.members.set(this.uid, localStream);
+
+    // 播放本地视频
+    localStream.stop();
+    localStream.play(this.uid);
   }
 
   resumeStreams() {

@@ -33,7 +33,7 @@
           </div>
         </section>
         <!-- 如果没有共享屏幕就展示老师 -->
-        <section class="speaker__wrap box-center" v-show="!meeting.otherscreen">
+        <section class="speaker__wrap box-center" v-if="!meeting.otherscreen">
           <avatar :member="activeStream"></avatar>
         </section>
       </section>
