@@ -286,6 +286,8 @@
     flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
+
+    outline: none;
   }
 
   .timeline__item {

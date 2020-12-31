@@ -69,10 +69,18 @@
         <section class="actions__item" @click="handleHangup" v-if="joined">
           <div class="actions__btn over meeting__exit box-center f12 cfff">退出互动</div>
         </section>
-        <section class="action box-center join__wrap" @click="handleJoin" v-else>
-          <div class="meeting__join box-center" >
+        <section class="action box-center join__wrap" v-else>
+          <div class="meeting__join box-center" @click="handleJoin">
             <i class="iconfont icon-48-jieru f28 cfff"></i>
           </div>
+
+          <!-- 互动加入提示 -->
+          <section class="meeting__tips box-start" v-if="visibleMeetingTips">
+            <div class="tips__content f16 cfff">老师开启了课堂互动快来加入吧</div>
+            <p class="tips__closed box-center" @click="handleClosedTips">
+              <i class="iconfont icon-guanbi1 f12 cfff"></i>
+            </p>
+          </section>
         </section>
       </template>
 
@@ -86,15 +94,15 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
-
+  import { isSupported } from '@/util/util'
   import danmu from './danmu-live';
 
   export default {
     name: "actions-bar",
     data() {
       return {
-        // 默认是控制
-        actions: [],
+        // 会议加入提示
+        visibleMeetingTips: true,
       };
     },
     components: {
@@ -119,6 +127,7 @@
       ]),
     },
     created() {
+      this.init();
     },
     mounted() {
     },
@@ -128,13 +137,10 @@
     filters: {
     },
     watch: {
-      danmuStatus(newVal) {
+      hasMeeting(newVal) {
         if(newVal) {
 
         }
-      },
-      hasMeeting(newVal) {
-
       }
     },
     methods: {
@@ -153,12 +159,12 @@
        * @param
        */
       init() {
-        if(this.danmuStatus) {
-          this.actions.push({ name: 'danmu', status: this.visibleDanmu })
-        }
-
-        if(this.hasMeeting) {
-          this.actions.push({ name: 'meeting', status: this.joined })
+        let key = 'lesson-mettingtips-cloesed';
+        if(isSupported(window.localStorage)) {
+          let hasClosedMeetignTips = !!localStorage.getItem(key);
+          if(hasClosedMeetignTips) {
+            this.visibleMeetingTips = false;
+          }
         }
       },
 
@@ -234,6 +240,19 @@
         meeting.video = video;
         this.setMeeting(meeting);
       },
+
+      /**
+       * @method 关闭会议加入提示
+       * @params
+       */
+      handleClosedTips(evt) {
+        this.visibleMeetingTips = false;
+
+        let key = 'lesson-mettingtips-cloesed';
+        if(isSupported(window.localStorage)) {
+          localStorage.setItem(key, true);
+        }
+      }
     }
   };
 </script>
@@ -426,4 +445,44 @@
       }
     }
   }
+
+
+  .meeting__tips {
+    position: absolute;
+    bottom: calc(100% + 15px);
+    right: -10px;
+
+    padding: 15px 0;
+    width: 220px;
+    height: 77px;
+
+    border-radius: 8px;
+    background: #5096F5;
+    box-shadow: 0 2px 10px rgba(80, 150, 245, 0.5);
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      right: 27px;
+
+      border: 9px solid transparent;
+      border-top-color: #5096F5;
+    }
+
+    .tips__content {
+      padding: 0 18px;
+      width: 184px;
+
+      text-align: left;
+
+      border-right: 1px solid #fff;
+    }
+
+    .tips__closed {
+      flex: 1;
+    }
+  }
+
+
 </style>

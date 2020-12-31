@@ -29,7 +29,7 @@
         <nav class="cards__nav" v-show="!fullscreen" v-if="!fold">
           <h3 class="nav__header box-between">
             <span>课堂动态</span>
-            <i class="iconfont icon-guanbi1 f20 c333 pointer" @click="handleFold(true)"></i>
+            <i class="iconfont icon-guanbi1 f16 c9b pointer" @click="handleFold(true)"></i>
           </h3>
           <section class="nav__list">
             <timeline></timeline>
@@ -37,7 +37,9 @@
         </nav>
         <!-- 展开更多 -->
         <p class="nav__fold box-center pointer" v-if="fold" @click="handleFold(false)">
-          <!-- <i class="iconfont icon-quanbu f28 cfff" ></i> -->
+          <svg class="icon f24 cfff" aria-hidden="true">
+            <use xlink:href="#icon16-xiaojiantou-shang"></use>
+          </svg>
         </p>
         <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
           <!-- 当前或者选中的数据展示 -->
@@ -376,10 +378,16 @@ export default {
       top: 50%;
       left: 0;
       transform: translateY(-50%);
-      width: 22px;
-      height: 200px;
-      background: url(https://qn-sfe.yuketang.cn/o_1e28aupan5lrkiq2ip1k4do0be.png) center
-        center/contain no-repeat;
+
+      width: 20px;
+      height: 100px;
+
+      border-radius: 0 17px 17px 0;
+      background: #C8C8C8;
+
+      .icon {
+        transform: rotate(90deg);
+      }
     }
   }
 
@@ -393,13 +401,13 @@ export default {
     flex-flow: column;
 
     overflow: hidden;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+    box-shadow: 1px 0 4px rgba(0,0,0,0.1);
     background: #fff;
 
     .nav__header {
       height: 40px;
       line-height: 40px;
-      padding: 0 20px 0 20px;
+      padding: 0 10px 0 10px;
       border-bottom: 1px solid #ddd;
 
       text-align: left;
