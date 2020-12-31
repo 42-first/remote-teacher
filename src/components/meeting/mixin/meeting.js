@@ -72,7 +72,8 @@ let meetingMixin = {
         }, 0)
       }
 
-      this.getSpeakers();
+      // this.getSpeakers();
+      this.getMembers();
     },
     // 正常说话列表
     speakers(newVal) {
@@ -277,7 +278,8 @@ let meetingMixin = {
       request.post(URL, params).
       then( res => {
         if (res && res.code === 0) {
-          this.getSpeakers();
+          // this.getSpeakers();
+          this.getMembers();
         }
       }).
       catch(error => {
@@ -304,6 +306,53 @@ let meetingMixin = {
               let { identityId, name, avatar, role, video, audio } = item;
               let active = audio ? true : false;
               let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
+
+              let index = speakers.findIndex((speaker)=>{
+                return speaker.id == user.id;
+              })
+
+              // 存在用户
+              if(~index) {
+                speakers.splice(index, 1, user);
+              } else {
+                speakers.push(user);
+              }
+            })
+
+            this.setSpeakers(speakers);
+          }
+        }
+      }).catch(error => {
+      })
+    },
+
+     /**
+     * @method 读取成员列表
+     * @params
+     */
+    getMembers() {
+      let URL = API.lesson.get_member_list;
+      let params = {
+        page_size: 100,
+        current_page: 1
+      };
+
+      request.get(URL, params).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let items = res.data.items;
+
+          // 数据是否需要格式化保持一致
+          let speakers = this.speakers;
+          if(items && items.length) {
+            items.forEach((item)=>{
+              let { identityId, name, avatar, role, video, audio } = item;
+              let active = audio ? true : false;
+              let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
+
+              if(this.meetingSDK === 'local') {
+                Object.assign(user, { audioConsumer: null, videoConsumer: null });
+              }
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;
