@@ -326,7 +326,7 @@ let meetingMixin = {
       })
     },
 
-     /**
+    /**
      * @method 读取成员列表
      * @params
      */
