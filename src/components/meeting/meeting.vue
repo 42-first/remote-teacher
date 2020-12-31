@@ -217,7 +217,10 @@ export default {
 
         // 目前如果有人在分享
         if(data.shareInfo && data.shareInfo.shareId) {
-          meeting.otherscreen = true;
+          if(uid != shareInfo.identityId) {
+            meeting.otherscreen = true;
+          }
+
           let shareInfo = data.shareInfo;
           shareInfo.uid = shareInfo.identityId;
         }
