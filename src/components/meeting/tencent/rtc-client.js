@@ -115,24 +115,34 @@ export default class RtcClient {
         switch (error.name) {
           case 'NotAllowedError':
             // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
-            console.error(error, error.name);
-
             window.$toast && window.$toast({
               type: 1,
+              position: 'top',
               message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
-              duration: 3000 })
+              duration: 5000 })
             break;
           case 'NotReadableError':
             // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
             window.$toast && window.$toast({
               type: 1,
+              position: 'top',
               message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
-              duration: 3000 })
+              duration: 5000 })
             break;
+          case 'NotFoundError':
+            // 找不到摄像头或麦克风设备
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '找不到摄像头或麦克风设备',
+              duration: 5000 })
+            return;
           default:
             console.error(error);
             break;
         }
+
+        console.error(error, error.name);
       });
 
       console.log('initialize local stream success');

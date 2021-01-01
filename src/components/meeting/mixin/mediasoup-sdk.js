@@ -487,6 +487,15 @@ export default class RoomClient {
             break;
           }
 
+        // 远端创建了Producer 也就是远端开启了音频或者视频
+        case 'newProducer':
+          {
+            const { peerId, producerId, kind } = notification.data;
+            // TODO:
+            //
+            break;
+          }
+
         case 'consumerClosed':
           {
             const { consumerId } = notification.data;
@@ -1481,7 +1490,7 @@ export default class RoomClient {
 
       // Join now into the room.
       // NOTE: Don't send our RTP capabilities if we don't want to consume.
-      const { peers } = await this._protoo.request('join', {
+      const { peers, producers } = await this._protoo.request('join', {
         displayName: this._displayName,
         avatar: this._avatar,
         device: this._device,
@@ -1499,6 +1508,15 @@ export default class RoomClient {
 
         this.fire('userJoined', peer);
       }
+
+      console.log('joined producers:', producers);
+      /*
+      producers: [ {
+        id: String, // producer 的 producerId
+        kind: String // 类型，"audio" 或 "video"
+      } ]
+      */
+
 
       // Enable mic/webcam.
       // TODO：检测麦克 摄像头
