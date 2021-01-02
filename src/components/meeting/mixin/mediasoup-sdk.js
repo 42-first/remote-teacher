@@ -41,7 +41,7 @@ function getProtooUrl({ roomId = '666666', peerId, token, forceH264, forceVP9 })
   // wss://v3demo.mediasoup.org:4443/?roomId=5agep09w&peerId=lo8b4bkf
 
   const hostname = 'b.yuketang.cn/wswebrtc';
-	let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
+  let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
 
 	if (forceH264)
 		url = `${url}&forceH264=true`;
@@ -502,6 +502,8 @@ export default class RoomClient {
             producerSet.add({ peerId, producerId, kind });
 
             this._remoteProducers.set(peerId, Array.from(producerSet));
+
+            // this._protoo.request('wantConsume', { producerId, peerId });
 
             break;
           }
@@ -1486,7 +1488,7 @@ export default class RoomClient {
 
       // Join now into the room.
       // NOTE: Don't send our RTP capabilities if we don't want to consume.
-      const { peers, producers } = await this._protoo.request('join', {
+      const { peers } = await this._protoo.request('join', {
         displayName: this._displayName,
         avatar: this._avatar,
         device: this._device,
@@ -1503,22 +1505,27 @@ export default class RoomClient {
         console.log('peer:', peer);
 
         this.fire('userJoined', peer);
+
+        /*
+        producers: [ {
+          id: String, // producer 的 producerId
+          kind: String // 类型，"audio" 或 "video"
+        } ]
+        */
+        if(peer.producers) {
+          console.log('joined producers:', peer.producers);
+
+          // 合并记录到peerId中
+          let producers = [];
+          peer.producers.forEach((producer)=>{
+            producers.push({ peerId: peer.id, producerId: producer.id, kind: producer.kind })
+
+            // this._protoo.request('wantConsume', { producerId: producer.id, peerId: peer.id });
+          })
+
+          this._remoteProducers.set(peer.id, producers);
+        }
       }
-
-      console.log('joined producers:', producers);
-      /*
-      producers: [ {
-        id: String, // producer 的 producerId
-        kind: String // 类型，"audio" 或 "video"
-      } ]
-      */
-
-      // 合并记录到peerId中
-      // let producers = this._remoteProducers.get(peerId) || [];
-      // let producerSet = new Set(producers);
-      // producerSet.add({ peerId, producerId, kind });
-
-      // this._remoteProducers.set(peerId, Array.from(producerSet));
 
 
       // Enable mic/webcam.

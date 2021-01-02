@@ -107,13 +107,6 @@ let localMeeting = {
 
 			setTimeout(()=>{
 				rtcEngine.join();
-
-        // const speakers = this.speakers;
-        // let { audio, video, active } = this.meeting;
-        // let user = Object.assign({ audioConsumer: null, videoConsumer: null }, this.user, { audio, video, active });
-        // speakers.push(user);
-
-        // this.setSpeakers(speakers);
 			}, 1000)
 
       this.rtcEngine = rtcEngine;
