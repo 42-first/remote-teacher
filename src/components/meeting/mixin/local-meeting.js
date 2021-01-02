@@ -43,6 +43,35 @@ function getDeviceInfo(){
 	};
 }
 
+// gen JWT token
+function getTestToken(roomId, peerId) {
+  const rs = require('jsrsasign');
+
+  // Header
+  let oHeader = {alg: 'HS256', typ: 'JWT'};
+
+  // Payload
+  var oPayload = {};
+  var tNow = rs.jws.IntDate.get('now');
+  var tEnd = rs.jws.IntDate.get('now + 1day');
+  oPayload.roomId = roomId;
+  oPayload.peerId = peerId;
+  oPayload.autoPubAudio = true;
+  oPayload.autoPubVideo = true;
+  oPayload.nbf = tNow;
+  oPayload.iat = tNow;
+  oPayload.exp = tEnd;
+
+  // Sign JWT, password=616161
+  var sHeader = JSON.stringify(oHeader);
+  var sPayload = JSON.stringify(oPayload);
+  var token = rs.jws.JWS.sign("HS256", sHeader, sPayload, "test");
+
+  console.log('getTestToken token:', token)
+
+  return token;
+}
+
 let localMeeting = {
   methods: {
     /**
@@ -55,12 +84,14 @@ let localMeeting = {
       let displayName = info && info.name;
       let avatar = info && info.avatar;
       let roomId = info && info.roomId;
+      let token = getTestToken(roomId, uid );
 
       let device = getDeviceInfo();
 
       let rtcEngine = new RoomClient({
 				roomId,
 				peerId: uid,
+        token,
 				displayName,
         avatar,
 				device,

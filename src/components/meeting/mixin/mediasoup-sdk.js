@@ -2,7 +2,7 @@
  * 会议操作指令处理 本地会议SDK封装
  * @author: chenzhou
  * @update: 2020.11.15
- * @desc
+ * @desc https://www.tapd.cn/38730227/documents/show/1138730227001002176?file_type=word
  */
 
 
@@ -36,11 +36,12 @@ const VIDEO_SVC_ENCODINGS = [
   { scalabilityMode: 'S3T3', dtx: true }
 ];
 
-function getProtooUrl({ roomId = '666666', peerId, forceH264, forceVP9 }) {
-	const hostname = 'b.yuketang.cn/wswebrtc';
+function getProtooUrl({ roomId = '666666', peerId, token, forceH264, forceVP9 }) {
   // const hostname = 'v3demo.mediasoup.org:4443' || 'b.yuketang.cn/wswebrtc';
   // wss://v3demo.mediasoup.org:4443/?roomId=5agep09w&peerId=lo8b4bkf
-	let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}`;
+
+  const hostname = 'b.yuketang.cn/wswebrtc';
+	let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
 
 	if (forceH264)
 		url = `${url}&forceH264=true`;
@@ -62,14 +63,14 @@ export default class RoomClient {
     store = data.store;
   }
 
-  constructor({ roomId, peerId, displayName, avatar, device, handlerName, useSimulcast,useSharingSimulcast,
+  constructor({ roomId, peerId, token, displayName, avatar, device, handlerName, useSimulcast,useSharingSimulcast,
   	forceTcp,
     forceH264,
     forceVP9,
     svc,
     externalVideo
   }) {
-    console.info('constructor() [roomId:"%s", peerId:"%s", displayName:"%s", device:%s]', roomId, peerId, displayName, device.flag);
+    console.info('constructor() [roomId:"%s", peerId:"%s", token:"%s"]', roomId, peerId, token);
 
     // super();
 
@@ -126,7 +127,7 @@ export default class RoomClient {
 
     // Protoo URL.
     // @type {String}
-    this._protooUrl = getProtooUrl({ roomId, peerId, forceH264, forceVP9 });
+    this._protooUrl = getProtooUrl({ roomId, peerId, token, forceH264, forceVP9 });
 
     // protoo-client Peer instance.
     // @type {protooClient.Peer}
@@ -155,6 +156,9 @@ export default class RoomClient {
     // Local share mediasoup Producer.
     // @type {mediasoupClient.Producer}
     this._shareProducer = null;
+
+    // 远端producer信息 可能需要订阅才能拿到对应的consumer
+    this._remoteProducers = new Map();
 
     // mediasoup Consumers.
     // @type {Map<String, mediasoupClient.Consumer>}
@@ -491,8 +495,14 @@ export default class RoomClient {
         case 'newProducer':
           {
             const { peerId, producerId, kind } = notification.data;
-            // TODO:
-            //
+
+            // 合并记录到peerId中
+            let producers = this._remoteProducers.get(peerId) || [];
+            let producerSet = new Set(producers);
+            producerSet.add({ peerId, producerId, kind });
+
+            this._remoteProducers.set(peerId, Array.from(producerSet));
+
             break;
           }
 
@@ -701,10 +711,7 @@ export default class RoomClient {
     this._micProducer.pause();
 
     try {
-        await this._protoo.request('pauseProducer', { producerId: this._micProducer.id });
-
-        // store.dispatch(
-        //     stateActions.setProducerPaused(this._micProducer.id));
+      await this._protoo.request('pauseProducer', { producerId: this._micProducer.id });
     } catch (error) {
       logger.error('muteMic() | failed: %o', error);
     }
@@ -1062,7 +1069,7 @@ export default class RoomClient {
     logger.debug('disableShare()');
 
     if (!this._shareProducer)
-        return;
+      return;
 
     this._shareProducer.close();
 
@@ -1123,31 +1130,22 @@ export default class RoomClient {
 
         await this._recvTransport.restartIce({ iceParameters });
       }
-
-      // store.dispatch(requestActions.notify({
-      //     text: 'ICE restarted'
-      // }));
     } catch (error) {
       logger.error('restartIce() | failed:%o', error);
     }
   }
 
   async setMaxSendingSpatialLayer(spatialLayer) {
-      logger.debug('setMaxSendingSpatialLayer() [spatialLayer:%s]', spatialLayer);
+    logger.debug('setMaxSendingSpatialLayer() [spatialLayer:%s]', spatialLayer);
 
-      try {
-          if (this._webcamProducer)
-              await this._webcamProducer.setMaxSpatialLayer(spatialLayer);
-          else if (this._shareProducer)
-              await this._shareProducer.setMaxSpatialLayer(spatialLayer);
-      } catch (error) {
-          logger.error('setMaxSendingSpatialLayer() | failed:%o', error);
-
-          store.dispatch(requestActions.notify({
-              type: 'error',
-              text: `Error setting max sending video spatial layer: ${error}`
-          }));
-      }
+    try {
+      if (this._webcamProducer)
+        await this._webcamProducer.setMaxSpatialLayer(spatialLayer);
+      else if (this._shareProducer)
+        await this._shareProducer.setMaxSpatialLayer(spatialLayer);
+    } catch (error) {
+      logger.error('setMaxSendingSpatialLayer() | failed:%o', error);
+    }
   }
 
   async setConsumerPreferredLayers(consumerId, spatialLayer, temporalLayer) {
@@ -1167,8 +1165,6 @@ export default class RoomClient {
 
     try {
       await this._protoo.request('setConsumerPriority', { consumerId, priority });
-
-      // store.dispatch(stateActions.setConsumerPriority(consumerId, priority));
     } catch (error) {
       logger.error('setConsumerPriority() | failed:%o', error);
     }
@@ -1516,6 +1512,13 @@ export default class RoomClient {
         kind: String // 类型，"audio" 或 "video"
       } ]
       */
+
+      // 合并记录到peerId中
+      // let producers = this._remoteProducers.get(peerId) || [];
+      // let producerSet = new Set(producers);
+      // producerSet.add({ peerId, producerId, kind });
+
+      // this._remoteProducers.set(peerId, Array.from(producerSet));
 
 
       // Enable mic/webcam.
