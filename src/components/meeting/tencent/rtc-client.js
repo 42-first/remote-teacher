@@ -100,7 +100,8 @@ export default class RtcClient {
       // not to specify cameraId/microphoneId to avoid OverConstrainedError
       this.localStream = TRTC.createStream({
         audio: true,
-        video: true,
+        video: false,
+        // video: true,
         userId: this.uid,
         mirror: true
       });
@@ -155,7 +156,7 @@ export default class RtcClient {
       await this.publish();
 
       this.muteLocalAudio();
-      this.muteLocalVideo();
+      // this.muteLocalVideo();
 
       // 监听自己的声音大小
       this.setVolumeInterval(this.localStream);
@@ -284,7 +285,42 @@ export default class RtcClient {
 
     const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
     videoStream.setVideoProfile('360p');
-    await videoStream.initialize();
+    await videoStream.initialize().
+    catch((error) => {
+      console.error(error.name);
+
+      // 本地流初始化失败
+      switch (error.name) {
+        case 'NotAllowedError':
+          // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
+          window.$toast && window.$toast({
+            type: 1,
+            position: 'top',
+            message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
+            duration: 5000 })
+          break;
+        case 'NotReadableError':
+          // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
+          window.$toast && window.$toast({
+            type: 1,
+            position: 'top',
+            message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
+            duration: 5000 })
+          break;
+        case 'NotFoundError':
+        case 'RtcError':
+          // 找不到摄像头或麦克风设备
+          window.$toast && window.$toast({
+            type: 1,
+            position: 'top',
+            message: '找不到摄像头或麦克风设备',
+            duration: 5000 })
+          return;
+        default:
+          console.error(error);
+          break;
+      }
+    });
 
     await localStream.addTrack(videoStream.getVideoTrack());
 

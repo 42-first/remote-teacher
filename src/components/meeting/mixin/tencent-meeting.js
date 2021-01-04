@@ -382,14 +382,25 @@ let tencentMixin = {
       let hasAudio = remoteStream.hasAudio();
       let hasVideo = remoteStream.hasVideo();
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
-      if (remoteStream.hasVideo() && type === 'main') {
+      if (hasVideo && type === 'main') {
         // remoteStream.stop();
         // remoteStream.play(uid);
       }
 
       // 更新流替换
       if(type === 'main' && (hasAudio || hasVideo)) {
-        rtcEngine.members.set(uid, remoteStream);
+        let members = rtcEngine.members;
+        members.set(uid, remoteStream);
+        rtcEngine.setMembers(members);
+      }
+
+      if (type === 'main') {
+        let user = {
+          id: uid,
+          type: 'video',
+          value: hasVideo
+        };
+        this.updateMeetingStatus(user);
       }
 
       console.log(
@@ -618,7 +629,7 @@ let tencentMixin = {
           }
         }
       } catch(error) {
-        log.error('[setVideo] error:%s', JSON.stringify(error.message));
+        log.error('[setVideo] error:%s', error.name, JSON.stringify(error.message));
 
         meeting.video = false;
         this.setMeeting(meeting);

@@ -465,19 +465,23 @@
           return this;
         }
 
+        if(this.requestPending) {
+          return this;
+        } else {
+          this.requestPending = true;
+        }
+
         request.post(URL, params).
         then((res)=>{
           if(res && res.code === 0) {
             this.danmuText = '';
-
-            // this.$toast({
-            //   message: this.$i18n.t('sendsuccess') || '发送成功',
-            //   duration: 2000
-            // });
           }
+
+          this.requestPending = false;
         }).
         catch(error => {
           console.log('send danmu:', error);
+          this.requestPending = false;
         })
       }
     },

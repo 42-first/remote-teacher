@@ -22,7 +22,7 @@
               <use xlink:href="#iconyincangshipinsuolvetu2x1"></use>
             </svg>
           </div>
-          <div class="action box-center pl5 J_action action__tips" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')" data-tips="展开">
+          <div class="action box-center pl5 J_action action__tips" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')" data-tips="展示正在发言的人">
             <svg class="icon f24 c666" aria-hidden="true">
               <use xlink:href="#iconkandanren2x"></use>
             </svg>
