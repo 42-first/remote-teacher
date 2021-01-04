@@ -14,7 +14,11 @@ import RTCClient from '../tencent/rtc-client';
 import ShareClient from '../tencent/share-client';
 
 
+// setup logging stuffs
+TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
+TRTC.Logger.enableUploadLog();
 let log = console;
+
 let shareUserId = null;
 
 let tencentMixin = {

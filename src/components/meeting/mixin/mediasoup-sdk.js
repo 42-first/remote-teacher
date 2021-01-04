@@ -494,6 +494,8 @@ export default class RoomClient {
         // 远端创建了Producer 也就是远端开启了音频或者视频
         case 'newProducer':
           {
+            logger.debug('proto "notification" event [method:%s, data:%o]', notification.method, notification.data);
+
             const { peerId, producerId, kind } = notification.data;
 
             // 合并记录到peerId中
@@ -503,7 +505,7 @@ export default class RoomClient {
 
             this._remoteProducers.set(peerId, Array.from(producerSet));
 
-            // this._protoo.request('wantConsume', { producerId, peerId });
+            this._protoo.request('wantConsume', { producerId, peerId });
 
             break;
           }
@@ -613,7 +615,7 @@ export default class RoomClient {
             const { peerId, volume } = notification.data;
             this.fire('activeSpeaker', { uid: peerId, volume });
 
-            logger.debug('activeSpeaker', notification.data);
+            // logger.debug('activeSpeaker', notification.data);
 
 
             break;
