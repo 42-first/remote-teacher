@@ -262,7 +262,7 @@ export default class RtcClient {
       this.members.set(this.uid, this.localStream);
 
       // 播放本地视频
-      localStream.play(this.uid);
+      this.localStream.play(this.uid);
 
       return true;
     } catch (e) {
@@ -371,6 +371,10 @@ export default class RtcClient {
       .then(() => {
         // 角色切换成功，关闭本地流切换到观众角色
         this.setRole('audience');
+
+        this.localStream.stop();
+        this.localStream.close();
+        this.localStream = null;
       });
     }
   }
@@ -408,6 +412,10 @@ export default class RtcClient {
    * @params
    */
   unpublishVideo() {
+    if(!this.isPublished) {
+      return false;
+    }
+
     if(this.localStream && this.localStream.hasAudio()) {
       this.muteLocalVideo();
     } else {
@@ -419,8 +427,14 @@ export default class RtcClient {
       .then(() => {
         // 角色切换成功，关闭本地流切换到观众角色
         this.setRole('audience');
+
+        this.localStream.stop();
+        this.localStream.close();
+        this.localStream = null;
       });
     }
+
+    return true;
   }
 
   muteLocalAudio() {
@@ -445,7 +459,7 @@ export default class RtcClient {
     return new Promise((resolve, reject) => {
       try {
         const videoTrack = localStream.getVideoTrack();
-        if (videoTrack) {
+        if (videoTrack && localStream.hasAudio()) {
           localStream.removeTrack(videoTrack).
           then(() => {
             console.log('remove video call success');
@@ -454,6 +468,8 @@ export default class RtcClient {
 
             resolve(true);
           });
+        } else {
+          localStream.muteVideo();
         }
       } catch (e) {
         console.error('failed to muteLocalVideo ' + e);

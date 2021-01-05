@@ -225,13 +225,17 @@ export default {
           shareInfo.uid = shareInfo.identityId;
         }
 
-        this.setMeeting(Object.assign(this.meeting, data, data.shareInfo, { joined: true }));
+        this.setMeeting(Object.assign(this.meeting, data, data.shareInfo, {
+          joined: true,
+          audio: false,
+          video: false
+        }));
 
         setTimeout(()=>{
           // 初始化视频通话SDK
           if(this.meetingSDK === 'tencent') {
             this.initTencent(this.meeting);
-          } else if(this.meetingSDK === 'local'){
+          } else if(this.meetingSDK === 'local') {
             let roomId = this.lesson && this.lesson.lessonID;
             this.initLocalMeeting(Object.assign(user, this.meeting, { roomId }));
           }

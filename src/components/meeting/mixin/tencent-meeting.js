@@ -646,11 +646,11 @@ let tencentMixin = {
           }
           // await rtcEngine.unmuteLocalVideo()
         } else {
-          rtcEngine.unpublishVideo();
+          result = rtcEngine.unpublishVideo();
           // result = await rtcEngine.muteLocalVideo();
-          // if(!result) {
-          //   return this;
-          // }
+          if(result === false) {
+            return this;
+          }
         }
       } catch(error) {
         log.error('[setVideo] error:%s', error.name, JSON.stringify(error.message));
