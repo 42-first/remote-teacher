@@ -216,6 +216,9 @@ export default class RoomClient {
 
     if (this._recvTransport)
       this._recvTransport.close();
+
+    // todo: 需要触发退出房间/关闭互动
+    this.fire('exitRoom', { });
   }
 
   /**

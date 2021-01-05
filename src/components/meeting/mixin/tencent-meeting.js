@@ -173,7 +173,7 @@ let tencentMixin = {
 
     /**
      * @method 本地用户加入通道成功
-     * @params result - 进房结果， 大于 0 时，为进房间消耗的时间，这表示进进房成功。如果为 -1 ，则表示进房失败。
+     * @params
      */
     async enterRoom() {
       log.info('[onEnterRoom] result:%s');
@@ -201,10 +201,9 @@ let tencentMixin = {
 
       this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
 
-      await rtcEngine.initLocalStream();
+      // await rtcEngine.initLocalStream();
       setTimeout(()=>{
         this.joinedMeeting(user);
-        // this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
       }, 0)
 
       let states = rtcEngine.getRemoteMutedState();
@@ -314,6 +313,7 @@ let tencentMixin = {
           rtcEngine.setMembers(members);
         }
 
+        // TODO: 订阅的流超过20个就不能再订阅了
         console.log('subscribe to this remote stream');
         client.subscribe(remoteStream);
       }
@@ -584,16 +584,27 @@ let tencentMixin = {
      */
     async setAudioByTencent(audio = false) {
       let rtcEngine = this.rtcEngine;
+      let meeting = this.meeting;
 
       try {
         if(audio) {
-          await rtcEngine.unmuteLocalAudio();
+          let result = await rtcEngine.publishAudio();
+
+          console.log('result:', result);
+          if(result === false) {
+            meeting.audio = false;
+            this.setMeeting(meeting);
+
+            return this;
+          }
+
+          // await rtcEngine.unmuteLocalAudio();
         } else {
-          rtcEngine.muteLocalAudio();
+          rtcEngine.unpublishAudio();
+          // rtcEngine.muteLocalAudio();
         }
       } catch(error) {
         console.error('设置音频 audio: ' + audio, error);
-        let meeting = this.meeting;
         meeting.audio = false;
         this.setMeeting(meeting);
 
@@ -624,13 +635,22 @@ let tencentMixin = {
       try {
         let rtcEngine = this.rtcEngine;
         if(video) {
-          await rtcEngine.unmuteLocalVideo()
-        } else {
-          result = await rtcEngine.muteLocalVideo();
+          result = await rtcEngine.publishVideo();
 
-          if(!result) {
+          console.log('result:', result);
+          if(result === false) {
+            meeting.video = false;
+            this.setMeeting(meeting);
+
             return this;
           }
+          // await rtcEngine.unmuteLocalVideo()
+        } else {
+          rtcEngine.unpublishVideo();
+          // result = await rtcEngine.muteLocalVideo();
+          // if(!result) {
+          //   return this;
+          // }
         }
       } catch(error) {
         log.error('[setVideo] error:%s', error.name, JSON.stringify(error.message));

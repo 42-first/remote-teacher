@@ -135,13 +135,13 @@ let localMeeting = {
     subEvents(rtcEngine) {
       rtcEngine.on('joinedChannel', this.onJoinedChannel.bind(this));
       rtcEngine.on('userJoined', this.onUserJoinedLocal.bind(this));
+      rtcEngine.on('exitRoom', this.onExitRoom.bind(this));
 
       rtcEngine.on('localVideoAvailable', this.onLocalVideoAvailable.bind(this));
 
       rtcEngine.on('userVideoAvailable', this.onUserVideoAvailableLocal.bind(this));
       rtcEngine.on('userAudioAvailable', this.onUserAudioAvailableLocal.bind(this));
 
-      // rtcEngine.on('onExitRoom', this.onExitRoom.bind(this));
       rtcEngine.on('userLeaveRoom', this.onUserLeaveRoomLocal.bind(this));
       rtcEngine.on('userScreenAvailable', this.onUserScreenAvailableLocal.bind(this));
 
@@ -202,6 +202,14 @@ let localMeeting = {
       };
 
       this.joinUser(user, 'SDK');
+    },
+
+    /**
+     * 当退出房间时触发的回调
+     */
+    onExitRoom() {
+      log.info('[onExitRoom]');
+
     },
 
     /**

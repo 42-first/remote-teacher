@@ -35,6 +35,8 @@ export default class RtcClient {
     this.roomId = roomId;
     this.privateMapKey = privateMapKey;
 
+    // audience: 观众 anchor:主播
+    this.role = '';
     this.isJoined = false;
     this.isPublished = false;
     this.isAudioMuted = false;
@@ -47,7 +49,8 @@ export default class RtcClient {
 
     // create a client for RtcClient
     this.client = TRTC.createClient({
-      mode: 'rtc',
+      // mode: 'rtc',
+      mode: 'live',
       sdkAppId: appId,
       userId: uid,
       userSig: token,
@@ -63,6 +66,14 @@ export default class RtcClient {
     this.remoteStreams = remoteStreams;
   }
 
+  setRole(role) {
+    this.role = role;
+  }
+
+  getRole(role) {
+    return this.role;
+  }
+
   async join() {
     if (this.isJoined) {
       console.warn('duplicate RtcClient.join() observed');
@@ -73,10 +84,12 @@ export default class RtcClient {
       // join the room
       await this.client.join({
         roomId: this.roomId,
+        role: 'audience',
         privateMapKey: this.privateMapKey
       });
       console.log('join room success');
       this.isJoined = true;
+      this.setRole('audience');
 
       return true;
     } catch (e) {
@@ -92,7 +105,7 @@ export default class RtcClient {
   }
 
   /**
-   * @method 初始化本地流
+   * @method 初始化本地音频流
    * @params
    */
   async initLocalStream() {
@@ -110,7 +123,7 @@ export default class RtcClient {
       this.localStream.setVideoProfile('360p');
 
       // initialize the local stream and the stream will be populated with audio/video
-      await this.localStream.initialize().
+      let initResult = await this.localStream.initialize().
       catch((error) => {
         // 本地流初始化失败
         switch (error.name) {
@@ -144,7 +157,14 @@ export default class RtcClient {
         }
 
         console.error(error, error.name);
+
+        return false;
       });
+
+      console.log('initResult:', initResult)
+      if(initResult === false) {
+        return false;
+      }
 
       console.log('initialize local stream success');
 
@@ -155,13 +175,100 @@ export default class RtcClient {
       // publish the local stream
       await this.publish();
 
-      this.muteLocalAudio();
+      // this.muteLocalAudio();
       // this.muteLocalVideo();
 
       // 监听自己的声音大小
       this.setVolumeInterval(this.localStream);
+
+      return true;
     } catch (e) {
       console.error('failed to initialize local stream - ' + e);
+
+      return false;
+    }
+  }
+
+   /**
+   * @method 初始化本地视频流
+   * @params
+   */
+  async initLocalVideoStream() {
+    try {
+      // not to specify cameraId/microphoneId to avoid OverConstrainedError
+      this.localStream = TRTC.createStream({
+        audio: false,
+        video: true,
+        userId: this.uid,
+        mirror: true
+      });
+
+      // 使用预定义Profile设置 640*360 15 800
+      this.localStream.setVideoProfile('360p');
+
+      // initialize the local stream and the stream will be populated with audio/video
+      let initResult = await this.localStream.initialize().
+      catch((error) => {
+        // 本地流初始化失败
+        switch (error.name) {
+          case 'NotAllowedError':
+            // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
+              duration: 5000 })
+            break;
+          case 'NotReadableError':
+            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
+              duration: 5000 })
+            break;
+          case 'NotFoundError':
+            // 找不到摄像头或麦克风设备
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '找不到摄像头或麦克风设备',
+              duration: 5000 })
+            return;
+          default:
+            console.error(error);
+            break;
+        }
+
+        console.error(error, error.name);
+
+        return false;
+      });
+
+      console.log('localStream initResult:', initResult)
+      if(initResult === false) {
+        return false;
+      }
+
+      console.log('initialize local stream success');
+
+      this.localStream.on('player-state-changed', event => {
+        console.log(`local stream ${event.type} player is ${event.state}`);
+      });
+
+      // publish the local stream
+      await this.publish();
+
+      this.members.set(this.uid, this.localStream);
+
+      // 播放本地视频
+      localStream.play(this.uid);
+
+      return true;
+    } catch (e) {
+      console.error('failed to initialize local stream - ' + e);
+
+      return false;
     }
   }
 
@@ -219,34 +326,117 @@ export default class RtcClient {
     this.isPublished = false;
   }
 
+  /**
+   * @method 开启麦克风
+   * @params
+   */
+  async publishAudio() {
+    let role = this.getRole();
+
+    if('anchor' === role) {
+      return await this.unmuteLocalAudio();
+    } else {
+      await this.client
+      .switchRole('anchor')
+      .catch(error => {
+        console.error('角色切换失败 ' + error);
+        return false;
+      })
+      .then(() => {
+        // 角色切换成功，现在是主播角色
+        this.setRole('anchor');
+
+        console.info('角色切换: anchor');
+
+        return true;
+      });
+
+      return await this.unmuteLocalAudio();
+    }
+  }
+
+  /**
+   * @method 关闭麦克风
+   * @params
+   */
+  unpublishAudio() {
+    if(this.localStream && this.localStream.hasVideo()) {
+      this.muteLocalAudio();
+    } else {
+      this.muteLocalAudio();
+      this.unpublish();
+
+      this.client
+      .switchRole('audience')
+      .then(() => {
+        // 角色切换成功，关闭本地流切换到观众角色
+        this.setRole('audience');
+      });
+    }
+  }
+
+  /**
+   * @method 开启摄像头
+   * @params
+   */
+  async publishVideo() {
+    let role = this.getRole();
+
+    if('anchor' === role) {
+      return await this.unmuteLocalVideo();
+    } else {
+      await this.client
+      .switchRole('anchor')
+      .catch(error => {
+        console.error('角色切换失败 ' + error);
+
+        return false;
+      })
+      .then(() => {
+        // 角色切换成功，现在是主播角色
+        this.setRole('anchor');
+
+        return true;
+      });
+
+      return await this.unmuteLocalVideo();
+    }
+  }
+
+  /**
+   * @method 关闭摄像头
+   * @params
+   */
+  unpublishVideo() {
+    if(this.localStream && this.localStream.hasAudio()) {
+      this.muteLocalVideo();
+    } else {
+      this.muteLocalVideo();
+      this.unpublish();
+
+      this.client
+      .switchRole('audience')
+      .then(() => {
+        // 角色切换成功，关闭本地流切换到观众角色
+        this.setRole('audience');
+      });
+    }
+  }
+
   muteLocalAudio() {
     this.localStream.muteAudio();
     this.deleteVolumeInterval(this.uid);
-
-    // return new Promise((resolve, reject) => {
-    //   try {
-    //     this.localStream.muteAudio();
-    //     this.deleteVolumeInterval(this.uid);
-
-    //     resolve(true);
-    //   } catch (e) {
-    //     console.error('failed to muteLocalAudio ' + e);
-
-    //     reject(false);
-    //   }
-    // });
   }
 
   async unmuteLocalAudio() {
-    console.log('isPublished:', this.isPublished);
-
     if(!this.isPublished) {
-      await this.initLocalStream();
+      return await this.initLocalStream();
+    } else {
+      this.localStream.unmuteAudio();
+      this.setVolumeInterval(this.localStream);
+
+      return true;
     }
-
-    this.localStream.unmuteAudio();
-    this.setVolumeInterval(this.localStream);
-
   }
 
   muteLocalVideo() {
@@ -275,62 +465,62 @@ export default class RtcClient {
 
   async unmuteLocalVideo() {
     if(!this.isPublished) {
-      await this.initLocalStream();
+      return await this.initLocalVideoStream();
+    } else {
+      // 打开摄像头，增加视频通话
+      let localStream = this.localStream;
+
+      await this.unpublish();
+
+      const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
+      videoStream.setVideoProfile('360p');
+      await videoStream.initialize().
+      catch((error) => {
+        console.error(error.name);
+
+        // 本地流初始化失败
+        switch (error.name) {
+          case 'NotAllowedError':
+            // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
+              duration: 5000 })
+            break;
+          case 'NotReadableError':
+            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
+              duration: 5000 })
+            break;
+          case 'NotFoundError':
+          case 'RtcError':
+            // 找不到摄像头或麦克风设备
+            window.$toast && window.$toast({
+              type: 1,
+              position: 'top',
+              message: '找不到摄像头或麦克风设备',
+              duration: 5000 })
+            return;
+          default:
+            console.error(error);
+            break;
+        }
+      });
+
+      await localStream.addTrack(videoStream.getVideoTrack());
+
+      this.publish();
+
+      this.members.set(this.uid, localStream);
+
+      // 播放本地视频
+      localStream.stop();
+      localStream.play(this.uid);
     }
-
-    // 打开摄像头，增加视频通话
-    let localStream = this.localStream;
-
-    await this.unpublish();
-
-    const videoStream = TRTC.createStream({ userId: this.uid, audio: false, video: true });
-    videoStream.setVideoProfile('360p');
-    await videoStream.initialize().
-    catch((error) => {
-      console.error(error.name);
-
-      // 本地流初始化失败
-      switch (error.name) {
-        case 'NotAllowedError':
-          // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
-            duration: 5000 })
-          break;
-        case 'NotReadableError':
-          // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
-            duration: 5000 })
-          break;
-        case 'NotFoundError':
-        case 'RtcError':
-          // 找不到摄像头或麦克风设备
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '找不到摄像头或麦克风设备',
-            duration: 5000 })
-          return;
-        default:
-          console.error(error);
-          break;
-      }
-    });
-
-    await localStream.addTrack(videoStream.getVideoTrack());
-
-    this.publish();
-
-    this.members.set(this.uid, localStream);
-
-    // 播放本地视频
-    localStream.stop();
-    localStream.play(this.uid);
   }
 
   resumeStreams() {
