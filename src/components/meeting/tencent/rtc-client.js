@@ -37,6 +37,8 @@ export default class RtcClient {
 
     // audience: 观众 anchor:主播
     this.role = '';
+    this.hasAudioAuth = true;
+    this.hasVideoAuth = true;
     this.isJoined = false;
     this.isPublished = false;
     this.isAudioMuted = false;
@@ -49,8 +51,8 @@ export default class RtcClient {
 
     // create a client for RtcClient
     this.client = TRTC.createClient({
-      // mode: 'rtc',
-      mode: 'live',
+      mode: 'rtc',
+      // mode: 'live',
       sdkAppId: appId,
       userId: uid,
       userSig: token,
@@ -84,7 +86,7 @@ export default class RtcClient {
       // join the room
       await this.client.join({
         roomId: this.roomId,
-        role: 'audience',
+        // role: 'audience',
         privateMapKey: this.privateMapKey
       });
       console.log('join room success');
@@ -108,7 +110,7 @@ export default class RtcClient {
    * @method 初始化本地音频流
    * @params
    */
-  async initLocalStream() {
+  async initLocalStream(publish = true) {
     try {
       // not to specify cameraId/microphoneId to avoid OverConstrainedError
       this.localStream = TRTC.createStream({
@@ -156,8 +158,7 @@ export default class RtcClient {
             break;
         }
 
-        console.error(error, error.name);
-
+        this.hasAudioAuth = false;
         return false;
       });
 
@@ -173,10 +174,12 @@ export default class RtcClient {
       });
 
       // publish the local stream
-      await this.publish();
-
-      // this.muteLocalAudio();
-      // this.muteLocalVideo();
+      if(publish) {
+        await this.publish();
+      } else {
+        this.localStream.muteAudio();
+        return true;
+      }
 
       // 监听自己的声音大小
       this.setVolumeInterval(this.localStream);
@@ -240,7 +243,7 @@ export default class RtcClient {
             break;
         }
 
-        console.error(error, error.name);
+        this.hasVideoAuth = false;
 
         return false;
       });
@@ -443,6 +446,10 @@ export default class RtcClient {
   }
 
   async unmuteLocalAudio() {
+    if(!this.hasAudioAuth) {
+      return false;
+    }
+
     if(!this.isPublished) {
       return await this.initLocalStream();
     } else {
@@ -470,6 +477,7 @@ export default class RtcClient {
           });
         } else {
           localStream.muteVideo();
+          resolve(true);
         }
       } catch (e) {
         console.error('failed to muteLocalVideo ' + e);
@@ -480,6 +488,10 @@ export default class RtcClient {
   }
 
   async unmuteLocalVideo() {
+    if(!this.hasVideoAuth) {
+      return false;
+    }
+
     if(!this.isPublished) {
       return await this.initLocalVideoStream();
     } else {

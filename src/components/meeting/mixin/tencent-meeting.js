@@ -201,7 +201,7 @@ let tencentMixin = {
 
       this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
 
-      // await rtcEngine.initLocalStream();
+      await rtcEngine.initLocalStream(false);
       setTimeout(()=>{
         this.joinedMeeting(user);
       }, 0)
@@ -588,7 +588,9 @@ let tencentMixin = {
 
       try {
         if(audio) {
-          let result = await rtcEngine.publishAudio();
+          // let result = await rtcEngine.publishAudio();
+
+          let result = await rtcEngine.unmuteLocalAudio();
 
           console.log('result:', result);
           if(result === false) {
@@ -597,11 +599,9 @@ let tencentMixin = {
 
             return this;
           }
-
-          // await rtcEngine.unmuteLocalAudio();
         } else {
-          rtcEngine.unpublishAudio();
-          // rtcEngine.muteLocalAudio();
+          // rtcEngine.unpublishAudio();
+          rtcEngine.muteLocalAudio();
         }
       } catch(error) {
         console.error('设置音频 audio: ' + audio, error);
@@ -635,8 +635,9 @@ let tencentMixin = {
       try {
         let rtcEngine = this.rtcEngine;
         if(video) {
-          result = await rtcEngine.publishVideo();
+          // result = await rtcEngine.publishVideo();
 
+          result = await rtcEngine.unmuteLocalVideo()
           console.log('result:', result);
           if(result === false) {
             meeting.video = false;
@@ -644,10 +645,9 @@ let tencentMixin = {
 
             return this;
           }
-          // await rtcEngine.unmuteLocalVideo()
         } else {
-          result = rtcEngine.unpublishVideo();
-          // result = await rtcEngine.muteLocalVideo();
+          // result = rtcEngine.unpublishVideo();
+          result = await rtcEngine.muteLocalVideo();
           if(result === false) {
             return this;
           }
