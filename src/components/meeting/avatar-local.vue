@@ -77,7 +77,7 @@
         } else if(this.meetingSDK === 'tencent') {
           setTimeout(()=>{
             this.initTencent();
-          }, 100)
+          }, 1000)
         } else {
           this.init();
         }
@@ -137,6 +137,7 @@
               stream.stop()
               stream.play(uid)
               .catch(err => {
+                console.error('stream.play', err, err.message);
                 let errCode = err.getCode()
                 if (errCode === 0x4043) {
                   // stream.stop()
@@ -150,6 +151,8 @@
               stream.play(uid)
               console.error('Stream play exception:%s', error.message);
             }
+          } else if(stream && !member.audio && !member.audio) {
+            stream.stop();
           }
         }
       },

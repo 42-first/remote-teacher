@@ -15,8 +15,8 @@ import ShareClient from '../tencent/share-client';
 
 
 // setup logging stuffs
-TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
-TRTC.Logger.enableUploadLog();
+// TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
+// TRTC.Logger.enableUploadLog();
 let log = console;
 
 let shareUserId = null;
@@ -351,6 +351,10 @@ let tencentMixin = {
         if (event.type == 'video' && event.state == 'STOPPED') {
         }
 
+        if (event.type == 'video' && event.state == 'PLAYING') {
+          // remoteStream.play(uid);
+        }
+
         if (event.type == 'audio' && event.state == 'PAUSED') {
           remoteStream.resume();
           // remoteStream.play(uid);
@@ -440,7 +444,16 @@ let tencentMixin = {
       if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(userId, false);
       } else {
+        let user = {
+          id: userId,
+          type: 'audio',
+          value: false
+        };
+        this.updateMeetingStatus(user);
 
+        // 关闭视频
+        user.type = 'video';
+        this.updateMeetingStatus(user);
       }
 
       // 删除对声音大小的监听
@@ -588,9 +601,9 @@ let tencentMixin = {
 
       try {
         if(audio) {
-          // let result = await rtcEngine.publishAudio();
+          let result = await rtcEngine.publishAudio();
 
-          let result = await rtcEngine.unmuteLocalAudio();
+          // let result = await rtcEngine.unmuteLocalAudio();
 
           console.log('result:', result);
           if(result === false) {
@@ -600,8 +613,8 @@ let tencentMixin = {
             return this;
           }
         } else {
-          // rtcEngine.unpublishAudio();
-          rtcEngine.muteLocalAudio();
+          rtcEngine.unpublishAudio();
+          // rtcEngine.muteLocalAudio();
         }
       } catch(error) {
         console.error('设置音频 audio: ' + audio, error);
@@ -635,9 +648,9 @@ let tencentMixin = {
       try {
         let rtcEngine = this.rtcEngine;
         if(video) {
-          // result = await rtcEngine.publishVideo();
+          result = await rtcEngine.publishVideo();
 
-          result = await rtcEngine.unmuteLocalVideo()
+          // result = await rtcEngine.unmuteLocalVideo()
           console.log('result:', result);
           if(result === false) {
             meeting.video = false;
@@ -646,8 +659,8 @@ let tencentMixin = {
             return this;
           }
         } else {
-          // result = rtcEngine.unpublishVideo();
-          result = await rtcEngine.muteLocalVideo();
+          result = await rtcEngine.unpublishVideo();
+          // result = await rtcEngine.muteLocalVideo();
           if(result === false) {
             return this;
           }
