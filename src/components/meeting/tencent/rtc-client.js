@@ -39,6 +39,7 @@ export default class RtcClient {
     this.role = 'anchor';
     this.hasAudioAuth = true;
     this.hasVideoAuth = true;
+    this.noAuthMsg = '';
     this.isJoined = false;
     this.isPublished = false;
     this.isAudioMuted = false;
@@ -128,30 +129,19 @@ export default class RtcClient {
       let initResult = await this.localStream.initialize().
       catch((error) => {
         // 本地流初始化失败
+        let msg = '';
         switch (error.name) {
           case 'NotAllowedError':
-            // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
-              duration: 5000 })
+            msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+
             break;
           case 'NotReadableError':
-            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
-              duration: 5000 })
+            msg = '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
+
             break;
           case 'NotFoundError':
-            // 找不到摄像头或麦克风设备
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '找不到摄像头或麦克风设备',
-              duration: 5000 })
+            msg = '找不到摄像头或麦克风设备';
+
             return;
           default:
             console.error(error);
@@ -160,6 +150,12 @@ export default class RtcClient {
 
         // 没有麦克风权限
         this.hasAudioAuth = false;
+
+        if(msg) {
+          this.noAuthMsg = msg;
+          window.$toast && window.$toast({ type: 1, position: 'top', message: msg, duration: 5000 });
+        }
+
         return false;
       });
 
@@ -215,30 +211,19 @@ export default class RtcClient {
       let initResult = await this.localStream.initialize().
       catch((error) => {
         // 本地流初始化失败
+        let msg = '';
         switch (error.name) {
           case 'NotAllowedError':
-            // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
-              duration: 5000 })
+            msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+
             break;
           case 'NotReadableError':
-            // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
-              duration: 5000 })
+            msg = '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
+
             break;
           case 'NotFoundError':
-            // 找不到摄像头或麦克风设备
-            window.$toast && window.$toast({
-              type: 1,
-              position: 'top',
-              message: '找不到摄像头或麦克风设备',
-              duration: 5000 })
+            msg = '找不到摄像头或麦克风设备';
+
             return;
           default:
             console.error(error);
@@ -247,6 +232,10 @@ export default class RtcClient {
 
         // 没有摄像头权限
         this.hasVideoAuth = false;
+        if(msg) {
+          this.noAuthMsg = msg;
+          window.$toast && window.$toast({ type: 1, position: 'top', message: msg, duration: 5000 });
+        }
 
         return false;
       });
@@ -465,6 +454,10 @@ export default class RtcClient {
 
   async unmuteLocalAudio() {
     if(!this.hasAudioAuth) {
+      if(this.noAuthMsg) {
+        window.$toast && window.$toast({ type: 1, position: 'top', message: this.noAuthMsg, duration: 5000 });
+      }
+
       return false;
     }
 
@@ -507,6 +500,10 @@ export default class RtcClient {
 
   async unmuteLocalVideo() {
     if(!this.hasVideoAuth) {
+      if(this.noAuthMsg) {
+        window.$toast && window.$toast({ type: 1, position: 'top', message: this.noAuthMsg, duration: 5000 });
+      }
+
       return false;
     }
 
@@ -524,31 +521,20 @@ export default class RtcClient {
       console.error(error.name);
 
       // 本地流初始化失败
+      let msg = '';
       switch (error.name) {
         case 'NotAllowedError':
-          // 提示用户：提示用户不授权摄像头/麦克风访问无法进行音视频通话
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '请授权摄像头/麦克风访问，否则无法进行音视频通话',
-            duration: 5000 })
+          msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+
           break;
         case 'NotReadableError':
-          // 提示用户：暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。',
-            duration: 5000 })
+          msg = '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
+
           break;
         case 'NotFoundError':
         case 'RtcError':
-          // 找不到摄像头或麦克风设备
-          window.$toast && window.$toast({
-            type: 1,
-            position: 'top',
-            message: '找不到摄像头或麦克风设备',
-            duration: 5000 })
+          msg = '找不到摄像头或麦克风设备';
+
           return;
         default:
           console.error(error);
@@ -557,6 +543,10 @@ export default class RtcClient {
 
       // 没有摄像头权限
       this.hasVideoAuth = false;
+      if(msg) {
+        this.noAuthMsg = msg;
+        window.$toast && window.$toast({ type: 1, position: 'top', message: msg, duration: 5000 });
+      }
     });
 
     await localStream.addTrack(videoStream.getVideoTrack());

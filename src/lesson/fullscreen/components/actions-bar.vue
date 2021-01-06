@@ -97,6 +97,16 @@
   import { isSupported } from '@/util/util'
   import danmu from './danmu-live';
 
+  // 会议模式
+  const MeetingMode = {
+    // 默认 default
+    DEFAULT: 0,
+    // 九宫格 Jiugongge
+    JIUGONGGE: 1,
+    // 发言者模式
+    SPEAKER: 2
+  };
+
   export default {
     name: "actions-bar",
     data() {
@@ -124,6 +134,7 @@
       ...mapState('meeting', [
         // 会议状态
         'meeting',
+        'meetingLayout',
       ]),
     },
     created() {
@@ -152,6 +163,7 @@
 
       ...mapActions('meeting', [
         'setMeeting',
+        'setMeetingLayout',
       ]),
 
       /**
@@ -182,7 +194,10 @@
        * @param
        */
       handleVisibleSubmission(evt) {
-        // todo: 暂时兼容下
+        if(this.meetingLayout !== MeetingMode.DEFAULT) {
+          this.setMeetingLayout(MeetingMode.DEFAULT);
+        }
+
         this.$parent.handleVisibleSubmission();
       },
 

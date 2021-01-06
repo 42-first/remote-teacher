@@ -235,6 +235,7 @@ export default {
     .video__wrap {
       position: relative;
       width: 100%;
+      max-height: calc(100% - 20px);
     }
 
     .video {

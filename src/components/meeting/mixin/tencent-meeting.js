@@ -348,11 +348,11 @@ let tencentMixin = {
         };
         this.updateMeetingStatus(user);
 
-        if (event.type == 'video' && event.state == 'STOPPED') {
+        if (event.type == 'video' && event.state == 'PAUSED') {
+          remoteStream.resume();
         }
 
         if (event.type == 'video' && event.state == 'PLAYING') {
-          // remoteStream.play(uid);
         }
 
         if (event.type == 'audio' && event.state == 'PAUSED') {
@@ -367,7 +367,7 @@ let tencentMixin = {
         this.setSubStreamAvailable(uid, true);
       } else if(uid) {
         try {
-          remoteStream.play(uid);
+          // remoteStream.play(uid);
         } catch (error) {
           console.error('Stream play exception:%s', error.message);
         }

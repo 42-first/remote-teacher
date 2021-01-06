@@ -671,6 +671,10 @@ export default class RoomClient {
         // NOTE: for testing codec selection.
         // codec : this._mediasoupDevice.rtpCapabilities.codecs
         // 	.find((codec) => codec.mimeType.toLowerCase() === 'audio/pcma')
+      }).catch((error)=>{
+        console.error('mic produce error:', error);
+
+        return null;
       });
 
       let audioProduce = this._micProducer;
@@ -1525,7 +1529,15 @@ export default class RoomClient {
           peer.producers.forEach((producer)=>{
             producers.push({ peerId: peer.id, producerId: producer.id, kind: producer.kind })
 
-            // this._protoo.request('wantConsume', { producerId: producer.id, peerId: peer.id });
+            // 需要订阅音频
+            if(producer.kind === 'audio' && peer.autoPub && !peer.autoPub.autoPubAudio) {
+              this._protoo.request('wantConsume', { producerId: producer.id, peerId: peer.id });
+            }
+
+            // 需要订阅视频
+            if(producer.kind === 'video' && peer.autoPub && !peer.autoPub.autoPubVideo) {
+              this._protoo.request('wantConsume', { producerId: producer.id, peerId: peer.id });
+            }
           })
 
           this._remoteProducers.set(peer.id, producers);

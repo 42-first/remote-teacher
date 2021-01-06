@@ -287,6 +287,8 @@
 
           this.addEventListeners();
         }, true)
+
+        danmuEl.querySelector('.J_input').focus();
       },
 
       translateContent(offset) {

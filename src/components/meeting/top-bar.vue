@@ -9,13 +9,13 @@
 <template>
   <!-- header -->
   <section class="top-bar__container box-between">
-    <div class="box-center pointer" @click="setMeetingLayout(MeetingMode.DEFAULT)">
+    <div class="box-center pointer back__wrap" @click="setMeetingLayout(MeetingMode.DEFAULT)">
       <div class="action__back box-center">
         <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icon16-zuo"></use>
         </svg>
       </div>
-      <p class="f14 c333">返回课件</p>
+      <p class="f14 c333 title">返回课件</p>
     </div>
     <section class="box-center">
       <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.SPEAKER }" @click="setMeetingLayout(MeetingMode.SPEAKER)">
@@ -111,9 +111,15 @@ export default {
       }
     }
 
-    .action__back:hover {
-      .icon {
-        color: #5096F5;
+    .back__wrap {
+      &:hover {
+        .title {
+          color: #5096F5;
+        }
+
+        .icon {
+          color: #5096F5;
+        }
       }
     }
   }

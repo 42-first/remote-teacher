@@ -138,6 +138,8 @@ let localMeeting = {
       rtcEngine.on('exitRoom', this.onExitRoom.bind(this));
 
       rtcEngine.on('localVideoAvailable', this.onLocalVideoAvailable.bind(this));
+      // 权限变更
+      // 强制静音/强制关闭摄像头
 
       rtcEngine.on('userVideoAvailable', this.onUserVideoAvailableLocal.bind(this));
       rtcEngine.on('userAudioAvailable', this.onUserAudioAvailableLocal.bind(this));

@@ -132,20 +132,21 @@
         if(rtcEngine && uid) {
           let stream = rtcEngine.members.get(uid);
 
-          if(stream && (member.audio || member.video)) {
+          if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
-              stream.stop()
+              stream.stop();
               stream.play(uid)
               .catch(err => {
-                console.error('stream.play', err, err.message);
                 let errCode = err.getCode()
                 if (errCode === 0x4043) {
                   // stream.stop()
                   stream.resume()
                   console.log('stream.play 0x4043 自动播放失败');
+
+                  document.addEventListener('mousedown', this.retryPlay);
                 }
 
-                document.addEventListener('mousedown', this.retryPlay);
+                console.error('stream.play', err, err.message);
               });
             } catch (error) {
               stream.play(uid)
