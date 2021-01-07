@@ -65,7 +65,7 @@
 
   .danmu__closed {
     position: absolute;
-    top: 0;
+    top: -10px;
     right: 10px;
 
     width: 16px;

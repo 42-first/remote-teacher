@@ -292,6 +292,10 @@ export default {
 
     cursor: pointer;
 
+    &:hover {
+      background: rgba(0,0,0,0.7);
+    }
+
     .icon {
       transform: rotate(90deg);
 

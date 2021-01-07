@@ -387,7 +387,7 @@
     opacity: 0;
     position: absolute;
     bottom: 120%;
-    right: 0;
+    right: -34px;
 
     padding: 10px 0;
     width: 120px;

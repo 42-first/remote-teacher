@@ -388,6 +388,10 @@ export default {
       .icon {
         transform: rotate(90deg);
       }
+
+      &:hover {
+        background: rgba(0,0,0,0.7);
+      }
     }
   }
 

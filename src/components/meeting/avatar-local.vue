@@ -10,7 +10,7 @@
 <template>
   <section class="user-item box-center" :class="{ 'fullscreen': fullscreen }" >
     <div class="avatar-wrap box-center" v-if="member">
-      <img class="user--avatar" :src="member.avatar" alt="头像" v-show="!member.video">
+      <img class="user--avatar" :class="{ 'small': meetingLayout === MeetingMode.DEFAULT }" :src="member.avatar" alt="头像" v-show="!member.video">
       <!-- 本地会议 -->
       <template v-if="meetingSDK === 'local'">
         <video class="user--video" :id="'uid-'+member.id" v-show="member.video"></video>
@@ -23,13 +23,18 @@
         <svg class="icon f16 cfff mr3" aria-hidden="true" v-if="member.role === 'lecturer' || member.role === 'collaborator'">
           <use xlink:href="#iconlaoshi"></use>
         </svg>
-        <div class="active__audio line-scale-pulse-out" v-if="member.audio">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <template v-if="member.audio">
+          <div class="active__audio line-scale-pulse-out" v-if="member.active">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <svg class="icon f16 cfff" aria-hidden="true" v-else>
+            <use xlink:href="#icon20-yuyin-weifashengbeifen"></use>
+          </svg>
+        </template>
         <svg class="icon f16 cfff" aria-hidden="true" v-else>
           <use xlink:href="#icon20-yuyin-weifasheng"></use>
         </svg>
@@ -41,6 +46,16 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
+
+  // 会议模式
+  const MeetingMode = {
+    // 默认 default
+    DEFAULT: 0,
+    // 九宫格 Jiugongge
+    JIUGONGGE: 1,
+    // 发言者模式
+    SPEAKER: 2
+  };
 
   export default {
     name: 'avatar-local',
@@ -56,6 +71,7 @@
     },
     data() {
       return {
+        MeetingMode,
         role: 5,
       };
     },
@@ -63,7 +79,8 @@
     computed: {
       ...mapState('meeting', [
         'local',
-        'meetingSDK'
+        'meetingSDK',
+        'meetingLayout',
       ]),
     },
     watch: {
@@ -349,7 +366,6 @@
       position: relative;
       width: 100%;
       height: 100%;
-      // height: 144px;
       overflow: hidden;
 
       background: #3a3a3a;
@@ -378,6 +394,10 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
+
+        &.small {
+          top: calc(50% - 10px);
+        }
       }
     }
 
