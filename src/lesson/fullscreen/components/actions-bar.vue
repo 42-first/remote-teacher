@@ -240,6 +240,11 @@
         let meeting = this.meeting;
         let audio = !meeting.audio;
 
+        // todo: 没有音频权限
+        if(audio && !meeting.hasAudioAuth) {
+          return this;
+        }
+
         meeting.audio = audio;
         this.setMeeting(meeting);
       },
@@ -251,6 +256,11 @@
       handleSetVideo(evt) {
         let meeting = this.meeting;
         let video = !meeting.video;
+
+        // todo: 没有视频权限
+        if(video && !meeting.hasVideoAuth) {
+          return this;
+        }
 
         meeting.video = video;
         this.setMeeting(meeting);

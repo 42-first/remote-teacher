@@ -197,7 +197,9 @@ export default {
       let user = {
         id: uid,
         name: name,
-        avatar, audio, video, active
+        avatar, audio, video, active,
+        hasAudioAuth: true,
+        hasVideoAuth: true,
       };
 
       this.setUser(user);
@@ -215,6 +217,8 @@ export default {
           this.setMeetingSDK('local');
         }
 
+        // this.setMeetingSDK('local');
+
         // 目前如果有人在分享
         if(data.shareInfo && data.shareInfo.shareId) {
           if(uid != data.shareInfo.identityId) {
@@ -228,7 +232,9 @@ export default {
         this.setMeeting(Object.assign(this.meeting, data, data.shareInfo, {
           joined: true,
           audio: false,
-          video: false
+          video: false,
+          hasAudioAuth: true,
+          hasVideoAuth: true,
         }));
 
         setTimeout(()=>{

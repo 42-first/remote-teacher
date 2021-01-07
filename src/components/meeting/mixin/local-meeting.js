@@ -139,7 +139,9 @@ let localMeeting = {
 
       rtcEngine.on('localVideoAvailable', this.onLocalVideoAvailable.bind(this));
       // 权限变更
+      rtcEngine.on('privilegeChanged', this.onPrivilegeChanged.bind(this));
       // 强制静音/强制关闭摄像头
+      rtcEngine.on('shutProducer', this.onShutProducer.bind(this));
 
       rtcEngine.on('userVideoAvailable', this.onUserVideoAvailableLocal.bind(this));
       rtcEngine.on('userAudioAvailable', this.onUserAudioAvailableLocal.bind(this));
@@ -186,6 +188,32 @@ let localMeeting = {
     },
 
     /**
+     * @method 音视频权限变更
+     * @params
+     */
+    onPrivilegeChanged({ privilege }) {
+      let { canProduceAudio, canProduceVideo } = privilege;
+      let meeting = this.meeting;
+
+      // 设置音视频开启权限
+      meeting.hasAudioAuth = canProduceAudio === false ? false : true;
+      meeting.hasVideoAuth = canProduceVideo === false ? false : true;
+      this.setMeeting(meeting);
+    },
+
+    /**
+     * @method 强制关闭本地流
+     * @params
+     */
+    onShutProducer({kind}) {
+      if(kind === 'audio') {
+        this.forceMute();
+      } else {
+        this.forceMute();
+      }
+    },
+
+    /**
      * @method 远端用户加入
      * @params
      */
@@ -209,9 +237,11 @@ let localMeeting = {
     /**
      * 当退出房间时触发的回调
      */
-    onExitRoom() {
+    async onExitRoom() {
       log.info('[onExitRoom]');
 
+      await this.leavedChanel();
+      this.setJoined(false);
     },
 
     /**

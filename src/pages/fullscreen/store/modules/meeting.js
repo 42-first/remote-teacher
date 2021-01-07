@@ -14,6 +14,8 @@ const meeting = {
     // }
     // 会议状态
     meeting: {
+      hasAudioAuth: true,
+      hasVideoAuth: true,
       joined: true,
       // 是否开启音频
       audio: false,
@@ -41,6 +43,8 @@ const meeting = {
       state.local = null;
       state.user = null;
       state.meeting = {
+        hasAudioAuth: true,
+        hasVideoAuth: true,
         joined: true,
         // 是否开启音频
         audio: false,

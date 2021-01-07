@@ -142,6 +142,7 @@ let meetingMixin = {
     forceMute(msg) {
       let meeting = this.meeting;
       meeting.audio = false;
+      meeting.video = false;
 
       this.setMeeting(meeting);
 
@@ -350,18 +351,23 @@ let meetingMixin = {
               let active = audio ? true : false;
               let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
 
-              if(this.meetingSDK === 'local') {
-                Object.assign(user, { audioConsumer: null, videoConsumer: null });
-              }
-
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;
               })
 
               // 存在用户
               if(~index) {
+                let originUser = speakers[index];
+                if(this.meetingSDK === 'local') {
+                  user = Object.assign({}, originUser, user);
+                }
+
                 speakers.splice(index, 1, user);
               } else {
+                if(this.meetingSDK === 'local') {
+                  Object.assign(user, { audioConsumer: null, videoConsumer: null });
+                }
+
                 speakers.push(user);
               }
             })

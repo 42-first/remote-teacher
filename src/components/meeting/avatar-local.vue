@@ -142,9 +142,9 @@
                   // stream.stop()
                   stream.resume()
                   console.log('stream.play 0x4043 自动播放失败');
-
-                  document.addEventListener('mousedown', this.retryPlay);
                 }
+
+                document.addEventListener('mousedown', this.retryPlay);
 
                 console.error('stream.play', err, err.message);
               });

@@ -620,6 +620,38 @@ export default class RoomClient {
 
             // logger.debug('activeSpeaker', notification.data);
 
+            break;
+          }
+
+        // 权限变更
+        case 'privilegeChanged': {
+            logger.debug('proto "notification" event [method:%s, data:%o]', notification.method, notification.data);
+            const { privilege } = notification.data;
+            this.fire('privilegeChanged', { privilege });
+
+            break;
+          }
+
+        // 流被终止
+        case 'shutProducer': {
+            logger.debug('proto "notification" event [method:%s, data:%o]', notification.method, notification.data);
+            const { producerId } = notification.data;
+            let kind = 'audio';
+
+            //  根据producerId获取流类型
+            if(this._micProducer && this._micProducer.id === producerId) {
+              kind = this._micProducer.kind;
+            }
+
+            if(this._webcamProducer && this._webcamProducer.id === producerId) {
+              kind = this._webcamProducer.kind;
+            }
+
+            // if(this._shareProducer && this._shareProducer.id === producerId) {
+            //   kind = 'screenShare';
+            // }
+
+            this.fire('shutProducer', { kind });
 
             break;
           }
@@ -678,10 +710,12 @@ export default class RoomClient {
       });
 
       let audioProduce = this._micProducer;
-      if( audioProduce&& audioProduce.rtpParameters && audioProduce.rtpParameters.codecs) {
+      if( audioProduce && audioProduce.rtpParameters && audioProduce.rtpParameters.codecs) {
         audioProduce.codec = audioProduce.rtpParameters.codecs[0].mimeType.split('/')[1];
         this._producer.set('audio', audioProduce);
       }
+
+      console.log('_micProducer:', this._micProducer)
 
       this._micProducer.on('transportclose', () => {
         this._micProducer = null;

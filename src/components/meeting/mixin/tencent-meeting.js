@@ -217,12 +217,6 @@ let tencentMixin = {
     },
 
     /**
-     * 当退出房间时触发的回调
-     */
-    onExitRoom() {
-      log.info('[onExitRoom]',);
-    },
-    /**
      * @method 远端用户加入通道成功
      * @params
      */
