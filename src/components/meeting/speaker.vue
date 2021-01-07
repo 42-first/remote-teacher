@@ -24,7 +24,7 @@
 
             <div class="share-info">
               <div class="share-name cfff f12 box-center" v-if="meeting.shareName">
-                <svg class="icon f20 cfff" aria-hidden="true">
+                <svg class="icon f20 blue" aria-hidden="true">
                   <use xlink:href="#icon20-gongxiangpingmu" ></use>
                 </svg>
                 <span class="pl5">{{meeting.shareName}}的共享窗口</span>

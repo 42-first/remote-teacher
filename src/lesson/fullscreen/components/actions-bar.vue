@@ -501,7 +501,7 @@
 
       text-align: left;
 
-      border-right: 1px solid #fff;
+      border-right: 1px solid rgba(255, 255, 255, 0.5);
     }
 
     .tips__closed {

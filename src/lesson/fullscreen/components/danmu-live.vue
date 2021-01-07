@@ -20,7 +20,7 @@
         <ul class="danmu__list">
           <li class="danmu__item J_danmu" :class="[ danmu.status===1? 'enter' : 'out']" v-for="danmu in danmuList">
             <p class="danmu--text f12" >
-              <span class="blue" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
+              <span class="blue pr5" v-if="danmu.ismine"><!-- (我) -->{{ $t('danmume') }}</span>
               <span>{{ danmu.danmu }}</span>
             </p>
           </li>
@@ -57,15 +57,15 @@
     cursor: move;
 
     &:hover {
-      background: rgba(255, 255,255, 0.6);
-      border-radius: 4px;
-      outline: 1px solid #E5E5E5;
+      // background: rgba(255, 255,255, 0.6);
+      // border-radius: 4px;
+      // outline: 1px solid #E5E5E5;
     }
   }
 
   .danmu__closed {
     position: absolute;
-    top: 10px;
+    top: 0;
     right: 10px;
 
     width: 16px;
@@ -334,9 +334,10 @@
         let y = evt.clientY - lastPoint.y;
         let offset = { x, y };
 
-        if(Math.abs(x) + Math.abs(y) > 5) {
-          this.translateContent(offset);
-        }
+        this.translateContent(offset);
+        // if(Math.abs(x) + Math.abs(y) > 5) {
+        //   this.translateContent(offset);
+        // }
       },
 
       handleMoveEnd(evt) {

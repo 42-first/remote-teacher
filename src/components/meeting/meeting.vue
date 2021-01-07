@@ -38,14 +38,14 @@
       <!-- 浮窗模式 -->
       <section class='speakers__container box-start' v-show="tab === 'default'">
         <!-- 共享 -->
-        <section class="member__container" v-show="meeting.otherscreen">
+        <section class="member__container share__container" v-show="meeting.otherscreen">
           <template v-if="meetingSDK === 'local'">
             <video class="video" id="J_screenshare"></video>
           </template>
           <div class="video" id="J_screenshare" v-else></div>
           <div class="share-info box-between">
             <div class="share-name cfff box-center" v-if="meeting.shareName">
-              <svg class="icon f20 cfff" aria-hidden="true">
+              <svg class="icon f20 blue" aria-hidden="true">
                 <use xlink:href="#icon20-gongxiangpingmu"></use>
               </svg>
               <span class="pl5 f12">{{meeting.shareName}}的共享窗口</span>
@@ -380,7 +380,7 @@ export default {
     padding: 5px 0;
     width: 100%;
     max-width: 450px;
-    height: 160px;
+    height: 128px;
 
     overflow: hidden;
 
@@ -388,7 +388,13 @@ export default {
       position: relative;
       padding: 0 3px;
       width: 150px;
-      height: 150px;
+      height: 118px;
+
+      &.share__container {
+        margin: 0 3px;
+        padding: 0;
+        background: #333;
+      }
 
       .video {
         width: 100%;
@@ -399,10 +405,11 @@ export default {
         position: absolute;
         bottom: 0;
         left: 0;
+        height: 26px;
 
         .share-name {
           padding: 0 3px;
-          background: rgba(0, 0, 0, 0.7);
+          // background: rgba(0, 0, 0, 0.7);
         }
       }
     }
