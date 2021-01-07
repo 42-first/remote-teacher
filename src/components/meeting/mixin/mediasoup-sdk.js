@@ -43,12 +43,12 @@ function getProtooUrl({ roomId = '666666', peerId, token, forceH264, forceVP9 })
   const hostname = 'b.yuketang.cn/wswebrtc';
   let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
 
-	if (forceH264)
-		url = `${url}&forceH264=true`;
-	else if (forceVP9)
-		url = `${url}&forceVP9=true`;
+  if (forceH264)
+    url = `${url}&forceH264=true`;
+  else if (forceVP9)
+    url = `${url}&forceVP9=true`;
 
-	return url;
+  return url;
 }
 
 const logger = console;
@@ -64,7 +64,7 @@ export default class RoomClient {
   }
 
   constructor({ roomId, peerId, token, displayName, avatar, device, handlerName, useSimulcast,useSharingSimulcast,
-  	forceTcp,
+    forceTcp,
     forceH264,
     forceVP9,
     svc,
@@ -181,7 +181,7 @@ export default class RoomClient {
     // - {String} [resolution] - 'qvga' / 'vga' / 'hd'.
     this._webcam = {
       device: null,
-      resolution: 'hd'
+      resolution: 'vga'
     };
 
     // Set custom SVC scalability mode.
@@ -234,7 +234,7 @@ export default class RoomClient {
   };
 
   async join() {
-  	// ws业务通信建立
+    // ws业务通信建立
     const protooTransport = new protooClient.WebSocketTransport(this._protooUrl);
 
     this._protoo = new protooClient.Peer(protooTransport);
@@ -488,12 +488,6 @@ export default class RoomClient {
             break;
           }
 
-        case 'peerDisplayNameChanged':
-          {
-            const { peerId, displayName, oldDisplayName } = notification.data;
-            break;
-          }
-
         // 远端创建了Producer 也就是远端开启了音频或者视频
         case 'newProducer':
           {
@@ -625,7 +619,6 @@ export default class RoomClient {
 
         // 权限变更
         case 'privilegeChanged': {
-            logger.debug('proto "notification" event [method:%s, data:%o]', notification.method, notification.data);
             const { privilege } = notification.data;
             this.fire('privilegeChanged', { privilege });
 
@@ -634,7 +627,6 @@ export default class RoomClient {
 
         // 流被终止
         case 'shutProducer': {
-            logger.debug('proto "notification" event [method:%s, data:%o]', notification.method, notification.data);
             const { producerId } = notification.data;
             let kind = 'audio';
 
@@ -662,6 +654,12 @@ export default class RoomClient {
           }
       }
     });
+  }
+
+  // 上行指令发送
+  requestProtoo(msg) {
+    console.log('requestProtoo:', msg);
+    this._protoo.request(msg.op, msg.data);
   }
 
   async enableLocalAudio() {
@@ -702,7 +700,7 @@ export default class RoomClient {
         }
         // NOTE: for testing codec selection.
         // codec : this._mediasoupDevice.rtpCapabilities.codecs
-        // 	.find((codec) => codec.mimeType.toLowerCase() === 'audio/pcma')
+        //   .find((codec) => codec.mimeType.toLowerCase() === 'audio/pcma')
       }).catch((error)=>{
         console.error('mic produce error:', error);
 
@@ -779,8 +777,8 @@ export default class RoomClient {
 
     if (this._webcamProducer)
       return;
-    else if (this._shareProducer)
-      await this.disableShare();
+    // else if (this._shareProducer)
+    //   await this.disableShare();
 
     if (!this._mediasoupDevice.canProduce('video')) {
       logger.error('enableWebcam() | cannot produce video');
@@ -857,7 +855,7 @@ export default class RoomClient {
           }
           // NOTE: for testing codec selection.
           // codec : this._mediasoupDevice.rtpCapabilities.codecs
-          // 	.find((codec) => codec.mimeType.toLowerCase() === 'video/h264')
+          //   .find((codec) => codec.mimeType.toLowerCase() === 'video/h264')
         });
       } else {
         this._webcamProducer = await this._sendTransport.produce({ track });
@@ -935,7 +933,7 @@ export default class RoomClient {
       logger.debug('changeWebcam() | new selected webcam [device:%o]', this._webcam.device);
 
       // Reset video resolution to HD.
-      this._webcam.resolution = 'hd';
+      this._webcam.resolution = 'vga';
 
       if (!this._webcam.device)
         throw new Error('no webcam devices');
@@ -1015,8 +1013,8 @@ export default class RoomClient {
 
     if (this._shareProducer)
       return;
-    else if (this._webcamProducer)
-      await this.disableWebcam();
+    // else if (this._webcamProducer)
+    //   await this.disableWebcam();
 
     if (!this._mediasoupDevice.canProduce('video')) {
       logger.error('enableShare() | cannot produce video');
@@ -1036,9 +1034,9 @@ export default class RoomClient {
           displaySurface: 'monitor',
           logicalSurface: true,
           cursor: true,
-          width: { max: 1920 },
-          height: { max: 1080 },
-          frameRate: { max: 30 }
+          width: { max: 1280 },
+          height: { max: 720 },
+          frameRate: { max: 15 }
         }
       });
 
@@ -1412,7 +1410,7 @@ export default class RoomClient {
     logger.debug('_joinRoom()', this._handlerName);
 
     try {
-    	// 1、设置设备
+      // 1、设置设备
       this._mediasoupDevice = new mediasoupClient.Device({
         handlerName: this._handlerName
       });
@@ -1524,8 +1522,8 @@ export default class RoomClient {
               transportId: this._recvTransport.id,
               dtlsParameters
             })
-  	        .then(callback)
-  	        .catch(errback);
+            .then(callback)
+            .catch(errback);
           });
       }
 
