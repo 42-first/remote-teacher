@@ -164,10 +164,6 @@ export default class RoomClient {
     // @type {Map<String, mediasoupClient.Consumer>}
     this._consumers = new Map();
 
-    // mediasoup DataConsumers.
-    // @type {Map<String, mediasoupClient.DataConsumer>}
-    this._dataConsumers = new Map();
-
     // 本地流 音频流 视频流 共享流
     this._producer = new Map();
 
@@ -350,113 +346,6 @@ export default class RoomClient {
             break;
           }
 
-        case 'newDataConsumer':
-          {
-            const {
-              peerId, // NOTE: Null if bot.
-              dataProducerId,
-              id,
-              sctpStreamParameters,
-              label,
-              protocol,
-              appData
-            } = request.data;
-
-            try
-            {
-              const dataConsumer = await this._recvTransport.consumeData(
-                {
-                  id,
-                  dataProducerId,
-                  sctpStreamParameters,
-                  label,
-                  protocol,
-                  appData : { ...appData, peerId } // Trick.
-                });
-
-              // Store in the map.
-              this._dataConsumers.set(dataConsumer.id, dataConsumer);
-
-              dataConsumer.on('transportclose', () => {
-                this._dataConsumers.delete(dataConsumer.id);
-              });
-
-              dataConsumer.on('open', () => {
-                logger.debug('DataConsumer "open" event');
-              });
-
-              dataConsumer.on('close', () => {
-                logger.warn('DataConsumer "close" event');
-
-                this._dataConsumers.delete(dataConsumer.id);
-              });
-
-              dataConsumer.on('error', (error) => {
-                logger.error('DataConsumer "error" event:%o', error);
-              });
-
-              dataConsumer.on('message', (message) => {
-                logger.debug(
-                  'DataConsumer "message" event [streamId:%d]',
-                  dataConsumer.sctpStreamParameters.streamId);
-
-                // TODO: For debugging.
-                window.DC_MESSAGE = message;
-
-                if (message instanceof ArrayBuffer) {
-                  const view = new DataView(message);
-                  const number = view.getUint32();
-
-                  if (number == Math.pow(2, 32) - 1) {
-                    logger.warn('dataChannelTest finished!');
-
-                    this._nextDataChannelTestNumber = 0;
-
-                    return;
-                  }
-
-                  if (number > this._nextDataChannelTestNumber)
-                  {
-                    logger.warn(
-                      'dataChannelTest: %s packets missing',
-                      number - this._nextDataChannelTestNumber);
-                  }
-
-                  this._nextDataChannelTestNumber = number + 1;
-
-                  return;
-                }
-
-                switch (dataConsumer.label) {
-                  case 'chat': {
-                    console.log('dataConsumer chat:', dataConsumer, message)
-
-                    break;
-                  }
-
-                  case 'bot': {
-                    console.log('dataConsumer bot:', dataConsumer, message)
-
-                    break;
-                  }
-                }
-              });
-
-              // TODO: REMOVE
-              window.DC = dataConsumer;
-
-              // We are ready. Answer the protoo request.
-              accept();
-            }
-            catch (error)
-            {
-              logger.error('"newDataConsumer" request failed:%o', error);
-
-              throw error;
-            }
-
-            break;
-          }
       }
     });
 
@@ -1223,69 +1112,6 @@ export default class RoomClient {
     }
   }
 
-  async enableChatDataProducer() {
-    logger.debug('enableChatDataProducer()');
-
-    try {
-      // Create chat DataProducer.
-      this._chatDataProducer = await this._sendTransport.produceData(
-        {
-          ordered        : false,
-          maxRetransmits : 1,
-          label          : 'chat',
-          priority       : 'medium',
-          appData        : { info: 'my-chat-DataProducer' }
-        });
-
-      // store.dispatch(stateActions.addDataProducer(
-      //   {
-      //     id                   : this._chatDataProducer.id,
-      //     sctpStreamParameters : this._chatDataProducer.sctpStreamParameters,
-      //     label                : this._chatDataProducer.label,
-      //     protocol             : this._chatDataProducer.protocol
-      //   }));
-
-      this._chatDataProducer.on('transportclose', () => {
-        this._chatDataProducer = null;
-      });
-
-      this._chatDataProducer.on('open', () => {
-        logger.debug('chat DataProducer "open" event');
-      });
-
-      this._chatDataProducer.on('close', () =>{
-        logger.error('chat DataProducer "close" event');
-
-        this._chatDataProducer = null;
-      });
-
-      this._chatDataProducer.on('error', (error) => {
-        logger.error('chat DataProducer "error" event:%o', error);
-      });
-
-      this._chatDataProducer.on('bufferedamountlow', () => {
-        logger.debug('chat DataProducer "bufferedamountlow" event');
-      });
-    } catch (error) {
-      logger.error('enableChatDataProducer() | failed:%o', error);
-
-      throw error;
-    }
-  }
-
-  async sendChatMessage(text) {
-    logger.debug('sendChatMessage() [text:"%s]', text);
-
-    if (!this._chatDataProducer) {
-      return;
-    }
-
-    try {
-      this._chatDataProducer.send(text);
-    } catch (error) {
-      logger.error('chat DataProducer.send() failed:%o', error);
-    }
-  }
 
   async getSendTransportRemoteStats() {
     logger.debug('getSendTransportRemoteStats()');
@@ -1380,30 +1206,6 @@ export default class RoomClient {
           return;
 
       return consumer.getStats();
-  }
-
-  async applyNetworkThrottle({ uplink, downlink, rtt, secret }) {
-    logger.debug(
-        'applyNetworkThrottle() [uplink:%s, downlink:%s, rtt:%s]',
-        uplink, downlink, rtt);
-
-    try {
-      await this._protoo.request('applyNetworkThrottle', { uplink, downlink, rtt, secret });
-    } catch (error) {
-      logger.error('applyNetworkThrottle() | failed:%o', error);
-    }
-  }
-
-  async resetNetworkThrottle({ silent = false, secret }) {
-    logger.debug('resetNetworkThrottle()');
-
-    try {
-      await this._protoo.request('resetNetworkThrottle', { secret });
-    } catch (error) {
-      if (!silent) {
-        logger.error('resetNetworkThrottle() | failed:%o', error);
-      }
-    }
   }
 
   async _joinRoom() {
@@ -1559,7 +1361,12 @@ export default class RoomClient {
           // 合并记录到peerId中
           let producers = [];
           peer.producers.forEach((producer)=>{
-            producers.push({ peerId: peer.id, producerId: producer.id, kind: producer.kind })
+            producers.push({
+              peerId: peer.id,
+              producerId: producer.id,
+              kind: producer.kind,
+              // autoPub: peer.autoPub
+            })
 
             // 需要订阅音频
             if(producer.kind === 'audio' && peer.autoPub && !peer.autoPub.autoPubAudio) {
@@ -1579,12 +1386,6 @@ export default class RoomClient {
 
       // Enable mic/webcam.
       // TODO：检测麦克 摄像头
-      this._sendTransport.on('connectionstatechange', (connectionState) => {
-        if (connectionState === 'connected') {
-          this.enableChatDataProducer();
-        }
-      });
-
     } catch (error) {
       logger.error('_joinRoom() failed:%o', error);
 

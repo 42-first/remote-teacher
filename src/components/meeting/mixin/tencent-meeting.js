@@ -159,7 +159,7 @@ let tencentMixin = {
       this.volumeTimer && clearInterval(this.volumeTimer);
       this.volumeTimer = setInterval(()=>{
         this.detectUserVoiceVolume();
-      }, 1000*15)
+      }, 1000*10)
     },
 
     onError(err) {
@@ -549,10 +549,11 @@ let tencentMixin = {
       speakers.forEach((user)=>{
         let userVolume = userVolumeMap.get(String(user.id));
 
+        // TODO：检测要排除自己 貌似自己检测不到
         if(user.audio && userVolume) {
           user.active = true;
           user.volume = userVolume;
-        } else if(user.active) {
+        } else if(user.active && user.id !== this.local) {
           user.active = false;
           user.volume = 0;
         }

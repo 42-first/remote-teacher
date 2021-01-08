@@ -73,6 +73,7 @@
     border-radius: 50%;
 
     background: rgba(0,0,0,0.7);
+    cursor: pointer;
   }
 
   .danmu__container {
