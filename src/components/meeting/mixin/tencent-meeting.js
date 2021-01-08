@@ -159,7 +159,7 @@ let tencentMixin = {
       this.volumeTimer && clearInterval(this.volumeTimer);
       this.volumeTimer = setInterval(()=>{
         this.detectUserVoiceVolume();
-      }, 1000*10)
+      }, 1000*5)
     },
 
     onError(err) {
@@ -362,12 +362,16 @@ let tencentMixin = {
       } else if(uid) {
         try {
           // remoteStream.play(uid);
+          setTimeout(()=>{
+            if( (remoteStream.hasVideo() || remoteStream.hasAudio())
+              && remoteStream.audioPlayer_ === null
+              && remoteStream.videoPlayer_ === null) {
+              remoteStream.play(uid);
+            }
+          }, 2000)
         } catch (error) {
           console.error('Stream play exception:%s', error.message);
         }
-      }
-
-      if (!remoteStream.hasVideo()) {
       }
     },
 
@@ -385,8 +389,10 @@ let tencentMixin = {
       let hasVideo = remoteStream.hasVideo();
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
       if (hasVideo && type === 'main') {
-        // remoteStream.stop();
-        // remoteStream.play(uid);
+        if(remoteStream.videoPlayer_ === null && uid) {
+          remoteStream.audioPlayer_ && remoteStream.stop();
+          remoteStream.play(uid);
+        }
       }
 
       // 更新流替换

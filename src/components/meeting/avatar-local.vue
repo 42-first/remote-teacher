@@ -151,7 +151,11 @@
 
           if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
-              stream.stop();
+              if(stream.audioPlayer_ || stream.videoPlayer_) {
+                stream.stop();
+              }
+
+              // stream.stop();
               stream.play(uid)
               .catch(err => {
                 let errCode = err.getCode()
