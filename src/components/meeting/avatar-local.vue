@@ -24,16 +24,17 @@
           <use xlink:href="#iconlaoshi"></use>
         </svg>
         <template v-if="member.audio">
-          <div class="active__audio line-scale-pulse-out" v-if="member.active">
+          <!-- v-if="member.active" -->
+          <div class="active__audio line-scale-pulse-out">
             <div></div>
             <div></div>
             <div></div>
             <div></div>
             <div></div>
           </div>
-          <svg class="icon f16 cfff" aria-hidden="true" v-else>
+          <!-- <svg class="icon f16 cfff" aria-hidden="true" v-else>
             <use xlink:href="#icon20-yuyin-weifashengbeifen"></use>
-          </svg>
+          </svg> -->
         </template>
         <svg class="icon f16 cfff" aria-hidden="true" v-else>
           <use xlink:href="#icon20-yuyin-weifasheng"></use>
@@ -152,10 +153,10 @@
           if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
               if(stream.audioPlayer_ || stream.videoPlayer_) {
-                stream.stop();
+                // stream.stop();
               }
 
-              // stream.stop();
+              stream.stop();
               stream.play(uid)
               .catch(err => {
                 let errCode = err.getCode()
@@ -175,6 +176,27 @@
             }
           } else if(stream && !member.audio && !member.audio) {
             stream.stop();
+          }
+        }
+      },
+
+      /**
+       * @method 解绑停止播放处理
+       * @param
+       */
+      unbindRender() {
+        let rtcEngine = window.rtcEngine;
+        let member = this.member;
+        let uid = String(member && member.id);
+
+        if(rtcEngine && uid) {
+          let stream = rtcEngine.members.get(uid);
+
+          if(stream && (stream.hasAudio() || stream.hasVideo())) {
+            try {
+              stream.stop();
+            } catch (error) {
+            }
           }
         }
       },
@@ -323,6 +345,9 @@
     },
     updated() {},
     beforeDestroy() {
+      if(this.meetingSDK === 'tencent') {
+        this.unbindRender();
+      }
     },
     destroyed() {},
   }

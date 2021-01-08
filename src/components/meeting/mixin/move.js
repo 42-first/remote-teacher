@@ -26,7 +26,7 @@ let eventMixin = {
       let meetingEl = document.querySelector('.J_meeting');
 
       meetingEl.addEventListener('mousedown', (evt) => {
-        if(evt.target.parentElement.className.indexOf('J_action') != -1) return;
+        if(evt.target.parentElement && evt.target.parentElement.className.indexOf('J_action') != -1) return;
         // evt.preventDefault();
 
         this.canMove = true;

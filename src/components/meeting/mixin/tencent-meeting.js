@@ -35,7 +35,6 @@ let tencentMixin = {
       let privateMapKey = info && info.privateMapKey;
 
       // 确保当前用户
-      roomId = Number(info && info.teacherUserId) || roomId;
       this.roomId = roomId;
       let uid = this.user && this.user.id;
       // 设置本地分享的UID
@@ -604,6 +603,10 @@ let tencentMixin = {
       let rtcEngine = this.rtcEngine;
       let meeting = this.meeting;
 
+      if(!rtcEngine) {
+        return this;
+      }
+
       try {
         if(audio) {
           let result = await rtcEngine.publishAudio();
@@ -647,11 +650,15 @@ let tencentMixin = {
      * @params
      */
     async setVideoByTencent(video = false) {
+      let rtcEngine = this.rtcEngine;
       let meeting = this.meeting;
       let result = false;
 
+      if(!rtcEngine) {
+        return this;
+      }
+
       try {
-        let rtcEngine = this.rtcEngine;
         if(video) {
           result = await rtcEngine.publishVideo();
 

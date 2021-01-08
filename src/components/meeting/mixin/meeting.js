@@ -348,8 +348,9 @@ let meetingMixin = {
           if(items && items.length) {
             items.forEach((item)=>{
               let { identityId, name, avatar, role, video, audio } = item;
-              let active = audio ? true : false;
-              let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active };
+              // let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active: false };
+              let user = { id: identityId, uid: identityId, name, avatar, role,
+                video: false, audio: false, active: false };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;
@@ -358,11 +359,11 @@ let meetingMixin = {
               // 存在用户
               if(~index) {
                 let originUser = speakers[index];
-                if(this.meetingSDK === 'local') {
-                  user = Object.assign({}, originUser, user);
-                }
+                // if(this.meetingSDK === 'local') {
+                //   user = Object.assign({}, originUser, user);
+                // }
 
-                speakers.splice(index, 1, user);
+                speakers.splice(index, 1, Object.assign({}, originUser, { name, avatar, role }));
               } else {
                 if(this.meetingSDK === 'local') {
                   Object.assign(user, { audioConsumer: null, videoConsumer: null });
