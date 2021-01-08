@@ -563,6 +563,35 @@ let pages = {
   "changetonotsignin": "Absent",
   "zuodashichang": "Length of response time",
 
+  meeting: {
+    "showing": "正在放映",
+    "dynamics": "课堂动态",
+    "more": "更多",
+    "post": "Post",
+    "team": "分组",
+    "muteaudio": "点击静音",
+    "unmuteaudio": "点击解除静音",
+    "mutecamera": "点击关闭摄像头",
+    "unmutecamera": "点击开启摄像头",
+
+    "hangup": "退出互动",
+    "jointips": "老师开启了课堂互动快来加入吧",
+    "minimize": "最小化",
+    "unfoldspeaker": "展示正在发言的人",
+    "screenshare": "{name}‘s Screen Sharing",
+    "speaking": "正在发言",
+    "backppt": "返回课件",
+    "muteall": "全员静音",
+    "joinedtips": "接入成功，当前已静音",
+    "micunmuted": "麦克风已开启",
+    "micmuted": "麦克风已静音",
+    "cameraunmuted": "视频已开启",
+    "cameramuted": "视频已关闭",
+    "notallowederror": "请授权摄像头/麦克风访问，否则无法进行音视频通话",
+    "notreadableerror": "暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试",
+    "notfounderror": "找不到摄像头或麦克风设备",
+  },
+
   // 图片国际化
   imgs: {
     "tougaoempty": "https://qn-sfe.yuketang.cn/o_1c2vtgl92fc11pofoot1ggv1clc9.png"

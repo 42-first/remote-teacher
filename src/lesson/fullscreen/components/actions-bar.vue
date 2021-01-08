@@ -121,6 +121,7 @@
     mixins: [ ],
     computed: {
       ...mapState([
+        'lesson',
         // 是否开启弹幕
         'danmuStatus',
         // 是否显示弹幕
@@ -148,10 +149,11 @@
     filters: {
     },
     watch: {
-      hasMeeting(newVal) {
-        if(newVal) {
+      joined(newVal) {
+        const lessonId = this.lesson && this.lesson.lessonID;
 
-        }
+        const key = 'lesson-metting-joined'+lessonId;
+        localStorage.setItem(key, newVal)
       }
     },
     methods: {
@@ -176,6 +178,14 @@
           let hasClosedMeetignTips = !!localStorage.getItem(key);
           if(hasClosedMeetignTips) {
             this.visibleMeetingTips = false;
+          }
+
+          // 自否自动加入会议
+          const lessonId = this.lesson && this.lesson.lessonID;
+          const joinedKey = 'lesson-metting-joined'+lessonId;
+          const joined = !!localStorage.getItem(joinedKey);
+          if(joined) {
+            this.handleJoin();
           }
         }
       },

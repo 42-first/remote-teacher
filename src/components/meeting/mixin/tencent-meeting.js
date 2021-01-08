@@ -269,11 +269,19 @@ let tencentMixin = {
 
         meeting.otherscreen = true;
 
-        this.setMeetingLayout(MeetingMode.SPEAKER)
+        this.shareClosedTimer && clearTimeout(this.shareClosedTimer);
+
+        if(this.meetingLayout !== MeetingMode.SPEAKER) {
+          this.setMeetingLayout(MeetingMode.SPEAKER)
+        }
       } else {
         meeting.otherscreen = false;
         this.shareStream = null;
-        this.setMeetingLayout(MeetingMode.DEFAULT)
+
+        // 5s之后再切换布局
+        this.shareClosedTimer = setTimeout(()=>{
+          this.setMeetingLayout(MeetingMode.DEFAULT)
+        }, 5000)
       }
 
       this.setMeeting(meeting);

@@ -240,7 +240,7 @@ export default {
 
     .video {
       width: 100%;
-      max-height: 100%;
+      max-height: calc(100% - 20px);
       object-fit: contain;
     }
 
@@ -260,6 +260,7 @@ export default {
     position: relative;
     width: 264px;
     height: 100%;
+    max-height: calc(100vw - 44px);
 
     flex-flow: column;
     align-content: flex-start;

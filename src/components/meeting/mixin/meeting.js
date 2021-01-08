@@ -142,7 +142,7 @@ let meetingMixin = {
     forceMute(msg) {
       let meeting = this.meeting;
       meeting.audio = false;
-      meeting.video = false;
+      // meeting.video = false;
 
       this.setMeeting(meeting);
 
