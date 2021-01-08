@@ -594,7 +594,7 @@ export default class RtcClient {
       const level = stream.getAudioLevel();
       // 获取到的音量大小和上一次记录的音量大小不同时进行更新渲染
       if (level !== this.volumeLevelMap.get(streamUserId)) {
-        console.log(`user ${streamUserId} is speaking ${level}`, Date.now());
+        // console.log(`user ${streamUserId} is speaking ${level}`, Date.now());
         this.volumeLevelMap.set(streamUserId, level);
       }
     });

@@ -343,7 +343,7 @@ let tencentMixin = {
         this.updateMeetingStatus(user);
 
         if (event.type == 'video' && event.state == 'PAUSED') {
-          remoteStream.resume();
+          // remoteStream.resume();
         }
 
         if (event.type == 'video' && event.state == 'PLAYING') {
@@ -448,6 +448,10 @@ let tencentMixin = {
         // 关闭视频
         user.type = 'video';
         this.updateMeetingStatus(user);
+
+        let members = rtcEngine.members;
+        members.delete(userId);
+        rtcEngine.setMembers(members);
       }
 
       // 删除对声音大小的监听

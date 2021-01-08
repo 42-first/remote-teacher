@@ -90,7 +90,7 @@
         if(this.meetingSDK === 'local') {
           setTimeout(()=>{
             this.initLocalVideo();
-          }, 2000)
+          }, 1000)
         } else if(this.meetingSDK === 'tencent') {
           setTimeout(()=>{
             this.initTencent();

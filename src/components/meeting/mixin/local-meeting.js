@@ -426,14 +426,22 @@ let localMeeting = {
      * @method 设置音频
      * @params
      */
-    setAudioLocal(audio = false) {
+    async setAudioLocal(audio = false) {
       let rtcEngine = this.rtcEngine;
-
-      if(audio) {
-        rtcEngine && rtcEngine.enableLocalAudio();
-      } else {
-        rtcEngine && rtcEngine.disableLocalAudio();
+      if(!rtcEngine) {
+        return this;
       }
+
+      try {
+        if(audio) {
+          await rtcEngine.enableLocalAudio();
+        } else {
+          await rtcEngine.disableLocalAudio();
+        }
+      } catch (error) {
+        console.error('setAudioLocal | failed: %o', error);
+      }
+
 
       const user = {
         id: this.user.id,
@@ -452,14 +460,17 @@ let localMeeting = {
      * @method 设置视频
      * @params
      */
-    setVideoLocal(video = false) {
+    async setVideoLocal(video = false) {
       let rtcEngine = this.rtcEngine;
+      if(!rtcEngine) {
+        return this;
+      }
 
       try {
         if(video) {
-          rtcEngine.enableWebcam();
+          await rtcEngine.enableWebcam();
         } else {
-          rtcEngine.disableWebcam();
+          await rtcEngine.disableWebcam();
         }
       } catch(error) {
         log.error('[setVideo] error:%s', JSON.stringify(error.message));
@@ -483,21 +494,25 @@ let localMeeting = {
      * @method 屏幕共享
      * @params
      */
-    setShareScreenLocal(screen) {
+    async setShareScreenLocal(screen) {
       console.log('screen:', screen);
 
       try {
         let rtcEngine = this.rtcEngine;
+        if(!rtcEngine) {
+          return this;
+        }
+
         const user = this.user;
         const userId = user.id;
 
         if(screen) {
-          rtcEngine && rtcEngine.enableShare();
+          await rtcEngine.enableShare();
 
           let msg = { shareId: Number(userId), shareName: user.name, type: String(1), width: 0, height: 0 };
           this.startShare(msg);
         } else {
-          rtcEngine && rtcEngine.disableShare();
+          await rtcEngine.disableShare();
           this.endShare();
         }
       } catch (error) {
