@@ -45,9 +45,9 @@
         </svg>
       </section>
 
-      <section class="members__list box-center" v-show="!fold">
+      <section class="members__list" v-show="!fold">
         <!-- 成员 -->
-        <div class="member__wrap" v-for="member in members">
+        <div class="member__wrap" v-for="member in members" >
           <div class="member__container">
             <avatar :member="member"></avatar>
           </div>
@@ -259,13 +259,10 @@ export default {
   .members__list {
     position: relative;
     width: 264px;
-    height: 100%;
     max-height: calc(100vw - 44px);
 
     flex-flow: column;
-    align-content: flex-start;
-    justify-content: center;
-    align-items: flex-start;
+    align-content: center;
 
     overflow-y: auto;
 

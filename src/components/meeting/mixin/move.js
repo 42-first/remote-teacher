@@ -29,7 +29,9 @@ let eventMixin = {
         if(evt.target.parentElement && evt.target.parentElement.className.indexOf('J_action') != -1) return;
         // evt.preventDefault();
 
-        this.canMove = true;
+        if(this.meetingLayout === MeetingMode.DEFAULT) {
+          this.canMove = true;
+        }
 
         const cssStyles = getComputedStyle(meetingEl);
         let xVal = String(cssStyles.getPropertyValue('--x')).trim();
@@ -79,6 +81,10 @@ let eventMixin = {
       evt.preventDefault();
 
       if(!this.canMove) {
+        return false;
+      }
+
+      if(this.meetingLayout !== MeetingMode.DEFAULT) {
         return false;
       }
 

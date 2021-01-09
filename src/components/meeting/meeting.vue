@@ -259,14 +259,6 @@ export default {
       this.tab = tab;
     },
 
-    /**
-     * @method 显示全屏模式
-     * @params
-     */
-    handleVisibleFullScreen(visible) {
-      this.visibleFullscreen = visible;
-    },
-
   }
 };
 </script>
