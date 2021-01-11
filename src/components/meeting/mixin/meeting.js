@@ -359,9 +359,6 @@ let meetingMixin = {
               // 存在用户
               if(~index) {
                 let originUser = speakers[index];
-                // if(this.meetingSDK === 'local') {
-                //   user = Object.assign({}, originUser, user);
-                // }
 
                 speakers.splice(index, 1, Object.assign({}, originUser, { name, avatar, role }));
               } else {
