@@ -87,7 +87,7 @@
     </section>
 
     <!-- 弹幕直播 -->
-    <danmu ref="danmu"  v-if="danmuStatus && visibleDanmu"></danmu>
+    <danmu ref="danmu" v-if="danmuStatus && visibleDanmu"></danmu>
 
   </section>
 </template>
