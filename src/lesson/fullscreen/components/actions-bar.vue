@@ -139,9 +139,9 @@
       ]),
     },
     created() {
-      this.init();
     },
     mounted() {
+      this.init();
     },
     updated() {},
     beforeDestroy() {
@@ -153,7 +153,11 @@
         const lessonId = this.lesson && this.lesson.lessonID;
 
         const key = 'lesson-metting-joined'+lessonId;
-        localStorage.setItem(key, newVal)
+        if(newVal) {
+          localStorage.setItem(key, newVal)
+        } else {
+          localStorage.removeItem(key);
+        }
       }
     },
     methods: {
@@ -181,12 +185,22 @@
           }
 
           // 自否自动加入会议
-          const lessonId = this.lesson && this.lesson.lessonID;
-          const joinedKey = 'lesson-metting-joined'+lessonId;
-          const joined = !!localStorage.getItem(joinedKey);
-          if(joined) {
-            this.handleJoin();
-          }
+          setTimeout(()=>{
+            this.autoJoin();
+          }, 1000)
+        }
+      },
+
+      /**
+       * @method 是否可以自动加入
+       * @param
+       */
+      autoJoin() {
+        const lessonId = this.lesson && this.lesson.lessonID;
+        const joinedKey = 'lesson-metting-joined'+lessonId;
+        const joined = !!localStorage.getItem(joinedKey);
+        if(joined) {
+          this.handleJoin();
         }
       },
 

@@ -159,7 +159,8 @@
               stream.stop();
               stream.play(uid)
               .catch(err => {
-                let errCode = err.getCode()
+                // let errCode = err.getCode()
+                let errCode = err.code;
                 if (errCode === 0x4043) {
                   // stream.stop()
                   stream.resume()

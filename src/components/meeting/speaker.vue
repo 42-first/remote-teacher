@@ -148,10 +148,23 @@ export default {
       let start = (page - 1) * pageSize;
       let end = start + pageSize;
       let speakers = this.speakers;
+      let activeStream = this.activeStream;
 
       if(start < speakers.length) {
-        this.members = speakers.slice(start, end);
+        let members = speakers.slice(start, end);
         this.page = page;
+
+        members.forEach((item)=>{
+          item.visible = true;
+
+          // 没有共享 演讲者模式显示老师 右侧过滤老师
+          if(item.id === activeStream.id && meeting && !meeting.otherscreen) {
+            item.visible = false;
+          }
+
+        })
+
+        this.members = members;
 
         console.log('getMembers', page, this.members);
       }
