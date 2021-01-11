@@ -154,15 +154,15 @@
 
         const key = 'lesson-metting-joined'+lessonId;
         if(newVal) {
-          localStorage.setItem(key, newVal)
+          localStorage.setItem(key, newVal);
         } else {
           localStorage.removeItem(key);
+        }
 
-          // 修正弹幕位置
-          let danmucmp = this.$refs.danmu;
-          if(danmucmp) {
-            danmucmp.translateContent({ x: 0, y: 0 });
-          }
+        // 修正弹幕位置 否则可能超出视图
+        let danmucmp = this.$refs.danmu;
+        if(danmucmp) {
+          danmucmp.translateContent({ x: 0, y: 0 });
         }
       }
     },
