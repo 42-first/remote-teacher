@@ -87,7 +87,7 @@
     </section>
 
     <!-- 弹幕直播 -->
-    <danmu v-if="danmuStatus && visibleDanmu"></danmu>
+    <danmu ref="danmu"  v-if="danmuStatus && visibleDanmu"></danmu>
 
   </section>
 </template>
@@ -157,6 +157,12 @@
           localStorage.setItem(key, newVal)
         } else {
           localStorage.removeItem(key);
+
+          // 修正弹幕位置
+          let danmucmp = this.$refs.danmu;
+          if(danmucmp) {
+            danmucmp.translateContent({ x: 0, y: 0 });
+          }
         }
       }
     },

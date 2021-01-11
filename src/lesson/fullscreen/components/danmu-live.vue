@@ -32,6 +32,7 @@
     <section class="publish__wrap" >
       <section class="danmu__publish f14 J_publish">
         <input class="danmu__ipt J_input f12 cfff" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @keyup="handleKeyup" />
+        <p class="ipt--tips box-center f12 c9b">{{ limit }}字</p>
         <p class="danmu__send box-center cfff" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
       </section>
     </section>
@@ -172,12 +173,18 @@
       flex: 1;
       height: 100%;
 
-      padding: 15px;
+      padding: 0 10px 0 15px;
       appearance: none;
       outline: none;
       border: none;
 
       border-radius: 20px 0 0 20px;
+      background: rgba(0,0,0,0.7);
+    }
+
+    .ipt--tips {
+      padding-right: 10px;
+      height: 100%;
       background: rgba(0,0,0,0.7);
     }
 
@@ -236,6 +243,12 @@
         'visibleDanmu',
         'danmus',
       ]),
+
+      limit() {
+        let danmuText = this.danmuText;
+
+        return 50 - (danmuText && danmuText.length || 0);
+      }
     },
     watch: {
       danmus(newVal, oldVal) {
