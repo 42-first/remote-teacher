@@ -47,7 +47,7 @@
 
       <section class="members__list" v-show="!fold">
         <!-- 成员 -->
-        <div class="member__wrap" v-for="member in members" >
+        <div class="member__wrap" v-for="member in members" v-if="member.visible" >
           <div class="member__container">
             <avatar :member="member"></avatar>
           </div>
@@ -154,6 +154,7 @@ export default {
         let members = speakers.slice(start, end);
         this.page = page;
 
+        const meeting = this.meeting;
         members.forEach((item)=>{
           item.visible = true;
 
@@ -161,7 +162,6 @@ export default {
           if(item.id === activeStream.id && meeting && !meeting.otherscreen) {
             item.visible = false;
           }
-
         })
 
         this.members = members;
