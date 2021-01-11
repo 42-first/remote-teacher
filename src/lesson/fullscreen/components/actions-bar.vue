@@ -122,6 +122,7 @@
     computed: {
       ...mapState([
         'lesson',
+        'teacher',
         // 是否开启弹幕
         'danmuStatus',
         // 是否显示弹幕
@@ -236,6 +237,16 @@
        * @param
        */
       handleJoin() {
+        // 不能是授课老师
+        const uid = window.identityId;
+        const teacher = this.teacher;
+        const teacherIdentityId = teacher && teacher.identityId;
+
+        if(uid === teacherIdentityId) {
+          this.$toast({ type: 1, message: '您是开课老师，请在电脑端加入互动', duration: 2000 });
+          return this;
+        }
+
         this.setJoined(true);
       },
 
