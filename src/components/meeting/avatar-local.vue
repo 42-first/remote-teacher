@@ -101,6 +101,14 @@
       },
       'member.audio'(newVal) {
         console.log('member.audio', newVal);
+        const local = this.local;
+        const member = this.member;
+        const uid = member && member.id;
+
+        // 本地音频不处理
+        if(local == uid) {
+          return this;
+        }
 
         if(this.meetingSDK === 'local') {
           setTimeout(()=>{
@@ -153,13 +161,14 @@
             try {
               if(stream.audioPlayer_ || stream.videoPlayer_) {
                 // stream.stop();
+                // TODO：这里需要解决已经播放中 停止再播放黑屏闪一下问题, 如果视频再播放开启音频应该不需要再次播放
+                console.log('stream:', stream);
               }
 
               stream.stop();
               stream.play(uid)
               .catch(err => {
-                // let errCode = err.getCode()
-                let errCode = err.code;
+                let errCode = typeof err.getCode === 'function' && err.getCode();
                 if (errCode === 0x4043) {
                   // stream.stop()
                   stream.resume()

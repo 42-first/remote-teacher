@@ -619,8 +619,6 @@ let tencentMixin = {
         if(audio) {
           let result = await rtcEngine.publishAudio();
 
-          // let result = await rtcEngine.unmuteLocalAudio();
-
           console.log('result:', result);
           if(result === false) {
             meeting.audio = false;
@@ -630,7 +628,6 @@ let tencentMixin = {
           }
         } else {
           rtcEngine.unpublishAudio();
-          // rtcEngine.muteLocalAudio();
         }
       } catch(error) {
         console.error('设置音频 audio: ' + audio, error);
@@ -670,7 +667,6 @@ let tencentMixin = {
         if(video) {
           result = await rtcEngine.publishVideo();
 
-          // result = await rtcEngine.unmuteLocalVideo()
           console.log('result:', result);
           if(result === false) {
             meeting.video = false;
@@ -680,7 +676,6 @@ let tencentMixin = {
           }
         } else {
           result = await rtcEngine.unpublishVideo();
-          // result = await rtcEngine.muteLocalVideo();
           if(result === false) {
             return this;
           }
