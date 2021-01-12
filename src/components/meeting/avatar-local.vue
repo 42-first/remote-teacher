@@ -160,9 +160,12 @@
           if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
               if(stream.audioPlayer_ || stream.videoPlayer_) {
-                // stream.stop();
                 // TODO：这里需要解决已经播放中 停止再播放黑屏闪一下问题, 如果视频再播放开启音频应该不需要再次播放
                 console.log('stream:', stream);
+
+                if(stream.isPlaying_) {
+                  return this;
+                }
               }
 
               stream.stop();

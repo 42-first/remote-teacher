@@ -85,7 +85,8 @@ export default {
       totalCount: 1,
       totalPage: 1,
       page: 1,
-      pageSize: 9,
+      // 默认9  测试的时候可以改成6
+      pageSize: 6,
     };
   },
   components: {

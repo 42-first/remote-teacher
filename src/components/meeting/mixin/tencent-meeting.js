@@ -364,7 +364,7 @@ let tencentMixin = {
         }
 
         if (event.type == 'audio' && event.state == 'PAUSED') {
-          remoteStream.resume();
+          // remoteStream.resume();
           // remoteStream.play(uid);
         }
       });
