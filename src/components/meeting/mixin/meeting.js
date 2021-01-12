@@ -83,7 +83,7 @@ let meetingMixin = {
         newVal.forEach((member)=>{
           if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
             activeSpeakers.push(member);
-          } else if(member.audio) {
+          } else if(member.audio || member.video) {
             activeSpeakers.push(member);
           }
         })

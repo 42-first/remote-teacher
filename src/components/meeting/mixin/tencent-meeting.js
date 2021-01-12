@@ -404,8 +404,12 @@ let tencentMixin = {
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
       if (hasVideo && type === 'main') {
         if(remoteStream.videoPlayer_ === null && uid) {
-          remoteStream.audioPlayer_ && remoteStream.stop();
-          remoteStream.play(uid);
+          try {
+            remoteStream.audioPlayer_ && remoteStream.stop();
+            remoteStream.play(uid);
+          } catch (error) {
+            console.error('Stream play exception:%s', error.message);
+          }
         }
       }
 

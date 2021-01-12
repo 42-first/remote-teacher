@@ -272,6 +272,7 @@ export default {
   .members__list {
     position: relative;
     width: 264px;
+    height: 100%;
     max-height: calc(100vw - 44px);
 
     flex-flow: column;
