@@ -146,7 +146,8 @@ let meetingMixin = {
 
       this.setMeeting(meeting);
 
-      this.$toast({ type: 1, position: 'top', message: '全员静音', duration: 3000 });
+      const message = this.$i18n && this.$i18n.t('meeting.muteall') || '全员静音';
+      this.$toast({ type: 1, position: 'top', message: message, duration: 3000 });
     },
 
     /**

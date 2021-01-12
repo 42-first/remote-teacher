@@ -41,7 +41,7 @@
                 <svg class="icon f20 blue" aria-hidden="true">
                   <use xlink:href="#icon20-gongxiangpingmu"></use>
                 </svg>
-                <span class="pl5 f12">{{meeting.shareName}}的共享窗口</span>
+                <span class="pl5 f12"><!-- {{meeting.shareName}}的共享窗口 -->{{ $t('meeting.screenshare', { name: meeting.shareName }) }}</span>
               </div>
             </div>
           </div>

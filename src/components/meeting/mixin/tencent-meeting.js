@@ -168,6 +168,12 @@ let tencentMixin = {
     onBanned(evt) {
       // 您已被踢出房间
       console.error('client has been banned for ' + evt);
+
+      this.exitRoomTencent();
+      this.setJoined(false);
+
+      const message = '您已被踢出房间';
+      this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**
@@ -198,7 +204,8 @@ let tencentMixin = {
         this.setSpeakers(speakers);
       }
 
-      this.$toast({ type: 1, message: '接入成功，当前已静音', duration: 2000 });
+      const message = this.$i18n && this.$i18n.t('meeting.joinedtips') || '接入成功，当前已静音';
+      this.$toast({ type: 1, message: message, duration: 2000 });
 
       await rtcEngine.initLocalStream(false);
       setTimeout(()=>{
@@ -647,7 +654,8 @@ let tencentMixin = {
       let device = { audio };
       this.changeDeviceStatus(device);
 
-      this.$toast({ type: 1, message: audio ? '麦克风已开启': '麦克风已静音', duration: 2000 });
+      const message = audio ? this.$i18n.t('meeting.micunmuted') : this.$i18n.t('meeting.micmuted');
+      this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**
@@ -698,7 +706,9 @@ let tencentMixin = {
 
       let device = { video };
       this.changeDeviceStatus(device);
-      this.$toast({ type: 1, message: video ? '视频已开启': '视频已关闭', duration: 2000 });
+
+      const message = video ? this.$i18n.t('meeting.cameraunmuted') : this.$i18n.t('meeting.cameramuted');
+      this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**

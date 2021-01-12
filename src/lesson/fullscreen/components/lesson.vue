@@ -18,17 +18,12 @@
             <h3 class="f16" v-if="lesson && lesson.title" >{{ lesson.title }}</h3>
           </section>
         </div>
-        <!-- <div class="box-center pointer">
-          <p class="box-center mr10 blue full-btn" @click="handleFullscreen">
-            <i class="iconfont icon-quanpingyanshix pr5 f15"></i><span>全屏演示</span>
-          </p>
-        </div> -->
       </header>
       <!-- 课件内容 -->
       <section class="lesson__cards">
         <nav class="cards__nav" v-show="!fullscreen" v-if="!fold">
           <h3 class="nav__header box-between">
-            <span>课堂动态</span>
+            <span><!-- 课堂动态 -->{{ $t('meeting.dynamics') }}</span>
             <i class="iconfont icon-guanbi1 f16 c9b pointer" @click="handleFold(true)"></i>
           </h3>
           <section class="nav__list">

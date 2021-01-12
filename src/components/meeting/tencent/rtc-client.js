@@ -132,15 +132,16 @@ export default class RtcClient {
         let msg = '';
         switch (error.name) {
           case 'NotAllowedError':
-            msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+            msg = typeof i18n !== 'undefined' && i18n.t('meeting.notallowederror') || '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+            // msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
 
             break;
           case 'NotReadableError':
-            msg = '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
+            msg = typeof i18n !== 'undefined' && i18n.t('meeting.notreadableerror') || '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
 
             break;
           case 'NotFoundError':
-            msg = '找不到摄像头或麦克风设备';
+            msg = typeof i18n !== 'undefined' && i18n.t('meeting.notfounderror') || '找不到摄像头或麦克风设备';
 
             return;
           default:
@@ -524,16 +525,16 @@ export default class RtcClient {
       let msg = '';
       switch (error.name) {
         case 'NotAllowedError':
-          msg = '请授权摄像头/麦克风访问，否则无法进行音视频通话';
+          msg = typeof i18n !== 'undefined' && i18n.t('meeting.notallowederror') || '请授权摄像头/麦克风访问，否则无法进行音视频通话';
 
           break;
         case 'NotReadableError':
-          msg = '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
+          msg = typeof i18n !== 'undefined' && i18n.t('meeting.notreadableerror') || '暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试。';
 
           break;
         case 'NotFoundError':
         case 'RtcError':
-          msg = '找不到摄像头或麦克风设备';
+          msg = typeof i18n !== 'undefined' && i18n.t('meeting.notfounderror') || '找不到摄像头或麦克风设备';
 
           return;
         default:

@@ -32,7 +32,7 @@
     <section class="publish__wrap" >
       <section class="danmu__publish f14 J_publish">
         <input class="danmu__ipt J_input f12 cfff" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @keyup="handleKeyup" />
-        <p class="ipt--tips box-center f12 c9b">{{ limit }}字</p>
+        <p class="ipt--tips box-center f12 c9b">{{ limit }}/50</p>
         <p class="danmu__send box-center cfff" @click="handleSend"><!-- 发送 -->{{ $t('danmusend') }}</p>
       </section>
     </section>

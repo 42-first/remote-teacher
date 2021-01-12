@@ -17,12 +17,12 @@
       <header class="meeting__header box-between" :class="{ 'bbl': tab === 'mini' }">
         <!-- 展开收起 -->
         <div class="box-center">
-          <div class="action box-center J_action action__tips" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')" data-tips="最小化">
+          <div class="action box-center J_action action__tips" :class="{ 'active': tab === 'mini' }" @click="handleSetTab('mini')" :data-tips="$t('meeting.minimize')">
             <svg class="icon f24 c666" aria-hidden="true">
               <use xlink:href="#iconyincangshipinsuolvetu2x1"></use>
             </svg>
           </div>
-          <div class="action box-center pl5 J_action action__tips" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')" data-tips="展示正在发言的人">
+          <div class="action box-center pl5 J_action action__tips" :class="{ 'active': tab === 'default' }" @click="handleSetTab('default')" :data-tips="$t('meeting.unfoldspeaker')">
             <svg class="icon f24 c666" aria-hidden="true">
               <use xlink:href="#iconkandanren2x"></use>
             </svg>
@@ -48,7 +48,7 @@
               <svg class="icon f20 blue" aria-hidden="true">
                 <use xlink:href="#icon20-gongxiangpingmu"></use>
               </svg>
-              <span class="pl5 f12">{{meeting.shareName}}的共享窗口</span>
+              <span class="pl5 f12"><!-- {{meeting.shareName}}的共享窗口 -->{{ $t('meeting.screenshare', { name: meeting.shareName }) }}</span>
             </div>
           </div>
         </section>
@@ -67,7 +67,7 @@
           <div></div>
         </section>
         <section class="box-center f14 c333">
-          <span class="pl5">正在发言:</span>
+          <span class="pl5"><!-- 正在发言 -->{{ $t('meeting.speaking') }}:</span>
           <span class="active__names">{{ activeNames }}</span>
         </section>
       </section>

@@ -15,7 +15,7 @@
           <use xlink:href="#icon16-zuo"></use>
         </svg>
       </div>
-      <p class="f14 c333 title">返回课件</p>
+      <p class="f14 c333 title"><!-- 返回课件 -->{{ $t('meeting.backppt') }}</p>
     </div>
     <section class="box-center">
       <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.SPEAKER }" @click="setMeetingLayout(MeetingMode.SPEAKER)">
