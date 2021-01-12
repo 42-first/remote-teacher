@@ -31,13 +31,14 @@
             </svg>
           </div>
         </section>
-        <section class="actions__item" @click="handleShareScreen">
+        <!-- 这一期 不上线 -->
+        <!-- <section class="actions__item" @click="handleShareScreen">
           <div class="actions__btn box-center">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-gongxiangpingmu" ></use>
             </svg>
           </div>
-        </section>
+        </section> -->
         <div class="line"></div>
       </section>
 

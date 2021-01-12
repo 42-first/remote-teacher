@@ -771,7 +771,9 @@ let tencentMixin = {
           try {
             shareStream.play('J_screenshare', { objectFit: 'contain' }).
             then(() => {
-              shareStream.videoPlayer_.element_.controls = true;
+              if(shareStream.videoPlayer_ && shareStream.videoPlayer_.element_) {
+                shareStream.videoPlayer_.element_.controls = true;
+              }
             });
           } catch (error) {
             console.error('Stream play exception:%s', error.message);
