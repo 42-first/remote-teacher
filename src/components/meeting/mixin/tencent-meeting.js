@@ -601,7 +601,7 @@ let tencentMixin = {
       })
 
       // 然后根据音量排序
-      speakers = speakers.sort((a, b) => { return b.volume - a.volume; })
+      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
 
       // 正在说话列表
       this.activeSpeakers = speakers.filter((user)=>{
