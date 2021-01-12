@@ -590,6 +590,7 @@ let pages = {
     "notallowederror": "Please authorize camera/microphone access, otherwise audio/video can not work.",
     "notreadableerror": "Unable to access the camera/microphone, please make sure no other application is occupying them and try again.",
     "notfounderror": "We can't find the camera or microphone device.",
+    "bannedtips": "You have joined the interaction from the other end.",
   },
 
   // 图片国际化

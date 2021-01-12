@@ -46,12 +46,14 @@
       </section>
 
       <section class="members__list" v-show="!fold">
-        <!-- 成员 -->
-        <div class="member__wrap" v-for="member in members" v-if="member.visible" >
-          <div class="member__container">
-            <avatar :member="member"></avatar>
+        <section class="members box-center">
+          <!-- 成员 -->
+          <div class="member__wrap" v-for="member in members" v-if="member.visible" >
+            <div class="member__container">
+              <avatar :member="member"></avatar>
+            </div>
           </div>
-        </div>
+        </section>
       </section>
 
     </section>
@@ -275,10 +277,14 @@ export default {
     height: 100%;
     max-height: calc(100vw - 44px);
 
-    flex-flow: column;
-    align-content: center;
-
+    // align-content: center;
     overflow-y: auto;
+
+    .members {
+      flex-flow: column;
+      width: 100%;
+      min-height: 100%;
+    }
 
     .member__wrap {
       padding: 3px 0 0 0;

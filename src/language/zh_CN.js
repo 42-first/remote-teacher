@@ -593,6 +593,7 @@ let pages = {
     "notallowederror": "请授权摄像头/麦克风访问，否则无法进行音视频通话",
     "notreadableerror": "暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试",
     "notfounderror": "找不到摄像头或麦克风设备",
+    "bannedtips": "你已从其他端进入互动",
   },
 
   // 图片国际化

@@ -125,18 +125,18 @@
       'member.id'(newVal) {
         console.log('change uid:', newVal)
 
-        setTimeout(()=>{
-          this.init();
-        }, 100)
+        // setTimeout(()=>{
+        //   this.init(true);
+        // }, 100)
       },
     },
     methods: {
-      init() {
+      init(change) {
         if(this.meetingSDK === 'local') {
           this.initLocalVideo();
           this.initLocalAudio();
         } else if(this.meetingSDK === 'tencent') {
-          this.initTencent();
+          this.initTencent(change);
         }
       },
 
@@ -164,7 +164,8 @@
                 console.log('stream:', stream);
 
                 if(stream.isPlaying_) {
-                  return this;
+                  // return this;
+                  stream.stop();
                 }
               }
 

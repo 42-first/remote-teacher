@@ -172,7 +172,7 @@ let tencentMixin = {
       this.exitRoomTencent();
       this.setJoined(false);
 
-      const message = '您已被踢出房间';
+      const message = this.$i18n && this.$i18n.t('meeting.bannedtips') || '您已被踢出房间';
       this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
@@ -349,12 +349,13 @@ let tencentMixin = {
 
       remoteStream.on('player-state-changed', event => {
         console.log(`${event.type} player is ${event.state}`, event);
+        // 静音流可能也会有PLAYING 状态 可能会导致状态和远端不一致错乱
         let user = {
           id: uid,
           type: event.type,
           value: event.state == 'PLAYING' ? true : false
         };
-        this.updateMeetingStatus(user);
+        // this.updateMeetingStatus(user);
 
         if (event.type == 'video' && event.state == 'PAUSED') {
           // remoteStream.resume();
@@ -375,7 +376,6 @@ let tencentMixin = {
         this.setSubStreamAvailable(uid, true);
       } else if(uid) {
         try {
-          // remoteStream.play(uid);
           setTimeout(()=>{
             if( (remoteStream.hasVideo() || remoteStream.hasAudio())
               && remoteStream.audioPlayer_ === null
@@ -403,14 +403,16 @@ let tencentMixin = {
       let hasVideo = remoteStream.hasVideo();
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
       if (hasVideo && type === 'main') {
-        if(remoteStream.videoPlayer_ === null && uid) {
-          try {
-            remoteStream.audioPlayer_ && remoteStream.stop();
-            remoteStream.play(uid);
-          } catch (error) {
-            console.error('Stream play exception:%s', error.message);
+        setTimeout(()=>{
+          if(remoteStream.videoPlayer_ === null && uid) {
+            try {
+              remoteStream.audioPlayer_ && remoteStream.stop();
+              remoteStream.play(uid);
+            } catch (error) {
+              console.error('Stream play exception:%s', error.message);
+            }
           }
-        }
+        }, 1000)
       }
 
       // 更新流替换
