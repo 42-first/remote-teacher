@@ -48,7 +48,7 @@
               <svg class="icon f20 blue" aria-hidden="true">
                 <use xlink:href="#icon20-gongxiangpingmu"></use>
               </svg>
-              <span class="pl5 f12"><!-- {{meeting.shareName}}的共享窗口 -->{{ $t('meeting.screenshare', { name: meeting.shareName }) }}</span>
+              <span class="name pl5 f12 ellipsis"><!-- {{meeting.shareName}}的共享窗口 -->{{ $t('meeting.screenshare', { name: meeting.shareName }) }}</span>
             </div>
           </div>
         </section>
@@ -68,7 +68,7 @@
         </section>
         <section class="box-center f14 c333">
           <span class="pl5"><!-- 正在发言 -->{{ $t('meeting.speaking') }}:</span>
-          <span class="active__names">{{ activeNames }}</span>
+          <span class="active__names ellipsis">{{ activeNames }}</span>
         </section>
       </section>
     </section>
@@ -401,7 +401,10 @@ export default {
 
         .share-name {
           padding: 0 3px;
-          // background: rgba(0, 0, 0, 0.7);
+
+          .name {
+            flex: 1;
+          }
         }
       }
     }
@@ -414,8 +417,13 @@ export default {
 
     cursor: move;
 
+    .line-scale-pulse-out {
+      min-width: 20px;
+    }
+
     .active__names {
       padding: 0 5px;
+      flex: 1;
     }
   }
 

@@ -595,13 +595,12 @@ let tencentMixin = {
 
         // 老师
         if(user.role === 'lecturer' || user.role === 'collaborator') {
-          // teacherAndMine.push(user);
           teacherAndMine.unshift(user);
-        }
-
-        // 自己
-        if(user.id === this.local) {
-          teacherAndMine.push(user);
+        } else {
+          // 自己
+          if(user.id === this.local) {
+            teacherAndMine.push(user);
+          }
         }
       })
 
