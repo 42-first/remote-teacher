@@ -15,7 +15,7 @@
     <!-- 会议成员列表 -->
     <section class="members__container box-center">
       <!-- 上一页 -->
-      <section class="actions__left" v-if="totalPage>1">
+      <section class="actions__left" v-show="totalPage>1">
         <section class="action__wrap action__pages box-center cfff">
           <div>
             <span class="f24 bold">{{page}}</span><span class="f12">/{{totalPage}}</span>
@@ -55,7 +55,7 @@
       </section>
 
       <!-- 下一页 -->
-      <section class="actions__right" v-if="totalPage>1">
+      <section class="actions__right" v-show="totalPage>1">
         <section class="action__wrap box-center" :class="{ 'disable': page === totalPage }" @click="handleNext">
           <svg class="icon f40 cfff" aria-hidden="true">
             <use xlink:href="#icon16-you"></use>
