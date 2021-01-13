@@ -360,6 +360,10 @@ let meetingMixin = {
                 return speaker.id == user.id;
               })
 
+              if(avatar && avatar.length < 10 || !avatar) {
+                avatar = "http://wx.qlogo.cn/mmopen/OUicWJdJoz3HNVF1oYxOQYibUZicpTD55udhicFPk9RBUuicwxiahv5nUJBx7MZPbl7tTkeZRlptRuhhMpaPNPxyplWQ/96";
+              }
+
               // 存在用户
               if(~index) {
                 let originUser = speakers[index];

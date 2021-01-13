@@ -21,7 +21,7 @@
             <span class="f24 bold">{{page}}</span><span class="f12">/{{totalPage}}</span>
           </div>
         </section>
-        <section class="action__wrap box-center mt20" :class="{ 'disable': page === 1 }" @click="handlePrev">
+        <section class="action__wrap action__prev box-center" :class="{ 'disable': page === 1 }" @click="handlePrev">
           <svg class="icon f40 cfff" aria-hidden="true">
             <use xlink:href="#icon16-zuo"></use>
           </svg>
@@ -135,6 +135,10 @@ export default {
     ]),
 
     init() {
+      if(this.meeting && this.meeting.otherscreen) {
+        this.pageSize = 8;
+      }
+
       this.initPages();
       this.getMembers(this.page);
     },
@@ -312,10 +316,24 @@ export default {
       font-family: din;
       // background: rgba(0,0,0,0.2);
     }
+
+    .action__prev {
+      display: none;
+    }
   }
 
   .actions__left {
     left: 0;
+
+    &:hover {
+      .action__pages {
+        display: none;
+      }
+
+      .action__prev {
+        display: flex;
+      }
+    }
   }
 
   .actions__right {
