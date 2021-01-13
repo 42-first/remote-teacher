@@ -170,6 +170,8 @@ let tencentMixin = {
       // 您已被踢出房间
       console.error('client has been banned for ' + evt);
 
+      this.banned = true;
+
       this.exitRoomTencent();
       this.setJoined(false);
 

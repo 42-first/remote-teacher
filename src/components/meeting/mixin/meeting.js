@@ -104,7 +104,10 @@ let meetingMixin = {
         this.stopLocaleeting();
       }
 
-      await this.leavedChanel();
+      // 被踢的不用调用后端接口
+      if(!this.banned) {
+        await this.leavedChanel();
+      }
 
       this.setJoined(false);
     },
