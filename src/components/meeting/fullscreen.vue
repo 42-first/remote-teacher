@@ -118,6 +118,8 @@ export default {
       if(newVal && newVal.length) {
         this.initPages();
         this.getMembers(this.page);
+
+        // todo: 需要检测共享流
       }
     },
     'meeting.otherscreen'(newVal) {
@@ -148,6 +150,11 @@ export default {
       if(speakers && speakers.length) {
         this.totalCount = speakers.length;
         this.totalPage = Math.ceil(this.totalCount/this.pageSize);
+
+        // 修正没有翻页按钮的问题
+        if(this.page > 1 && this.page > this.totalPage) {
+          this.page -= 1;
+        }
       }
     },
 

@@ -200,7 +200,7 @@ let tencentMixin = {
         speakers.push(user);
 
         // todo: test
-        // for(let i =1; i<21; i++) {
+        // for(let i =1; i<7; i++) {
         //   speakers.push(user);
         // }
 
@@ -361,7 +361,10 @@ let tencentMixin = {
         // this.updateMeetingStatus(user);
 
         if (event.type == 'video' && event.state == 'PAUSED') {
-          // remoteStream.resume();
+          if(type === 'auxiliary') {
+            console.log(`auxiliary stream:`, remoteStream);
+            this.joinRemoteScreenSharing();
+          }
         }
 
         if (event.type == 'video' && event.state == 'PLAYING') {
@@ -783,7 +786,7 @@ let tencentMixin = {
             console.error('Stream play exception:%s', error.message);
           }
         }
-      }, 500)
+      }, 20)
     },
 
     /**
