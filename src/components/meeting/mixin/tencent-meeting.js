@@ -377,9 +377,10 @@ let tencentMixin = {
       } else if(uid) {
         try {
           setTimeout(()=>{
+            let view = document.getElementById(uid);
             if( (remoteStream.hasVideo() || remoteStream.hasAudio())
               && remoteStream.audioPlayer_ === null
-              && remoteStream.videoPlayer_ === null) {
+              && remoteStream.videoPlayer_ === null && view) {
               remoteStream.play(uid);
             }
           }, 2000)
@@ -404,7 +405,8 @@ let tencentMixin = {
       let uid = rtcEngine.getUidByStreamId(remoteStream.getId());
       if (hasVideo && type === 'main') {
         setTimeout(()=>{
-          if(remoteStream.videoPlayer_ === null && uid) {
+          let view = document.getElementById(uid);
+          if(remoteStream.videoPlayer_ === null && uid && view) {
             try {
               remoteStream.audioPlayer_ && remoteStream.stop();
               remoteStream.play(uid);
@@ -412,7 +414,7 @@ let tencentMixin = {
               console.error('Stream play exception:%s', error.message);
             }
           }
-        }, 1000)
+        }, 1500)
       }
 
       // 更新流替换
