@@ -591,6 +591,9 @@ let pages = {
     "notreadableerror": "Unable to access the camera/microphone, please make sure no other application is occupying them and try again.",
     "notfounderror": "We can't find the camera or microphone device.",
     "bannedtips": "You have joined the interaction from the other end.",
+    "webrtcnosupported": "建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课",
+    "switchtolive": "Switch to Live",
+    "rtcnosupported": "Current browser does not support interactive, please <a class=blue href=http://www.google.cn/chrome/ target=_blank>click here to update</a> or switch to live mode.",
   },
 
   // 图片国际化

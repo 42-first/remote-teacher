@@ -594,6 +594,9 @@ let pages = {
     "notreadableerror": "暂时无法访问摄像头/麦克风，请确保当前没有其他应用请求访问摄像头/麦克风，并重试",
     "notfounderror": "找不到摄像头或麦克风设备",
     "bannedtips": "你已从其他端进入互动",
+    "webrtcnosupported": "建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课",
+    "switchtolive": "切换到直播",
+    "rtcnosupported": "当前浏览器版本不支持互动，请<a class=blue href=http://www.google.cn/chrome/ target=_blank>点击此处更新</a>或 进入直播模式上课",
   },
 
   // 图片国际化

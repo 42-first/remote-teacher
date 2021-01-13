@@ -90,10 +90,24 @@
     <!-- 弹幕直播 -->
     <danmu ref="danmu" v-if="danmuStatus && visibleDanmu"></danmu>
 
+    <!-- webrtc不支持 提示框 -->
+    <section class="dialog" v-if="visibleWebRTCNoSupported">
+      <section class="dialog__wrap">
+        <section class="dialog__content">
+          <div class="f16 c666" v-html="$t('meeting.rtcnosupported')"></div>
+        </section>
+        <footer class="dialog__actions f14 pointer">
+          <button class="actions-btn" @click="handleCancel"><!-- 取消 -->{{ $t('cancel') }}</button>
+          <button class="actions-btn active" @click="handleSwitchLive"><!-- 切换到直播 -->{{ $t('meeting.switchtolive') }}</button>
+        </footer>
+      </section>
+    </section>
+
   </section>
 </template>
 
 <script>
+  import TRTC from 'trtc-js-sdk';
   import { mapState, mapActions } from 'vuex';
   import { isSupported } from '@/util/util'
   import danmu from './danmu-live';
@@ -114,6 +128,9 @@
       return {
         // 会议加入提示
         visibleMeetingTips: true,
+        // 是否支持webrtc
+        isWebRTCSupported: true,
+        visibleWebRTCNoSupported: false,
       };
     },
     components: {
@@ -166,6 +183,16 @@
         if(danmucmp) {
           danmucmp.translateContent({ x: 0, y: 0 });
         }
+      },
+      hasMeeting(newVal) {
+        if(newVal) {
+          this.checWebRTCSupported();
+        }
+      },
+      isWebRTCSupported(newVal) {
+        if(!newVal) {
+          this.visibleWebRTCNoSupported = true;
+        }
       }
     },
     methods: {
@@ -173,6 +200,7 @@
         'setDanmuStatus',
         'setVisibleDanmu',
         'setJoined',
+        'setHasMeeting',
       ]),
 
       ...mapActions('meeting', [
@@ -197,6 +225,10 @@
             this.autoJoin();
           }, 2000)
         }
+
+        if(this.hasMeeting) {
+          this.checWebRTCSupported();
+        }
       },
 
       /**
@@ -210,6 +242,40 @@
         if(joined) {
           this.handleJoin();
         }
+      },
+
+      /**
+       * @method 检测是否支持webrtc
+       * @param
+       */
+      checWebRTCSupported() {
+        // 浏览器否则支持检测
+        TRTC.checkSystemRequirements().
+        then(checkResult => {
+          if (!checkResult.result) {
+            console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
+            // 点击之后判断当前浏览器版本是否支持RTC，不支持的话，弹窗提示用户换浏览器或进入直播模式上课
+            this.isWebRTCSupported = false;
+          }
+        })
+      },
+
+      handleCancel() {
+        this.visibleWebRTCNoSupported = false;
+      },
+
+      /**
+       * @method 切换到直播
+       * @param
+       */
+      handleSwitchLive() {
+        this.setHasMeeting(false);
+
+        setTimeout(()=>{
+          this.$parent.initKwai();
+          this.$parent.initEvent();
+          this.handleCancel();
+        }, 20)
       },
 
       /**
@@ -248,7 +314,11 @@
           return this;
         }
 
-        this.setJoined(true);
+        if(this.isWebRTCSupported) {
+          this.setJoined(true);
+        } else {
+          this.visibleWebRTCNoSupported = true;
+        }
       },
 
       /**
@@ -548,6 +618,68 @@
 
     .tips__closed {
       flex: 1;
+    }
+  }
+
+
+  .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+
+    .dialog__wrap {
+      z-index: 1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      padding: 30px 0 0;
+      width: 350px;
+      min-height: 222px;
+
+      transform: translate(-50%, -50%);
+
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(229, 213, 213, 0.2);
+
+      background: #fff;
+
+      .dialog__content {
+        padding: 30px 0;
+        margin: 0 30px;
+
+        border-bottom: 1px solid #ddd;
+      }
+
+      .dialog__actions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        padding: 30px 50px;
+
+        .actions-btn {
+          width: 100px;
+          height: 34px;
+
+          color: #5096F5;
+          border: 1px solid #5096F5;
+          border-radius: 17px/50%;
+          transition: all 0.35s ease-in;
+
+          cursor: pointer;
+
+          &:hover,
+          &.active {
+            color: #fff;
+            background: #5096F5;
+          }
+        }
+      }
     }
   }
 

@@ -57,7 +57,7 @@ let tencentMixin = {
             confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
             cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
           };
-          let message = '建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课';
+          let message = this.$i18n && this.$i18n.t('meeting.webrtcnosupported') || '建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课';
 
           this.$messagebox.confirm(message, msgOptions)
           .then( action => {
@@ -67,6 +67,7 @@ let tencentMixin = {
 
               setTimeout(()=>{
                 this.$parent.initKwai();
+                this.$parent.initEvent();
               }, 20)
             }
           });
