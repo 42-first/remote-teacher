@@ -576,7 +576,7 @@ let pages = {
     "unmuteaudio": "点击解除静音",
     "mutecamera": "点击关闭摄像头",
     "unmutecamera": "点击开启摄像头",
-
+    "joinoncomputer": "您是开课老师，请在电脑端加入互动",
     "hangup": "退出互动",
     "jointips": "老师开启了课堂互动快来加入吧",
     "minimize": "最小化",

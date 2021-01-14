@@ -573,7 +573,7 @@ let pages = {
     "unmuteaudio": "Click to unmute",
     "mutecamera": "Click to stop video",
     "unmutecamera": "Click to start video",
-
+    "joinoncomputer": "Course instructor can only join interaction on the computer.",
     "hangup": "Quit",
     "jointips": "Click to join the interaction",
     "minimize": "Minimize",

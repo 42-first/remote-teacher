@@ -587,7 +587,7 @@ let tencentMixin = {
       speakers.forEach((user)=>{
         let userVolume = userVolumeMap.get(String(user.id));
 
-        // TODO：检测要排除自己 貌似自己检测不到
+        // userVolume 不准确
         if(user.audio && userVolume) {
           user.active = true;
           user.volume = userVolume;
@@ -597,8 +597,10 @@ let tencentMixin = {
         }
 
         // 老师
-        if(user.role === 'lecturer' || user.role === 'collaborator') {
+        if(user.role === 'lecturer') {
           teacherAndMine.unshift(user);
+        } else if(user.role === 'collaborator') {
+          teacherAndMine.push(user);
         } else {
           // 自己
           if(user.id === this.local) {

@@ -310,7 +310,8 @@
         const teacherIdentityId = teacher && teacher.identityId;
 
         if(uid && teacherIdentityId && (uid === teacherIdentityId)) {
-          this.$toast({ type: 1, message: '您是开课老师，请在电脑端加入互动', duration: 2000 });
+          const message = this.$i18n && this.$i18n.t('meeting.joinoncomputer') || '您是开课老师，请在电脑端加入互动';
+          this.$toast({ type: 1, message: message, duration: 2000 });
           return this;
         }
 
