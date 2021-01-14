@@ -1055,7 +1055,12 @@ let actionsMixin = {
      */
     receiveDanmu(data) {
       if(data && !data.isFetch) {
-        this.danmus.push(data);
+        let danmus = this.danmus;
+        danmus.push(data);
+        this.setDanmus(danmus);
+
+        // 兼容之前
+        this.emitDanmu(data.danmu)
       }
     },
 
@@ -1065,7 +1070,8 @@ let actionsMixin = {
      */
     clearDanmus(data) {
       if(this.danmus && this.danmus.length) {
-        this.danmus = [];
+        // this.danmus = [];
+        this.setDanmus([]);
       }
     },
 

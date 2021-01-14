@@ -18,18 +18,13 @@
             <h3 class="f16" v-if="lesson && lesson.title" >{{ lesson.title }}</h3>
           </section>
         </div>
-        <!-- <div class="box-center pointer">
-          <p class="box-center mr10 blue full-btn" @click="handleFullscreen">
-            <i class="iconfont icon-quanpingyanshix pr5 f15"></i><span>全屏演示</span>
-          </p>
-        </div> -->
       </header>
       <!-- 课件内容 -->
       <section class="lesson__cards">
         <nav class="cards__nav" v-show="!fullscreen" v-if="!fold">
           <h3 class="nav__header box-between">
-            <span>课堂动态</span>
-            <i class="iconfont icon-guanbi1 f20 c333 pointer" @click="handleFold(true)"></i>
+            <span><!-- 课堂动态 -->{{ $t('meeting.dynamics') }}</span>
+            <i class="iconfont icon-guanbi1 f16 c9b pointer" @click="handleFold(true)"></i>
           </h3>
           <section class="nav__list">
             <timeline></timeline>
@@ -37,7 +32,9 @@
         </nav>
         <!-- 展开更多 -->
         <p class="nav__fold box-center pointer" v-if="fold" @click="handleFold(false)">
-          <!-- <i class="iconfont icon-quanbu f28 cfff" ></i> -->
+          <svg class="icon f24 cfff" aria-hidden="true">
+            <use xlink:href="#icon16-xiaojiantou-shang"></use>
+          </svg>
         </p>
         <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
           <!-- 当前或者选中的数据展示 -->
@@ -56,6 +53,15 @@ import { mapState, mapActions } from 'vuex'
 
 import timeline from './timeline';
 
+// 会议模式
+const MeetingMode = {
+  // 默认 default
+  DEFAULT: 0,
+  // 九宫格 Jiugongge
+  JIUGONGGE: 1,
+  // 发言者模式
+  SPEAKER: 2
+};
 
 export default {
   name: "lesson-content",
@@ -82,6 +88,10 @@ export default {
       'slideIndex',
       'msg',
       'currSlide'
+    ]),
+
+    ...mapState('meeting', [
+      'meetingLayout',
     ]),
   },
   components: {
@@ -196,6 +206,12 @@ export default {
     autoJump(index, slide) {
       // 自动跳转策略
       // 当前页是是放映页 PPT或者白板 新消息是PPT习题白板自动跳
+
+      // todo: 会议全屏模式不自动跳转
+      if(this.meetingLayout !== MeetingMode.DEFAULT) {
+        return this;
+      }
+
       let curr = this.currSlide;
       // 当前页是放映也
       if(curr && curr.index === this.slideIndex) {
@@ -297,6 +313,8 @@ export default {
     height: 100vh;
 
     background: radial-gradient(circle at 100% 100%, #0D1F39, #224372 80%, #284D83 100%);
+
+    user-select: none;
   }
 
   .lesson__wrap {
@@ -355,10 +373,20 @@ export default {
       top: 50%;
       left: 0;
       transform: translateY(-50%);
-      width: 22px;
-      height: 200px;
-      background: url(https://qn-sfe.yuketang.cn/o_1e28aupan5lrkiq2ip1k4do0be.png) center
-        center/contain no-repeat;
+
+      width: 20px;
+      height: 100px;
+
+      border-radius: 0 17px 17px 0;
+      background: #C8C8C8;
+
+      .icon {
+        transform: rotate(90deg);
+      }
+
+      &:hover {
+        background: rgba(0,0,0,0.7);
+      }
     }
   }
 
@@ -372,13 +400,13 @@ export default {
     flex-flow: column;
 
     overflow: hidden;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+    box-shadow: 1px 0 4px rgba(0,0,0,0.1);
     background: #fff;
 
     .nav__header {
       height: 40px;
       line-height: 40px;
-      padding: 0 20px 0 20px;
+      padding: 0 10px 0 10px;
       border-bottom: 1px solid #ddd;
 
       text-align: left;
