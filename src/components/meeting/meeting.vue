@@ -424,6 +424,7 @@ export default {
     .active__names {
       padding: 0 5px;
       flex: 1;
+      max-width: 140px;
     }
   }
 

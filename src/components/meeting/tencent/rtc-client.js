@@ -554,13 +554,12 @@ export default class RtcClient {
 
     if(!this.isPublished) {
       await this.publish();
+
+      // fix 只开视频会发送onUserAudioUnmuted
+      localStream.muteAudio();
     }
 
     this.members.set(this.uid, localStream);
-
-    // 播放本地视频
-    // localStream.stop();
-    // localStream.play(this.uid);
   }
 
   resumeStreams() {

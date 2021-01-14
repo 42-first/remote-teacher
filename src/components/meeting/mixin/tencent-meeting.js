@@ -522,7 +522,7 @@ let tencentMixin = {
      */
     onUserAudioUnmuted(evt) {
       let uid = evt.userId;
-      log.info('[onUserAudioMuted]', uid);
+      log.info('[onUserAudioUnmuted]', uid);
 
       const user = {
         id: uid,
