@@ -147,6 +147,7 @@ var commandMixin = {
 
       if(lesson && lesson.teacher) {
         this.teacherName = lesson.teacher.name;
+        this.setTeacher(lesson.teacher);
       }
 
       // 班级信息
@@ -158,9 +159,11 @@ var commandMixin = {
       }, 20)
 
       // 课程基本信息
-      this.setLesson({
+      this.setLesson(Object.assign(lesson, {
         lessonID: id
-      })
+      }));
+
+      window.user = user;
     },
 
     /**
@@ -360,6 +363,12 @@ var commandMixin = {
           if(role === 2 || role === 3) {
             this.setObserverMode(true);
           }
+
+          // 设置当前userid 专业版是虚ID 基础本是实ID
+          if(data.identityId) {
+            this.identityId = data.identityId;
+            window.identityId = data.identityId;
+          }
         }
 
         return res.code;
@@ -440,6 +449,28 @@ var commandMixin = {
         }
       }).catch(error => {
         console.log('getLive:', error);
+      })
+    },
+
+    /**
+     * @method 获取会议基本信息 token channel
+     * @param
+     */
+    getMeeting() {
+      let URL = API.lesson.get_meeting_config;
+
+      request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+
+          // 本地会议？
+          if(data && data.provider === 3) {
+            this.meeting = data;
+          }
+        }
+      }).catch(error => {
+        return {};
       })
     },
 

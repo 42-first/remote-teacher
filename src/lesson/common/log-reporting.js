@@ -64,7 +64,7 @@ let logMixin = {
 
       // 监听事件
       events.forEach((evt)=>{
-        liveEl.addEventListener(evt, ()=>{
+        liveEl && liveEl.addEventListener(evt, ()=>{
           let system = this.system;
           system['et'] = evt;
 

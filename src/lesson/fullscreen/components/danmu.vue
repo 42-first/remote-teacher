@@ -8,11 +8,6 @@
 <template>
   <section class="danmu-control-cmp">
     <template v-if="!videoFullscreen">
-      <!-- <div class="danmu__control">
-        <i class="iconfont icon-danmukai1 f28" v-if="visibleDanmu" @click="handleVisibleDanmu"></i>
-        <i class="iconfont icon-danmuguan1 f28" v-else @click="handleVisibleDanmu"></i>
-        <i class="iconfont icon-fadanmu f24" @click="showSend = true"></i>
-      </div> -->
       <div class="danmu__send_box" v-show="visibleDanmuSend">
         <div class="send__container">
           <div class="input__box">
@@ -71,6 +66,7 @@ export default {
     // 使用对象展开运算符将 getter 混入 computed 对象中
     ...mapState([
       'visibleDanmuSend',
+      // 'visibleDanmu',
     ]),
   },
   watch: {
@@ -86,7 +82,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setVisibleDanmuSend'
+      'setVisibleDanmuSend',
+      'setVisibleDanmu',
     ]),
 
     /*
@@ -159,8 +156,7 @@ export default {
      * @param
      */
     handleVisibleDanmu() {
-      // this.visibleDanmu = !this.visibleDanmu;
-      this.$parent.setVisibleDanmu(!this.visibleDanmu);
+      this.setVisibleDanmu(!this.visibleDanmu);
     },
 
     /**

@@ -92,9 +92,10 @@ var mixin = {
           }
 
           // 握手开始通信
+          let userId = self.identityId || self.userID;
           self.socket.send(JSON.stringify({
             'op': 'hello',
-            'userid': self.userID,
+            'userid': userId,
             'role': 'student',
             'auth': self.token,
             'lessonid': self.lessonID
@@ -131,10 +132,13 @@ var mixin = {
       let timeline;
       let item;
       let hasMsg = true;
+      let userId = this.identityId || this.userID;
 
       if(msg.op) {
         // 弹幕状态
-        msg["danmu"] && (this.danmuStatus = msg["danmu"])
+        if(msg["danmu"]) {
+          this.setDanmuStatus(msg["danmu"]);
+        }
 
         switch(msg.op) {
           // 建立通信 时间轴事件
@@ -148,7 +152,10 @@ var mixin = {
             // 是否开启了互动 加入会议
             if(msg.interactive) {
               // 学生可自行加入会议
-              this.hasMeeting = true;
+              // this.hasMeeting = true;
+              this.setHasMeeting(true);
+              // 标记这是一堂直播远程课 方便后面对直播远程课处理
+              !this.isLive && (this.isLive = true);
             }
 
             if(timeline && timeline.length) {
@@ -160,7 +167,7 @@ var mixin = {
           // 开启互动 { op: 'startinteractive', lessonid }
           case 'startinteractive':
             if(msg.lessonid) {
-              this.hasMeeting = true;
+              this.setHasMeeting(true);
 
               item = msg['event'];
               this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
@@ -171,10 +178,60 @@ var mixin = {
           // 结束互动 { op: 'endinteractive', lessonid }
           case 'endinteractive':
             if(msg.lessonid) {
-              this.hasMeeting = false;
+              // 不显示直播
+              this.liveURL = '';
+              this.setHasMeeting(false);
 
               item = msg['event'];
               this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
+            }
+
+            break
+
+          // 用户加入会议
+          // { op: 'userjoin', uid: '101', meetinguid: 2110, name: '', avatar: '', role: 'teacher', video: true/false, audio: true/false  }
+          case 'userjoin':
+            if(msg.uid !== userId) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.joinUser(msg, 'ws');
+              }
+            }
+
+            break
+
+          // 用户离开会议
+          // { op: 'userleave', uid: 101 }
+          case 'userleave':
+            if(userId !== msg.uid) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.userLeave(msg);
+              }
+            }
+
+            break
+
+          // 请求关闭/启用音视频
+          case 'controldevice':
+            // { op: 'controldevice', type: 'audio/video', value: true/false }
+            if(msg.type === 'audio') {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.forceMute(msg);
+              }
+            }
+
+            break
+
+          // 共享桌面
+          case 'sharescreen':
+            // { op: 'sharescreen', shareid: 0, sharename, type: '', width: 0, height: 0, uid: 0 }
+            if(msg.uid != userId) {
+              let meetingcmp = this.$refs.meeting;
+              if(meetingcmp) {
+                meetingcmp.shareScreen(msg);
+              }
             }
 
             break
@@ -219,7 +276,8 @@ var mixin = {
             item = msg['event'];
 
             this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item });
-            this.danmuStatus = true;
+            // this.danmuStatus = true;
+            this.setDanmuStatus(true);
             break
 
           // 关闭弹幕
@@ -227,7 +285,8 @@ var mixin = {
             item = msg['event'];
 
             this.addMessage({ type: 1, message: item['title'], event: item });
-            this.danmuStatus = false;
+            // this.danmuStatus = false;
+            this.setDanmuStatus(false);
             break
 
           // 幻灯片 结束放映
@@ -239,7 +298,8 @@ var mixin = {
             // this.danmuStatus = false;
             // 结束放映 老版本大屏是无法展示弹幕 所以这里需要根据版本处理下
             if(this.version < 1.3) {
-              this.danmuStatus = false;
+              // this.danmuStatus = false;
+              this.setDanmuStatus(false);
             }
 
             break
@@ -269,7 +329,8 @@ var mixin = {
 
             // 课程状态 弹幕状态
             this.lessonStatus = 1;
-            this.danmuStatus = false;
+            // this.danmuStatus = false;
+            this.setDanmuStatus(false);
 
             break
 
@@ -388,7 +449,6 @@ var mixin = {
 
           // 开始直播
           case 'startlive':
-            // this.startLive(msg['liveurl']);
             this.startLive(msg);
 
             break;

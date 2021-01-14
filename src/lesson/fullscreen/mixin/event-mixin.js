@@ -34,6 +34,10 @@ let eventMixin = {
       let videoEl = this.$el.querySelector('.J_live');
       let videoWrapEl = this.$el.querySelector('.J_live_wrap');
 
+      if(!videoEl) {
+        return this;
+      }
+
       videoEl.addEventListener('mousedown', (evt) => {
         if(evt.target.parentElement.className.indexOf('volume_list') != -1) return
         evt.preventDefault();

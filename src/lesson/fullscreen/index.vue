@@ -10,11 +10,6 @@
   <section class="page">
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
-      <!-- 提示 -->
-      <!--  <p class="lesson--tip" v-if="visibleTip">
-        <span><i class="iconfont icon--weilianjie f14"></i> 网页直播延迟较大，推荐使用手机/平板微信小程序观看直播，体验更佳</span><i class="iconfont icon-guanbi1 f15 close" @click="handleClosedTopTip"></i>
-      </p> -->
-
       <!-- 消息通知 -->
       <msgbox></msgbox>
 
@@ -23,7 +18,7 @@
     </section>
 
     <!-- 直播入口 音频直播 -->
-    <section class="live" v-if="liveURL && liveType === 1">
+    <section class="live" v-if="liveURL && liveType === 1 && !hasMeeting">
       <div class="live__audio">
         <i class="iconfont icon-quxiaojingyinx" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-jingyin" v-else @click="handleplay"></i>
@@ -33,8 +28,8 @@
       </audio>
     </section>
 
-    <!-- 直播入口 视频直播 -->
-    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }"  v-if="liveURL && liveType === 2">
+    <!-- 直播入口 视频直播 加入会议不再显示直播 -->
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && !hasMeeting">
       <!-- 定制video -->
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
@@ -73,52 +68,8 @@
       <section class="danmu-live J_video_danmu" v-show="videoFullscreen && visibleDanmu"></section>
     </section>
 
-    <!-- 实时弹幕列表 -->
-    <section class="danmu-live J_danmu_live" v-show="visibleDanmu"></section>
-
-    <!-- 更多操作 -->
-    <section class="actions__wrap blue" :class="{ 'only': !danmuStatus && !visibleMore && !hasMeeting }" >
-      <div class="" v-show="danmuStatus" >
-        <p class="action-btn action-tip" @click="setVisibleDanmu(false)" data-tip="弹幕：开" v-if="visibleDanmu">
-          <i class="iconfont icon-danmukai f32"></i>
-        </p>
-        <p class="action-btn action-tip" @click="setVisibleDanmu(true)" data-tip="弹幕：关" v-else >
-          <i class="iconfont icon-danmuguan f32 c666"></i>
-        </p>
-        <p class="action-btn action-tip" @click="handleVisibleDanmu" data-tip="发弹幕">
-          <i class="iconfont icon-fadanmu f32"></i>
-        </p>
-      </div>
-      <div class="" v-if="visibleMore">
-        <p class="line" v-show="danmuStatus" ></p>
-        <p class="action-btn action-tip" @click="handleVisibleSubmission" data-tip="投稿">
-          <i class="iconfont icon-ykq_tab_tougao f32"></i>
-        </p>
-        <!-- <p class="action-btn action-tip" @click="handleVisibleGroup" data-tip="分组">
-          <i class="iconfont icon-fenzu1 f32"></i>
-        </p> -->
-      </div>
-      <p class="action-btn action-tip" @click="handleVisibleMore(false)" data-tip="收起" v-if="visibleMore">
-        <i class="iconfont icon--shuangjiantouxiangxia f24"></i>
-      </p>
-      <p class="action-btn action-tip" @click="handleVisibleMore(true)" data-tip="更多" v-else>
-        <i class="iconfont icon--gengduocaozuo f24"></i>
-      </p>
-      <!-- 加入会议 -->
-      <div class="action-btn join__wrap" v-if="hasMeeting">
-        <div class="meeting__join box-center" >
-          <i class="iconfont icon-48-jieru f28 cfff"></i>
-        </div>
-        <!-- 小程序二维码 -->
-        <section class="mini-code__wrap">
-          <img class="qr-code" :src="miniCode" alt="雨课堂小程序" v-if="miniCode" />
-          <div class="c666 bold" v-html="$t('scanjoininteraction')"></div>
-        </section>
-      </div>
-    </section>
-
-    <!-- 弹幕控制组件 -->
-    <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
+    <!-- 更多操作 新 -->
+    <actions-cmp></actions-cmp>
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -148,6 +99,8 @@
       </div>
     </section>
 
+    <!-- 会议演讲者模式 -->
+    <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
   </section>
 </template>
 <script>
@@ -171,12 +124,15 @@
   let screenfull = require('screenfull');
   import Danmaku from 'danmaku';
 
+  import actionsCmp from './components/actions-bar.vue'
   import danmuCmp from './components/danmu.vue'
   import volume from './components/video_volume.vue'
 
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';
   import videomsg from './components/video-msg';
+
+  import meeting from '@/components/meeting/meeting'
 
 
   // 子组件不需要引用直接使用
@@ -225,10 +181,6 @@
 
         // 是否有新消息
         hasMsg: false,
-        // 是否开启弹幕
-        danmuStatus: false,
-        // 是否显示弹幕
-        visibleDanmu: true,
         // 课程是否结束
         lessonStatus: 0,
         presentationList: null,
@@ -266,8 +218,6 @@
         boardMap: new Map(),
         // 白板不懂收藏
         boardList: null,
-        // 弹幕直播
-        danmus: [],
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
@@ -294,8 +244,6 @@
         currentTime: 0,
         // 小程序码
         miniCode: '',
-        // 是否有会议
-        hasMeeting: false
       };
     },
     components: {
@@ -303,7 +251,9 @@
       danmuCmp,
       volume,
       msgbox,
-      videomsg
+      videomsg,
+      actionsCmp,
+      meeting
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -311,6 +261,16 @@
         'lesson',
         'cards',
         'lines',
+        // 是否开启弹幕
+        'danmuStatus',
+        // 是否显示弹幕
+        'visibleDanmu',
+        // 是否有会议
+        'hasMeeting',
+        // 是否已进入会议
+        'joined',
+        // 弹幕直播
+        'danmus',
       ])
     },
     watch: {
@@ -346,24 +306,12 @@
           this.liveType === 2 && this.initEvent();
         }, 1000)
       },
-      danmus(newVal, oldVal) {
-        if(newVal && newVal.length) {
-          let danmu = newVal.shift();
-          if(danmu) {
-            this.emitDanmu(danmu.danmu)
-          }
-        }
-      },
       visibleDanmu(newVal, oldVal) {
         // 视频全屏开启弹幕
         if(newVal && this.videoFullscreen) {
           setTimeout(()=>{
             this.initVideoDanmu();
           }, 500)
-        } else if(newVal) {
-          setTimeout(()=>{
-            // this.initDanmu();
-          }, 200)
         }
       }
     },
@@ -383,6 +331,12 @@
         'setCurrSlide',
         'setBoardMsg',
         'setVisibleDanmuSend',
+        'setTeacher',
+        'setDanmuStatus',
+        'setVisibleDanmu',
+        'setHasMeeting',
+        'setJoined',
+        'setDanmus',
       ]),
 
       /*
@@ -397,6 +351,14 @@
         this.setObserverMode(observerMode);
 
         this.iniTimeline(this.lessonID);
+
+        // 调试模式
+        if(query && query.debug) {
+          // 是否模拟会议
+          if(query.meeting) {
+            this.hasMeeting = true;
+          }
+        }
       },
 
       /**
@@ -445,19 +407,10 @@
         }
       },
 
-      /**
-       * @method 是否显示弹幕
-       * @params
-       */
-      setVisibleDanmu(visible) {
-        this.visibleDanmu = visible;
-      },
-
       /*
        * @method 直播悬停反面等事件
        */
       iniTimeline(lessonID) {
-        // Promise.all([this.getPresentationList()]).
         Promise.all([this.initLesson(lessonID)]).
         then((res) => {
           setTimeout(()=>{
@@ -490,150 +443,6 @@
         }
       },
 
-      /*
-      * @method 读取直播的课程列表和auth信息
-      * @param  init: 是否初始化socket
-      */
-      getPresentationList() {
-        let self = this;
-        let URL = API.student.GET_PRESENTATION_LIST;
-        let param = {
-          'lesson_id': this.lessonID
-        }
-
-        // 是否有明确的签到方式
-        if(this.source) {
-          param['source'] = this.source;
-        }
-
-        this.fetchPresentationCount++;
-
-        // lessons
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
-              self.pro_perm_info = data.pro_perm_info
-              // auth
-              self.userID = data.userID;
-              self.avatar = data.avatar;
-              self.userAuth = data.userAuth;
-
-              self.presentationList = data.presentationList;
-              self.quizList = data.quizList;
-              self.presentationID = data.activePresentationID;
-              self.groupList = data.groupList;
-              self.groupReviewList = data.groupReviewList;
-              self.liveInfo = data.liveList || null;
-              // 白板不懂收藏
-              self.boardList = data.share_board_track || null;
-
-              // classroom
-              self.classroom = data.classroom;
-
-              // set presentation map
-              if(self.presentationList.length) {
-                for(let i = 0; i < self.presentationList.length; i++) {
-                  let presentation = self.presentationList[i];
-
-                  self.formatPresentation(presentation, presentation.presentationID);
-                }
-              }
-
-              // set quiz map
-              if(self.quizList && self.quizList.length) {
-                self.quizList.forEach( function(quiz, index) {
-                  self.quizMap.set(quiz.quizID, quiz);
-                });
-              }
-
-              // set groupMap
-              if(self.groupList && self.groupList.length) {
-                self.groupList.forEach( (group, index) => {
-                  self.groupMap.set(group.group_id, group);
-                });
-              }
-
-              // set groupReviewMap
-              if(self.groupReviewList && self.groupReviewList.length) {
-                self.groupReviewList.forEach( (review) => {
-                  self.groupReviewMap.set(review.group_review_id, review);
-                });
-              }
-
-              // set boardMap
-              if(self.boardList && self.boardList.length) {
-                self.boardList.forEach( (board) => {
-                  self.boardMap.set(board.board_id, board);
-                });
-              }
-
-              // set title
-              let presentationData = null;
-
-              if(self.presentationID) {
-                presentationData = self.presentationMap.get(self.presentationID);
-                presentationData && presentationData.Title && (self.title = presentationData.Title);
-              } else {
-                // presentation没有数据 重新初始化
-                self.fetchPresentationCount < 2 && setTimeout(() => {
-                  self.getPresentationList();
-                }, 5000)
-
-                return presentationData;
-              }
-
-              // 直播处理 1为直播中，2为已结束
-              if(self.liveInfo && self.liveInfo.status === 1) {
-                self.liveType = self.liveInfo.type || 1;
-                self.liveURL = self.liveInfo.live_url.httpflv;
-                self.liveurl = self.liveInfo.live_url;
-
-                // 日志上报
-                setTimeout(() => {
-                  self.handleLogEvent();
-                }, 30000)
-              }
-
-              // 课程title
-              document.title = self.courseName = data.classroom && data.classroom.courseName;
-
-              // 初始化websocket
-              setTimeout(() => {
-                self.initws();
-              }, 20)
-
-              // 课程基本信息
-              self.setLesson({
-                lessonID: self.lessonID,
-                presentationID: self.presentationID,
-                title: presentationData && presentationData.Title,
-                userID: data.userID,
-                avatar: data.avatar,
-                userAuth: data.userAuth
-              })
-
-              return presentationData;
-            }
-          })
-          .catch(error => {
-            console.log(error);
-
-            if(error && error.status_code === 601) {
-              // 课程结束
-              console.log('课程结束');
-              location.href = '/v/index/lessonend';
-            } else if(error && error.status_code === 603) {
-              // 没有权限
-              console.log('没有权限');
-            } else if(error && error.status_code === 5) {
-              // 显示引导
-              // this.showGuide = true;
-              // this.getTeacherName(this.lessonID);
-            }
-          });
-      },
-
       /**
        * @method 弹幕发送toast
       */
@@ -648,7 +457,7 @@
       */
       handleSetVolume(volume){
         document.querySelector('#player').volume = volume
-      }
+      },
     },
     created() {
       this.init();
@@ -1032,46 +841,41 @@
       background: #08BC72;
     }
 
-    .meeting__join:hover +.mini-code__wrap {
-      opacity: 1;
-      transition: opacity ease-out 1.25s;
-    }
+    // .meeting__join:hover +.mini-code__wrap {
+    //   opacity: 1;
+    //   transition: opacity ease-out 1.25s;
+    // }
 
-    .mini-code__wrap {
-      opacity: 0;
-      position: absolute;
-      right: calc(100% + 20px);
-      bottom: 0;
+    // .mini-code__wrap {
+    //   opacity: 0;
+    //   position: absolute;
+    //   right: calc(100% + 20px);
+    //   bottom: 0;
 
-      padding: 16px 20px;
-      width: 200px;
-      height: 242px;
+    //   padding: 16px 20px;
+    //   width: 200px;
+    //   height: 242px;
 
-      border-radius: 4px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-      transition: all ease-in 0.35s;
-      background: #fff;
+    //   border-radius: 4px;
+    //   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    //   transition: all ease-in 0.35s;
+    //   background: #fff;
 
-      // &:hover {
-      //   opacity: 1;
-      //   transition: opacity ease-out 1.25s;
-      // }
+    //   .qr-code {
+    //     width: 160px;
+    //     height: 160px;
+    //   }
 
-      .qr-code {
-        width: 160px;
-        height: 160px;
-      }
+    //   &:after {
+    //     content: '';
+    //     position: absolute;
+    //     right: -18px;
+    //     bottom: 15px;
 
-      &:after {
-        content: '';
-        position: absolute;
-        right: -18px;
-        bottom: 15px;
-
-        border: 10px solid transparent;
-        border-left-color: #fff;
-      }
-    }
+    //     border: 10px solid transparent;
+    //     border-left-color: #fff;
+    //   }
+    // }
 
     .action-tip:hover:before {
       content: '';
@@ -1194,8 +998,6 @@
   .submit-btn.can:active {
     background: rgba(99,158,244,0.7);
   }
-
-
 
 
 </style>
