@@ -121,6 +121,11 @@ export default {
       let slide = this.cards[index];
       if(slide) {
         this.slide = slide;
+      } else {
+        setTimeout(()=>{
+          let slide = this.cards[index];
+          slide && (this.slide = slide);
+        }, 2000)
       }
 
       this.initEvent();
