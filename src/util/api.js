@@ -134,6 +134,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_member_list: '/api/v3/lesson/meeting/member-list',
       // 获取共享屏幕信息
       get_share_config: '/api/v3/lesson/meeting/share-config',
+      // 互动打点
+      report_meeting: '/api/v3/lesson/meeting/report',
 
 
       // 教师接口
