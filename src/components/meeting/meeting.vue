@@ -89,6 +89,9 @@ import localMeeting from './mixin/local-meeting'
 // 腾讯
 import tencentMeeting from './mixin/tencent-meeting'
 import move from './mixin/move'
+// 上报打点
+import report from './mixin/report'
+
 
 // 会议模式
 const MeetingMode = {
@@ -118,7 +121,7 @@ export default {
     fullscreen,
     speaker
   },
-  mixins: [ meeting, localMeeting, tencentMeeting, move ],
+  mixins: [ meeting, localMeeting, tencentMeeting, move, report ],
   computed: {
     ...mapState([
       'baseInfo',
