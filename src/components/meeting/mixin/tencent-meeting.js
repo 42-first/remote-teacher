@@ -804,6 +804,8 @@ let tencentMixin = {
 
       if(this.reportTimer) {
         clearInterval(this.reportTimer);
+        this.reportTimer = null;
+
         this.report();
       }
     },
