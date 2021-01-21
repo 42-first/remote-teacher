@@ -215,14 +215,8 @@ let tencentMixin = {
         this.joinedMeeting(user);
       }, 0)
 
-      let states = rtcEngine.getRemoteMutedState();
-      if(states && states.length) {
-        console.log('states:', states);
-
-        states.forEach((item)=>{
-          let uid = item.userId;
-        })
-      }
+      // 开始上报
+      this.autoReport();
     },
 
     /**
@@ -807,6 +801,13 @@ let tencentMixin = {
       }
 
       this.volumeTimer && clearInterval(this.volumeTimer);
+
+      if(this.reportTimer) {
+        clearInterval(this.reportTimer);
+        this.reportTimer = null;
+
+        this.report();
+      }
     },
 
   }
