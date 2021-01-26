@@ -87,12 +87,14 @@
       'member.video'(newVal) {
         console.log('member.video', newVal);
 
+        this.initTimer && clearTimeout(this.initTimer)
+
         if(this.meetingSDK === 'local') {
-          setTimeout(()=>{
+          this.initTimer = setTimeout(()=>{
             this.initLocalVideo();
           }, 1000)
         } else if(this.meetingSDK === 'tencent') {
-          setTimeout(()=>{
+          this.initTimer = setTimeout(()=>{
             this.initTencent();
           }, 1000)
         } else {
@@ -110,12 +112,14 @@
           return this;
         }
 
+        this.initTimer && clearTimeout(this.initTimer)
+
         if(this.meetingSDK === 'local') {
           setTimeout(()=>{
             this.initLocalAudio();
           }, 1000)
         } else if(this.meetingSDK === 'tencent') {
-          setTimeout(()=>{
+          this.initTimer = setTimeout(()=>{
             this.initTencent();
           }, 100)
         } else {
@@ -125,9 +129,15 @@
       'member.id'(newVal) {
         console.log('change uid:', newVal)
 
-        // setTimeout(()=>{
-        //   this.init(true);
-        // }, 100)
+        this.initTimer && clearTimeout(this.initTimer)
+
+        if(this.meetingSDK === 'tencent') {
+          this.initTimer = setTimeout(()=>{
+            this.initTencent();
+          }, 100)
+        } else {
+          this.init();
+        }
       },
     },
     methods: {
@@ -361,6 +371,8 @@
       if(this.meetingSDK === 'tencent') {
         this.unbindRender();
       }
+
+      console.log('beforeDestroy unbindRender')
     },
     destroyed() {},
   }

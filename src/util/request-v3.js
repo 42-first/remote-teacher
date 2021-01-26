@@ -87,6 +87,8 @@ const catchCode = (code) => {
 }
 
 
+// 业务线统计
+axios.defaults.headers['xtbz'] = 'ykt';
 // 超时默认60s避免造成阻塞卡顿
 axios.defaults.timeout = 60000;
 
