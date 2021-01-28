@@ -1095,6 +1095,10 @@
 
             weappEl.addEventListener('launch', (e) => {
               console.log('success');
+              // 如果有直播关闭
+              if(this.liveType) {
+                this.handleStopVideo();
+              }
             });
 
             weappEl.addEventListener('error', (e) => {
