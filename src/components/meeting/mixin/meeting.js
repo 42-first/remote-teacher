@@ -72,7 +72,11 @@ let meetingMixin = {
         }, 0)
       }
 
-      // this.getSpeakers();
+      if(this.meetingSDK === 'tencent') {
+        // 取消订阅远端流 排除共享和老师流
+        this.unsubscribeSpeakers();
+      }
+
       this.getMembers();
     },
     // 正常说话列表
@@ -83,7 +87,8 @@ let meetingMixin = {
         newVal.forEach((member)=>{
           if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
             activeSpeakers.push(member);
-          } else if(member.audio || member.video) {
+          } else if(member.audio) {
+            // else if(member.audio || member.video)
             activeSpeakers.push(member);
           }
         })
@@ -135,6 +140,24 @@ let meetingMixin = {
           speakers.splice(index, 1, user);
           this.setSpeakers(speakers);
         }
+      }
+    },
+
+    /**
+     * @method 更新用户
+     * @param
+     */
+    updateUser(data) {
+      let speakers = this.speakers;
+      let index = speakers.findIndex((user)=>{
+        return user.id == data.id;
+      })
+
+      if(~index) {
+        let user = speakers[index];
+
+        speakers.splice(index, 1, Object.assign(user, data));
+        this.setSpeakers(speakers);
       }
     },
 
@@ -210,6 +233,31 @@ let meetingMixin = {
         speakers.splice(index, 1);
         this.setSpeakers(speakers);
       }
+    },
+
+    /**
+     * @method 取消订阅远端流
+     * @param
+     */
+    unsubscribeSpeakers() {
+      const rtcEngine = this.rtcEngine;
+      const members = rtcEngine.members;
+      const client = rtcEngine.client;
+      let speakers = this.speakers;
+
+      speakers.forEach((user)=>{
+        let uid = user.id;
+        // 排除老师流，自己的流
+        if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
+          let stream = members.get(String(uid));
+          if(stream && user.subscribe) {
+            user.subscribe = false;
+            client.unsubscribe(stream);
+          }
+        }
+      })
+
+      this.setSpeakers(speakers);
     },
 
     /**
@@ -352,9 +400,8 @@ let meetingMixin = {
           if(items && items.length) {
             items.forEach((item)=>{
               let { identityId, name, avatar, role, video, audio } = item;
-              // let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active: false };
               let user = { id: identityId, uid: identityId, name, avatar, role,
-                video: false, audio: false, active: false };
+                video: false, audio: false, active: false, subscribe: false };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;

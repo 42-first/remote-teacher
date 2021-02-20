@@ -238,12 +238,13 @@ let tencentMixin = {
         role = 'lecturer';
       }
 
+      // subscribe: 远端流是否被订阅
       let user = {
         id: uid,
         uid,
         name,
         avatar,
-        role, audio: false, video: false, active: false
+        role, audio: false, video: false, active: false, subscribe: false
       };
 
       this.joinUser(user, 'SDK');
@@ -313,14 +314,26 @@ let tencentMixin = {
         // web共享兼容 ~String(stream.userID).indexOf('share')
         if(type === 'auxiliary' || ~String(userId).indexOf('share')) {
           this.shareStream = remoteStream;
+
+          // 共享流需要主动订阅
+          client.subscribe(remoteStream);
         } else if(type === 'main') {
           members.set(userId, remoteStream);
           rtcEngine.setMembers(members);
+
+          // 老师的流主动订阅
+          let teacher = this.teacher;
+          if(userId == teacher.identityId || userId == teacher.userId) {
+            client.subscribe(remoteStream);
+          } else {
+            // 其他远端流等页面展示的时候订阅
+            client.unsubscribe(remoteStream);
+          }
         }
 
         // TODO: 订阅的流超过20个就不能再订阅了
-        console.log('subscribe to this remote stream');
-        client.subscribe(remoteStream);
+        // console.log('subscribe to this remote stream');
+        // client.subscribe(remoteStream);
       }
     },
 
@@ -375,6 +388,14 @@ let tencentMixin = {
       if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(uid, true);
       } else if(uid) {
+        // 更新远端流已订阅状态 可以播放
+        const user = {
+          id: uid,
+          type: 'subscribe',
+          value: true
+        };
+        this.updateMeetingStatus(user);
+
         try {
           setTimeout(()=>{
             let view = document.getElementById(uid);
@@ -466,16 +487,14 @@ let tencentMixin = {
       if(type === 'auxiliary' || ~String(remoteStream.userId_).indexOf('share')) {
         this.setSubStreamAvailable(userId, false);
       } else {
+        // 关闭音视频订阅状态
         let user = {
           id: userId,
-          type: 'audio',
-          value: false
+          audio: false,
+          video: false,
+          subscribe: false
         };
-        this.updateMeetingStatus(user);
-
-        // 关闭视频
-        user.type = 'video';
-        this.updateMeetingStatus(user);
+        this.updateUser(user);
 
         let members = rtcEngine.members;
         members.delete(userId);
@@ -607,9 +626,9 @@ let tencentMixin = {
       speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
 
       // 正在说话列表
-      this.activeSpeakers = speakers.filter((user)=>{
-        return user.audio && user.volume;
-      });
+      // this.activeSpeakers = speakers.filter((user)=>{
+      //   return user.audio && user.volume;
+      // });
 
       // 其他学生
       others = speakers.filter((user)=>{

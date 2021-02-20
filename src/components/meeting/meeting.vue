@@ -53,7 +53,7 @@
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container" :class="{ 'none': meeting.otherscreen && index > 1 || !meeting.otherscreen && index > 2 }" v-for="(member, index) in activeSpeakers" >
+        <section class="member__container" :class="{ 'none': meeting.otherscreen && index > 1 || !meeting.otherscreen && index > 2 }" v-for="(member, index) in activeSpeakers.slice(0, 3)" v-if="activeSpeakers && activeSpeakers.length" >
           <avatar :member="member" :mode="1"></avatar>
         </section>
       </section>

@@ -84,6 +84,14 @@
       ]),
     },
     watch: {
+      // 远程流 订阅了才可以播放
+      'member.subscribe'(newVal) {
+        if(newVal && this.meetingSDK === 'tencent') {
+          this.initTimer && clearTimeout(this.initTimer)
+
+          this.initTencent();
+        }
+      },
       'member.video'(newVal) {
         console.log('member.video', newVal);
 
@@ -161,11 +169,19 @@
        */
       initTencent() {
         let rtcEngine = window.rtcEngine;
+        const local = this.local;
         let member = this.member;
         let uid = String(member && member.id);
 
         if(rtcEngine && uid) {
           let stream = rtcEngine.members.get(uid);
+          // 远端流是否订阅
+          if(local != uid && !member.subscribe) {
+            const client = rtcEngine.client;
+            client.subscribe(stream);
+
+            return this;
+          }
 
           if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
@@ -197,7 +213,7 @@
               stream.play(uid)
               console.error('Stream play exception:%s', error.message);
             }
-          } else if(stream && !member.audio && !member.audio) {
+          } else if(stream && !member.audio && !member.video) {
             stream.stop();
           }
         }
