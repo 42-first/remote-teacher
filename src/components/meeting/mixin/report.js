@@ -132,10 +132,18 @@ let reportMixin = {
       request.post(URL, log).
       then( res => {
         if (res && res.code === 0) {
+        } else {
+          if(this.reportTimer) {
+            clearInterval(this.reportTimer);
+          }
         }
       }).
       catch(error => {
         console.error('reportLog:', error);
+
+        if(this.reportTimer) {
+          clearInterval(this.reportTimer);
+        }
       })
     },
 

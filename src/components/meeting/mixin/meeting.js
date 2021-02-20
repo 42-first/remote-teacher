@@ -93,6 +93,7 @@ let meetingMixin = {
           }
         })
 
+        // console.log('activeSpeakers:', activeSpeakers)
         this.activeSpeakers = activeSpeakers;
       }
     },
@@ -253,6 +254,7 @@ let meetingMixin = {
           if(stream && user.subscribe) {
             user.subscribe = false;
             client.unsubscribe(stream);
+            stream.close();
           }
         }
       })

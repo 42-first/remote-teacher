@@ -115,11 +115,11 @@ export default {
   },
   watch: {
     'speakers'(newVal, oldVal) {
+      // 新增或者减少时更新成员和页码
+      // if(newVal && oldVal && newVal.length !== oldVal.length)
       if(newVal && newVal.length) {
         this.initPages();
         this.getMembers(this.page);
-
-        // todo: 需要检测共享流
       }
     },
     'meeting.otherscreen'(newVal) {
@@ -184,6 +184,11 @@ export default {
     handleNext(evt) {
       let page = this.page;
       if(page < this.totalPage) {
+        if(this.meetingSDK === 'tencent') {
+          // 取消订阅远端流 排除共享和老师流
+          this.$parent.unsubscribeSpeakers();
+        }
+
         this.getMembers(page+1);
 
         console.log('handleNext');
@@ -197,6 +202,11 @@ export default {
     handlePrev(evt) {
       let page = this.page;
       if(page > 1) {
+        if(this.meetingSDK === 'tencent') {
+          // 取消订阅远端流 排除共享和老师流
+          this.$parent.unsubscribeSpeakers();
+        }
+
         this.getMembers(page-1);
         console.log('handlePrev');
       }

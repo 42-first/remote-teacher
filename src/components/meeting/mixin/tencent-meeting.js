@@ -345,43 +345,57 @@ let tencentMixin = {
       console.log('stream-subscribed: ', evt);
       const rtcEngine = this.rtcEngine;
       const client = rtcEngine.client;
+      const members = rtcEngine.members;
 
       const remoteStream = evt.stream;
       const type = remoteStream.getType();
       const streamId = remoteStream.getId();
       let uid = rtcEngine.getUidByStreamId(streamId);
 
-      const remoteStreams = rtcEngine.remoteStreams
-      remoteStreams.push(remoteStream);
+      const remoteStreams = rtcEngine.remoteStreams;
+      let index = remoteStreams.findIndex((stream)=>{
+        return stream.getId() === streamId;
+      })
+
+      // 远端流存在
+      if(~index) {
+        remoteStreams.splice(index, 1, remoteStream);
+
+        // 更新远程流
+        members.set(String(uid), remoteStream);
+        rtcEngine.setMembers(members);
+      } else {
+        remoteStreams.push(remoteStream);
+
+        remoteStream.on('player-state-changed', event => {
+          console.log(`${event.type} player is ${event.state}`, event);
+          // 静音流可能也会有PLAYING 状态 可能会导致状态和远端不一致错乱
+          // let user = {
+          //   id: uid,
+          //   type: event.type,
+          //   value: event.state == 'PLAYING' ? true : false
+          // };
+          // this.updateMeetingStatus(user);
+
+          if (event.type == 'video' && event.state == 'PAUSED') {
+            if(type === 'auxiliary') {
+              this.joinRemoteScreenSharing();
+            }
+          }
+
+          if (event.type == 'video' && event.state == 'PLAYING') {
+          }
+
+          if (event.type == 'audio' && event.state == 'PAUSED') {
+            // remoteStream.resume();
+            // remoteStream.play(uid);
+          }
+        });
+      }
+
       rtcEngine.setRemoteStreams(remoteStreams);
 
       console.log('stream-subscribed uid: ', uid);
-
-      remoteStream.on('player-state-changed', event => {
-        console.log(`${event.type} player is ${event.state}`, event);
-        // 静音流可能也会有PLAYING 状态 可能会导致状态和远端不一致错乱
-        let user = {
-          id: uid,
-          type: event.type,
-          value: event.state == 'PLAYING' ? true : false
-        };
-        // this.updateMeetingStatus(user);
-
-        if (event.type == 'video' && event.state == 'PAUSED') {
-          if(type === 'auxiliary') {
-            console.log(`auxiliary stream:`, remoteStream);
-            this.joinRemoteScreenSharing();
-          }
-        }
-
-        if (event.type == 'video' && event.state == 'PLAYING') {
-        }
-
-        if (event.type == 'audio' && event.state == 'PAUSED') {
-          // remoteStream.resume();
-          // remoteStream.play(uid);
-        }
-      });
 
       // 屏幕分享流
       // web共享兼容 ~String(remoteStream.userId_).indexOf('share')
@@ -402,7 +416,7 @@ let tencentMixin = {
             if( (remoteStream.hasVideo() || remoteStream.hasAudio())
               && remoteStream.audioPlayer_ === null
               && remoteStream.videoPlayer_ === null && view) {
-              remoteStream.play(uid);
+              // remoteStream.play(uid);
             }
           }, 2000)
         } catch (error) {
@@ -429,8 +443,8 @@ let tencentMixin = {
           let view = document.getElementById(uid);
           if(remoteStream.videoPlayer_ === null && uid && view) {
             try {
-              remoteStream.audioPlayer_ && remoteStream.stop();
-              remoteStream.play(uid);
+              // remoteStream.audioPlayer_ && remoteStream.stop();
+              // remoteStream.play(uid);
             } catch (error) {
               console.error('Stream play exception:%s', error.message);
             }

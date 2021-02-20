@@ -86,6 +86,7 @@
     watch: {
       // 远程流 订阅了才可以播放
       'member.subscribe'(newVal) {
+        console.log('subscribe:', newVal)
         if(newVal && this.meetingSDK === 'tencent') {
           this.initTimer && clearTimeout(this.initTimer)
 
@@ -176,7 +177,7 @@
         if(rtcEngine && uid) {
           let stream = rtcEngine.members.get(uid);
           // 远端流是否订阅
-          if(local != uid && !member.subscribe) {
+          if(local != uid && !member.subscribe && stream) {
             const client = rtcEngine.client;
             client.subscribe(stream);
 
@@ -380,7 +381,7 @@
     mounted() {
       setTimeout(()=>{
         this.init();
-      }, 0)
+      }, 500)
     },
     updated() {},
     beforeDestroy() {
