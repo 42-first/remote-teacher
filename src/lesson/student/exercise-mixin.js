@@ -16,7 +16,7 @@ var exerciseMixin = {
     * @param
     */
     getAnswer(key) {
-      key = key || 'answer_problem';
+      key = key || 'answer_problem_v3';
       let value = [];
 
       if(isSupported(localStorage)) {
@@ -61,7 +61,7 @@ var exerciseMixin = {
     * @param
     */
     autoSendAnswers() {
-      let key = 'answer_problem';
+      let key = 'answer_problem_v3';
       let URL = API.lesson.retry_answer_problem;
       let answerPostList = this.getAnswer(key);
 
