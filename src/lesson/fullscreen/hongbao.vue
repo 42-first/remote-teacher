@@ -42,7 +42,7 @@
             </div>
             <div class="hongbao-item--content">
               <div class="name-time">
-                <p class="name f14">{{ item.name }}</p>
+                <p class="name f14">{{ item.userName }}</p>
                 <p class="time f12">{{ item.createTime|formatTime }}</p>
               </div>
               <p class="f14">￥ {{ (item.issueAmount/100).toFixed(2) }}</p>
