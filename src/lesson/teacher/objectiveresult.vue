@@ -188,6 +188,7 @@
 				return [
 					'gctest.xuetangonline.com',
 					'rain.gdufemooc.cn',
+					'rain.xuetangonline.com',
 					'localhost:8088', // 这个本地测试
 				].indexOf(location.host) > -1
 			}
