@@ -149,6 +149,11 @@ export default {
       axios.defaults.withCredentials = true;
     }
 
+    // 课上接收器 遥控器使用
+    if(window.Authorization) {
+      axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;
+    }
+
     return axios
       .post(url, params, {
         headers
