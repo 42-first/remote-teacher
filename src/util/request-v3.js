@@ -83,6 +83,10 @@ const catchCode = (code) => {
     });
 
     // todo: 后面可能上报
+    if(code === 50000) {
+      // 需要先登录
+      window.location.href = '/login/weixinapp/?next=' + window.location.href;
+    }
   }
 }
 

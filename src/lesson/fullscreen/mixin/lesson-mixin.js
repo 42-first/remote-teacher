@@ -128,14 +128,14 @@ var commandMixin = {
       // 先签到
       source = source || this.source;
       let joined = await this.checkin(source);
-      // TODO： 签到发现没有权限处理
+      // 签到发现没有权限处理
       if(joined !== 0) {
         // 50004 lesson end
         if(joined === 50004) {
           location.href = '/v/index/lessonend';
-
-          return this;
         }
+
+        return this;
       }
 
       let user = await this.getUser();
