@@ -246,6 +246,10 @@
       item: {
         type: Object,
         default: null
+      },
+      liveType: {
+        type: Number,
+        default: 0
       }
     },
     data() {
