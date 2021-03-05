@@ -399,7 +399,7 @@
         // 是否web开课
         isWebLesson: false,
         // 直播下默认显示动画
-        visibleAnimation: true,
+        visibleAnimation: false,
         returnRemote: false,
         liveStatusTips: '',
         isMute: false,  //静音播放

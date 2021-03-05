@@ -28,7 +28,11 @@
         <div class="ppt__modal" v-show="item.animation === 1">
           <div class="modal__center">
             <p class="f24"><!-- 当前页面有动画 -->{{ $t('animatepage') }}</p>
-            <p class="f32"><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
+            <template v-if="liveType">
+              <p class="f32" v-if="liveType === 1"><!-- 请先听老师讲解 -->{{ $t('listenfirst') }}</p>
+              <p class="f32" v-if="liveType === 2"><!-- 请先观看直播 -->{{ $t('watchlivefirst') }}</p>
+            </template>
+            <p class="f32" v-else><!-- 请看大屏幕 -->{{ $t('lookatscreen') }}</p>
           </div>
         </div>
       </div>

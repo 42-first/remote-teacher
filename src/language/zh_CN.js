@@ -111,6 +111,8 @@ let pages = {
   "getpoint": "{score}分",
   "animatepage": "当前页面有动画",
   "lookatscreen": "请看大屏幕",
+  "watchlivefirst": "请先观看直播",
+  "listenfirst": "请先听老师讲解",
   "notimelimit": "题目不限时",
   "extendmin": "题目续时 {minutes}分钟",
   "extendsec": "题目续时 {seconds}秒",
