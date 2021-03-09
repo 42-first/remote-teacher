@@ -902,6 +902,8 @@ var actionsMixin = {
 
       // 关闭弹幕直播
       this.isLive && (this.isLive = false);
+
+      this.removeEventListeners();
     },
 
     /*

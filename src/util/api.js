@@ -11,6 +11,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
     // 停服务通知
     'HOLD_SERVICE_NOTICE': '/pc/hole_service_notice/',
 
+    // 直播打点
+    'HEARTBEAT': '/video-log/heartbeat/',
+
     /*------------------*\
        $ 接收器 start
     \*------------------*/

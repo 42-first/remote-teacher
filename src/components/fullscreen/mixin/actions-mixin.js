@@ -928,6 +928,8 @@ let actionsMixin = {
       if(this.qos) {
         this.qos.liveEnd();
       }
+
+      this.removeEventListeners();
     },
 
     /*
