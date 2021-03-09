@@ -37,6 +37,8 @@ let logMixin = {
         c: '',
         // 该字段传lessonId(已沟通)
         classroomid: '',
+        // 服务商
+        n: 'kwai',
         // 业务线
         lob: 'ykt'
       },
