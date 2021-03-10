@@ -25,7 +25,7 @@
         	<img v-if="isUpImgError && (!isPPTVersionAboveOne || isUploadSlideCrash)" class="img-error" src="~images/teacher/img-error.png" />
         	<img v-if="pptData.length && !pptData[current - 1].cover" class="img-error" :src="imgUploadingPath" />
         	<img v-if="pptData.length && pptData[current - 1].cover" class="card" :src="pptData[current - 1].cover" />
-					<div class="note" v-if="pptData.length && pptData[current - 1].Note" v-show="pptData[current-1].Note" @touchend.self="showNote(pptData[current-1].Note)">{{$t('note')}}</div>
+					<div class="note" v-if="pptData.length && pptData[current - 1].note" v-show="pptData[current-1].note" @touchend.self="showNote(pptData[current-1].note)">{{$t('note')}}</div>
         </div>
 
       </div>
