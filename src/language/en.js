@@ -112,6 +112,8 @@ let pages = {
   "getpoint": "Point:{score}",
   "animatepage": "The current page contains animation.",
   "lookatscreen": "Please look at the screen.",
+  "watchlivefirst": "Please watch live first.",
+  "listenfirst": "Please listen to the lecturer first.",
   "notimelimit": "No Time Limit",
   "extendmin": "Extend {minutes} mins",
   "extendsec": "Extend {seconds} secs",
