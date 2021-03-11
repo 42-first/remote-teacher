@@ -130,7 +130,7 @@
           </div>
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards" :key="index">
-            <Card-Item-Component :item="item" :index="index" :tabindex='currTabIndex' :live-type="liveType" v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
+            <Card-Item-Component :item="item" :index="index" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1"></Card-Item-Component>
           </div>
           <!-- 各类型中的空状态 -->
           <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">{{ $t('noslides') }}</div>
