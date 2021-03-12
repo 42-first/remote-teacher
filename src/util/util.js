@@ -214,3 +214,24 @@ export function compareVersion(v1, v2) {
 
   return 0
 }
+
+export function getPlatformKey() {
+  let key = 'rain';
+  let host = {
+    'www.yuketang.cn': 'rain',
+    'b.yuketang.cn': 'thunder',
+    'pro.yuketang.cn': 'thu',
+    'changjiang.yuketang.cn': 'changjiang',
+    'g.yuketang.cn': 'g',
+    'huanghe.yuketang.cn': 'huanghe',
+    'hhtest.yuketang.cn': 'hhtest',
+    'pro.xuetangonline.com': 'protest',
+    'protest.xuetangonline.com': 'protest',
+    'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt',
+    'online1.yuketang.cn': 'huanghe'
+  }
+
+  key = host[location.host] || '';
+
+  return key;
+}

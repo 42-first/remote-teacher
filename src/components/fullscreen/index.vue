@@ -353,7 +353,9 @@
         }
       },
       'classroom.classroomId'(newVal){
-        this.getUserAgreement()
+        if(this.isHuanghe || this.isWind){
+          this.getUserAgreement()
+        }
       }
     },
     filters: {
