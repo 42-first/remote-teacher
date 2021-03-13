@@ -393,7 +393,7 @@
     mounted() {
       setTimeout(()=>{
         this.init();
-      }, 500)
+      }, 1000)
     },
     updated() {},
     beforeDestroy() {

@@ -74,9 +74,11 @@ let meetingMixin = {
 
       if(this.meetingSDK === 'tencent') {
         // 九宫格切到其它模式 取消订阅远端流 排除共享和老师流
-        if(oldVal === MeetingMode.JIUGONGGE) {
-          this.unsubscribeSpeakers();
-        }
+        // if(oldVal === MeetingMode.JIUGONGGE) {
+        //   this.unsubscribeSpeakers();
+        // }
+
+        this.unsubscribeSpeakers();
       }
 
       this.getMembers();

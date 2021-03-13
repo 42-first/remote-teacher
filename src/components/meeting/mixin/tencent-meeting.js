@@ -416,7 +416,7 @@ let tencentMixin = {
             if( (remoteStream.hasVideo() || remoteStream.hasAudio())
               && remoteStream.audioPlayer_ === null
               && remoteStream.videoPlayer_ === null && view) {
-              // remoteStream.play(uid);
+              remoteStream.play(uid);
             }
           }, 2000)
         } catch (error) {
