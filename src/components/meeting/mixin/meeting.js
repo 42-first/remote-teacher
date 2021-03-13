@@ -258,7 +258,7 @@ let meetingMixin = {
       }, 3500)
 
       try {
-        speakers.forEach((user)=>{
+        for(let user of speakers) {
           let uid = user.id;
           // 排除老师流，自己的流
           if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
@@ -277,7 +277,7 @@ let meetingMixin = {
               // stream.close();
             }
           }
-        })
+        }
 
         this.setSpeakers(speakers);
       } catch (error) {
