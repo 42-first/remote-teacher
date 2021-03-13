@@ -49,7 +49,7 @@
         <!-- 成员 -->
         <div class="member__wrap" :class="{ 'half' : !meeting.otherscreen &&members.length < 3 }" v-for="member in members">
           <div class="member__container">
-            <avatar :member="member" :fullscreen="true"></avatar>
+            <avatar :member="member" :fullscreen="true" v-if="!subscribeLoading"></avatar>
           </div>
         </div>
       </section>
@@ -101,6 +101,7 @@ export default {
       // 会议成员
       'speakers',
       'meetingSDK',
+      'subscribeLoading',
     ]),
   },
   created() {

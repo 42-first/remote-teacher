@@ -350,7 +350,7 @@ let tencentMixin = {
       const remoteStream = evt.stream;
       const type = remoteStream.getType();
       const streamId = remoteStream.getId();
-      let uid = rtcEngine.getUidByStreamId(streamId);
+      let uid = rtcEngine.getUidByStreamId(streamId)||remoteStream.userId_;
 
       const remoteStreams = rtcEngine.remoteStreams;
       let index = remoteStreams.findIndex((stream)=>{

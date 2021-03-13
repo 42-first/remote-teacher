@@ -90,7 +90,10 @@
         if(newVal && this.meetingSDK === 'tencent') {
           this.initTimer && clearTimeout(this.initTimer)
 
-          this.initTencent();
+          // this.initTencent();
+          this.initTimer = setTimeout(()=>{
+            this.initTencent();
+          }, 1000)
         }
       },
       'member.video'(newVal) {
@@ -130,7 +133,7 @@
         } else if(this.meetingSDK === 'tencent') {
           this.initTimer = setTimeout(()=>{
             this.initTencent();
-          }, 100)
+          }, 1000)
         } else {
           this.init();
         }
@@ -143,7 +146,7 @@
         if(this.meetingSDK === 'tencent') {
           this.initTimer = setTimeout(()=>{
             this.initTencent();
-          }, 100)
+          }, 1000)
         } else {
           this.init();
         }
@@ -210,6 +213,15 @@
 
                 console.error('stream.play', err, err.message);
               });
+
+              stream.on('error', error => {
+                let errorCode = typeof error.getCode === 'function' && error.getCode()
+                if (errorCode === 0x4043) {
+                  // PLAY_NOT_ALLOWED,引导用户手势操作并调用 stream.resume 恢复音视频播放
+                  stream.resume();
+                  console.log('stream error 0x4043 自动播放失败');
+                }
+              })
             } catch (error) {
               stream.play(uid)
               console.error('Stream play exception:%s', error.message);

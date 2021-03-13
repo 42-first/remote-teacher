@@ -59,7 +59,7 @@ let meetingMixin = {
       }
     },
     // 切换布局
-    meetingLayout(newVal) {
+    meetingLayout(newVal, oldVal) {
       // 处理共享
       let meeting = this.meeting;
       if(meeting.otherscreen) {
@@ -73,8 +73,10 @@ let meetingMixin = {
       }
 
       if(this.meetingSDK === 'tencent') {
-        // 取消订阅远端流 排除共享和老师流
-        this.unsubscribeSpeakers();
+        // 九宫格切到其它模式 取消订阅远端流 排除共享和老师流
+        if(oldVal === MeetingMode.JIUGONGGE) {
+          this.unsubscribeSpeakers();
+        }
       }
 
       this.getMembers();
@@ -240,26 +242,49 @@ let meetingMixin = {
      * @method 取消订阅远端流
      * @param
      */
-    unsubscribeSpeakers() {
+    async unsubscribeSpeakers() {
       const rtcEngine = this.rtcEngine;
       const members = rtcEngine.members;
       const client = rtcEngine.client;
       let speakers = this.speakers;
 
-      speakers.forEach((user)=>{
-        let uid = user.id;
-        // 排除老师流，自己的流
-        if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
-          let stream = members.get(String(uid));
-          if(stream && user.subscribe) {
-            user.subscribe = false;
-            client.unsubscribe(stream);
-            stream.close();
-          }
-        }
-      })
+      // 取消订阅流期间（异步的）需要锁定不能订阅播放
+      this.setSubscribeLoading(true);
 
-      this.setSpeakers(speakers);
+      setTimeout(()=>{
+        if(this.subscribeLoading) {
+          this.setSubscribeLoading(false);
+        }
+      }, 3500)
+
+      try {
+        speakers.forEach((user)=>{
+          let uid = user.id;
+          // 排除老师流，自己的流
+          if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
+            let stream = members.get(String(uid));
+            if(stream && user.subscribe) {
+              user.subscribe = false;
+
+              // 删除之前的播放结构 否则可能还会显示之前的
+              if(stream.audioPlayer_ || stream.videoPlayer_) {
+                if(stream.isPlaying_) {
+                  stream.stop();
+                }
+              }
+
+              await client.unsubscribe(stream);
+              // stream.close();
+            }
+          }
+        })
+
+        this.setSpeakers(speakers);
+      } catch (error) {
+        console.error('unsubscribeSpeakers! ' + error);
+      }
+
+      this.setSubscribeLoading(false);
     },
 
     /**
