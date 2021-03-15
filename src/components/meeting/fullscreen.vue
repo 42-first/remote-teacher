@@ -210,6 +210,12 @@ export default {
 
         if(~index) {
           members.splice(index, 1);
+
+          // 会导致错乱重新订阅下
+          if(this.meetingSDK === 'tencent') {
+            // 取消订阅远端流
+            this.$parent.unsubscribeSpeakers();
+          }
         }
 
         // 视图需要增加成员
