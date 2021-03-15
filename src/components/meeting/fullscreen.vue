@@ -197,7 +197,9 @@ export default {
           })
 
           if(user && (user.video !== member.video || user.audio !== member.audio)) {
-            member = user;
+            member.video = user.video;
+            member.audio = user.audio;
+            // member = user;
           }
 
           // 用户被删除了
