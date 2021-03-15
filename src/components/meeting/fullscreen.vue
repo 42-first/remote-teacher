@@ -49,7 +49,7 @@
         <!-- 成员 -->
         <div class="member__wrap" :class="{ 'half' : !meeting.otherscreen &&members.length < 3 }" v-for="member in members">
           <div class="member__container">
-            <avatar :member="member" :fullscreen="true"></avatar>
+            <avatar :member="member" :fullscreen="true" v-if="!subscribeLoading"></avatar>
           </div>
         </div>
       </section>
@@ -101,6 +101,7 @@ export default {
       // 会议成员
       'speakers',
       'meetingSDK',
+      'subscribeLoading',
     ]),
   },
   created() {
@@ -115,11 +116,11 @@ export default {
   },
   watch: {
     'speakers'(newVal, oldVal) {
+      // 新增或者减少时更新成员和页码
+      // if(newVal && oldVal && newVal.length !== oldVal.length)
       if(newVal && newVal.length) {
         this.initPages();
-        this.getMembers(this.page);
-
-        // todo: 需要检测共享流
+        this.updateMembers(this.page);
       }
     },
     'meeting.otherscreen'(newVal) {
@@ -178,12 +179,83 @@ export default {
     },
 
     /**
+     * @method 更新与会成员状态
+     * @params
+     */
+    updateMembers(page) {
+      page = page || this.page;
+      const pageSize = this.pageSize;
+      let members = this.members
+      const speakers = this.speakers;
+
+      if(members && members.length) {
+        // 删除的位置
+        let index = -1;
+        members.forEach((member, i)=>{
+          let user = speakers.find((item)=>{
+            return item && item.id === member.id;
+          })
+
+          if(user && (user.video !== member.video || user.audio !== member.audio)) {
+            member.video = user.video;
+            member.audio = user.audio;
+            // member = user;
+          }
+
+          // 用户被删除了(需要增加离线状态)
+          if(!user) {
+            // index = i;
+            member.video = false;
+            member.audio = false;
+          }
+        })
+
+        // if(~index) {
+        //   members.splice(index, 1);
+
+        //   // 会导致错乱重新订阅下
+        //   if(this.meetingSDK === 'tencent') {
+        //     // 取消订阅远端流
+        //     this.$parent.unsubscribeSpeakers();
+        //   }
+        // }
+
+        // 视图需要增加成员
+        if(members.length < pageSize) {
+          const start = (page - 1) * pageSize + members.length;
+          const end = page * pageSize;
+
+          let addMembers = speakers.slice(start, end);
+          // 去重
+          if(addMembers && addMembers.length) {
+            addMembers.forEach((item)=>{
+              let addTemp = members.find((member)=>{
+                return item && item.id === member.id;
+              })
+
+              if(!addTemp) {
+                members.push(item);
+              }
+            })
+          }
+        }
+
+        this.members = members;
+      }
+    },
+
+    /**
      * @method 下一页
      * @params
      */
     handleNext(evt) {
       let page = this.page;
       if(page < this.totalPage) {
+        if(this.meetingSDK === 'tencent') {
+          // 取消订阅远端流 排除共享和老师流
+          this.$parent.unsubscribeSpeakers();
+        }
+
         this.getMembers(page+1);
 
         console.log('handleNext');
@@ -197,6 +269,11 @@ export default {
     handlePrev(evt) {
       let page = this.page;
       if(page > 1) {
+        if(this.meetingSDK === 'tencent') {
+          // 取消订阅远端流 排除共享和老师流
+          this.$parent.unsubscribeSpeakers();
+        }
+
         this.getMembers(page-1);
         console.log('handlePrev');
       }

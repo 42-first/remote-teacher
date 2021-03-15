@@ -84,6 +84,18 @@
       ]),
     },
     watch: {
+      // 远程流 订阅了才可以播放
+      'member.subscribe'(newVal) {
+        console.log('subscribe:', newVal)
+        if(newVal && this.meetingSDK === 'tencent') {
+          this.initTimer && clearTimeout(this.initTimer)
+
+          // this.initTencent();
+          this.initTimer = setTimeout(()=>{
+            this.initTencent();
+          }, 1000)
+        }
+      },
       'member.video'(newVal) {
         console.log('member.video', newVal);
 
@@ -121,7 +133,7 @@
         } else if(this.meetingSDK === 'tencent') {
           this.initTimer = setTimeout(()=>{
             this.initTencent();
-          }, 100)
+          }, 1000)
         } else {
           this.init();
         }
@@ -134,7 +146,7 @@
         if(this.meetingSDK === 'tencent') {
           this.initTimer = setTimeout(()=>{
             this.initTencent();
-          }, 100)
+          }, 1000)
         } else {
           this.init();
         }
@@ -161,11 +173,19 @@
        */
       initTencent() {
         let rtcEngine = window.rtcEngine;
+        const local = this.local;
         let member = this.member;
         let uid = String(member && member.id);
 
         if(rtcEngine && uid) {
           let stream = rtcEngine.members.get(uid);
+          // 远端流是否订阅
+          if(local != uid && !member.subscribe && stream) {
+            const client = rtcEngine.client;
+            client.subscribe(stream);
+
+            return this;
+          }
 
           if(stream && (member.audio || member.video) && (stream.hasAudio() || stream.hasVideo())) {
             try {
@@ -193,11 +213,20 @@
 
                 console.error('stream.play', err, err.message);
               });
+
+              stream.on('error', error => {
+                let errorCode = typeof error.getCode === 'function' && error.getCode()
+                if (errorCode === 0x4043) {
+                  // PLAY_NOT_ALLOWED,引导用户手势操作并调用 stream.resume 恢复音视频播放
+                  stream.resume();
+                  console.log('stream error 0x4043 自动播放失败');
+                }
+              })
             } catch (error) {
               stream.play(uid)
               console.error('Stream play exception:%s', error.message);
             }
-          } else if(stream && !member.audio && !member.audio) {
+          } else if(stream && !member.audio && !member.video) {
             stream.stop();
           }
         }
@@ -364,7 +393,7 @@
     mounted() {
       setTimeout(()=>{
         this.init();
-      }, 0)
+      }, 1000)
     },
     updated() {},
     beforeDestroy() {

@@ -36,6 +36,9 @@ const meeting = {
     meetingSDK: '',
     // 会议模式 0: 默认上课布局 1: 宫格模式  2: 演讲模
     meetingLayout: 0,
+    // 取消订阅loading
+    subscribeLoading: false,
+
   },
   mutations: {
     // 重置课堂信息
@@ -59,6 +62,7 @@ const meeting = {
       state.speakers = [];
       state.localSharing = false;
       state.meetingLayout = 0;
+      state.subscribeLoading = false;
     },
 
     setLocal(state, data) {
@@ -87,6 +91,10 @@ const meeting = {
 
     setMeetingLayout(state, data) {
       state.meetingLayout = data
+    },
+
+    setSubscribeLoading(state, data) {
+      state.subscribeLoading = data
     },
   },
 
@@ -121,6 +129,10 @@ const meeting = {
 
     setMeetingLayout({commit}, data) {
       commit('setMeetingLayout', data)
+    },
+
+    setSubscribeLoading({commit}, data) {
+      commit('setSubscribeLoading', data)
     },
 
   }

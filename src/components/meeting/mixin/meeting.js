@@ -59,7 +59,7 @@ let meetingMixin = {
       }
     },
     // 切换布局
-    meetingLayout(newVal) {
+    meetingLayout(newVal, oldVal) {
       // 处理共享
       let meeting = this.meeting;
       if(meeting.otherscreen) {
@@ -72,7 +72,15 @@ let meetingMixin = {
         }, 0)
       }
 
-      // this.getSpeakers();
+      if(this.meetingSDK === 'tencent') {
+        // 九宫格切到其它模式 取消订阅远端流 排除共享和老师流
+        // if(oldVal === MeetingMode.JIUGONGGE) {
+        //   this.unsubscribeSpeakers();
+        // }
+
+        this.unsubscribeSpeakers();
+      }
+
       this.getMembers();
     },
     // 正常说话列表
@@ -83,11 +91,13 @@ let meetingMixin = {
         newVal.forEach((member)=>{
           if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
             activeSpeakers.push(member);
-          } else if(member.audio || member.video) {
+          } else if(member.audio) {
+            // else if(member.audio || member.video)
             activeSpeakers.push(member);
           }
         })
 
+        // console.log('activeSpeakers:', activeSpeakers)
         this.activeSpeakers = activeSpeakers;
       }
     },
@@ -135,6 +145,24 @@ let meetingMixin = {
           speakers.splice(index, 1, user);
           this.setSpeakers(speakers);
         }
+      }
+    },
+
+    /**
+     * @method 更新用户
+     * @param
+     */
+    updateUser(data) {
+      let speakers = this.speakers;
+      let index = speakers.findIndex((user)=>{
+        return user.id == data.id;
+      })
+
+      if(~index) {
+        let user = speakers[index];
+
+        speakers.splice(index, 1, Object.assign(user, data));
+        this.setSpeakers(speakers);
       }
     },
 
@@ -210,6 +238,55 @@ let meetingMixin = {
         speakers.splice(index, 1);
         this.setSpeakers(speakers);
       }
+    },
+
+    /**
+     * @method 取消订阅远端流
+     * @param
+     */
+    async unsubscribeSpeakers() {
+      const rtcEngine = this.rtcEngine;
+      const members = rtcEngine.members;
+      const client = rtcEngine.client;
+      let speakers = this.speakers;
+
+      // 取消订阅流期间（异步的）需要锁定不能订阅播放
+      this.setSubscribeLoading(true);
+
+      setTimeout(()=>{
+        if(this.subscribeLoading) {
+          this.setSubscribeLoading(false);
+        }
+      }, 5000)
+
+      try {
+        for(let user of speakers) {
+          let uid = user.id;
+          // 排除老师流，自己的流
+          if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
+            let stream = members.get(String(uid));
+            if(stream && user.subscribe) {
+              user.subscribe = false;
+
+              // 删除之前的播放结构 否则可能还会显示之前的
+              if(stream.audioPlayer_ || stream.videoPlayer_) {
+                if(stream.isPlaying_) {
+                  stream.stop();
+                }
+              }
+
+              await client.unsubscribe(stream);
+              // stream.close();
+            }
+          }
+        }
+
+        this.setSpeakers(speakers);
+      } catch (error) {
+        console.error('unsubscribeSpeakers! ' + error);
+      }
+
+      this.setSubscribeLoading(false);
     },
 
     /**
@@ -352,9 +429,8 @@ let meetingMixin = {
           if(items && items.length) {
             items.forEach((item)=>{
               let { identityId, name, avatar, role, video, audio } = item;
-              // let user = { id: identityId, uid: identityId, name, avatar, role, video, audio, active: false };
               let user = { id: identityId, uid: identityId, name, avatar, role,
-                video: false, audio: false, active: false };
+                video: false, audio: false, active: false, subscribe: false };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;
