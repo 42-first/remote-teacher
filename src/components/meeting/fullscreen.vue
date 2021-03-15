@@ -202,7 +202,7 @@ export default {
             // member = user;
           }
 
-          // 用户被删除了
+          // 用户被删除了(需要增加离线状态)
           if(!user) {
             // index = i;
             member.video = false;
