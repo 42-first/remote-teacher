@@ -257,7 +257,7 @@ let meetingMixin = {
         if(this.subscribeLoading) {
           this.setSubscribeLoading(false);
         }
-      }, 3500)
+      }, 5000)
 
       try {
         for(let user of speakers) {
