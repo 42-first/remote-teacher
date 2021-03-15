@@ -189,7 +189,9 @@ export default {
       const speakers = this.speakers;
 
       if(members && members.length) {
-        members.forEach((member)=>{
+        // 删除的位置
+        let index = -1;
+        members.forEach((member, i)=>{
           let user = speakers.find((item)=>{
             return item && item.id === member.id;
           })
@@ -197,7 +199,16 @@ export default {
           if(user && (user.video !== member.video || user.audio !== member.audio)) {
             member = user;
           }
+
+          // 用户被删除了
+          if(!user) {
+            index = i;
+          }
         })
+
+        if(~index) {
+          members.splice(index, 1);
+        }
 
         // 视图需要增加成员
         if(members.length < pageSize) {
