@@ -228,7 +228,10 @@ export function getPlatformKey() {
     'pro.xuetangonline.com': 'protest',
     'protest.xuetangonline.com': 'protest',
     'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt',
-    'online1.yuketang.cn': 'huanghe'
+    // 清华继教学院定制需求 单独判断该学校使用的域名
+    'online1.yuketang.cn': 'huanghe',
+    'www.itsinghua.com': 'huanghe',
+    'home.itsinghua.com': 'huanghe'
   }
 
   key = host[location.host] || '';
