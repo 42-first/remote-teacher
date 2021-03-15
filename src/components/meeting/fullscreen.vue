@@ -229,6 +229,8 @@ export default {
             })
           }
         }
+
+        this.members = members;
       }
     },
 
