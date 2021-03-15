@@ -159,7 +159,7 @@ let tencentMixin = {
       this.volumeTimer && clearInterval(this.volumeTimer);
       this.volumeTimer = setInterval(()=>{
         this.detectUserVoiceVolume();
-      }, 1000*5)
+      }, 1000*10)
     },
 
     onError(err) {

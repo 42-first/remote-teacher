@@ -120,7 +120,7 @@ export default {
       // if(newVal && oldVal && newVal.length !== oldVal.length)
       if(newVal && newVal.length) {
         this.initPages();
-        this.getMembers(this.page);
+        this.updateMembers(this.page);
       }
     },
     'meeting.otherscreen'(newVal) {
@@ -175,6 +175,49 @@ export default {
         this.page = page;
 
         console.log('getMembers', page, this.members);
+      }
+    },
+
+    /**
+     * @method 更新与会成员状态
+     * @params
+     */
+    updateMembers(page) {
+      page = page || this.page;
+      const pageSize = this.pageSize;
+      let members = this.members
+      const speakers = this.speakers;
+
+      if(members && members.length) {
+        members.forEach((member)=>{
+          let user = speakers.find((item)=>{
+            return item && item.id === member.id;
+          })
+
+          if(user && (user.video !== member.video || user.audio !== member.audio)) {
+            member = user;
+          }
+        })
+
+        // 视图需要增加成员
+        if(members.length < pageSize) {
+          const start = (page - 1) * pageSize + members.length;
+          const end = page * pageSize;
+
+          let addMembers = speakers.slice(start, end);
+          // 去重
+          if(addMembers && addMembers.length) {
+            addMembers.forEach((item)=>{
+              let addTemp = members.find((member)=>{
+                return item && item.id === member.id;
+              })
+
+              if(!addTemp) {
+                members.push(item);
+              }
+            })
+          }
+        }
       }
     },
 
