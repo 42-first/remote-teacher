@@ -204,19 +204,21 @@ export default {
 
           // 用户被删除了
           if(!user) {
-            index = i;
+            // index = i;
+            member.video = false;
+            member.audio = false;
           }
         })
 
-        if(~index) {
-          members.splice(index, 1);
+        // if(~index) {
+        //   members.splice(index, 1);
 
-          // 会导致错乱重新订阅下
-          if(this.meetingSDK === 'tencent') {
-            // 取消订阅远端流
-            this.$parent.unsubscribeSpeakers();
-          }
-        }
+        //   // 会导致错乱重新订阅下
+        //   if(this.meetingSDK === 'tencent') {
+        //     // 取消订阅远端流
+        //     this.$parent.unsubscribeSpeakers();
+        //   }
+        // }
 
         // 视图需要增加成员
         if(members.length < pageSize) {
