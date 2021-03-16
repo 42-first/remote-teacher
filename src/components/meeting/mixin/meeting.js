@@ -190,12 +190,13 @@ let meetingMixin = {
      */
     joinUser(data, from) {
       let speakers = this.speakers;
-      let { uid, name, avatar, role, video, audio } = data;
+      let { uid, name, avatar, role, video, audio, subscribe = false, offline = false } = data;
       let index = speakers.findIndex((user)=>{
         return user.id == uid;
       })
 
-      let user = { id: uid, uid, name, avatar, role, video, audio, active: false, tryTimes: 0 };
+      let user = { id: uid, uid, name, avatar, role, video, audio, active: false,
+        subscribe, offline };
 
       if(this.meetingSDK === 'local') {
         Object.assign(user, { audioConsumer: null, videoConsumer: null });
