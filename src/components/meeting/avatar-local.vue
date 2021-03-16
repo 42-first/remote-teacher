@@ -36,8 +36,8 @@
             <use xlink:href="#icon20-yuyin-weifashengbeifen"></use>
           </svg> -->
         </template>
-        <svg class="icon f16 red" aria-hidden="true" v-else-if="member.offline">
-          <use xlink:href="#icon20-jieshu"></use>
+        <svg class="icon f16 cfff" aria-hidden="true" v-else-if="member.offline">
+          <use xlink:href="#icon20-weijieru"></use>
         </svg>
         <svg class="icon f16 cfff" aria-hidden="true" v-else>
           <use xlink:href="#icon20-yuyin-weifasheng"></use>
