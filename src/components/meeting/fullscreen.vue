@@ -117,10 +117,16 @@ export default {
   watch: {
     'speakers'(newVal, oldVal) {
       // 新增或者减少时更新成员和页码
-      // if(newVal && oldVal && newVal.length !== oldVal.length)
       if(newVal && newVal.length) {
         this.initPages();
-        this.updateMembers(this.page);
+
+        if(this.updateTimer) {
+          clearTimeout(this.updateTimer);
+        }
+
+        this.updateTimer = setTimeout(()=>{
+          this.updateMembers(this.page);
+        }, 2000)
       }
     },
     'meeting.otherscreen'(newVal) {
