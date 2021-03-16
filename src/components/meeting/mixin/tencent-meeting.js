@@ -159,7 +159,7 @@ let tencentMixin = {
       this.volumeTimer && clearInterval(this.volumeTimer);
       this.volumeTimer = setInterval(()=>{
         this.detectUserVoiceVolume();
-      }, 1000*10)
+      }, 1000*5)
     },
 
     onError(err) {
@@ -244,7 +244,7 @@ let tencentMixin = {
         uid,
         name,
         avatar,
-        role, audio: false, video: false, active: false, subscribe: false
+        role, audio: false, video: false, active: false, subscribe: false, offline: false
       };
 
       this.joinUser(user, 'SDK');

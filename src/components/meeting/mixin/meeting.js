@@ -257,7 +257,7 @@ let meetingMixin = {
         if(this.subscribeLoading) {
           this.setSubscribeLoading(false);
         }
-      }, 5000)
+      }, 1000*10)
 
       try {
         for(let user of speakers) {
@@ -271,7 +271,7 @@ let meetingMixin = {
               // 删除之前的播放结构 否则可能还会显示之前的
               if(stream.audioPlayer_ || stream.videoPlayer_) {
                 if(stream.isPlaying_) {
-                  stream.stop();
+                  // stream.stop();
                 }
               }
 
@@ -430,7 +430,7 @@ let meetingMixin = {
             items.forEach((item)=>{
               let { identityId, name, avatar, role, video, audio } = item;
               let user = { id: identityId, uid: identityId, name, avatar, role,
-                video: false, audio: false, active: false, subscribe: false };
+                video: false, audio: false, active: false, subscribe: false, offline: false };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;
