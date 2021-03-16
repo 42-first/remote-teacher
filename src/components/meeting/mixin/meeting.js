@@ -120,6 +120,9 @@ let meetingMixin = {
       }
 
       this.setJoined(false);
+
+      // 恢复默认
+      this.setMeetingLayout(MeetingMode.DEFAULT);
     },
 
     /**

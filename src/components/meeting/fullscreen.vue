@@ -219,7 +219,7 @@ export default {
         // 更新用户视图防止状态不变化
         members.map((member, i)=>{
           let user = speakers.find((item)=>{
-            return item && item.id === member.id;
+            return item && item.id == member.id;
           })
 
           if(user) {
