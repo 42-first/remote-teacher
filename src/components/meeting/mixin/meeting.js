@@ -120,6 +120,9 @@ let meetingMixin = {
       }
 
       this.setJoined(false);
+
+      // 恢复默认
+      this.setMeetingLayout(MeetingMode.DEFAULT);
     },
 
     /**
@@ -187,12 +190,13 @@ let meetingMixin = {
      */
     joinUser(data, from) {
       let speakers = this.speakers;
-      let { uid, name, avatar, role, video, audio } = data;
+      let { uid, name, avatar, role, video, audio, subscribe = false, offline = false } = data;
       let index = speakers.findIndex((user)=>{
         return user.id == uid;
       })
 
-      let user = { id: uid, uid, name, avatar, role, video, audio, active: false, tryTimes: 0 };
+      let user = { id: uid, uid, name, avatar, role, video, audio, active: false,
+        subscribe, offline };
 
       if(this.meetingSDK === 'local') {
         Object.assign(user, { audioConsumer: null, videoConsumer: null });
@@ -257,7 +261,7 @@ let meetingMixin = {
         if(this.subscribeLoading) {
           this.setSubscribeLoading(false);
         }
-      }, 5000)
+      }, 1000*10)
 
       try {
         for(let user of speakers) {
@@ -271,7 +275,7 @@ let meetingMixin = {
               // 删除之前的播放结构 否则可能还会显示之前的
               if(stream.audioPlayer_ || stream.videoPlayer_) {
                 if(stream.isPlaying_) {
-                  stream.stop();
+                  // stream.stop();
                 }
               }
 
@@ -430,7 +434,7 @@ let meetingMixin = {
             items.forEach((item)=>{
               let { identityId, name, avatar, role, video, audio } = item;
               let user = { id: identityId, uid: identityId, name, avatar, role,
-                video: false, audio: false, active: false, subscribe: false };
+                video: false, audio: false, active: false, subscribe: false, offline: false };
 
               let index = speakers.findIndex((speaker)=>{
                 return speaker.id == user.id;

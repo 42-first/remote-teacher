@@ -117,10 +117,16 @@ export default {
   watch: {
     'speakers'(newVal, oldVal) {
       // 新增或者减少时更新成员和页码
-      // if(newVal && oldVal && newVal.length !== oldVal.length)
       if(newVal && newVal.length) {
         this.initPages();
-        this.updateMembers(this.page);
+
+        if(this.updateTimer) {
+          clearTimeout(this.updateTimer);
+        }
+
+        this.updateTimer = setTimeout(()=>{
+          this.updateMembers(this.page);
+        }, 2000)
       }
     },
     'meeting.otherscreen'(newVal) {
@@ -190,35 +196,43 @@ export default {
 
       if(members && members.length) {
         // 删除的位置
-        let index = -1;
-        members.forEach((member, i)=>{
+        // let index = -1;
+        // members.forEach((member, i)=>{
+        //   let user = speakers.find((item)=>{
+        //     return item && item.id === member.id;
+        //   })
+
+        //   if(user && (user.video !== member.video || user.audio !== member.audio)) {
+        //     // member.video = user.video;
+        //     // member.audio = user.audio;
+        //     member = user;
+        //   }
+
+        //   // 用户被删除了(需要增加离线状态)
+        //   if(!user) {
+        //     // index = i;
+        //     member.video = false;
+        //     member.audio = false;
+        //   }
+        // })
+
+        // 更新用户视图防止状态不变化
+        members.map((member, i)=>{
           let user = speakers.find((item)=>{
-            return item && item.id === member.id;
+            return item && item.id == member.id;
           })
 
-          if(user && (user.video !== member.video || user.audio !== member.audio)) {
-            member.video = user.video;
-            member.audio = user.audio;
-            // member = user;
-          }
-
-          // 用户被删除了(需要增加离线状态)
-          if(!user) {
-            // index = i;
-            member.video = false;
-            member.audio = false;
+          if(user) {
+            members.splice(i, 1, Object.assign({}, user, { offline: false}));
+          } else {
+            // 用户被删除了(需要增加离线状态)
+            members.splice(i, 1, Object.assign({}, member, {
+              video: false,
+              audio: false,
+              offline: true
+            }));
           }
         })
-
-        // if(~index) {
-        //   members.splice(index, 1);
-
-        //   // 会导致错乱重新订阅下
-        //   if(this.meetingSDK === 'tencent') {
-        //     // 取消订阅远端流
-        //     this.$parent.unsubscribeSpeakers();
-        //   }
-        // }
 
         // 视图需要增加成员
         if(members.length < pageSize) {
