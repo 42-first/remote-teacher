@@ -27,7 +27,7 @@
     </div>
     <div class="agreement__btns f14">
       <div class="btn cancel f14" @click="close">退出班级</div>
-      <div class="btn confirm f14" @click="confirm">同意并进入</div>
+      <div class="btn confirm f14" @click="confirm">同意并继续</div>
     </div>
   </section>
 </section>
