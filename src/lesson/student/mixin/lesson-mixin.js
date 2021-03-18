@@ -352,6 +352,11 @@ let lessonMixin = {
               this.supportFLV();
             }, 3000)
           }
+
+          // 日志上报
+          setTimeout(() => {
+            this.handleLogEvent();
+          }, 30000)
         }
       }).catch(error => {
         console.log('getLive:', error);

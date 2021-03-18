@@ -446,6 +446,11 @@ var commandMixin = {
           this.liveType = data.type || 1;
           this.liveurl = data;
           this.liveURL = data.flv;
+
+          // 日志上报
+          setTimeout(() => {
+            this.handleLogEvent();
+          }, 30000)
         }
       }).catch(error => {
         console.log('getLive:', error);
