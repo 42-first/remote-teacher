@@ -225,6 +225,9 @@
 
     <!-- 停服务通知 -->
     <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
+
+    <!-- 清华继教用户协议 -->
+    <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
 </template>
 <script>
@@ -248,6 +251,10 @@
 
   import logmixin from '@/components/common/log-reporting'
   import localstoragemixin from '@/components/common/localstorage-mixin'
+
+  import agreementMixin from '@/components/common/agreement-mixin'
+
+  import userAgreement from '@/components/common/agreement'
 
 
   // 子组件不需要引用直接使用
@@ -418,6 +425,7 @@
         visibleMiniCode: false,
         // 小程序分享信息
         weappConfig: null,
+        is_agreement: true
       };
     },
     components: {
@@ -430,6 +438,7 @@
       notice: () => import('@/components/common/service-notice.vue'),
       danmuLive: () => import('@/components/common/danmu-live.vue'),
       livetip: () => import('@/components/common/live-tip.vue'),
+      userAgreement
     },
     computed: {
     },
@@ -468,10 +477,15 @@
           this.setLocalData('cards', newVal);
         }, 1500)
       },
+      'classroom.classroomId'(newVal){
+        if(this.isHuanghe || this.isWind){
+          this.getUserAgreement()
+        }
+      }
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, agreementMixin ],
     methods: {
       /*
        * @method 接收器初始化

@@ -101,6 +101,9 @@
 
     <!-- 会议演讲者模式 -->
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
+
+    <!-- 清华继教用户协议 -->
+    <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
 </template>
 <script>
@@ -133,6 +136,11 @@
   import videomsg from './components/video-msg';
 
   import meeting from '@/components/meeting/meeting'
+
+  import agreementMixin from '@/components/common/agreement-mixin'
+
+  import userAgreement from '@/components/common/agreement-pc'
+
 
 
   // 子组件不需要引用直接使用
@@ -244,6 +252,8 @@
         currentTime: 0,
         // 小程序码
         miniCode: '',
+        is_agreement: true,
+        classroom: {}
       };
     },
     components: {
@@ -253,7 +263,8 @@
       msgbox,
       videomsg,
       actionsCmp,
-      meeting
+      meeting,
+      userAgreement
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -313,11 +324,16 @@
             this.initVideoDanmu();
           }, 500)
         }
+      },
+      'classroom.classroomId'(newVal){
+        if(this.isHuanghe || this.isWind){
+          this.getUserAgreement()
+        }
       }
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin ],
     methods: {
       ...mapActions([
         // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`

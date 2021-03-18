@@ -3,7 +3,7 @@ var path = require('path')
 // var proxyUrl = 'http://10.0.3.3:9000'
 var proxyUrl = 'https://b.yuketang.cn'
 
-proxyUrl = 'https://pre-apple-ykt.xuetangonline.com'
+proxyUrl = 'https://protest.xuetangonline.com'
 
 
 function proxyConfig () {
@@ -42,7 +42,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/wsapp/': {
-        target: 'wss://pre-apple-ykt.xuetangonline.com',
+        target: 'wss://protest.xuetangonline.com',
         changeOrigin: true,
         ws: true,
         secure: false
@@ -59,7 +59,8 @@ module.exports = {
       '/v/lesson': proxyConfig(),
       '/lesson': proxyConfig(),
       '/hls': proxyConfig(),
-      '/reporter': proxyConfig()
+      '/reporter': proxyConfig(),
+      '/train_platform': proxyConfig()
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

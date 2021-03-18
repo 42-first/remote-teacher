@@ -137,6 +137,8 @@
       </div>
     </section>
 
+    <!-- 清华继教用户协议 -->
+    <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
 </template>
 <script>
@@ -167,6 +169,10 @@
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';
   import videomsg from './components/video-msg';
+
+  import agreementMixin from '@/components/common/agreement-mixin'
+
+  import userAgreement from '@/components/common/agreement-pc'
 
 
   // 子组件不需要引用直接使用
@@ -272,7 +278,9 @@
         liveStatusTips: '',
         // 显示更多操作
         visibleMore: false,
-        currentTime: 0
+        currentTime: 0,
+        is_agreement: true,
+        classroom: {}
       };
     },
     components: {
@@ -280,7 +288,8 @@
       danmuCmp,
       volume,
       msgbox,
-      videomsg
+      videomsg,
+      userAgreement
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -342,11 +351,16 @@
             // this.initDanmu();
           }, 200)
         }
+      },
+      'classroom.classroomId'(newVal){
+        if(this.isHuanghe || this.isWind){
+          this.getUserAgreement()
+        }
       }
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin ],
     methods: {
       ...mapActions([
         // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`

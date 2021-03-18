@@ -214,3 +214,27 @@ export function compareVersion(v1, v2) {
 
   return 0
 }
+
+export function getPlatformKey() {
+  let key = 'rain';
+  let host = {
+    'www.yuketang.cn': 'rain',
+    'b.yuketang.cn': 'thunder',
+    'pro.yuketang.cn': 'thu',
+    'changjiang.yuketang.cn': 'changjiang',
+    'g.yuketang.cn': 'g',
+    'huanghe.yuketang.cn': 'huanghe',
+    'hhtest.yuketang.cn': 'hhtest',
+    'pro.xuetangonline.com': 'protest',
+    'protest.xuetangonline.com': 'protest',
+    'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt',
+    // 清华继教学院定制需求 单独判断该学校使用的域名
+    'online1.yuketang.cn': 'huanghe',
+    'www.itsinghua.com': 'huanghe',
+    'home.itsinghua.com': 'huanghe'
+  }
+
+  key = host[location.host] || '';
+
+  return key;
+}
