@@ -280,7 +280,7 @@
     'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
     'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
     'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg',
-    // 'rain.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg',
+    'rain.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1f0kreooe16b6mh9k618ep1a4j9.jpeg',
   }
 
   const miniAppIds = {
@@ -290,7 +290,7 @@
     'changjiang.yuketang.cn': 'gh_731c9c765693',
     'huanghe.yuketang.cn': 'gh_67c3b8305643',
     'pre-apple-ykt.xuetangonline.com': 'gh_b82950979ac8',
-    // 'rain.xuetangonline.com': 'gh_b82950979ac8',
+    'rain.xuetangonline.com': 'gh_8ebceaef4044',
   }
 
   export default {

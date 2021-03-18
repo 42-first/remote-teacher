@@ -34,7 +34,7 @@
         </section>
         <!-- 如果没有共享屏幕就展示老师 -->
         <section class="speaker__wrap box-center" v-if="!meeting.otherscreen && activeStream">
-          <avatar :member="activeStream" ></avatar>
+          <avatar :member="activeStream" v-if="!subscribeLoading"></avatar>
         </section>
       </section>
 
@@ -49,7 +49,7 @@
         <section class="members box-center">
           <!-- 成员 -->
           <div class="member__wrap" v-for="member in members" v-if="member.visible" >
-            <div class="member__container">
+            <div class="member__container" v-if="!subscribeLoading">
               <avatar :member="member"></avatar>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default {
       totalCount: 1,
       totalPage: 1,
       page: 1,
-      pageSize: 9,
+      pageSize: 5,
 
       // 右侧列表收起
       fold: false
@@ -97,6 +97,7 @@ export default {
       // 会议成员
       'speakers',
       'meetingSDK',
+      'subscribeLoading',
     ]),
   },
   created() {

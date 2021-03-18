@@ -79,6 +79,7 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 				</div>
 
+				<template v-if="!isGc">
 	      <div @click="sendCheckRed({name: 'redpacket_v3', problemid: problemid, type: 0})" v-show="problemType !== 3 && !~RedEnvelopeID && problemType !== 4" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
@@ -92,6 +93,7 @@
 	      	</div>
 	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',~RedEnvelopeID) }}</div>
 	      </div>
+				</template>
 	    </section>
 	  </div>
 
@@ -181,7 +183,15 @@
         'isGuideDelayHidden',
 				'pptData',
 				'isCloneClass'
-      ])
+      ]),
+			isGc() {
+				return [
+					'gctest.xuetangonline.com',
+					'rain.gdufemooc.cn',
+					'rain.xuetangonline.com',
+					'localhost:8088', // 这个本地测试
+				].indexOf(location.host) > -1
+			}
 	  },
 	  components: {
 	    Problemtime,
