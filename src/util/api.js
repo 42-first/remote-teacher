@@ -11,6 +11,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
     // 停服务通知
     'HOLD_SERVICE_NOTICE': '/pc/hole_service_notice/',
 
+    get_agreement: '/train_platform/v1/rain-user/agreement/',
+    set_agreement: '/train_platform/v1/rain-user/agreement/',
     /*------------------*\
        $ 接收器 start
     \*------------------*/
@@ -231,6 +233,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
     // 停服务通知
     'HOLD_SERVICE_NOTICE': 'http://apimock.xuetangx.com/mock/115/pc/hole_service_notice/',
+
+    get_agreement: '/train_platform/v1/rain-user/agreement/',
+    set_agreement: '/train_platform/v1/rain-user/agreement/',
 
     /*------------------*\
        $ 接收器 start
