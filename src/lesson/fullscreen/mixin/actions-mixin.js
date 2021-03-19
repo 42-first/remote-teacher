@@ -836,6 +836,7 @@ let actionsMixin = {
         "lessonid": 298,
         "type": 1,    //1音频 2视频
         "code": "RainLive-8201d0bf-e0d441b3",
+        "liveid": 111
         "liveurl": {
           "flv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
           "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
@@ -860,6 +861,7 @@ let actionsMixin = {
         !this.isLive && this.liveURL && (this.isLive = true);
 
         // 日志上报
+        this.liveId = data.liveid;
         setTimeout(() => {
           this.handleLogEvent();
         }, 1000)

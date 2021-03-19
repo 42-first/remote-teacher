@@ -40,7 +40,13 @@ let logMixin = {
         // 服务商
         n: 'kwai',
         // 业务线
-        lob: 'ykt'
+        lob: 'ykt',
+        cp: 0,
+        fp: 0,
+        tp: 0,
+        d: 1,
+        pg: 1,
+        sp: 1,
       },
     }
   },
@@ -59,7 +65,8 @@ let logMixin = {
           t: this.liveType === 1 ? 'live_audio' : 'live',
           classroomid: this.lessonID,
           c: this.classroom && this.classroom.courseId,
-          ts: (new Date()).getTime()
+          ts: (new Date()).getTime(),
+          v: this.liveId || 0
         });
       } catch(error) {
         console.error('[initHeartLog] exception:%s', error.message);

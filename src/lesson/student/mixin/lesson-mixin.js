@@ -74,7 +74,11 @@ let lessonMixin = {
 
       // 是否有直播
       let liveid = data.liveid;
-      liveid && this.getLive(liveid);
+      // liveid && this.getLive(liveid);
+      if(liveid) {
+        this.getLive(liveid);
+        this.liveId = liveid;
+      }
 
       if(timeline && timeline.length) {
         timeline.forEach(item => {
