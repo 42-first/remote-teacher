@@ -2,6 +2,8 @@ import 'mint-ui/lib/loadmore/style.css'
 import 'mint-ui/lib/toast/style.css'
 import 'mint-ui/lib/message-box/style.css'
 
+import {getPlatformKey} from '@/util/util'
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import Loadmore from 'mint-ui/lib/loadmore'
@@ -29,6 +31,25 @@ Vue.component('loadmore', Loadmore);
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
 window.$toast = Toast;
+
+let key = getPlatformKey()
+if(key === 'thu'){
+    Vue.prototype.isThu = true
+}else if(key === 'changjiang'){
+    Vue.prototype.isChangjiang = true
+}else if(key === 'huanghe'){
+    Vue.prototype.isHuanghe = true
+}else if(key === 'rain'){
+    Vue.prototype.isRain = true
+}else if(key === 'protest'){
+    Vue.prototype.isPro = true
+}else if(key === "g"){
+  Vue.prototype.isG = true
+}else if(key === "thunder"){
+  Vue.prototype.isThunder = true
+}else if(key === 'pre-apple-ykt'){
+  Vue.prototype.isWind = true
+}
 
 document.addEventListener('touchstart', function(){},false);
 

@@ -219,6 +219,7 @@ let localstorageMixin = {
             }
 
             // 日志上报
+            this.liveId = this.liveInfo.live_id || 0;
             setTimeout(() => {
               this.handleLogEvent();
             }, 1000)

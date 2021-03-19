@@ -10,7 +10,72 @@
 let reportMap = new Map();
 
 let logMixin = {
+  data() {
+    return {
+      // 直播打点日志
+      liveLogs: {
+        // 日志开始时间
+        startTime: null,
+        // 上次打点打点时间
+        lastLogTime: null,
+        logs: [],
+      },
+      // 直播打点结构
+      heartLog: {
+        // 用户端时间
+        ts: 0,
+        // 心跳间隔
+        i: 20,
+        // 打点类型
+        et: 'heartbeat',
+        // 终端
+        p: 'web',
+        t: 'live',
+        // 用户ID
+        u: '',
+        // 课程ID
+        c: '',
+        // 该字段传lessonId(已沟通)
+        classroomid: '',
+        // 服务商
+        n: 'kwai',
+        // 业务线
+        lob: 'ykt',
+        cp: 0,
+        fp: 0,
+        tp: 0,
+        d: 1,
+        pg: 1,
+        sp: 1,
+        sq: 1,
+      },
+    }
+  },
   methods: {
+    /**
+     * @method 直播打点
+     * @params
+     */
+    initHeartLog() {
+      let log = this.heartLog;
+
+      try {
+        this.heartLog = Object.assign({}, log, {
+          p: 'web',
+          u: this.userID,
+          t: this.liveType === 1 ? 'live_audio' : 'live',
+          classroomid: this.lessonID,
+          c: this.classroom && this.classroom.courseId,
+          // 班级ID
+          cid: this.classroom && this.classroom.classroomId,
+          ts: (new Date()).getTime(),
+          v: this.liveId || 1
+        });
+      } catch(error) {
+        console.error('[initHeartLog] exception:%s', error.message);
+      }
+    },
+
     /**
      * @method 系统信息
      * @params
@@ -74,6 +139,91 @@ let logMixin = {
           this.detectionWaiting(evt);
         });
       })
+
+      // 新增直播打点事件
+      if(liveEl) {
+        this.initHeartLog();
+        liveEl.addEventListener('timeupdate', this.handleTimeupdate)
+      }
+    },
+
+    /**
+     * @method 取消视频事件订阅（多次开关直播）
+     * @params
+     */
+    removeEventListeners() {
+      let liveEl = document.getElementById('player');
+
+      if(liveEl) {
+        liveEl.removeEventListener('timeupdate', this.handleTimeupdate)
+
+        // 上报一次打点数据
+        let liveLogs = this.liveLogs;
+        if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
+          this.reportLiveLog(liveLogs.logs);
+        }
+      }
+    },
+
+    /**
+     * @method 直播打点进度检测
+     * @params
+     */
+    handleTimeupdate(evt) {
+      const dt = (new Date()).getTime();
+      let liveLogs = this.liveLogs;
+
+      // console.log('timeupdate:', dt);
+
+      if(!liveLogs) {
+        return this;
+      }
+
+      if(!liveLogs.startTime) {
+        // 记录开始时间
+        liveLogs.startTime = dt;
+        this.liveLogs = liveLogs;
+      } else {
+        let heartLog = this.heartLog;
+        // 距离上次时间间隔计算
+        const lastTime = liveLogs.lastLogTime || liveLogs.startTime;
+        let duration = (dt - lastTime)/1000;
+        // 20s记录一次上报点
+        if(duration >= 20) {
+          // 记录本地打点
+          liveLogs.logs.push(Object.assign({}, heartLog, { ts: dt }));
+          liveLogs.lastLogTime = dt;
+          this.liveLogs = liveLogs;
+
+          // 2min上报一次
+          const startTime = liveLogs.startTime;
+          duration = (dt - startTime)/1000;
+          if(duration >= 60*2) {
+            // 上报直播打点
+            this.reportLiveLog(liveLogs.logs);
+          }
+        }
+      }
+    },
+
+    /**
+     * @method 直播打点上报
+     * @params
+     */
+    reportLiveLog(log) {
+      let URL = API.HEARTBEAT;
+      let params = {
+        'heart_data': log
+      };
+
+      request.post(URL, params);
+
+      // reset
+      this.liveLogs = {
+        startTime: null,
+        lastLogTime: null,
+        logs: []
+      }
     },
 
     /**
