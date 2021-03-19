@@ -47,6 +47,7 @@ let logMixin = {
         d: 1,
         pg: 1,
         sp: 1,
+        sq: 1,
       },
     }
   },
@@ -66,7 +67,7 @@ let logMixin = {
           classroomid: this.lessonID,
           c: this.classroom && this.classroom.courseId,
           ts: (new Date()).getTime(),
-          v: this.liveId || 0
+          v: this.liveId || 1
         });
       } catch(error) {
         console.error('[initHeartLog] exception:%s', error.message);
