@@ -66,6 +66,8 @@ let logMixin = {
           t: this.liveType === 1 ? 'live_audio' : 'live',
           classroomid: this.lessonID,
           c: this.classroom && this.classroom.courseId,
+          // 班级ID
+          cid: this.classroom && this.classroom.classroomId,
           ts: (new Date()).getTime(),
           v: this.liveId || 1
         });
