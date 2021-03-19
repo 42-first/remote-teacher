@@ -803,6 +803,7 @@ var actionsMixin = {
         "lessonid": 298,
         "type": 1,    //1音频 2视频
         "code": "RainLive-8201d0bf-e0d441b3",
+        "liveid": 111,
         "liveurl": {
           "httpflv": "http://vdn-flv.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3.flv",
           "hls": "http://vdn-hls.xuetangx.com/xuetanglive/RainLive-8201d0bf-e0d441b3/index.m3u8",
@@ -840,6 +841,7 @@ var actionsMixin = {
         !this.isLive && this.liveURL && (this.isLive = true);
 
         // 日志上报
+        this.liveId = data.liveid;
         setTimeout(() => {
           this.handleLogEvent();
         }, 1000)
@@ -890,6 +892,8 @@ var actionsMixin = {
 
       // 关闭弹幕直播
       this.isLive && (this.isLive = false);
+
+      this.removeEventListeners();
     },
 
     /*

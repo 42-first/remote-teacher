@@ -42,6 +42,13 @@ const handleResponse = (res) => {
     return Promise.reject(res.data)
   }
 }
+
+if(axios && axios.defaults) {
+  // 业务线统计
+  axios.defaults.headers['xtbz'] = 'ykt';
+}
+
+
 export default {
   get (url, params) {
     params = params || {}

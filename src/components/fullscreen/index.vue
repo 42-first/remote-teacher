@@ -580,6 +580,7 @@
                 self.liveurl = self.liveInfo.live_url;
 
                 // 日志上报
+                self.liveId = self.liveInfo.live_id || 0;
                 setTimeout(() => {
                   self.handleLogEvent();
                 }, 30000)

@@ -82,6 +82,10 @@ const handleResponse = (res) => {
  */
 const catchCode = (code) => {
   if(code && window.$toast) {
+    if(code === 200) {
+      return this;
+    }
+
     $toast({
       message: window.i18n && window.i18n.t(`code.${code}`) + `(${code})`,
       duration: 3000

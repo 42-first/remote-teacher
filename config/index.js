@@ -60,7 +60,8 @@ module.exports = {
       '/lesson': proxyConfig(),
       '/hls': proxyConfig(),
       '/reporter': proxyConfig(),
-      '/train_platform': proxyConfig()
+      '/train_platform': proxyConfig(),
+      '/video-log': proxyConfig()
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

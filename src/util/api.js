@@ -13,6 +13,10 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
     get_agreement: '/train_platform/v1/rain-user/agreement/',
     set_agreement: '/train_platform/v1/rain-user/agreement/',
+
+    // 直播打点
+    'HEARTBEAT': '/video-log/heartbeat/',
+
     /*------------------*\
        $ 接收器 start
     \*------------------*/
