@@ -475,9 +475,9 @@
         }, 1500)
       },
       'classroom.classroomId'(newVal){
-        if(this.isHuanghe || this.isWind){
-          this.getUserAgreement()
-        }
+        // if(this.isHuanghe || this.isWind){
+        //   this.getUserAgreement()
+        // }
       }
     },
     filters: {
