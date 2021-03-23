@@ -41,7 +41,7 @@ let logMixin = {
         n: 'kwai',
         // 业务线
         lob: 'ykt',
-        cp: 0,
+        cp: 1,
         fp: 0,
         tp: 0,
         d: 1,
@@ -63,11 +63,10 @@ let logMixin = {
         this.heartLog = Object.assign({}, log, {
           p: 'web',
           u: this.userID,
-          t: this.liveType === 1 ? 'live_audio' : 'live',
-          classroomid: this.lessonID,
+          t: this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live',
+          classroomid: this.classroom && this.classroom.classroomId,
           c: this.classroom && this.classroom.courseId,
-          // 班级ID
-          cid: this.classroom && this.classroom.classroomId,
+          lesson_id: this.lessonID,
           ts: (new Date()).getTime(),
           v: this.liveId || 1
         });
