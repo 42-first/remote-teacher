@@ -69,6 +69,8 @@
       ...mapState([
         'lesson',
         'cards',
+        // 插件协议版本
+        'addinVersion'
       ]),
     },
     watch: {
@@ -129,6 +131,36 @@
           }
         }).catch(error => {
           console.log('getSubmission:', error);
+        })
+      },
+
+      /*
+       * @method 根据ID读取投稿详情
+       * @param
+       */
+      getPost(tougaoId) {
+        let URL = API.lesson.get_tougao;;
+        let params = {
+          'tougaoId': tougaoId
+        };
+        // 是否匿名
+        let anon = this.summary.anon;
+
+        request.get(URL, params).
+        then( res => {
+          if (res && res.code === 0 && res.data) {
+            let data = res.data;
+
+            anon && Object.assign(data, {
+              userAvatar: 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg',
+              userName: this.$i18n.t('anonymous2') || '匿名',
+              anon: true
+            })
+
+            this.result = data;
+          }
+        }).catch(error => {
+          console.log('getPost:', error);
         })
       },
 
@@ -228,7 +260,14 @@
       this.summary = cards[this.index];
 
       if(this.summary) {
-        this.getSubmission(this.summary.postid);
+        const addinVersion = this.addinVersion;
+        const postid = this.summary.postid;
+        // 协议版本5.0是桌面端
+        if(addinVersion === 5) {
+          this.getPost(postid);
+        } else {
+          this.getSubmission(postid);
+        }
       } else {
         // this.$router.back();
       }

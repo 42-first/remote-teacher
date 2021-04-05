@@ -53,6 +53,8 @@ const store = new Vuex.Store({
     hasMeeting: false,
     // 是否已进入会议
     joined: false,
+    // 插件协议版本
+    addinVersion: 1.6
   },
   mutations: {
     // 重置课堂信息
@@ -66,6 +68,7 @@ const store = new Vuex.Store({
       state.hasMeeting = false;
       state.joined = false;
       state.danmus = [];
+      state.addinVersion = 1.6;
     },
 
     setLines(state, lines) {
@@ -126,6 +129,10 @@ const store = new Vuex.Store({
 
     setDanmus(state, data) {
       state.danmus = data;
+    },
+
+    setAddinVersion(state, data) {
+      state.addinVersion = data;
     },
   },
 
@@ -190,6 +197,10 @@ const store = new Vuex.Store({
 
     setDanmus({commit}, data) {
       commit('setDanmus', data)
+    },
+
+    setAddinVersion({commit}, data) {
+      commit('setAddinVersion', data)
     },
   },
 
