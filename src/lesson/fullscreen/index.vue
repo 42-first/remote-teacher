@@ -353,6 +353,7 @@
         'setHasMeeting',
         'setJoined',
         'setDanmus',
+        'setAddinVersion',
       ]),
 
       /*
