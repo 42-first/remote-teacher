@@ -222,6 +222,7 @@
               case 2:
               case 6:
               case 22:
+              case 43:
                 source_name = i18n.locale === 'zh_CN' ? '课堂暗号' : 'Class Code'
                 break;
               case 3:
@@ -231,6 +232,7 @@
               case 8:
               case 23:
               case 24:
+              case 42:
                 source_name = i18n.locale === 'zh_CN' ? '“正在上课”提示' : 'Class Tip'
                 break;
               case 9:
