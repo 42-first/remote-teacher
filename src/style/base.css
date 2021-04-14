@@ -46,6 +46,14 @@ textarea { outline: none; resize: none; }
     $ 常用颜色
 \*-----------------------*/
 
+.c7a {
+  color: #7a7a7a;
+}
+
+.ccc {
+  color: #ccc;
+}
+
 .c333 {
   color: #333;
 }

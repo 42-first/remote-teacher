@@ -128,14 +128,14 @@ var commandMixin = {
       // 先签到
       source = source || this.source;
       let joined = await this.checkin(source);
-      // TODO： 签到发现没有权限处理
+      // 签到发现没有权限处理
       if(joined !== 0) {
         // 50004 lesson end
         if(joined === 50004) {
           location.href = '/v/index/lessonend';
-
-          return this;
         }
+
+        return this;
       }
 
       let user = await this.getUser();
@@ -147,6 +147,7 @@ var commandMixin = {
 
       if(lesson && lesson.teacher) {
         this.teacherName = lesson.teacher.name;
+        this.setTeacher(lesson.teacher);
       }
 
       // 班级信息
@@ -158,9 +159,11 @@ var commandMixin = {
       }, 20)
 
       // 课程基本信息
-      this.setLesson({
+      this.setLesson(Object.assign(lesson, {
         lessonID: id
-      })
+      }));
+
+      window.user = user;
     },
 
     /**
@@ -182,7 +185,11 @@ var commandMixin = {
 
       // 是否有直播
       let liveid = data.liveid;
-      liveid && this.getLive(liveid);
+      // liveid && this.getLive(liveid);
+      if(liveid) {
+        this.getLive(liveid);
+        this.liveId = liveid;
+      }
 
       // 是否有试卷
       let hasQuiz = false
@@ -373,6 +380,7 @@ var commandMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
+            window.identityId = data.identityId;
           }
         }
 
@@ -451,9 +459,36 @@ var commandMixin = {
           this.liveType = data.type || 1;
           this.liveurl = data;
           this.liveURL = data.flv;
+
+          // 日志上报
+          setTimeout(() => {
+            this.handleLogEvent();
+          }, 30000)
         }
       }).catch(error => {
         console.log('getLive:', error);
+      })
+    },
+
+    /**
+     * @method 获取会议基本信息 token channel
+     * @param
+     */
+    getMeeting() {
+      let URL = API.lesson.get_meeting_config;
+
+      request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+
+          // 本地会议？
+          if(data && data.provider === 3) {
+            this.meeting = data;
+          }
+        }
+      }).catch(error => {
+        return {};
       })
     },
 

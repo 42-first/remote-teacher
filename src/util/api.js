@@ -11,6 +11,12 @@ if (process.env.NODE_ENV === 'production' || process.env) {
     // 停服务通知
     'HOLD_SERVICE_NOTICE': '/pc/hole_service_notice/',
 
+    get_agreement: '/train_platform/v1/rain-user/agreement/',
+    set_agreement: '/train_platform/v1/rain-user/agreement/',
+
+    // 直播打点
+    'HEARTBEAT': '/video-log/heartbeat/',
+
     /*------------------*\
        $ 接收器 start
     \*------------------*/
@@ -120,6 +126,24 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_meeting_config: '/api/v3/lesson/meeting/get-config',
       // 学生课上试卷状态
       get_quiz_status: '/api/v3/lesson/quiz/status',
+      // 加入会议
+      join_meeting: '/api/v3/lesson/meeting/join',
+      // 离开会议
+      leave_meeting: '/api/v3/lesson/meeting/leave',
+      // 音视频管理（当前设备状态）
+      manage_device: '/api/v3/lesson/meeting/device',
+      // 开启共享屏幕
+      start_share: '/api/v3/lesson/meeting/share',
+      // 关闭桌面共享
+      end_share: '/api/v3/lesson/meeting/share/cancel',
+      // 获取发言列表
+      get_talk_list: '/api/v3/lesson/meeting/talk-list',
+      // 获取成员列表
+      get_member_list: '/api/v3/lesson/meeting/member-list',
+      // 获取共享屏幕信息
+      get_share_config: '/api/v3/lesson/meeting/share-config',
+      // 互动打点
+      report_meeting: '/api/v3/lesson/meeting/report',
 
 
       // 教师接口
@@ -227,6 +251,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
     // 停服务通知
     'HOLD_SERVICE_NOTICE': 'http://apimock.xuetangx.com/mock/115/pc/hole_service_notice/',
+
+    get_agreement: '/train_platform/v1/rain-user/agreement/',
+    set_agreement: '/train_platform/v1/rain-user/agreement/',
 
     /*------------------*\
        $ 接收器 start

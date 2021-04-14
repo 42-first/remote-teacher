@@ -6,6 +6,8 @@ import Router from 'vue-router'
 import Toast from 'mint-ui/lib/toast'
 import MessageBox from 'mint-ui/lib/message-box';
 
+import {getPlatformKey} from '@/util/util'
+
 import Index from '@/components/fullscreen/index'
 
 // 问题解析
@@ -34,6 +36,27 @@ Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
 window.$toast = Toast;
+
+let key = getPlatformKey()
+if(key === 'thu'){
+    Vue.prototype.isThu = true
+}else if(key === 'changjiang'){
+    Vue.prototype.isChangjiang = true
+}else if(key === 'huanghe'){
+    Vue.prototype.isHuanghe = true
+}else if(key === 'rain'){
+    Vue.prototype.isRain = true
+}else if(key === 'protest'){
+    Vue.prototype.isPro = true
+}else if(key === "g"){
+  Vue.prototype.isG = true
+}else if(key === "thunder"){
+  Vue.prototype.isThunder = true
+}else if(key === 'pre-apple-ykt'){
+  Vue.prototype.isWind = true
+}
+
+
 
 // FastClick.attach(document.body)
 document.addEventListener('touchstart', function(){},false);

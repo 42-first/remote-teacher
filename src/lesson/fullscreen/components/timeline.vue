@@ -10,7 +10,7 @@
     <section class="timeline__item J_slide" :data-index="index" :class="{ 'active': slideIndex === index }" v-for="(item, index) in cards" :key="index" v-if="item" @click="handleView(item, index)" >
       <!-- 正在放映提示 v-if="item.type === 2 || item.type === 3 " -->
       <section class="box-between inlesson" v-if="currSlide && index === currSlide.index">
-        <span class="f12 cfff">正在放映</span>
+        <span class="f12 cfff"><!-- 正在放映 -->{{ $t('meeting.showing') }}</span>
       </section>
 
       <!-- type : 1消息 2ppt 3习题 4试卷 5红包 8分组 10截图分享 11白板分享 12白板绘制 -->
@@ -286,6 +286,8 @@
     flex-direction: column-reverse;
     align-items: center;
     justify-content: center;
+
+    outline: none;
   }
 
   .timeline__item {

@@ -230,6 +230,9 @@
 
     <!-- 停服务通知 -->
     <!-- <livetip :id="lessonID" v-if="liveURL"></livetip> -->
+
+    <!-- 清华继教用户协议 -->
+    <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
 </template>
 <script>
@@ -257,6 +260,10 @@
   import logmixin from '@/lesson/common/log-reporting'
   import localstoragemixin from '@/lesson/common/localstorage-mixin'
 
+  import agreementMixin from '@/components/common/agreement-mixin'
+
+  import userAgreement from '@/components/common/agreement'
+
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -272,7 +279,8 @@
     'pro.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e0s17it5bgm1tc1162g1v1q3ik9.jpg',
     'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
     'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
-    'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg'
+    'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg',
+    'rain.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1f0kreooe16b6mh9k618ep1a4j9.jpeg',
   }
 
   const miniAppIds = {
@@ -281,7 +289,8 @@
     'pro.yuketang.cn': 'gh_b8eff085064f',
     'changjiang.yuketang.cn': 'gh_731c9c765693',
     'huanghe.yuketang.cn': 'gh_67c3b8305643',
-    'pre-apple-ykt.xuetangonline.com': 'gh_b82950979ac8'
+    'pre-apple-ykt.xuetangonline.com': 'gh_b82950979ac8',
+    'rain.xuetangonline.com': 'gh_8ebceaef4044',
   }
 
   export default {
@@ -395,7 +404,7 @@
         // 是否web开课
         isWebLesson: false,
         // 直播下默认显示动画
-        visibleAnimation: true,
+        visibleAnimation: false,
         returnRemote: false,
         liveStatusTips: '',
         isMute: false,  //静音播放
@@ -412,7 +421,8 @@
         // 小程序分享信息
         weappConfig: null,
         // 是都有会议
-        hasMeeting: false
+        hasMeeting: false,
+        is_agreement: true
       };
     },
     components: {
@@ -425,6 +435,7 @@
       notice: () => import('@/lesson/common/service-notice.vue'),
       danmuLive: () => import('@/lesson/common/danmu-live.vue'),
       livetip: () => import('@/lesson/common/live-tip.vue'),
+      userAgreement
     },
     computed: {
       ...mapState([
@@ -463,10 +474,15 @@
           this.setLocalData('cards', newVal);
         }, 1500)
       },
+      'classroom.classroomId'(newVal){
+        // if(this.isHuanghe || this.isWind){
+        //   this.getUserAgreement()
+        // }
+      }
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, lessonmixin ],
+    mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, lessonmixin, agreementMixin ],
     methods: {
       ...mapActions([
         'setCards',
@@ -775,6 +791,10 @@
 
             weappEl.addEventListener('launch', (e) => {
               console.log('success');
+              // 如果有直播关闭
+              if(this.liveType) {
+                this.handleStopVideo();
+              }
             });
 
             weappEl.addEventListener('error', (e) => {

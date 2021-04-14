@@ -116,6 +116,16 @@
 <script>
   import { mapState, mapActions } from 'vuex'
 
+  // 会议模式
+  const MeetingMode = {
+    // 默认 default
+    DEFAULT: 0,
+    // 九宫格 Jiugongge
+    JIUGONGGE: 1,
+    // 发言者模式
+    SPEAKER: 2
+  };
+
   export default {
     name: 'mag-box',
     data() {
@@ -131,11 +141,19 @@
         // 'slideIndex',
         'msg'
       ]),
+
+      ...mapState('meeting', [
+        'meetingLayout',
+      ]),
     },
     methods: {
       ...mapActions([
         'setSlideIndex',
         'setMsg',
+      ]),
+
+      ...mapActions('meeting', [
+        'setMeetingLayout',
       ]),
 
       /*
@@ -155,6 +173,11 @@
         }
 
         this.setMsg(null);
+
+        // 会议全屏模式切换到默认模式
+        if(this.meetingLayout !== MeetingMode.DEFAULT) {
+          this.setMeetingLayout(MeetingMode.DEFAULT)
+        }
       },
 
       /**

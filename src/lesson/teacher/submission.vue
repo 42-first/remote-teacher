@@ -523,11 +523,11 @@
        */
       fsqbHander () {
         let self = this
-
+        let postid = this.addinversion < 5 ? self.postDetail.tougaoIndex : self.postDetail.tougaoId
         let str = JSON.stringify({
           'op': 'sendpost',
           'lessonid': self.lessonid,
-          'postid': self.postDetail.tougaoIndex,
+          'postid': postid,
           'msgid': 1234
         })
 
@@ -725,16 +725,25 @@
       */
       getTougaoDetail(tougaoIndex){
         let self = this
-        let URL = API.lesson.get_tougao_by_index
-        let params = {
-          tougaoIndex: tougaoIndex
-        }
+        let URL = ''
+        let params = {}
+        if(this.addinversion < 5) {
+          URL = API.lesson.get_tougao_by_index
+          params = {
+            tougaoIndex: tougaoIndex
+          }
+        }else {
+          URL = API.lesson.get_tougao
+          params = {
+            tougaoId: tougaoIndex
+          }
+        } 
+        
 
         return request.get(URL, params)
         .then((res) => {
           if(res && res.code === 0 && res.data){
             this.postDetail = res.data
-            this.postDetail.tougaoIndex = tougaoIndex
           }
         })
       }

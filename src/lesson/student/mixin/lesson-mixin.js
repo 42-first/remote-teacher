@@ -74,7 +74,11 @@ let lessonMixin = {
 
       // 是否有直播
       let liveid = data.liveid;
-      liveid && this.getLive(liveid);
+      // liveid && this.getLive(liveid);
+      if(liveid) {
+        this.getLive(liveid);
+        this.liveId = liveid;
+      }
 
       // 是否有试卷
       let hasQuiz = false
@@ -362,6 +366,11 @@ let lessonMixin = {
               this.supportFLV();
             }, 3000)
           }
+
+          // 日志上报
+          setTimeout(() => {
+            this.handleLogEvent();
+          }, 30000)
         }
       }).catch(error => {
         console.log('getLive:', error);

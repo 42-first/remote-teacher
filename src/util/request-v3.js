@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { isSupported } from '@/util/util'
 
 // 新版接口状态码定义 https://www.tapd.cn/42030465/documents/show/1142030465001001744
 // 错误码翻译 http://git.sys.xuetangx.info/new-backend/grpc/-/blob/master/src/main/proto/error.json
@@ -19,6 +20,10 @@ const handleResponse = (res) => {
   // 从相应头中读取auth, 后面使用
   if(res.headers && res.headers['set-auth']) {
     window.Authorization = res.headers['set-auth'];
+    // 写到本地缓存中
+    if(isSupported(window.localStorage)) {
+      localStorage.setItem('Authorization', window.Authorization)
+    }
   }
 
   let status = res.status;
@@ -77,16 +82,26 @@ const handleResponse = (res) => {
  */
 const catchCode = (code) => {
   if(code && window.$toast) {
+    if(code === 200) {
+      return this;
+    }
+
     $toast({
       message: window.i18n && window.i18n.t(`code.${code}`) + `(${code})`,
       duration: 3000
     });
 
     // todo: 后面可能上报
+    if(code === 50000) {
+      // 需要先登录
+      window.location.href = '/login/weixinapp/?next=' + window.location.href;
+    }
   }
 }
 
 
+// 业务线统计
+axios.defaults.headers['xtbz'] = 'ykt';
 // 超时默认60s避免造成阻塞卡顿
 axios.defaults.timeout = 60000;
 
@@ -111,13 +126,17 @@ export default {
     // app h5 web desktop miniprogram
     axios.defaults.headers['X-Client'] = 'h5';
 
-    // todo: test 正式联调后删除
-    // Cookies.set('sid', '1c5db47f09c19ae187f3f126773cfa01');
-    // console.log(axios.defaults.headers['Cookie'])
-
     // 课上接收器 遥控器使用
     if(window.Authorization) {
       axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;
+    } else {
+      // 本地缓存读取
+      if(isSupported(window.localStorage)) {
+        const jwt = localStorage.getItem('Authorization');
+        if(jwt) {
+          axios.defaults.headers['Authorization'] = 'Bearer ' + jwt;
+        }
+      }
     }
 
     // 灰度发布需要
@@ -145,6 +164,11 @@ export default {
     // axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken') || ''
     if (process.env.NODE_ENV === 'development') {
       axios.defaults.withCredentials = true;
+    }
+
+    // 课上接收器 遥控器使用
+    if(window.Authorization) {
+      axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;
     }
 
     return axios
