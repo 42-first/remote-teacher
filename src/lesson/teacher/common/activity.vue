@@ -130,7 +130,9 @@
     },
     created () {
       let self = this;
-      this.fetchParticipantList();
+      if(this.coursename) {
+        this.fetchParticipantList();
+      } 
     },
     methods: {
       /**
