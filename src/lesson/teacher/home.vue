@@ -208,6 +208,7 @@
 	      cardWidth: 750,												// 大json中的ppt原始宽度
 				cardHeight: 540,												// 大json中的ppt原始高度
 				noteText: "",
+				shownow: false
 	    }
 	  },
 	  computed: {
