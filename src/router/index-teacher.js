@@ -384,7 +384,11 @@ router.beforeEach((to, from, next) => {
     }
     next()
   }else {
-    if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'teacher-v3' && to.path.indexOf('redpacketqueryproblemid') != -1)){
+    // app进入的遥控器  直接进入
+    if(to.query.app) {
+      next()
+      return
+    } else if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'teacher-v3' && to.path.indexOf('redpacketqueryproblemid') != -1)){
       next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
       return;
     }
