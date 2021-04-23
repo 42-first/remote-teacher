@@ -7,6 +7,7 @@
       </a>
       <a href="/web" target="_blank" class="right loginweb">登录网页版</a>
       <a href="/help" class="right">帮助中心</a>
+      <a href="/en/set-meal" class="right">支付</a>
       <a href="/training/index" class="right">培训服务</a>
       <a href="/lesson/market/courseware" id="rainMarket" class="right active">雨课件</a>
       <a href="/presenter" class="right">翻页笔</a>

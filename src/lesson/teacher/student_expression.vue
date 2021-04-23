@@ -233,6 +233,7 @@
               case 23:
               case 24:
               case 42:
+              case 11:
                 source_name = i18n.locale === 'zh_CN' ? '“正在上课”提示' : 'Class Tip'
                 break;
               case 9:
@@ -241,6 +242,10 @@
               case 99:
               case -2:
                 source_name = i18n.locale === 'zh_CN' ? '教师手动修改' : 'Manual mark'
+                break;
+              case 25:
+              case 10:
+                source_name = i18n.locale === 'zh_CN' ? '上课提醒' : 'Lesson Reminder'
                 break;
             }
             res.data['source_name'] = source_name

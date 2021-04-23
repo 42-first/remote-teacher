@@ -46,6 +46,7 @@ function socketProcessMessage(msg){
 
   // 通杀，针对所有指令，并不只是hello
   if(msg.shownow){
+    this.shownow = true
     // 处理刷新页面之前在课堂动态页进入的子路由的情况时，默认进入课堂动态页
     let _state = self.$store.state
     // computed 数据有缓存，这里直接用store中的数据，而不是computed传过来的数据
@@ -86,10 +87,14 @@ function socketProcessMessage(msg){
     // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
       if (msg.mask && msg.mask.type === 'qrcode') {
-        self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
-        self.$store.commit('set_isMsgMaskHidden', true)
+        if(msg.addinversion == 5 && !msg.shownow){
+          self.showEscMask()
+        }else {
+          self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+          self.$store.commit('set_isMsgMaskHidden', true)
 
-        self.showQrcodeMask()
+          self.showQrcodeMask()
+        }
       } else if(msg.mask && msg.mask.type === 'wordcloud'){
         if(msg.mask.cat == 'danmu'){
           self.$store.commit('set_postWordCloudOpen', false)
@@ -151,8 +156,12 @@ function socketProcessMessage(msg){
     }
 
     if(msg.mask && msg.mask.type === 'qrcode'){
-      // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
-      self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+      if(msg.addinversion == 5 && !msg.shownow){
+        self.showEscMask()
+      }else {
+        // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
+        self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+      }
     }
 
     if(!msg.shownow){
@@ -179,7 +188,12 @@ function socketProcessMessage(msg){
     if(msg.addinversion === -1){
       self.showPcErrorMask()
     }else{
-      self.killMask()
+      if(!this.shownow){
+        self.showEscMask()
+      }else {
+        self.killMask()
+      }
+      
     }
     return
   }
@@ -215,6 +229,7 @@ function socketProcessMessage(msg){
   }
 
   if (msg.op == 'showfinished') {
+    this.shownow = false
     self.showEscMask()
     goHome.call(self)
     return
