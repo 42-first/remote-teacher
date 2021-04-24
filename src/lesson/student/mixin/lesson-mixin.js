@@ -105,7 +105,7 @@ let lessonMixin = {
       }
 
       // 有试卷
-      hasQuiz && this.getQuizStatus()
+      hasQuiz && await this.getQuizStatus()
 
       // 有课件
       if(presSet.size) {
@@ -517,6 +517,7 @@ let lessonMixin = {
             }
             this.quizMap.set(+item, quizObJ);
           })
+          return res.data
         }
       })
     }

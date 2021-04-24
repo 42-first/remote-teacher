@@ -215,7 +215,7 @@ var commandMixin = {
         })
       }
 
-      hasQuiz && this.getQuizStatus()
+      hasQuiz && await this.getQuizStatus()
 
       // 有课件
       if(presSet.size) {
