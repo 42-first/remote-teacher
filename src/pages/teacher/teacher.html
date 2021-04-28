@@ -73,5 +73,20 @@
         s.parentNode.insertBefore(mta, s);
       })();
     </script>
+    <!-- 极光统计 2021.4.28 -->
+    <script type="text/javascript" src="https://web-stat.jiguang.cn/web-janalytics/scripts/janalytics-web.min.js"></script>
+    <script>
+      (function() {
+        if(window.JAnalyticsInterface) {
+          window.JAnalyticsInterface.init({
+            appkey: 'fcdf8e635093adde6bef4265',
+            debugMode: false,
+            channel: 'rainH5',
+            loc: false, //设置是否尝试获取位置信息上报，默认为 true
+            singlePage: true //设置是否为单页面，默认为 false
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
