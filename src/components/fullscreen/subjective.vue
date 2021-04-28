@@ -271,6 +271,8 @@
         this.noTeam = false;
         this.timeOver =false;
         this.warning = false;
+        // 重置的时候完成状态都为false
+        this.isComplete = false;
       },
 
       /*
