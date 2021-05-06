@@ -185,6 +185,7 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
+        timer: null
       };
     },
     components: {
@@ -1005,6 +1006,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer);
     }
   };
 </script>

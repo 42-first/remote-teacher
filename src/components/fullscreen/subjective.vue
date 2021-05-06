@@ -186,6 +186,7 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
+        timer: null
       };
     },
     components: {
