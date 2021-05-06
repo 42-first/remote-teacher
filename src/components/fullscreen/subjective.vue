@@ -1188,6 +1188,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer)
     }
   };
 </script>
