@@ -237,6 +237,8 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.timer && clearInterval(this.timer)
+
           if(this.summary) {
             this.init(this.summary);
           } else {
