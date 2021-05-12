@@ -147,7 +147,11 @@ var mixin = {
 
             msg['presentation'] && (this.presentationID = msg['presentation']);
             // 协议版本号
-            msg['addinversion'] && (this.version = msg['addinversion']);
+            // msg['addinversion'] && (this.version = msg['addinversion']);
+            if(msg['addinversion']) {
+              this.version = msg['addinversion'];
+              this.setAddinVersion(msg['addinversion']);
+            }
 
             // 是否开启了互动 加入会议
             if(msg.interactive) {
