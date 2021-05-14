@@ -307,6 +307,7 @@
               isCollecting = false
               self.isPaperCollected = true
               self.endTimers()
+              self.getPaperResult();
             }
             
           })
