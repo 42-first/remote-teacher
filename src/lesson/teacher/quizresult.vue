@@ -130,6 +130,9 @@
 
             finishedQuizList['id'+self.quizid] = true
             self.$store.commit('set_finishedQuizList', finishedQuizList)
+
+            // 插件端收卷 假设没有之前没有学生交卷  主动收卷后应在请求一遍结果 以便拿到最新数据
+            self.getPaperResult()
           } 
         })
 
