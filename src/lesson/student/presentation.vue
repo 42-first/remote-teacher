@@ -465,7 +465,8 @@
         // 下课啦
         if(newValue === 1) {
           // this.backURL = '/v/index/course/normalcourse/learning_lesson_detail/' + this.lessonID;
-          this.backURL = '/v/index/lessonend'
+          // this.backURL = '/v/index/lessonend'
+          this.backURL = `/v/index/lessonend?id=${this.lessonID}&version=5`;
         }
       },
       cards(newVal, oldVal) {
