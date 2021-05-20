@@ -375,4 +375,11 @@
       vertical-align: middle;
     }
   }
+
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-min-device-pixel-ratio: 3) {
+    .rc-toolbar {
+      height: 2rem;
+      align-items: flex-start;
+    }
+  }
 </style>

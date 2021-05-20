@@ -17,10 +17,10 @@
       <!-- 已发试卷 -->
       <section class="list upper" v-show="quizList.length && activeTab === 1">
         <!-- <div class="title f17">{{ $t('publishedquiz') }}</div> -->
-        <v-touch class="item" v-for="quiz in quizList" :key="quiz.quiz_id" v-on:tap="showQuizResult(quiz.quiz_id)">
+        <v-touch class="item" v-for="quiz in quizList" :key="quiz.quizId" v-on:tap="showQuizResult(quiz.quizId)">
           <div class="desc f18 ellipsis">
             {{quiz.title}} <br>
-            <span class="f14"> {{quiz.time | formatTime}}</span>
+            <span class="f14"> {{quiz.publishTime | formatTime}}</span>
           </div>
           <i class="iconfont icon-dakai f14"></i>
         </v-touch>
@@ -30,7 +30,7 @@
       <section class="list downer" v-show="activeTab === 0">
         <!-- <div class="title f17">{{ $t('myquiz') }}</div> -->
 
-        <router-link tag="div" :to="{name: 'paperfolder', params: {folderid: folder.id}}" class="folder f15" v-for="(folder, index) in dirList" :key="index">
+        <router-link tag="div" :to="{name: 'paperfolder_v3', params: {folderid: folder.dirId}}" class="folder f15" v-for="(folder, index) in dirList" :key="index">
           <div class="left ellipsis">
             <img class="foldericon" src="~images/teacher/folder.png" alt="">
             {{folder.title}}
@@ -38,10 +38,10 @@
           <div class="right">{{folder.count}} <i class="iconfont icon-dakai f14"></i></div>
         </router-link>
         
-        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.id, paper.title, paper.total)">
+        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
           <div class="desc f18 ellipsis">
             {{paper.title}} <br>
-            <span class="f14">{{paper.create_time | formatTime}}</span>
+            <span class="f14">{{paper.createTime | formatTime}}</span>
           </div>
           <!-- <i class="iconfont icon-dakai f14"></i> -->
         </v-touch>
@@ -106,7 +106,7 @@
       formatTime (value) {
         let self = this
 
-        return Moment(value*1000).format('YYYY-MM-DD HH:mm:ss')
+        return Moment(value).format('YYYY-MM-DD HH:mm:ss')
       },
     },
     created () {
@@ -147,29 +147,27 @@
           self.isFetching = true
         }
 
-        let url = API.lesson_paper_quiz
-
-        if (process.env.NODE_ENV === 'production' || 1) {
-          url = API.lesson_paper_quiz + '?lesson_id=' + self.lessonid
-        }
+        let url = API.lesson.get_quiz_list
 
         request.get(url)
-          .then(jsonData => {
-            self.isFetching = false
-            self.dirList = jsonData.data.directory_list
-            self.paperList = jsonData.data.nodir_paper_list
-            self.quizList = jsonData.data.on_lesson_quiz_list
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              self.isFetching = false
+              self.dirList = res.data.dir
+              self.paperList = res.data.paper
+              self.quizList = res.data.quiz
 
-            let quizList = self.quizList
+              let quizList = self.quizList
 
-            // 有可能老师刷新了遥控器，而之前已经有已经收卷的试卷
-            let finishedQuizList = {}
-            for (let i = 0; i < quizList.length; i++) {
-              let tmpID = quizList[i].quiz_id;
-              finishedQuizList['id'+tmpID] = quizList[i].quiz_end;
+              // 有可能老师刷新了遥控器，而之前已经有已经收卷的试卷
+              let finishedQuizList = {}
+              for (let i = 0; i < quizList.length; i++) {
+                let tmpID = quizList[i].quizId;
+                finishedQuizList['id'+tmpID] = quizList[i].end;
+              }
+
+              self.$store.commit('set_finishedQuizList', finishedQuizList)
             }
-
-            self.$store.commit('set_finishedQuizList', finishedQuizList)
           })
       },
       /**
@@ -224,25 +222,22 @@
        */
       publishPaper () {
         let self = this
-        let url = API.publish_lesson_paper
+        let url = API.lesson.publish_quiz
 
-        if (process.env.NODE_ENV === 'production') {
-          url = API.publish_lesson_paper + '/' + self.lessonid + '/'
-        }
 
         let postData = {
-          'paperID': self.paperChosen.id
+          'paperId': self.paperChosen.id
         }
 
         self.isPubmodalHidden = true
 
         request.post(url, postData)
-          .then(jsonData => {
-            // 不需要判断success，在request模块中判断如果success为false，会直接reject
-
-            // 显示饼图页
-            self.showQuizResult(jsonData.quizID);
-            self.closePubmodal()
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              // 显示饼图页
+              self.showQuizResult(res.data.quizId);
+              self.closePubmodal()
+            }
           })
       },
       /**
@@ -254,7 +249,7 @@
         let self = this
 
         let to = {
-          name: 'quizresult',
+          name: 'quizresult_v3',
           params: {
             quizid,
           }

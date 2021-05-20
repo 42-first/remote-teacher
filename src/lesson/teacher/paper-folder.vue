@@ -8,10 +8,10 @@
       <section class="list downer">
         <div class="title f20 ellipsis">{{folderTitle}}</div>
         
-        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.id, paper.title, paper.total)">
+        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
           <div class="desc f18 ellipsis">
             {{paper.title}} <br>
-            <span class="f14">{{paper.create_time | formatTime}}</span>
+            <span class="f14">{{paper.createTime | formatTime}}</span>
           </div>
           <!-- <i class="iconfont icon-dakai f14"></i> -->
         </v-touch>
@@ -72,7 +72,7 @@
       formatTime (value) {
         let self = this
 
-        return Moment(value*1000).format('YYYY-MM-DD HH:mm:ss')
+        return Moment(value).format('YYYY-MM-DD HH:mm:ss')
       },
     },
     created () {
@@ -109,17 +109,18 @@
       fetchPaperData () {
         let self = this
 
-        let url = API.lesson_one_directory_paper
+        let url = API.lesson.quiz_dir
 
-        if (process.env.NODE_ENV === 'production' || 1) {
-          url = API.lesson_one_directory_paper + `?lesson_id=${self.lessonid}&directory_id=${self.folderid}`
+        let params = {
+          dir_id: this.folderid
         }
 
-        request.get(url)
-          .then(jsonData => {
-            let folderNow = jsonData.data.directory
-            self.folderTitle = folderNow.title
-            self.paperList = folderNow.paper_list
+        request.get(url, params)
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              self.folderTitle = res.data.title
+              self.paperList = res.data.paper
+            }
           })
       },
       
@@ -163,25 +164,22 @@
        */
       publishPaper () {
         let self = this
-        let url = API.publish_lesson_paper
+        let url = API.lesson.publish_quiz
 
-        if (process.env.NODE_ENV === 'production') {
-          url = API.publish_lesson_paper + '/' + self.lessonid + '/'
-        }
 
         let postData = {
-          'paperID': self.paperChosen.id
+          'paperId': self.paperChosen.id
         }
 
         self.isPubmodalHidden = true
 
         request.post(url, postData)
-          .then(jsonData => {
-            // 不需要判断success，在request模块中判断如果success为false，会直接reject
-
-            // 显示饼图页
-            self.showQuizResult(jsonData.quizID);
-            self.closePubmodal()
+          .then(res => {
+            if(res && res.code === 0 && res.data){
+              // 显示饼图页
+              self.showQuizResult(res.data.quizId);
+              self.closePubmodal()
+            }
           })
       },
       /**
@@ -193,7 +191,7 @@
         let self = this
 
         let to = {
-          name: 'quizresult',
+          name: 'quizresult_v3',
           params: {
             quizid,
           }
