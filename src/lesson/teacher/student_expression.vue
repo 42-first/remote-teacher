@@ -234,6 +234,7 @@
               case 24:
               case 42:
               case 11:
+              case 12:
                 source_name = i18n.locale === 'zh_CN' ? '“正在上课”提示' : 'Class Tip'
                 break;
               case 9:

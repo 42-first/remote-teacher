@@ -777,11 +777,15 @@ let actionsMixin = {
 
       oImg.src = data.url;
 
+      // 有可能桌面端开课没有打开过课件
+      let width = presentation && presentation.width || 960
+      let height = presentation && presentation.height || 540
+
       let cardItem = {
         src: data.url,
-        rate: presentation.width / presentation.height,
-        Width: presentation.width,
-        Height: presentation.height,
+        rate: width / height,
+        Width: width,
+        Height: height
       };
 
       data = Object.assign(data, cardItem)
