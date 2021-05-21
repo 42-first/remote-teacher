@@ -95,8 +95,12 @@ export default {
       // let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
       let isProblemPublished
 
+      let slideData = self.pptData[current - 1]
+      let pid = null
+
       if (self.isPPTVersionAboveOne && isProblem) {
-        isProblemPublished = msg.unlockedproblem.includes(msg.slide ? msg.slide.sid : msg.slideid)
+        pid = msg.slide && msg.slide.sid ? msg.slide.sid : msg.slideid ? msg.slideid : slideData.id
+        isProblemPublished = msg.unlockedproblem.includes(pid)
       } else {
         isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
       }
