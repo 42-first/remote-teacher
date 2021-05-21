@@ -151,7 +151,7 @@ var actionsMixin = {
      */
     getSlideData(slides, si, sid) {
       let slideData = slides && slides[si - 1];
-      if (slides) {
+      if (slides && typeof sid !== 'undefined' && sid > 0) {
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide) => {
           return slide.id === sid;

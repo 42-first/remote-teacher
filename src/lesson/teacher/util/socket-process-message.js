@@ -253,7 +253,7 @@ function socketProcessMessage(msg){
 
     // 换页
     if (self.isPPTVersionAboveOne) {
-      msg.slideindex = self.idIndexMap[msg.slide.sid] // 为了公用函数，补充一下数据
+      msg.slideindex = typeof msg.slide.sid !== 'undefined' && msg.slide.sid > 0 ? self.idIndexMap[msg.slide.sid] : msg.slide.si// 为了公用函数，补充一下数据
     }else {
       msg.slideindex = msg.slide.si // 为了公用函数，补充一下数据
     }
