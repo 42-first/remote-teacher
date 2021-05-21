@@ -151,7 +151,7 @@ var actionsMixin = {
      */
     getSlideData(slides, si, sid) {
       let slideData = slides && slides[si - 1];
-      if (slides) {
+      if (slides && typeof sid !== 'undefined' && sid > 0) {
         // ppt不一致 通过sid取slideData
         slideData = slides.find((slide) => {
           return slide.id === sid;
@@ -755,11 +755,15 @@ var actionsMixin = {
 
       oImg.src = data.url;
 
+      // 有可能桌面端开课没有打开过课件
+      let width = presentation && presentation.width || 960
+      let height = presentation && presentation.height || 540
+
       let cardItem = {
         src: data.url,
-        rate: presentation.width / presentation.height,
-        Width: presentation.width,
-        Height: presentation.height,
+        rate: width / height,
+        Width: width,
+        Height: height
       };
 
       data = Object.assign(data, cardItem)

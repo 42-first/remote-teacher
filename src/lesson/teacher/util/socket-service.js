@@ -10,7 +10,6 @@ import socketProcessMessage from './socket-process-message'
 
 
 const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
-// const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
 let isReconnect = false
@@ -80,7 +79,8 @@ let mixin = {
         }
 
         // 雷上已经全部使用https了，本地调试也使用https
-        let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+        // let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+        let wsProtocol = 'wss://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
         socket.socket_id = Date.now()
         self.$store.commit('set_socket', socket)
