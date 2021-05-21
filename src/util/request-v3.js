@@ -86,6 +86,11 @@ const catchCode = (code) => {
       return this;
     }
 
+    // 下课啦 不提示
+    if(code === 50004) {
+      return this;
+    }
+
     $toast({
       message: window.i18n && window.i18n.t(`code.${code}`) + `(${code})`,
       duration: 3000
