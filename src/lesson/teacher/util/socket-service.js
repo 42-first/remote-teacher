@@ -9,8 +9,7 @@
 import socketProcessMessage from './socket-process-message'
 
 
-// const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
-const SOCKET_HOST  = 'pre-apple-ykt.xuetangonline.com'
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
 
 let xintiaoTimer = null
 let isReconnect = false
