@@ -13,7 +13,7 @@
             <img :src="user_profile.avatar" alt="">
           </div>
           <p class="user-name f17">{{user_profile.name}}</p>
-          <p class="school-number f14">{{user_profile.school_number ? user_profile.school_number : $t('weishezhixuehao')}}</p>
+          <p class="school-number f14">{{user_profile.schoolNumber ? user_profile.schoolNumber : $t('weishezhixuehao')}}</p>
           <div class="participant-box flexbetween">
             <div class="participant-info flexcenter">
               <i class="icon mt-2" :class="checkinDetail.source >= 0 ? 'icon-sign' : 'icon-unsign'"></i>
