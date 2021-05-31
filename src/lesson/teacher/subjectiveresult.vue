@@ -182,7 +182,7 @@
 
 
 		<!-- 发题选时间蒙版客观题 -->
-    <Problemtime v-show="!isProblemtimeHidden"
+    <Problemtime v-if="!isProblemtimeHidden"
       :problem-type="'ShortAnswer'"
       :isYanshi="true"
       @cancelPublishProblem="cancelPublishProblem"

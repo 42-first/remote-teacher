@@ -7,7 +7,7 @@ import request from '@/util/request-v3'
 import API from '@/util/api'
 
 // 发送试题
-import Problemtime from '@/components/teacher-restructure/common/problemtime'
+import Problemtime from '../common/problemtime'
 
 let problemType = ''
 
@@ -95,7 +95,8 @@ export default {
       let params = {
         problemId: problemid,
         slideIndex: self.current,
-        limit: limit
+        limit: limit,
+        groupid: groupid
       }
   
       return request.post(URL,params)
