@@ -24,7 +24,6 @@
     </section>
     <!-- 恢复课上试卷功能 -->
     <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
-    <!-- <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页"> -->
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -34,7 +33,6 @@
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    <!-- </v-touch> -->
     </router-link>
     <router-link tag="div" :to="{name: 'danmu_v3'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
@@ -60,8 +58,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-		<!-- <v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页"> -->
-    <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #08BC72;">
           <i class="iconfont icon-fenzu1 f21"></i>
@@ -193,8 +190,13 @@
 			 */
 			toTeam() {
 				let self = this;
-				console.log(self.classroomid + '--' + self.lessonid);
-				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+        console.log(self.classroomid + '--' + self.lessonid);
+        if(process.env.NODE_ENV !== 'production') {
+          location.href = 'http://0.0.0.0:8080/team.html#/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+        } else {
+          location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+        }
+				
       },
       /** 
        * 新增随机点名入口

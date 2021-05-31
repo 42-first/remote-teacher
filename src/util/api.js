@@ -226,7 +226,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 收卷
       quiz_finish: '/api/v3/lesson/quiz/finish',
       // 成绩详情
-      quiz_results_detail: '/api/v3/lesson/quiz/result'
+      quiz_results_detail: '/api/v3/lesson/quiz/result',
+      // 获取分组列表
+      get_classroom_group_list: '/group/get_classroom_group_list/'
     },
 
     /*------------------*\
