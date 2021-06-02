@@ -96,7 +96,7 @@ export default {
         problemId: problemid,
         slideIndex: self.current,
         limit: limit,
-        groupid: groupid
+        groupId: groupid
       }
   
       return request.post(URL,params)

@@ -50,7 +50,7 @@
 								</template>
 								<template v-else>
 									<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
-										<span class="f18">{{unfinished_team_count}}</span>
+										<span class="f18">{{unfinished_count}}</span>
 										<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
 			            </v-touch>
 								</template>
@@ -64,8 +64,8 @@
 								</template>
 							</div>
               <!-- v-if="problem_answer_type"  -->
-							<v-touch v-if="false" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
-              <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch>
+							<v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+              <!-- <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch> -->
 						</div>
           </section>
           <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
@@ -91,12 +91,12 @@
                   <div class="detail">
 										<div class="student-info" v-if="problem_answer_type == 1">
 											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
-												<template v-for="(item2, index2) in item.users">
-													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
+												<template v-for="(item2, index2) in item.teamInfo.memberList">
+													<img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
 												</template>
-												<span class="author f15">{{item.team_name}}</span>
+												<span class="author f15">{{item.teamInfo.teamName}}</span>
 											</v-touch>
-											<div class="time f15">{{item.time | formatTime}}</div>
+											<div class="time f15">{{item.resultInfo.submitTime | formatTime}}</div>
 										</div>
 										<div class="student-info" v-else>
 											<div class="avatar-box">
@@ -209,8 +209,8 @@
             <span class="team-total f14"><!-- 共{{teamMemberList.length}}人 -->{{ $t('team.totalmembers', {num: teamMemberList.length}) }}</span>
           </p>
           <div class="team-item" v-for="(item, index) in teamMemberList" :key="index">
-            <img class="member--avatar" :src="item.user_avatar_46" alt="" >
-            <div class="member--name f16 c666"><span class="name">{{item.user_name}}</span></div>
+            <img class="member--avatar" :src="item.avatar" alt="" >
+            <div class="member--name f16 c666"><span class="name">{{item.userName}}</span></div>
           </div>
         </div>
       </div>
@@ -664,12 +664,16 @@
 
         self.fetchList(tailNow).then(res => {
           if(res && res.code === 0 && res.data){
+            let list = res.data.list
+            if(self.problem_answer_type) {
+              list = self.formatTeamResult(res.data)
+            }
             // response_num 当前请求返回的投稿数量
-            if (res.data.list.length === 0) {
+            if (list.length === 0) {
               self.isAllLoaded = true
               return
             }
-            self.dataList = self.addFold(self.dataList.concat(res.data.list))
+            self.dataList = self.addFold(self.dataList.concat(list))
             // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
 
             this.$refs.Loadmore.onBottomLoaded()
@@ -750,7 +754,9 @@
             self.setData({
               isShowNewHint: res.data.count - self.dataList.length > 0,
               total_num: res.data.count,
-              unfinished_count: res.data.unfinishedCount
+              unfinished_count: res.data.unfinishedCount,
+              group_review_done_num: res.data.reviewNum,
+              group_review_total_num: res.data.reviewTotalNum
             })
           }
         })
@@ -783,10 +789,20 @@
             self.setData({
               isShowNewHint: false,
               total_num: res.data.count,
-              unfinished_count: res.data.unfinished
+              unfinished_count: res.data.unfinished,
+              problem_group_review_id: res.data.reviewInfo.reviewId
             })
 
             let newList = res.data.list
+            if(res.data.groupInfo){
+              let groupInfo = res.data.groupInfo
+              self.setData({
+                problem_answer_type: 1,
+                group_name: groupInfo.groupName,
+              })
+              newList = self.formatTeamResult(res.data)
+            }
+
             // 返回的条目的个数
             let response_num = newList.length
             // 有可能还一条都没有呢
@@ -822,6 +838,22 @@
         })
 
       },
+
+      /** 
+       * @method 分组作答结果
+      */
+      formatTeamResult(data){
+        let self = this
+        let newList = data.resultList
+        newList.forEach(item => {
+          item['index'] = item.resultInfo.index
+          item['result'] = Object.assign({}, item.resultInfo) 
+          item['score'] = item.scoreInfo.score
+          item['totalScore'] = item.scoreInfo.totalScore
+        })
+        return newList
+      },
+
       /**
        * 延时
        *
@@ -1085,7 +1117,6 @@
         }
 				let self = this
 				if(this.newTime > 0){
-					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
 					let msg = i18n.locale === 'zh_CN' ? '请先收题' : 'Stop answering required'
 					T_PUBSUB.publish('ykt-msg-toast', msg);
 				} else {
@@ -1110,10 +1141,9 @@
 
 	      let url = API.publish_subj_problem_group_review
 	      let postData = {
-	        "problem_id": self.problemid,
-					teacher_score_proportion,
-					group_review_proportion,
-					review_declaration
+	        "problemId": self.problemid,
+					reviewPercent: group_review_proportion,
+					reviewDeclaration: review_declaration
 	      }
 
 	      request.post(url, postData)
@@ -1171,8 +1201,8 @@
 			 */
 			handleOpenTeamMember(index) {
 				this.showTeamMember = true;
-				this.teamMemberList = this.dataList[index].users
-				this.currentTeam = this.dataList[index].team_name
+				this.teamMemberList = this.dataList[index].teamInfo.memberList
+				this.currentTeam = this.dataList[index].teamInfo.teamName
 			},
 			/*
 			 * 关闭小组成员列表

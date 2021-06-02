@@ -202,8 +202,8 @@
        */
       submit (evt) {
         let self = this
-        let teacher_score_proportion = self.teacher_score_proportion / 100
-        let group_review_proportion = self.group_review_proportion / 100
+        let teacher_score_proportion = self.teacher_score_proportion
+        let group_review_proportion = self.group_review_proportion
         self.changed = true
         self.$emit('giveHuping', teacher_score_proportion, group_review_proportion, self.review_declaration)
       },
@@ -212,7 +212,7 @@
        */
       save(){
         let self = this
-        let teacher_proportion = self.teacher_score_proportion / 100
+        let teacher_proportion = self.teacher_score_proportion
         if(self.changed) return
         self.changed = true
         self.$emit('editHuping', teacher_proportion)
