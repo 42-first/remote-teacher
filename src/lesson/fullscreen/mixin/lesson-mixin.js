@@ -194,6 +194,9 @@ var commandMixin = {
       // 是否有试卷
       let hasQuiz = false
 
+      // 是否有分组
+      let hasGroup = false
+
       if(timeline && timeline.length) {
         timeline.forEach(item => {
           if(item.pres && !presSet.has(item.pres)) {
@@ -212,10 +215,17 @@ var commandMixin = {
           if(item.type === 'quiz') {
             hasQuiz = true
           }
+
+          if(item.type === 'group') {
+            hasGroup = true
+          }
         })
       }
 
       hasQuiz && await this.getQuizStatus()
+
+      // 有分组
+      hasGroup && await this.getGroupStatus()
 
       // 有课件
       if(presSet.size) {
@@ -608,6 +618,28 @@ var commandMixin = {
             }
             this.quizMap.set(+item, quizObJ);
           })
+        }
+      })
+    },
+
+    /** 
+     * @method 获取分组状态
+    */
+    getGroupStatus(){
+      let URL = API.lesson.get_group_info
+      let params = {
+        lesson_id: this.lessonID
+      }
+
+      return request.get(URL, params)
+      .then(res => {
+        console.log(res)
+        if(res && res.success){
+          let groupList = res.data.groupList
+          groupList.length && groupList.forEach(group => {
+            this.groupMap.set(group.group_id, group);
+          })
+          return res.data
         }
       })
     }
