@@ -843,9 +843,9 @@
        */
       handleenterTeam(evt) {
         if(process.env.NODE_ENV !== 'production') {
-          location.href = 'http://0.0.0.0:8080/team.html#/student/' + this.classroom.id + '?lessonid=' + this.lessonID;
+          location.href = 'http://0.0.0.0:8080/team.html#/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
         } else {
-          location.href = '/team/student/' + this.classroom.id + '?lessonid=' + this.lessonID;
+          location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
         }
       },
 
