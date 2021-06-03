@@ -35,7 +35,7 @@
 
       <!-- 小组作答 显示 未进组不显示小组详情 -->
       <section class="team__intro" v-if="team && !noTeam">
-        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
+        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
         <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
       </section>
 
@@ -104,13 +104,13 @@
       <div class="team__members">
         <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
         <div class="members__header">
-          <p class="members__title f20 c333">{{ team.team_name }}</p>
-          <p class="members__total f14 c9b">{{ team.member_count }}人</p>
+          <p class="members__title f20 c333">{{ team.teamName }}</p>
+          <p class="members__total f14 c9b">{{ team.memberCount }}人</p>
         </div>
         <ul class="">
-          <li class="member__info" v-for="member in team.members">
-            <img class="member--avatar" :src="member.avatar" :alt="member.name" >
-            <div class="member--name f16 c666"><span class="name">{{ member.name }}</span></div>
+          <li class="member__info" v-for="member in team.memberList">
+            <img class="member--avatar" :src="member.avatar" :alt="member.userName" >
+            <div class="member--name f16 c666"><span class="name">{{ member.userName }}</span></div>
           </li>
         </ul>
       </div>
@@ -364,10 +364,9 @@
        * @param
        */
       getTeamInfo(problemID) {
-        let URL = API.student.GET_GROUP_STATUS;
+        let URL = API.lesson.get_group_status;
         let param = {
-          'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'problem_id': problemID
         };
 
         // 小组作答
@@ -375,36 +374,35 @@
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code == 0 && res.data) {
               let data = res.data;
 
               // 小组信息
-              let team = data.team_info;
+              let team = data.teamInfo;
               // 当前学生是否进入分组
-              let noTeam = team && team.no_team;
+              let noTeam = team && !team.teamId;
               // 学生是否作答过
-              this.hasAnswered = data.user_answered;
+              this.hasAnswered = data.userAnswered;
               // 是否强制临时组作答
               this.forceTempTeam = data.user_force_temp_team;
 
               // 拉取小组成员
-              team.team_id && this.getMembers(team.team_id);
+              team.teamId && this.getMembers(team.teamId);
 
               // 作答结果
-              let problemResult = data.team_problem_result;
+              let problemResult = data.LastResult;
               if(problemResult) {
-                let result = problemResult.team_result_data;
-                this.text = result.content;
+                this.text = problemResult.content;
                 // 计数
                 this.text && (this.count = this.text.length);
                 // 是否有图片
-                if(result.pics && result.pics.length && result.pics[0].pic) {
+                if(problemResult.pics && problemResult.pics.length && problemResult.pics[0].pic) {
                   this.hasImage = true;
-                  this.imageURL = result.pics[0].pic;
-                  this.imageThumbURL = result.pics[0].thumb;
+                  this.imageURL = problemResult.pics[0].pic;
+                  this.imageThumbURL = problemResult.pics[0].thumb;
                 }
 
-                this.result = result;
+                this.result = problemResult;
                 this.ispreview = true;
               }
 
@@ -426,14 +424,14 @@
        * @param
        */
       getMembers(teamID) {
-        let URL = API.student.GET_TEAM_DETAIL;
+        let URL = API.lesson.get_team_detail;
         let param = {
           'team_id': teamID
         };
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code == 0 && res.data) {
               let data = res.data;
 
               // 小组成员
@@ -447,18 +445,17 @@
        * @param
        */
       getTeamResult(problemID) {
-        let URL = API.student.GET_GROUP_STATUS;
+        let URL = API.lesson.get_group_status;
         let param = {
-          'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'problem_id': problemID
         };
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
 
-              let problemResult = data.team_problem_result;
+              let problemResult = data.LastResult;
               // 答案覆盖提示
               if(problemResult) {
                 let msgOptions = {
