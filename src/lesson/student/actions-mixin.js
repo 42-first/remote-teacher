@@ -643,9 +643,12 @@ var actionsMixin = {
         href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
       } else if (groupType === 'free') {
         href = `/team/join/${data.groupid}?lessonid=${lessonID}`;
-      } else {
-        href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
       }
+
+      // 随机分组无teamid不能进入分组
+      // else {
+      //   href = `/team/studentteam/${teamid}?lessonid=${lessonID}`;
+      // }
 
       Object.assign(data, {
         groupid: data.groupid,
