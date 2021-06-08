@@ -245,6 +245,13 @@
        */
       handleView(item, index) {
         if(item && item.type) {
+          if(item.type == 8 && !item.href) {
+            this.$toast({
+              message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
+              duration: 3000
+            });
+            return this;
+          } 
           this.setSlideIndex(index);
         }
       },

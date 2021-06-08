@@ -139,7 +139,7 @@
     <!-- 发起了分组 -->
     <template v-else-if="item.type==8">
       <div class="timeline__paper">
-        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href" @click="handlecanJoin" >
+        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" href="javascript:;" @click="handlecanJoin(item.href)" >
           <div class="paper-txt f18" v-if="item.groupType ==='random'">
             <p class="paper-name"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
             <p class="paper-name"><!-- 查看结果 -->{{ $t('team.viewresults') }}</p>
@@ -439,7 +439,14 @@
       /*
       * @method 是否可以加入小组
       */
-      handlecanJoin(evt) {
+      handlecanJoin(href, evt) {
+        if(!href) {
+          this.$toast({
+            message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
+            duration: 3000
+          });
+          return this;
+        }
         if(this.observerMode) {
           evt.preventDefault();
           evt.stopPropagation();
@@ -451,6 +458,8 @@
 
           return false;
         }
+
+        location.href = href
 
         return true;
       },

@@ -53,6 +53,7 @@ let pages = {
   "recvbonus": "Hi,本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
+  "cantintoteam2": "你不在本组，无权限进入",
 
   "submit": "提交",
   "submitansw": "提交答案",

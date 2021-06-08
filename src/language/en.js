@@ -54,6 +54,7 @@ let pages = {
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
   "cantintoteam": "The co-instructor does not belong to any groups.",
+  "cantintoteam2": "No authority",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
