@@ -90,7 +90,7 @@
                 <div class="item">
                   <div class="detail">
 										<div class="student-info" v-if="problem_answer_type == 1">
-											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
+											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
 												<template v-for="(item2, index2) in item.teamInfo.memberList">
 													<img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
 												</template>
@@ -129,7 +129,7 @@
                   </div>
                   <div class="action-box f14">
                     <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.score, item.totalScore, index, item.comment && item.comment.content)">
+                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.resultId, item.score, item.totalScore, index, item.comment && item.comment.content)">
                       <div class="gray">
                         <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
                         <span>{{ $tc('givestuscore', item.score === -1) }}</span>
@@ -312,6 +312,7 @@
 				unfinished_team_count: 0,				// 没有回答的组数
         group_name: '',									// 分组名
         group_review_done_num: 0,        // 已互评数
+        group_review_declaration: '',    // 互评规则
 	    }
 	  },
     mixins: [ analysismixin ],
@@ -793,6 +794,11 @@
               problem_group_review_id: res.data.reviewInfo.reviewId
             })
 
+            // 有互评拿到互评规则
+            if(res.data.reviewInfo.reviewId && !self.group_review_declaration){
+              self.getReviewRules(res.data.reviewInfo.reviewId)
+            }
+
             let newList = res.data.list
             if(res.data.groupInfo){
               let groupInfo = res.data.groupInfo
@@ -850,6 +856,7 @@
           item['result'] = Object.assign({}, item.resultInfo) 
           item['score'] = item.scoreInfo.score
           item['totalScore'] = item.scoreInfo.totalScore
+          item['resultId'] = item.resultInfo.resultId
         })
         return newList
       },
@@ -983,14 +990,19 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-       * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} answerindex 将要打分的主观题答案的index
        * @params {Number} scoreTotal 总分
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
+       * @params {Number} resultId 将要打分的主观题答案的id
 	     */
-	    initScore (answerindex, score = -1, scoreTotal, index, remark = '') {
+	    initScore (answerindex, resultId, score = -1, scoreTotal, index, remark = '') {
 	      let self = this
-				// let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
+        let url = API.lesson.review_score_detail
+        let params = {
+          problemId: self.problemid,
+          problemResultId: resultId
+        }
 	      // 投屏时不可打分
         if (answerindex === self.postingSubjectiveid) {return;}
         
@@ -1002,17 +1014,21 @@
         scoreTapTimer = setTimeout(() => {
           self.scoringIndex = index
           // TODO:有互评的时候再开放这段
-					// return request.get(url)
-	        //   .then(jsonData => {
-	        //     if (jsonData.success) {
-					// 			self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
-					// 			self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
-	        //       self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
-	        //     }
-	        //   }).catch(error => {
-	        //     console.error('error', error)
-	        //   })
-          self.$refs.StarPanel.$emit('enter', answerindex, scoreTotal, score, -2, 100, 0, index, remark)
+					return request.post(url, params)
+	          .then(res => {
+              if(res && res.code === 0 && res.data){
+                let data = res.data
+                self.tProportion = 100 - data.reviewPercent
+                self.gProportion = data.reviewPercent
+
+                let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
+
+                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, data.teacherScore/100, reviewScore, self.tProportion/100, data.reviewPercent/100, index, remark)
+              }
+	          }).catch(error => {
+	            console.error('error', error)
+	          })
+          
         }, 100)
 	    },
 	    /**
@@ -1023,7 +1039,7 @@
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerindex, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
+	    giveScore (answerindex, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion, resultId) {
 	    	let self = this
 
 	    	if (teacherScore === -1) {
@@ -1035,20 +1051,22 @@
 	      let postData = {
           problemId: self.problemid,
           score: Math.round(teacherScore*100),
-          userId: self.dataList[self.scoringIndex].user.userId,
+          userId: !problem_group_review_id ? self.dataList[self.scoringIndex].user.userId : undefined,
           comment: {
             content: remark
-          }
-	      }
+          },
+          problemResultId: resultId,
+          reviewScore: Math.round(groupReviewScore*100)
+        }
 
 	      return request.post(url, postData)
 	        .then(res => {
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
+              self.dataList[self.scoringIndex].score = Math.round(((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))*100)
               self.dataList[self.scoringIndex].comment.content = remark
-
+              
 
               self.$refs.StarPanel.$emit('leave')
             }
@@ -1139,7 +1157,7 @@
 	    giveHuping (teacher_score_proportion, group_review_proportion, review_declaration) {
 	    	let self = this
 
-	      let url = API.publish_subj_problem_group_review
+	      let url = API.lesson.publish_review
 	      let postData = {
 	        "problemId": self.problemid,
 					reviewPercent: group_review_proportion,
@@ -1147,16 +1165,13 @@
 	      }
 
 	      request.post(url, postData)
-	        .then(jsonData => {
-
-						if(jsonData.success){
-							// 关闭互评页面
-		          console.log('发起互评');
-							self.problem_group_review_id = jsonData.data.problem_group_review_id
+	        .then(res => {
+            if(res && res.code === 0 && res.data){
+              self.problem_group_review_id = res.data.reviewId
+              self.group_review_declaration = review_declaration
 		          self.$refs.HupingPanel.$emit('leaveHuping')
 							self.init()
-						}
-
+            }
 	        }).catch(res => {
             self.$refs.HupingPanel.$emit('leaveHuping')
 						let msg = res.msg
@@ -1199,10 +1214,19 @@
 			 * 打开小组成员列表
 			 *
 			 */
-			handleOpenTeamMember(index) {
-				this.showTeamMember = true;
-				this.teamMemberList = this.dataList[index].teamInfo.memberList
-				this.currentTeam = this.dataList[index].teamInfo.teamName
+			handleOpenTeamMember(teamId) {
+        let URL = API.lesson.get_team_detail
+        let params = {
+          team_id: teamId
+        }
+        return request.get(URL, params)
+        .then(res => {
+          if(res && res.code === 0 && res.data){
+            this.showTeamMember = true;
+            this.teamMemberList = res.data.memberList
+            this.currentTeam = res.data.teamName
+          }
+        })
 			},
 			/*
 			 * 关闭小组成员列表
@@ -1270,6 +1294,23 @@
           message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
           duration: 3e3
         });
+      },
+      /** 
+       * @method 获取互评规则
+       * 
+      */
+      getReviewRules(reviewId){
+        let URL = API.lesson.get_review_config
+        let params = {
+          reviewId
+        }
+
+        return request.post(URL, params)
+        .then(res => {
+          if(res && res.code === 0 && res.data){
+            this.group_review_declaration = res.data.reviewDeclaration
+          }
+        })
       }
 	  }
 	}

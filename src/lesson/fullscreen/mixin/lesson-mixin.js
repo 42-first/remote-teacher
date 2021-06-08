@@ -387,6 +387,11 @@ var commandMixin = {
             this.setObserverMode(true);
           }
 
+          if(role === 6){
+            // 分组作答主观题状态接口不会处理旁听生的逻辑 且后端产品确认同一堂课学生身份不做转换  故直接使用签到时的身份判断是否旁听生
+            this.setIsGuestStudent(true)
+          }
+
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;

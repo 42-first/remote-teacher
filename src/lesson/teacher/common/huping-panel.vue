@@ -30,7 +30,7 @@
           <div class="scale-of-marks">
             <div class="score-point">
               <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
-              <textarea class="textarea-place f15" v-model="review_declaration" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+              <textarea class="textarea-place f15" v-model="review_declaration" maxlength="100" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
             </div>
             <div class="score-rules">
               <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
@@ -147,14 +147,14 @@
       },
     },
     watch: {
-      review_declaration(newVal, oldVal) {
-        if(newVal && newVal.length > 100) {
-          let len = this.getLength(newVal);
-          if(len > 100) {
-            this.review_declaration = newVal.substr(0, 100);
-          }
-        }
-      },
+      // review_declaration(newVal, oldVal) {
+      //   if(newVal && newVal.length > 100) {
+      //     let len = this.getLength(newVal);
+      //     if(len > 100) {
+      //       this.review_declaration = newVal.substr(0, 100);
+      //     }
+      //   }
+      // },
       gProportion(newVal, oldVal){
         if(newVal != this.$parent.gProportion){
           this.changed = false

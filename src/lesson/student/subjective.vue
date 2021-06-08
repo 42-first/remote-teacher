@@ -393,9 +393,7 @@
             }
           })
           .catch((error) => {
-            if(error.status_code == 604){
-              this.isGuestStudent = true
-            }
+            console.log('getTeamInfo:', error)
           });
       },
 
@@ -1007,6 +1005,9 @@
 
       // 课程结束啦
       this.$parent.lessonStatus === 1 && (this.sendStatus = 5);
+
+      // 分组作答主观题状态接口不会处理旁听生的逻辑 且后端产品确认同一堂课学生身份不做转换  故直接使用签到时的身份判断是否旁听生
+      this.$parent.role === 6 && (this.isGuestStudent = true)
     },
     mounted() {
       // 息屏锁屏检测

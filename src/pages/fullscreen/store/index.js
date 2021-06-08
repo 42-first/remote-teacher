@@ -54,7 +54,9 @@ const store = new Vuex.Store({
     // 是否已进入会议
     joined: false,
     // 插件协议版本
-    addinVersion: 1.6
+    addinVersion: 1.6,
+    // 是否旁听生
+    isGuestStudent: false
   },
   mutations: {
     // 重置课堂信息
@@ -69,6 +71,7 @@ const store = new Vuex.Store({
       state.joined = false;
       state.danmus = [];
       state.addinVersion = 1.6;
+      state.isGuestStudent = false;
     },
 
     setLines(state, lines) {
@@ -134,6 +137,10 @@ const store = new Vuex.Store({
     setAddinVersion(state, data) {
       state.addinVersion = data;
     },
+
+    setIsGuestStudent(state, data) {
+      state.isGuestStudent = data
+    }
   },
 
   actions: {
@@ -202,6 +209,10 @@ const store = new Vuex.Store({
     setAddinVersion({commit}, data) {
       commit('setAddinVersion', data)
     },
+
+    setIsGuestStudent({commit}, data) {
+      commit('setIsGuestStudent', data)
+    }
   },
 
   modules: {

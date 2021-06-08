@@ -12,7 +12,7 @@
       <section class="evaluation__inner">
       <!-- 互评得分 修改入口 -->
       <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
-        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
+        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore/100 }) }}</p>
         <p class="pointer" @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
@@ -157,31 +157,31 @@
        * @param reviewID 互评ID
        */
       getGroupReview(reviewID) {
-        let URL = API.student.GET_GROUP_REVIEW;
+        let URL = API.lesson.get_problem_review_detail;
         let param = {
-          'group_review_id': reviewID
+          'reviewId': reviewID
         };
 
         this.reviewID = reviewID;
 
-        return request.get(URL, param)
+        return request.post(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
 
               this.review = data;
-              this.problemID = data.problem_id;
+              this.problemID = data.problemId;
               // this.canSubmitScore = data.can_submit_score;
-              this.declaration = data.group_review_declaration;
+              this.declaration = data.reviewDeclaration;
 
               // 作答结果
-              if(data.problem_result_list && data.problem_result_list.length) {
-                let resultInfo = data.problem_result_list[0];
+              if(data.problemResultList && data.problemResultList.length) {
+                let resultInfo = data.problemResultList[0];
                 this.result = resultInfo.result;
-                this.reviewScore = resultInfo.review_score;
-                this.score = this.reviewScore > 0 ? this.reviewScore : '';
-                this.problemResultID = resultInfo.problem_result_id;
-                this.canSubmitScore = resultInfo.can_submit_score;
+                this.reviewScore = resultInfo.reviewScore;
+                this.score = this.reviewScore > 0 ? this.reviewScore / 100 : '';
+                this.problemResultID = resultInfo.problemResultId;
+                this.canSubmitScore = resultInfo.canSubmitScore;
               } else {
                 this.hasReview = false;
                 this.canSubmitScore = false;
@@ -223,11 +223,12 @@
        * @param
        */
       submitReview() {
-        let URL = API.student.SUBMIT_GROUP_REVIEW;
+        let URL = API.lesson.submit_review_score;
         let param = {
-          'group_review_id': this.summary.reviewid,
-          'problem_result_id': this.problemResultID,
-          'score': this.score
+          'reviewId': this.summary.reviewid,
+          'problemId': this.problemID,
+          'problemResultId': this.problemResultID,
+          'reviewScore': this.score*100
         };
 
         if(!this.submitStatus) {
@@ -238,9 +239,9 @@
 
         return request.post(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
-              this.reviewScore = this.score;
+              this.reviewScore = this.score * 100;
 
               this.summary = Object.assign(this.summary, {
                 status: this.$i18n.t('done') || '已完成',

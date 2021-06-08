@@ -140,6 +140,7 @@
         teacherScore: 0,        // 教师评分
         teacherProportion: 0,    // 教师评分占比
         groupReviewProportion: 0,  // 互评占比
+        answerId: '',             // 答案id
       }
     },
     created () {
@@ -181,7 +182,7 @@
        * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
        */
-      enter (answerindex, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
+      enter (answerindex, resultId, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
         let self = this
 
         self.isPanelHidden = false
@@ -196,6 +197,7 @@
         self.teacherProportion = teacherProportion
         // self.finallyScore = +teacherScore * teacherProportion + +groupReviewScore * groupReviewProportion
         self.remark = remark
+        self.answerId = resultId
       },
       /**
        * 点击空白处或星星决定放弃或星级
@@ -276,9 +278,9 @@
       decide (evt) {
         let self = this
         if (self.problem_group_review_id){
-          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }else {
-          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion)
+          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }
 
 

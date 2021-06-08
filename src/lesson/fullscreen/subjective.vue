@@ -183,8 +183,8 @@
         // 是否再次编辑状态
         isEdit: false,
         retryTimes: 0,
-        // 是否旁听生
-        isGuestStudent: false,
+        // // 是否旁听生 从store中获取
+        // isGuestStudent: false,
       };
     },
     components: {
@@ -194,6 +194,7 @@
       ...mapState([
         'lesson',
         'cards',
+        'isGuestStudent'
       ]),
     },
     watch: {
@@ -413,9 +414,7 @@
             }
           })
           .catch((error) => {
-            if(error.status_code == 604){
-              this.isGuestStudent = true
-            }
+            console.log('getTeamInfo:', error)
           });
       },
 

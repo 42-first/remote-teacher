@@ -85,6 +85,7 @@ let lessonMixin = {
 
       // 是否有分组
       let hasGroup = false
+      let hasReview = false
 
       if(timeline && timeline.length) {
         timeline.forEach(item => {
@@ -108,6 +109,10 @@ let lessonMixin = {
           if(item.type === 'group') {
             hasGroup = true
           }
+
+          if(item.type === 'review'){
+            hasReview = true
+          }
         })
       }
 
@@ -116,6 +121,9 @@ let lessonMixin = {
 
       // 有分组
       hasGroup && await this.getGroupStatus()
+      // 有互评
+      hasReview && await this.getReviewStatus()
+
 
       // 有课件
       if(presSet.size) {
@@ -549,6 +557,23 @@ let lessonMixin = {
             this.groupMap.set(group.group_id, group);
           })
           return res.data
+        }
+      })
+    },
+
+    /** 
+     * 
+     * @method 获取课上互评状态
+    */
+    getReviewStatus(){
+      let self = this
+      let URL = API.lesson.get_review_status_list
+      return request.get(URL)
+      .then(res => {
+        if(res && res.code === 0 && res.data){
+          res.data.length && res.data.forEach(review => {
+            this.groupReviewMap.set(review.reviewId, review);
+          })
         }
       })
     }
