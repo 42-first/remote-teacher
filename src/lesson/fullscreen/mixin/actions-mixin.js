@@ -686,6 +686,15 @@ let actionsMixin = {
       if(!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
+
+        // 新增的分组要添加到map中  以防老师取消分组后 刷新timeline状态不对
+        this.groupMap.set(data.groupid, {
+          deleted: false,
+          group_id: data.groupid,
+          group_name: "",
+          group_type: groupType == 'free' ? 1 : 0,
+          team_id: teamid
+        });
       }
     },
 
@@ -697,6 +706,13 @@ let actionsMixin = {
       let targetIndex = this.cards.findIndex((item) => {
         return item.type === 8 && item.groupid === data.groupid;
       })
+
+      // 取消分组时 如果顶部提醒是该分组时要把提醒去掉 同时更新map中的状态
+      if(this.msg.type == 8 && this.msg.groupid === data.groupid){
+        this.setMsg(null)
+      }
+      let oGroup = this.groupMap.get(data.groupid)
+      this.groupMap.set(data.groupid, Object.assign({}, oGroup, {deleted: true}));
 
       // 可以确认分组被取消了
       if(targetIndex !== -1) {
