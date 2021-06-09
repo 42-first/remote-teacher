@@ -697,7 +697,7 @@ let tencentMixin = {
       this.changeDeviceStatus(device);
 
       const message = audio ? this.$i18n.t('meeting.micunmuted') : this.$i18n.t('meeting.micmuted');
-      this.$toast({ type: 1, message: message, duration: 2000 });
+      !meeting.bandevice && this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**

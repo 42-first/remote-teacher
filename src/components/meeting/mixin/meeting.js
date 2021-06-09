@@ -196,7 +196,7 @@ let meetingMixin = {
       }
       this.setMeeting(meeting);
 
-      this.$toast({ type: 1, position: 'top', message: msg.value ? '全员禁言' : '老师已解除全员禁言', duration: 3000 })
+      this.$toast({ type: 1, message: msg.value ? '全员禁言' : '老师已解除全员禁言', duration: 3000 })
     },
 
     /**
