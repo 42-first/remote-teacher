@@ -353,6 +353,13 @@
         let meeting = this.meeting;
         let audio = !meeting.audio;
 
+        // 全员禁言中
+        if(meeting.bandevice){
+          const message = '全员禁言中';
+          this.$toast({ type: 1, message: message, duration: 2000 });
+          return this
+        }
+
         // todo: 没有音频权限
         if(audio && !meeting.hasAudioAuth) {
           return this;

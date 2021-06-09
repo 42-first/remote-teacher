@@ -142,6 +142,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_share_config: '/api/v3/lesson/meeting/share-config',
       // 互动打点
       report_meeting: '/api/v3/lesson/meeting/report',
+      // 获取禁言状态
+      get_speech_state: '/api/v3/lesson/meeting/forbidden-speech/state',
 
 
       // 教师接口
