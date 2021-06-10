@@ -842,6 +842,13 @@
        *
        */
       handleenterTeam(evt) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam'),
+            duration: 2000
+          });
+          return false
+        }
         if(process.env.NODE_ENV !== 'production') {
           location.href = 'http://0.0.0.0:8080/team.html#/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
         } else {

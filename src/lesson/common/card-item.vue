@@ -440,23 +440,21 @@
       * @method 是否可以加入小组
       */
       handlecanJoin(href, evt) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+            duration: 3000
+          });
+
+          return false;
+        }
+
         if(!href) {
           this.$toast({
             message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
             duration: 3000
           });
           return this;
-        }
-        if(this.observerMode) {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          this.$toast({
-            message: this.$i18n.t('cantintoteam') || '当前是协同教师身份，不参与分组',
-            duration: 3000
-          });
-
-          return false;
         }
 
         location.href = href

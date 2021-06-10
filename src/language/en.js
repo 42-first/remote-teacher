@@ -55,6 +55,7 @@ let pages = {
   "gainbonus": "{number} students won bonus.",
   "cantintoteam": "The co-instructor does not belong to any groups.",
   "cantintoteam2": "No authority",
+  "watchmodenotintoteam": "View mode. Unable to join grouping.",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

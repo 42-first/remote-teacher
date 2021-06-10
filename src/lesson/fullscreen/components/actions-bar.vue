@@ -149,6 +149,7 @@
         'hasMeeting',
         // 是否已进入会议
         'joined',
+        'observerMode'
       ]),
 
       ...mapState('meeting', [
@@ -397,6 +398,13 @@
        * @params
        */
       handleVisibleGroup(evt) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+            duration: 3000
+          });
+          return this;
+        }
         let src = '/team/student/' + this.lesson.classroomId + '?lessonid=' + this.lesson.lessonID;
 
         this.$router.push({ name: 'team-v3', query: { src: encodeURIComponent(src) } });

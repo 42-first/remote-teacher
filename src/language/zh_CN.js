@@ -54,6 +54,7 @@ let pages = {
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
   "cantintoteam2": "你不在本组，无权限进入",
+  "watchmodenotintoteam": "观看者模式下无法参与分组",
 
   "submit": "提交",
   "submitansw": "提交答案",
