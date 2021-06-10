@@ -189,13 +189,15 @@
 			 * 分组入口
 			 */
 			toTeam() {
-				let self = this;
-        console.log(self.classroomid + '--' + self.lessonid);
-        if(process.env.NODE_ENV !== 'production') {
-          location.href = 'http://0.0.0.0:8080/team.html#/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
-        } else {
-          location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+        if(this.studentsCount > 3000) {
+          this.$toast({
+            message: '班级人数超过3000人时暂不支持分组',
+            duration: 3e3
+          });
+          return 
         }
+				let self = this;
+        location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
 				
       },
       /** 
