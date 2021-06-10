@@ -569,6 +569,7 @@ let pages = {
   "changetosignin": "修改为已签到",
   "changetonotsignin": "修改为未签到",
   "zuodashichang": "作答时长",
+  "studentstoomuchnotgroup": "班级人数超过3000人时暂不支持分组",
 
   meeting: {
     "showing": "正在放映",

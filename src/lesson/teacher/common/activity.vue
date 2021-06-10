@@ -58,7 +58,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-		<v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+		<div @click="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #08BC72;">
           <i class="iconfont icon-fenzu1 f21"></i>
@@ -68,7 +68,7 @@
 			<div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
+    </div>
 
     <Toolbar
       ref="Toolbar"
@@ -188,15 +188,19 @@
 			/*
 			 * 分组入口
 			 */
-			toTeam() {
-        if(this.studentsCount > 3000) {
-          this.$toast({
-            message: '班级人数超过3000人时暂不支持分组',
-            duration: 3e3
-          });
-          return 
+			toTeam(evt) {
+        if(this.studentCounts > 3) {
+          let title =  this.$t('tips');
+          let message = this.$t('studentstoomuchnotgroup');
+          let msgOptions = {
+            confirmButtonText: this.$i18n.t('guide.iknown') || '知道了'
+          };
+          this.$messagebox.alert(message, title, msgOptions)
+          
+          return
         }
-				let self = this;
+
+        let self = this;
         location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
 				
       },

@@ -566,6 +566,7 @@ let pages = {
   "changetosignin": "Present",
   "changetonotsignin": "Absent",
   "zuodashichang": "Length of response time",
+  "studentstoomuchnotgroup": "There are more than 3000 students in the class. Grouping is not supported.",
 
   meeting: {
     "showing": "Showing",
