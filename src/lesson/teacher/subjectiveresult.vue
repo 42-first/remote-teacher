@@ -791,11 +791,11 @@
               isShowNewHint: false,
               total_num: res.data.count,
               unfinished_count: res.data.unfinished,
-              problem_group_review_id: res.data.reviewInfo.reviewId
+              problem_group_review_id: res.data.reviewInfo && res.data.reviewInfo.reviewId || this.problem_group_review_id
             })
 
             // 有互评拿到互评规则
-            if(res.data.reviewInfo.reviewId && !self.group_review_declaration){
+            if(res.data.reviewInfo && res.data.reviewInfo.reviewId && !self.group_review_declaration){
               self.getReviewRules(res.data.reviewInfo.reviewId)
             }
 
@@ -1027,7 +1027,9 @@
               }
 	          }).catch(error => {
 	            console.error('error', error)
-	          })
+            })
+          
+          // self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, score, -2, 100, 0, index, remark)
           
         }, 100)
 	    },
@@ -1051,12 +1053,12 @@
 	      let postData = {
           problemId: self.problemid,
           score: Math.round(teacherScore*100),
-          userId: !problem_group_review_id ? self.dataList[self.scoringIndex].user.userId : undefined,
+          userId: !this.problem_group_review_id ? self.dataList[self.scoringIndex].user.userId : undefined,
           comment: {
             content: remark
           },
           problemResultId: resultId,
-          reviewScore: Math.round(groupReviewScore*100)
+          reviewScore: groupReviewScore > 0 ? Math.round(groupReviewScore*100) : undefined
         }
 
 	      return request.post(url, postData)
@@ -1064,7 +1066,7 @@
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = Math.round(((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))*100)
+              self.dataList[self.scoringIndex].score = Math.round((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))
               self.dataList[self.scoringIndex].comment.content = remark
               
 
@@ -1138,6 +1140,11 @@
 					let msg = i18n.locale === 'zh_CN' ? '请先收题' : 'Stop answering required'
 					T_PUBSUB.publish('ykt-msg-toast', msg);
 				} else {
+          if(this.dataList.length < 2){
+            let msg = i18n.locale === 'zh_CN' ? '答案提交数量不少于2份才可发起互评' : '2 answers are required at least'
+            T_PUBSUB.publish('ykt-msg-toast', msg);
+            return this;
+          }
 					// 防止用户频繁点击
 	        clearTimeout(hupingTapTimer)
 	        hupingTapTimer = setTimeout(() => {
@@ -1174,8 +1181,7 @@
             }
 	        }).catch(res => {
             self.$refs.HupingPanel.$emit('leaveHuping')
-						let msg = res.msg
-						T_PUBSUB.publish('ykt-msg-toast', msg);
+						
           });
 
 

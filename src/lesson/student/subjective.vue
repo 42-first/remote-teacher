@@ -262,7 +262,7 @@
 
         // 检测这个问题是否分组
         let isTeam = data.groupid || false;
-        isTeam && this.getTeamInfo(problemID);
+        isTeam && this.getTeamInfo(problemID, data.groupid);
 
         // event消息订阅
         this.initPubSub();
@@ -343,10 +343,11 @@
        * @method 是否小组作答，拉取小组列表，作答结果 是否可以提交答案
        * @param
        */
-      getTeamInfo(problemID) {
+      getTeamInfo(problemID, groupID) {
         let URL = API.lesson.get_group_status;
         let param = {
-          'problem_id': problemID
+          'problem_id': problemID,
+          'group_id': groupID
         };
 
         // 小组作答
@@ -360,7 +361,7 @@
               // 小组信息
               let team = data.teamInfo;
               // 当前学生是否进入分组
-              let noTeam = team && !team.teamId;
+              let noTeam = team && !+team.teamId;
               // 学生是否作答过
               this.hasAnswered = data.userAnswered;
               // 是否强制临时组作答
@@ -422,10 +423,11 @@
        * @method 是否小组有小组作答结果
        * @param
        */
-      getTeamResult(problemID) {
+      getTeamResult(problemID, groupID) {
         let URL = API.lesson.get_group_status;
         let param = {
-          'problem_id': problemID
+          'problem_id': problemID,
+          'group_id': groupID
         };
 
         request.get(URL, param)
@@ -433,7 +435,7 @@
             if(res && res.code === 0 && res.data) {
               let data = res.data;
 
-              let problemResult = data.LastResult;
+              let problemResult = data.lastResult.lastAnswerUserId;
               // 答案覆盖提示
               if(problemResult) {
                 let msgOptions = {
@@ -951,7 +953,7 @@
                 }
               });
             } else {
-              this.getTeamResult(this.problemID);
+              this.getTeamResult(this.problemID, this.summary.groupid);
             }
           } else {
             this.sendSubjective();

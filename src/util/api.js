@@ -147,7 +147,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 获取分组状态
       get_group_info: '/v/lesson/lesson_group_info',
       // 学生答题时获取分组作答主观题状态
-      get_group_status: '/api/v3/problem/group/subjective/status',
+      get_group_status: '/api/v3/lesson/problem/group/subjective/status',
       // 获取team详情
       get_team_detail: '/api/v3/group/team/detail',
       // 学生端-查看互评任务详情
