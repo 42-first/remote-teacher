@@ -190,6 +190,7 @@
         retryTimes: 0,
         // // 是否旁听生 从store中获取
         // isGuestStudent: false,
+        timer: null
       };
     },
     components: {
@@ -243,6 +244,8 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.timer && clearInterval(this.timer)
+
           if(this.summary) {
             this.init(this.summary);
           } else {
@@ -277,6 +280,9 @@
         this.noTeam = false;
         this.timeOver =false;
         this.warning = false;
+        // 重置的时候完成状态都为false
+        this.isComplete = false;
+        this.team = null
       },
 
       /*
@@ -398,7 +404,7 @@
               team.teamId && this.getMembers(team.teamId);
 
               // 作答结果
-              let problemResult = data.lastResult;
+              let problemResult = data.lastResult.result;
               if(problemResult) {
                 this.text = problemResult.content;
                 // 计数
@@ -1006,6 +1012,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer);
     }
   };
 </script>
