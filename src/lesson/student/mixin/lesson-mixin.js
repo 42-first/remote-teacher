@@ -574,7 +574,11 @@ let lessonMixin = {
           res.data.length && res.data.forEach(review => {
             this.groupReviewMap.set(review.reviewId, review);
           })
+          return res.data
         }
+      }).catch(error => {
+        console.log('getReviewStatus:', error)
+        return {}
       })
     }
   }

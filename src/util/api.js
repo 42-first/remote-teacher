@@ -155,7 +155,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 学生端-互评打分
       submit_review_score: '/api/v3/lesson/review/submit-review-score',
       // 获取互评状态列表
-      get_review_status_list: '/api/v3/review/status-list',
+      get_review_status_list: '/api/v3/lesson/review/status-list',
 
       // 教师接口
       // 发题
@@ -243,9 +243,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 教师端-查看互评规则
       get_review_config: '/api/v3/lesson/review/config',
       // 教师端-发起主观题互评
-      publish_review: '/api/v3/lesson/review/lesson/publish-review',
+      publish_review: '/api/v3/lesson/review/publish-review',
       // 教师端-查看题目打分情况
-      review_score_detail: '/api/v3/lesson/review/teacher/score-detail'
+      review_score_detail: '/api/v3/lesson/problem/teacher/score-detail'
     },
 
     /*------------------*\

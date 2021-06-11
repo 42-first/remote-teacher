@@ -33,7 +33,7 @@
           <p class="answer--points f14 blue pointer" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
+          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics.length && result.pics[0].pic" @click="handleZoom" />
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
@@ -154,15 +154,15 @@
 
       /*
        * @method 获取互评的详情
-       * @param reviewID 互评ID
+        * @param problemID 
        */
-      getGroupReview(reviewID) {
+      getGroupReview(problemID) {
         let URL = API.lesson.get_problem_review_detail;
         let param = {
-          'reviewId': reviewID
+          'problemId': problemID
         };
 
-        this.reviewID = reviewID;
+
 
         return request.post(URL, param)
           .then((res) => {
@@ -374,7 +374,10 @@
 
       if(this.summary) {
         let reviewID = this.summary.reviewid;
-        reviewID && this.getGroupReview(reviewID);
+        let problemID = this.summary.prob;
+        problemID && this.getGroupReview(problemID);
+
+        this.reviewID = reviewID;
       } else {
         // this.$router.back();
       }
