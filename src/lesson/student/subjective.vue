@@ -194,7 +194,8 @@
         // 是否旁听生
         isGuestStudent: false,
         // 是否华为特殊手机
-        huawei: !!huawei
+        huawei: !!huawei,
+        timer: null
       };
     },
     components: {
@@ -237,7 +238,24 @@
         } else if(newValue === 5) {
           this.submitText = this.$i18n.t('classended') || '课程已结束';
         }
-      }
+      },
+      '$route' (to, from) {
+        if(to && to.params && to.name === 'student-subjective') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          this.timer && clearInterval(this.timer)
+
+          if(this.summary) {
+            this.init(this.summary);
+          } else {
+            this.$router.back();
+          }
+        }
+      },
     },
     filters: {
     },
@@ -371,7 +389,7 @@
               team.teamId && this.getMembers(team.teamId);
 
               // 作答结果
-              let problemResult = data.lastResult;
+              let problemResult = data.lastResult.result;
               if(problemResult) {
                 this.text = problemResult.content;
                 // 计数
