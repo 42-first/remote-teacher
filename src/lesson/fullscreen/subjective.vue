@@ -403,9 +403,9 @@
               // 拉取小组成员
               team.teamId && this.getMembers(team.teamId);
 
-              // 作答结果
+              // 作答结果  未作答时返回的是{}
               let problemResult = data.lastResult.result;
-              if(problemResult) {
+              if(problemResult && data.lastResult.lastAnswerUserId) {
                 this.text = problemResult.content;
                 // 计数
                 this.text && (this.count = this.text.length);

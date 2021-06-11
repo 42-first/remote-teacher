@@ -1315,6 +1315,8 @@
         .then(res => {
           if(res && res.code === 0 && res.data){
             this.group_review_declaration = res.data.reviewDeclaration
+            this.tProportion = 100 - res.data.reviewPercent
+            this.gProportion = res.data.reviewPercent
           }
         })
       }
