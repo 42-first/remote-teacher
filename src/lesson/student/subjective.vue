@@ -371,7 +371,7 @@
               team.teamId && this.getMembers(team.teamId);
 
               // 作答结果
-              let problemResult = data.LastResult;
+              let problemResult = data.lastResult;
               if(problemResult) {
                 this.text = problemResult.content;
                 // 计数
