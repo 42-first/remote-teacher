@@ -1068,7 +1068,13 @@
             content: remark
           },
           problemResultId: resultId,
-          reviewScore: groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined
+          reviewScore: typeof groupReviewScore == 'number' ? (groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined) : -1
+        }
+
+        if(this.problem_answer_type){
+          params['groupId'] = this.group_id
+          params['teamId'] = this.dataList[this.scoringIndex].teamInfo.teamId
+          delete params.userId
         }
 
 	      return request.post(url, postData)

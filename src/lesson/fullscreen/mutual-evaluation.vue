@@ -280,6 +280,8 @@
                 duration: 2000
               });
 
+              this.handleclosed()
+
               return data;
             }
           });
