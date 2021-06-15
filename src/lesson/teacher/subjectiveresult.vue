@@ -28,6 +28,7 @@
           <!-- 上部时钟、人数统计 -->
           <section class="upper">
             <Rolex
+              v-if="!problem_group_review_id"
               :limit="limit"
               :newTime="newTime"
               :durationLeft="durationLeft"
@@ -791,11 +792,11 @@
               isShowNewHint: false,
               total_num: res.data.count,
               unfinished_count: res.data.unfinished,
-              problem_group_review_id: res.data.reviewInfo && res.data.reviewInfo.reviewId || this.problem_group_review_id
+              problem_group_review_id: res.data.reviewInfo && +res.data.reviewInfo.reviewId && res.data.reviewInfo.reviewId || this.problem_group_review_id
             })
 
-            // 有互评拿到互评规则
-            if(res.data.reviewInfo && res.data.reviewInfo.reviewId && !self.group_review_declaration){
+            // 有互评拿到互评规则  无互评的时候返回的是"0"
+            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId && !self.group_review_declaration){
               self.getReviewRules(res.data.reviewInfo.reviewId)
             }
 
@@ -1020,10 +1021,11 @@
                 let data = res.data
                 self.tProportion = 100 - data.reviewPercent
                 self.gProportion = data.reviewPercent
-
+                
+                let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
                 let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
 
-                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, data.teacherScore/100, reviewScore, self.tProportion/100, data.reviewPercent/100, index, remark)
+                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, remark)
               }
 	          }).catch(error => {
 	            console.error('error', error)
@@ -1053,12 +1055,12 @@
 	      let postData = {
           problemId: self.problemid,
           score: Math.round(teacherScore*100),
-          userId: !this.problem_group_review_id ? self.dataList[self.scoringIndex].user.userId : undefined,
+          userId: self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark
           },
           problemResultId: resultId,
-          reviewScore: groupReviewScore > 0 ? Math.round(groupReviewScore*100) : undefined
+          reviewScore: groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined
         }
 
 	      return request.post(url, postData)
@@ -1066,7 +1068,11 @@
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = Math.round((+teacherScore * teacherProportion) + (+groupReviewScore * groupReviewProportion))
+              if(this.problem_group_review_id) {
+                self.dataList[self.scoringIndex].score = Math.round((+teacherScore * teacherProportion * 100) + (+groupReviewScore * groupReviewProportion * 100))
+              }else {
+                self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
+              }
               self.dataList[self.scoringIndex].comment.content = remark
               
 

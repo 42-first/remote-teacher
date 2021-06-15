@@ -157,18 +157,13 @@
       })
     },
     computed: {
-      finallyScore: {
-        set() {
+      finallyScore() {
+        if(this.groupReviewScore == -2 || (!Number.isFinite(this.groupReviewScore) && !Number.isFinite(this.teacherScore))) {
+          return '--'
+        }else {
           return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
-        },
-        get() {
-          if(this.groupReviewScore == -2 || (typeof this.groupReviewScore != 'number' && typeof this.teacherScore  != 'number')) {
-            return '--'
-          }else {
-            return (this.teacherProportion * (+this.teacherScore) + this.groupReviewProportion * (+this.groupReviewScore)).toFixed(1)
-          }
         }
-
+        
       }
     },
     methods: {
@@ -370,7 +365,7 @@
           }
           return false;
         }
-        self[score] = '' + num
+        self[score] = num
         return true
       },
     }
