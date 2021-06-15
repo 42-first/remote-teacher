@@ -142,6 +142,14 @@
         if(newVal > this.summary.score) {
           this.score = this.summary.score;
         }
+      },
+      '$route'(to, from){
+        if(to && to.params && to.name === 'evaluation') {
+          let params = to.params;
+          this.index = params.index
+
+          this.init()
+        }
       }
     },
     filters: {
@@ -151,6 +159,22 @@
       ...mapActions([
         'setCards',
       ]),
+
+      init(){
+        let cards = this.cards;
+        this.summary = cards[this.index];
+        this.lessonID = this.lesson.lessonID;
+
+        if(this.summary) {
+          let reviewID = this.summary.reviewid;
+          let problemID = this.summary.prob;
+          problemID && this.getGroupReview(problemID);
+
+          this.reviewID = reviewID;
+        } else {
+          // this.$router.back();
+        }
+      },
 
       /*
        * @method 获取互评的详情
@@ -368,19 +392,7 @@
     created() {
       this.index = +this.$route.params.index;
 
-      let cards = this.cards;
-      this.summary = cards[this.index];
-      this.lessonID = this.lesson.lessonID;
-
-      if(this.summary) {
-        let reviewID = this.summary.reviewid;
-        let problemID = this.summary.prob;
-        problemID && this.getGroupReview(problemID);
-
-        this.reviewID = reviewID;
-      } else {
-        // this.$router.back();
-      }
+      this.init()
     },
     mounted() {
     },

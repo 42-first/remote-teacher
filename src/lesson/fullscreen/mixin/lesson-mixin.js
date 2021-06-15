@@ -663,13 +663,11 @@ var commandMixin = {
     getReviewStatus(){
       let self = this
       let URL = API.lesson.get_review_status_list
-      return request.get({
-        url: URL
-      })
+      return request.get(URL)
       .then(res => {
         if(res && res.code === 0 && res.data){
           res.data.length && res.data.forEach(review => {
-            self.app.student.groupReviewMap.set(review.reviewId, review);
+            this.groupReviewMap.set(review.reviewId, review);
           })
           return res.data
         }

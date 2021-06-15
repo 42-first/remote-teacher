@@ -314,6 +314,7 @@
         group_name: '',									// 分组名
         group_review_done_num: 0,        // 已互评数
         group_review_declaration: '',    // 互评规则
+        group_id: 0,                    // 分组id 打分时使用
 	    }
 	  },
     mixins: [ analysismixin ],
@@ -806,6 +807,7 @@
               self.setData({
                 problem_answer_type: 1,
                 group_name: groupInfo.groupName,
+                group_id: groupInfo.groupId
               })
               newList = self.formatTeamResult(res.data)
             }
@@ -1002,7 +1004,13 @@
         let url = API.lesson.review_score_detail
         let params = {
           problemId: self.problemid,
-          problemResultId: resultId
+          problemResultId: resultId,
+          userId: self.dataList[index].user && self.dataList[index].user.userId
+        }
+        if(this.problem_answer_type){
+          params['groupId'] = this.group_id
+          params['teamId'] = this.dataList[index].teamInfo.teamId
+          delete params.userId
         }
 	      // 投屏时不可打分
         if (answerindex === self.postingSubjectiveid) {return;}
@@ -1025,7 +1033,7 @@
                 let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
                 let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
 
-                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, remark)
+                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content)
               }
 	          }).catch(error => {
 	            console.error('error', error)
