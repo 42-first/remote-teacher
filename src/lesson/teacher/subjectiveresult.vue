@@ -1033,7 +1033,7 @@
                 let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
                 let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
 
-                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content)
+                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content || '')
               }
 	          }).catch(error => {
 	            console.error('error', error)
