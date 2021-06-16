@@ -797,7 +797,7 @@
             })
 
             // 有互评拿到互评规则  无互评的时候返回的是"0"
-            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId){
+            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId && !self.group_review_declaration){
               self.getReviewRules(res.data.reviewInfo.reviewId)
             }
 
@@ -1196,6 +1196,8 @@
             if(res && res.code === 0 && res.data){
               self.problem_group_review_id = res.data.reviewId
               self.group_review_declaration = review_declaration
+              self.tProportion = teacher_score_proportion
+              self.gProportion = group_review_proportion
 		          self.$refs.HupingPanel.$emit('leaveHuping')
 							self.init()
             }
