@@ -797,7 +797,7 @@
             })
 
             // 有互评拿到互评规则  无互评的时候返回的是"0"
-            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId && !self.group_review_declaration){
+            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId){
               self.getReviewRules(res.data.reviewInfo.reviewId)
             }
 
