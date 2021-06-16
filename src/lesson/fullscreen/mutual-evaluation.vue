@@ -355,7 +355,7 @@
         let targetEl = evt.target;
         let sValue = targetEl.value;
         let index = sValue.indexOf('.');
-        let sourceScore = this.summary && this.summary.score || 0;
+        let sourceScore = this.summary && this.summary.score/100 || 0;
 
         if(index !== -1 && index == sValue.length - 1) {
           return ;
