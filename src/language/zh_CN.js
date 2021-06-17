@@ -55,6 +55,7 @@ let pages = {
   "cantintoteam": "当前是协同教师身份，不参与分组",
   "cantintoteam2": "你不在本组，无权限进入",
   "watchmodenotintoteam": "观看者模式下无法参与分组",
+  "auditornotgrade": "旁听生身份无法参与互评",
 
   "submit": "提交",
   "submitansw": "提交答案",

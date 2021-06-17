@@ -56,6 +56,7 @@ let pages = {
   "cantintoteam": "The co-instructor does not belong to any groups.",
   "cantintoteam2": "No authority",
   "watchmodenotintoteam": "View mode. Unable to join grouping.",
+  "auditornotgrade": "Auditors are not allowed to participate in peer grading",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

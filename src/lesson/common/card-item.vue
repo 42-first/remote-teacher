@@ -161,13 +161,13 @@
     <!-- 发起了互评 -->
     <template v-else-if="item.type==9">
       <div class="timeline__paper">
-        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/v3/'+lessonId+'/evaluation/'+index" >
+        <div :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" @click="handleGoEvaluation(index)" >
           <div class="paper-txt f18">
             <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
             <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
           </div>
           <i class="iconfont icon-huping f55"></i>
-        </router-link>
+        </div>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
@@ -474,6 +474,25 @@
         }else {
           location.href = url
         }
+      },
+
+      /** 
+       * @method 互评
+       * 
+      */
+      handleGoEvaluation(index){
+        if(this.$parent.$parent.role === 6){
+          this.$toast({
+            message: this.$i18n.t('auditornotgrade'),
+            duration: 3000
+          })
+
+          return this;
+        }
+
+        this.$router.push({
+          path: `/v3/${this.lessonId}/evaluation/${index}`
+        })
       }
     },
     created() {

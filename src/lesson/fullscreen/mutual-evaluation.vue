@@ -41,6 +41,11 @@
       <section class="evaluation__empty f17" v-if="!hasReview">
         <p>{{ $t('grading.noarticipate') }}</p>
       </section>
+      <!-- 旁听生不能打分 -->
+      <section class="evaluation__empty f17" v-if="isGuestStudent">
+        <p>{{ $t('auditornotgrade') }}</p>
+      </section>
+      
 
       <!-- 打分 -->
       <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
@@ -129,6 +134,7 @@
       ...mapState([
         'lesson',
         'cards',
+        'isGuestStudent'
       ]),
     },
     watch: {

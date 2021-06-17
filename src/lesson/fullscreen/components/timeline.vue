@@ -226,7 +226,8 @@
         'slideIndex',
         'msg',
         'observerMode',
-        'currSlide'
+        'currSlide',
+        'isGuestStudent',
       ]),
     },
     filters: {
@@ -260,7 +261,16 @@
               });
               return this;
             }
-          } 
+          }else if(item.type == 9){
+            if(this.isGuestStudent){
+              this.$toast({
+                message: this.$i18n.t('auditornotgrade') || '旁听生身份无法参与互评',
+                duration: 3000
+              });
+              return this;
+            }
+          }
+
           this.setSlideIndex(index);
         }
       },
