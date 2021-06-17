@@ -189,7 +189,7 @@
 			 * 分组入口
 			 */
 			toTeam(evt) {
-        if(this.studentCounts > 3) {
+        if(this.studentCounts > 3000) {
           let title =  this.$t('tips');
           let message = this.$t('studentstoomuchnotgroup');
           let msgOptions = {
