@@ -206,6 +206,7 @@
                 this.score = this.reviewScore > 0 ? this.reviewScore / 100 : '';
                 this.problemResultID = resultInfo.problemResultId;
                 this.canSubmitScore = resultInfo.canSubmitScore;
+                this.hasReview = true;
               } else {
                 this.hasReview = false;
                 this.canSubmitScore = false;

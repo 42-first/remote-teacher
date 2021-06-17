@@ -757,8 +757,8 @@
             self.setData({
               isShowNewHint: res.data.count - self.dataList.length > 0,
               total_num: res.data.count,
-              unfinished_count: res.data.unfinishedCount,
-              group_review_done_num: res.data.reviewNum,
+              unfinished_count: res.data.unfinishedCount || 0,
+              group_review_done_num: res.data.reviewNum || 0,
               group_review_total_num: res.data.reviewTotalNum
             })
           }
@@ -856,7 +856,7 @@
         let newList = data.resultList
         newList.forEach(item => {
           item['index'] = item.resultInfo.index
-          item['result'] = Object.assign({}, item.resultInfo) 
+          item['result'] = Object.assign({}, item.resultInfo.result) 
           item['score'] = item.scoreInfo.score
           item['totalScore'] = item.scoreInfo.totalScore
           item['resultId'] = item.resultInfo.resultId
@@ -1004,7 +1004,7 @@
         let url = API.lesson.review_score_detail
         let params = {
           problemId: self.problemid,
-          problemResultId: resultId,
+          // problemResultId: resultId,
           userId: self.dataList[index].user && self.dataList[index].user.userId
         }
         if(this.problem_answer_type){
@@ -1033,7 +1033,7 @@
                 let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
                 let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
 
-                self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content || '')
+                self.$refs.StarPanel.$emit('enter', self.problem_group_review_id, answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content || '')
               }
 	          }).catch(error => {
 	            console.error('error', error)
@@ -1063,18 +1063,19 @@
 	      let postData = {
           problemId: self.problemid,
           score: Math.round(teacherScore*100),
-          userId: self.dataList[self.scoringIndex].user.userId,
+          userId: self.dataList[self.scoringIndex].user && self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark
           },
           problemResultId: resultId,
-          reviewScore: typeof groupReviewScore == 'number' ? (groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined) : -1
+          reviewScore: typeof groupReviewScore == 'number' || +groupReviewScore ? (groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined) : -1
         }
 
         if(this.problem_answer_type){
-          params['groupId'] = this.group_id
-          params['teamId'] = this.dataList[this.scoringIndex].teamInfo.teamId
-          delete params.userId
+          postData['groupId'] = this.group_id
+          postData['teamId'] = this.dataList[this.scoringIndex].teamInfo.teamId
+          delete postData.userId
+          delete postData.problemResultId
         }
 
 	      return request.post(url, postData)
@@ -1087,7 +1088,9 @@
               }else {
                 self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
               }
-              self.dataList[self.scoringIndex].comment.content = remark
+              self.dataList[self.scoringIndex].comment = {
+                content: remark
+              }
               
 
               self.$refs.StarPanel.$emit('leave')

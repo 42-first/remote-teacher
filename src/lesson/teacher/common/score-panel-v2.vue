@@ -141,6 +141,9 @@
         teacherProportion: 0,    // 教师评分占比
         groupReviewProportion: 0,  // 互评占比
         answerId: '',             // 答案id
+        problem_group_review_id: 0, // 互评id
+        tempTeacherScore: 0,
+        tempReviewScore: 0
       }
     },
     created () {
@@ -177,7 +180,7 @@
        * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
        */
-      enter (answerindex, resultId, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
+      enter (problem_group_review_id, answerindex, resultId, scoreTotal, teacherScore = 0, groupReviewScore = -2, teacherProportion, groupReviewProportion, index, remark) {
         let self = this
 
         self.isPanelHidden = false
@@ -193,6 +196,9 @@
         // self.finallyScore = +teacherScore * teacherProportion + +groupReviewScore * groupReviewProportion
         self.remark = remark
         self.answerId = resultId
+        self.problem_group_review_id = problem_group_review_id
+        self.tempTeacherScore = self.teacherScore
+        self.tempReviewScore = self.groupReviewScore
       },
       /**
        * 点击空白处或星星决定放弃或星级
@@ -272,10 +278,10 @@
        */
       decide (evt) {
         let self = this
-        if (self.problem_group_review_id){
+        if (self.problem_group_review_id && self.groupReviewScore && self.teacherScore){
           self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }else {
-          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
+          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore || self.tempTeacherScore, self.groupReviewScore || self.tempReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }
 
 
