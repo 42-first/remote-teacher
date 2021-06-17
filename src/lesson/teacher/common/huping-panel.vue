@@ -538,6 +538,10 @@
     background: #5096F5;
     border-top-right-radius: .053333rem !important;
     border-bottom-right-radius: .053333rem !important;
+    margin-left: 20px;
+  }
+  .mt-range-content {
+    margin-right: 0;
   }
 
   .score-rules i, .score-rules span {
