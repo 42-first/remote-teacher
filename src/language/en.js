@@ -545,7 +545,7 @@ let pages = {
     "gradedalready" : "Tips",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading",
-    "noarticipate": "Groups did not submit will not participate in the peer grading.",
+    "noarticipate": "Students who did not submit will not participate in the peer grading",
   },
 
   "openwordcloud": "Show word cloud",

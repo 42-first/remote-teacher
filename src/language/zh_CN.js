@@ -549,7 +549,7 @@ let pages = {
     "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
-    "noarticipate": "未作答的小组不参与互评",
+    "noarticipate": "未作答状态下无法参与互评",
   },
 
   "openwordcloud": "生成词云并投屏",
