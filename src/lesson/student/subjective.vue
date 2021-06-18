@@ -949,8 +949,14 @@
         // 是否小组作答
         // 小组作答先看下有没有人提交 提示覆盖信息
 
+        // 小组作答 旁听生身份不能提交
+        if(this.answerType && this.isGuestStudent) {
+          return this;
+        }
+
         if(this.sendStatus === 2) {
-          if(this.answerType === 1 && !this.isEdit) {
+          // 只要是小组作答  都请求下
+          if(this.answerType === 1) {
             // 是否进组
             if(this.noTeam || this.forceTempTeam) {
               let msgOptions = {
