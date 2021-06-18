@@ -61,7 +61,7 @@
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
           <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score/100 }) }}</p>
-          <input class="input f30 c9b" :placeholder="$t('grading.pleasescore')" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" :max="summary.score/100"/>
+          <input class="input f30 c9b" :placeholder="$t('grading.pleasescore')" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" :max="summary.score/100" min="0"/>
         </div>
         <div class="score__node">
           <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
