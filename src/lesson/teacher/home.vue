@@ -524,7 +524,11 @@
 					if(res && res.code === 0 && res.data){
 						let data = res.data
 						return res.data
-					}
+					} else if(res && res.code === 50004) {
+            location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + this.lessonid;
+
+            return null;
+          }
 				}).catch(error => {
 					console.log('getLesson:', error);
 				})
