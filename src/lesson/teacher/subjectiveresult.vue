@@ -1300,7 +1300,7 @@
       addFold(list) {
           list.map(e => {
               if(e.result.content && this.getLength(e.result.content)> 200) {
-                  e.fold = false
+                  e.fold = true
               } else {
                   e.fold = false
                   e.hideFold = true
