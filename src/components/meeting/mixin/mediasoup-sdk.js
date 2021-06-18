@@ -40,7 +40,7 @@ function getProtooUrl({ roomId = '666666', peerId, token, forceH264, forceVP9 })
   // const hostname = 'v3demo.mediasoup.org:4443' || 'b.yuketang.cn/wswebrtc';
   // wss://v3demo.mediasoup.org:4443/?roomId=5agep09w&peerId=lo8b4bkf
 
-  const hostname = 'b.yuketang.cn/wswebrtc';
+  const hostname = 'webrtc.huanghe-corp.xuetangonline.com/wswebrtc';
   let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
 
   if (forceH264)

@@ -65,7 +65,7 @@ function getTestToken(roomId, peerId) {
   // Sign JWT, password=616161
   var sHeader = JSON.stringify(oHeader);
   var sPayload = JSON.stringify(oPayload);
-  var token = rs.jws.JWS.sign("HS256", sHeader, sPayload, "test");
+  var token = rs.jws.JWS.sign("HS256", sHeader, sPayload, "testsecret");
 
   console.log('getTestToken token:', token)
 
