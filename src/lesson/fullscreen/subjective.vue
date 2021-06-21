@@ -90,7 +90,7 @@
         <span class="f18 yellow">*</span>
         <!-- 由于获取小组信息状态接口不再处理旁听生的异常 优先展示旁听生提示 -->
         <p class="f14 c9b" v-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
-        <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
+        <p class="f14 c9b" v-else-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
         <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
