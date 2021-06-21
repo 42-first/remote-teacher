@@ -184,7 +184,7 @@
 
 		<!-- 发题选时间蒙版客观题 -->
     <Problemtime v-if="!isProblemtimeHidden"
-      :problem-type="'ShortAnswer'"
+      :problem-type="5"
       :isYanshi="true"
       @cancelPublishProblem="cancelPublishProblem"
       @chooseProblemDuration="yanshiProblem"
