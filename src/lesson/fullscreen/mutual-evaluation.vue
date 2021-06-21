@@ -259,7 +259,7 @@
           'reviewId': this.summary.reviewid,
           'problemId': this.problemID,
           'problemResultId': this.problemResultID,
-          'reviewScore': this.score*100
+          'reviewScore': Math.round(this.score*100)
         };
 
         if(!this.submitStatus) {
