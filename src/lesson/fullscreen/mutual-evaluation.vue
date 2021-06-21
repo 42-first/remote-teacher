@@ -42,7 +42,7 @@
         <p>{{ $t('grading.noarticipate') }}</p>
       </section>
       <!-- 旁听生不能打分 -->
-      <section class="evaluation__empty f17" v-if="isGuestStudent">
+      <section class="evaluation__empty f17" v-else-if="isGuestStudent">
         <p>{{ $t('auditornotgrade') }}</p>
       </section>
       
@@ -533,7 +533,7 @@
     justify-content: center;
 
     padding: 0 20px;
-    height: 15px;
+    height: 70px;
     text-align: center;
     background: #fff;
   }
