@@ -315,6 +315,7 @@
         group_review_done_num: 0,        // 已互评数
         group_review_declaration: '',    // 互评规则
         group_id: 0,                    // 分组id 打分时使用
+        init_total_num: 0,              // 已作答初始值
 	    }
 	  },
     mixins: [ analysismixin ],
@@ -755,7 +756,7 @@
         .then((res) => {
           if(res && res.code === 0 && res.data){
             self.setData({
-              isShowNewHint: res.data.count - self.dataList.length > 0,
+              isShowNewHint: res.data.count - self.init_total_num > 0,
               total_num: res.data.count,
               unfinished_count: res.data.unfinishedCount || 0,
               group_review_done_num: res.data.reviewNum || 0,
@@ -793,7 +794,8 @@
               isShowNewHint: false,
               total_num: res.data.count,
               unfinished_count: res.data.unfinished,
-              problem_group_review_id: res.data.reviewInfo && +res.data.reviewInfo.reviewId && res.data.reviewInfo.reviewId || this.problem_group_review_id
+              problem_group_review_id: res.data.reviewInfo && +res.data.reviewInfo.reviewId && res.data.reviewInfo.reviewId || this.problem_group_review_id,
+              init_total_num: res.data.count
             })
 
             // 有互评拿到互评规则  无互评的时候返回的是"0"
