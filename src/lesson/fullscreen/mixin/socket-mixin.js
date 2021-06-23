@@ -227,6 +227,14 @@ var mixin = {
             }
 
             break
+          
+          // 请求禁言
+          case 'bandevice':
+            let meetingcmp = this.$refs.meeting;
+            if(meetingcmp) {
+              meetingcmp.banDevice(msg);
+            } 
+            break
 
           // 共享桌面
           case 'sharescreen':
