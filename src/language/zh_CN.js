@@ -599,6 +599,9 @@ let pages = {
     "webrtcnosupported": "建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课",
     "switchtolive": "切换到直播",
     "rtcnosupported": "当前浏览器版本不支持互动，请<a class=blue href=http://www.google.cn/chrome/ target=_blank>点击此处更新</a>或 进入直播模式上课",
+    "bannedfromspeaking": "全员禁言",
+    "releasebannedspeak": "老师已解除全员禁言",
+    "bannedspeaking": "全员禁言中",
   },
 
   // 图片国际化

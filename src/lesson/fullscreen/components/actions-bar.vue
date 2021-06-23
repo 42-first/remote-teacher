@@ -355,7 +355,7 @@
 
         // 全员禁言中
         if(meeting.bandevice){
-          const message = '全员禁言中';
+          const message = this.$i18n && this.$i18n.t('meeting.bannedspeaking') || '全员禁言中';
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this
         }

@@ -196,7 +196,10 @@ let meetingMixin = {
       }
       this.setMeeting(meeting);
 
-      this.$toast({ type: 1, message: msg.value ? '全员禁言' : '老师已解除全员禁言', duration: 3000 })
+      let bannedSpeaking = this.$i18n && this.$i18n.t('meeting.bannedfromspeaking') || '全员禁言';
+      let releaseBannedSpeaking = this.$i18n && this.$i18n.t('meeting.releasebannedspeak') || '老师已解除全员禁言';
+      
+      this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
     },
 
     /**
