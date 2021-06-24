@@ -184,6 +184,24 @@ let meetingMixin = {
       this.$toast({ type: 1, position: 'top', message: message, duration: 3000 });
     },
 
+    /** 
+     * @method 强制禁言 
+    */
+    banDevice (msg) {
+
+      let meeting = this.meeting;
+      meeting.bandevice = msg.value
+      if(msg.value) {
+        meeting['audio'] = !msg.value
+      }
+      this.setMeeting(meeting);
+
+      let bannedSpeaking = this.$i18n && this.$i18n.t('meeting.bannedfromspeaking') || '全员禁言';
+      let releaseBannedSpeaking = this.$i18n && this.$i18n.t('meeting.releasebannedspeak') || '老师已解除全员禁言';
+      
+      this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
+    },
+
     /**
      * @method 通过ws命令加入会议更新姓名和头像
      * @param
@@ -366,10 +384,30 @@ let meetingMixin = {
         if (res && res.code === 0) {
           // this.getSpeakers();
           this.getMembers();
+          this.getDeviceStatus()
         }
       }).
       catch(error => {
         console.error('join_meeting:', error);
+      })
+    },
+
+    /** 
+     * @method 获取当前会议禁言状态
+    */
+    getDeviceStatus(){
+      let URL = API.lesson.get_speech_state
+      return request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+          let meeting = this.meeting
+          meeting.bandevice = data.fsState ? true : false
+          this.setMeeting(meeting)
+          return data;
+        }
+      }).catch(error => {
+        return false;
       })
     },
 

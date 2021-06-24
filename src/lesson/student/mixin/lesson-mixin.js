@@ -24,7 +24,8 @@ let lessonMixin = {
       if(joined !== 0) {
         // 50004 lesson end
         if(joined === 50004) {
-          location.href = '/v/index/lessonend';
+          location.href = `/v/index/learning_lesson_detail_v3/${this.lessonID}`;
+          // location.href = `/v/index/lessonend?id=${this.lessonID}&version=5`
         }
 
         return this;
