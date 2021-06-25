@@ -644,6 +644,10 @@ let pages = {
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',
+    '60100': 'Service error, please try again later.',
+    '60101': 'Service error, please try again later.',
+    '60102': 'Review has been initiated, please do not repeat the operation.',
+    '60104': '2 answers are required at least.',
   }
 };
 
