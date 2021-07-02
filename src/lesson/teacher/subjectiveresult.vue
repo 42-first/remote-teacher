@@ -672,13 +672,15 @@
             if(self.problem_answer_type) {
               list = self.formatTeamResult(res.data)
             }
+            
+            self.dataList = self.addFold(self.dataList.concat(list))
+            // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+
             // response_num 当前请求返回的投稿数量
-            if (list.length === 0) {
+            if (list.length === 0 || list.length < FENYE_COUNT) {
               self.isAllLoaded = true
               return
             }
-            self.dataList = self.addFold(self.dataList.concat(list))
-            // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
 
             this.$refs.Loadmore.onBottomLoaded()
           }
