@@ -14,160 +14,151 @@
         <img class="jishi" src="~images/teacher/back-top.png" alt="">
       </v-touch>
 
-      <Loadmore
-       ref="Loadmore"
-       :bottom-method="loadBottom"
-       :bottom-all-loaded="isAllLoaded"
-       :bottomPullText="$t('release')"
-       :bottomDropText="$t('shifang')"
-       :class="{'allLoaded': isAllLoaded}"
-       >
-        <!--试题-主观题面板-->
-        <div id="subjective-wrapper" class="problemresult-box">
+      <!--试题-主观题面板-->
+      <div id="subjective-wrapper" class="problemresult-box">
 
-          <!-- 上部时钟、人数统计 -->
-          <section class="upper">
-            <Rolex
-              v-if="!problem_group_review_id"
-              :limit="limit"
-              :newTime="newTime"
-              :durationLeft="durationLeft"
-              :problemid="problemid"
-              @yanshi="yanshi"
-              @shouti="shouti"
-            ></Rolex>
-						<div class="faqihuping-box">
-							<div class="total-box">
-								<div :class="['f12', 'yjy']">
-									<span class="f18">{{total_num}}</span>
-									{{ $t('yizuoda') }}
-		            </div>
-								<div class="line"></div>
-								<template v-if="problem_answer_type == 0">
-									<div class="f12 yjy">
-										<span class="f18" >{{unfinished_count}}</span>
-										<span class="tips"> {{ $t('team.weizuoda') }}</span>
-									</div>
-								</template>
-								<template v-else>
-									<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
-										<span class="f18">{{unfinished_count}}</span>
-										<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
-			            </v-touch>
-								</template>
+        <!-- 上部时钟、人数统计 -->
+        <section class="upper">
+          <Rolex
+            v-if="!problem_group_review_id"
+            :limit="limit"
+            :newTime="newTime"
+            :durationLeft="durationLeft"
+            :problemid="problemid"
+            @yanshi="yanshi"
+            @shouti="shouti"
+          ></Rolex>
+          <div class="faqihuping-box">
+            <div class="total-box">
+              <div :class="['f12', 'yjy']">
+                <span class="f18">{{total_num}}</span>
+                {{ $t('yizuoda') }}
+              </div>
+              <div class="line"></div>
+              <template v-if="problem_answer_type == 0">
+                <div class="f12 yjy">
+                  <span class="f18" >{{unfinished_count}}</span>
+                  <span class="tips"> {{ $t('team.weizuoda') }}</span>
+                </div>
+              </template>
+              <template v-else>
+                <v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
+                  <span class="f18">{{unfinished_count}}</span>
+                  <span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
+                </v-touch>
+              </template>
 
-								<template v-if="problem_group_review_id">
-									<div class="line"></div>
-									<div :class="['f12', 'yjy']">
-										<span class="f18">{{group_review_done_num}}</span>
-										{{ $t('team.yihuping') }}
-			            </div>
-								</template>
-							</div>
-              <!-- v-if="problem_answer_type"  -->
-							<v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
-              <!-- <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch> -->
-						</div>
-          </section>
-          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
-          <!-- 有解析显示解析入口 -->
-          <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
-					<template v-if="group_name">
-            <div class="gap"></div>
-						<div class="group_name f14">
-							<i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
-						</div>
-					</template>
+              <template v-if="problem_group_review_id">
+                <div class="line"></div>
+                <div :class="['f12', 'yjy']">
+                  <span class="f18">{{group_review_done_num}}</span>
+                  {{ $t('team.yihuping') }}
+                </div>
+              </template>
+            </div>
+            <!-- v-if="problem_answer_type"  -->
+            <v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+            <!-- <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch> -->
+          </div>
+        </section>
+        <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+        <!-- 有解析显示解析入口 -->
+        <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+        <template v-if="group_name">
           <div class="gap"></div>
-          <!-- 中间主观题页面 -->
-          <section class="subjective-box f18">
-            <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
-              <!-- 还没有人提交<br>耐心等待一会儿吧~ -->
-            </p>
+          <div class="group_name f14">
+            <i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
+          </div>
+        </template>
+        <div class="gap"></div>
+        <!-- 中间主观题页面 -->
+        <section class="subjective-box f18">
+          <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
+            <!-- 还没有人提交<br>耐心等待一会儿吧~ -->
+          </p>
 
-            <!-- 主观题部分 -->
-            <div class="subjective-list" v-show="dataList.length">
-              <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
-                <div class="item">
-                  <div class="detail">
-										<div class="student-info" v-if="problem_answer_type == 1">
-											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
-												<template v-for="(item2, index2) in item.teamInfo.memberList">
-													<img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
-												</template>
-												<span class="author f15">{{item.teamInfo.teamName}}</span>
-											</v-touch>
-											<div class="time f15">{{item.resultInfo.submitTime | formatTime}}</div>
-										</div>
-										<div class="student-info" v-else>
-											<div class="avatar-box">
-												<img :src="item.user.avatar" class="avatar" alt="">
-												<span class="author f15">{{item.user.name}}</span>
-											</div>
-											<div class="time f15">{{item.time | formatTime}}</div>
-										</div>
-
-                    <div class="cont f18">
-                      <div class="cont-title">
-                        {{item.fold ? item.result.foldContent : item.result.content}}
-                        <!-- {{item.result.content}} -->
-                        <span v-show="!item.hideFold">
-                            <span v-show="item.fold" @click="item.fold = false">
-                                <span>...</span>
-                                <span class="color16">
-                                  <span>{{$t('showall')}}</span>
-                                  <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
-                                </span>
-                            </span>
-                            <span v-show="!item.fold" @click="item.fold = true" class="color16">
-                                <i class="iconfont icon-zhankai"></i>
-                                {{$t('foldall')}}
-                            </span>
-                        </span>
-                      </div>
-                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
-                    </div>
-                  </div>
-                  <div class="action-box f14">
-                    <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.resultId, item.score, item.totalScore, index, item.comment && item.comment.content)">
-                      <div class="gray">
-                        <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
-                        <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
-                      </div>
+          <!-- 主观题部分 -->
+          <div class="subjective-list" v-show="dataList.length">
+            <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
+              <div class="item">
+                <div class="detail">
+                  <div class="student-info" v-if="problem_answer_type == 1">
+                    <v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
+                      <template v-for="(item2, index2) in item.teamInfo.memberList">
+                        <img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
+                      </template>
+                      <span class="author f15">{{item.teamInfo.teamName}}</span>
                     </v-touch>
-                    <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
-
-                    <div class="action f14">
-                      <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
-                        <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
-                        <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
-                      </v-touch>
-                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
-                        <!-- 发送全班 -->{{ $t('postpublic') }}
-                      </v-touch>
-                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.index && postingSubjectiveSent">
-                        <!-- 已发全班 -->{{ $t('postpubliced') }}
-                      </div>
-                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
-                        <span class="fsqb-innerline"></span>
-                        <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
-                      </v-touch>
+                    <div class="time f15">{{item.resultInfo.submitTime | formatTime}}</div>
+                  </div>
+                  <div class="student-info" v-else>
+                    <div class="avatar-box">
+                      <img :src="item.user.avatar" class="avatar" alt="">
+                      <span class="author f15">{{item.user.name}}</span>
                     </div>
+                    <div class="time f15">{{item.time | formatTime}}</div>
+                  </div>
+
+                  <div class="cont f18">
+                    <div class="cont-title">
+                      {{item.fold ? item.result.foldContent : item.result.content}}
+                      <!-- {{item.result.content}} -->
+                      <span v-show="!item.hideFold">
+                          <span v-show="item.fold" @click="item.fold = false">
+                              <span>...</span>
+                              <span class="color16">
+                                <span>{{$t('showall')}}</span>
+                                <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
+                              </span>
+                          </span>
+                          <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                              <i class="iconfont icon-zhankai"></i>
+                              {{$t('foldall')}}
+                          </span>
+                      </span>
+                    </div>
+                    <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
                   </div>
                 </div>
-                <div class="gap"></div>
-              </div>
-              <div v-show="isAllLoaded && isContLonger" class="nomore f15">
-                <div class="bgline"></div>
-                <div class="wenan">end</div>
-              </div>
-            </div>
-          </section>
+                <div class="action-box f14">
+                  <!-- 投屏时不能打分 -->
+                  <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.resultId, item.score, item.totalScore, index, item.comment && item.comment.content)">
+                    <div class="gray">
+                      <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
+                      <span>{{ $tc('givestuscore', item.score === -1) }}</span>
+                      <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
+                    </div>
+                  </v-touch>
+                  <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
 
-        </div>
-      </Loadmore>
+                  <div class="action f14">
+                    <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
+                      <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                      <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
+                    </v-touch>
+                    <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
+                      <!-- 发送全班 -->{{ $t('postpublic') }}
+                    </v-touch>
+                    <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.index && postingSubjectiveSent">
+                      <!-- 已发全班 -->{{ $t('postpubliced') }}
+                    </div>
+                    <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
+                      <span class="fsqb-innerline"></span>
+                      <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
+                    </v-touch>
+                  </div>
+                </div>
+              </div>
+              <div class="gap"></div>
+            </div>
+            <div v-show="isAllLoaded && isContLonger" class="nomore f15">
+              <div class="bgline"></div>
+              <div class="wenan">end</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
       <div class="gap"></div>
 
       <Scale></Scale>
@@ -243,7 +234,9 @@
   // 答案解析
   import analysismixin from '@/lesson/common/analysis-mixin'
   // 时钟组件
-	import Rolex from '@/lesson/teacher/common/rolex'
+  import Rolex from '@/lesson/teacher/common/rolex'
+  
+  import _ from 'underscore'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -316,6 +309,7 @@
         group_review_declaration: '',    // 互评规则
         group_id: 0,                    // 分组id 打分时使用
         init_total_num: 0,              // 已作答初始值
+        isPending: false
 	    }
 	  },
     mixins: [ analysismixin ],
@@ -488,6 +482,21 @@
         self.handlePubSub()
 
         this.getProlemById(this.problemid);
+
+        // 下拉加载更多
+        this.scrollThrottled = _.throttle(evt => {
+          let $list = evt.target
+          let clientHeight = $list.clientHeight;
+          let totalHeight = $list.scrollHeight;
+          let scrollTop = $list && $list.scrollTop;
+          let leaveHeight = totalHeight - clientHeight - scrollTop;
+
+          self.isShow2TopBtn = $list.scrollTop > windowHeight
+
+          if(leaveHeight < 150 && !this.isAllLoaded && !this.isPending) {
+            this.loadBottom()
+          }
+        }, 100);
       },
       /**
        * 处理计时
@@ -656,9 +665,6 @@
       loadBottom () {
         let self = this
         if (!self.dataList[0]) {
-          setTimeout(() => {
-            this.$refs.Loadmore.onBottomLoaded()
-          }, 100)
           return;
         }
 
@@ -666,23 +672,23 @@
 
         let tailNow = self.dataList[self.dataList.length-1].index
 
+        self.isPending = true
+
         self.fetchList(tailNow).then(res => {
           if(res && res.code === 0 && res.data){
             let list = res.data.list
             if(self.problem_answer_type) {
               list = self.formatTeamResult(res.data)
             }
-            
-            self.dataList = self.addFold(self.dataList.concat(list))
-            // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
-
-            // response_num 当前请求返回的投稿数量
-            if (list.length === 0 || list.length < FENYE_COUNT) {
+            if (list.length === 0) {
               self.isAllLoaded = true
               return
             }
+            
+            self.dataList = self.addFold(self.dataList.concat(list))
 
-            this.$refs.Loadmore.onBottomLoaded()
+            self.isPending = false
+            self.isAllLoaded = list.length < FENYE_COUNT
           }
         })
       },
@@ -697,14 +703,9 @@
 	     *
 	     * @param {object, object} e event对象，position 当前对象滚动信息
 	     */
-	    onScroll (e, position) {
-        console.log(e, position, '测试scroll')
+	    onScroll (e) {
 	      let self = this
-        // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
-        // let scoreDom = document.querySelector('#scoreDom')
-        // scoreDom.style.top = position.scrollTop + 'px'
-
-        self.isShow2TopBtn = position.scrollTop > windowHeight
+        self.scrollThrottled(e);
 	    },
 	    /**
 	     * 回到顶部
@@ -714,7 +715,7 @@
 	    back2Top () {
 	      let self = this
 
-	      self.$el.scrollTop = 0
+	      self.$el.querySelector('.problem-root').scrollTop = 0
 	      self.isShow2TopBtn = false
 	    },
 	    /**
@@ -1396,7 +1397,7 @@
 
 		.back-top-btn {
 			position: fixed;
-		  z-index: 10;
+		  z-index: 40;
 		  right: 0.306667rem;
 		  bottom: 1.986667rem;
 		  width: 1.066667rem;
