@@ -68,6 +68,7 @@
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
           :problem-type="problemType"
+					:isYanshi="false"
           :card-width="cardWidth"
           :card-height="cardHeight"
         ></component>
@@ -277,8 +278,9 @@
 	    this.init()
 	  },
 	  beforeDestroy () {
-    clearInterval(pollingPresentationTagTimer)
-    // clearInterval(pollingTougaoTimer)
+    	clearInterval(pollingPresentationTagTimer)
+			// clearInterval(pollingTougaoTimer)
+			this.goHome()
 	  },
 	  mounted () {
 	    let self = this

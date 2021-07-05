@@ -53,6 +53,9 @@ let pages = {
   "recvbonus": "Hi,本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
+  "cantintoteam2": "你不在本组，无权限进入",
+  "watchmodenotintoteam": "观看者模式下无法参与分组",
+  "auditornotgrade": "旁听生身份无法参与互评",
 
   "submit": "提交",
   "submitansw": "提交答案",
@@ -547,7 +550,7 @@ let pages = {
     "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
-    "noarticipate": "未作答的小组不参与互评",
+    "noarticipate": "未作答状态下无法参与互评",
   },
 
   "openwordcloud": "生成词云并投屏",
@@ -567,6 +570,7 @@ let pages = {
   "changetosignin": "修改为已签到",
   "changetonotsignin": "修改为未签到",
   "zuodashichang": "作答时长",
+  "studentstoomuchnotgroup": "班级人数超过3000人时暂不支持分组",
 
   meeting: {
     "showing": "正在放映",
@@ -646,6 +650,10 @@ let pages = {
 
     '60000': '服务错误，请稍后再试。',
     '60001': '服务错误，请稍后再试。',
+    '60100': '服务异常，请稍后再试',
+    '60101': '服务异常，请稍后再试',
+    '60102': '已发起互评，请勿重复操作',
+    '60104': '答案提交数量不少于2份时才可发起互评',
   }
 };
 

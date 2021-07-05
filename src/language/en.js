@@ -54,6 +54,9 @@ let pages = {
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
   "cantintoteam": "The co-instructor does not belong to any groups.",
+  "cantintoteam2": "No authority",
+  "watchmodenotintoteam": "View mode. Unable to join grouping.",
+  "auditornotgrade": "Auditors are not allowed to participate in peer grading",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
@@ -543,7 +546,7 @@ let pages = {
     "gradedalready" : "Tips",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading",
-    "noarticipate": "Groups did not submit will not participate in the peer grading.",
+    "noarticipate": "Students who did not submit will not participate in the peer grading",
   },
 
   "openwordcloud": "Show word cloud",
@@ -564,6 +567,7 @@ let pages = {
   "changetosignin": "Present",
   "changetonotsignin": "Absent",
   "zuodashichang": "Length of response time",
+  "studentstoomuchnotgroup": "There are more than 3000 students in the class. Grouping is not supported.",
 
   meeting: {
     "showing": "Showing",
@@ -643,6 +647,10 @@ let pages = {
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',
+    '60100': 'Service error, please try again later.',
+    '60101': 'Service error, please try again later.',
+    '60102': 'Review has been initiated, please do not repeat the operation.',
+    '60104': '2 answers are required at least.',
   }
 };
 

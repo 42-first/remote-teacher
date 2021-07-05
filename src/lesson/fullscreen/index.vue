@@ -354,6 +354,7 @@
         'setJoined',
         'setDanmus',
         'setAddinVersion',
+        'setIsGuestStudent'
       ]),
 
       /*
