@@ -57,10 +57,10 @@
             <i class="iconfont icon-ykq_tab_tougao f20"></i>
             <p class="pl10 f14"><!-- 投稿 -->{{ $t('meeting.post') }}</p>
           </section>
-          <!--  <section class="action__menu box-start c333" data-tip="分组">
+           <section class="action__menu box-start c333" @click="handleVisibleGroup">
             <i class="iconfont icon-fenzu1 f20"></i>
-            <p class="pl10 f14">分组</p>
-          </section> -->
+            <p class="pl10 f14"><!--分组 --> {{$t('group')}}</p>
+          </section>
         </section>
       </section>
 
@@ -149,6 +149,7 @@
         'hasMeeting',
         // 是否已进入会议
         'joined',
+        'observerMode'
       ]),
 
       ...mapState('meeting', [
@@ -397,7 +398,24 @@
         if(isSupported(window.localStorage)) {
           localStorage.setItem(key, true);
         }
-      }
+      },
+
+      /**
+       * @method 显示分组
+       * @params
+       */
+      handleVisibleGroup(evt) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+            duration: 3000
+          });
+          return this;
+        }
+        let src = '/team/student/' + this.lesson.classroomId + '?lessonid=' + this.lesson.lessonID;
+
+        this.$router.push({ name: 'team-v3', query: { src: encodeURIComponent(src) } });
+      },
     }
   };
 </script>

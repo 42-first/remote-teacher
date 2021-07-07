@@ -226,7 +226,8 @@
         'slideIndex',
         'msg',
         'observerMode',
-        'currSlide'
+        'currSlide',
+        'isGuestStudent',
       ]),
     },
     filters: {
@@ -245,6 +246,31 @@
        */
       handleView(item, index) {
         if(item && item.type) {
+          if(item.type == 8) {
+            if(this.observerMode) {
+              this.$toast({
+                message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+                duration: 3000
+              });
+              return this;
+            }
+            if(!item.href){
+              this.$toast({
+                message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
+                duration: 3000
+              });
+              return this;
+            }
+          }else if(item.type == 9){
+            if(this.isGuestStudent){
+              this.$toast({
+                message: this.$i18n.t('auditornotgrade') || '旁听生身份无法参与互评',
+                duration: 3000
+              });
+              return this;
+            }
+          }
+
           this.setSlideIndex(index);
         }
       },

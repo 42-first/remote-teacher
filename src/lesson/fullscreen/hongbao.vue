@@ -82,6 +82,33 @@
       ]),
     },
     watch: {
+      // 刷新或跳转页面后回到课堂  还没有cards 导致红包信息展示不出来
+      cards(newVal, oldVal){
+        if(newVal.length && !oldVal.length){
+          if(!this.summary){
+            
+            this.summary = newVal[this.index];
+
+            if(this.summary) {
+              this.init()
+            }
+          }
+        }
+      },
+      '$route'(to, from){
+        if(to && to.params && to.name === 'hongbao') {
+          let params = to.params;
+          this.index = params.index
+
+          let cards = this.cards;
+          this.summary = cards[this.index];
+
+          if(this.summary) {
+            this.init()
+          }
+          
+        }
+      }
     },
     filters: {
       formatTime(time) {
@@ -93,6 +120,10 @@
     },
     mixins: [],
     methods: {
+      init(){
+        this.formatData(this.summary);
+        this.getRedEnvelop(this.summary.redpacketID);
+      },
       /*
       * @method 是否是我的红包
       * @param problemID 问题ID
@@ -165,8 +196,7 @@
       if(this.summary) {
         console.log(this.summary);
 
-        this.formatData(this.summary);
-        this.getRedEnvelop(this.summary.redpacketID);
+        this.init()
       }
 
     },

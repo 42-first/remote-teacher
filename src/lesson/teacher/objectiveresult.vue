@@ -52,24 +52,6 @@
 	        <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
 	      </v-touch>
 
-				<!-- <router-link v-if="problemType === 4" tag="div" :to="{name: 'fillblankresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
-	        <div class="iconbox" style="background: #EEBC28;">
-	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
-            是否有解析提示
-            <p class="analysis--tip" v-if="problem && problem.hasRemark">看解析{{ $t('viewanswer') }}</p>
-	      	</div>
-	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
-	      </router-link>
-
-	      <router-link v-else tag="div" :to="{name: 'collumresult-detail_v3', params: { problemid: problemid }}" class="btn-item">
-	        <div class="iconbox" style="background: #EEBC28;">
-	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
-            是否有解析提示
-            <p class="analysis--tip" v-if="problem && problem.hasRemark">看解析{{ $t('viewanswer') }}</p>
-	      	</div>
-	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
-	      </router-link> -->
-
 				<div class="btn-item" @click="toProblemDetail">
 					<div class="iconbox" style="background: #EEBC28;">
 	      	  <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
@@ -720,6 +702,14 @@
 				}
 				// 红包列表 
 				else {
+					// 克隆班不能执行当前操作
+					if (!!this.isCloneClass) {
+						this.$toast({
+							message: this.$t('cloneTips'),
+							duration: 3e3
+						});
+						return
+					}
 					this.$router.push({name, params: { redid }});
 				}
 			},

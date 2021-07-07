@@ -139,7 +139,7 @@
     <!-- 发起了分组 -->
     <template v-else-if="item.type==8">
       <div class="timeline__paper">
-        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" :href="item.href" @click="handlecanJoin" >
+        <a :class="['paper-info', 'fenzu', item.isComplete ? 'complete' : '']" href="javascript:;" @click="handlecanJoin(item.href)" >
           <div class="paper-txt f18" v-if="item.groupType ==='random'">
             <p class="paper-name"><!-- Hi，老师进行了随机分组 -->{{ $t('team.randomized') }}</p>
             <p class="paper-name"><!-- 查看结果 -->{{ $t('team.viewresults') }}</p>
@@ -161,13 +161,13 @@
     <!-- 发起了互评 -->
     <template v-else-if="item.type==9">
       <div class="timeline__paper">
-        <router-link :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" :to="'/v3/'+lessonId+'/evaluation/'+index" >
+        <div :class="['paper-info', 'evaluation', item.isComplete ? 'complete' : '']" @click="handleGoEvaluation(index)" >
           <div class="paper-txt f18">
             <p class="paper-name"><!-- Hi，老师发起了互评 -->{{ $t('grading.launchedgrading') }}</p>
             <p class="paper-count">{{ $t('pno', { number: item.pageIndex }) }}</p>
           </div>
           <i class="iconfont icon-huping f55"></i>
-        </router-link>
+        </div>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
           <div class="f14" v-show="!observerMode">
@@ -439,18 +439,25 @@
       /*
       * @method 是否可以加入小组
       */
-      handlecanJoin(evt) {
+      handlecanJoin(href, evt) {
         if(this.observerMode) {
-          evt.preventDefault();
-          evt.stopPropagation();
-
           this.$toast({
-            message: this.$i18n.t('cantintoteam') || '当前是协同教师身份，不参与分组',
+            message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
             duration: 3000
           });
 
           return false;
         }
+
+        if(!href) {
+          this.$toast({
+            message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
+            duration: 3000
+          });
+          return this;
+        }
+
+        location.href = href
 
         return true;
       },
@@ -467,6 +474,25 @@
         }else {
           location.href = url
         }
+      },
+
+      /** 
+       * @method 互评
+       * 
+      */
+      handleGoEvaluation(index){
+        if(this.$parent.$parent.role === 6){
+          this.$toast({
+            message: this.$i18n.t('auditornotgrade'),
+            duration: 3000
+          })
+
+          return this;
+        }
+
+        this.$router.push({
+          path: `/v3/${this.lessonId}/evaluation/${index}`
+        })
       }
     },
     created() {

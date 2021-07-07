@@ -88,7 +88,7 @@ function socketProcessMessage(msg){
     // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
       if (msg.mask && msg.mask.type === 'qrcode') {
-        if(msg.addinversion == 5 && !msg.shownow){
+        if(msg.addinversion >= 5 && !msg.shownow){
           self.showEscMask()
         }else {
           self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
@@ -157,7 +157,7 @@ function socketProcessMessage(msg){
     }
 
     if(msg.mask && msg.mask.type === 'qrcode'){
-      if(msg.addinversion == 5 && !msg.shownow){
+      if(msg.addinversion >= 5 && !msg.shownow){
         self.showEscMask()
       }else {
         // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容

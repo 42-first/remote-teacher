@@ -12,7 +12,7 @@
       <section class="evaluation__inner">
       <!-- 互评得分 修改入口 -->
       <section class="evaluation__getscore mb10" v-if="reviewScore !== -1">
-        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore }) }}</p>
+        <p class="f20 yellow">{{ $t('grading.gradingscore', { score: reviewScore/100 }) }}</p>
         <p class="pointer" @click="handlescore" v-if="canSubmitScore"><i class="iconfont icon-bianji f25 blue"></i></p>
       </section>
 
@@ -33,7 +33,7 @@
           <p class="answer--points f14 blue pointer" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics && result.pics[0].pic" @click="handleZoom" />
+          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics.length && result.pics[0].pic" @click="handleZoom" />
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
@@ -41,6 +41,11 @@
       <section class="evaluation__empty f17" v-if="!hasReview">
         <p>{{ $t('grading.noarticipate') }}</p>
       </section>
+      <!-- 旁听生不能打分 -->
+      <section class="evaluation__empty f17" v-else-if="isGuestStudent">
+        <p>{{ $t('auditornotgrade') }}</p>
+      </section>
+      
 
       <!-- 打分 -->
       <section class="evaluation__score f18" v-if="canSubmitScore && reviewScore === -1">
@@ -55,8 +60,8 @@
       <div class="score__modal" >
         <header class="modal--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosed"></i></header>
         <div class="score__input">
-          <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score }) }}</p>
-          <input class="input f30 c9b" :placeholder="$t('grading.pleasescore')" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" />
+          <p class="input--tip f14 c666"><!-- 请输入互评分数（满分{{ summary&&summary.score }}分） -->{{ $t('grading.gradingtotalscore', { score: summary&&summary.score/100 }) }}</p>
+          <input class="input f30 c9b" :placeholder="$t('grading.pleasescore')" type="number" pattern="\d" v-model="score" @focus="handlefocus" @blur="handleblur" @keyup="oninput" :max="summary.score/100" min="0"/>
         </div>
         <div class="score__node">
           <h3 class="f20 c333"><!-- 注意 -->{{ $t('grading.notice') }}</h3>
@@ -129,6 +134,7 @@
       ...mapState([
         'lesson',
         'cards',
+        'isGuestStudent'
       ]),
     },
     watch: {
@@ -142,6 +148,14 @@
         if(newVal > this.summary.score) {
           this.score = this.summary.score;
         }
+      },
+      '$route'(to, from){
+        if(to && to.params && to.name === 'evaluation') {
+          let params = to.params;
+          this.index = params.index
+
+          this.init()
+        }
       }
     },
     filters: {
@@ -152,36 +166,53 @@
         'setCards',
       ]),
 
+      init(){
+        let cards = this.cards;
+        this.summary = cards[this.index];
+        this.lessonID = this.lesson.lessonID;
+
+        if(this.summary) {
+          let reviewID = this.summary.reviewid;
+          let problemID = this.summary.prob;
+          problemID && this.getGroupReview(problemID);
+
+          this.reviewID = reviewID;
+        } else {
+          // this.$router.back();
+        }
+      },
+
       /*
        * @method 获取互评的详情
-       * @param reviewID 互评ID
+        * @param problemID 
        */
-      getGroupReview(reviewID) {
-        let URL = API.student.GET_GROUP_REVIEW;
+      getGroupReview(problemID) {
+        let URL = API.lesson.get_problem_review_detail;
         let param = {
-          'group_review_id': reviewID
+          'problemId': problemID
         };
 
-        this.reviewID = reviewID;
 
-        return request.get(URL, param)
+
+        return request.post(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
 
               this.review = data;
-              this.problemID = data.problem_id;
+              this.problemID = data.problemId;
               // this.canSubmitScore = data.can_submit_score;
-              this.declaration = data.group_review_declaration;
+              this.declaration = data.reviewDeclaration;
 
               // 作答结果
-              if(data.problem_result_list && data.problem_result_list.length) {
-                let resultInfo = data.problem_result_list[0];
+              if(data.problemResultList && data.problemResultList.length) {
+                let resultInfo = data.problemResultList[0];
                 this.result = resultInfo.result;
-                this.reviewScore = resultInfo.review_score;
-                this.score = this.reviewScore > 0 ? this.reviewScore : '';
-                this.problemResultID = resultInfo.problem_result_id;
-                this.canSubmitScore = resultInfo.can_submit_score;
+                this.reviewScore = resultInfo.reviewScore;
+                this.score = this.reviewScore > 0 ? this.reviewScore / 100 : '';
+                this.problemResultID = resultInfo.problemResultId;
+                this.canSubmitScore = resultInfo.canSubmitScore;
+                this.hasReview = true;
               } else {
                 this.hasReview = false;
                 this.canSubmitScore = false;
@@ -223,11 +254,12 @@
        * @param
        */
       submitReview() {
-        let URL = API.student.SUBMIT_GROUP_REVIEW;
+        let URL = API.lesson.submit_review_score;
         let param = {
-          'group_review_id': this.summary.reviewid,
-          'problem_result_id': this.problemResultID,
-          'score': this.score
+          'reviewId': this.summary.reviewid,
+          'problemId': this.problemID,
+          'problemResultId': this.problemResultID,
+          'reviewScore': Math.round(this.score*100)
         };
 
         if(!this.submitStatus) {
@@ -238,9 +270,9 @@
 
         return request.post(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
-              this.reviewScore = this.score;
+              this.reviewScore = this.score * 100;
 
               this.summary = Object.assign(this.summary, {
                 status: this.$i18n.t('done') || '已完成',
@@ -254,6 +286,8 @@
                 message: this.$i18n.t('sendsuccess') || '提交成功',
                 duration: 2000
               });
+
+              this.handleclosed()
 
               return data;
             }
@@ -328,7 +362,7 @@
         let targetEl = evt.target;
         let sValue = targetEl.value;
         let index = sValue.indexOf('.');
-        let sourceScore = this.summary && this.summary.score || 0;
+        let sourceScore = this.summary && this.summary.score/100 || 0;
 
         if(index !== -1 && index == sValue.length - 1) {
           return ;
@@ -367,16 +401,7 @@
     created() {
       this.index = +this.$route.params.index;
 
-      let cards = this.cards;
-      this.summary = cards[this.index];
-      this.lessonID = this.lesson.lessonID;
-
-      if(this.summary) {
-        let reviewID = this.summary.reviewid;
-        reviewID && this.getGroupReview(reviewID);
-      } else {
-        // this.$router.back();
-      }
+      this.init()
     },
     mounted() {
     },
@@ -508,7 +533,7 @@
     justify-content: center;
 
     padding: 0 20px;
-    height: 15px;
+    height: 70px;
     text-align: center;
     background: #fff;
   }

@@ -14,159 +14,151 @@
         <img class="jishi" src="~images/teacher/back-top.png" alt="">
       </v-touch>
 
-      <Loadmore
-       ref="Loadmore"
-       :bottom-method="loadBottom"
-       :bottom-all-loaded="isAllLoaded"
-       :bottomPullText="$t('release')"
-       :bottomDropText="$t('shifang')"
-       :class="{'allLoaded': isAllLoaded}"
-       >
-        <!--试题-主观题面板-->
-        <div id="subjective-wrapper" class="problemresult-box">
+      <!--试题-主观题面板-->
+      <div id="subjective-wrapper" class="problemresult-box">
 
-          <!-- 上部时钟、人数统计 -->
-          <section class="upper">
-            <Rolex
-              :limit="limit"
-              :newTime="newTime"
-              :durationLeft="durationLeft"
-              :problemid="problemid"
-              @yanshi="yanshi"
-              @shouti="shouti"
-            ></Rolex>
-						<div class="faqihuping-box">
-							<div class="total-box">
-								<div :class="['f12', 'yjy']">
-									<span class="f18">{{total_num}}</span>
-									{{ $t('yizuoda') }}
-		            </div>
-								<div class="line"></div>
-								<template v-if="problem_answer_type == 0">
-									<div class="f12 yjy">
-										<span class="f18" >{{unfinished_count}}</span>
-										<span class="tips"> {{ $t('team.weizuoda') }}</span>
-									</div>
-								</template>
-								<template v-else>
-									<v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
-										<span class="f18">{{unfinished_team_count}}</span>
-										<span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
-			            </v-touch>
-								</template>
+        <!-- 上部时钟、人数统计 -->
+        <section class="upper">
+          <Rolex
+            v-if="!problem_group_review_id"
+            :limit="limit"
+            :newTime="newTime"
+            :durationLeft="durationLeft"
+            :problemid="problemid"
+            @yanshi="yanshi"
+            @shouti="shouti"
+          ></Rolex>
+          <div class="faqihuping-box">
+            <div class="total-box">
+              <div :class="['f12', 'yjy']">
+                <span class="f18">{{total_num}}</span>
+                {{ $t('yizuoda') }}
+              </div>
+              <div class="line"></div>
+              <template v-if="problem_answer_type == 0">
+                <div class="f12 yjy">
+                  <span class="f18" >{{unfinished_count}}</span>
+                  <span class="tips"> {{ $t('team.weizuoda') }}</span>
+                </div>
+              </template>
+              <template v-else>
+                <v-touch :class="['f12', 'yjy']" v-on:tap="showTips">
+                  <span class="f18">{{unfinished_count}}</span>
+                  <span class="tips"> {{ $t('team.weizuoda') }}<i class="ques"></i></span>
+                </v-touch>
+              </template>
 
-								<template v-if="problem_group_review_id">
-									<div class="line"></div>
-									<div :class="['f12', 'yjy']">
-										<span class="f18">{{group_review_done_num}}</span>
-										{{ $t('team.yihuping') }}
-			            </div>
-								</template>
-							</div>
-              <!-- v-if="problem_answer_type"  -->
-							<v-touch v-if="false" :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
-              <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch>
-						</div>
-          </section>
-          <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
-          <!-- 有解析显示解析入口 -->
-          <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
-					<template v-if="group_name">
-            <div class="gap"></div>
-						<div class="group_name f14">
-							<i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
-						</div>
-					</template>
+              <template v-if="problem_group_review_id">
+                <div class="line"></div>
+                <div :class="['f12', 'yjy']">
+                  <span class="f18">{{group_review_done_num}}</span>
+                  {{ $t('team.yihuping') }}
+                </div>
+              </template>
+            </div>
+            <!-- v-if="problem_answer_type"  -->
+            <v-touch :class="['faqihuping', 'f12', newTime > 0 ? 'disabled' : '']" v-on:tap="faqihuping">{{!problem_group_review_id ? $t('team.faqihuping') : $t('team.hupingguize')}}</v-touch>
+            <!-- <v-touch :class="['faqihuping', 'f12', 'disabled']" v-on:tap="showToast">{{$t('team.faqihuping')}}</v-touch> -->
+          </div>
+        </section>
+        <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
+        <!-- 有解析显示解析入口 -->
+        <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+        <template v-if="group_name">
           <div class="gap"></div>
-          <!-- 中间主观题页面 -->
-          <section class="subjective-box f18">
-            <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
-              <!-- 还没有人提交<br>耐心等待一会儿吧~ -->
-            </p>
+          <div class="group_name f14">
+            <i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
+          </div>
+        </template>
+        <div class="gap"></div>
+        <!-- 中间主观题页面 -->
+        <section class="subjective-box f18">
+          <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
+            <!-- 还没有人提交<br>耐心等待一会儿吧~ -->
+          </p>
 
-            <!-- 主观题部分 -->
-            <div class="subjective-list" v-show="dataList.length">
-              <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
-                <div class="item">
-                  <div class="detail">
-										<div class="student-info" v-if="problem_answer_type == 1">
-											<v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(index)">
-												<template v-for="(item2, index2) in item.users">
-													<img v-if="index2 < 3" :src="item2.user_avatar_46" :key="index2" class="avatar" alt="">
-												</template>
-												<span class="author f15">{{item.team_name}}</span>
-											</v-touch>
-											<div class="time f15">{{item.time | formatTime}}</div>
-										</div>
-										<div class="student-info" v-else>
-											<div class="avatar-box">
-												<img :src="item.user.avatar" class="avatar" alt="">
-												<span class="author f15">{{item.user.name}}</span>
-											</div>
-											<div class="time f15">{{item.time | formatTime}}</div>
-										</div>
-
-                    <div class="cont f18">
-                      <div class="cont-title">
-                        {{item.fold ? item.result.foldContent : item.result.content}}
-                        <!-- {{item.result.content}} -->
-                        <span v-show="!item.hideFold">
-                            <span v-show="item.fold" @click="item.fold = false">
-                                <span>...</span>
-                                <span class="color16">
-                                  <span>{{$t('showall')}}</span>
-                                  <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
-                                </span>
-                            </span>
-                            <span v-show="!item.fold" @click="item.fold = true" class="color16">
-                                <i class="iconfont icon-zhankai"></i>
-                                {{$t('foldall')}}
-                            </span>
-                        </span>
-                      </div>
-                      <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
-                    </div>
-                  </div>
-                  <div class="action-box f14">
-                    <!-- 投屏时不能打分 -->
-                    <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.score, item.totalScore, index, item.comment && item.comment.content)">
-                      <div class="gray">
-                        <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
-                        <span>{{ $tc('givestuscore', item.score === -1) }}</span>
-                        <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
-                      </div>
+          <!-- 主观题部分 -->
+          <div class="subjective-list" v-show="dataList.length">
+            <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
+              <div class="item">
+                <div class="detail">
+                  <div class="student-info" v-if="problem_answer_type == 1">
+                    <v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
+                      <template v-for="(item2, index2) in item.teamInfo.memberList">
+                        <img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
+                      </template>
+                      <span class="author f15">{{item.teamInfo.teamName}}</span>
                     </v-touch>
-                    <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
-
-                    <div class="action f14">
-                      <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
-                        <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
-                        <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
-                      </v-touch>
-                      <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
-                        <!-- 发送全班 -->{{ $t('postpublic') }}
-                      </v-touch>
-                      <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.index && postingSubjectiveSent">
-                        <!-- 已发全班 -->{{ $t('postpubliced') }}
-                      </div>
-                      <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
-                        <span class="fsqb-innerline"></span>
-                        <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
-                      </v-touch>
+                    <div class="time f15">{{item.resultInfo.submitTime | formatTime}}</div>
+                  </div>
+                  <div class="student-info" v-else>
+                    <div class="avatar-box">
+                      <img :src="item.user.avatar" class="avatar" alt="">
+                      <span class="author f15">{{item.user.name}}</span>
                     </div>
+                    <div class="time f15">{{item.time | formatTime}}</div>
+                  </div>
+
+                  <div class="cont f18">
+                    <div class="cont-title">
+                      {{item.fold ? item.result.foldContent : item.result.content}}
+                      <!-- {{item.result.content}} -->
+                      <span v-show="!item.hideFold">
+                          <span v-show="item.fold" @click="item.fold = false">
+                              <span>...</span>
+                              <span class="color16">
+                                <span>{{$t('showall')}}</span>
+                                <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
+                              </span>
+                          </span>
+                          <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                              <i class="iconfont icon-zhankai"></i>
+                              {{$t('foldall')}}
+                          </span>
+                      </span>
+                    </div>
+                    <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
                   </div>
                 </div>
-                <div class="gap"></div>
-              </div>
-              <div v-show="isAllLoaded && isContLonger" class="nomore f15">
-                <div class="bgline"></div>
-                <div class="wenan">end</div>
-              </div>
-            </div>
-          </section>
+                <div class="action-box f14">
+                  <!-- 投屏时不能打分 -->
+                  <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.resultId, item.score, item.totalScore, index, item.comment && item.comment.content)">
+                    <div class="gray">
+                      <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
+                      <span>{{ $tc('givestuscore', item.score === -1) }}</span>
+                      <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
+                    </div>
+                  </v-touch>
+                  <div class="zhanweifu" v-show="postingSubjectiveid === item.index"></div>
 
-        </div>
-      </Loadmore>
+                  <div class="action f14">
+                    <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
+                      <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                      <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
+                    </v-touch>
+                    <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
+                      <!-- 发送全班 -->{{ $t('postpublic') }}
+                    </v-touch>
+                    <div class="cancel-post-btn yfqb f14" v-show="postingSubjectiveid === item.index && postingSubjectiveSent">
+                      <!-- 已发全班 -->{{ $t('postpubliced') }}
+                    </div>
+                    <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
+                      <span class="fsqb-innerline"></span>
+                      <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
+                    </v-touch>
+                  </div>
+                </div>
+              </div>
+              <div class="gap"></div>
+            </div>
+            <div v-show="isAllLoaded && isContLonger" class="nomore f15">
+              <div class="bgline"></div>
+              <div class="wenan">end</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
       <div class="gap"></div>
 
       <Scale></Scale>
@@ -182,8 +174,8 @@
 
 
 		<!-- 发题选时间蒙版客观题 -->
-    <Problemtime v-show="!isProblemtimeHidden"
-      :problem-type="'ShortAnswer'"
+    <Problemtime v-if="!isProblemtimeHidden"
+      :problem-type="5"
       :isYanshi="true"
       @cancelPublishProblem="cancelPublishProblem"
       @chooseProblemDuration="yanshiProblem"
@@ -209,8 +201,8 @@
             <span class="team-total f14"><!-- 共{{teamMemberList.length}}人 -->{{ $t('team.totalmembers', {num: teamMemberList.length}) }}</span>
           </p>
           <div class="team-item" v-for="(item, index) in teamMemberList" :key="index">
-            <img class="member--avatar" :src="item.user_avatar_46" alt="" >
-            <div class="member--name f16 c666"><span class="name">{{item.user_name}}</span></div>
+            <img class="member--avatar" :src="item.avatar" alt="" >
+            <div class="member--name f16 c666"><span class="name">{{item.userName}}</span></div>
           </div>
         </div>
       </div>
@@ -242,7 +234,9 @@
   // 答案解析
   import analysismixin from '@/lesson/common/analysis-mixin'
   // 时钟组件
-	import Rolex from '@/lesson/teacher/common/rolex'
+  import Rolex from '@/lesson/teacher/common/rolex'
+  
+  import _ from 'underscore'
 
   // 使用 https://github.com/wangpin34/vue-scroll 处理当前搓动方向
   let VueScroll = require('vue-scroll') // 不是ES6模块，而是CommonJs模块
@@ -312,6 +306,10 @@
 				unfinished_team_count: 0,				// 没有回答的组数
         group_name: '',									// 分组名
         group_review_done_num: 0,        // 已互评数
+        group_review_declaration: '',    // 互评规则
+        group_id: 0,                    // 分组id 打分时使用
+        init_total_num: 0,              // 已作答初始值
+        isPending: false
 	    }
 	  },
     mixins: [ analysismixin ],
@@ -484,6 +482,21 @@
         self.handlePubSub()
 
         this.getProlemById(this.problemid);
+
+        // 下拉加载更多
+        this.scrollThrottled = _.throttle(evt => {
+          let $list = evt.target
+          let clientHeight = $list.clientHeight;
+          let totalHeight = $list.scrollHeight;
+          let scrollTop = $list && $list.scrollTop;
+          let leaveHeight = totalHeight - clientHeight - scrollTop;
+
+          self.isShow2TopBtn = $list.scrollTop > windowHeight
+
+          if(leaveHeight < 150 && !this.isAllLoaded && !this.isPending) {
+            this.loadBottom()
+          }
+        }, 100);
       },
       /**
        * 处理计时
@@ -652,9 +665,6 @@
       loadBottom () {
         let self = this
         if (!self.dataList[0]) {
-          setTimeout(() => {
-            this.$refs.Loadmore.onBottomLoaded()
-          }, 100)
           return;
         }
 
@@ -662,17 +672,23 @@
 
         let tailNow = self.dataList[self.dataList.length-1].index
 
+        self.isPending = true
+
         self.fetchList(tailNow).then(res => {
           if(res && res.code === 0 && res.data){
-            // response_num 当前请求返回的投稿数量
-            if (res.data.list.length === 0) {
+            let list = res.data.list
+            if(self.problem_answer_type) {
+              list = self.formatTeamResult(res.data)
+            }
+            if (list.length === 0) {
               self.isAllLoaded = true
               return
             }
-            self.dataList = self.addFold(self.dataList.concat(res.data.list))
-            // self.dataList = self.dataList.concat(jsonData.data.problem_results_list)
+            
+            self.dataList = self.addFold(self.dataList.concat(list))
 
-            this.$refs.Loadmore.onBottomLoaded()
+            self.isPending = false
+            self.isAllLoaded = list.length < FENYE_COUNT
           }
         })
       },
@@ -687,14 +703,9 @@
 	     *
 	     * @param {object, object} e event对象，position 当前对象滚动信息
 	     */
-	    onScroll (e, position) {
-        console.log(e, position, '测试scroll')
+	    onScroll (e) {
 	      let self = this
-        // 处理打分蒙版跟随搓动的问题，必须用 absolute， 不能用fixed（否则有光标错位问题）
-        // let scoreDom = document.querySelector('#scoreDom')
-        // scoreDom.style.top = position.scrollTop + 'px'
-
-        self.isShow2TopBtn = position.scrollTop > windowHeight
+        self.scrollThrottled(e);
 	    },
 	    /**
 	     * 回到顶部
@@ -704,7 +715,7 @@
 	    back2Top () {
 	      let self = this
 
-	      self.$el.scrollTop = 0
+	      self.$el.querySelector('.problem-root').scrollTop = 0
 	      self.isShow2TopBtn = false
 	    },
 	    /**
@@ -748,9 +759,11 @@
         .then((res) => {
           if(res && res.code === 0 && res.data){
             self.setData({
-              isShowNewHint: res.data.count - self.dataList.length > 0,
+              isShowNewHint: res.data.count - self.init_total_num > 0,
               total_num: res.data.count,
-              unfinished_count: res.data.unfinishedCount
+              unfinished_count: res.data.unfinishedCount || 0,
+              group_review_done_num: res.data.reviewNum || 0,
+              group_review_total_num: res.data.reviewTotalNum
             })
           }
         })
@@ -783,10 +796,27 @@
             self.setData({
               isShowNewHint: false,
               total_num: res.data.count,
-              unfinished_count: res.data.unfinished
+              unfinished_count: res.data.unfinished,
+              problem_group_review_id: res.data.reviewInfo && +res.data.reviewInfo.reviewId && res.data.reviewInfo.reviewId || this.problem_group_review_id,
+              init_total_num: res.data.count
             })
 
+            // 有互评拿到互评规则  无互评的时候返回的是"0"
+            if(res.data.reviewInfo && +res.data.reviewInfo.reviewId && !self.group_review_declaration){
+              self.getReviewRules(res.data.reviewInfo.reviewId)
+            }
+
             let newList = res.data.list
+            if(res.data.groupInfo){
+              let groupInfo = res.data.groupInfo
+              self.setData({
+                problem_answer_type: 1,
+                group_name: groupInfo.groupName,
+                group_id: groupInfo.groupId
+              })
+              newList = self.formatTeamResult(res.data)
+            }
+
             // 返回的条目的个数
             let response_num = newList.length
             // 有可能还一条都没有呢
@@ -822,6 +852,23 @@
         })
 
       },
+
+      /** 
+       * @method 分组作答结果
+      */
+      formatTeamResult(data){
+        let self = this
+        let newList = data.resultList
+        newList.forEach(item => {
+          item['index'] = item.resultInfo.index
+          item['result'] = Object.assign({}, item.resultInfo.result) 
+          item['score'] = item.scoreInfo.score
+          item['totalScore'] = item.scoreInfo.totalScore
+          item['resultId'] = item.resultInfo.resultId
+        })
+        return newList
+      },
+
       /**
        * 延时
        *
@@ -951,14 +998,25 @@
 	     * 点击打分部分，呼出打分面板
 	     *
 	     * @event bindtap
-       * @params {Number} answerid 将要打分的主观题答案的id
+       * @params {Number} answerindex 将要打分的主观题答案的index
        * @params {Number} scoreTotal 总分
 	     * @params {Number} index 当前的item的序号
        * @params {String} remark 教师的评语
+       * @params {Number} resultId 将要打分的主观题答案的id
 	     */
-	    initScore (answerindex, score = -1, scoreTotal, index, remark = '') {
+	    initScore (answerindex, resultId, score = -1, scoreTotal, index, remark = '') {
 	      let self = this
-				// let url = API.get_subj_result_score_detail +'?problem_result_id=' + answerid + '&problem_id=' + self.problemid;
+        let url = API.lesson.review_score_detail
+        let params = {
+          problemId: self.problemid,
+          // problemResultId: resultId,
+          userId: self.dataList[index].user && self.dataList[index].user.userId
+        }
+        if(this.problem_answer_type){
+          params['groupId'] = this.group_id
+          params['teamId'] = this.dataList[index].teamInfo.teamId
+          delete params.userId
+        }
 	      // 投屏时不可打分
         if (answerindex === self.postingSubjectiveid) {return;}
         
@@ -970,17 +1028,24 @@
         scoreTapTimer = setTimeout(() => {
           self.scoringIndex = index
           // TODO:有互评的时候再开放这段
-					// return request.get(url)
-	        //   .then(jsonData => {
-	        //     if (jsonData.success) {
-					// 			self.tProportion = Math.floor(jsonData.data.teacher_proportion * 100)
-					// 			self.gProportion = Math.floor(jsonData.data.group_review_proportion * 100)
-	        //       self.$refs.StarPanel.$emit('enter', answerid, scoreTotal, jsonData.data.teacher_score, jsonData.data.group_review_score, jsonData.data.teacher_proportion, jsonData.data.group_review_proportion, index, remark)
-	        //     }
-	        //   }).catch(error => {
-	        //     console.error('error', error)
-	        //   })
-          self.$refs.StarPanel.$emit('enter', answerindex, scoreTotal, score, -2, 100, 0, index, remark)
+					return request.post(url, params)
+	          .then(res => {
+              if(res && res.code === 0 && res.data){
+                let data = res.data
+                self.tProportion = 100 - data.reviewPercent
+                self.gProportion = data.reviewPercent
+                
+                let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
+                let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
+
+                self.$refs.StarPanel.$emit('enter', self.problem_group_review_id, answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content || remark)
+              }
+	          }).catch(error => {
+	            console.error('error', error)
+            })
+          
+          // self.$refs.StarPanel.$emit('enter', answerindex, resultId, scoreTotal, score, -2, 100, 0, index, remark)
+          
         }, 100)
 	    },
 	    /**
@@ -991,7 +1056,7 @@
        * @params {Number} score 打的分
        * @params {String} remark 教师的评语
 	     */
-	    giveScore (answerindex, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion) {
+	    giveScore (answerindex, teacherScore, groupReviewScore, remark, teacherProportion, groupReviewProportion, resultId) {
 	    	let self = this
 
 	    	if (teacherScore === -1) {
@@ -1003,20 +1068,35 @@
 	      let postData = {
           problemId: self.problemid,
           score: Math.round(teacherScore*100),
-          userId: self.dataList[self.scoringIndex].user.userId,
+          userId: self.dataList[self.scoringIndex].user && self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark
-          }
-	      }
+          },
+          problemResultId: resultId,
+          reviewScore: typeof groupReviewScore == 'number' || +groupReviewScore ? (groupReviewScore > 0 ? Math.round(groupReviewScore*100) : groupReviewScore > -1 ? 0 : undefined) : -1
+        }
+
+        if(this.problem_answer_type){
+          postData['groupId'] = this.group_id
+          postData['teamId'] = this.dataList[this.scoringIndex].teamInfo.teamId
+          delete postData.userId
+          delete postData.problemResultId
+        }
 
 	      return request.post(url, postData)
 	        .then(res => {
             if(res && res.code === 0 && res.data){
                // 关闭打分页面
               console.log(`打过分啦${teacherScore}`, self.scoringIndex)
-              self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
-              self.dataList[self.scoringIndex].comment.content = remark
-
+              if(this.problem_group_review_id) {
+                self.dataList[self.scoringIndex].score = Math.round((+teacherScore * teacherProportion * 100) + (+groupReviewScore * groupReviewProportion * 100))
+              }else {
+                self.dataList[self.scoringIndex].score = Math.round(teacherScore*100)
+              }
+              self.dataList[self.scoringIndex].comment = {
+                content: remark
+              }
+              
 
               self.$refs.StarPanel.$emit('leave')
             }
@@ -1085,10 +1165,14 @@
         }
 				let self = this
 				if(this.newTime > 0){
-					// let msg = i18n.locale === 'zh_CN' ? `延时${timeList[duration]}成功` : 'Successful'
 					let msg = i18n.locale === 'zh_CN' ? '请先收题' : 'Stop answering required'
 					T_PUBSUB.publish('ykt-msg-toast', msg);
 				} else {
+          if(this.dataList.length < 2){
+            let msg = i18n.locale === 'zh_CN' ? '答案提交数量不少于2份才可发起互评' : '2 answers are required at least'
+            T_PUBSUB.publish('ykt-msg-toast', msg);
+            return this;
+          }
 					// 防止用户频繁点击
 	        clearTimeout(hupingTapTimer)
 	        hupingTapTimer = setTimeout(() => {
@@ -1108,29 +1192,26 @@
 	    giveHuping (teacher_score_proportion, group_review_proportion, review_declaration) {
 	    	let self = this
 
-	      let url = API.publish_subj_problem_group_review
+	      let url = API.lesson.publish_review
 	      let postData = {
-	        "problem_id": self.problemid,
-					teacher_score_proportion,
-					group_review_proportion,
-					review_declaration
+	        "problemId": self.problemid,
+					reviewPercent: group_review_proportion,
+					reviewDeclaration: review_declaration
 	      }
 
 	      request.post(url, postData)
-	        .then(jsonData => {
-
-						if(jsonData.success){
-							// 关闭互评页面
-		          console.log('发起互评');
-							self.problem_group_review_id = jsonData.data.problem_group_review_id
+	        .then(res => {
+            if(res && res.code === 0 && res.data){
+              self.problem_group_review_id = res.data.reviewId
+              self.group_review_declaration = review_declaration
+              self.tProportion = teacher_score_proportion
+              self.gProportion = group_review_proportion
 		          self.$refs.HupingPanel.$emit('leaveHuping')
 							self.init()
-						}
-
+            }
 	        }).catch(res => {
             self.$refs.HupingPanel.$emit('leaveHuping')
-						let msg = res.msg
-						T_PUBSUB.publish('ykt-msg-toast', msg);
+						
           });
 
 
@@ -1169,10 +1250,19 @@
 			 * 打开小组成员列表
 			 *
 			 */
-			handleOpenTeamMember(index) {
-				this.showTeamMember = true;
-				this.teamMemberList = this.dataList[index].users
-				this.currentTeam = this.dataList[index].team_name
+			handleOpenTeamMember(teamId) {
+        let URL = API.lesson.get_team_detail
+        let params = {
+          team_id: teamId
+        }
+        return request.get(URL, params)
+        .then(res => {
+          if(res && res.code === 0 && res.data){
+            this.showTeamMember = true;
+            this.teamMemberList = res.data.memberList
+            this.currentTeam = res.data.teamName
+          }
+        })
 			},
 			/*
 			 * 关闭小组成员列表
@@ -1215,7 +1305,7 @@
       addFold(list) {
           list.map(e => {
               if(e.result.content && this.getLength(e.result.content)> 200) {
-                  e.fold = false
+                  e.fold = true
               } else {
                   e.fold = false
                   e.hideFold = true
@@ -1240,6 +1330,25 @@
           message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
           duration: 3e3
         });
+      },
+      /** 
+       * @method 获取互评规则
+       * 
+      */
+      getReviewRules(reviewId){
+        let URL = API.lesson.get_review_config
+        let params = {
+          reviewId
+        }
+
+        return request.post(URL, params)
+        .then(res => {
+          if(res && res.code === 0 && res.data){
+            this.group_review_declaration = res.data.reviewDeclaration
+            this.tProportion = 100 - res.data.reviewPercent
+            this.gProportion = res.data.reviewPercent
+          }
+        })
       }
 	  }
 	}
@@ -1288,7 +1397,7 @@
 
 		.back-top-btn {
 			position: fixed;
-		  z-index: 10;
+		  z-index: 40;
 		  right: 0.306667rem;
 		  bottom: 1.986667rem;
 		  width: 1.066667rem;

@@ -35,7 +35,7 @@
 
       <!-- 小组作答 显示 未进组不显示小组详情 -->
       <section class="team__intro" v-if="team && !noTeam">
-        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.team_name }}</p>
+        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
         <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
       </section>
 
@@ -88,14 +88,20 @@
       <!-- 小组提示 -->
       <div class="team__tip" v-show="answerType">
         <span class="f18 yellow">*</span>
-        <p class="f14 c9b" v-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
+        <!-- 由于获取小组信息状态接口不再处理旁听生的异常 优先展示旁听生提示 -->
+        <p class="f14 c9b" v-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
+        <p class="f14 c9b" v-else-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
         <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
-        <p class="f14 c9b" v-else-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
+      </section>
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <p v-if="!observerMode" :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
 
@@ -104,13 +110,13 @@
       <div class="team__members">
         <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
         <div class="members__header">
-          <p class="members__title f20 c333">{{ team.team_name }}</p>
-          <p class="members__total f14 c9b">{{ team.member_count }}人</p>
+          <p class="members__title f20 c333">{{ team.teamName }}</p>
+          <p class="members__total f14 c9b">{{ team.memberCount }}人</p>
         </div>
         <ul class="">
-          <li class="member__info" v-for="member in team.members">
-            <img class="member--avatar" :src="member.avatar" :alt="member.name" >
-            <div class="member--name f16 c666"><span class="name">{{ member.name }}</span></div>
+          <li class="member__info" v-for="member in team.memberList">
+            <img class="member--avatar" :src="member.avatar" :alt="member.userName" >
+            <div class="member--name f16 c666"><span class="name">{{ member.userName }}</span></div>
           </li>
         </ul>
       </div>
@@ -183,8 +189,9 @@
         // 是否再次编辑状态
         isEdit: false,
         retryTimes: 0,
-        // 是否旁听生
-        isGuestStudent: false,
+        // // 是否旁听生 从store中获取
+        // isGuestStudent: false,
+        timer: null
       };
     },
     components: {
@@ -194,6 +201,8 @@
       ...mapState([
         'lesson',
         'cards',
+        'isGuestStudent',
+        'observerMode'
       ]),
     },
     watch: {
@@ -236,6 +245,8 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.timer && clearInterval(this.timer)
+
           if(this.summary) {
             this.init(this.summary);
           } else {
@@ -270,6 +281,9 @@
         this.noTeam = false;
         this.timeOver =false;
         this.warning = false;
+        // 重置的时候完成状态都为false
+        this.isComplete = false;
+        this.team = null
       },
 
       /*
@@ -301,7 +315,7 @@
 
         // TODO：检测这个问题是否分组
         let isTeam = data.groupid || false;
-        isTeam && this.getTeamInfo(problemID);
+        isTeam && this.getTeamInfo(problemID, data.groupid);
 
         this.oProblem = problem['problem'];
         // 问题分数
@@ -363,11 +377,11 @@
        * @method 是否小组作答，拉取小组列表，作答结果 是否可以提交答案
        * @param
        */
-      getTeamInfo(problemID) {
-        let URL = API.student.GET_GROUP_STATUS;
+      getTeamInfo(problemID, groupID) {
+        let URL = API.lesson.get_group_status;
         let param = {
           'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'group_id': groupID
         };
 
         // 小组作答
@@ -375,36 +389,35 @@
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code == 0 && res.data) {
               let data = res.data;
 
               // 小组信息
-              let team = data.team_info;
+              let team = data.teamInfo;
               // 当前学生是否进入分组
-              let noTeam = team && team.no_team;
+              let noTeam = team && !+team.teamId;
               // 学生是否作答过
-              this.hasAnswered = data.user_answered;
+              this.hasAnswered = data.userAnswered;
               // 是否强制临时组作答
               this.forceTempTeam = data.user_force_temp_team;
 
               // 拉取小组成员
-              team.team_id && this.getMembers(team.team_id);
+              team.teamId && this.getMembers(team.teamId);
 
-              // 作答结果
-              let problemResult = data.team_problem_result;
-              if(problemResult) {
-                let result = problemResult.team_result_data;
-                this.text = result.content;
+              // 作答结果  未作答时返回的是{}
+              let problemResult = data.lastResult.result;
+              if(problemResult && data.lastResult.lastAnswerUserId) {
+                this.text = problemResult.content;
                 // 计数
                 this.text && (this.count = this.text.length);
                 // 是否有图片
-                if(result.pics && result.pics.length && result.pics[0].pic) {
+                if(problemResult.pics && problemResult.pics.length && problemResult.pics[0].pic) {
                   this.hasImage = true;
-                  this.imageURL = result.pics[0].pic;
-                  this.imageThumbURL = result.pics[0].thumb;
+                  this.imageURL = problemResult.pics[0].pic;
+                  this.imageThumbURL = problemResult.pics[0].thumb;
                 }
 
-                this.result = result;
+                this.result = problemResult;
                 this.ispreview = true;
               }
 
@@ -415,9 +428,7 @@
             }
           })
           .catch((error) => {
-            if(error.status_code == 604){
-              this.isGuestStudent = true
-            }
+            console.log('getTeamInfo:', error)
           });
       },
 
@@ -426,14 +437,14 @@
        * @param
        */
       getMembers(teamID) {
-        let URL = API.student.GET_TEAM_DETAIL;
+        let URL = API.lesson.get_team_detail;
         let param = {
           'team_id': teamID
         };
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code == 0 && res.data) {
               let data = res.data;
 
               // 小组成员
@@ -446,19 +457,19 @@
        * @method 是否小组有小组作答结果
        * @param
        */
-      getTeamResult(problemID) {
-        let URL = API.student.GET_GROUP_STATUS;
+      getTeamResult(problemID, groupID) {
+        let URL = API.lesson.get_group_status;
         let param = {
           'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'group_id': groupID
         };
 
         request.get(URL, param)
           .then((res) => {
-            if(res && res.data) {
+            if(res && res.code === 0 && res.data) {
               let data = res.data;
 
-              let problemResult = data.team_problem_result;
+              let problemResult = data.lastResult.lastAnswerUserId;
               // 答案覆盖提示
               if(problemResult) {
                 let msgOptions = {
@@ -516,22 +527,21 @@
        * @param
        */
       getScoreFn(problemID) {
-        let URL = API.student.PROBLEM_SCORE;
+        let URL = API.lesson.get_problem_answer;
         let param = {
-          'problem_id': problemID,
-          'lesson_id': this.lessonID
+          'problem_id': problemID
         };
 
-        return request.get(URL, param)
-          .then((res) => {
-            if(res && res.data) {
-              let data = res.data;
+        request.get(URL, param)
+        .then((res) => {
+          if(res && res.code === 0 && res.data) {
+            let data = res.data;
 
-              this.getScore = data.score;
-
-              return data;
-            }
-          });
+            this.getScore = data.score > 0 ? data.score/100 : data.score;
+          }
+        })
+        .catch(error => {
+        });
       },
 
       /*
@@ -953,8 +963,13 @@
         // 是否小组作答
         // 小组作答先看下有没有人提交 提示覆盖信息
 
+        // 小组作答 旁听生身份不能提交
+        if(this.answerType && this.isGuestStudent) {
+          return this;
+        }
+
         if(this.sendStatus === 2) {
-          if(this.answerType === 1 && !this.isEdit) {
+          if(this.answerType === 1) {
             // 是否进组
             if(this.noTeam || this.forceTempTeam) {
               let msgOptions = {
@@ -975,7 +990,7 @@
                 }
               });
             } else {
-              this.getTeamResult(this.summary.problemID);
+              this.getTeamResult(this.problemID, this.summary.groupid);
             }
           } else {
             this.sendSubjective();
@@ -1003,6 +1018,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer);
     }
   };
 </script>

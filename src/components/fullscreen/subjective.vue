@@ -186,6 +186,7 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
+        timer: null
       };
     },
     components: {
@@ -237,6 +238,8 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.timer && clearInterval(this.timer)
+
           if(this.summary) {
             this.init(this.summary);
           } else {
@@ -271,6 +274,9 @@
         this.noTeam = false;
         this.timeOver =false;
         this.warning = false;
+        // 重置的时候完成状态都为false
+        this.isComplete = false;
+        this.team = null
       },
 
       /*
@@ -1186,6 +1192,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer)
     }
   };
 </script>

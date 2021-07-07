@@ -3,7 +3,8 @@ var path = require('path')
 // var proxyUrl = 'http://10.0.3.3:9000'
 var proxyUrl = 'https://b.yuketang.cn'
 
-proxyUrl = 'https://protest.xuetangonline.com'
+// proxyUrl = 'https://protest.xuetangonline.com'
+proxyUrl = 'https://pre-apple-ykt.xuetangonline.com'
 
 
 function proxyConfig () {
@@ -42,7 +43,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/wsapp/': {
-        target: 'wss://protest.xuetangonline.com',
+        // target: 'wss://protest.xuetangonline.com',
+        target: 'wss://pre-apple-ykt.xuetangonline.com',
         changeOrigin: true,
         ws: true,
         secure: false

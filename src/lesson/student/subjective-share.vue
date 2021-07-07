@@ -83,19 +83,26 @@
         request.get(URL, params).
         then( res => {
           if (res && res.code === 0 && res.data) {
-            let user = res.data.user;
 
             // 是否匿名
             let anon = this.summary.anon;
             if(anon) {
               this.avatar = 'https://qn-sfe.yuketang.cn/o_1cvff7vi9p781opp1c0r1ot9o1n9.jpg';
               this.name = this.$i18n.t('anonymous2') || '匿名';
-            } else if(user) {
-              this.avatar = user.avatar;
-              this.name = user.name;
+            } else {
+
+              if(res.data.teamInfo) {
+                this.name = res.data.teamInfo.teamName;
+                // 后面使用小组头像 暂时使用个人头像
+                this.avatar = this.teamAvatar;
+              } else {
+                let user = res.data.user;
+                this.avatar = user.avatar;
+                this.name = user.name;
+              }
             }
 
-            this.result = res.data;
+            this.result = res.data.teamInfo ? res.data.resultInfo.result : res.data;
           }
         }).catch(error => {
           console.log('getSubjective:', error);
