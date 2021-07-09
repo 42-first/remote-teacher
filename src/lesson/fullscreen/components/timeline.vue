@@ -22,7 +22,7 @@
         <div class="timeline__ppt">
           <span class="ppt--pageno f12" >{{ $t('pno', { number: item.pageIndex }) }}</span>
           <div class="ppt__cover--wrapper" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="cover" :src="item.src">
+            <img class="cover" :src="item.src" loading="lazy" alt="雨课堂">
           </div>
           <div class="timeline__footer box-between">
             <p class="f12 c9b">{{ item.time|getTimeago }}</p>
@@ -34,7 +34,7 @@
         <div class="timeline__ppt problem" :class="{ 'complete': item.isComplete }" >
           <span class="ppt--pageno f12" >{{ $t('pno', { number: item.pageIndex }) }}</span>
           <div class="ppt__cover--wrapper" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="cover" :src="item.src">
+            <img class="cover" :src="item.src" loading="lazy" alt="雨课堂">
           </div>
           <div class="timeline__footer box-between cfff">
             <p class="f12">{{ item.time|getTimeago }}</p>
@@ -47,7 +47,7 @@
         <div class="timeline__ppt">
           <span class="ppt--pageno f12"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
           <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="screenshot--image" :src="item.src" alt="雨课堂,截图分享" />
+            <img class="screenshot--image" :src="item.src" loading="lazy" alt="雨课堂,截图分享" />
           </div>
           <div class="timeline__footer box-between">
             <p class="f12 c9b">{{ item.time|getTimeago }}</p>
