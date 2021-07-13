@@ -367,7 +367,7 @@ let pages = {
 
   "nybcykq": "Your have entered the remoter in other place",
   "dqquit": "Quit",
-  "dqlssk": "Your account has been logged in by others.<br>You want to",
+  "dqlssk": "The lesson is controlled by the other teacher.<br>You want to",
   "loginagain": "Control the lesson",
 
   "subjectiveedit": "Edit",
