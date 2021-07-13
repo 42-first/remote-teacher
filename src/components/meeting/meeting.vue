@@ -222,7 +222,11 @@ export default {
           this.setMeetingSDK('local');
         }
 
-        // this.setMeetingSDK('local');
+        // 自测本地会议
+        const provider = this.$route.query && this.$route.query.provider || data.provider;
+        if(provider === 3) {
+          this.setMeetingSDK('local');
+        }
 
         // 目前如果有人在分享
         if(data.shareInfo && data.shareInfo.shareId) {
