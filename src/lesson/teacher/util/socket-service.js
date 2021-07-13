@@ -168,7 +168,7 @@ let mixin = {
     detectlessonHandle (msg) {
       const { remoteuid, wakeuid } = msg;
       const userid = this.identityId || this.userid;
-      console.log(remoteuid, wakeuid);
+      // console.log(remoteuid, wakeuid);
       if (!!remoteuid) {
         this.sayHello();
       } else {
@@ -179,6 +179,7 @@ let mixin = {
         } else {
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
         }
       }
     },

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import request from '@/util/request-v3'
   import API from '@/util/api'
 
@@ -39,10 +39,14 @@
       	'classroomid',
         'lessonid',
 				'socket',
-				'isCloneClass'
+				'isCloneClass',
+				'pretendSeizeAuth',
       ])
     },
 	  methods: {
+			...mapActions([
+				'set_pretendSeizeAuth'
+			]),
 	  	/**
 		   * 我要上课夺主权
 		   *
@@ -56,6 +60,11 @@
         //   });
         //   return
         // }
+				if(this.pretendSeizeAuth) {
+					this.set_pretendSeizeAuth(false);
+		    	this.$emit("sayhello");
+					return;
+				}
 		    let self = this
 		    let str = JSON.stringify({
 		      'op': 'depriveremote',

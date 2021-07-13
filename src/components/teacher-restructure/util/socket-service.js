@@ -173,7 +173,7 @@ let mixin = {
             self.socketProcessMessage(msg)
           }
           // 握手开始通信
-          self.detectlessonHandle();
+          self.sendDetectlesson();
         }
       } catch (error) {
         Raven.captureException(error)
@@ -217,6 +217,7 @@ let mixin = {
         } else {
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
         }
       }
     },
