@@ -224,7 +224,7 @@ export default {
 
         // 自测本地会议
         const provider = this.$route.query && this.$route.query.provider || data.provider;
-        if(provider === 3) {
+        if(provider == 3) {
           this.setMeetingSDK('local');
         }
 
