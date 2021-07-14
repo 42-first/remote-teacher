@@ -77,6 +77,8 @@ export default class RoomClient {
     // Closed flag.
     // @type {Boolean}
     this._closed = false;
+    this._opened = false;
+    this._openedCount = 0;
 
     // Display name.
     // @type {String}
@@ -200,6 +202,8 @@ export default class RoomClient {
       return;
 
     this._closed = true;
+    this._opened = false;
+    this._openedCount = 0;
 
     logger.debug('close()');
 
@@ -235,7 +239,11 @@ export default class RoomClient {
 
     this._protoo = new protooClient.Peer(protooTransport);
 
-    this._protoo.on('open', () => this._joinRoom());
+    this._protoo.on('open', () => {
+      this._joinRoom();
+      this._opened = true;
+      this._openedCount += 1;
+    });
 
     this._protoo.on('failed', () => {
     });
@@ -537,9 +545,8 @@ export default class RoomClient {
             break;
           }
 
-        default:
-          {
-            logger.error('unknown protoo notification.method "%s"', notification.method);
+        default: {
+            // logger.error('unknown protoo notification.method "%s"', notification.method);
           }
       }
     });
@@ -1209,7 +1216,7 @@ export default class RoomClient {
   }
 
   async _joinRoom() {
-    logger.debug('_joinRoom()', this._handlerName);
+    logger.log('_joinRoom()', this._handlerName);
 
     try {
       // 1、设置设备
@@ -1338,6 +1345,10 @@ export default class RoomClient {
         rtpCapabilities: this._mediasoupDevice.rtpCapabilities,
         sctpCapabilities: this._mediasoupDevice.sctpCapabilities
       });
+
+      if(this._openedCount > 0) {
+        console.log('_openedCount:', this._openedCount);
+      }
 
       // 本地用户加入成功
       this.fire('joinedChannel', { code: 1});
