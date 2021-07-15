@@ -246,9 +246,11 @@ export default class RoomClient {
     });
 
     this._protoo.on('failed', () => {
+      console.log('protooClient failed');
     });
 
     this._protoo.on('disconnected', () => {
+      console.log('protooClient disconnected');
       // Close mediasoup Transports.
       if (this._sendTransport) {
         this._sendTransport.close();
@@ -262,6 +264,8 @@ export default class RoomClient {
     });
 
     this._protoo.on('close', () => {
+      console.log('protooClient close');
+
       if (this._closed)
         return;
 
