@@ -251,6 +251,11 @@ export default class RoomClient {
 
     this._protoo.on('disconnected', () => {
       console.log('protooClient disconnected');
+
+      if(this._openedCount > 0) {
+        return this;
+      }
+
       // Close mediasoup Transports.
       if (this._sendTransport) {
         this._sendTransport.close();
