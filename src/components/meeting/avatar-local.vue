@@ -153,6 +153,35 @@
         } else {
           this.init();
         }
+      },
+      'member.videoConsumer'(newVal) {
+        if(newVal) {
+          this.initTimer && clearTimeout(this.initTimer)
+
+          if(this.meetingSDK === 'local') {
+            this.initTimer = setTimeout(()=>{
+              this.initLocalVideo();
+            }, 1000)
+          }
+        }
+      },
+      'member.audioConsumer'(newVal) {
+        if(newVal) {
+          const local = this.local;
+          const member = this.member;
+          const uid = member && member.id;
+
+          // 本地音频不处理
+          if(local == uid) {
+            return this;
+          }
+
+          if(this.meetingSDK === 'local') {
+            setTimeout(()=>{
+              this.initLocalAudio();
+            }, 1000)
+          }
+        }
       }
     },
     methods: {
