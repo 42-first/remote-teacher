@@ -414,15 +414,15 @@
     .icon {
       width: 0.64rem;
       height: 0.64rem;
-      background: url('http://sfe.ykt.io/o_1d60d5hgm1cloft113n79jf1nbld.png') no-repeat 0 0/contain;
+      background: url('https://qn-sfe.yuketang.cn/o_1d60d5hgm1cloft113n79jf1nbld.png') no-repeat 0 0/contain;
       &.icon-unsign {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgm11umdgl1oga50v1tb8f.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgm11umdgl1oga50v1tb8f.png');
       }
       &.icon-points {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgmv1mbpq1m7oq051s74c.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgmv1mbpq1m7oq051s74c.png');
       }
       &.icon-unpoints {
-        background-image: url('http://sfe.ykt.io/o_1d60d5hgmhj1ioadg5ea31gp2e.png');
+        background-image: url('https://qn-sfe.yuketang.cn/o_1d60d5hgmhj1ioadg5ea31gp2e.png');
       }
       &.mt-2 {
         margin-top: -0.05333333rem;

@@ -59,7 +59,7 @@
         <!-- 图片 -->
         <section class="submission__pic">
           <div v-if="!hasImage&&!loading">
-            <div class="submission__pic--add" ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
+            <div class="submission__pic--add" ><input type=file accept="image/jpeg,image/png,image/jpg" class="camera" @change="handleChooseImageChange" ></div>
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
@@ -127,6 +127,7 @@
   import { isSupported } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import upload from '@/util/upload'
 
 
   export default {
@@ -185,6 +186,7 @@
         retryTimes: 0,
         // 是否旁听生
         isGuestStudent: false,
+        timer: null
       };
     },
     components: {
@@ -236,6 +238,8 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.timer && clearInterval(this.timer)
+
           if(this.summary) {
             this.init(this.summary);
           } else {
@@ -258,8 +262,11 @@
       */
       reset() {
         this.text = '';
+        this.hasImage = false;
+        this.loading = false;
         this.imageURL = '';
         this.imageThumbURL = '';
+        this.fileData = null;
         this.ispreview =false;
         this.sendStatus = 0;
         this.teamVisible = false;
@@ -267,6 +274,9 @@
         this.noTeam = false;
         this.timeOver =false;
         this.warning = false;
+        // 重置的时候完成状态都为false
+        this.isComplete = false;
+        this.team = null
       },
 
       /*
@@ -841,9 +851,9 @@
         };
 
         let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        let sBase64 = data.substr(data.indexOf(',') + 1);
-        params['pic_data'] = sBase64;
-        params['pic_type'] = picType;
+        // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // params['pic_data'] = sBase64;
+        // params['pic_type'] = picType;
 
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
@@ -860,25 +870,83 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
+          // let file = dataURLtoFile(data, fileName);
+          // data.name = fileName;
+          this.uploadFile(data).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
 
-              self.cacheResult();
-
-              return self.imageURL;
+              this.cacheResult();
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
+
+        // return request.post(URL, params)
+        //   .then( (res) => {
+        //     if(res && res.data) {
+        //       let data = res.data;
+
+        //       self.imageURL = data.pic_url;
+        //       self.imageThumbURL = data.thumb_url
+        //       self.sendStatus = 2;
+
+        //       self.cacheResult();
+
+        //       return self.imageURL;
+        //     }
+        //   }).catch(error => {
+        //     self.retryUpload(data, fileType);
+
+        //     return null;
+        //   });
       },
+
+      /**
+       * method 上传七牛
+       * params
+       */
+      uploadFile(file) {
+        let domain = upload.qiniuDomain;
+
+        return new Promise((resolve, reject)=>{
+          let observer = {
+            next(res) {
+              let total = res.total;
+              let percent = total.percent;
+
+              console.log("进度：" + percent + "% ");
+            },
+            error(err) {
+              console.log(err);
+              reject({ url: '' });
+            },
+            complete(res) {
+              console.log(res);
+              let url = domain + res.key;
+
+              console.log("url:" + url);
+              resolve({ url });
+            }
+          };
+
+          upload.upload(file, observer);
+        });
+      },
+
       /*
        * @method 上传图片失败重试策略
        * @param
@@ -951,16 +1019,16 @@
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
+        this.uploadImage(file, fileType);
+        // compress(file, options, function(dataUrl) {
+        //   if(dataUrl) {
+        //     self.fileData = dataUrl;
 
-        compress(file, options, function(dataUrl) {
-          if(dataUrl) {
-            self.fileData = dataUrl;
-
-            // 上传图片
-            self.uploadImage(dataUrl, fileType);
-            // self.hasImage = true;
-          }
-        });
+        //     // 上传图片
+        //     self.uploadImage(dataUrl, fileType, file.name);
+        //     // self.hasImage = true;
+        //   }
+        // });
       },
 
       /*
@@ -1124,6 +1192,7 @@
     mounted() {
     },
     beforeDestroy() {
+      this.timer && clearInterval(this.timer)
     }
   };
 </script>

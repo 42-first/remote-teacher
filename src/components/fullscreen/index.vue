@@ -109,6 +109,36 @@
     <!-- 弹幕控制组件 -->
     <danmu-cmp v-if="danmuStatus && !videoFullscreen" :videoFullscreen="videoFullscreen" :visible-danmu="visibleDanmu"></danmu-cmp>
 
+    <!-- 图片放大结构 -->
+    <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="pswp__bg"></div>
+      <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+        </div>
+        <div class="pswp__ui pswp__ui--hidden">
+          <div class="pswp__top-bar">
+            <div class="pswp__counter"></div>
+            <div class="pswp__preloader">
+              <div class="pswp__preloader__icn">
+                <div class="pswp__preloader__cut">
+                  <div class="pswp__preloader__donut"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pswp__caption">
+            <div class="pswp__caption__center"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 清华继教用户协议 -->
+    <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
 </template>
 <script>
@@ -139,6 +169,10 @@
   import lesson from './components/lesson';
   import msgbox from './components/msg-box';
   import videomsg from './components/video-msg';
+
+  import agreementMixin from '@/components/common/agreement-mixin'
+
+  import userAgreement from '@/components/common/agreement-pc'
 
 
   // 子组件不需要引用直接使用
@@ -224,7 +258,7 @@
         // 是否直播课
         isLive: false,
         // 当前正在播放的ppt
-        // currSlide: { src: 'http://sfe.ykt.io/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
+        // currSlide: { src: 'https://qn-sfe.yuketang.cn/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
         liveurl: null,
         // 直播类型 0：默认值 1:audio  2:video
@@ -244,7 +278,9 @@
         liveStatusTips: '',
         // 显示更多操作
         visibleMore: false,
-        currentTime: 0
+        currentTime: 0,
+        is_agreement: true,
+        classroom: {}
       };
     },
     components: {
@@ -252,7 +288,8 @@
       danmuCmp,
       volume,
       msgbox,
-      videomsg
+      videomsg,
+      userAgreement
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -314,11 +351,16 @@
             // this.initDanmu();
           }, 200)
         }
+      },
+      'classroom.classroomId'(newVal){
+        // if(this.isHuanghe || this.isWind){
+        //   this.getUserAgreement()
+        // }
       }
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin ],
     methods: {
       ...mapActions([
         // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`
@@ -417,6 +459,11 @@
           setTimeout(()=>{
             // sentry 配置
             this.setSentry();
+
+            require(['photoswipe', 'photoswipe/dist/photoswipe-ui-default', 'photoswipe/dist/photoswipe.css'], function(PhotoSwipe, PhotoSwipeUI_Default) {
+              window.PhotoSwipe = PhotoSwipe;
+              window.PhotoSwipeUI_Default = PhotoSwipeUI_Default;
+            })
           }, 1000)
         });
       },
@@ -426,7 +473,7 @@
       */
       setSentry() {
         if(window.Sentry) {
-          window.Sentry.init({ dsn: 'https://27f98c41f6584529b30068fe12a71241@mobile-sentry.xuetangonline.com/5' });
+          window.Sentry.init({ dsn: 'https://3d89296280c84e499c8022dc77217999@mobile-sentry.xuetangonline.com/3' });
           window.Sentry.configureScope((scope) => {
             scope.setUser({ 'id': this.userID });
           });
@@ -533,6 +580,7 @@
                 self.liveurl = self.liveInfo.live_url;
 
                 // 日志上报
+                self.liveId = self.liveInfo.live_id || 0;
                 setTimeout(() => {
                   self.handleLogEvent();
                 }, 30000)

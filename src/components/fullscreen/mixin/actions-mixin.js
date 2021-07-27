@@ -882,6 +882,7 @@ let actionsMixin = {
         !this.isLive && this.liveURL && (this.isLive = true);
 
         // 日志上报
+        this.liveId = data.liveid;
         setTimeout(() => {
           this.handleLogEvent();
         }, 1000)
@@ -928,6 +929,8 @@ let actionsMixin = {
       if(this.qos) {
         this.qos.liveEnd();
       }
+
+      this.removeEventListeners();
     },
 
     /*

@@ -11,8 +11,8 @@
     <!-- 定时 续时等 -->
     <section class="exercise__tips">
       <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
-        <img class="timing--icon" v-if="!warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
-        <img class="timing--icon" v-if="warning&&!timeOver" src="http://sfe.ykt.io/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
+        <img class="timing--icon" v-if="!warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
+        <img class="timing--icon" v-if="warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
         <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
       </div>
       <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
@@ -58,7 +58,7 @@
         <section class="submission__pic">
           <div v-if="!hasImage&&!loading">
             <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
-            <div class="submission__pic--add" v-else ><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
+            <div class="submission__pic--add" v-else ><input type=file accept="image/jpeg,image/png,image/jpg" class="camera" @change="handleChooseImageChange" ></div>
             <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
           </div>
           <div class="pic-view" v-show="hasImage||loading">
@@ -93,8 +93,13 @@
         <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
       </div>
 
+      <!-- 观看者提示文字 返回 -->
+      <section v-if="observerMode">
+        <p class="f18">{{ $t('watchmode') }}</p>
+        <p class="submit-btn f18" @click="handleBack">{{ $t('back') }}</p>
+      </section>
       <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" v-else ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
 
     </div>
 
@@ -124,6 +129,7 @@
   import { isSupported } from '@/util/util'
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
+  import upload from '@/util/upload'
   // 是否华为特殊手机 P20 P20-pro
   const ua = navigator.userAgent.toLowerCase();
   const huawei = ua.match(/huaweiclt|huaweieml/i);
@@ -167,8 +173,6 @@
         rate: 1,
         msgid: 0,
         summary: null,
-        // star count 获得星星的数量
-        starCount: 0,
         getScore: -1,
         // 个人作答还是小组作答 0 个人作答 1小组作答
         answerType: 0,
@@ -187,7 +191,9 @@
         // 是否旁听生
         isGuestStudent: false,
         // 是否华为特殊手机
-        huawei: !!huawei
+        huawei: !!huawei,
+        // 是否观察者模式
+        observerMode: false,
       };
     },
     components: {
@@ -259,7 +265,6 @@
         let getScore = this.oProblem['getScore'];
 
         if(score && getScore > 0) {
-          this.starCount = getScore / score * 5;
           this.getScore = getScore;
         }
 
@@ -824,9 +829,9 @@
         };
 
         let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        let sBase64 = data.substr(data.indexOf(',') + 1);
-        params['pic_data'] = sBase64;
-        params['pic_type'] = picType;
+        // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // params['pic_data'] = sBase64;
+        // params['pic_type'] = picType;
 
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
@@ -843,25 +848,82 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          let randomNumber = parseInt(Math.random()*10000, 10);
+          let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
+          // let file = dataURLtoFile(data, fileName);
+          this.uploadFile(data).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
 
-              self.cacheResult();
-
-              return self.imageURL;
+              this.cacheResult();
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
+
+        // return request.post(URL, params)
+        //   .then( (res) => {
+        //     if(res && res.data) {
+        //       let data = res.data;
+
+        //       self.imageURL = data.pic_url;
+        //       self.imageThumbURL = data.thumb_url
+        //       self.sendStatus = 2;
+
+        //       self.cacheResult();
+
+        //       return self.imageURL;
+        //     }
+        //   }).catch(error => {
+        //     self.retryUpload(data, fileType);
+
+        //     return null;
+        //   });
       },
+
+      /**
+       * method 上传七牛
+       * params
+       */
+      uploadFile(file) {
+        let domain = upload.qiniuDomain;
+
+        return new Promise((resolve, reject)=>{
+          let observer = {
+            next(res) {
+              let total = res.total;
+              let percent = total.percent;
+
+              console.log("进度：" + percent + "% ");
+            },
+            error(err) {
+              console.log(err);
+              reject({ url: '' });
+            },
+            complete(res) {
+              console.log(res);
+              let url = domain + res.key;
+
+              console.log("url:" + url);
+              resolve({ url });
+            }
+          };
+
+          upload.upload(file, observer);
+        });
+      },
+
       /*
        * @method 上传图片失败重试策略
        * @param
@@ -934,14 +996,14 @@
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
+        this.uploadImage(file, fileType);
 
         compress(file, options, function(dataUrl) {
           if(dataUrl) {
             self.fileData = dataUrl;
 
             // 上传图片
-            self.uploadImage(dataUrl, fileType);
-            // self.hasImage = true;
+            // self.uploadImage(dataUrl, fileType);
           }
         });
       },

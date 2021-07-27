@@ -338,7 +338,7 @@
 			  text-indent: 1.706667rem;
 			  border-top: 1px solid #C8C8C8;
 			  border-bottom: 1px solid #C8C8C8;
-			  background: url(http://sfe.ykt.io/bank.png) 0.8rem center no-repeat;
+			  background: url(https://qn-sfe.yuketang.cn/bank.png) 0.8rem center no-repeat;
 			  background-size: 0.6rem;
 			}
 			.wallet.nbt {
@@ -346,7 +346,7 @@
 			}
 			.needmoremoney {
 			  border-top: 0;
-			  background-image: url(http://sfe.ykt.io/wxlogo.png);
+			  background-image: url(https://qn-sfe.yuketang.cn/wxlogo.png);
 			}
 			.gray {
 			  color: $graybg;

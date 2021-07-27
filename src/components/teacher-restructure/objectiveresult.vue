@@ -71,6 +71,8 @@
 	        <div class="btn-desc f14">{{ $t('viewdetails') }}</div>
 	      </router-link>
 
+				<!-- 广财暂时没红包 -->
+				<template v-if="!isGc">
 	      <div @click="sendCheckRed({name: 'redpacket', problemid: problemid, type: 0})" v-show="!~problemType.indexOf('Polling') && !~RedEnvelopeID && !~problemType.indexOf('FillBlank')" class="btn-item">
 	        <div class="iconbox" style="background: #E64340;">
 	      	  <i class="iconfont icon-shiti_hongbao f28" style="color: #DCBC83;"></i>
@@ -84,6 +86,7 @@
 	      	</div>
 	        <div class="btn-desc f14">{{ $tc('classbonusBonuslist',~RedEnvelopeID) }}</div>
 	      </div>
+				</template>
 	    </section>
 	  </div>
 
@@ -175,7 +178,14 @@
 				'pptData',
 				'toupinginfo',
 				'isCloneClass'
-      ])
+      ]),
+			isGc() {
+				return [
+					'gctest.xuetangonline.com',
+					'rain.gdufemooc.cn',
+					'localhost:8088', // 这个本地测试
+				].indexOf(location.host) > -1
+			}
 	  },
 	  components: {
 	    Problemtime,

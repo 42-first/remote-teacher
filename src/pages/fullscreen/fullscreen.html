@@ -31,5 +31,22 @@
     <!-- <script async src="/static/lesson/html/kwai-video-qos-h5.js?v1.1.1"></script> -->
     <!-- sentry SDK -->
     <script defer src="/static/lesson/html/sentry.js" crossorigin="anonymous"></script>
+    <!-- 这里svg使用的桌面端项目 -->
+    <script src="//at.alicdn.com/t/font_1954061_nmmw2ctp93g.js" async defer></script>
+    <!-- 极光统计 2021.4.26 -->
+    <script type="text/javascript" src="https://web-stat.jiguang.cn/web-janalytics/scripts/janalytics-web.min.js"></script>
+    <script>
+      (function() {
+        if(window.JAnalyticsInterface) {
+          window.JAnalyticsInterface.init({
+            appkey: 'fcdf8e635093adde6bef4265',
+            debugMode: false,
+            channel: 'rainweb',
+            loc: false, //设置是否尝试获取位置信息上报，默认为 true
+            singlePage: true //设置是否为单页面，默认为 false
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

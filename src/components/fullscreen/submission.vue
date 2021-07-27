@@ -11,14 +11,6 @@
     <!-- 关闭页面 -->
     <div class="page__back" @click="handleBack">返回</div>
     <div class="submission-wrapper">
-      <!-- <div class="text-left contributor-wrapper" v-if="classroomid">
-        <div class="title">选择分组</div>
-        <div class="handler-wrapper" @click="showPicker">
-          <span>{{ selectedVal }}</span>
-          <i class="iconfont icon-dakai ver-middle font20"></i>
-        </div>
-      </div> -->
-
       <div class="submission-inner">
         <!-- 文字编辑 -->
         <section class="submission__text">
@@ -106,6 +98,7 @@
   import { configWX } from '@/util/wx-util'
   import imagemixin from '@/components/common/image-mixin'
   import upload from '@/util/upload'
+  import { isSupported } from '@/util/util'
   import $ from 'jquery'
 
 
@@ -174,6 +167,7 @@
 
         if(this.count) {
            this.sendStatus === 0 && (this.sendStatus = 2);
+           this.cacheResult();
         } else {
           !this.hasImage && (this.sendStatus = 0);
         }
@@ -231,6 +225,8 @@
             setTimeout(() => {
               self.$router.back();
             }, 2000)
+
+            this.removeCache();
           }
         }).catch(error => {
           this.sendStatus = 2;
@@ -261,9 +257,9 @@
         };
 
         let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        let sBase64 = data.substr(data.indexOf(',') + 1);
-        params['pic_data'] = sBase64;
-        params['pic_type'] = picType;
+        // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // params['pic_data'] = sBase64;
+        // params['pic_type'] = picType;
 
         // jpg,jpeg,bmp,png,gif
         if(!/png|jpg|jpeg/.test(picType)) {
@@ -280,22 +276,30 @@
         }
 
         this.sendStatus = 1;
-        return request.post(URL, params)
-          .then( (res) => {
-            if(res && res.data) {
-              let data = res.data;
 
-              self.imageURL = data.pic_url;
-              self.imageThumbURL = data.thumb_url
-              self.sendStatus = 2;
+        // 上传七牛
+        Promise.all([upload.getToken()]).
+        then(() => {
+          // let randomNumber = parseInt(Math.random()*10000, 10);
+          // let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
+          // let file = dataURLtoFile(data, fileName);
+          // data.name = fileName;
+          this.uploadFile(data).
+          then((res)=>{
+            if(res.url) {
+              this.imageURL = res.url;
+              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              this.sendStatus = 2;
 
-              return self.imageURL;
+              this.cacheResult();
+            } else {
+              this.retryUpload(data, fileType);
             }
-          }).catch(error => {
-            self.retryUpload(data, fileType);
-
-            return null;
+          }).
+          catch(error => {
+            this.retryUpload(data, fileType);
           });
+        });
       },
 
       /*
@@ -386,14 +390,15 @@
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
         this.imageThumbURL = '/vue_images/images/loading-3.gif';
-        compress(file, options, function(dataUrl) {
-          if(dataUrl) {
-            self.fileData = dataUrl;
+        this.uploadImage(file, fileType);
+        // compress(file, options, function(dataUrl) {
+        //   if(dataUrl) {
+        //     self.fileData = dataUrl;
 
-            // 上传图片
-            self.uploadImage(dataUrl, fileType);
-          }
-        });
+        //     // 上传图片
+        //     self.uploadImage(dataUrl, fileType, file.name);
+        //   }
+        // });
 
       },
 
@@ -466,6 +471,8 @@
               this.hasImage = true;
               this.sendStatus = 2;
               this.video = video;
+
+              this.cacheResult();
             }
           },
           error: (xhr, type) => {
@@ -494,6 +501,7 @@
         };
 
         !this.text && (this.sendStatus = 0);
+        this.cacheResult();
       },
       handleScaleImage() {
         let targetEl = event.target;
@@ -546,6 +554,72 @@
       },
       handleSend() {
         this.sendStatus === 2 && this.sendSubmission();
+      },
+
+      /*
+       * @method 缓存投稿
+       * @param
+       */
+      cacheResult() {
+        // 定时保存
+        this.cacheTimer && clearTimeout(this.cacheTimer);
+        this.cacheTimer = setTimeout(() => {
+          // 缓存到本地
+          let key = 'lessontougao' + this.lessonID;
+          let result = {
+            'text': this.text
+          };
+
+          result['imageURL'] = this.imageURL;
+          result['imageThumbURL'] = this.imageThumbURL;
+          result['video'] = this.video;
+
+          if(isSupported) {
+            localStorage.removeItem(key);
+            localStorage.setItem(key, JSON.stringify(result));
+          }
+        }, 3000)
+      },
+
+      /*
+       * @method 删除缓存
+       * @param
+       */
+      removeCache() {
+        let key = 'lessontougao' + this.lessonID;
+        if(isSupported) {
+          localStorage.removeItem(key);
+        }
+      },
+
+      /*
+       * @method 恢复作答结果
+       * @param
+       */
+      restore() {
+        // 恢复作答结果
+        let sResult = localStorage.getItem('lessontougao' + this.lessonID);
+        if(sResult) {
+          let result = JSON.parse(sResult);
+          this.text = result.text;
+          // 是否有图片
+          if(result.imageURL) {
+            this.hasImage = true;
+            this.imageURL = result.imageURL;
+            this.imageThumbURL = result.imageThumbURL;
+
+            setTimeout(()=>{
+              let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+              imgEl.src = this.imageURL;
+            }, 300)
+          }
+
+          if(result.video) {
+            this.video = result.video;
+          }
+
+          this.sendStatus = 2;
+        }
       },
 
       /**
@@ -629,8 +703,10 @@
       }
     },
     created() {
-      this.lessonID = +this.$route.params.lessonID;
-      this.classroomid = this.$route.query.classroomid
+      this.lessonID = this.$route.params.lessonID;
+      this.classroomid = this.$route.query.classroomid;
+
+      this.restore();
 
       // 获取学生分组列表
       this.pickerDataInit()
@@ -858,6 +934,7 @@
     background: #639EF4;
 
     border-radius: 4px;
+    cursor: pointer;
   }
 
   .submission__submit.disable {

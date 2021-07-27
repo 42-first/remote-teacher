@@ -111,9 +111,17 @@
       self.socket.send(str)
       self.handlePubSub()
     },
-    beforeDestroy(){
+    // beforeDestroy(){
+    //   T_PUBSUB.unsubscribe('call-msg')
+    //   this.giveupRoll()
+    // },
+    beforeRouteLeave (to, from, next) {
+      // ...
       T_PUBSUB.unsubscribe('call-msg')
-      this.giveupRoll()
+      if(to.name !== 'stuexpression'){
+        this.giveupRoll()
+      }
+      next()
     },
     methods: {
       /**

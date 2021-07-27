@@ -89,6 +89,13 @@ let fileupload = {
       observable.subscribe(observer);
 
       return observable;
+    } else {
+      let fileType = file.type;
+      let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
+      let randomNumber = parseInt(Math.random()*10000, 10);
+      let fileName = `${time}${randomNumber}.${picType}`;
+
+      key = fileName;
     }
 
     qiniu.compressImage(file, options).then(data => {

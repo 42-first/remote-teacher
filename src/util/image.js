@@ -178,7 +178,18 @@ function compress(file, options, callback) {
             canvas.width = w;
             canvas.height = h;
 
-            if(orientation > 0){
+            /**
+             * ios13.4 后系统做了自动旋转处理不需要再手动旋转
+             */
+            var needHelp=true;
+            if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+                var test = /os\s([\w_]+)/;// ios
+                var ua = navigator.userAgent.toLowerCase();
+                var match = test.exec(ua);
+                var Version = match[1].split("_")[0]+'.'+match[1].split("_")[1]; 
+                needHelp = Number(Version) < 13.4 ? true : false;
+            }
+            if(orientation > 0 && needHelp){
                 orientationHelper(canvas, ctx, orientation);
             }
             ctx.drawImage(img, 0, 0, w, h / ratio);

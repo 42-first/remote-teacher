@@ -167,3 +167,92 @@ export function substr(str, maxLength) {
 
   return str.substr(0, index);
 }
+
+/**
+ * @method 将base64转换为文件
+ * @params
+ */
+export function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(',');
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}
+
+
+/**
+ * @method 版本号比较
+ * @params
+ */
+export function compareVersion(v1, v2) {
+  v1 = v1.split('.')
+  v2 = v2.split('.')
+  const len = Math.max(v1.length, v2.length)
+
+  while (v1.length < len) {
+    v1.push('0')
+  }
+  while (v2.length < len) {
+    v2.push('0')
+  }
+
+  for (let i = 0; i < len; i++) {
+    const num1 = parseInt(v1[i])
+    const num2 = parseInt(v2[i])
+
+    if (num1 > num2) {
+      return 1
+    } else if (num1 < num2) {
+      return -1
+    }
+  }
+
+  return 0
+}
+
+export function getPlatformKey() {
+  let key = 'rain';
+  let host = {
+    'www.yuketang.cn': 'rain',
+    'b.yuketang.cn': 'thunder',
+    'pro.yuketang.cn': 'thu',
+    'changjiang.yuketang.cn': 'changjiang',
+    'g.yuketang.cn': 'g',
+    'huanghe.yuketang.cn': 'huanghe',
+    'hhtest.yuketang.cn': 'hhtest',
+    'pro.xuetangonline.com': 'protest',
+    'protest.xuetangonline.com': 'protest',
+    'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt',
+    // 清华继教学院定制需求 单独判断该学校使用的域名
+    'online1.yuketang.cn': 'huanghe',
+    'www.itsinghua.com': 'huanghe',
+    'home.itsinghua.com': 'huanghe'
+  }
+
+  key = host[location.host] || '';
+
+  return key;
+}
+
+// 动态加载js
+export function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    let scriptNode = document.createElement("script");
+    scriptNode.setAttribute("type", "text/javascript");
+    scriptNode.setAttribute("src", src);
+    document.body.appendChild(scriptNode);
+
+    scriptNode.onload = (evt) => {
+      resolve(evt);
+    }
+
+    scriptNode.onerror = (evt)=>{
+      reject('加载失败');
+    }
+  });
+}

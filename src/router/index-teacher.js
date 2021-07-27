@@ -208,7 +208,140 @@ const router = new Router({
       name: 'remote-fallback',
       component: RemoteList,
       meta
+    },
+    {
+      path: '/v3/:lessonid',
+      name: 'teacher-v3',
+      component: () => import('@/lesson/teacher/home'),
+      meta,
+      children: [
+        {
+          path: 'objectiveresult/:problemid',
+          name: 'objectiveresult_v3',
+          component: () => import('@/lesson/teacher/objectiveresult'),
+          meta
+    
+        },
+        {
+          path: 'collumresult-detail/:problemid',
+          name: 'collumresult-detail_v3',
+          component: () => import('@/lesson/teacher/collumresult-detail'),
+          meta
+        },
+        {
+          path: 'fillblankresult-detail/:problemid',
+          name: 'fillblankresult-detail_v3',
+          component: () => import('@/lesson/teacher/fillblankresult-detail'),
+          meta
+        },
+        {
+          path: 'redpacketlist/:problemid',
+          name: 'redpacketlist_v3',
+          component: () => import('@/lesson/teacher/redpacketlist'),
+          meta
+        },
+        {
+          path: 'subjectiveresult/:problemid',
+          name: 'subjectiveresult_v3',
+          component: () => import('@/lesson/teacher/subjectiveresult'),
+          meta
+        },
+        {
+          // 随便加个后缀，避免刷新页面时“/member”匹配到 /:lessonid
+          path: 'member/xxx',
+          name: 'member_v3',
+          component: () => import('@/lesson/teacher/member'),
+          meta
+        },
+        {
+          path: 'randomcall/xxx',
+          name: 'randomcall_v3',
+          component: () => import('@/lesson/teacher/randomcall'),
+          meta
+        },
+        {
+          path: 'paper/xxx',
+          name: 'paper_v3',
+          component: () => import('@/lesson/teacher/paper2'),
+          meta
+        },
+        {
+          path: 'paperfolder/:folderid',
+          name: 'paperfolder_v3',
+          component: () => import('@/lesson/teacher/paper-folder'),
+          meta
+        },
+        {
+          path: 'danmu/xxx',
+          name: 'danmu_v3',
+          component: () => import('@/lesson/teacher/danmu'),
+          meta
+        },
+        {
+          path: 'submission/xxx',
+          name: 'submission_v3',
+          component: () => import('@/lesson/teacher/submission'),
+          meta
+        },
+        {
+          path: 'postsubmission/:lessonID',
+          name: 'postsubmission_v3',
+          component: () => import('@/lesson/student/submission'),
+          meta
+        },
+        {
+          path: 'submission_list',
+          name: 'student-submissionlist-page_v3',
+          component: () => import('@/lesson/student/submission-list')
+        },
+        // 课堂动态设置
+        {
+          path: 'stateSet/xxx',
+          name: 'stateSet_v3',
+          component: () => import('@/lesson/teacher/stateSet'),
+          meta: {
+            keepAlive: false
+          }
+        },
+        {
+          path: 'quizresult/:quizid',
+          name: 'quizresult_v3',
+          component: () => import('@/lesson/teacher/quizresult'),
+          meta
+        },
+        {
+          path: 'quizresultdetail/:quizid',
+          name: 'quizresultdetail_v3',
+          component: () => import('@/lesson/teacher/quizresultdetail'),
+          meta
+        },
+        {
+          path: 'boardlist',
+          name: 'boardlist_v3',
+          component: () => import('@/lesson/teacher/board-list'),
+          meta
+        },
+        {
+          path: 'stuexpression/:userid',
+          name: 'stuexpression_v3',
+          component: () => import('@/lesson/teacher/student_expression'),
+          meta
+        },
+        {
+          path: 'search',
+          name: 'search_v3',
+          component: () => import('@/lesson/teacher/search_student'),
+          meta
+        }
+      ]
+    },
+    {
+      path: '/v3/redpacketqueryproblemid',
+      name: 'redpacket_v3',
+      component: () => import('@/lesson/teacher/redpacket'),
+      meta
     }
+    
   ]
 })
 
@@ -218,35 +351,69 @@ router.beforeEach((to, from, next) => {
   pubSub && pubSub.publish( 'reset', { msg: 'reset' } );
 
   // socket 无法使用的话，功能不正常，回根页面
-  if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send)) {
-    next({name: 'home', params: {lessonid: STORE.state.lessonid}})
-    return;
+  console.log(to);
+  
+  if(to.name.indexOf('v3') == -1){
+    if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'home' && to.path.indexOf('redpacketqueryproblemid') != -1)) {
+      next({name: 'home', params: {lessonid: STORE.state.lessonid}})
+      return;
+    }
+    // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
+    if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
+      let str = JSON.stringify({
+        'op': 'closequizresult',
+        'lessonid': STORE.state.lessonid,
+        'quizid': from.params.quizid
+      })
+      localStorage['isTouping'+from.params.quizid] = false
+  
+      STORE.state.socket.send(str)
+    }
+  
+    // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
+    let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    if (isObjectiveresultClose) {
+      let str = JSON.stringify({
+        'op': 'closeproblemresult',
+        'lessonid': STORE.state.lessonid,
+        'problemid': from.params.problemid
+      })
+  
+      STORE.state.socket.send(str)
+    }
+    next()
+  }else {
+    if(to.name !== 'teacher-v3'  && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'teacher-v3' && to.path.indexOf('redpacketqueryproblemid') != -1)){
+      next({name: 'teacher-v3', params: {lessonid: STORE.state.lessonid}})
+      return;
+    }
+    // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
+    if (from.name === 'quizresult_v3' && to.name !== 'quizresultdetail_v3') {
+      let str = JSON.stringify({
+        'op': 'closequizresult',
+        'lessonid': STORE.state.lessonid,
+        'quizid': from.params.quizid
+      })
+      localStorage['isTouping'+from.params.quizid] = false
+  
+      STORE.state.socket.send(str)
+    }
+  
+    // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
+    let isObjectiveresultClose = from.name === 'objectiveresult_v3' && to.name !== 'collumresult-detail_v3' && to.name !== 'fillblankresult-detail_v3' && to.name !== 'redpacket_v3' && to.name !== 'redpacketlist_v3'
+    // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
+    if (isObjectiveresultClose) {
+      let str = JSON.stringify({
+        'op': 'closeproblemresult',
+        'lessonid': STORE.state.lessonid,
+        'problemid': from.params.problemid
+      })
+  
+      STORE.state.socket.send(str)
+    }
+    next()
   }
-  // 试卷页进入试卷详情页，不关闭试卷投屏，进入其他页面时候都关闭投屏
-  if (from.name === 'quizresult' && to.name !== 'quizresultdetail') {
-    let str = JSON.stringify({
-      'op': 'closequizresult',
-      'lessonid': STORE.state.lessonid,
-      'quizid': from.params.quizid
-    })
-    localStorage['isTouping'+from.params.quizid] = false
-
-    STORE.state.socket.send(str)
-  }
-
-  // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
-  let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
-  if (isObjectiveresultClose) {
-    let str = JSON.stringify({
-      'op': 'closeproblemresult',
-      'lessonid': STORE.state.lessonid,
-      'problemid': from.params.problemid
-    })
-
-    STORE.state.socket.send(str)
-  }
-  next()
 })
 
 router.afterEach(function (to, from){

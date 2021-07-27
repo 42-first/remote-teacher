@@ -132,7 +132,7 @@
       }
     },
     created() {
-      this.lessonID = +this.$route.params.lessonID;
+      this.lessonID = this.$route.params.lessonID;
       document.title = this.$i18n.t('bullet') || '弹幕';
 
       // 课程结束啦
