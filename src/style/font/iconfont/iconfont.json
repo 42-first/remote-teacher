@@ -6,6 +6,111 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "20061997",
+      "name": "48-接入2",
+      "font_class": "48-jieru2",
+      "unicode": "e7eb",
+      "unicode_decimal": 59371
+    },
+    {
+      "icon_id": "20059649",
+      "name": "48-静态正在说话",
+      "font_class": "48-jingtaizhengzaishuohua",
+      "unicode": "e7ea",
+      "unicode_decimal": 59370
+    },
+    {
+      "icon_id": "19291514",
+      "name": "左箭头@2x",
+      "font_class": "zuojiantou2x",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "19291499",
+      "name": "右箭头@2x",
+      "font_class": "youjiantou2x",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "10158776",
+      "name": "右移动@2x",
+      "font_class": "youyidongx",
+      "unicode": "e7b8",
+      "unicode_decimal": 59320
+    },
+    {
+      "icon_id": "19068688",
+      "name": "28-弹幕",
+      "font_class": "28-danmu",
+      "unicode": "e7de",
+      "unicode_decimal": 59358
+    },
+    {
+      "icon_id": "19068156",
+      "name": "演讲者模式-线@2x",
+      "font_class": "yanjiangzhemoshi-xian2x",
+      "unicode": "e7dc",
+      "unicode_decimal": 59356
+    },
+    {
+      "icon_id": "19068157",
+      "name": "宫格模式-线@2x",
+      "font_class": "gonggemoshi-xian2x",
+      "unicode": "e7dd",
+      "unicode_decimal": 59357
+    },
+    {
+      "icon_id": "19068089",
+      "name": "16-收起全屏",
+      "font_class": "16-shouqiquanping",
+      "unicode": "e7da",
+      "unicode_decimal": 59354
+    },
+    {
+      "icon_id": "19068106",
+      "name": "16-全屏",
+      "font_class": "16-quanping",
+      "unicode": "e7db",
+      "unicode_decimal": 59355
+    },
+    {
+      "icon_id": "18261068",
+      "name": "20-语音-未发声",
+      "font_class": "20-yuyin-weifasheng",
+      "unicode": "e6bf",
+      "unicode_decimal": 59071
+    },
+    {
+      "icon_id": "18553666",
+      "name": "隐藏视频缩略图@2x",
+      "font_class": "yincangshipinsuolvetu2x1",
+      "unicode": "e6f8",
+      "unicode_decimal": 59128
+    },
+    {
+      "icon_id": "18553668",
+      "name": "看单人@2x",
+      "font_class": "kandanren2x",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
+    },
+    {
+      "icon_id": "18536021",
+      "name": "64-收起",
+      "font_class": "64-shouqi",
+      "unicode": "e7cf",
+      "unicode_decimal": 59343
+    },
+    {
+      "icon_id": "18526865",
+      "name": "48-展开操作栏",
+      "font_class": "48-zhankaicaozuolan",
+      "unicode": "e7ce",
+      "unicode_decimal": 59342
+    },
+    {
       "icon_id": "9532341",
       "name": "关闭",
       "font_class": "guanbi2",
