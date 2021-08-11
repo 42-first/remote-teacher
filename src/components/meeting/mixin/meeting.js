@@ -184,8 +184,8 @@ let meetingMixin = {
       this.$toast({ type: 1, position: 'top', message: message, duration: 3000 });
     },
 
-    /** 
-     * @method 强制禁言 
+    /**
+     * @method 强制禁言
     */
     banDevice (msg) {
 
@@ -198,7 +198,7 @@ let meetingMixin = {
 
       let bannedSpeaking = this.$i18n && this.$i18n.t('meeting.bannedfromspeaking') || '全员禁言';
       let releaseBannedSpeaking = this.$i18n && this.$i18n.t('meeting.releasebannedspeak') || '老师已解除全员禁言';
-      
+
       this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
     },
 
@@ -216,9 +216,9 @@ let meetingMixin = {
       let user = { id: uid, uid, name, avatar, role, video, audio, active: false,
         subscribe, offline };
 
-      if(this.meetingSDK === 'local') {
-        Object.assign(user, { audioConsumer: null, videoConsumer: null });
-      }
+      // if(this.meetingSDK === 'local') {
+      //   Object.assign(user, { audioConsumer: null, videoConsumer: null });
+      // }
 
       // 存在用户
       if(~index) {
@@ -232,6 +232,10 @@ let meetingMixin = {
           speakers.splice(index, 1, user);
         }
       } else {
+        if(this.meetingSDK === 'local') {
+          Object.assign(user, { audioConsumer: null, videoConsumer: null });
+        }
+
         // 教师放在最前面
         if(data.role === 'lecturer' || data.role === 'collaborator') {
           speakers.unshift(user);
@@ -392,7 +396,7 @@ let meetingMixin = {
       })
     },
 
-    /** 
+    /**
      * @method 获取当前会议禁言状态
     */
     getDeviceStatus(){

@@ -345,7 +345,6 @@ let pages = {
   "otherslogin": "其他老师已登录",
   "forcelogout": "您已被迫下线",
   "studentrole": "以学生身份进入",
-  "loginagain": "我要夺回主权",
   "imgafterfix": '',
   "extend": "延时",
   "chtet": "给学生延长答题时间",
@@ -367,7 +366,7 @@ let pages = {
   "nybcykq": "您已在别处进入遥控器",
   "dqquit": "退出",
   "dqlssk": "当前有老师正在上课<br>您希望",
-  "loginagain": "我要上课夺主权",
+  "loginagain": "夺取控制权",
 
   "subjectiveedit": "修改",
   "graded": "已批改",

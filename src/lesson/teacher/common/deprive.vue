@@ -4,7 +4,7 @@
 
     <div class="" v-show="isRobber">
       <div class="title" v-html="$t('dqlssk')"><!-- 当前有老师正在上课<br>您希望 --></div>
-      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" style="margin-top: 1.5rem;">{{isRobbing ? $t('loading')+'...' : /*'我要上课夺主权'*/$t('loginagain')}}</v-touch>
+      <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" style="margin-top: 1.5rem;">{{isRobbing ? $t('loading')+'...' : /*'夺取控制权'*/$t('loginagain')}}</v-touch>
       <v-touch class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
       <v-touch class="btn _btn" v-on:tap="exitRC" style="margin-top: 4.4rem;"><!-- 退出 -->{{ $t('dqquit') }}</v-touch>
     </div>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import request from '@/util/request-v3'
   import API from '@/util/api'
 
@@ -39,10 +39,14 @@
       	'classroomid',
         'lessonid',
 				'socket',
-				'isCloneClass'
+				'isCloneClass',
+				'pretendSeizeAuth',
       ])
     },
 	  methods: {
+			...mapActions([
+				'set_pretendSeizeAuth'
+			]),
 	  	/**
 		   * 我要上课夺主权
 		   *
@@ -56,6 +60,11 @@
         //   });
         //   return
         // }
+				if(this.pretendSeizeAuth) {
+					this.set_pretendSeizeAuth(false);
+		    	this.$emit("sayhello");
+					return;
+				}
 		    let self = this
 		    let str = JSON.stringify({
 		      'op': 'depriveremote',
