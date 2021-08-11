@@ -52,5 +52,6 @@ const getters = {
   danmuWordCloudOpen: state => state.danmuWordCloudOpen,
   toolbarIndex: state => state.toolbarIndex,
   isCloneClass: state => state.isCloneClass,
+  pretendSeizeAuth: state => state.pretendSeizeAuth,
 };
 export default getters

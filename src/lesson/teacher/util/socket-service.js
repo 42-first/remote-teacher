@@ -8,8 +8,9 @@
 
 import socketProcessMessage from './socket-process-message'
 
+const isLocal = location.host.indexOf('localhost') !== -1 || location.host.indexOf('192.168') !== -1
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
+const SOCKET_HOST = isLocal ? 'pre-apple-ykt.xuetangonline.com' : location.host
 
 let xintiaoTimer = null
 let isReconnect = false
@@ -134,20 +135,53 @@ let mixin = {
             self.socketProcessMessage(msg)
           }
 
-          // 握手开始通信
-          let userId = self.identityId || self.userid;
-          self.socket.send(JSON.stringify({
-            'op': 'hello',
-            'userid': userId,
-            'avatar': self.avatar,
-            'role': 'lecturer',
-            'auth': self.token,
-            'lessonid': self.lessonid
-          }))
+          // 首先去检测，遥控器是否正在被使用
+          self.sendDetectlesson();
         }
       } catch (error) {
         Raven.captureException(error)
         // myApp.alert("您的设备在连接服务时出现了错误，请尝试重试...","")
+      }
+    },
+    // 检测夺权
+    //  https://www.tapd.cn/50384083/prong/stories/view/1150384083001033588
+    sendDetectlesson () {
+      const msg = {
+        "op": "detectlesson",
+        "lessonid": this.lessonid
+      };
+      this.socket.send(JSON.stringify(msg));
+    },
+    sayHello () {
+      // 握手开始通信
+      const userid = this.identityId || this.userid;
+      this.socket.send(JSON.stringify({
+        'op': 'hello',
+        'userid': userid,
+        'avatar': this.avatar,
+        'role': 'lecturer',
+        'auth': this.token,
+        'lessonid': this.lessonid
+      }));
+    },
+    // socketProcessMessage 中使用
+    // 根据用户返回的消息，做是否做夺权处理的操作
+    detectlessonHandle (msg) {
+      const { remoteuid, wakeuid } = msg;
+      const userid = this.identityId || this.userid;
+      // console.log(remoteuid, wakeuid);
+      if (!!remoteuid) {
+        this.sayHello();
+      } else {
+        // 当前遥控器没有使用:
+        // 当前用户为开课开课老师
+        if(wakeuid == userid) {
+          this.sayHello();
+        } else {
+          this.$store.commit('set_isMsgMaskHidden', true);
+          this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
+        }
       }
     },
     /*
