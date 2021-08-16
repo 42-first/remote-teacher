@@ -366,6 +366,17 @@
           return this;
         }
 
+        // 处理连击问题
+        if(this.audioPending) {
+          return this;
+        } else {
+          this.audioPending = true;
+
+          setTimeout(()=>{
+            this.audioPending = false;
+          }, 2000)
+        }
+
         meeting.audio = audio;
         this.setMeeting(meeting);
       },
@@ -381,6 +392,17 @@
         // todo: 没有视频权限
         if(video && !meeting.hasVideoAuth) {
           return this;
+        }
+
+        // 处理连击问题
+        if(this.videoPending) {
+          return this;
+        } else {
+          this.videoPending = true;
+
+          setTimeout(()=>{
+            this.videoPending = false;
+          }, 2000)
         }
 
         meeting.video = video;
