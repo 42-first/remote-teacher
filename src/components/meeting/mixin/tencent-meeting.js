@@ -810,7 +810,11 @@ let tencentMixin = {
               if(shareStream.videoPlayer_ && shareStream.videoPlayer_.element_) {
                 shareStream.videoPlayer_.element_.controls = true;
               }
-            });
+            }).catch(error => {
+              console.error('Stream play exception:%s', error);
+              shareStream.stop();
+              document.addEventListener('mousedown', this.retryPlay);
+            })
           } catch (error) {
             console.error('Stream play exception:%s', error.message);
           }
@@ -841,6 +845,33 @@ let tencentMixin = {
 
         this.report();
       }
+    },
+
+    /**
+     * @method 尝试播放
+     * @param
+     */
+    retryPlay() {
+      let shareStream = this.shareStream;
+
+      if(shareStream) {
+        try {
+          shareStream.stop()
+          shareStream.play('J_screenshare', { muted: false })
+          .catch(err => {
+            let errCode = err.getCode()
+            if (errCode === 0x4043) {
+              stream.resume()
+              console.log('retryPlay stream.play 0x4043 自动播放失败');
+            }
+          });
+        } catch (error) {
+          console.error('Stream play exception:%s', error.message);
+        }
+      }
+
+      // 移除用户鼠标事件监听
+      document.removeEventListener('mousedown', this.retryPlay);
     },
 
   }

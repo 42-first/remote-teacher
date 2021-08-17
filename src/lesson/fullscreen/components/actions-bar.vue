@@ -374,7 +374,7 @@
 
           setTimeout(()=>{
             this.audioPending = false;
-          }, 2000)
+          }, 1000)
         }
 
         meeting.audio = audio;
@@ -402,7 +402,7 @@
 
           setTimeout(()=>{
             this.videoPending = false;
-          }, 2000)
+          }, 1000)
         }
 
         meeting.video = video;
