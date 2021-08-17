@@ -23,11 +23,12 @@
           <use xlink:href="#iconyanjiangzhemoshi-xian2x"></use>
         </svg>
       </div>
-      <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.JIUGONGGE }" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+      <!-- 去掉九宫格 -->
+      <!-- <div class="action box-center" :class="{ 'active': meetingLayout === MeetingMode.JIUGONGGE }" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
         <svg class="icon f28 c666" aria-hidden="true">
           <use xlink:href="#icongonggemoshi-xian2x"></use>
         </svg>
-      </div>
+      </div> -->
       <div class="line"></div>
       <div class="action box-center" @click="setMeetingLayout(MeetingMode.DEFAULT)">
         <svg class="icon f28 c666" aria-hidden="true">

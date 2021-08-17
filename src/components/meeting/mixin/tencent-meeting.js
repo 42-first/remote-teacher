@@ -21,6 +21,7 @@ let log = console;
 
 let shareUserId = null;
 
+
 let tencentMixin = {
   methods: {
     /**
@@ -379,7 +380,11 @@ let tencentMixin = {
 
           if (event.type == 'video' && event.state == 'PAUSED') {
             if(type === 'auxiliary') {
-              this.joinRemoteScreenSharing();
+              const isSafari = this.isSafari();
+
+              if(!isSafari) {
+                this.joinRemoteScreenSharing();
+              }
             }
           }
 
@@ -812,7 +817,7 @@ let tencentMixin = {
               }
             }).catch(error => {
               console.error('Stream play exception:%s', error);
-              shareStream.stop();
+
               document.addEventListener('mousedown', this.retryPlay);
             })
           } catch (error) {
@@ -861,7 +866,7 @@ let tencentMixin = {
           .catch(err => {
             let errCode = err.getCode()
             if (errCode === 0x4043) {
-              stream.resume()
+              shareStream.resume()
               console.log('retryPlay stream.play 0x4043 自动播放失败');
             }
           });
@@ -872,6 +877,17 @@ let tencentMixin = {
 
       // 移除用户鼠标事件监听
       document.removeEventListener('mousedown', this.retryPlay);
+    },
+
+    /**
+     * @method 是否safari
+     * @param
+     */
+    isSafari() {
+      const ua = navigator.userAgent.toLowerCase();
+      let isSafari = /safari/.test(ua) && !/chrome/.test(ua);
+
+      return isSafari;
     },
 
   }
