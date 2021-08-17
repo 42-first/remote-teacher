@@ -154,7 +154,8 @@ let mixin = {
     },
     sayHello () {
       // 握手开始通信
-      const userid = this.identityId || this.userid;
+      const userid =  this.userid;
+      console.log(userid);
       this.socket.send(JSON.stringify({
         'op': 'hello',
         'userid': userid,
@@ -167,8 +168,12 @@ let mixin = {
     // socketProcessMessage 中使用
     // 根据用户返回的消息，做是否做夺权处理的操作
     detectlessonHandle (msg) {
-      const { remoteuid, wakeuid } = msg;
-      const userid = this.identityId || this.userid;
+      const { remoteuid, wakeuid, addinversion } = msg;
+      let userid = this.userid;
+      if(addinversion >= 5) {
+        userid = this.identityId;
+      }
+      console.log(userid);
       // console.log(remoteuid, wakeuid);
       if (!!remoteuid) {
         this.sayHello();
