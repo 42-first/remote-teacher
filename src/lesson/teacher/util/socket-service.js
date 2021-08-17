@@ -168,7 +168,7 @@ let mixin = {
     // socketProcessMessage 中使用
     // 根据用户返回的消息，做是否做夺权处理的操作
     detectlessonHandle (msg) {
-      const { remoteuid, wakeuid } = msg;
+      const { remoteuid, wakeuid, addinversion } = msg;
       let userid = this.userid;
       if(addinversion >= 5) {
         userid = this.identityId;
