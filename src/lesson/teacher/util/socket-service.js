@@ -169,7 +169,10 @@ let mixin = {
     // 根据用户返回的消息，做是否做夺权处理的操作
     detectlessonHandle (msg) {
       const { remoteuid, wakeuid } = msg;
-      const userid = this.userid;
+      let userid = this.userid;
+      if(addinversion >= 5) {
+        userid = this.identityId;
+      }
       console.log(userid);
       // console.log(remoteuid, wakeuid);
       if (!!remoteuid) {
