@@ -641,10 +641,7 @@ let tencentMixin = {
         }
       })
 
-      // 然后根据音量排序
-      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
-
-      // 正在说话列表
+      // 正在说话列表 音量好像不太准
       // this.activeSpeakers = speakers.filter((user)=>{
       //   return user.audio && user.volume;
       // });
@@ -654,7 +651,11 @@ let tencentMixin = {
         return user.role !== 'lecturer' && user.role !== 'collaborator' && user.id !== this.local;
       })
 
-      this.setSpeakers([...teacherAndMine, ...others]);
+      speakers = [...teacherAndMine, ...others];
+      // 然后根据音量排序
+      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
+
+      this.setSpeakers(speakers);
     },
 
     /**

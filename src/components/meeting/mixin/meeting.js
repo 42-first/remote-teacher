@@ -92,12 +92,12 @@ let meetingMixin = {
           if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
             activeSpeakers.push(member);
           } else if(member.audio) {
-            // else if(member.audio || member.video)
             activeSpeakers.push(member);
           }
         })
 
-        // console.log('activeSpeakers:', activeSpeakers)
+        // 然后根据音量排序
+        activeSpeakers = activeSpeakers.sort((a, b) => { return b.audio - a.audio; })
         this.activeSpeakers = activeSpeakers;
       }
     },
@@ -313,28 +313,6 @@ let meetingMixin = {
       }
 
       this.setSubscribeLoading(false);
-    },
-
-    /**
-     * @method 尝试播放
-     * @param
-     */
-    retryPlay() {
-      if(this.meetingSDK !== 'tencent') {
-        return this;
-      }
-
-      let speakers = this.speakers;
-      speakers.forEach((member)=>{
-        if(member.audio || member.video) {
-          member.tryTimes += 1;
-        }
-      })
-
-      this.setSpeakers(speakers);
-
-      // 移除用户鼠标事件监听
-      document.removeEventListener('mousedown', this.replay);
     },
 
     /**
