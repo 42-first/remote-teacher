@@ -170,6 +170,7 @@
     },
     watch: {
       joined(newVal) {
+        console.log('joined:', newVal);
         const lessonId = this.lesson && this.lesson.lessonID;
 
         const key = 'lesson-metting-joined'+lessonId;
@@ -315,6 +316,8 @@
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this;
         }
+
+        console.log('handleJoin:', this.isWebRTCSupported);
 
         if(this.isWebRTCSupported) {
           this.setJoined(true);
