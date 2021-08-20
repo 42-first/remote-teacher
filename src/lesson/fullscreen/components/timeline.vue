@@ -22,7 +22,7 @@
         <div class="timeline__ppt">
           <span class="ppt--pageno f12" >{{ $t('pno', { number: item.pageIndex }) }}</span>
           <div class="ppt__cover--wrapper" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="cover" :src="item.src">
+            <img class="cover" :src="item.src" loading="lazy" alt="雨课堂">
           </div>
           <div class="timeline__footer box-between">
             <p class="f12 c9b">{{ item.time|getTimeago }}</p>
@@ -34,7 +34,7 @@
         <div class="timeline__ppt problem" :class="{ 'complete': item.isComplete }" >
           <span class="ppt--pageno f12" >{{ $t('pno', { number: item.pageIndex }) }}</span>
           <div class="ppt__cover--wrapper" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="cover" :src="item.src">
+            <img class="cover" :src="item.src" loading="lazy" alt="雨课堂">
           </div>
           <div class="timeline__footer box-between cfff">
             <p class="f12">{{ item.time|getTimeago }}</p>
@@ -47,7 +47,7 @@
         <div class="timeline__ppt">
           <span class="ppt--pageno f12"><!-- 截图分享 -->{{ item.type === 10 ? $t('screenshot') : $t('blackboard') }}</span>
           <div class="ppt__cover--wrapper screenshot" :style="{ minHeight: 180/item.rate + 'px' }">
-            <img class="screenshot--image" :src="item.src" alt="雨课堂,截图分享" />
+            <img class="screenshot--image" :src="item.src" loading="lazy" alt="雨课堂,截图分享" />
           </div>
           <div class="timeline__footer box-between">
             <p class="f12 c9b">{{ item.time|getTimeago }}</p>
@@ -226,7 +226,8 @@
         'slideIndex',
         'msg',
         'observerMode',
-        'currSlide'
+        'currSlide',
+        'isGuestStudent',
       ]),
     },
     filters: {
@@ -245,6 +246,31 @@
        */
       handleView(item, index) {
         if(item && item.type) {
+          if(item.type == 8) {
+            if(this.observerMode) {
+              this.$toast({
+                message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+                duration: 3000
+              });
+              return this;
+            }
+            if(!item.href){
+              this.$toast({
+                message: this.$i18n.t('cantintoteam2') || '你不在本组，无权限进入',
+                duration: 3000
+              });
+              return this;
+            }
+          }else if(item.type == 9){
+            if(this.isGuestStudent){
+              this.$toast({
+                message: this.$i18n.t('auditornotgrade') || '旁听生身份无法参与互评',
+                duration: 3000
+              });
+              return this;
+            }
+          }
+
           this.setSlideIndex(index);
         }
       },

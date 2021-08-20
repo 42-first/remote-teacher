@@ -92,12 +92,12 @@ let meetingMixin = {
           if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
             activeSpeakers.push(member);
           } else if(member.audio) {
-            // else if(member.audio || member.video)
             activeSpeakers.push(member);
           }
         })
 
-        // console.log('activeSpeakers:', activeSpeakers)
+        // 然后根据音量排序
+        activeSpeakers = activeSpeakers.sort((a, b) => { return b.audio - a.audio; })
         this.activeSpeakers = activeSpeakers;
       }
     },
@@ -185,6 +185,24 @@ let meetingMixin = {
     },
 
     /**
+     * @method 强制禁言
+    */
+    banDevice (msg) {
+
+      let meeting = this.meeting;
+      meeting.bandevice = msg.value
+      if(msg.value) {
+        meeting['audio'] = !msg.value
+      }
+      this.setMeeting(meeting);
+
+      let bannedSpeaking = this.$i18n && this.$i18n.t('meeting.bannedfromspeaking') || '全员禁言';
+      let releaseBannedSpeaking = this.$i18n && this.$i18n.t('meeting.releasebannedspeak') || '老师已解除全员禁言';
+
+      this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
+    },
+
+    /**
      * @method 通过ws命令加入会议更新姓名和头像
      * @param
      */
@@ -198,9 +216,9 @@ let meetingMixin = {
       let user = { id: uid, uid, name, avatar, role, video, audio, active: false,
         subscribe, offline };
 
-      if(this.meetingSDK === 'local') {
-        Object.assign(user, { audioConsumer: null, videoConsumer: null });
-      }
+      // if(this.meetingSDK === 'local') {
+      //   Object.assign(user, { audioConsumer: null, videoConsumer: null });
+      // }
 
       // 存在用户
       if(~index) {
@@ -214,6 +232,10 @@ let meetingMixin = {
           speakers.splice(index, 1, user);
         }
       } else {
+        if(this.meetingSDK === 'local') {
+          Object.assign(user, { audioConsumer: null, videoConsumer: null });
+        }
+
         // 教师放在最前面
         if(data.role === 'lecturer' || data.role === 'collaborator') {
           speakers.unshift(user);
@@ -294,28 +316,6 @@ let meetingMixin = {
     },
 
     /**
-     * @method 尝试播放
-     * @param
-     */
-    retryPlay() {
-      if(this.meetingSDK !== 'tencent') {
-        return this;
-      }
-
-      let speakers = this.speakers;
-      speakers.forEach((member)=>{
-        if(member.audio || member.video) {
-          member.tryTimes += 1;
-        }
-      })
-
-      this.setSpeakers(speakers);
-
-      // 移除用户鼠标事件监听
-      document.removeEventListener('mousedown', this.replay);
-    },
-
-    /**
      * @method 通过ws命令通知有人共享了屏幕
      * @param
      */
@@ -366,10 +366,30 @@ let meetingMixin = {
         if (res && res.code === 0) {
           // this.getSpeakers();
           this.getMembers();
+          this.getDeviceStatus()
         }
       }).
       catch(error => {
         console.error('join_meeting:', error);
+      })
+    },
+
+    /**
+     * @method 获取当前会议禁言状态
+    */
+    getDeviceStatus(){
+      let URL = API.lesson.get_speech_state
+      return request.get(URL).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          let data = res.data;
+          let meeting = this.meeting
+          meeting.bandevice = data.fsState ? true : false
+          this.setMeeting(meeting)
+          return data;
+        }
+      }).catch(error => {
+        return false;
       })
     },
 

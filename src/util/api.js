@@ -144,7 +144,21 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_share_config: '/api/v3/lesson/meeting/share-config',
       // 互动打点
       report_meeting: '/api/v3/lesson/meeting/report',
+      // 获取禁言状态
+      get_speech_state: '/api/v3/lesson/meeting/forbidden-speech/state',
 
+      // 获取分组状态
+      get_group_info: '/v/lesson/lesson_group_info',
+      // 学生答题时获取分组作答主观题状态
+      get_group_status: '/api/v3/lesson/problem/group/subjective/status',
+      // 获取team详情
+      get_team_detail: '/api/v3/group/team/detail',
+      // 学生端-查看互评任务详情
+      get_problem_review_detail: '/api/v3/lesson/review/get-problem-review-detail',
+      // 学生端-互评打分
+      submit_review_score: '/api/v3/lesson/review/submit-review-score',
+      // 获取互评状态列表
+      get_review_status_list: '/api/v3/lesson/review/status-list',
 
       // 教师接口
       // 发题
@@ -226,7 +240,15 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 收卷
       quiz_finish: '/api/v3/lesson/quiz/finish',
       // 成绩详情
-      quiz_results_detail: '/api/v3/lesson/quiz/result'
+      quiz_results_detail: '/api/v3/lesson/quiz/result',
+      // 获取分组列表
+      get_classroom_group_list: '/group/get_classroom_group_list/',
+      // 教师端-查看互评规则
+      get_review_config: '/api/v3/lesson/review/config',
+      // 教师端-发起主观题互评
+      publish_review: '/api/v3/lesson/review/publish-review',
+      // 教师端-查看题目打分情况
+      review_score_detail: '/api/v3/lesson/problem/teacher/score-detail'
     },
 
     /*------------------*\

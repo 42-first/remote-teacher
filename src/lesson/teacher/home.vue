@@ -68,6 +68,7 @@
           @chooseProblemDuration="unlockProblem"
           @checkDoubt="checkDoubt"
           :problem-type="problemType"
+					:isYanshi="false"
           :card-width="cardWidth"
           :card-height="cardHeight"
         ></component>
@@ -81,6 +82,7 @@
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
           :byself="byself"
+					@sayhello="sayHello"
         ></component>
       </div>
 
@@ -277,8 +279,9 @@
 	    this.init()
 	  },
 	  beforeDestroy () {
-    clearInterval(pollingPresentationTagTimer)
-    // clearInterval(pollingTougaoTimer)
+    	clearInterval(pollingPresentationTagTimer)
+			// clearInterval(pollingTougaoTimer)
+			this.goHome()
 	  },
 	  mounted () {
 	    let self = this
@@ -304,7 +307,8 @@
 		},
 	  methods: {
 			...mapActions([
-				'set_isCloneClass'
+				'set_isCloneClass',
+				'set_pretendSeizeAuth',
 			]),
 			showNote(text) {
 				this.noteText = text
@@ -524,7 +528,11 @@
 					if(res && res.code === 0 && res.data){
 						let data = res.data
 						return res.data
-					}
+					} else if(res && res.code === 50004) {
+            location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + this.lessonid;
+
+            return null;
+          }
 				}).catch(error => {
 					console.log('getLesson:', error);
 				})

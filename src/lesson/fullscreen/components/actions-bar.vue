@@ -57,10 +57,10 @@
             <i class="iconfont icon-ykq_tab_tougao f20"></i>
             <p class="pl10 f14"><!-- 投稿 -->{{ $t('meeting.post') }}</p>
           </section>
-          <!--  <section class="action__menu box-start c333" data-tip="分组">
+           <section class="action__menu box-start c333" @click="handleVisibleGroup">
             <i class="iconfont icon-fenzu1 f20"></i>
-            <p class="pl10 f14">分组</p>
-          </section> -->
+            <p class="pl10 f14"><!--分组 --> {{$t('group')}}</p>
+          </section>
         </section>
       </section>
 
@@ -149,6 +149,7 @@
         'hasMeeting',
         // 是否已进入会议
         'joined',
+        'observerMode'
       ]),
 
       ...mapState('meeting', [
@@ -169,6 +170,7 @@
     },
     watch: {
       joined(newVal) {
+        console.log('joined:', newVal);
         const lessonId = this.lesson && this.lesson.lessonID;
 
         const key = 'lesson-metting-joined'+lessonId;
@@ -315,6 +317,8 @@
           return this;
         }
 
+        console.log('handleJoin:', this.isWebRTCSupported);
+
         if(this.isWebRTCSupported) {
           this.setJoined(true);
         } else {
@@ -353,9 +357,27 @@
         let meeting = this.meeting;
         let audio = !meeting.audio;
 
+        // 全员禁言中
+        if(meeting.bandevice){
+          const message = this.$i18n && this.$i18n.t('meeting.bannedspeaking') || '全员禁言中';
+          this.$toast({ type: 1, message: message, duration: 2000 });
+          return this
+        }
+
         // todo: 没有音频权限
         if(audio && !meeting.hasAudioAuth) {
           return this;
+        }
+
+        // 处理连击问题
+        if(this.audioPending) {
+          return this;
+        } else {
+          this.audioPending = true;
+
+          setTimeout(()=>{
+            this.audioPending = false;
+          }, 1000)
         }
 
         meeting.audio = audio;
@@ -375,6 +397,17 @@
           return this;
         }
 
+        // 处理连击问题
+        if(this.videoPending) {
+          return this;
+        } else {
+          this.videoPending = true;
+
+          setTimeout(()=>{
+            this.videoPending = false;
+          }, 1000)
+        }
+
         meeting.video = video;
         this.setMeeting(meeting);
       },
@@ -390,7 +423,24 @@
         if(isSupported(window.localStorage)) {
           localStorage.setItem(key, true);
         }
-      }
+      },
+
+      /**
+       * @method 显示分组
+       * @params
+       */
+      handleVisibleGroup(evt) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam') || '观看者模式下无法参与分组',
+            duration: 3000
+          });
+          return this;
+        }
+        let src = '/team/student/' + this.lesson.classroomId + '?lessonid=' + this.lesson.lessonID;
+
+        this.$router.push({ name: 'team-v3', query: { src: encodeURIComponent(src) } });
+      },
     }
   };
 </script>

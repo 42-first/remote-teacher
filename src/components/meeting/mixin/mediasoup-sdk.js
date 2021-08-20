@@ -40,7 +40,7 @@ function getProtooUrl({ roomId = '666666', peerId, token, forceH264, forceVP9 })
   // const hostname = 'v3demo.mediasoup.org:4443' || 'b.yuketang.cn/wswebrtc';
   // wss://v3demo.mediasoup.org:4443/?roomId=5agep09w&peerId=lo8b4bkf
 
-  const hostname = 'b.yuketang.cn/wswebrtc';
+  const hostname = 'webrtc.huanghe-corp.xuetangonline.com/wswebrtc';
   let url = `wss://${hostname}/?roomId=${roomId}&peerId=${peerId}&token=${token}`;
 
   if (forceH264)
@@ -77,6 +77,8 @@ export default class RoomClient {
     // Closed flag.
     // @type {Boolean}
     this._closed = false;
+    this._opened = false;
+    this._openedCount = 0;
 
     // Display name.
     // @type {String}
@@ -200,6 +202,8 @@ export default class RoomClient {
       return;
 
     this._closed = true;
+    this._opened = false;
+    this._openedCount = 0;
 
     logger.debug('close()');
 
@@ -235,12 +239,23 @@ export default class RoomClient {
 
     this._protoo = new protooClient.Peer(protooTransport);
 
-    this._protoo.on('open', () => this._joinRoom());
+    this._protoo.on('open', () => {
+      this._joinRoom();
+      this._opened = true;
+      this._openedCount += 1;
+    });
 
     this._protoo.on('failed', () => {
+      console.log('protooClient failed');
     });
 
     this._protoo.on('disconnected', () => {
+      console.log('protooClient disconnected');
+
+      if(this._openedCount > 0) {
+        return this;
+      }
+
       // Close mediasoup Transports.
       if (this._sendTransport) {
         this._sendTransport.close();
@@ -254,6 +269,8 @@ export default class RoomClient {
     });
 
     this._protoo.on('close', () => {
+      console.log('protooClient close');
+
       if (this._closed)
         return;
 
@@ -537,9 +554,8 @@ export default class RoomClient {
             break;
           }
 
-        default:
-          {
-            logger.error('unknown protoo notification.method "%s"', notification.method);
+        default: {
+            // logger.error('unknown protoo notification.method "%s"', notification.method);
           }
       }
     });
@@ -1209,7 +1225,7 @@ export default class RoomClient {
   }
 
   async _joinRoom() {
-    logger.debug('_joinRoom()', this._handlerName);
+    logger.log('_joinRoom()', this._handlerName);
 
     try {
       // 1、设置设备
@@ -1338,6 +1354,10 @@ export default class RoomClient {
         rtpCapabilities: this._mediasoupDevice.rtpCapabilities,
         sctpCapabilities: this._mediasoupDevice.sctpCapabilities
       });
+
+      if(this._openedCount > 0) {
+        console.log('_openedCount:', this._openedCount);
+      }
 
       // 本地用户加入成功
       this.fire('joinedChannel', { code: 1});

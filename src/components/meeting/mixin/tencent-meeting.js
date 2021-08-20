@@ -21,6 +21,7 @@ let log = console;
 
 let shareUserId = null;
 
+
 let tencentMixin = {
   methods: {
     /**
@@ -379,7 +380,11 @@ let tencentMixin = {
 
           if (event.type == 'video' && event.state == 'PAUSED') {
             if(type === 'auxiliary') {
-              this.joinRemoteScreenSharing();
+              const isSafari = this.isSafari();
+
+              if(!isSafari) {
+                this.joinRemoteScreenSharing();
+              }
             }
           }
 
@@ -636,10 +641,7 @@ let tencentMixin = {
         }
       })
 
-      // 然后根据音量排序
-      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
-
-      // 正在说话列表
+      // 正在说话列表 音量好像不太准
       // this.activeSpeakers = speakers.filter((user)=>{
       //   return user.audio && user.volume;
       // });
@@ -649,7 +651,11 @@ let tencentMixin = {
         return user.role !== 'lecturer' && user.role !== 'collaborator' && user.id !== this.local;
       })
 
-      this.setSpeakers([...teacherAndMine, ...others]);
+      speakers = [...teacherAndMine, ...others];
+      // 然后根据音量排序
+      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
+
+      this.setSpeakers(speakers);
     },
 
     /**
@@ -697,7 +703,7 @@ let tencentMixin = {
       this.changeDeviceStatus(device);
 
       const message = audio ? this.$i18n.t('meeting.micunmuted') : this.$i18n.t('meeting.micmuted');
-      this.$toast({ type: 1, message: message, duration: 2000 });
+      !meeting.bandevice && this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**
@@ -810,7 +816,11 @@ let tencentMixin = {
               if(shareStream.videoPlayer_ && shareStream.videoPlayer_.element_) {
                 shareStream.videoPlayer_.element_.controls = true;
               }
-            });
+            }).catch(error => {
+              console.error('Stream play exception:%s', error);
+
+              document.addEventListener('mousedown', this.retryPlay);
+            })
           } catch (error) {
             console.error('Stream play exception:%s', error.message);
           }
@@ -841,6 +851,44 @@ let tencentMixin = {
 
         this.report();
       }
+    },
+
+    /**
+     * @method 尝试播放
+     * @param
+     */
+    retryPlay() {
+      let shareStream = this.shareStream;
+
+      if(shareStream) {
+        try {
+          shareStream.stop()
+          shareStream.play('J_screenshare', { muted: false })
+          .catch(err => {
+            let errCode = err.getCode()
+            if (errCode === 0x4043) {
+              shareStream.resume()
+              console.log('retryPlay stream.play 0x4043 自动播放失败');
+            }
+          });
+        } catch (error) {
+          console.error('Stream play exception:%s', error.message);
+        }
+      }
+
+      // 移除用户鼠标事件监听
+      document.removeEventListener('mousedown', this.retryPlay);
+    },
+
+    /**
+     * @method 是否safari
+     * @param
+     */
+    isSafari() {
+      const ua = navigator.userAgent.toLowerCase();
+      let isSafari = /safari/.test(ua) && !/chrome/.test(ua);
+
+      return isSafari;
     },
 
   }

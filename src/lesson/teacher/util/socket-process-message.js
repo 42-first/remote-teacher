@@ -25,15 +25,21 @@ function remoteReset() {
 function socketProcessMessage(msg){
   let self = this
 
+  if(msg.op === "detectlesson") {
+    this.detectlessonHandle(msg);
+    return;
+  }
+
   if (msg.op === 'hello') {
     this.set_isCloneClass(!!msg.isClone)
   }
 
   // 没有在上课则直接跳走
   if (msg.op === 'hello' && !msg.isAlive) {
-    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+    // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
     return
   }
+
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
     // 有可能 presentationupdated 触发的 fetchData 比较慢（比 showpresentation 指令慢），这时还没有新 slideid 的 map
@@ -87,7 +93,7 @@ function socketProcessMessage(msg){
     // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
       if (msg.mask && msg.mask.type === 'qrcode') {
-        if(msg.addinversion == 5 && !msg.shownow){
+        if(msg.addinversion >= 5 && !msg.shownow){
           self.showEscMask()
         }else {
           self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
@@ -129,7 +135,7 @@ function socketProcessMessage(msg){
       self.$store.commit('set_pptData', [])
     }
     self.$store.commit('set_presentationid', msg.presentation)
-    
+
     // 保证夺权的时候如果shownow为false也能事后关闭夺权蒙版
     self.$store.commit('set_isToastCtrlMaskHidden', true)
 
@@ -156,7 +162,7 @@ function socketProcessMessage(msg){
     }
 
     if(msg.mask && msg.mask.type === 'qrcode'){
-      if(msg.addinversion == 5 && !msg.shownow){
+      if(msg.addinversion >= 5 && !msg.shownow){
         self.showEscMask()
       }else {
         // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
@@ -193,7 +199,7 @@ function socketProcessMessage(msg){
       }else {
         self.killMask()
       }
-      
+
     }
     return
   }
@@ -237,7 +243,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'lessonfinished') {
     // 结束授课
-    location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+    location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + self.lessonid;
     return
   }
 

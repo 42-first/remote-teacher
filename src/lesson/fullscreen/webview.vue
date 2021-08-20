@@ -44,6 +44,7 @@ export default {
   },
   mounted() {
     this.index = +this.$route.params.index;
+    this.initPubSub()
   },
   updated() {},
   beforeDestroy() {
@@ -67,6 +68,7 @@ export default {
   methods: {
     ...mapActions([
       'setSlide',
+      'setCards'
     ]),
 
     /**
@@ -105,6 +107,37 @@ export default {
 
       }
     },
+
+    initPubSub(){
+      let self = this
+      window.PubSub.subscribe('finish', function(topic, data){
+        let type = self.slide && self.slide.type
+        switch(type){
+          case 4:
+            let quizObj = {
+              status: self.$i18n.t('done'),
+              isComplete: true
+            }
+            self.slide = Object.assign({}, self.slide, quizObj)
+            self.cards.splice(self.index, 1, self.slide)
+
+            self.setCards(self.cards)
+            break;
+            break;
+          case 8:
+            let teamObj = {
+              status: self.$i18n.t('done'),
+              href: `/team/studentteam/${data.teamid}?lessonid=${self.lesson.lessonID}`,
+              isComplete: true
+            }
+            self.slide = Object.assign({}, self.slide, teamObj)
+            self.cards.splice(self.index, 1, self.slide)
+
+            self.setCards(self.cards)
+            break;
+        }
+      })
+    }
 
   }
 };

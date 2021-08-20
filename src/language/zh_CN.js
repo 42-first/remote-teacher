@@ -53,6 +53,9 @@ let pages = {
   "recvbonus": "Hi,本题有课堂红包发送",
   "gainbonus": "{number}位同学已赢得课堂红包",
   "cantintoteam": "当前是协同教师身份，不参与分组",
+  "cantintoteam2": "你不在本组，无权限进入",
+  "watchmodenotintoteam": "观看者模式下无法参与分组",
+  "auditornotgrade": "旁听生身份无法参与互评",
 
   "submit": "提交",
   "submitansw": "提交答案",
@@ -342,7 +345,6 @@ let pages = {
   "otherslogin": "其他老师已登录",
   "forcelogout": "您已被迫下线",
   "studentrole": "以学生身份进入",
-  "loginagain": "我要夺回主权",
   "imgafterfix": '',
   "extend": "延时",
   "chtet": "给学生延长答题时间",
@@ -364,7 +366,7 @@ let pages = {
   "nybcykq": "您已在别处进入遥控器",
   "dqquit": "退出",
   "dqlssk": "当前有老师正在上课<br>您希望",
-  "loginagain": "我要上课夺主权",
+  "loginagain": "夺取控制权",
 
   "subjectiveedit": "修改",
   "graded": "已批改",
@@ -547,7 +549,7 @@ let pages = {
     "gradedalready" : "温馨提示",
     "gradedoverwrite" : "提交后将会覆盖之前的评分",
     "pleasescore" : "请打分",
-    "noarticipate": "未作答的小组不参与互评",
+    "noarticipate": "未作答状态下无法参与互评",
   },
 
   "openwordcloud": "生成词云并投屏",
@@ -567,6 +569,7 @@ let pages = {
   "changetosignin": "修改为已签到",
   "changetonotsignin": "修改为未签到",
   "zuodashichang": "作答时长",
+  "studentstoomuchnotgroup": "班级人数超过3000人时暂不支持分组",
 
   meeting: {
     "showing": "正在放映",
@@ -599,6 +602,9 @@ let pages = {
     "webrtcnosupported": "建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课",
     "switchtolive": "切换到直播",
     "rtcnosupported": "当前浏览器版本不支持互动，请<a class=blue href=http://www.google.cn/chrome/ target=_blank>点击此处更新</a>或 进入直播模式上课",
+    "bannedfromspeaking": "全员禁言",
+    "releasebannedspeak": "老师已解除全员禁言",
+    "bannedspeaking": "全员禁言中",
   },
 
   // 图片国际化
@@ -643,6 +649,10 @@ let pages = {
 
     '60000': '服务错误，请稍后再试。',
     '60001': '服务错误，请稍后再试。',
+    '60100': '服务异常，请稍后再试',
+    '60101': '服务异常，请稍后再试',
+    '60102': '已发起互评，请勿重复操作',
+    '60104': '答案提交数量不少于2份时才可发起互评',
   }
 };
 

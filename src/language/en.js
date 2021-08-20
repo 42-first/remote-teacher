@@ -54,6 +54,9 @@ let pages = {
   "recvbonus": "Hi, answer the question correctly and bonus awaits you!",
   "gainbonus": "{number} students won bonus.",
   "cantintoteam": "The co-instructor does not belong to any groups.",
+  "cantintoteam2": "No authority",
+  "watchmodenotintoteam": "View mode. Unable to join grouping.",
+  "auditornotgrade": "Auditors are not allowed to participate in peer grading",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
@@ -345,8 +348,7 @@ let pages = {
   "showconnecting": "or connecting",
   "otherslogin": "Your account has been logged in by others",
   "forcelogout": "You have been force logged out",
-  "studentrole": "Access in student role",
-  "loginagain": "Login again",
+  "studentrole": "Access as a student",
   "imgafterfix": '-eng',
   "extend": "Extend",
   "chtet": "Click here to extend time",
@@ -365,8 +367,8 @@ let pages = {
 
   "nybcykq": "Your have entered the remoter in other place",
   "dqquit": "Quit",
-  "dqlssk": "Your account has been logged in by others.<br>You want to",
-  "loginagain": "Login again",
+  "dqlssk": "The lesson is controlled by the other teacher.<br>You want to",
+  "loginagain": "Control the lesson",
 
   "subjectiveedit": "Edit",
   "graded": "Graded",
@@ -543,7 +545,7 @@ let pages = {
     "gradedalready" : "Tips",
     "gradedoverwrite" : "Your submission will overwrite the present grading.",
     "pleasescore" : "Please grading",
-    "noarticipate": "Groups did not submit will not participate in the peer grading.",
+    "noarticipate": "Students who did not submit will not participate in the peer grading",
   },
 
   "openwordcloud": "Show word cloud",
@@ -564,6 +566,7 @@ let pages = {
   "changetosignin": "Present",
   "changetonotsignin": "Absent",
   "zuodashichang": "Length of response time",
+  "studentstoomuchnotgroup": "There are more than 3000 students in the class. Grouping is not supported.",
 
   meeting: {
     "showing": "Showing",
@@ -596,6 +599,9 @@ let pages = {
     "webrtcnosupported": "建议下载最新版Chrome浏览器（http://www.google.cn/chrome/）打开链接或进入直播模式上课",
     "switchtolive": "Switch to Live",
     "rtcnosupported": "Current browser does not support interactive, please <a class=blue href=http://www.google.cn/chrome/ target=_blank>click here to update</a> or switch to live mode.",
+    "bannedfromspeaking": "Banned from speaking",
+    "releasebannedspeak": "Banned from speaking has been released",
+    "bannedspeaking": "Banned from speaking",
   },
 
   // 图片国际化
@@ -640,6 +646,10 @@ let pages = {
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',
+    '60100': 'Service error, please try again later.',
+    '60101': 'Service error, please try again later.',
+    '60102': 'Review has been initiated, please do not repeat the operation.',
+    '60104': '2 answers are required at least.',
   }
 };
 

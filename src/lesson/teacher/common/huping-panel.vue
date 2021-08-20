@@ -30,7 +30,7 @@
           <div class="scale-of-marks">
             <div class="score-point">
               <h1 class="f20"><!-- 评分要点 -->{{$t('grading.pointsofgrading')}}</h1>
-              <textarea class="textarea-place f15" v-model="review_declaration" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
+              <textarea class="textarea-place f15" v-model="review_declaration" maxlength="100" :placeholder="$t('grading.textareaplaceholder')" @focus="focusText" @blur="isTextFocused = false"></textarea>
             </div>
             <div class="score-rules">
               <h1 class="f20"><!-- 互评规则 -->{{$t('grading.hupingguize')}}</h1>
@@ -94,22 +94,6 @@
   import { Range } from 'mint-ui';
   Vue.component(Range.name, Range);
 
-  var ModalHelper = (function(bodyCls) {
-    var scrollTop;
-    return {
-      afterOpen: function() {
-        scrollTop = document.scrollingElement.scrollTop;
-        document.body.classList.add(bodyCls);
-        document.body.style.top = -scrollTop + 'px';
-      },
-      beforeClose: function() {
-        document.body.classList.remove(bodyCls);
-        // scrollTop lost after set position:fixed, restore it back.
-        document.scrollingElement.scrollTop = scrollTop;
-      }
-    };
-  })('modal-open');
-
   export default {
     name: 'HupingPanel',
     data () {
@@ -147,26 +131,19 @@
       },
     },
     watch: {
-      review_declaration(newVal, oldVal) {
-        if(newVal && newVal.length > 100) {
-          let len = this.getLength(newVal);
-          if(len > 100) {
-            this.review_declaration = newVal.substr(0, 100);
-          }
-        }
-      },
+      // review_declaration(newVal, oldVal) {
+      //   if(newVal && newVal.length > 100) {
+      //     let len = this.getLength(newVal);
+      //     if(len > 100) {
+      //       this.review_declaration = newVal.substr(0, 100);
+      //     }
+      //   }
+      // },
       gProportion(newVal, oldVal){
         if(newVal != this.$parent.gProportion){
           this.changed = false
         }
       },
-      isHupingPanelHidden(newVal){
-        if(!newVal){
-          this.openModal()
-        }else {
-          this.closeModal()
-        }
-      }
     },
     methods: {
       /**
@@ -202,8 +179,8 @@
        */
       submit (evt) {
         let self = this
-        let teacher_score_proportion = self.teacher_score_proportion / 100
-        let group_review_proportion = self.group_review_proportion / 100
+        let teacher_score_proportion = self.teacher_score_proportion
+        let group_review_proportion = self.group_review_proportion
         self.changed = true
         self.$emit('giveHuping', teacher_score_proportion, group_review_proportion, self.review_declaration)
       },
@@ -212,7 +189,7 @@
        */
       save(){
         let self = this
-        let teacher_proportion = self.teacher_score_proportion / 100
+        let teacher_proportion = self.teacher_score_proportion
         if(self.changed) return
         self.changed = true
         self.$emit('editHuping', teacher_proportion)
@@ -538,6 +515,10 @@
     background: #5096F5;
     border-top-right-radius: .053333rem !important;
     border-bottom-right-radius: .053333rem !important;
+    margin-left: 20px;
+  }
+  .mt-range-content {
+    margin-right: 0;
   }
 
   .score-rules i, .score-rules span {

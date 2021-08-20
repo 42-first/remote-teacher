@@ -24,7 +24,6 @@
     </section>
     <!-- 恢复课上试卷功能 -->
     <router-link :to="{name: 'paper_v3'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
-    <!-- <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页"> -->
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -34,7 +33,6 @@
       <div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    <!-- </v-touch> -->
     </router-link>
     <router-link tag="div" :to="{name: 'danmu_v3'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
@@ -60,8 +58,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-		<!-- <v-touch v-on:tap="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页"> -->
-    <v-touch v-on:tap="showToast" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+		<div @click="toTeam" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #08BC72;">
           <i class="iconfont icon-fenzu1 f21"></i>
@@ -71,7 +68,7 @@
 			<div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>
       </div>
-    </v-touch>
+    </div>
 
     <Toolbar
       ref="Toolbar"
@@ -191,10 +188,21 @@
 			/*
 			 * 分组入口
 			 */
-			toTeam() {
-				let self = this;
-				console.log(self.classroomid + '--' + self.lessonid);
-				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+			toTeam(evt) {
+        if(this.studentCounts > 3000) {
+          let title =  this.$t('tips');
+          let message = this.$t('studentstoomuchnotgroup');
+          let msgOptions = {
+            confirmButtonText: this.$i18n.t('guide.iknown') || '知道了'
+          };
+          this.$messagebox.alert(message, title, msgOptions)
+          
+          return
+        }
+
+        let self = this;
+        location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+				
       },
       /** 
        * 新增随机点名入口

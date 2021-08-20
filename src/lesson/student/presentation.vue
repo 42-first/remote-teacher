@@ -20,14 +20,14 @@
               <i class="iconfont icon-ykq_tab_danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
-            <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action f17">
+            <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action f17 line">
               <i class="iconfont icon-ykq_tab_tougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
-            <!-- <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
+            <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
               <i class="iconfont icon-fenzu f25"></i>
               <span>{{ $t('team.mygroup') }}</span>
-            </p> -->
+            </p>
           </div>
         </div>
       </header>
@@ -842,7 +842,18 @@
        *
        */
       handleenterTeam(evt) {
-        location.href = '/team/student/' + this.classroom.id + '?lessonid=' + this.lessonID;
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('watchmodenotintoteam'),
+            duration: 2000
+          });
+          return false
+        }
+        if(process.env.NODE_ENV !== 'production') {
+          location.href = 'http://0.0.0.0:8080/team.html#/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+        } else {
+          location.href = '/team/student/' + this.classroom.classroomId + '?lessonid=' + this.lessonID;
+        }
       },
 
       /*

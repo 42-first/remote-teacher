@@ -28,8 +28,8 @@
             </svg>
           </div>
         </div>
-        <!-- 全屏展开 -->
-        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+        <!-- 全屏展开 去掉九宫格 -->
+        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.SPEAKER)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon16-quanping1"></use>
           </svg>
@@ -222,7 +222,11 @@ export default {
           this.setMeetingSDK('local');
         }
 
-        // this.setMeetingSDK('local');
+        // 自测本地会议
+        const provider = this.$route.query && this.$route.query.provider || data.provider;
+        if(provider == 3) {
+          this.setMeetingSDK('local');
+        }
 
         // 目前如果有人在分享
         if(data.shareInfo && data.shareInfo.shareId) {

@@ -174,6 +174,14 @@ export default {
     // 课上接收器 遥控器使用
     if(window.Authorization) {
       axios.defaults.headers['Authorization'] = 'Bearer ' + window.Authorization;
+    } else {
+      // 本地缓存读取
+      if(isSupported(window.localStorage)) {
+        const jwt = localStorage.getItem('Authorization');
+        if(jwt) {
+          axios.defaults.headers['Authorization'] = 'Bearer ' + jwt;
+        }
+      }
     }
 
     return axios

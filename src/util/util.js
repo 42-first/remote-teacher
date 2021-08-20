@@ -238,3 +238,21 @@ export function getPlatformKey() {
 
   return key;
 }
+
+// 动态加载js
+export function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    let scriptNode = document.createElement("script");
+    scriptNode.setAttribute("type", "text/javascript");
+    scriptNode.setAttribute("src", src);
+    document.body.appendChild(scriptNode);
+
+    scriptNode.onload = (evt) => {
+      resolve(evt);
+    }
+
+    scriptNode.onerror = (evt)=>{
+      reject('加载失败');
+    }
+  });
+}

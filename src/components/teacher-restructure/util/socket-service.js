@@ -172,20 +172,53 @@ let mixin = {
             msg.addinversion && self.$store.commit('addinversion', msg.addinversion)
             self.socketProcessMessage(msg)
           }
-
           // 握手开始通信
-          self.socket.send(JSON.stringify({
-            'op': 'hello',
-            'userid': self.userid,
-            'avatar': self.avatar,
-            'role': 'lecturer',
-            'auth': self.auth,
-            'lessonid': self.lessonid
-          }))
+          self.sendDetectlesson();
         }
       } catch (error) {
         Raven.captureException(error)
         // myApp.alert("您的设备在连接服务时出现了错误，请尝试重试...","")
+      }
+    },
+    // 检测夺权
+    //  https://www.tapd.cn/50384083/prong/stories/view/1150384083001033588
+    sendDetectlesson () {
+      const msg = {
+        "op": "detectlesson",
+        "lessonid": this.lessonid
+      };
+      this.socket.send(JSON.stringify(msg));
+    },
+    sayHello () {
+      // 握手开始通信
+      const userid = this.userid;
+      this.socket.send(JSON.stringify({
+        'op': 'hello',
+        'userid': userid,
+        'avatar': this.avatar,
+        'role': 'lecturer',
+        'auth': this.auth,
+        'lessonid': this.lessonid
+      }));
+    },
+    // socketProcessMessage 中使用
+    // 根据用户返回的消息，做是否做夺权处理的操作
+    detectlessonHandle (msg) {
+      const { remoteuid, wakeuid } = msg;
+      const userid = window.userid || this.userid;
+      // console.log(remoteuid, wakeuid);
+      if (!!remoteuid) {
+        this.sayHello();
+      } else {
+        // 当前遥控器没有使用:
+        // 当前用户为开课开课老师
+        if(wakeuid == userid) {
+          this.sayHello();
+        } else {
+          this.$store.commit('set_isMsgMaskHidden', true);
+          this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
+        }
       }
     },
     /*
