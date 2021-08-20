@@ -170,6 +170,7 @@
     },
     watch: {
       joined(newVal) {
+        console.log('joined:', newVal);
         const lessonId = this.lesson && this.lesson.lessonID;
 
         const key = 'lesson-metting-joined'+lessonId;
@@ -316,6 +317,8 @@
           return this;
         }
 
+        console.log('handleJoin:', this.isWebRTCSupported);
+
         if(this.isWebRTCSupported) {
           this.setJoined(true);
         } else {
@@ -366,6 +369,17 @@
           return this;
         }
 
+        // 处理连击问题
+        if(this.audioPending) {
+          return this;
+        } else {
+          this.audioPending = true;
+
+          setTimeout(()=>{
+            this.audioPending = false;
+          }, 1000)
+        }
+
         meeting.audio = audio;
         this.setMeeting(meeting);
       },
@@ -381,6 +395,17 @@
         // todo: 没有视频权限
         if(video && !meeting.hasVideoAuth) {
           return this;
+        }
+
+        // 处理连击问题
+        if(this.videoPending) {
+          return this;
+        } else {
+          this.videoPending = true;
+
+          setTimeout(()=>{
+            this.videoPending = false;
+          }, 1000)
         }
 
         meeting.video = video;

@@ -489,6 +489,11 @@ export default class RtcClient {
           });
         } else {
           localStream.muteVideo();
+          // setTimeout(()=>{
+          //   // 关闭摄像头
+          //   videoTrack.stop();
+          // }, 0)
+
           resolve(true);
         }
       } catch (e) {

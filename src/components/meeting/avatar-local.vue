@@ -43,6 +43,7 @@
           <use xlink:href="#icon20-yuyin-weifasheng"></use>
         </svg>
         <span class="name f12">{{ member.name }}</span>
+        <span class="f12" v-if="local == member.id">{{ $t('danmume') }}</span>
       </div>
     </div>
   </section>

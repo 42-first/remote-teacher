@@ -28,8 +28,8 @@
             </svg>
           </div>
         </div>
-        <!-- 全屏展开 -->
-        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+        <!-- 全屏展开 去掉九宫格 -->
+        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.SPEAKER)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon16-quanping1"></use>
           </svg>
