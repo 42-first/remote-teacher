@@ -32,6 +32,8 @@ const meeting = {
     localSharing: false,
     // 发言列表
     speakers: [],
+    // 活跃用户老师和我
+    activeSpeakers: [],
     // 视频通话使用的SDK kwai: 快手 tencent：腾讯 local:本地
     meetingSDK: '',
     // 会议模式 0: 默认上课布局 1: 宫格模式  2: 演讲模
@@ -60,6 +62,7 @@ const meeting = {
         otherscreen: false
       };
       state.speakers = [];
+      state.activeSpeakers = [];
       state.localSharing = false;
       state.meetingLayout = 0;
       state.subscribeLoading = false;
@@ -79,6 +82,10 @@ const meeting = {
 
     setSpeakers(state, data) {
       state.speakers = data;
+    },
+
+    setActiveSpeakers(state, data) {
+      state.activeSpeakers = data;
     },
 
     setMeetingSDK(state, data) {
@@ -117,6 +124,10 @@ const meeting = {
 
     setSpeakers({commit}, data) {
       commit('setSpeakers', data)
+    },
+
+    setActiveSpeakers({commit}, data) {
+      commit('setActiveSpeakers', data)
     },
 
     setMeetingSDK({commit}, data) {
