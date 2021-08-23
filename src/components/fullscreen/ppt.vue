@@ -11,7 +11,7 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center" v-if="slide">
-      <img class="cover" :src="slide.src" :style="slide|setStyle" alt="" />
+      <img class="cover" :src="slide.src" :style="style" alt="" />
       <!-- <img class="cover" :src="slide.src" alt="" /> -->
     </div>
 
@@ -132,7 +132,7 @@ export default {
      * @params
      */
     initEvent() {
-      // window.addEventListener('resize', this.resize);
+      window.addEventListener('resize', this.resize);
     },
 
     /**
@@ -147,8 +147,12 @@ export default {
         return this;
       }
 
-      let innerHeight = this.$el.innerHeight - 80;
-      let innerWidth = this.$el.innerWidth - 220 -40;
+      let container = document.querySelector('.J_container')
+
+      let innerHeight = window.innerHeight - 80;
+      // let innerWidth = window.innerWidth - 220 -40;
+      // 直接获取图片展示区域的宽度  有可能左侧导航会被关闭
+      let innerWidth = container.clientWidth - 40;
       let screenRate = innerWidth/innerHeight;
       let width = slide.Width;
       let height = slide.Height;
@@ -159,16 +163,12 @@ export default {
         return oStyle;
       }
 
-      // 正常宽高比屏幕的宽高
-      if(rate > screenRate) {
-        oStyle['width'] = innerWidth + 'px';
-        oStyle['height'] = innerWidth/rate + 'px';
-      } else {
-        oStyle['width'] = innerHeight*rate + 'px';
-        oStyle['height'] = innerHeight + 'px';
-      }
+      let resultRate = screenRate > rate ? innerHeight/height : innerWidth/width
 
-      return oStyle;
+      oStyle['width'] = slide.Width * resultRate + 'px' 
+      oStyle['height'] = slide.Height * resultRate + 'px' 
+
+      this.style = oStyle
     },
 
     /**
@@ -234,7 +234,7 @@ export default {
     width: 100%;
     height: 100%;
 
-    background: #fff;
+    // background: #fff;
   }
 
   .cover__container {
