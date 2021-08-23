@@ -613,6 +613,10 @@ let tencentMixin = {
       let rtcEngine = this.rtcEngine;
       let userVolumeMap = rtcEngine.getVolumeLevelMap();
 
+      const teacher = this.teacher;
+      // 开课老师或者自己 (Id类型太乱统一转成字符串处理)
+      const teacherIds = [ String(teacher.identityId), String(teacher.userId) ];
+
       let teacherAndMine = [];
       let others = [];
       let speakers = this.speakers;
@@ -628,14 +632,12 @@ let tencentMixin = {
           user.volume = 0;
         }
 
-        // 老师
-        if(user.role === 'lecturer') {
+        // 开课老师或者自己
+        if(teacherIds.includes(String(user.id))) {
           teacherAndMine.unshift(user);
-        } else if(user.role === 'collaborator') {
-          teacherAndMine.push(user);
         } else {
           // 自己
-          if(user.id === this.local) {
+          if(user.id == this.local) {
             teacherAndMine.push(user);
           }
         }
@@ -647,8 +649,9 @@ let tencentMixin = {
       // });
 
       // 其他学生
+      const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
       others = speakers.filter((user)=>{
-        return user.role !== 'lecturer' && user.role !== 'collaborator' && user.id !== this.local;
+        return !teacherAndMeIds.includes(String(user.id));
       })
 
       speakers = [...teacherAndMine, ...others];
