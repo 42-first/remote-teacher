@@ -568,6 +568,13 @@ let pages = {
   "zuodashichang": "Length of response time",
   "studentstoomuchnotgroup": "There are more than 3000 students in the class. Grouping is not supported.",
 
+  // slide.vue
+  "qztmzdxx": "Please submit after clicking on the option in the question.",
+  "answer": "Answer",
+  "submiting": "Sending",
+  "countdown": "Countdown",
+  "notsupportedasateacher": "Not supported as a teacher",
+
   meeting: {
     "showing": "Showing",
     "dynamics": "Feed",

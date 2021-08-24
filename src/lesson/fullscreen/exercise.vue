@@ -8,45 +8,10 @@
 
 <template>
   <section class="page-exercise">
-    <div class="container">
-      <!-- 定时 续时等 -->
-      <section class="exercise__tips" v-show="isShowOption">
-        <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
-          <img class="timing--icon" v-if="!warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
-          <img class="timing--icon" v-if="warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
-          <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
-        </div>
-        <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-        <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
-        <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
+    <!-- 问题内容 -->
+      <section class="container box-center">
+        <slide v-if="summary" :item="summary" :options="options" :width="maxWidth" :height="maxHeight" :canSubmit="canSubmit"  :limit="limit" :sLeaveTime="sLeaveTime" :hasNewExtendTime="hasNewExtendTime" :timeOver="timeOver" :warning="warning" :sExtendTimeMsg="sExtendTimeMsg" :isComplete="isComplete" :pollingCount="pollingCount" @setoption="handleSetOption"  @clickbtn="handleSubmit"></slide>
       </section>
-
-      <!-- 问题内容 -->
-      <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
-        <img class="cover" :src="summary&&summary.cover" @load="handleLoadImg" />
-      </section>
-
-      <!-- 问题选项 -->
-      <section class="" v-if="isShowOption">
-        <ul class="exercise-options" v-if="summary">
-          <li :class="['options-item', 'f45', problemType === 1 || pollingCount === 1 ? 'MultipleChoice': '']" v-for="(item, index) in options">
-            <p :class="['options-label', item.selected ? 'selected' : '' ]" @click="handleSetOption(item.label, $event)" :data-option="item.label">{{ item.label }}</p>
-          </li>
-        </ul>
-        <!-- 投票选择提示 -->
-        <p class="polling-count f20" v-if="(problemType === 3) && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
-        <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 3) && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(anonymous && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
-      </section>
-
-      <!-- 观看者提示文字 返回 -->
-      <section v-if="observerMode">
-        <p class="f18">{{ $t('watchmode') }}</p>
-        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
-      </section>
-    </div>
-
   </section>
 </template>
 <script>
@@ -55,6 +20,8 @@
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
   import problemControl from '@/lesson/fullscreen/mixin/problem-control'
+
+  import slide from './components/slide'
 
   export default {
     name: 'exercise-page',
@@ -95,6 +62,7 @@
       };
     },
     components: {
+      slide
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -102,7 +70,14 @@
         'lesson',
         'cards',
         'observerMode',
+        'layoutSize'
       ]),
+      maxWidth(){
+        return this.layoutSize.maxWidth
+      },
+      maxHeight(){
+        return this.layoutSize.maxHeight
+      }
     },
     watch: {
       '$route' (to, from) {
@@ -156,7 +131,7 @@
       reset() {
         this.optionsSet = new Set();
         this.timeOver = false;
-        this.canSubmit = false;
+        this.canSubmit = 0;
         this.warning = false;
         this.limit = -1;
         this.leaveTime = 0;
@@ -479,13 +454,8 @@
   }
 
   .container {
-    width: 375px;
+    width: 100%;
     height: 100%;
-
-    background: #fff;
-    border: 2px solid #eee;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .page__header {

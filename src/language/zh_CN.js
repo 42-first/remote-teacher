@@ -571,6 +571,13 @@ let pages = {
   "zuodashichang": "作答时长",
   "studentstoomuchnotgroup": "班级人数超过3000人时暂不支持分组",
 
+  // slide.vue
+  "qztmzdxx": "请在题目中点击选项后提交答案",
+  "answer": "作答",
+  "submiting": "提交中...",
+  "countdown": "倒计时",
+  "notsupportedasateacher": "老师身份在学生模式下不支持此操作",
+
   meeting: {
     "showing": "正在放映",
     "dynamics": "课堂动态",

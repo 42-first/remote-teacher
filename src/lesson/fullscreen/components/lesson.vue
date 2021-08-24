@@ -36,10 +36,15 @@
             <use xlink:href="#icon16-xiaojiantou-shang"></use>
           </svg>
         </p>
-        <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
-          <!-- 当前或者选中的数据展示 -->
-          <router-view></router-view>
+        <!-- 右侧左右布局 -->
+        <section class="lesson__container box-center" :class="!fold ? 'notfull' : ''">
+          <section class="slide__info J_container" >
+            <!-- 当前或者选中的数据展示 -->
+            <router-view></router-view>
+          </section>
+          <section class="right__layout"></section>
         </section>
+        
       </section>
     </section>
 
@@ -62,6 +67,8 @@ const MeetingMode = {
   // 发言者模式
   SPEAKER: 2
 };
+
+let resizeObserver = null
 
 export default {
   name: "lesson-content",
@@ -105,7 +112,7 @@ export default {
   },
   updated() {},
   beforeDestroy() {
-    window.removeEventListener('resize', this.resize);
+    // window.removeEventListener('resize', this.resize);
   },
   filters: {
   },
@@ -129,6 +136,7 @@ export default {
     ...mapActions([
       'setSlideIndex',
       'setMsg',
+      'setLayoutSize'
     ]),
 
     /**
@@ -152,7 +160,7 @@ export default {
      * @params
      */
     initEvent() {
-      window.addEventListener('resize', this.resize);
+      // window.addEventListener('resize', this.resize);
 
       this.$el.focus();
       this.$el.addEventListener('keydown', (e) => {
@@ -167,6 +175,8 @@ export default {
           this.mapKeyCode(e);
         }
       })
+
+      this.resize()
     },
 
     /**
@@ -174,14 +184,25 @@ export default {
      * @params
      */
     resize() {
-      // this.checkFullscreen();
-      this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 40;
-      this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 40;
+      let self = this
+      
+      resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          self.handleSetSize()
+        }
+      });
+      resizeObserver.observe(document.documentElement);
+      
+    },
 
-      setTimeout(()=>{
-        this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 41;
-        this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 41;
-      }, 1500)
+    handleSetSize(){
+      let layoutEl = document.querySelector('.J_container')
+      let maxWidth = layoutEl.clientWidth;
+      let maxHeight = layoutEl.clientHeight;
+      this.setLayoutSize({
+        maxWidth,
+        maxHeight
+      })
     },
 
     checkFullscreen() {
@@ -425,11 +446,9 @@ export default {
       }
     }
   }
-
-  .slide__info {
+  .lesson__container {
     position: relative;
     flex: 1;
-    max-width: calc(100% - 220px);
     height: 100%;
 
     padding: 20px;
@@ -438,10 +457,16 @@ export default {
     justify-content: center;
     align-items: center;
 
-    &.full {
-      max-width: 100vw;
-      padding: 20px 30px;
+    &.notfull {
+      max-width: calc(100% - 220px);
     }
+  }
+
+  .slide__info {
+    flex: 1;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .unlock-problem {
