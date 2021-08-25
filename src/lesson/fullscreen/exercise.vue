@@ -10,7 +10,7 @@
   <section class="page-exercise">
     <!-- 问题内容 -->
       <section class="container box-center">
-        <slide v-if="summary" :item="summary" :options="options" :width="maxWidth" :height="maxHeight" :canSubmit="canSubmit"  :limit="limit" :sLeaveTime="sLeaveTime" :hasNewExtendTime="hasNewExtendTime" :timeOver="timeOver" :warning="warning" :sExtendTimeMsg="sExtendTimeMsg" :isComplete="isComplete" :pollingCount="pollingCount" @setoption="handleSetOption"  @clickbtn="handleSubmit"></slide>
+        <slide v-if="summary" :item="summary" :options="options" :canSubmit="canSubmit"  :limit="limit" :sLeaveTime="sLeaveTime" :hasNewExtendTime="hasNewExtendTime" :timeOver="timeOver" :warning="warning" :sExtendTimeMsg="sExtendTimeMsg" :isComplete="isComplete" :pollingCount="pollingCount" @setoption="handleSetOption"  @clickbtn="handleSubmit"></slide>
       </section>
   </section>
 </template>
@@ -70,14 +70,7 @@
         'lesson',
         'cards',
         'observerMode',
-        'layoutSize'
       ]),
-      maxWidth(){
-        return this.layoutSize.maxWidth
-      },
-      maxHeight(){
-        return this.layoutSize.maxHeight
-      }
     },
     watch: {
       '$route' (to, from) {
@@ -87,6 +80,8 @@
 
           let cards = this.cards;
           this.summary = cards[this.index];
+
+          this.endTiming()
 
           if(this.summary) {
             this.init(this.summary);
@@ -124,21 +119,6 @@
         'setCards',
       ]),
 
-      /*
-      * @method 重置数据
-      * @param
-      */
-      reset() {
-        this.optionsSet = new Set();
-        this.timeOver = false;
-        this.canSubmit = 0;
-        this.warning = false;
-        this.limit = -1;
-        this.leaveTime = 0;
-        this.isShowSubmit = true;
-        this.isComplete = false;
-        this.anonymous = false;
-      },
 
       /*
       * @method 初始化习题页面

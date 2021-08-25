@@ -101,14 +101,6 @@ props: {
     type: Object,
     default: null
   },
-  width: {
-    type: Number,
-    default: window.innerWidth - 220 - 40
-  },
-  height: {
-    type: Number,
-    default: window.innerHeight - 30
-  },
   options: {
     type: Array,
     default: null
@@ -131,14 +123,22 @@ mixins: [  ],
 computed: {
   ...mapState([
     'lessonStatus',
-    'observerMode'
+    'observerMode',
+    'layoutSize'
   ]),
+
+  maxWidth(){
+    return this.layoutSize.maxWidth
+  },
+  maxHeight(){
+    return this.layoutSize.maxHeight
+  }
 },
 watch: {
-  width(newVal, oldVal) {
+  maxWidth(newVal, oldVal) {
     this.zoomSlide();
   },
-  height(newVal, oldVal) {
+  maxHeight(newVal, oldVal) {
     this.zoomSlide();
   },
   item(newVal){
@@ -152,8 +152,8 @@ methods: {
     * @param
     */
   zoomSlide() {
-    let maxWidth = this.width;
-    let maxHeight = this.height;
+    let maxWidth = this.maxWidth;
+    let maxHeight = this.maxHeight;
     let width = this.item.Width;
     let height = this.item.Height;
 

@@ -577,6 +577,9 @@ let pages = {
   "submiting": "提交中...",
   "countdown": "倒计时",
   "notsupportedasateacher": "老师身份在学生模式下不支持此操作",
+  // blank.vue
+  "blankanswer": "填空题作答",
+  "continue": "继续填写",
 
   meeting: {
     "showing": "正在放映",

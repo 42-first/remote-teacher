@@ -38,11 +38,11 @@
         </p>
         <!-- 右侧左右布局 -->
         <section class="lesson__container box-center" :class="!fold ? 'notfull' : ''">
-          <section class="slide__info J_container" >
+          <section class="slide__info J_container" :class="rightType ? 'maxWidth' : ''">
             <!-- 当前或者选中的数据展示 -->
             <router-view></router-view>
           </section>
-          <section class="right__layout"></section>
+          <section class="right__layout" v-show="rightType"></section>
         </section>
         
       </section>
@@ -94,7 +94,8 @@ export default {
       'cards',
       'slideIndex',
       'msg',
-      'currSlide'
+      'currSlide',
+      'rightType'
     ]),
 
     ...mapState('meeting', [
@@ -130,13 +131,27 @@ export default {
     fullscreen(newVal, oldVal) {
       if(newVal) {
       }
-    }
+    },
+
+    rightType(newVal) {
+      this.$nextTick(() => {
+        this.handleSetSize()
+      })
+      
+    },
+
+    slideIndex(newVal){
+      if(this.rightType != 'tougao'){
+        this.setRightType('')
+      }
+    },
   },
   methods: {
     ...mapActions([
       'setSlideIndex',
       'setMsg',
-      'setLayoutSize'
+      'setLayoutSize',
+      'setRightType'
     ]),
 
     /**
@@ -191,7 +206,7 @@ export default {
           self.handleSetSize()
         }
       });
-      resizeObserver.observe(document.documentElement);
+      resizeObserver.observe(document.querySelector('.lesson__container'));
       
     },
 
@@ -467,6 +482,14 @@ export default {
     height: 100%;
     max-width: 100%;
     max-height: 100%;
+    &.maxWidth {
+      max-width: calc(100% - 380px);
+    }
+  }
+
+  .right__layout {
+    width: 380px;
+    height: 100%;
   }
 
   .unlock-problem {

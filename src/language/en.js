@@ -574,6 +574,9 @@ let pages = {
   "submiting": "Sending",
   "countdown": "Countdown",
   "notsupportedasateacher": "Not supported as a teacher",
+  // blank.vue
+  "blankanswer": "Answer",
+  "continue": "Continue",
 
   meeting: {
     "showing": "Showing",

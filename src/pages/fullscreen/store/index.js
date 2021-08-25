@@ -61,7 +61,9 @@ const store = new Vuex.Store({
     // 内容区大小
     layoutSize: {},
     // 课程状态 1 已结课
-    lessonStatus: 0
+    lessonStatus: 0,
+    // 右侧展示内容
+    rightType: ''
   },
   mutations: {
     // 重置课堂信息
@@ -155,6 +157,10 @@ const store = new Vuex.Store({
 
     setLessonStatus(state, data) {
       state.lessonStatus = data
+    },
+
+    setRightType(state, data) {
+      state.rightType = data
     }
   },
 
@@ -235,6 +241,10 @@ const store = new Vuex.Store({
 
     setLessonStatus({commit}, data) {
       commit('setLessonStatus', data)
+    },
+
+    setRightType({commit}, data) {
+      commit('setRightType', data)
     }
   },
 

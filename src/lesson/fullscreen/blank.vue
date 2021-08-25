@@ -7,47 +7,30 @@
  */
 
 <template>
-  <section class="page-exercise">
-    <div class="container">
-
-      <!-- 定时 续时等 -->
-      <section class="exercise__tips" v-show="isShowOption">
-        <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
-          <img class="timing--icon" v-if="!warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
-          <img class="timing--icon" v-if="warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
-          <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
-        </div>
-        <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-        <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
-        <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
-      </section>
+  <section class="page-exercise" v-if="summary">
+    <div class="container box-center">
 
       <!-- 问题内容 -->
-      <section class="exercise-content" :style="{ minHeight: (10 - 0.906667)/rate + 'rem' }">
-        <p class="page-no f12"><span>{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
-        <img class="cover" :src="summary&&summary.cover" @load="handleLoadImg" />
-      </section>
-
-      <!-- 填空选项 -->
-      <section class="blanks__wrap">
-        <header class="blanks__header f20"><!-- 我的答案 -->{{ $t('myanswer') }}</header>
-        <ul class="blanks__options">
-          <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
-            <div class="blank__order">{{ index + 1 }}</div>
-            <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index]" @input="handleinput" :data-index="index" :placeholder="$t('enteranswer')" ></textarea>
-          </li>
-        </ul>
-      </section>
-
-      <!-- 观看者提示文字 返回 -->
-      <section v-if="observerMode">
-        <p class="f18">{{ $t('watchmode') }}</p>
-        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
-      </section>
-
-      <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
-
+      <slide :item="summary" :canSubmit="canSubmit" @clickanswer="handleShowAnswer" :limit="limit" :sLeaveTime="sLeaveTime" :hasNewExtendTime="hasNewExtendTime" :timeOver="timeOver" :warning="warning" :sExtendTimeMsg="sExtendTimeMsg" :isComplete="isComplete"></slide>
     </div>
+
+    <!-- 填空选项 -->
+    <section class="blanks__wrap" v-show="rightType == 'blank'">
+      <header class="blanks__header box-between">
+        <span class="blue f14"><!-- 填空题作答 --> {{ $t('blankanswer') }}</span>
+        <i class="iconfont icon-guanbi2 f16 c9b pointer" @click="handleCloseAnswer"></i>
+      </header>
+      <ul class="blanks__options">
+        <li class="blank__item f14 mb10" v-for="(item, index) in blanks" >
+          <div class="blank__order">{{ index + 1 }}</div>
+          <textarea rows="1" class="blank__input f17" :readonly="!isShowSubmit" type="text" v-model="result[index]" @input="handleinput" :data-index="index" :placeholder="$t('enteranswer')" ></textarea>
+        </li>
+      </ul>
+      <div class="btn-box" v-show="!summary.isComplete">
+        <p :class="['submit-btn', 'f14', canSubmit === 1 || canSubmit === 2 ? '' : 'disable']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}</p>
+      </div>
+      
+    </section>
 
   </section>
 </template>
@@ -57,6 +40,7 @@
   import API from '@/util/api'
   import { isSupported } from '@/util/util'
   import problemControl from '@/lesson/fullscreen/mixin/problem-control'
+  import slide from './components/slide'
 
   export default {
     name: 'blanks-page',
@@ -100,12 +84,14 @@
       };
     },
     components: {
+      slide
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
       ...mapState([
         'lesson',
         'cards',
+        'rightType'
       ]),
     },
     watch: {
@@ -116,7 +102,7 @@
 
           let cards = this.cards;
           this.summary = cards[this.index];
-
+          this.endTiming()
           if(this.summary) {
             this.init(this.summary);
           } else {
@@ -153,22 +139,8 @@
     methods: {
       ...mapActions([
         'setCards',
+        'setRightType'
       ]),
-
-      /*
-      * @method 重置数据
-      * @param
-      */
-      reset() {
-        this.timeOver =false;
-        this.canSubmit = false;
-        this.warning = false;
-        this.limit = -1;
-        this.leaveTime = 0;
-        this.isShowSubmit = true;
-        this.result = {};
-        this.isComplete = false;
-      },
 
       /*
       * @method 初始化习题页面
@@ -374,18 +346,26 @@
         });
 
         if(hasNoAnswer) {
-          let msgOptions = {
-            confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
-            cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
-          };
-          let message = this.$i18n && this.$i18n.t('blanksnotanswer') || '有空格未填写，确认提交吗？';
 
-          this.$messagebox.confirm(message, msgOptions).
-            then( action => {
-              if(action === 'confirm') {
-                this.submitProblem();
-              }
+          this.$rainConfirm({
+            data: {
+              title: this.$i18n.t('tips') || "提示",
+              message: this.$i18n.t('blanksnotanswer') || "有空格未填写，确认提交吗？",
+              showCancel: true,
+              confirmText: this.$i18n.t('confirm') || '确认',
+              cancelText: this.$i18n.t('continue') || '继续填写',
+              confirmClass: ''
+            },
+            cancel: () => {
+              
+            },
+            confirm: () => {
+              setTimeout(() => {
+                this.submitProblem()
+              }, 50);
+            },
           });
+
         } else {
           this.submitProblem();
         }
@@ -401,7 +381,14 @@
         this.height = target.naturalHeight || target.width;
 
         this.rate = this.width/this.height;
-      }
+      },
+
+      handleShowAnswer(){
+        this.setRightType('blank')
+      },
+      handleCloseAnswer(){
+        this.setRightType('')
+      },
     },
     created() {
       this.index = +this.$route.params.index;
@@ -423,7 +410,7 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
   /*------------------*\
     $ 习题详情页
@@ -435,19 +422,15 @@
     height: 100%;
 
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
 
   .container {
-    width: 375px;
-    // height: 667px;
+    width: 100%;
     height: 100%;
-
-    background: #fff;
-    border: 2px solid #eee;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: center;
   }
 
   .page__header {
@@ -465,27 +448,33 @@
   \*------------------*/
 
   .blanks__wrap {
-    margin-top: 10px;
-    padding: 20px 0;
-
+    width: 380px;
+    height: calc(100% - 40px);
     background: #fff;
+    position: fixed;
+    right: 0;
+    top: 40px;
   }
 
   .blanks__header {
-    padding-left: 20px;
-    height: 28px;
-    border-left: 6px solid #639EF4;
-    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+
     text-align: left;
+    border-bottom: 1px solid #ddd;
   }
 
   .blanks__options {
-    padding: 20px;
+    padding: 30px 20px;
+    height: calc(100% - 110px);
+    overflow-y: auto;
   }
 
   .blank__item {
     display: flex;
     min-height: 40px;
+    margin-bottom: 10px;
   }
 
   .blank__order {
@@ -493,29 +482,59 @@
     justify-content: center;
     align-items: center;
 
-    width: 40px;
-    min-height: 40px;
+    width: 36px;
+    min-height: 36px;
     font-weight: bold;
     color: #5096F5;
     border: 2px solid #5096F5;
     border-radius: 4px 0 0 4px;
+    background: rgba($color: #EDF4FE, $alpha: .1);
   }
 
   .blank__input {
     flex: 1;
-    padding: 5px;
+    padding: 5px 10px;
     min-height: 40px;
     line-height: 1.5;
     outline: none;
     border: none;
     appearance: none;
     box-sizing: border-box;
-    border: 2px solid #eee;
+    border: 1px solid #ddd;
     border-left: none;
     border-radius: 0 4px 4px 0;
+    background: transparent;
+    color: #333;
   }
 
-
+  .btn-box {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    z-index: 2;
+    .submit-btn {
+      width: 120px;
+      height: 34px;
+      text-align: center;
+      line-height: 34px;
+      border-radius: 4px;
+      background: #5096f5;
+      color: #fff;
+      cursor: pointer;
+      margin: 0 !important;
+      &.disable {
+        color: #9B9B9B;
+        background: #ddd;
+      }
+    }
+    
+  }
 </style>
 
 
