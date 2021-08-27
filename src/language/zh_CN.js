@@ -580,6 +580,13 @@ let pages = {
   // blank.vue
   "blankanswer": "填空题作答",
   "continue": "继续填写",
+  // subjective.vue
+  "addpic": "添加图片",
+  "uploading": "正在上传",
+  "ungrade": "未打分",
+  "reviewtip": "* 本题得分由互评分数和教师评分构成，当前分数可能不是最终得分",
+  "teamanswer": "本组答案",
+  "lastsubmit": "最后提交：",
 
   meeting: {
     "showing": "正在放映",

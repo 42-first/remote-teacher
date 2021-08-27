@@ -577,6 +577,13 @@ let pages = {
   // blank.vue
   "blankanswer": "Answer",
   "continue": "Continue",
+  // subjective.vue
+  "addpic": "Add pictures",
+  "uploading": "Uploading..",
+  "ungrade": "Not scored",
+  "reviewtip": "* The problem score is composed of the peer grading score and the teacher's grade, the current score may not be the final score",
+  "teamanswer": "Answer",
+  "lastsubmit": "Final submission:",
 
   meeting: {
     "showing": "Showing",
