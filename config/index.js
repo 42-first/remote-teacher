@@ -15,6 +15,16 @@ function proxyConfig () {
   }
 }
 
+// 是否部署到七牛
+let productionCDN = false;
+if(process.env && process.env.BUILD_ENV) {
+  console.log('BUILD_ENV:', process.env.BUILD_ENV);
+  if(process.env.BUILD_ENV === 'qiniu') {
+    productionCDN = true;
+  }
+}
+
+
 module.exports = {
   build: {
     env: require('./prod.env'),
@@ -22,6 +32,8 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: '', //static
     assetsPublicPath: '/static/lesson/',
+    // 静态资源是否部署到七牛
+    productionCDN: productionCDN,
     productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.

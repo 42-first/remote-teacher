@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=keywords content="雨课堂, 清华大学, 智慧教学, 翻转课堂, 混合式教学, 教学工具, 教学软件"><meta name=Description content=雨课堂是清华大学和学堂在线共同推出的新型智慧教学解决方案，是教育部在线教育研究中心的最新研究成果，致力于快捷免费的为所有教学过程提供数据化、智能化的信息支持。><link type=image/x-icon rel="shortcut icon" href=/static/images/favicon.ico><title>雨课堂</title><script src=/static/lesson/html/flexible.js></script><script src=//res.wx.qq.com/open/js/jweixin-1.6.0.js></script></head><body><div id=app><canvas id=canvas style="display: block;position: absolute;top: 50%;left: 50%; width: 100%; height: 400px; transform: translate(-50%, -50%);"></canvas><script>var canvas = document.querySelector('#canvas');
+        var ctx = canvas.getContext('2d');
+
+        canvas.width = parseInt(getComputedStyle(canvas).width);
+        canvas.height = parseInt(getComputedStyle(canvas).height);
+
+        var P = 4;
+        var A = 4;
+
+        function draw(shift) {
+          var w = canvas.width;
+          var h = canvas.height;
+
+          shift = shift >= 500*Math.PI ? shift - 100*Math.PI : shift;
+          ctx.clearRect(0, 0, w, h);
+
+          var grd = ctx.createLinearGradient(0, 0, w, h);
+          grd.addColorStop(0, '#4a8bf5');
+          grd.addColorStop(1, '#f16b55');
+          ctx.strokeStyle = grd;
+          ctx.lineCap = 'round';
+
+          for (var i = 0; i < w; ) {
+            var _A = Math.abs(A*Math.cos(2*i));
+            ctx.beginPath();
+            var pos = Math.exp(-_A * i / w) * Math.sin(P * Math.PI * (i + shift) / w);
+            pos *= h / 2;
+            var lw = Math.exp(-_A * i / w) * Math.sin(3 * Math.PI * (i - shift) / w) * 2;
+            ctx.lineWidth = (lw)+1;
+            ctx.lineTo(i, h / 2 - pos);
+            ctx.closePath();
+            ctx.stroke();
+            i += 1;
+          }
+
+          window.requestAnimationFrame(() => {
+            draw(shift + 1);
+          });
+        }
+
+        draw(0);</script></div><script>var _mtac = {"performanceMonitor":1,"senseQuery":1};
+      (function() {
+        var mta = document.createElement("script");
+        mta.src = "https://pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500535776");
+        mta.setAttribute("cid", "500613279");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();</script><script async src=/static/lesson/html/kwai-video-qos-h5.js?v1.1.14></script></body></html>
