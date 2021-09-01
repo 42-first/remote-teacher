@@ -314,6 +314,8 @@ var commandMixin = {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
           this.userID = data.id;
+          // 日活上报增加
+          window.userId = data.id;
 
           return data;
         }
@@ -634,7 +636,7 @@ var commandMixin = {
       })
     },
 
-    /** 
+    /**
      * @method 获取分组状态
     */
     getGroupStatus(){
@@ -656,8 +658,8 @@ var commandMixin = {
       })
     },
 
-    /** 
-     * 
+    /**
+     *
      * @method 获取课上互评状态
     */
     getReviewStatus(){
