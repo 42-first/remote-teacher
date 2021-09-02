@@ -209,18 +209,22 @@ let mixin = {
       if (!!remoteuid) {
         this.sayHello();
       } else {
-        this.keepReal().then(id => {
-          userid = id || userid;
-          // 当前遥控器没有使用:
-          // 当前用户为开课开课老师
-          if(wakeuid == userid) {
-            this.sayHello();
-          } else {
-            this.$store.commit('set_isMsgMaskHidden', true);
-            this.openDeprive('isRobber');
-            this.set_pretendSeizeAuth(true);
-          }
-        })
+        // 当前遥控器没有使用:
+        // 当前用户为开课开课老师
+        if(wakeuid == userid) {
+          this.sayHello();
+        } else {
+          // 也有可能是专业版的虚id,所以接口获取一次实id
+          this.keepReal().then(id => {
+            if(id == wakeuid) {
+              this.sayHello();
+            } else {
+              this.$store.commit('set_isMsgMaskHidden', true);
+              this.openDeprive('isRobber');
+              this.set_pretendSeizeAuth(true);
+            }
+          });
+        }
       }
     },
     /*
