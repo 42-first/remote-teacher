@@ -7,6 +7,8 @@ import Toast from 'mint-ui/lib/toast'
 import MessageBox from 'mint-ui/lib/message-box';
 
 import {getPlatformKey} from '@/util/util'
+// 日活上报
+import dailyReport from '@/util/daily-report'
 
 import Index from '@/components/fullscreen/index'
 
@@ -221,9 +223,10 @@ fullscreenRouter.beforeEach((to, from, next) => {
 })
 
 fullscreenRouter.afterEach(route=>{
-  // mta统计
+  // 统计
   setTimeout(() => {
-    typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
+    // pv单页面统计
+    typeof dailyReport !== 'undefined' && dailyReport.reportLog({ terminal = 'Web' });
   }, 1000);
 });
 
