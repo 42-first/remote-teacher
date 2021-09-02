@@ -226,7 +226,7 @@ fullscreenRouter.afterEach(route=>{
   // 统计
   setTimeout(() => {
     // pv单页面统计
-    typeof dailyReport !== 'undefined' && dailyReport.reportLog({ terminal = 'Web' });
+    typeof dailyReport !== 'undefined' && dailyReport.reportLog({ terminal: 'Web' });
   }, 1000);
 });
 

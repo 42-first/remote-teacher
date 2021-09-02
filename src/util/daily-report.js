@@ -55,7 +55,7 @@ let dailyReport = {
    * @method 直播打点
    * @params
    */
-  initLog(data = { terminal = 'h5' }) {
+  initLog(data = { terminal: 'h5' }) {
     let log = this.options.log;
 
     try {
