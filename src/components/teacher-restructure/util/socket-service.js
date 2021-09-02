@@ -10,7 +10,7 @@ import socketProcessMessage from './socket-process-message'
 import request from '@/util/request'
 import API from '@/pages/teacher/config/api'
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'pre-apple-ykt.xuetangonline.com' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null
@@ -205,20 +205,22 @@ let mixin = {
     // 根据用户返回的消息，做是否做夺权处理的操作
     detectlessonHandle (msg) {
       const { remoteuid, wakeuid } = msg;
-      const userid = window.userid || this.userid;
-      // console.log(remoteuid, wakeuid);
+      let userid = window.userid || this.userid;
       if (!!remoteuid) {
         this.sayHello();
       } else {
-        // 当前遥控器没有使用:
-        // 当前用户为开课开课老师
-        if(wakeuid == userid) {
-          this.sayHello();
-        } else {
-          this.$store.commit('set_isMsgMaskHidden', true);
-          this.openDeprive('isRobber');
-          this.set_pretendSeizeAuth(true);
-        }
+        this.keepReal().then(id => {
+          userid = id || userid;
+          // 当前遥控器没有使用:
+          // 当前用户为开课开课老师
+          if(wakeuid == userid) {
+            this.sayHello();
+          } else {
+            this.$store.commit('set_isMsgMaskHidden', true);
+            this.openDeprive('isRobber');
+            this.set_pretendSeizeAuth(true);
+          }
+        })
       }
     },
     /*
@@ -268,6 +270,22 @@ let mixin = {
       self.isConnectingHidden = false
       self.connectCountDown = 10
       setTimeout(self.initws, 1000)
+    },
+    /**
+     *  因为专业版开课 lesson_userinfo 拿到的虚ID ，开课返回的实ID，所以需要获取一次实ID做对比
+     **/
+    keepReal () {
+      const url = API.baseUserInfo;
+      return request.get(url).then(res => {
+        console.log(res);
+        const { success, data } = res || {};
+        if(success) {
+          const { user_profile } = data || {};
+          const { user_id } = user_profile || {};
+          return user_id
+        }
+        return 0;
+      })
     },
   }
 }
