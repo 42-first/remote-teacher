@@ -281,7 +281,6 @@ let mixin = {
     keepReal () {
       const url = API.baseUserInfo;
       return request.get(url).then(res => {
-        console.log(res);
         const { success, data } = res || {};
         if(success) {
           const { user_profile } = data || {};
