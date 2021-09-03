@@ -8,6 +8,8 @@ import MessageBox from 'mint-ui/lib/message-box'
 
 import Home from '@/components/teacher-restructure/home'
 import {setSize} from '@/components/teacher-restructure/util/util'
+// 日活上报
+import dailyReport from '@/util/daily-report'
 
 const RemoteList = () => import('@/components/teacher-restructure/remote-list')
 const Randomcall = () => import('@/components/teacher-restructure/randomcall')
@@ -40,8 +42,8 @@ Vue.$toast = Vue.prototype.$toast = Toast;
 
 
 let meta = {
-      keepAlive: true // 不需要缓存
-    }
+  keepAlive: true // 不需要缓存
+}
 
 const router = new Router({
   base: process.env.NODE_ENV === 'production' ? '/lesson/teacher' : '/',
@@ -220,7 +222,7 @@ const router = new Router({
           name: 'objectiveresult_v3',
           component: () => import('@/lesson/teacher/objectiveresult'),
           meta
-    
+
         },
         {
           path: 'collumresult-detail/:problemid',
@@ -341,7 +343,7 @@ const router = new Router({
       component: () => import('@/lesson/teacher/redpacket'),
       meta
     }
-    
+
   ]
 })
 
@@ -352,7 +354,7 @@ router.beforeEach((to, from, next) => {
 
   // socket 无法使用的话，功能不正常，回根页面
   console.log(to);
-  
+
   if(to.name.indexOf('v3') == -1){
     if (to.name !== 'home' && (!STORE.state.socket || !STORE.state.socket.send) || (to.name == 'home' && to.path.indexOf('redpacketqueryproblemid') != -1)) {
       next({name: 'home', params: {lessonid: STORE.state.lessonid}})
@@ -366,10 +368,10 @@ router.beforeEach((to, from, next) => {
         'quizid': from.params.quizid
       })
       localStorage['isTouping'+from.params.quizid] = false
-  
+
       STORE.state.socket.send(str)
     }
-  
+
     // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
     let isObjectiveresultClose = from.name === 'objectiveresult' && to.name !== 'collumresult-detail' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
     // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
@@ -379,7 +381,7 @@ router.beforeEach((to, from, next) => {
         'lessonid': STORE.state.lessonid,
         'problemid': from.params.problemid
       })
-  
+
       STORE.state.socket.send(str)
     }
     next()
@@ -396,10 +398,10 @@ router.beforeEach((to, from, next) => {
         'quizid': from.params.quizid
       })
       localStorage['isTouping'+from.params.quizid] = false
-  
+
       STORE.state.socket.send(str)
     }
-  
+
     // 柱状图页进入试题详情页、课堂红包页，不关闭试卷投屏，进入其他页面时候都关闭柱状图投屏
     let isObjectiveresultClose = from.name === 'objectiveresult_v3' && to.name !== 'collumresult-detail_v3' && to.name !== 'fillblankresult-detail_v3' && to.name !== 'redpacket_v3' && to.name !== 'redpacketlist_v3'
     // let isFillblankresultClose = from.name === 'objectiveresult' && to.name !== 'fillblankresult-detail' && to.name !== 'redpacket' && to.name !== 'redpacketlist'
@@ -409,7 +411,7 @@ router.beforeEach((to, from, next) => {
         'lessonid': STORE.state.lessonid,
         'problemid': from.params.problemid
       })
-  
+
       STORE.state.socket.send(str)
     }
     next()
@@ -418,12 +420,12 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(function (to, from){
   setTimeout(()=>{
-      // 解决 android手机字体缩放
-      setSize();
+    // 解决 android手机字体缩放
+    setSize();
 
-      // mta pv单页面统计
-      typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
-  }, 1050);
+    // pv单页面统计
+    typeof dailyReport !== 'undefined' && dailyReport.reportLog();
+}, 1050);
 
 })
 
