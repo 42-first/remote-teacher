@@ -682,6 +682,8 @@
               self.userID = data.userID;
               self.avatar = data.avatar;
               self.userAuth = data.userAuth;
+              // 日活上报增加
+              window.userId = data.userID;
 
               self.presentationList = data.presentationList;
               self.quizList = data.quizList;

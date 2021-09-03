@@ -71,7 +71,7 @@
           <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 退出互动 -->{{ $t('meeting.hangup') }}</div>
         </section>
         <section class="action box-center join__wrap" v-else>
-          <div class="meeting__join box-center" @click="handleJoin">
+          <div class="meeting__join box-center" @click.stop="handleJoin">
             <i class="iconfont icon-48-jieru f28 cfff"></i>
           </div>
 
@@ -305,7 +305,7 @@
        * @method 加入会议
        * @param
        */
-      handleJoin() {
+      handleJoin(evt) {
         // 不能是授课老师
         const uid = window.identityId;
         const teacher = this.teacher;

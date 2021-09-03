@@ -5,6 +5,9 @@ import verification from '@/components/market/verification'
 import mobileMarket from '@/components/market/mobile_market'
 import courseware from '@/components/market/courseware'
 
+// 日活上报
+import dailyReport from '@/util/daily-report'
+
 Vue.use(Router)
 
 var browser = {
@@ -75,5 +78,14 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
+router.afterEach(route=>{
+  // 统计
+  setTimeout(() => {
+    // pv单页面统计
+    typeof dailyReport !== 'undefined' && dailyReport.reportLog({ terminal: 'Web' });
+  }, 1000);
+});
+
 
 export default router
