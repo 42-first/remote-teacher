@@ -8,7 +8,7 @@
 
 import socketProcessMessage from '@/util/teacher-util/socket-process-message'
 
-const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'b.yuketang.cn' : location.host
+const SOCKET_HOST = location.host.indexOf('192.168') !== -1 ? 'pre-apple-ykt.xuetangonline.com' : location.host
 // const SOCKET_HOST  = 'b.xuetangx.com'
 
 let xintiaoTimer = null

@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === 'production' || 1) {
     lesson_ppt_version:                 prefix + '/v/lesson/lesson_ppt_version',
     lesson_status:                      prefix + '/v/lesson/lesson_status',
     userinfo:                           prefix + '/v/lesson/lesson_user_info',
+    baseUserInfo:                       prefix + '/v/course_meta/user_info',
     remote_control_list:                prefix + '/api/mina/remote_control_list',     // 遥控器列表
     fetch_presentation_data:            prefix + '/v/lesson/fetch_presentation_data',   // ppt数据
     lesson_quiz_list:                   prefix + '/api/mina/lesson_quiz_list',        // 试卷数据（已发布、未发布）
@@ -96,6 +97,7 @@ if (process.env.NODE_ENV === 'production' || 1) {
     lesson_status:                      '/static/lesson/mock/lesson_status.json',
     // userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
     userinfo:                           '/v/lesson/lesson_user_info',
+    baseUserInfo:                       prefix + '/v/course_meta/user_info',
     remote_control_list:                '/static/lesson/mock/remote_control_list.json',        // 遥控器列表
     // fetch_presentation_data:            '/static/lesson/mock/fetch_presentation_data.json',    // ppt数据
     fetch_presentation_data:            '/v/lesson/fetch_presentation_data',    // ppt数据
