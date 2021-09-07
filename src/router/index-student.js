@@ -3,6 +3,8 @@ import 'mint-ui/lib/toast/style.css'
 import 'mint-ui/lib/message-box/style.css'
 
 import {getPlatformKey} from '@/util/util'
+// 日活上报
+import dailyReport from '@/util/daily-report'
 
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -194,9 +196,10 @@ studentRouter.beforeEach((to, from, next) => {
 })
 
 studentRouter.afterEach(route=>{
-  // mta统计
+  // 统计
   setTimeout(() => {
-    typeof MtaH5 !== 'undefined' && typeof MtaH5.pgv === 'function' && MtaH5.pgv();
+    // pv单页面统计
+    typeof dailyReport !== 'undefined' && dailyReport.reportLog();
   }, 2000);
 });
 

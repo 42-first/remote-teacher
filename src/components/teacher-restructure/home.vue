@@ -334,7 +334,7 @@
 		      });
 		    });
 
-		    self.setSentry()
+		    // self.setSentry()
 
 				let goHomeFlag = localStorage.getItem('gohome')
 				if(goHomeFlag){
