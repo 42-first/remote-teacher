@@ -181,18 +181,12 @@ module.exports = class QiniuPlugin {
                     reject(body);
                   }
                 } else {
-                  // 失败重新上传1次
-                  if (order && +order >= 1) {
-                    spinnerFile.fail(`文件：${key}，上传失败！`);
-                    reject(body);
-                  } else {
-                    spinnerFile.fail(`文件：${key}，上传失败！重新上传..`);
-                    if (!~retryFiles.indexOf(fileName)) {
-                      retryFiles.push(fileName);
-                    }
-
-                    resolve(body);
+                  spinnerFile.fail(`文件：${key}，上传失败！重新上传..`);
+                  if (!~retryFiles.indexOf(fileName)) {
+                    retryFiles.push(fileName);
                   }
+
+                  resolve(body);
                 }
               }
 
