@@ -1,6 +1,11 @@
 .DS_Store
 node_modules/
-dist/
+/dist/css/
+/dist/js/
+/dist/fonts/
+/dist/img/
+/dist/mock/
+/dist/favicon.ico
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

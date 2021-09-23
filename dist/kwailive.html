@@ -1,0 +1,66 @@
+<html><head><meta charset=UTF-8><meta name=renderer content=webkit><link type=image/x-icon rel="shortcut icon" href=/static/images/favicon.ico><title>直播测试</title><link rel=stylesheet href=https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css><script src=https://cdn.bootcss.com/vConsole/3.3.2/vconsole.min.js></script><script>var vConsole = new VConsole();
+      console.log('Hello world');</script></head><body><div class=ui-widget><select name=box id=box onchange=selectType() style="height: 30px;"><option value=flv>FLV</option><option value=hls>HLS</option></select> <input type=text id=playUrl placeholder=输入视频url value=http://127.0.0.1/web-test/hls/master.m3u8 class="ui-widget ui-corner-all" style="width: 600px; height: 30px;"> <button onclick=play() class="ui-button ui-widget ui-corner-all" style="color: #fff;background-color: #337ab7;border-color: #2e6da4;width: 80px;vertical-align: top;">播放</button></div><video id=player controls=controls width=800 height=480 autoplay muted></video><div><input type=button onclick=sendSummary() class="ui-button ui-widget ui-corner-all" value=发送汇总上报></div><div id=output style="font-size: 13px; color: #666666; padding:4px;"></div><script type=text/javascript>var kernel;
+        var box = document.querySelector('#box');
+        var playUrl = document.querySelector('#playUrl');
+        var player = document.querySelector('#player');
+        var output = document.querySelector('#output');
+        var datas = [];
+        var index = 0;
+        var playIndex = 0;
+
+        function log(str) {
+            var date = new Date();
+            output.innerHTML =
+                date.getHours() +
+                ':' +
+                date.getMinutes() +
+                ':' +
+                date.getSeconds() +
+                ' ' +
+                str +
+                '<br>' +
+                output.innerHTML;
+        }
+
+        function selectType() {
+            destroyKernel();
+            initKernel(box.value);
+        }
+
+        function destroyKernel() {
+            if (kernel) {
+                kernel.removeAllListeners();
+                kernel.destroy();
+                kernel = null;
+            }
+        }
+
+        function initKernel(type) {
+            kernel = new KwaiPlayerKernelExternal({
+                box: type || box.value || 'flv',
+                isLive: false,
+                debug: true,
+                logEnv: 'development',
+                logBaseConfig: { product_name: 'test' }
+            });
+            kernel.attachMedia(player);
+            kernel.on('error', function (e) {
+                log(JSON.stringify(e));
+            });
+        }
+
+
+        function play() {
+            let url = playUrl.value;
+            console.log('debug html play', url);
+            kernel.load(url);
+        }
+        function sendSummary() {
+            if (kernel) {
+                kernel.sendSummary();
+            }
+        }
+
+        setTimeout(()=>{
+            initKernel();
+        }, 3000)</script><script type=text/javascript src=https://ykt-fe.yuketang.cn/static/lesson/js/kwailive.91dd557249f43c3e6822.js></script></body></html>

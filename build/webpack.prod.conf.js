@@ -8,6 +8,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+// 七牛部署插件
+const QiniuPlugin = require('./qiniu-plugin')
 
 var env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -181,16 +183,38 @@ var webpackConfig = merge(baseWebpackConfig, {
     //   chunks: ['vendor']
     // }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        // to: path.resolve(__dirname, '../dist/static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ])
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: path.resolve(__dirname, '../static'),
+    //     // to: path.resolve(__dirname, '../dist/static'),
+    //     to: config.build.assetsSubDirectory,
+    //     ignore: ['.*']
+    //   }
+    // ])
   ]
 })
+
+// 是否部署到七牛
+if(config.build.productionCDN) {
+  // 设置 assetsPublicPath CDN域名，最后要有：‘/’
+  const publicPath = 'https://ykt-fe.yuketang.cn/';
+  const assetsSubDirectory = 'static/lesson/';
+  webpackConfig.output.publicPath = publicPath + assetsSubDirectory;
+
+  webpackConfig.plugins.push(
+    new QiniuPlugin({
+      publicPath: publicPath,
+      assetsSubDirectory: assetsSubDirectory,
+      accessKey: 'XbBjw6RmDf-8tTJ8vwVjI6fR1sOboimKSfnRK6Jf',
+      secretKey: '_7ZPARAS--B5en3Y7qgT6f7XNemQCbR5iybLruqo',
+      bucket: 'ykt-fe',
+      // 华北
+      zone: 'Zone_z1',
+      // 已经存在的文件是否
+      cover: false
+    })
+  )
+}
 
 if (config.build.productionGzip) {
   var CompressionWebpackPlugin = require('compression-webpack-plugin')

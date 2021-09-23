@@ -84,7 +84,14 @@
             this.summary = cards[this.index];
 
             if(this.summary) {
-              this.getSubmission(this.summary.postid);
+              const addinVersion = this.addinVersion;
+              const postid = this.summary.postid;
+              // 协议版本5.0是桌面端
+              if(addinVersion >= 5) {
+                this.getPost(postid);
+              } else {
+                this.getSubmission(postid);
+              }
             }
           }, 500)
         }

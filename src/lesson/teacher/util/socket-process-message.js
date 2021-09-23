@@ -93,14 +93,15 @@ function socketProcessMessage(msg){
     // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
       if (msg.mask && msg.mask.type === 'qrcode') {
-        if(msg.addinversion >= 5 && !msg.shownow){
-          self.showEscMask()
-        }else {
-          self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
-          self.$store.commit('set_isMsgMaskHidden', true)
+        // 最新桌面调整了 有课件才会主动发送qrcodezoom
+        // if(msg.addinversion >= 5 && !msg.shownow){
+        //   self.showEscMask()
+        // }
 
-          self.showQrcodeMask()
-        }
+        self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+        self.$store.commit('set_isMsgMaskHidden', true)
+
+        self.showQrcodeMask()
       } else if(msg.mask && msg.mask.type === 'wordcloud'){
         if(msg.mask.cat == 'danmu'){
           self.$store.commit('set_postWordCloudOpen', false)
@@ -162,12 +163,13 @@ function socketProcessMessage(msg){
     }
 
     if(msg.mask && msg.mask.type === 'qrcode'){
-      if(msg.addinversion >= 5 && !msg.shownow){
-        self.showEscMask()
-      }else {
-        // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
-        self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
-      }
+      // 最新桌面调整了 有课件才会主动发送qrcodezoom
+      // if(msg.addinversion >= 5 && !msg.shownow){
+      //   self.showEscMask()
+      // }
+
+      // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
+      self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
     }
 
     if(!msg.shownow){
