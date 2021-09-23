@@ -40,6 +40,10 @@ function socketProcessMessage(msg){
     }
   }
 
+  if(msg.op === "detectlesson") {
+    this.detectlessonHandle(msg);
+    return;
+  }
   if (msg.op === 'hello') {
     this.set_isCloneClass(!!msg.isClone)
   }

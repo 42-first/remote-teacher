@@ -28,8 +28,8 @@
             </svg>
           </div>
         </div>
-        <!-- 全屏展开 -->
-        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.JIUGONGGE)">
+        <!-- 全屏展开 去掉九宫格 -->
+        <div class="action box-center J_action" @click="setMeetingLayout(MeetingMode.SPEAKER)">
           <svg class="icon f28 c666" aria-hidden="true">
             <use xlink:href="#icon16-quanping1"></use>
           </svg>
@@ -111,7 +111,7 @@ export default {
     return {
       MeetingMode,
       // 正在说话的列表 包含老师和自己
-      activeSpeakers: [],
+      // activeSpeakers: [],
       // 浮窗操作 mini default
       tab: 'default',
     };
@@ -138,6 +138,8 @@ export default {
       'meeting',
       // 会议成员
       'speakers',
+      // 正在说话的列表 包含老师和自己
+      'activeSpeakers',
       // SDK类型
       'meetingSDK',
       'localSharing',
@@ -188,6 +190,7 @@ export default {
       'setLocalSharing',
       'setMeetingLayout',
       'setSubscribeLoading',
+      'setActiveSpeakers',
     ]),
 
     /**

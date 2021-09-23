@@ -21,6 +21,7 @@ let log = console;
 
 let shareUserId = null;
 
+
 let tencentMixin = {
   methods: {
     /**
@@ -379,7 +380,11 @@ let tencentMixin = {
 
           if (event.type == 'video' && event.state == 'PAUSED') {
             if(type === 'auxiliary') {
-              this.joinRemoteScreenSharing();
+              const isSafari = this.isSafari();
+
+              if(!isSafari) {
+                this.joinRemoteScreenSharing();
+              }
             }
           }
 
@@ -608,6 +613,10 @@ let tencentMixin = {
       let rtcEngine = this.rtcEngine;
       let userVolumeMap = rtcEngine.getVolumeLevelMap();
 
+      const teacher = this.teacher;
+      // 开课老师或者自己 (Id类型太乱统一转成字符串处理)
+      const teacherIds = [ String(teacher.identityId), String(teacher.userId) ];
+
       let teacherAndMine = [];
       let others = [];
       let speakers = this.speakers;
@@ -623,33 +632,33 @@ let tencentMixin = {
           user.volume = 0;
         }
 
-        // 老师
-        if(user.role === 'lecturer') {
+        // 开课老师或者自己
+        if(teacherIds.includes(String(user.id))) {
           teacherAndMine.unshift(user);
-        } else if(user.role === 'collaborator') {
-          teacherAndMine.push(user);
         } else {
           // 自己
-          if(user.id === this.local) {
+          if(user.id == this.local) {
             teacherAndMine.push(user);
           }
         }
       })
 
-      // 然后根据音量排序
-      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
-
-      // 正在说话列表
+      // 正在说话列表 音量好像不太准
       // this.activeSpeakers = speakers.filter((user)=>{
       //   return user.audio && user.volume;
       // });
 
       // 其他学生
+      const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
       others = speakers.filter((user)=>{
-        return user.role !== 'lecturer' && user.role !== 'collaborator' && user.id !== this.local;
+        return !teacherAndMeIds.includes(String(user.id));
       })
 
-      this.setSpeakers([...teacherAndMine, ...others]);
+      speakers = [...teacherAndMine, ...others];
+      // 然后根据音量排序
+      speakers = speakers.sort((a, b) => { return b.audio - a.audio; })
+
+      this.setSpeakers(speakers);
     },
 
     /**
@@ -810,7 +819,11 @@ let tencentMixin = {
               if(shareStream.videoPlayer_ && shareStream.videoPlayer_.element_) {
                 shareStream.videoPlayer_.element_.controls = true;
               }
-            });
+            }).catch(error => {
+              console.error('Stream play exception:%s', error);
+
+              document.addEventListener('mousedown', this.retryPlay);
+            })
           } catch (error) {
             console.error('Stream play exception:%s', error.message);
           }
@@ -841,6 +854,44 @@ let tencentMixin = {
 
         this.report();
       }
+    },
+
+    /**
+     * @method 尝试播放
+     * @param
+     */
+    retryPlay() {
+      let shareStream = this.shareStream;
+
+      if(shareStream) {
+        try {
+          shareStream.stop()
+          shareStream.play('J_screenshare', { muted: false })
+          .catch(err => {
+            let errCode = err.getCode()
+            if (errCode === 0x4043) {
+              shareStream.resume()
+              console.log('retryPlay stream.play 0x4043 自动播放失败');
+            }
+          });
+        } catch (error) {
+          console.error('Stream play exception:%s', error.message);
+        }
+      }
+
+      // 移除用户鼠标事件监听
+      document.removeEventListener('mousedown', this.retryPlay);
+    },
+
+    /**
+     * @method 是否safari
+     * @param
+     */
+    isSafari() {
+      const ua = navigator.userAgent.toLowerCase();
+      let isSafari = /safari/.test(ua) && !/chrome/.test(ua);
+
+      return isSafari;
     },
 
   }

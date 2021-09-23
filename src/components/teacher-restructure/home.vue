@@ -80,6 +80,7 @@
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
           :byself="byself"
+					@sayhello="sayHello"
         ></component>
       </div>
 
@@ -293,7 +294,8 @@
 	  mixins: [switches, socketService, problemRelated],
 	  methods: {
 			...mapActions([
-				'set_isCloneClass'
+				'set_isCloneClass',
+				'set_pretendSeizeAuth',
 			]),
 			showNote(text) {
 				this.noteText = text.split(/\r\n/).join("<br/>")
@@ -333,7 +335,7 @@
 		      });
 		    });
 
-		    self.setSentry()
+		    // self.setSentry()
 
 				let goHomeFlag = localStorage.getItem('gohome')
 				if(goHomeFlag){

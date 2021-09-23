@@ -86,19 +86,23 @@ let meetingMixin = {
     // 正常说话列表
     speakers(newVal) {
       let activeSpeakers = [];
-      // 老师自己
+      // 开课老师
+      let teacher = this.teacher;
+      // 开课老师或者自己 (Id类型太乱统一转成字符串处理)
+      const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
       if(newVal && newVal.length) {
         newVal.forEach((member)=>{
-          if(member.role === 'lecturer' || member.role === 'collaborator' || member.id == this.local) {
+          if(teacherAndMeIds.includes(String(member.id))) {
             activeSpeakers.push(member);
           } else if(member.audio) {
-            // else if(member.audio || member.video)
             activeSpeakers.push(member);
           }
         })
 
-        // console.log('activeSpeakers:', activeSpeakers)
-        this.activeSpeakers = activeSpeakers;
+        // 然后根据音量排序
+        activeSpeakers = activeSpeakers.sort((a, b) => { return b.audio - a.audio; })
+        // this.activeSpeakers = activeSpeakers;
+        this.setActiveSpeakers(activeSpeakers);
       }
     },
   },
@@ -216,10 +220,6 @@ let meetingMixin = {
       let user = { id: uid, uid, name, avatar, role, video, audio, active: false,
         subscribe, offline };
 
-      // if(this.meetingSDK === 'local') {
-      //   Object.assign(user, { audioConsumer: null, videoConsumer: null });
-      // }
-
       // 存在用户
       if(~index) {
         // SDK远端加入没有name和avatar
@@ -236,8 +236,13 @@ let meetingMixin = {
           Object.assign(user, { audioConsumer: null, videoConsumer: null });
         }
 
-        // 教师放在最前面
-        if(data.role === 'lecturer' || data.role === 'collaborator') {
+        // 开课老师
+        const teacher = this.teacher;
+        // 开课老师或者自己 (Id类型太乱统一转成字符串处理)
+        const teacherIds = [ String(teacher.identityId), String(teacher.userId) ];
+
+        // 开课老师放在最前面 'lecturer' || 'collaborator'
+        if(teacherIds.includes(String(user.id))) {
           speakers.unshift(user);
         } else {
           speakers.push(user);
@@ -313,28 +318,6 @@ let meetingMixin = {
       }
 
       this.setSubscribeLoading(false);
-    },
-
-    /**
-     * @method 尝试播放
-     * @param
-     */
-    retryPlay() {
-      if(this.meetingSDK !== 'tencent') {
-        return this;
-      }
-
-      let speakers = this.speakers;
-      speakers.forEach((member)=>{
-        if(member.audio || member.video) {
-          member.tryTimes += 1;
-        }
-      })
-
-      this.setSpeakers(speakers);
-
-      // 移除用户鼠标事件监听
-      document.removeEventListener('mousedown', this.replay);
     },
 
     /**

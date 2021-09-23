@@ -82,6 +82,7 @@
           :is-robber="isRobber"
           :is-robbing.sync="isRobbing"
           :byself="byself"
+					@sayhello="sayHello"
         ></component>
       </div>
 
@@ -306,7 +307,8 @@
 		},
 	  methods: {
 			...mapActions([
-				'set_isCloneClass'
+				'set_isCloneClass',
+				'set_pretendSeizeAuth',
 			]),
 			showNote(text) {
 				this.noteText = text
@@ -346,7 +348,7 @@
 		      });
 		    });
 
-		    self.setSentry()
+		    // self.setSentry()
 
 				let goHomeFlag = localStorage.getItem('gohome')
 				if(goHomeFlag){

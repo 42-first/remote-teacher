@@ -71,7 +71,7 @@
           <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 退出互动 -->{{ $t('meeting.hangup') }}</div>
         </section>
         <section class="action box-center join__wrap" v-else>
-          <div class="meeting__join box-center" @click="handleJoin">
+          <div class="meeting__join box-center" @click.stop="handleJoin">
             <i class="iconfont icon-48-jieru f28 cfff"></i>
           </div>
 
@@ -170,6 +170,7 @@
     },
     watch: {
       joined(newVal) {
+        console.log('joined:', newVal);
         const lessonId = this.lesson && this.lesson.lessonID;
 
         const key = 'lesson-metting-joined'+lessonId;
@@ -304,7 +305,7 @@
        * @method 加入会议
        * @param
        */
-      handleJoin() {
+      handleJoin(evt) {
         // 不能是授课老师
         const uid = window.identityId;
         const teacher = this.teacher;
@@ -315,6 +316,8 @@
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this;
         }
+
+        console.log('handleJoin:', this.isWebRTCSupported);
 
         if(this.isWebRTCSupported) {
           this.setJoined(true);
@@ -366,6 +369,17 @@
           return this;
         }
 
+        // 处理连击问题
+        if(this.audioPending) {
+          return this;
+        } else {
+          this.audioPending = true;
+
+          setTimeout(()=>{
+            this.audioPending = false;
+          }, 1000)
+        }
+
         meeting.audio = audio;
         this.setMeeting(meeting);
       },
@@ -381,6 +395,17 @@
         // todo: 没有视频权限
         if(video && !meeting.hasVideoAuth) {
           return this;
+        }
+
+        // 处理连击问题
+        if(this.videoPending) {
+          return this;
+        } else {
+          this.videoPending = true;
+
+          setTimeout(()=>{
+            this.videoPending = false;
+          }, 1000)
         }
 
         meeting.video = video;

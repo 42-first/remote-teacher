@@ -65,6 +65,7 @@ const store = new Vuex.Store({
     analysisRemarkId: 0,                    // 标示当前答案解析投屏状态的problemid
 
     isCloneClass: false,                     // 是不是克隆班
+    pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
 
   },
 
@@ -228,7 +229,10 @@ const store = new Vuex.Store({
     },
     set_isCloneClass(state, status) {
       state.isCloneClass = status
-    }
+    },
+    set_pretendSeizeAuth(state, status) {
+      state.pretendSeizeAuth = status;
+    },
   },
 
   actions: {
@@ -284,7 +288,10 @@ const store = new Vuex.Store({
     },
     set_isCloneClass({commit}, status) {
       commit('set_isCloneClass', status)
-    }
+    },
+    set_pretendSeizeAuth({commit}, status) {
+      commit('set_pretendSeizeAuth', status)
+    },
   },
   getters
 })

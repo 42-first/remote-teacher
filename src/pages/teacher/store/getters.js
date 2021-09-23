@@ -55,5 +55,6 @@ const getters = {
   analysisRemarkId: state => state.analysisRemarkId,
   toolbarIndex: state => state.toolbarIndex,
   isCloneClass: state => state.isCloneClass,
+  pretendSeizeAuth: state => state.pretendSeizeAuth,
 };
 export default getters

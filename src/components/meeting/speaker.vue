@@ -91,11 +91,17 @@ export default {
   },
   mixins: [ ],
   computed: {
+    ...mapState([
+      'teacher',
+    ]),
+
     ...mapState('meeting', [
       // 会议状态
       'meeting',
       // 会议成员
       'speakers',
+      // 正在说话的列表 包含老师和自己
+      'activeSpeakers',
       'meetingSDK',
       'subscribeLoading',
     ]),
@@ -111,7 +117,7 @@ export default {
   filters: {
   },
   watch: {
-    'speakers'(newVal, oldVal) {
+    'activeSpeakers'(newVal, oldVal) {
       if(newVal && newVal.length) {
         this.initPages();
         this.getMembers(this.page);
@@ -131,13 +137,24 @@ export default {
 
     initPages() {
       const speakers = this.speakers;
-      if(speakers && speakers.length) {
-        this.totalCount = speakers.length;
+      const activeSpeakers = this.activeSpeakers;
+      if(activeSpeakers && activeSpeakers.length) {
+        this.totalCount = activeSpeakers.length;
         this.totalPage = Math.ceil(this.totalCount/this.pageSize);
 
-        this.activeStream = speakers.find((user)=>{
-          return user.role === 'lecturer' || user.role === 'collaborator';
+        const teacher = this.teacher || {};
+        // 开课老师 (Id类型太乱统一转成字符串处理)
+        const teacherIds = [ String(teacher.identityId), String(teacher.userId) ];
+        console.log('teacherIds:', teacherIds);
+        let activeStream = speakers.find((user)=>{
+          return teacherIds.includes(String(user.id));
         })
+
+        if(!activeStream) {
+          activeStream = activeSpeakers[0];
+        }
+
+        this.activeStream = activeStream;
       }
     },
 
@@ -150,7 +167,7 @@ export default {
       const pageSize = this.pageSize;
       let start = (page - 1) * pageSize;
       let end = start + pageSize;
-      let speakers = this.speakers;
+      let speakers = this.activeSpeakers;
       let activeStream = this.activeStream;
 
       if(start < speakers.length) {
@@ -170,31 +187,6 @@ export default {
         this.members = members;
 
         console.log('getMembers', page, this.members);
-      }
-    },
-
-    /**
-     * @method 下一页
-     * @params
-     */
-    handleNext(evt) {
-      let page = this.page;
-      if(page < this.totalPage) {
-        this.getMembers(page+1);
-
-        console.log('handleNext');
-      }
-    },
-
-    /**
-     * @method 上一页
-     * @params
-     */
-    handlePrev(evt) {
-      let page = this.page;
-      if(page > 1) {
-        this.getMembers(page-1);
-        console.log('handlePrev');
       }
     },
 
