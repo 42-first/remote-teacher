@@ -358,7 +358,7 @@
         let audio = !meeting.audio;
 
         // 全员禁言中
-        if(meeting.bandevice){
+        if(meeting.bandevice == 1 || meeting.bandevice == 2 || !this.observerMode && (meeting.bandevice == 3 || meeting.bandevice == 4)){
           const message = this.$i18n && this.$i18n.t('meeting.bannedspeaking') || '全员禁言中';
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this
@@ -390,6 +390,16 @@
        */
       handleSetVideo(evt) {
         let meeting = this.meeting;
+
+        if(meeting.bandevice == 2 || !this.observerMode && meeting.bandevice == 4){
+          this.$toast({
+            message: this.$i18n.t('meeting.bannedvideo') || '全员禁言中',
+            type: 'warning', 
+            duration: 2000
+          })
+          return 
+        }
+
         let video = !meeting.video;
 
         // todo: 没有视频权限

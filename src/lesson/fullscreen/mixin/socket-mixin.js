@@ -231,7 +231,7 @@ var mixin = {
           // 请求禁言
           case 'bandevice':
             let meetingcmp = this.$refs.meeting;
-            if(meetingcmp) {
+            if(meetingcmp && msg.type == 'fs') {
               meetingcmp.banDevice(msg);
             } 
             break

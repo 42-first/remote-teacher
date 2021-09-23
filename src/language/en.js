@@ -602,6 +602,7 @@ let pages = {
     "bannedfromspeaking": "Banned from speaking",
     "releasebannedspeak": "Banned from speaking has been released",
     "bannedspeaking": "Banned from speaking",
+    "bannedvideo": "Banned from the teacher",
   },
 
   // 图片国际化

@@ -759,7 +759,7 @@ let tencentMixin = {
       this.changeDeviceStatus(device);
 
       const message = video ? this.$i18n.t('meeting.cameraunmuted') : this.$i18n.t('meeting.cameramuted');
-      this.$toast({ type: 1, message: message, duration: 2000 });
+      !meeting.bandevice && this.$toast({ type: 1, message: message, duration: 2000 });
     },
 
     /**
