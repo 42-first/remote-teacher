@@ -1,4 +1,3 @@
-
 const getters = {
   userid: state => state.userid,
   avatar: state => state.avatar,

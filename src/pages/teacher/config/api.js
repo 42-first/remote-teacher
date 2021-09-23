@@ -92,7 +92,7 @@ if (process.env.NODE_ENV === 'production' || 1) {
   }
 } else {
   api = {
-    reporter:                           '/reporter/collect',
+    reporter:                          '/reporter/collect',
     lesson_ppt_version:                '/static/lesson/mock/lesson_ppt_version.json',
     lesson_status:                      '/static/lesson/mock/lesson_status.json',
     // userinfo:                           '/static/lesson/mock/userinfo_teacher.json',
