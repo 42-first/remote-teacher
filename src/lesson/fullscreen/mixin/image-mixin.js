@@ -1,11 +1,5 @@
 import upload from '@/util/upload'
 
-let Photoswipe = require('photoswipe');
-let PhotoSwipeUI_Default = require('photoswipe/dist/photoswipe-ui-default');
-import 'photoswipe/dist/photoswipe.css'
-window.PhotoSwipe = Photoswipe;
-window.PhotoSwipeUI_Default = PhotoSwipeUI_Default; 
-
 let imageMixin = {
   data: () => {
     return {
@@ -17,6 +11,7 @@ let imageMixin = {
       this.imageURL = '';
       this.imageThumbURL = '';
       this.hasImage = false;
+      this.video = null;
     },
     /*
      * @method 选择拍照后触发事件
@@ -38,22 +33,42 @@ let imageMixin = {
       if (file.size) {
         const size = parseInt(file.size / 1024 / 1024, 10);
 
-        if (size >= 10) {
-          this.$toast({
-            message: this.$i18n.t('student.picsizelimit') || '图片不可超过10M，请重试',
-            duration: 2000,
-            type: 'warning'
+        let isVideo = 'video/mp4' === fileType;
+        if(isVideo) {
+          if(size >= 50) {
+            this.$toast({
+              message: '视频不可超过50M，请重试',
+              duration: 2000
+            });
+
+            return this;
+          }
+
+          Promise.all([upload.getToken()]).then(() => {
+            // 上传七牛
+            this.uploadFile(file).then((res)=>{
+              res && this.getVideoInfo(res.url);
+            });
           });
 
           return this;
-        }
+        } else {
+          if(size >= 10) {
+            this.$toast({
+              message: '图片不可超过10M，请重试',
+              duration: 2000
+            });
+
+            return this;
+          }
+        } 
       }
 
       let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
       // jpg,jpeg,bmp,png,gif
       if (!/png|jpg|jpeg/.test(picType)) {
         this.$toast({
-          message: this.$i18n.t('student.reuploadpiconly') || '当前仅支持图片格式，请重新上传',
+          message: this.$i18n.t('reuploadpiconly') || '当前仅支持图片格式，请重新上传',
           duration: 2000,
           type: 'warning'
         });
@@ -109,19 +124,16 @@ let imageMixin = {
             let percent = total.percent;
           },
           error(err) {
-            reject({
-              url: ''
-            });
+            // todo: 给一个失败图图片吗 后面还需要重试吗 放入失败的队列
+            reject(Object.assign(file, { url: '' }));
           },
           complete(res) {
             let url = domain + res.key;
-            resolve({
-              url
-            });
+            resolve(Object.assign(file, { url }));
           }
         };
 
-        upload.upload(file, observer);
+        upload.upload(file, observer, 'file');
       });
     },
 
@@ -141,7 +153,7 @@ let imageMixin = {
         this.retryTimes = retryTimes;
       } else {
         this.$toast({
-          message: this.$i18n.t('student.networkerror') || '网络不佳，图片上传失败，请重新上传',
+          message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
           duration: 3000,
           type: 'error'
         });
@@ -200,6 +212,51 @@ let imageMixin = {
           gallery.init();
         }, 1500)
       }
+    },
+    
+
+    /**
+     * method 视频源信息(?avinfo)
+     * params
+     */
+    getVideoInfo(url) {
+      let URL = url + '?avinfo';
+
+      $.ajax({
+        type: 'GET',
+        url: URL,
+        dataType: 'json',
+        success: (res) => {
+          let data = res;
+
+          if(data) {
+            let streams = data.streams;
+            let info = streams[0];
+            let iofo2 = streams[1];
+            let format = data.format;
+            let width = info.width || iofo2.width;
+            let height = info.height || iofo2.height;
+            let video =  {
+              'url': url,
+              'thumb': `${url}?vframe/jpg/offset/2/w/${width}/h/${height}`,
+              'duration': info.duration,
+              'size': format.size,
+              'height': height,
+              'width': width
+            };
+
+            console.dir(video);
+
+            this.hasImage = true;
+            this.sendStatus = 2;
+            this.video = video;
+
+            this.cacheResult();
+          }
+        },
+        error: (xhr, type) => {
+        }
+      })
     },
   },
 }

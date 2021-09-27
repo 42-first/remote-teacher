@@ -585,6 +585,19 @@ let pages = {
   "teamanswer": "Answer",
   "lastsubmit": "Final submission:",
 
+  // tougao.vue
+  "poster": "Poster",
+  "own": "(me)",
+  "postplaceholder": "Enter here（1000 characters and one picture)",
+  "confirmsend": "Send",
+  "issending": "Sending",
+  "picuploading": "Uploading...",
+  "sendsucc": "Post sent",
+  "postsendfail": "Sending failed because of bad network, please try again.",
+  "nopost": "No recent posts",
+  "mypost": "My posts",
+  "postrecalled": "The post has been withdrawed.",
+
   meeting: {
     "showing": "Showing",
     "dynamics": "Feed",

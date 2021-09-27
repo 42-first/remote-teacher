@@ -588,6 +588,19 @@ let pages = {
   "teamanswer": "本组答案",
   "lastsubmit": "最后提交：",
 
+  // tougao.vue
+  "poster": "投稿人：",
+  "own": "(自己)",
+  "postplaceholder": "请将投稿内容填写在此处（可添加1000字和一张图片）",
+  "confirmsend": "确认发送",
+  "issending": "正在发送",
+  "picuploading": "图片上传中",
+  "sendsucc": "发送成功",
+  "postsendfail": "网络不佳，投稿发送失败，请重试",
+  "nopost": "暂无投稿",
+  "mypost": "我的投稿",
+  "postrecalled": "投稿已被撤回",
+
   meeting: {
     "showing": "正在放映",
     "dynamics": "课堂动态",

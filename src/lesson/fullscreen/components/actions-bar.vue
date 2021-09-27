@@ -203,6 +203,7 @@
         'setVisibleDanmu',
         'setJoined',
         'setHasMeeting',
+        'setRightType'
       ]),
 
       ...mapActions('meeting', [
@@ -298,7 +299,8 @@
           this.setMeetingLayout(MeetingMode.DEFAULT);
         }
 
-        this.$parent.handleVisibleSubmission();
+        // this.$parent.handleVisibleSubmission();
+        this.setRightType('tougao')
       },
 
       /**

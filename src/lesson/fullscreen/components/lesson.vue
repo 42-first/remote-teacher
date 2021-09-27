@@ -42,7 +42,9 @@
             <!-- 当前或者选中的数据展示 -->
             <router-view></router-view>
           </section>
-          <section class="right__layout" v-show="rightType"></section>
+          <section class="right__layout" v-show="rightType">
+            <tougao v-if="rightType == 'tougao'"></tougao>
+          </section>
         </section>
         
       </section>
@@ -57,6 +59,8 @@ let screenfull = require('screenfull');
 import { mapState, mapActions } from 'vuex'
 
 import timeline from './timeline';
+
+import tougao from './tougao'
 
 // 会议模式
 const MeetingMode = {
@@ -104,6 +108,7 @@ export default {
   },
   components: {
     timeline,
+    tougao
   },
   mixins: [ ],
   created() {
