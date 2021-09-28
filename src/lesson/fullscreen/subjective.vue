@@ -430,6 +430,8 @@
               // 未进组提示
               if(noTeam) {
                 this.noTeam = true;
+              }else {
+                this.noTeam = false
               }
             }
           })
@@ -932,7 +934,7 @@
     border-radius: 2px;
     border: 1px solid #ddd;
     &.focus {
-      border-color: #9b9b9b;
+      border-color: #5096f5;
     }
 
     .submission-textarea {
