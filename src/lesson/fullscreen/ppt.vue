@@ -47,6 +47,7 @@ export default {
     ...mapState([
       'lesson',
       'cards',
+      'rightType'
     ]),
   },
   mixins: [ ],
@@ -107,6 +108,9 @@ export default {
         }, 1000)
       }
     },
+    rightType(newVal){
+      this.resize()
+    }
   },
   methods: {
     ...mapActions([

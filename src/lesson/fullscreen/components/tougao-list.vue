@@ -41,7 +41,7 @@
       <svg class="icon f40 c7a" aria-hidden="true">
         <use xlink:href="#icon40-kong" ></use>
       </svg>
-      <p class="f14 c7a mt10"><!--暂无投稿--> {{ $t('student.nopost') }} </p>
+      <p class="f14 c7a mt10"><!--暂无投稿--> {{ $t('nopost') }} </p>
     </section>
   </template>
   <template v-else>
