@@ -606,6 +606,9 @@ let pages = {
     "releasebannedspeak": "老师已解除全员禁言",
     "bannedspeaking": "全员禁言中",
     "bannedvideo": "老师已禁用",
+    "invitetospeak": "老师邀请你发言，是否打开麦克风？",
+    "fou": "否",
+    "shi": "是",
   },
 
   // 图片国际化

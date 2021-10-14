@@ -626,6 +626,16 @@ let meetingMixin = {
       })
     },
 
+    /** 
+     * @method 老师邀请我开启声音
+    */
+    handleOpenAudio(){
+      let meeting = this.meeting
+      meeting.audio = true
+
+      this.setMeeting(meeting)
+    }
+
   }
 }
 

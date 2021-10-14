@@ -603,6 +603,9 @@ let pages = {
     "releasebannedspeak": "Banned from speaking has been released",
     "bannedspeaking": "Banned from speaking",
     "bannedvideo": "Banned from the teacher",
+    "invitetospeak": "The teacher invites you to speak. Do you want to turn on the microphone?",
+    "fou": "No",
+    "shi": "Yes",
   },
 
   // 图片国际化

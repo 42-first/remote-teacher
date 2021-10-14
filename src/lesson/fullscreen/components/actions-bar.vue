@@ -358,7 +358,7 @@
         let audio = !meeting.audio;
 
         // 全员禁言中
-        if(meeting.bandevice == 1 || meeting.bandevice == 2 || !this.observerMode && (meeting.bandevice == 3 || meeting.bandevice == 4)){
+        if((meeting.bandevice == 1 || meeting.bandevice == 2 || !this.observerMode && (meeting.bandevice == 3 || meeting.bandevice == 4)) && !meeting.audio){
           const message = this.$i18n && this.$i18n.t('meeting.bannedspeaking') || '全员禁言中';
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this

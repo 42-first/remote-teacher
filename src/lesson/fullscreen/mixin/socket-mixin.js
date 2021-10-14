@@ -247,6 +247,26 @@ var mixin = {
             }
 
             break
+          
+          // 邀请开启声音
+          case 'openaudio':
+          
+            let self = this
+            
+            let msgOptions = {
+              confirmButtonText: this.$i18n && this.$i18n.t('meeting.shi') || '是',
+              cancelButtonText: this.$i18n && this.$i18n.t('meeting.fou') || '否'
+            };
+            let message = this.$i18n && this.$i18n.t('meeting.invitetospeak') || '老师邀请你发言，是否打开麦克风？';
+
+            this.$messagebox.confirm(message, msgOptions).
+              then( action => {
+                if(action === 'confirm') {
+                  let meeting = this.$refs.meeting
+                  meeting.handleOpenAudio()
+                }
+            });
+        
 
           // 翻页
           case 'slidenav':
