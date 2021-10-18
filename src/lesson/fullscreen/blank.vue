@@ -80,7 +80,8 @@
         // 问题定时通信ID
         msgid: 1,
         timer: null,
-        rate: 1
+        rate: 1,
+        heightResult: []
       };
     },
     components: {
@@ -172,9 +173,19 @@
 
         this.oProblem = problem['problem'];
 
+        let key = `lessonBlank${this.problemID}`
+        let result = []
+
+        // 刷新后作答结果丢失 使用本地存储的
+        if(isSupported(localStorage)){
+          let value = JSON.parse(localStorage.getItem(key))
+          result = value.result
+          this.heightResult = value.heightResult
+        }
+
         // 问题类型
         this.problemType = this.oProblem['problemType'];
-        this.result = this.oProblem['result'] || this.result;
+        this.result = this.oProblem['result'] || result || this.result ;
         // 选项
         let blanks = this.oProblem.blanks;
 
@@ -192,13 +203,14 @@
             // 是否有作答
             if(!this.result[index]) {
               this.result[index] = '';
+              this.heightResult[index] = 40
             }
           })
         }
 
         setTimeout(()=>{
-          this.$el.querySelectorAll('textarea').forEach((ele) => {
-            ele.style.height = (ele.scrollHeight) + 'px';
+          this.$el.querySelectorAll('textarea').forEach((ele, i) => {
+            ele.style.height = this.heightResult[i] + 'px';
           })
         }, 300)
 
@@ -209,7 +221,7 @@
        * @method 是否点亮提交按钮
        * @params problem
        */
-      canSubmitFn() {
+      canSubmitFn(height, index) {
         let result = this.result;
         let hasAnswer = false;
 
@@ -225,6 +237,20 @@
 
         // 保存作答记录
         this.oProblem['result'] = result;
+
+        this.heightResult[index] = height
+
+        // 存储作答结果&输入框高度
+        let key = `lessonBlank${this.problemID}`
+        if(isSupported(localStorage)) {
+          let blankCache = JSON.parse(localStorage.getItem(key)) || {};
+          blankCache = {
+            result: result,
+            heightResult: this.heightResult
+          }
+          let value = JSON.stringify(blankCache);
+          localStorage.setItem(key, value); 
+        }
       },
 
       /*
@@ -242,7 +268,7 @@
         let index = target.dataset.index;
         let value = target.value;
 
-        this.canSubmitFn();
+        this.canSubmitFn(target.scrollHeight, index);
         target.style.height = (target.scrollHeight) + 'px';
       },
 
