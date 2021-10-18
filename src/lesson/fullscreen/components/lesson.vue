@@ -383,7 +383,10 @@ export default {
 
     // cursor: pointer;
     background: #fff;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
 
     .cards__title {
       position: relative;

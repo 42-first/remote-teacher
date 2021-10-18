@@ -204,6 +204,7 @@ destroyed() {},
 
     margin: 0 auto;
     overflow: hidden;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
 
     .slide__wrap {
     position: absolute;
@@ -288,7 +289,7 @@ destroyed() {},
   .time-box {
     position: absolute;
     top: 5px;
-    right: 20px;
+    right: 0;
     z-index: 99;
       font-size: 14px;
       min-width: 190px;
@@ -298,16 +299,17 @@ destroyed() {},
         height: 100%;
         line-height: 36px;
         text-align: center;
-        background: #9b9b9b;
-        color: #fff;
+        background: #e5e5e5;
+        color: #666;
         border-radius: 2px;
+        font-weight: bold;
         &.warning {
           background: rgba(248,79,65,.8);
-          color: #fff;
+          color: #666;
         }
         &.willEnd {
           background: #ddd;
-          color: #333;
+          color: #666;
         }
       }
     }

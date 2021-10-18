@@ -11,7 +11,8 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center" v-if="slide">
-      <img class="cover" :src="slide.src" :style="style" alt="" />
+      <!-- <img class="cover" :src="slide.src" :style="style" alt="" /> -->
+      <slide :item="slide" v-show="slide.animation != 1"></slide>
     </div>
 
     <!-- 不懂收藏 -->
@@ -31,6 +32,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import slide from './components/slide'
 
 
 export default {
@@ -41,6 +43,9 @@ export default {
       slide: null,
       style: {},
     };
+  },
+  components: {
+    slide
   },
   computed: {
     // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -132,7 +137,7 @@ export default {
         }, 2000)
       }
 
-      this.initEvent();
+      // this.initEvent();
     },
 
     /**
@@ -140,7 +145,7 @@ export default {
      * @params
      */
     initEvent() {
-      window.addEventListener('resize', this.resize);
+      // window.addEventListener('resize', this.resize);
     },
 
     /**

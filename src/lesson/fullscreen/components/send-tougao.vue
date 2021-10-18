@@ -447,7 +447,7 @@ export default {
   }
 
   .submit {
-    width: 326px;
+    width: 100%;
     height: 34px;
     text-align: center;
     line-height: 34px;

@@ -11,8 +11,8 @@
   <section class="tougao__wrap">
     <header class="tougao__header box-between">
       <div class="tab_box box-center pointer">
-        <div class="tab_item" :class="{'active': currentTab == 1}" @click="currentTab = 1"><!-- 投稿 --> {{ $t('post') }} </div>
-        <div class="tab_item" :class="{'active': currentTab == 2}" @click="currentTab = 2"><!-- 我的投稿 --> {{ $t('mypost') }} </div>
+        <div class="tab_item box-center" :class="{'active': currentTab == 1}" @click="currentTab = 1"><!-- 投稿 --> {{ $t('post') }} </div>
+        <div class="tab_item box-center" :class="{'active': currentTab == 2}" @click="currentTab = 2"><!-- 我的投稿 --> {{ $t('mypost') }} </div>
       </div>
       <i class="iconfont icon-guanbi2 f16 c9b pointer" @click="handleClosed"></i>
     </header>
@@ -111,11 +111,15 @@ export default {
     border-bottom: 1px solid #ddd;
     padding: 0 15px;
     .tab_box {
+      height: 100%;
       .tab_item {
         position: relative;
         min-width: 56px;
         margin-right: 20px;
-        line-height: 20px;
+        height: 100%;
+        &.active {
+          color: #5096F5;
+        }
         &.active::after {
           content: "";
           width: 20px;
@@ -124,7 +128,7 @@ export default {
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
-          top: calc(100% + 4px);
+          bottom: 0;
         }
       }
     }

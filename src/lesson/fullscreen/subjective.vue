@@ -931,11 +931,11 @@
     position: relative;
     padding: 10px 0 26px 10px;
     height: 290px;
-    border-radius: 2px;
+    border-radius: 4px;
     border: 1px solid #ddd;
-    &.focus {
-      border-color: #5096f5;
-    }
+    // &.focus {
+    //   border-color: #5096f5;
+    // }
 
     .submission-textarea {
       font-size: 16px;
