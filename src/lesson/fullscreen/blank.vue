@@ -338,6 +338,7 @@
        * @method 提交作答结果
        */
       handleSubmit() {
+        if(this.canSubmit !== 1) return
         let result = this.result;
 
         // 检测是否所有的选项都作答了
@@ -354,7 +355,8 @@
               showCancel: true,
               confirmText: this.$i18n.t('confirm') || '确认',
               cancelText: this.$i18n.t('continue') || '继续填写',
-              confirmClass: ''
+              confirmClass: '',
+              reverse: true
             },
             cancel: () => {
               

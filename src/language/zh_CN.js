@@ -119,7 +119,7 @@ let pages = {
   "notimelimit": "题目不限时",
   "extendmin": "题目续时 {minutes}分钟",
   "extendsec": "题目续时 {seconds}秒",
-  "receivertimeout": "作答时间结束",
+  "receivertimeout": "作答已结束",
   "receiverdone": "已完成",
   "collectprotip": "老师可能会随时结束答题",
   "enteranswer": "输入答案",
