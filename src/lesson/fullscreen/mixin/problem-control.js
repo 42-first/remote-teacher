@@ -155,7 +155,7 @@ let problemControl = {
      * @param
      */
     saveAnswer(data) {
-      let key = 'answer_problem';
+      let key = 'answer_problem_v3';
 
       if(isSupported(localStorage)) {
         let answerPostList = JSON.parse(localStorage.getItem(key)) || [];

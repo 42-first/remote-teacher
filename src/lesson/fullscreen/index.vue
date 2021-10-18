@@ -117,6 +117,7 @@
   import actionsmixin from '@/lesson/fullscreen/mixin/actions-mixin'
   import livemixin from '@/lesson/fullscreen/mixin/live-kwai'
   import eventmixin from '@/lesson/fullscreen/mixin/event-mixin'
+  import exerciseMixin from '@/lesson/fullscreen/mixin/exercise-mixin'
 
   import lessonmixin from '@/lesson/fullscreen/mixin/lesson-mixin'
 
@@ -333,7 +334,7 @@
     },
     filters: {
     },
-    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin ],
+    mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin, exerciseMixin ],
     methods: {
       ...mapActions([
         // 将 `this.setCards()` 映射为 `this.$store.dispatch('setCards')`
@@ -447,6 +448,11 @@
               window.moment = moment;
             })
           }, 2500)
+
+          // 设置自动提交
+          setInterval(() => {
+            this.autoSendAnswers();
+          }, 10000)
         });
       },
 
