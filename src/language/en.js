@@ -584,6 +584,7 @@ let pages = {
   "reviewtip": "* The problem score is composed of the peer grading score and the teacher's grade, the current score may not be the final score",
   "teamanswer": "Answer",
   "lastsubmit": "Final submission:",
+  "subjectiveanswer": "Answer Subjective Question",
 
   // tougao.vue
   "poster": "Poster",

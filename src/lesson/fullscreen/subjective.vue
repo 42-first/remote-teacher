@@ -20,7 +20,7 @@
 
     <section class="answer__wrapper" :class="ispreview ? 'nopb' : ''" v-show="rightType == 'subject'">
       <header class="answer__header box-between">
-        <span class="blue f14"><!-- 主观题作答 --> {{ $t('answerarea') }} </span>
+        <span class="blue f14"><!-- 主观题作答 --> {{ $t('subjectiveanswer') }} </span>
         <i class="iconfont icon-guanbi2 f16 c9b pointer" @click="handleCloseAnswer"></i>
       </header>
       <section class="answer__content">
@@ -920,7 +920,7 @@
 
   .subjective__answer, .subjective-inner {
     padding: 0 20px;
-    margin-top: 10px;
+    margin-top: 20px;
   }
 
   /*------------------*\

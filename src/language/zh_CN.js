@@ -587,6 +587,7 @@ let pages = {
   "reviewtip": "* 本题得分由互评分数和教师评分构成，当前分数可能不是最终得分",
   "teamanswer": "本组答案",
   "lastsubmit": "最后提交：",
+  "subjectiveanswer": "主观题作答",
 
   // tougao.vue
   "poster": "投稿人：",

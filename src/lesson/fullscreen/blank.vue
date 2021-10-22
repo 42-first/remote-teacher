@@ -179,8 +179,8 @@
         // 刷新后作答结果丢失 使用本地存储的
         if(isSupported(localStorage)){
           let value = JSON.parse(localStorage.getItem(key))
-          result = value.result
-          this.heightResult = value.heightResult
+          result = value && value.result || []
+          this.heightResult = value && value.heightResult || []
         }
 
         // 问题类型

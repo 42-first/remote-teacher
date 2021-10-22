@@ -304,7 +304,7 @@ destroyed() {},
         border-radius: 2px;
         font-weight: bold;
         &.warning {
-          background: rgba(248,79,65,.8);
+          background: rgba(248,79,65,.1);
           color: #666;
         }
         &.willEnd {
