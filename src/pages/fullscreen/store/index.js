@@ -56,7 +56,14 @@ const store = new Vuex.Store({
     // 插件协议版本
     addinVersion: 1.6,
     // 是否旁听生
-    isGuestStudent: false
+    isGuestStudent: false,
+
+    // 内容区大小
+    layoutSize: {},
+    // 课程状态 1 已结课
+    lessonStatus: 0,
+    // 右侧展示内容
+    rightType: ''
   },
   mutations: {
     // 重置课堂信息
@@ -72,6 +79,8 @@ const store = new Vuex.Store({
       state.danmus = [];
       state.addinVersion = 1.6;
       state.isGuestStudent = false;
+      state.layoutSize = {}
+      state.lessonStatus = 0
     },
 
     setLines(state, lines) {
@@ -140,6 +149,18 @@ const store = new Vuex.Store({
 
     setIsGuestStudent(state, data) {
       state.isGuestStudent = data
+    },
+
+    setLayoutSize(state, data) {
+      state.layoutSize = data
+    },
+
+    setLessonStatus(state, data) {
+      state.lessonStatus = data
+    },
+
+    setRightType(state, data) {
+      state.rightType = data
     }
   },
 
@@ -212,6 +233,18 @@ const store = new Vuex.Store({
 
     setIsGuestStudent({commit}, data) {
       commit('setIsGuestStudent', data)
+    },
+
+    setLayoutSize({commit}, data) {
+      commit('setLayoutSize', data)
+    },
+
+    setLessonStatus({commit}, data) {
+      commit('setLessonStatus', data)
+    },
+
+    setRightType({commit}, data) {
+      commit('setRightType', data)
     }
   },
 

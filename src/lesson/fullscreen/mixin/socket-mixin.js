@@ -341,6 +341,7 @@ var mixin = {
 
             // 课程状态 弹幕状态
             this.lessonStatus = 1;
+            this.setLessonStatus(1)
             // this.danmuStatus = false;
             this.setDanmuStatus(false);
 
