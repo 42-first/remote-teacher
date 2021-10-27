@@ -36,10 +36,17 @@
             <use xlink:href="#icon16-xiaojiantou-shang"></use>
           </svg>
         </p>
-        <section class="slide__info J_container" :class="[ fold ? 'full' : '']" >
-          <!-- 当前或者选中的数据展示 -->
-          <router-view></router-view>
+        <!-- 右侧左右布局 -->
+        <section class="lesson__container box-center" :class="!fold ? 'notfull' : ''">
+          <section class="slide__info J_container" :class="rightType ? 'maxWidth' : ''">
+            <!-- 当前或者选中的数据展示 -->
+            <router-view></router-view>
+          </section>
+          <section class="right__layout" v-show="rightType">
+            <tougao v-if="rightType == 'tougao'"></tougao>
+          </section>
         </section>
+        
       </section>
     </section>
 
@@ -53,6 +60,8 @@ import { mapState, mapActions } from 'vuex'
 
 import timeline from './timeline';
 
+import tougao from './tougao'
+
 // 会议模式
 const MeetingMode = {
   // 默认 default
@@ -62,6 +71,8 @@ const MeetingMode = {
   // 发言者模式
   SPEAKER: 2
 };
+
+let resizeObserver = null
 
 export default {
   name: "lesson-content",
@@ -87,7 +98,8 @@ export default {
       'cards',
       'slideIndex',
       'msg',
-      'currSlide'
+      'currSlide',
+      'rightType'
     ]),
 
     ...mapState('meeting', [
@@ -96,6 +108,7 @@ export default {
   },
   components: {
     timeline,
+    tougao
   },
   mixins: [ ],
   created() {
@@ -105,7 +118,7 @@ export default {
   },
   updated() {},
   beforeDestroy() {
-    window.removeEventListener('resize', this.resize);
+    // window.removeEventListener('resize', this.resize);
   },
   filters: {
   },
@@ -123,12 +136,27 @@ export default {
     fullscreen(newVal, oldVal) {
       if(newVal) {
       }
-    }
+    },
+
+    rightType(newVal) {
+      this.$nextTick(() => {
+        this.handleSetSize()
+      })
+      
+    },
+
+    slideIndex(newVal){
+      if(this.rightType != 'tougao'){
+        this.setRightType('')
+      }
+    },
   },
   methods: {
     ...mapActions([
       'setSlideIndex',
       'setMsg',
+      'setLayoutSize',
+      'setRightType'
     ]),
 
     /**
@@ -152,7 +180,7 @@ export default {
      * @params
      */
     initEvent() {
-      window.addEventListener('resize', this.resize);
+      // window.addEventListener('resize', this.resize);
 
       this.$el.focus();
       this.$el.addEventListener('keydown', (e) => {
@@ -167,6 +195,8 @@ export default {
           this.mapKeyCode(e);
         }
       })
+
+      this.resize()
     },
 
     /**
@@ -174,14 +204,25 @@ export default {
      * @params
      */
     resize() {
-      // this.checkFullscreen();
-      this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 40;
-      this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 40;
+      let self = this
+      
+      resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          self.handleSetSize()
+        }
+      });
+      resizeObserver.observe(document.querySelector('.lesson__container'));
+      
+    },
 
-      setTimeout(()=>{
-        this.maxWidth = this.$el.querySelector('.J_container').clientWidth - 41;
-        this.maxHeight = this.$el.querySelector('.J_container').clientHeight - 41;
-      }, 1500)
+    handleSetSize(){
+      let layoutEl = document.querySelector('.J_container')
+      let maxWidth = layoutEl.clientWidth;
+      let maxHeight = layoutEl.clientHeight;
+      this.setLayoutSize({
+        maxWidth,
+        maxHeight
+      })
     },
 
     checkFullscreen() {
@@ -342,7 +383,10 @@ export default {
 
     // cursor: pointer;
     background: #fff;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
 
     .cards__title {
       position: relative;
@@ -425,11 +469,9 @@ export default {
       }
     }
   }
-
-  .slide__info {
+  .lesson__container {
     position: relative;
     flex: 1;
-    max-width: calc(100% - 220px);
     height: 100%;
 
     padding: 20px;
@@ -438,10 +480,24 @@ export default {
     justify-content: center;
     align-items: center;
 
-    &.full {
-      max-width: 100vw;
-      padding: 20px 30px;
+    &.notfull {
+      max-width: calc(100% - 220px);
     }
+  }
+
+  .slide__info {
+    flex: 1;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    &.maxWidth {
+      max-width: calc(100% - 380px);
+    }
+  }
+
+  .right__layout {
+    width: 380px;
+    height: 100%;
   }
 
   .unlock-problem {

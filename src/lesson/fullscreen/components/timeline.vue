@@ -416,7 +416,7 @@
     }
 
     .timeline__footer {
-      background: #5096F5;
+      background: rgba($color: #fa837a, $alpha: .7);
     }
   }
 

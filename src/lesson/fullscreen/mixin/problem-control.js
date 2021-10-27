@@ -155,7 +155,7 @@ let problemControl = {
      * @param
      */
     saveAnswer(data) {
-      let key = 'answer_problem';
+      let key = 'answer_problem_v3';
 
       if(isSupported(localStorage)) {
         let answerPostList = JSON.parse(localStorage.getItem(key)) || [];
@@ -184,6 +184,47 @@ let problemControl = {
         console.log('submit:', error);
         return -1;
       })
+    },
+
+    /** 
+     * @method 切换习题 停止计时
+    */
+    endTiming(){
+      this.timer && clearInterval(this.timer)
+    },
+
+    /*
+     * @method 重置数据
+     * @param
+    */
+    reset() {
+      if([1,2,3].includes(this.problemType)){
+        this.optionsSet = new Set()
+        this.pollingCount = 0
+      }else if(this.problemType == 4){
+        this.result = [];
+      }else if(this.problemType == 5){
+        this.text = '';
+        this.hasImage = false;
+        this.loading = false;
+        this.imageURL = '';
+        this.imageThumbURL = '';
+        this.ispreview =false;
+        this.sendStatus = 0;
+        this.teamVisible = false;
+        this.answerType = 0;
+        this.noTeam = false;
+        this.getScore = undefined;
+        this.team = null;
+      }
+      this.timeOver = false;
+      this.canSubmit = 0;
+      this.warning = false;
+      this.limit = -1;
+      this.leaveTime = 0;
+      this.isShowSubmit = true;
+      this.isComplete = false;
+      this.sLeaveTime = '--:--';
     },
 
   }

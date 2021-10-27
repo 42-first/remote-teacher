@@ -119,7 +119,7 @@ let pages = {
   "notimelimit": "题目不限时",
   "extendmin": "题目续时 {minutes}分钟",
   "extendsec": "题目续时 {seconds}秒",
-  "receivertimeout": "作答时间结束",
+  "receivertimeout": "作答已结束",
   "receiverdone": "已完成",
   "collectprotip": "老师可能会随时结束答题",
   "enteranswer": "输入答案",
@@ -570,6 +570,37 @@ let pages = {
   "changetonotsignin": "修改为未签到",
   "zuodashichang": "作答时长",
   "studentstoomuchnotgroup": "班级人数超过3000人时暂不支持分组",
+
+  // slide.vue
+  "qztmzdxx": "请在题目中点击选项后提交答案",
+  "answer": "作答",
+  "submiting": "提交中...",
+  "countdown": "倒计时",
+  "notsupportedasateacher": "老师身份在学生模式下不支持此操作",
+  // blank.vue
+  "blankanswer": "填空题作答",
+  "continue": "继续填写",
+  // subjective.vue
+  "addpic": "添加图片",
+  "uploading": "正在上传",
+  "ungrade": "未打分",
+  "reviewtip": "* 本题得分由互评分数和教师评分构成，当前分数可能不是最终得分",
+  "teamanswer": "本组答案",
+  "lastsubmit": "最后提交：",
+  "subjectiveanswer": "主观题作答",
+
+  // tougao.vue
+  "poster": "投稿人：",
+  "own": "(自己)",
+  "postplaceholder": "请将投稿内容填写在此处（可添加1000字和一张图片）",
+  "confirmsend": "确认发送",
+  "issending": "正在发送",
+  "picuploading": "图片上传中",
+  "sendsucc": "发送成功",
+  "postsendfail": "网络不佳，投稿发送失败，请重试",
+  "nopost": "暂无投稿",
+  "mypost": "我的投稿",
+  "postrecalled": "投稿已被撤回",
 
   meeting: {
     "showing": "正在放映",

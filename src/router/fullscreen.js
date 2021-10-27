@@ -12,6 +12,8 @@ import dailyReport from '@/util/daily-report'
 
 import Index from '@/components/fullscreen/index'
 
+import { confirm } from '@/lesson/common/rain-element';
+
 // 问题解析
 const Exercise = resolve => require(['@/components/fullscreen/exercise'], resolve)
 const Subjective = resolve => require(['@/components/fullscreen/subjective'], resolve)
@@ -38,6 +40,8 @@ Vue.use(Router)
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
 window.$toast = Toast;
+
+Vue.use(confirm);
 
 let key = getPlatformKey()
 if(key === 'thu'){
