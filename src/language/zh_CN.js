@@ -620,7 +620,7 @@ let pages = {
     "screenshare": "{name}的共享窗口",
     "speaking": "正在发言",
     "backppt": "返回课件",
-    "muteall": "全员静音",
+    "muteall": "已被老师静音",
     "joinedtips": "接入成功，当前已静音",
     "micunmuted": "麦克风已开启",
     "micmuted": "麦克风已静音",

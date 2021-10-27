@@ -233,18 +233,20 @@
         if(this.reviewScore === -1) {
           this.submitReview();
         } else {
-          let msgOptions = {
-            confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
-            cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
-          };
-          let title = this.$i18n && this.$i18n.t('grading.gradedalready');
-          let message = this.$i18n && this.$i18n.t('grading.gradedoverwrite');
 
-          this.$messagebox.confirm(message, title, msgOptions).
-            then( action => {
-              if(action === 'confirm') {
-                this.submitReview();
-              }
+          this.$rainConfirm({
+            data: {
+              title: this.$i18n && this.$i18n.t('grading.gradedalready'),
+              message: this.$i18n && this.$i18n.t('grading.gradedoverwrite'),
+              showCancel: true,
+              confirmText: this.$i18n && this.$i18n.t('submit') || '提交',
+              cancelText: this.$i18n && this.$i18n.t('cancel') || '取消',
+            },
+            cancel: () => {
+            },
+            confirm: () => {
+              this.submitReview();
+            },
           });
         }
       },

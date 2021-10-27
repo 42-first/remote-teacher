@@ -617,7 +617,7 @@ let pages = {
     "screenshare": "{name}‘s Screen Sharing",
     "speaking": "Speaking",
     "backppt": "Return to slides",
-    "muteall": "All mute",
+    "muteall": "Muted by the teacher",
     "joinedtips": "Join successfully and muted",
     "micunmuted": "Unmute",
     "micmuted": "Mute",

@@ -179,6 +179,11 @@ let meetingMixin = {
      */
     forceMute(msg) {
       let meeting = this.meeting;
+      // 由于全员静音的文案改为了已被老师静音 所以如果我没有开启声音的话不提示了
+      if(!meeting.audio) {
+        return this
+      }
+
       meeting.audio = false;
       // meeting.video = false;
 
