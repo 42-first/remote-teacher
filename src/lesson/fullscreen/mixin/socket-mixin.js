@@ -250,25 +250,26 @@ var mixin = {
           
           // 邀请开启声音
           case 'openaudio':
-          
-            let self = this
 
-            this.$rainConfirm({
-              data: {
-                title: '',
-                message: this.$i18n && this.$i18n.t('meeting.invitetospeak') || '老师邀请你发言，是否打开麦克风？',
-                showCancel: true,
-                confirmText: this.$i18n && this.$i18n.t('meeting.shi') || '是',
-                cancelText: this.$i18n && this.$i18n.t('meeting.fou') || '否',
-              },
-              cancel: () => {
-              },
-              confirm: () => {
-                let meeting = this.$refs.meeting
-                meeting.handleOpenAudio()
-              },
-            });
-        
+            if(this.joined) {
+              this.$rainConfirm({
+                data: {
+                  title: '',
+                  message: this.$i18n && this.$i18n.t('meeting.invitetospeak') || '老师邀请你发言，是否打开麦克风？',
+                  showCancel: true,
+                  confirmText: this.$i18n && this.$i18n.t('meeting.shi') || '是',
+                  cancelText: this.$i18n && this.$i18n.t('meeting.fou') || '否',
+                },
+                cancel: () => {
+                },
+                confirm: () => {
+                  let meeting = this.$refs.meeting
+                  meeting.handleOpenAudio()
+                },
+              });
+            }
+
+            break
 
           // 翻页
           case 'slidenav':
