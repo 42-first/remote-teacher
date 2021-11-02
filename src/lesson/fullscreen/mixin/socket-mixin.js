@@ -231,7 +231,8 @@ var mixin = {
           // 请求禁言
           case 'bandevice':
             let meetingcmp = this.$refs.meeting;
-            if(meetingcmp && msg.type == 'fs') {
+            // 兼容旧版桌面端 禁言没有type
+            if(meetingcmp && (msg.type == 'fs' || !msg.type) ) {
               meetingcmp.banDevice(msg);
             } 
             break
