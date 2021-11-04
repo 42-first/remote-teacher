@@ -129,6 +129,7 @@ export default {
       'teacher',
       // 是否已进入会议
       'joined',
+      'observerMode',
     ]),
 
     ...mapState('meeting', [
