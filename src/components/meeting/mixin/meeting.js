@@ -179,6 +179,11 @@ let meetingMixin = {
      */
     forceMute(msg) {
       let meeting = this.meeting;
+      // 由于全员静音的文案改为了已被老师静音 所以如果我没有开启声音的话不提示了
+      if(!meeting.audio) {
+        return this
+      }
+
       meeting.audio = false;
       // meeting.video = false;
 
@@ -194,16 +199,36 @@ let meetingMixin = {
     banDevice (msg) {
 
       let meeting = this.meeting;
-      meeting.bandevice = msg.value
+
+      // 获取初始的禁言状态
+      let fsState = meeting.bandevice
+
+      let bandeviceTip = false
+
+      // msg.value 取值： 1 禁言(学生+其他教师) 2 禁言禁视频(学生+其他教师) 3 禁言(仅学生) 4 禁言禁视频(仅学生)
+  
+      // 开启禁言
       if(msg.value) {
-        meeting['audio'] = !msg.value
+        // 协同教师、学生都禁 就都提示
+        if(msg.value == 1 || msg.value == 2 || !this.observerMode && (msg.value == 3 || msg.value == 4)) {
+          bandeviceTip = true
+          meeting['audio'] = false;
+          (msg.value == 2 || msg.value == 4) && (meeting['video'] = false)
+          meeting['bandevice'] = msg.value
+        }
+      }else {
+        // 取消禁言
+        if(fsState == 1 || fsState == 2 || !this.observerMode && (fsState == 3 || fsState == 4)) {
+          bandeviceTip = true
+        }
+        meeting['bandevice'] = msg.value
       }
       this.setMeeting(meeting);
 
       let bannedSpeaking = this.$i18n && this.$i18n.t('meeting.bannedfromspeaking') || '全员禁言';
       let releaseBannedSpeaking = this.$i18n && this.$i18n.t('meeting.releasebannedspeak') || '老师已解除全员禁言';
 
-      this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
+      bandeviceTip && this.$toast({ type: 1, message: msg.value ? bannedSpeaking : releaseBannedSpeaking, duration: 3000 })
     },
 
     /**
@@ -389,7 +414,7 @@ let meetingMixin = {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
           let meeting = this.meeting
-          meeting.bandevice = data.fsState ? true : false
+          meeting.bandevice = data.fsState
           this.setMeeting(meeting)
           return data;
         }
@@ -605,6 +630,16 @@ let meetingMixin = {
         return false;
       })
     },
+
+    /** 
+     * @method 老师邀请我开启声音
+    */
+    handleOpenAudio(){
+      let meeting = this.meeting
+      meeting.audio = true
+
+      this.setMeeting(meeting)
+    }
 
   }
 }

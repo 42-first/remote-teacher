@@ -620,7 +620,7 @@ let pages = {
     "screenshare": "{name}的共享窗口",
     "speaking": "正在发言",
     "backppt": "返回课件",
-    "muteall": "全员静音",
+    "muteall": "已被老师静音",
     "joinedtips": "接入成功，当前已静音",
     "micunmuted": "麦克风已开启",
     "micmuted": "麦克风已静音",
@@ -636,6 +636,10 @@ let pages = {
     "bannedfromspeaking": "全员禁言",
     "releasebannedspeak": "老师已解除全员禁言",
     "bannedspeaking": "全员禁言中",
+    "bannedvideo": "老师已禁用",
+    "invitetospeak": "老师邀请你发言，是否打开麦克风？",
+    "fou": "否",
+    "shi": "是",
   },
 
   // 图片国际化

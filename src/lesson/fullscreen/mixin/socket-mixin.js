@@ -231,7 +231,8 @@ var mixin = {
           // 请求禁言
           case 'bandevice':
             let meetingcmp = this.$refs.meeting;
-            if(meetingcmp) {
+            // 兼容旧版桌面端 禁言没有type
+            if(meetingcmp && (msg.type == 'fs' || !msg.type) ) {
               meetingcmp.banDevice(msg);
             } 
             break
@@ -244,6 +245,29 @@ var mixin = {
               if(meetingcmp) {
                 meetingcmp.shareScreen(msg);
               }
+            }
+
+            break
+          
+          // 邀请开启声音
+          case 'openaudio':
+
+            if(this.joined) {
+              this.$rainConfirm({
+                data: {
+                  title: '',
+                  message: this.$i18n && this.$i18n.t('meeting.invitetospeak') || '老师邀请你发言，是否打开麦克风？',
+                  showCancel: true,
+                  confirmText: this.$i18n && this.$i18n.t('meeting.shi') || '是',
+                  cancelText: this.$i18n && this.$i18n.t('meeting.fou') || '否',
+                },
+                cancel: () => {
+                },
+                confirm: () => {
+                  let meeting = this.$refs.meeting
+                  meeting.handleOpenAudio()
+                },
+              });
             }
 
             break

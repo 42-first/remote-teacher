@@ -617,7 +617,7 @@ let pages = {
     "screenshare": "{name}‘s Screen Sharing",
     "speaking": "Speaking",
     "backppt": "Return to slides",
-    "muteall": "All mute",
+    "muteall": "Muted by the teacher",
     "joinedtips": "Join successfully and muted",
     "micunmuted": "Unmute",
     "micmuted": "Mute",
@@ -633,6 +633,10 @@ let pages = {
     "bannedfromspeaking": "Banned from speaking",
     "releasebannedspeak": "Banned from speaking has been released",
     "bannedspeaking": "Banned from speaking",
+    "bannedvideo": "Banned from the teacher",
+    "invitetospeak": "The teacher invites you to speak. Do you want to turn on the microphone?",
+    "fou": "No",
+    "shi": "Yes",
   },
 
   // 图片国际化
