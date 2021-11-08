@@ -276,6 +276,9 @@
 			endshow
 	  },
 	  created () {
+			// 默认进入展示正在连接中 清除原有modal状态
+			this.$store.dispatch('resetModal')
+			this.isConnectingHidden = false
 	    this.init()
 	  },
 	  beforeDestroy () {

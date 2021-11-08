@@ -257,6 +257,11 @@ const store = new Vuex.Store({
       commit('set_newtougao', 0)
 
     },
+    resetModal: ({commit}) => {
+      commit('set_isToastCtrlMaskHidden', true)
+      commit('set_toastCtrlMaskTpl', '')
+      commit('set_msgMaskTpl', 'Reconnect')
+    },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
     },
