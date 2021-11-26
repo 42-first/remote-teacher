@@ -448,6 +448,8 @@ var mixin = {
             this.changeLiveStatusTips(msg.status, msg.voice)
             break;
 
+          // todo: 是否开启了腾讯会议
+
           default:
             hasMsg = false;
             break

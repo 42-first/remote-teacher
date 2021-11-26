@@ -1135,7 +1135,20 @@ var actionsMixin = {
       setTimeout(() => {
         this.liveStatusTips = ''
       }, 5000)
-    }
+    },
+
+    /*
+     * @method 打开腾讯会议
+     * @param
+     */
+    handleOpenTXMeet() {
+      // todo: 先确定有没有绑定 绑定了直接打开会议邀请链接
+      // 没有绑定引导用户去绑定
+
+      this.$router.push({
+        path: `/v3/${this.lessonId}/bind/`
+      })
+    },
 
   }
 }

@@ -108,6 +108,19 @@
           </p>
         </section>
       </section>
+      <!-- todo: 腾讯会议 -->
+      <section class="blue" v-if="liveType === 3">
+        <section class="live__fold" @click="handleOpenTXMeet">
+          <div class="box-center">
+            <img class="icon-laba" src="~images/student/txmeet-logo.png" >
+            <span class="f12">老师开启了腾讯会议</span>
+          </div>
+          <div class="box-center">
+            <span class="f12">前往腾讯会议</span>
+            <i class="iconfont icon--danjiantouxiangyou f16"></i>
+          </div>
+        </section>
+      </section>
     </section>
 
     <!-- 接收器 时间轴 -->
@@ -528,6 +541,9 @@
             this.openDebug();
           }, 1000*10)
         }
+
+        // TODO：腾讯会议测试
+        this.liveType = 3;
       },
 
       /*
