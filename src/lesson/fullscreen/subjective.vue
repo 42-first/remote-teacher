@@ -8,125 +8,110 @@
 
 <template>
   <section class="page-subjective">
-
-    <div class="subjective-wrapper">
-
-      <!-- 定时 续时等 -->
-      <section class="exercise__tips">
-        <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
-          <img class="timing--icon" v-if="!warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
-          <img class="timing--icon" v-if="warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
-          <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
-        </div>
-        <div class="timing f24" v-else-if="hasNewExtendTime">{{ sExtendTimeMsg }}</div>
-        <div class="timing f24" v-else-if="isComplete"><!-- 已完成 -->{{ $t('receiverdone') }}</div>
-        <div class="timing f24" v-else><!-- 老师可能会随时结束答题 -->{{ $t('collectprotip') }}</div>
-      </section>
+    <section class="page-container">
 
       <!-- 问题内容 cover -->
-      <section class="subjective-content" >
-        <div class="content_wrapper">
-          <p class="page-no f12"><span><!-- 第{{ summary&&summary.pageIndex }}页 -->{{ $t('pno', { number: summary&&summary.pageIndex }) }}</span></p>
-          <div class="cover__wrapper" :style="{ minHeight: (10 - 0.906667)/pptRate + 'rem' }">
-            <img class="cover J_preview_img" :src="summary&&summary.cover" @load="handleLoadImg(1, $event)" />
-          </div>
-        </div>
-      </section>
-
-      <!-- 小组作答 显示 未进组不显示小组详情 -->
-      <section class="team__intro" v-if="team && !noTeam">
-        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
-        <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
-      </section>
-
-      <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimit') }}）</span></h3>
-      <h3 class="subjective__answer--lable answer__header f17" v-else >
-        <p><!-- 我的回答 -->{{ $t('myanswer') }}</p>
-        <p @click="handleedit" v-if="answerType && !hasAnswered"><i class="iconfont icon-bianji f25 blue"></i></p>
-      </h3>
-      <!-- 编辑状态-->
-      <div class="subjective-inner" v-if="!ispreview">
-        <!-- 文字编辑 -->
-        <section class="submission__text">
-          <div class="submission__textarea--wrapper f17">
-            <textarea class="submission-textarea J_feed_content" maxlength="1000" :placeholder="$t('subjectivetext')" v-model="text"></textarea>
-            <div class="submission-footer">
-              <p class="">(<span class="">{{ count }}</span>/1000)</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- 图片 -->
-        <section class="submission__pic">
-          <div v-if="!hasImage&&!loading">
-            <div class="submission__pic--add" ><input type=file accept="image/jpeg,image/png,image/jpg" class="camera" @change="handleChooseImageChange" ></div>
-            <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
-          </div>
-          <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handleLoadImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
-            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
-            <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
-            <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
-          </div>
-        </section>
-      </div>
-      <!-- 预览状态 -->
-      <div class="subjective__answer" v-if="ispreview && result">
-        <div class="answer__inner">
-          <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
-            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handleLoadImg(3, $event)" @click="handleScaleImage(3, $event)" />
-          </div>
-        </div>
-        <!-- 打分显示 -->
-        <div class="answer-score" v-if="getScore !== -1">
-          <i class="iconfont blue icon-ykq_dafen f18"></i>
-          <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
-        </div>
-      </div>
-
-      <!-- 小组提示 -->
-      <div class="team__tip" v-show="answerType">
-        <span class="f18 yellow">*</span>
-        <!-- 由于获取小组信息状态接口不再处理旁听生的异常 优先展示旁听生提示 -->
-        <p class="f14 c9b" v-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
-        <p class="f14 c9b" v-else-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
-        <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
-        <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
-      </div>
-
-      <!-- 观看者提示文字 返回 -->
-      <section v-if="observerMode">
-        <p class="f18">{{ $t('watchmode') }}</p>
-        <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
-      </section>
-      <!-- 提交按钮 -->
-      <p v-if="!observerMode" :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
-
-    </div>
-
-    <!-- 小组成员列表 -->
-    <section class="members__wrap" v-if="teamVisible">
-      <div class="team__members">
-        <header class="members--closed"><i class="iconfont icon-shiti_guanbitouping f28 c333" @click="handleclosedTeam"></i></header>
-        <div class="members__header">
-          <p class="members__title f20 c333">{{ team.teamName }}</p>
-          <p class="members__total f14 c9b">{{ team.memberCount }}人</p>
-        </div>
-        <ul class="">
-          <li class="member__info" v-for="member in team.memberList">
-            <img class="member--avatar" :src="member.avatar" :alt="member.userName" >
-            <div class="member--name f16 c666"><span class="name">{{ member.userName }}</span></div>
-          </li>
-        </ul>
+      <div class="content_wrapper J_container box-center">
+        <!-- <p class="page-no f12"><span>第{{ summary&&summary.pageIndex }}页</span></p> -->
+        <slide v-if="summary" :item="summary" :canSubmit="sendStatus" @clickanswer="handleShowAnswer" :limit="limit" :sLeaveTime="sLeaveTime" :hasNewExtendTime="hasNewExtendTime" :timeOver="timeOver" :warning="warning" :sExtendTimeMsg="sExtendTimeMsg" :isComplete="isComplete"></slide>
+        
       </div>
     </section>
 
+    <section class="answer__wrapper" :class="ispreview ? 'nopb' : ''" v-show="rightType == 'subject'">
+      <header class="answer__header box-between">
+        <span class="blue f14"><!-- 主观题作答 --> {{ $t('subjectiveanswer') }} </span>
+        <i class="iconfont icon-guanbi2 f16 c9b pointer" @click="handleCloseAnswer"></i>
+      </header>
+      <section class="answer__content">
+        <!-- 得分 -->
+        <div class="score-box" v-if="ispreview && result">
+          <div class="box-between">
+            <p class="answer--label bold c333"><!-- 得分 --> {{ $t('stuscore') }} </p>
+            <p class="f12 c9b bold"><!-- 本题总分{{totalScore / 100}}分 --> {{ $t('newtotalscore', {total: totalScore / 100}) }} </p>
+          </div>
+          
+          <div class="score f20 orange bold">
+            <template v-if="getScore > -1">
+              <span class="f40">{{getScore}}</span><!-- 分 --> {{ $t('stutestscore') }} 
+            </template>
+            <span v-else><!-- 未打分 --> {{ $t('ungrade') }} </span>
+          </div>
+          <div class="grade-tips f14 orange mt20" v-if="isReview">
+            <!-- * 本题得分由互评分数和教师评分构成，当前分数可能不是最终得分 -->{{ $t('reviewtip') }}
+          </div>
+        </div>
+        
+        <!-- 小组提示 -->
+        <div class="team__tip" v-show="answerType && !hasAnswered">
+          <!-- 由于获取小组信息状态接口不再处理旁听生的异常 优先展示旁听生提示 -->
+          <p v-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
+          <p v-else-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
+          <p v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
+          <p v-else>{{ $t('team.groupansweredtip') }}</p>
+        </div>
+        <!-- 小组成员 -->
+        <team-cmp v-if="answerType && team && !noTeam && !isGuestStudent" :team="team"></team-cmp>
+        <!-- 编辑状态-->
+        <div class="subjective-inner" v-if="!ispreview">
+          <!-- 文字编辑 -->
+          <section class="submission__text" :class="{'focus': isFocus}">
+            <textarea class="submission-textarea J_feed_content f14" maxlength="1000" :placeholder="$t('subjectivetext')" v-model="text" @focus="isFocus = true" @blur="isFocus = false"></textarea>
+            <p class="count">({{count}}/1000)</p>
+          </section>
+          <!-- 图片 -->
+          <section class="submission__pic">
+            <div style="text-align: left;" v-if="!hasImage&&!loading">
+              <div class="submission__pic--add f12" >
+                <input type=file accept="image/jpeg,image/png,image/jpg" class="camera" :disabled="lessonStatus ? true : false" @change="handleChooseImageChange" >
+                <i class="iconfont icon--tianjiatupiancopy f16"></i><!-- 添加图片 --> {{ $t('addpic') }} 
+              </div>
+            </div>
+            <div class="pic-view" v-show="hasImage||loading">
+              <div class="image__item">
+                <img class="image--thumb J_preview_img" alt="" v-show="hasImage" :src="fileData||imageURL" @click="handleScaleImage($event)" v-if="imageURL" />
+                <div class="donut"  v-else>
+                  <i class="iconfont f40 icon--jiazaiwubaidi1"></i>
+                  <!-- 正在上传 --> {{ $t('uploading') }} 
+                </div>
+                <p class="delete-img" @click="handleDeleteImg" v-show="hasImage && imageURL"><i class="iconfont icon-ykq_shanchu f18"></i></p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- 预览状态 -->
+        <div class="subjective__answer" v-if="ispreview && result">
+          <p v-if="!answerType" class="answer--label c333 bold"><!-- 我的答案 --> {{ $t('myanswer') }} </p>
+          <div class="box-between" v-else>
+            <span class="c333 bold"><!-- 本组答案 --> {{ $t('teamanswer') }} </span>
+            <span class="f12 c9b">
+              <!-- 最后提交： --> {{ $t('lastsubmit') }} {{lastSubmitInfo.time | formatTime('MM-DD HH:mm')}} {{lastSubmitInfo.user}}
+              <i class="iconfont icon-bianji f25 blue" v-if="!hasAnswered" @click="handleedit"></i>
+            </span>
+          </div>
+          <div class="answer__inner">
+            <p class="answer--text f17">{{ result.content }}</p>
+            <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
+              <ul class="pic-view">
+                <li class="image__item" v-for="(item,index) in result.pics" :key="index">
+                  <img class="image--thumb" :src="item.pic" :data-src="item.pic" alt="雨课堂" v-if="item.pic" @click="handleScaleImage($event)"/>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <div class="btn-box" v-show="!ispreview">
+        <p :class="['submit-btn', 'f14', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-if="!ispreview" @click="handleSend">{{sendStatus | setSubmitText}}</p>
+      </div>
+    </section>
   </section>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import moment from 'moment'
 
   import API from '@/util/api'
   import {compress} from '@/util/image'
@@ -134,7 +119,10 @@
   import { configWX } from '@/util/wx-util'
   import upload from '@/util/upload'
   import problemControl from '@/lesson/fullscreen/mixin/problem-control'
+  import slide from './components/slide'
+  import imagemixin from './mixin/image-mixin.js'
 
+  import teamCmp from './components/team.vue'
 
   export default {
     name: 'subjective-page',
@@ -191,10 +179,18 @@
         retryTimes: 0,
         // // 是否旁听生 从store中获取
         // isGuestStudent: false,
-        timer: null
+        timer: null,
+        isFocus: false,
+        lastSubmitInfo: {},
+        // 该提是否发起了互评
+        isReview: false,
+        // 本题总分
+        totalScore: 0,
       };
     },
     components: {
+      slide,
+      teamCmp
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -202,7 +198,9 @@
         'lesson',
         'cards',
         'isGuestStudent',
-        'observerMode'
+        'observerMode',
+        'rightType',
+        'lessonStatus'
       ]),
     },
     watch: {
@@ -245,6 +243,7 @@
           let cards = this.cards;
           this.summary = cards[this.index];
 
+          this.endTiming()
           this.timer && clearInterval(this.timer)
 
           if(this.summary) {
@@ -256,35 +255,35 @@
       },
     },
     filters: {
+      setSubmitText(sendStatus){
+        let text = i18n.t('submitansw') || '提交答案'
+        switch(sendStatus){
+          case 0:
+          case 2: 
+            text = i18n.t('submitansw') || '提交答案';
+            break;
+          case 3:
+            text = i18n.t('submiting') || '提交中...';
+            break;
+          case 4:
+            text = i18n.t('submitok') || '提交成功';
+            break;
+          case 5:
+            text = i18n.t('classended') || '课程已结束';
+            break;
+        }
+        return text
+      },
+      formatTime(time, format) {
+        return moment(time).format(format || 'YYYY-MM-DD HH:mm');
+      },
     },
-    mixins: [ problemControl ],
+    mixins: [ problemControl, imagemixin ],
     methods: {
       ...mapActions([
         'setCards',
+        'setRightType'
       ]),
-
-      /*
-      * @method 重置数据
-      * @param
-      */
-      reset() {
-        this.text = '';
-        this.hasImage = false;
-        this.loading = false;
-        this.imageURL = '';
-        this.imageThumbURL = '';
-        this.fileData = null;
-        this.ispreview =false;
-        this.sendStatus = 0;
-        this.teamVisible = false;
-        this.answerType = 0;
-        this.noTeam = false;
-        this.timeOver =false;
-        this.warning = false;
-        // 重置的时候完成状态都为false
-        this.isComplete = false;
-        this.team = null
-      },
 
       /*
       * @method 初始化习题页面
@@ -325,6 +324,8 @@
         if(score && getScore > 0) {
           this.getScore = getScore;
         }
+
+        this.totalScore = score
 
         // 是否观察者模式
         if(this.observerMode) {
@@ -419,11 +420,18 @@
 
                 this.result = problemResult;
                 this.ispreview = true;
+
+                this.lastSubmitInfo = {
+                  time: data.lastResult.submitTime,
+                  user: data.lastResult.lastAnswerUserName.length > 5 ? data.lastResult.lastAnswerUserName.substring(0,5) + '...' : data.lastResult.lastAnswerUserName
+                }
               }
 
               // 未进组提示
               if(noTeam) {
                 this.noTeam = true;
+              }else {
+                this.noTeam = false
               }
             }
           })
@@ -472,18 +480,19 @@
               let problemResult = data.lastResult.lastAnswerUserId;
               // 答案覆盖提示
               if(problemResult) {
-                let msgOptions = {
-                  confirmButtonText: this.$i18n && this.$i18n.t('submit') || '提交',
-                  cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
-                };
-                let title = this.$i18n && this.$i18n.t('team.teamhasanswer') || '已有人提交答案';
-                let message = this.$i18n && this.$i18n.t('team.teamanswercover') || '已有本组同学提交了答案，提交后将会覆盖已提交的答案';
-
-                this.$messagebox.confirm(message, title, msgOptions).
-                then( action => {
-                  if(action === 'confirm') {
+                this.$rainConfirm({
+                  data: {
+                    title: this.$i18n && this.$i18n.t('team.teamhasanswer') || '已有人提交答案',
+                    message: this.$i18n && this.$i18n.t('team.teamanswercover') || '已有本组同学提交了答案，提交后将会覆盖已提交的答案',
+                    showCancel: true,
+                    confirmText: this.$i18n && this.$i18n.t('submit') || '提交',
+                    cancelText: this.$i18n && this.$i18n.t('cancel') || '取消',
+                  },
+                  cancel: () => {
+                  },
+                  confirm: () => {
                     this.sendSubjective();
-                  }
+                  },
                 });
               } else {
                 this.sendSubjective();
@@ -538,6 +547,7 @@
             let data = res.data;
 
             this.getScore = data.score > 0 ? data.score/100 : data.score;
+            this.isReview = data.isReview
           }
         })
         .catch(error => {
@@ -629,6 +639,12 @@
           this.sendStatus = 4;
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
+          this.ispreview = true
+
+          this.result = params['result']
+          this.endTiming()
+
+          this.answerType && !this.hasAnswered && this.getTeamInfo(this.problemID, this.summary.groupid)
         } else if(code === 50028) {
           this.$toast({
             message: '此题已经作答过',
@@ -662,198 +678,6 @@
       },
 
       /*
-       * @method 上传图片
-       * @param
-       */
-      uploadImage(data, fileType) {
-        let self = this;
-        let URL = API.student.UPLOAD_PIC;
-        let params = {
-          'pic_type': ''
-        };
-
-        let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        // let sBase64 = data.substr(data.indexOf(',') + 1);
-        // params['pic_data'] = sBase64;
-        // params['pic_type'] = picType;
-
-        // jpg,jpeg,bmp,png,gif
-        if(!/png|jpg|jpeg/.test(picType)) {
-          this.$toast({
-            message: this.$i18n.t('reuploadpiconly') || '当前仅支持图片格式，请重新上传',
-            duration: 2000
-          });
-
-          this.imageURL = '';
-          this.imageThumbURL = '';
-          this.hasImage = false;
-
-          return this;
-        }
-
-        this.sendStatus = 1;
-
-        // 上传七牛
-        Promise.all([upload.getToken()]).
-        then(() => {
-          let randomNumber = parseInt(Math.random()*10000, 10);
-          let fileName = `${this.lessonID}${data.length}${randomNumber}.${picType}`;
-          // let file = dataURLtoFile(data, fileName);
-          // data.name = fileName;
-          this.uploadFile(data).
-          then((res)=>{
-            if(res.url) {
-              this.imageURL = res.url;
-              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
-              this.sendStatus = 2;
-
-              this.cacheResult();
-            } else {
-              this.retryUpload(data, fileType);
-            }
-          }).
-          catch(error => {
-            this.retryUpload(data, fileType);
-          });
-        });
-
-        // return request.post(URL, params)
-        //   .then( (res) => {
-        //     if(res && res.data) {
-        //       let data = res.data;
-
-        //       self.imageURL = data.pic_url;
-        //       self.imageThumbURL = data.thumb_url
-        //       self.sendStatus = 2;
-
-        //       self.cacheResult();
-
-        //       return self.imageURL;
-        //     }
-        //   }).catch(error => {
-        //     self.retryUpload(data, fileType);
-
-        //     return null;
-        //   });
-      },
-
-      /**
-       * method 上传七牛
-       * params
-       */
-      uploadFile(file) {
-        let domain = upload.qiniuDomain;
-
-        return new Promise((resolve, reject)=>{
-          let observer = {
-            next(res) {
-              let total = res.total;
-              let percent = total.percent;
-
-              console.log("进度：" + percent + "% ");
-            },
-            error(err) {
-              console.log(err);
-              reject({ url: '' });
-            },
-            complete(res) {
-              console.log(res);
-              let url = domain + res.key;
-
-              console.log("url:" + url);
-              resolve({ url });
-            }
-          };
-
-          upload.upload(file, observer);
-        });
-      },
-
-      /*
-       * @method 上传图片失败重试策略
-       * @param
-       */
-      retryUpload(data, fileType) {
-        // 重试次数
-        let retryTimes = this.retryTimes + 1;
-
-        if(retryTimes < 4) {
-          setTimeout(()=>{
-            this.uploadImage(data, fileType);
-          }, 2000 * retryTimes)
-
-          this.retryTimes = retryTimes;
-        } else {
-          this.$toast({
-            message: this.$i18n.t('networkerror') || '网络不佳，图片上传失败，请重新上传',
-            duration: 3000
-          });
-
-          // 帮用户清空上传
-          this.hasImage = false;
-          this.imageURL = '';
-          this.imageThumbURL = '';
-          this.text && (this.sendStatus = 2);
-          this.retryTimes = 0;
-        }
-      },
-
-      /*
-       * @method 选择拍照后触发事件
-       * @param
-       */
-      handleChooseImageChange(evt) {
-        let self = this;
-        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
-        let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
-
-        let file = targetEl.files[0];
-        let fileType = file.type;
-
-        console.log('MIME类型：' + fileType);
-        // 课程结束啦
-        if(this.sendStatus === 5) {
-          return this;
-        }
-
-        if(file.size) {
-          const size = parseInt(file.size/1024/1024, 10);
-
-          if(size >= 10) {
-            this.$toast({
-              message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
-              duration: 2000
-            });
-
-            return this;
-          }
-        }
-
-        // 图片处理参数
-        let options = {
-          compress: {
-            width: 1600,
-            height: 1600,
-            quality: .6
-          }
-        };
-
-        // 压缩 浏览器旋转 微信崩溃等问题
-        this.hasImage = true;
-        this.imageThumbURL = '/vue_images/images/loading-3.gif';
-        this.uploadImage(file, fileType);
-        // compress(file, options, function(dataUrl) {
-        //   if(dataUrl) {
-        //     self.fileData = dataUrl;
-
-        //     // 上传图片
-        //     self.uploadImage(dataUrl, fileType, file.name);
-        //     // self.hasImage = true;
-        //   }
-        // });
-      },
-
-      /*
        * @method 选择拍照后触发事件
        * @param type 1 ppt图片 2 上传图片 3 完成后预览
        */
@@ -881,83 +705,28 @@
       },
       handleDeleteImg() {
         let self = this;
-
-        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?').then(action => {
-          if(action === 'confirm') {
+        this.$rainConfirm({
+          data: {
+            title: this.$i18n.t('tips') || "提示",
+            message: this.$i18n.t('cfmdelpic') || '确定删除图片?',
+            showCancel: true,
+            confirmText: '删除',
+            cancelText: '取消',
+            confirmClass: 'del',
+            reverse: true
+          },
+          cancel: () => {
+          },
+          confirm: () => {
             self.hasImage = false;
             self.imageURL = '';
             self.imageThumbURL = '';
 
             !self.text && (self.sendStatus = 0);
-          }
+          },
         });
       },
 
-      /*
-       * @method 图片放大
-       * @param
-       */
-      handleScaleImage(type, evt) {
-        let targetEl = evt.target;
-        let pswpElement = document.querySelector('.J_pswp');
-        let index = 0;
-        let items = [];
-        let src = this.fileData || this.imageURL;
-        let width = this.width;
-        let height = this.height;
-
-        if(type === 1 || type === 3) {
-          src = targetEl.src;
-        }
-
-        if(type === 1) {
-          width = this.pptWidth;
-          height = this.pptHeight;
-        }
-
-        // build items array
-        items.unshift({ src: src, w: width || 750, h: height });
-
-        let options = {
-          index: 0,
-          maxSpreadZoom: 5,
-          showAnimationDuration: 300,
-          hideAnimationDuration: 300,
-          showHideOpacity: true,
-
-          closeEl: false,
-          captionEl: false,
-          fullscreenEl: false,
-          zoomEl: false,
-          shareEl: false,
-          counterEl: false,
-          arrowEl: false,
-          preloaderEl: false,
-
-          tapToClose: true,
-
-          getThumbBoundsFn: function(index) {
-            // find thumbnail element
-            var thumbnail = targetEl;
-
-            // get window scroll Y
-            var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-            // optionally get horizontal scroll
-
-            // get position of element relative to viewport
-            var rect = thumbnail.getBoundingClientRect();
-
-            // w = width
-            return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
-
-          }
-        };
-
-        // Initializes and opens PhotoSwipe
-        let gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-
-        gallery.init();
-      },
       handleSend() {
         // 是否可以提交
         // 是否小组作答
@@ -972,23 +741,28 @@
           if(this.answerType === 1) {
             // 是否进组
             if(this.noTeam || this.forceTempTeam) {
-              let msgOptions = {
-                confirmButtonText: this.$i18n && this.$i18n.t('confirm') || '确定',
-                cancelButtonText: this.$i18n && this.$i18n.t('cancel') || '取消'
-              };
-              let title = this.$i18n && this.$i18n.t('team.noteam') || '未进组';
               let message = this.$i18n && this.$i18n.t('team.tempteamtip');
 
               if(this.forceTempTeam) {
                 message = this.$i18n && this.$i18n.t('team.forcetempteamtip');
               }
 
-              this.$messagebox.confirm(message, title, msgOptions).
-              then( action => {
-                if(action === 'confirm') {
+              this.$rainConfirm({
+                data: {
+                  title: this.$i18n.t('team.noteam') || '未进组',
+                  message: message,
+                  showCancel: true,
+                  confirmText: this.$i18n.t('confirm') || '确定',
+                  cancelText: this.$i18n.t('cancel') || '取消',
+                  confirmClass: ''
+                },
+                cancel: () => {
+                },
+                confirm: () => {
                   this.sendSubjective();
-                }
+                },
               });
+
             } else {
               this.getTeamResult(this.problemID, this.summary.groupid);
             }
@@ -999,7 +773,14 @@
       },
       handleBack() {
         this.$router.back();
-      }
+      },
+
+      handleShowAnswer(){
+        this.setRightType('subject')
+      },
+      handleCloseAnswer(){
+        this.setRightType('')
+      },
     },
     created() {
       this.index = +this.$route.params.index;
@@ -1034,15 +815,11 @@
     align-items: center;
   }
 
-  .subjective-wrapper {
-    width: 375px;
-    // height: 667px;
+  .page-container {
+    width: 100%;
     height: 100%;
-
-    background: #fff;
-    border: 2px solid #eee;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: center;
   }
 
   .page__header {
@@ -1057,43 +834,6 @@
   .problem-tag {
     border-left: 15px solid #4A90E2;
   }
-
-  .subjective__header {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 17px;
-    width: 100%;
-    height: 50px;
-    color: #2A2A2A;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0, 0.2);
-
-    .heade-action {
-      min-width: 25px;
-      color: #639EF4;
-    }
-
-    .subjective--back {
-      margin-left: -9px;
-      color: #4a4a4a;
-    }
-
-    .heade-action.disable {
-      color: #999999;
-    }
-
-    .heade-action:active:not(.disable) {
-      color: rgba(99,158,244,0.7);
-    }
-  }
-
-
 
   .submit-btn {
     margin: 10px auto 15px;
@@ -1119,75 +859,69 @@
     $ 习题内容
   \*------------------*/
 
-  .subjective-content {
-    // padding-top: 61.8px;
-
-    .content_wrapper {
-      position: relative;
-      margin: 10px 0 10px;
-      background: #fff;
-      overflow: hidden;
-    }
-
-    .content__header {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      padding-right: 15px;
-      width: 100%;
-      height: 45px;
-      color: #4A4A4A;
-       background: #fff;
-
-      .header-item {
-        margin-left: 15px;
-        text-align: center;
-      }
-    }
-
-    .page-no {
-      position: absolute;
-      top: 0;
-      right: 1px;
-
-      padding: 0 12px;
-      height: 25px;
-      line-height: 25px;
-      color: #fff;
-
-      background: rgba(0,0,0,0.5);
-    }
-
-    .cover {
-      display: block;
-      width: 100%;
-    }
+  .content_wrapper {
+    width: 100%;
+    height: 100%;
   }
 
-
-  .subjective__answer--lable {
-    padding: 0 17px 17px;
-    color: #333;
-    font-weight: normal;
-    text-align: left;
-
-    .tip {
-      color: #9B9B9B;
+  .answer__wrapper {
+    width: 380px;
+    height: calc(100% - 40px);
+    background: #fff;
+    position: fixed;
+    right: 0;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 0 70px;
+    &.nopb {
+      padding-bottom: 0;
     }
   }
 
   .answer__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+
+    text-align: left;
+    border-bottom: 1px solid #ddd;
   }
 
-  .subjective-inner {
-    background: #fff;
+  .answer__content {
+    flex: 1;
+    overflow-y: auto;
   }
 
+  .orange {
+      color: #FEA300;
+    }
+  .score-box {
+    padding: 20px 0;
+    margin: 0 20px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    .score {
+      margin: 40px 0 20px;
+      height: 56px;
+      vertical-align: bottom;
+    }
+    .grade-tips {
+      padding: 10px 20px;
+      text-align: left;
+      background: rgba($color: #FEA300, $alpha: .1);
+      line-height: 20px;
+    }
+  }
+
+  .subjective__answer, .subjective-inner {
+    padding: 0 20px;
+    margin-top: 20px;
+  }
 
   /*------------------*\
     $ 投稿文字
@@ -1195,31 +929,35 @@
 
   .submission__text {
     position: relative;
-    margin: 0 17px 10px;
-
-    background: #fff;
-    border-bottom: 1px solid #C8C8C8;
+    padding: 10px 0 26px 10px;
+    height: 290px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    // &.focus {
+    //   border-color: #5096f5;
+    // }
 
     .submission-textarea {
-      margin-bottom: 20px;
-      padding: 10px;
-
+      font-size: 16px;
+      color: #666;
       width: 100%;
-      height: 160px;
+      height: 245px;
       border-width: 0;
       -webkit-user-select: auto;
+      background: transparent;
+      padding-right: 10px;
     }
 
     .submission-textarea::-webkit-input-placeholder {
       color: #9B9B9B
     }
 
-    .submission-footer {
+    .count {
       position: absolute;
-      bottom: 5px;
-      right: 2.5px;
-
-      color: #9B9B9B
+      bottom: 9px;
+      right: 20px;
+      font-size: 14px;
+      color: #9b9b9b;
     }
 
   }
@@ -1231,66 +969,135 @@
   \*------------------*/
 
   .submission__pic {
-    margin: 40px auto 10px;
-    padding-bottom: 75px;
+    margin: 10px 0 20px;
 
     .submission__pic--add {
       position: relative;
-      margin: 0 auto;
-      width: 72px;
-      height: 72px;
+      padding: 7px 15px;
+      min-width: 98px;
+      height: 30px; 
+      white-space: nowrap;    
 
-      border: 2px solid #C8C8C8;
-      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #666;
+      color: #5096f5;
+      border-radius: 44px;
+      background: rgba($color: #5096f5, $alpha: .1);
+      cursor: pointer;
 
-      .camera {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        opacity: 0;
+      // &:hover {
+      //   background: rgba(80, 150, 245, .2);
+      // }
+
+      &.disabled {
+        background: rgba(255,255,255,.2);
+        color: #9b9b9b;
+      }
+      .iconfont {
+        margin-right: 5px;
       }
     }
-
-    .submission__pic--add:before,
-    .submission__pic--add:after {
-      content: '';
+    .camera {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 37px;
-      height: 2px;
-
-      transform: translate(-50%, -50%);
-
-      background: #C8C8C8;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
 
-    .submission__pic--add:after {
-      width: 2px;
-      height: 37px;
-    }
+  }
 
-    .submission__pic--remark {
-      padding-top: 15px;
-      color: #C8C8C8;
-    }
+  .team__tip {
+    width: 100%;
+    padding: 10px 20px;
+    line-height: 20px;
+    background: rgba($color: #FEA300, $alpha: .1);
+    color: #FEA300;
+    font-size: 13px;
+    text-align: left;
+  }
 
-    .pic-view {
+  .btn-box {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    border-top: 1px solid #ddd;
+    z-index: 2;
+    .submit-btn {
+      width: 120px;
+      height: 34px;
+      text-align: center;
+      line-height: 34px;
+      border-radius: 4px;
+      background: #5096f5;
+      color: #fff;
+      cursor: pointer;
+      margin: 0;
+       &.disable {
+        color: #9B9B9B;
+        background: #ddd;
+      }
+    }
+  }
+  .pic-view {
       position: relative;
-      margin: 0 auto;
-      width: 250px;
-      height: 250px;
+      margin: 20px auto;
+      
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
 
-      background: #C8C8C8;
-      overflow: hidden;
+      .image__item {
+        width: 180px;
+        height: 180px;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        margin-bottom: 10px;
+        &:not(:nth-of-type(3n)){
+          margin-right: 10px;
+        }
 
-      img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        img {
+          width: 180px;
+          height: 180px;
+          object-fit: cover;
+        }
+
+        @keyframes donut-spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .donut {
+          font-size: 12px;
+          position: absolute;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          color: #9b9b9b;
+          .iconfont {
+            animation: donut-spin 1.2s linear infinite;
+          }
+        }
       }
 
       .pic--loading {
@@ -1300,7 +1107,7 @@
       .img--loading {
         width: 70px;
       }
-
+      
       .higher {
         max-width: 100%;
       }
@@ -1311,172 +1118,54 @@
 
       .delete-img {
         position: absolute;
-        top: 0;
-        right: 0;
-
-        width: 29px;
-        height: 29px;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        width: 100%;
+        height: 28px;
         line-height: 28px;
 
         color: #fff;
-        background: rgba(0,0,0,0.6);
+        background: rgba(248, 79, 65,.7);
+
       }
 
     }
-
-  }
-
-
   /*------------------*\
     $ 作答完成预览
   \*------------------*/
 
   .subjective__answer {
     margin-bottom: 40px;
-    padding: 12.5px 15px;
-    color: #333;
-    background: #fff;
+    color: #666;
+
+    .answer--label {
+      font-size: 16px;
+      color: #333;
+      line-height: 18px;
+      text-align: left;
+    }
 
     .answer__inner {
-      padding: 0 7px 15px;
-      border-bottom: 1px solid #C8C8C8;
+      margin-top: 10px;
+      &.score {
+        text-align: left;
+        margin-bottom: 20px;
+      }
     }
 
     .answer--text {
       text-align: left;
       word-wrap: break-word;
+      line-height: 22px;
+      font-size: 14px;
+      white-space: pre-wrap;
     }
 
     .answer--image {
       padding-top: 10px;
-      img {
-        display: block;
-        width: 260px;
-        max-width: 100%;
-      }
     }
 
-    .answer-score {
-      padding: 10px 7.5px 0;
-      color: #9B9B9B;
-      text-align: left;
-
-      .lable {
-        vertical-align: 2.5px;
-      }
-
-      .iconfont {
-        color: #F5A623;
-      }
-
-      .iconfont.blue {
-        color: #639EF4;
-      }
-    }
-
-  }
-
-
-  /*------------------*\
-    $ 小组详情
-  \*------------------*/
-
-  .team__intro {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin: 5px 0;
-    padding: 0 20px;
-    height: 65px;
-    line-height: 65px;
-    background: #fff;
-
-    .team__intro--name {
-      flex: 1;
-      text-align: left;
-    }
-  }
-
-  .team__tip {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: -40px;
-    padding: 0 20px 30px;
-    text-align: justify;
-
-    background: #fff;
-  }
-
-  .members--closed {
-    height: 50px;
-    line-height: 50px;
-    padding: 0 15px;
-    text-align: left;
-    border-bottom: 1px solid #C8C8C8;
-  }
-
-  .team__members {
-    z-index: 1;
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-
-    width: 375px;
-    height: 75vh;
-    overflow-y: auto;
-    background: #fff;
-
-    .members__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 20px 10px;
-
-      .members__title {
-        font-weight: bold;
-      }
-    }
-
-    .member__info {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-
-      padding-left: 20px;
-      height: 56px;
-      line-height: 56px;
-
-      .member--avatar {
-        display: block;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-      }
-
-      .member--name {
-        flex: 1;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-
-        .name {
-          padding-left: 15px;
-        }
-      }
-    }
-  }
-
-  .members__wrap:after {
-    content: '';
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    background: rgba(0,0,0,0.45);
   }
 
 

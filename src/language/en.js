@@ -568,6 +568,37 @@ let pages = {
   "zuodashichang": "Length of response time",
   "studentstoomuchnotgroup": "There are more than 3000 students in the class. Grouping is not supported.",
 
+  // slide.vue
+  "qztmzdxx": "Please submit after clicking on the option in the question.",
+  "answer": "Answer",
+  "submiting": "Sending",
+  "countdown": "Countdown",
+  "notsupportedasateacher": "Not supported as a teacher",
+  // blank.vue
+  "blankanswer": "Answer",
+  "continue": "Continue",
+  // subjective.vue
+  "addpic": "Add pictures",
+  "uploading": "Uploading..",
+  "ungrade": "Not scored",
+  "reviewtip": "* The problem score is composed of the peer grading score and the teacher's grade, the current score may not be the final score",
+  "teamanswer": "Answer",
+  "lastsubmit": "Final submission:",
+  "subjectiveanswer": "Answer Subjective Question",
+
+  // tougao.vue
+  "poster": "Poster",
+  "own": "(me)",
+  "postplaceholder": "Enter here（1000 characters and one picture)",
+  "confirmsend": "Send",
+  "issending": "Sending",
+  "picuploading": "Uploading...",
+  "sendsucc": "Post sent",
+  "postsendfail": "Sending failed because of bad network, please try again.",
+  "nopost": "No recent posts",
+  "mypost": "My posts",
+  "postrecalled": "The post has been withdrawed.",
+
   meeting: {
     "showing": "Showing",
     "dynamics": "Feed",
@@ -586,7 +617,7 @@ let pages = {
     "screenshare": "{name}‘s Screen Sharing",
     "speaking": "Speaking",
     "backppt": "Return to slides",
-    "muteall": "All mute",
+    "muteall": "Muted by the teacher",
     "joinedtips": "Join successfully and muted",
     "micunmuted": "Unmute",
     "micmuted": "Mute",
@@ -602,6 +633,10 @@ let pages = {
     "bannedfromspeaking": "Banned from speaking",
     "releasebannedspeak": "Banned from speaking has been released",
     "bannedspeaking": "Banned from speaking",
+    "bannedvideo": "Banned from the teacher",
+    "invitetospeak": "The teacher invites you to speak. Do you want to turn on the microphone?",
+    "fou": "No",
+    "shi": "Yes",
   },
 
   // 图片国际化

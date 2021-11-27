@@ -11,7 +11,7 @@
 
 <template>
   <!-- 操作栏 -->
-  <section class="actions__cmp" :class="{ 'center': hasMeeting && joined }" tabindex="1">
+  <section class="actions__cmp" :class="{ 'center': hasMeeting && joined, 'right': rightType}" tabindex="1">
     <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting }">
       <!-- 会议基本操作 -->
       <section class="meeting__actions box-center" v-if="hasMeeting && joined">
@@ -149,7 +149,8 @@
         'hasMeeting',
         // 是否已进入会议
         'joined',
-        'observerMode'
+        'observerMode',
+        'rightType'
       ]),
 
       ...mapState('meeting', [
@@ -203,6 +204,7 @@
         'setVisibleDanmu',
         'setJoined',
         'setHasMeeting',
+        'setRightType'
       ]),
 
       ...mapActions('meeting', [
@@ -298,7 +300,8 @@
           this.setMeetingLayout(MeetingMode.DEFAULT);
         }
 
-        this.$parent.handleVisibleSubmission();
+        // this.$parent.handleVisibleSubmission();
+        this.setRightType('tougao')
       },
 
       /**
@@ -358,7 +361,7 @@
         let audio = !meeting.audio;
 
         // 全员禁言中
-        if(meeting.bandevice){
+        if((meeting.bandevice == 1 || meeting.bandevice == 2 || !this.observerMode && (meeting.bandevice == 3 || meeting.bandevice == 4)) && !meeting.audio){
           const message = this.$i18n && this.$i18n.t('meeting.bannedspeaking') || '全员禁言中';
           this.$toast({ type: 1, message: message, duration: 2000 });
           return this
@@ -390,6 +393,16 @@
        */
       handleSetVideo(evt) {
         let meeting = this.meeting;
+
+        if(meeting.bandevice == 2 || !this.observerMode && meeting.bandevice == 4){
+          this.$toast({
+            message: this.$i18n.t('meeting.bannedvideo') || '全员禁言中',
+            type: 'warning', 
+            duration: 2000
+          })
+          return 
+        }
+
         let video = !meeting.video;
 
         // todo: 没有视频权限
@@ -458,6 +471,10 @@
     &.center {
       right: 50%;
       transform: translateX(50%);
+    }
+
+    &.right {
+      right: 414px;
     }
 
     outline: none;
