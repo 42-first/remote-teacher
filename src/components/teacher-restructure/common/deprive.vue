@@ -3,7 +3,8 @@
   <div class="mask-content deprive-box f21">
 
     <div class="" v-show="isRobber">
-      <div class="title" v-html="$t('dqlssk')"><!-- 当前有老师正在上课<br>您希望 --></div>
+      <div class="title" v-if="!noWakeuid" v-html="$t('dqlssk')"><!-- 当前有老师正在上课<br>您希望 --></div>
+      <div class="title" v-else v-html="$t('dqqtlssk')"><!-- 当前有其他老师正在上课<br>您希望 --></div>
       <v-touch class="btn _btn" v-on:tap="tryDepriveRemote" style="margin-top: 1.5rem;">{{isRobbing ? $t('loading')+'...' : /*'夺取控制权'*/$t('loginagain')}}</v-touch>
       <v-touch class="btn _btn" v-on:tap="gotoStu">{{ $t('studentrole') }}</v-touch>
       <v-touch class="btn _btn" v-on:tap="exitRC" style="margin-top: 4.4rem;"><!-- 退出 -->{{ $t('dqquit') }}</v-touch>
@@ -40,12 +41,14 @@
         'lessonid',
 				'socket',
 				'isCloneClass',
-				'pretendSeizeAuth'
+				'pretendSeizeAuth',
+				'noWakeuid',
       ])
     },
 	  methods: {
 			...mapActions([
-				'set_pretendSeizeAuth'
+				'set_pretendSeizeAuth',
+				'set_noWakeuid',
 			]),
 	  	/**
 		   * 我要上课夺主权
@@ -60,8 +63,9 @@
         //   });
         //   return
         // }
-				if(this.pretendSeizeAuth) {
-					this.set_pretendSeizeAuth(false);
+				if(this.pretendSeizeAuth || this.noWakeuid) {
+					this.pretendSeizeAuth && this.set_pretendSeizeAuth(false);
+					this.noWakeuid && this.set_noWakeuid(false)
 		    	this.$emit("sayhello");
 					return;
 				}

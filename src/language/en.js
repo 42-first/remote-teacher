@@ -368,6 +368,7 @@ let pages = {
   "nybcykq": "Your have entered the remoter in other place",
   "dqquit": "Quit",
   "dqlssk": "The lesson is controlled by the other teacher.<br>You want to",
+  "dqqtlssk": "当前有其他老师正在上课<br>您希望",
   "loginagain": "Control the lesson",
 
   "subjectiveedit": "Edit",

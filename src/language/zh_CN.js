@@ -366,6 +366,7 @@ let pages = {
   "nybcykq": "您已在别处进入遥控器",
   "dqquit": "退出",
   "dqlssk": "当前有老师正在上课<br>您希望",
+  "dqqtlssk": "当前有其他老师正在上课<br>您希望",
   "loginagain": "夺取控制权",
 
   "subjectiveedit": "修改",

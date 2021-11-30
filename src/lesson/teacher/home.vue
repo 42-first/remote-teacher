@@ -312,6 +312,7 @@
 			...mapActions([
 				'set_isCloneClass',
 				'set_pretendSeizeAuth',
+				'set_noWakeuid',
 			]),
 			showNote(text) {
 				this.noteText = text
