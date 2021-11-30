@@ -42,7 +42,8 @@ export default {
   data() {
     return {
       // 腾讯会议绑定地址
-      bindUri: location.origin + '/authorize/bind',
+      // bindUri: location.origin + 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
+      bindUri: 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
     };
   },
   components: {

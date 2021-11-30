@@ -1146,7 +1146,7 @@ var actionsMixin = {
       // 没有绑定引导用户去绑定
 
       this.$router.push({
-        path: `/v3/${this.lessonId}/bind/`
+        path: `/v3/${this.lessonID}/bind/`
       })
     },
 
