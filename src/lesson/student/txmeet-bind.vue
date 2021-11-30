@@ -23,7 +23,7 @@
         <p>以便在腾讯会议中使用雨课堂</p>
       </section>
 
-      <section class="bind--btn box-center f17 cfff">前往绑定</section>
+      <section class="bind--btn box-center f17 cfff" @click="handleBindMeetAccount">前往绑定</section>
 
       <!-- 关闭 -->
       <p class="bind__closed cfff" @click="handleClosed">
@@ -41,8 +41,8 @@ export default {
   name: 'meeting-bind',
   data() {
     return {
-      // 回调地址
-      redirectUri: location.origin + '/authorize/bind',
+      // 腾讯会议绑定地址
+      bindUri: location.origin + '/authorize/bind',
     };
   },
   components: {
@@ -71,6 +71,10 @@ export default {
      */
     async init() {
       try {
+        this.lessonId = this.$route.params.lessonID;
+        console.log('lessonId:', this.lessonId);
+
+        this.verifyBinding();
       } catch (error) {
         console.error('[init] exception:%s', error);
       }
@@ -82,24 +86,25 @@ export default {
      */
     async verifyBinding() {
       // 需要返回状态
-      // 1、有没有绑定
-      // 2、token是否过期
-      //
-      // 老师已经绑定过 就可以继续创建会议（如果token过期了后面需要调接口刷token）
       // 没有绑定需要oauth授权登录
 
       try {
-        let url = API.check_bind;
+        let url = API.lesson.check_bind;
         let res = await request.get(url);
         console.log('verifyBinding:', res);
         if (res && res.code == 0) {
           let { bind, bindList } = res.data;
 
           if(bind) {
-            this.openId = bindList[0];
+            let { openId }= bindList[0] || {};
+            if(openId) {
+              this.openId = openId;
+            }
+
+            this.getInvitation(this.lessonId);
           } else {
-            // 授权绑定
-            this.getAuthorize();
+            // 需要绑定
+            // location.href = this.bindUri + `?id=${this.lessonId}`;
           }
         }
       } catch(error) {
@@ -108,10 +113,18 @@ export default {
     },
 
     /**
+     * @method 绑定会议账号
+     */
+    handleBindMeetAccount(evt) {
+      location.href = this.bindUri + `?id=${this.lessonId}`;
+    },
+
+    /**
      * @method 获取会议邀请信息
      */
     getInvitation(id) {
       // TODO：通过lessonId读取会议邀请信息
+      // 跳转到会议邀请页面
     },
 
     handleClosed(evt) {

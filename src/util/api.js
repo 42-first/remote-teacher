@@ -160,6 +160,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 获取互评状态列表
       get_review_status_list: '/api/v3/lesson/review/status-list',
 
+      // 是否绑定腾讯会议账号
+      check_bind: '/api/v3/lesson/meeting/tencent/check-bind',
+
       // 教师接口
       // 发题
       problem_unlock: '/api/v3/lesson/problem/unlock',
