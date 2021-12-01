@@ -6,6 +6,76 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "9373533",
+      "name": "40-视频",
+      "font_class": "-shipin1",
+      "unicode": "e792",
+      "unicode_decimal": 59282
+    },
+    {
+      "icon_id": "24023424",
+      "name": "icon说明",
+      "font_class": "iconshuoming",
+      "unicode": "e809",
+      "unicode_decimal": 59401
+    },
+    {
+      "icon_id": "20808436",
+      "name": "40-空",
+      "font_class": "40-kong",
+      "unicode": "e82a",
+      "unicode_decimal": 59434
+    },
+    {
+      "icon_id": "23466425",
+      "name": "60-试卷pdf",
+      "font_class": "a-60-shijuanpdf",
+      "unicode": "e867",
+      "unicode_decimal": 59495
+    },
+    {
+      "icon_id": "23466426",
+      "name": "60-云盘",
+      "font_class": "a-60-yunpan",
+      "unicode": "e868",
+      "unicode_decimal": 59496
+    },
+    {
+      "icon_id": "23466427",
+      "name": "60-语音直播",
+      "font_class": "a-60-yuyinzhibo",
+      "unicode": "e869",
+      "unicode_decimal": 59497
+    },
+    {
+      "icon_id": "23466429",
+      "name": "60-视频直播",
+      "font_class": "a-60-shipinzhibo",
+      "unicode": "e86a",
+      "unicode_decimal": 59498
+    },
+    {
+      "icon_id": "23466430",
+      "name": "60-监考",
+      "font_class": "a-60-jiankao",
+      "unicode": "e86b",
+      "unicode_decimal": 59499
+    },
+    {
+      "icon_id": "23466541",
+      "name": "60-板书",
+      "font_class": "a-60-banshu",
+      "unicode": "e86c",
+      "unicode_decimal": 59500
+    },
+    {
+      "icon_id": "23466553",
+      "name": "60-互动",
+      "font_class": "a-60-hudong",
+      "unicode": "e86d",
+      "unicode_decimal": 59501
+    },
+    {
       "icon_id": "20061997",
       "name": "48-接入2",
       "font_class": "48-jieru2",

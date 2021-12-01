@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 345995 */
-  src: url('iconfont.woff2?t=1627372727429') format('woff2'),
-       url('iconfont.woff?t=1627372727429') format('woff'),
-       url('iconfont.ttf?t=1627372727429') format('truetype');
+  src: url('iconfont.woff2?t=1638338263702') format('woff2'),
+       url('iconfont.woff?t=1638338263702') format('woff'),
+       url('iconfont.ttf?t=1638338263702') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,46 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon--shipin1:before {
+  content: "\e792";
+}
+
+.icon-iconshuoming:before {
+  content: "\e809";
+}
+
+.icon-40-kong:before {
+  content: "\e82a";
+}
+
+.icon-a-60-shijuanpdf:before {
+  content: "\e867";
+}
+
+.icon-a-60-yunpan:before {
+  content: "\e868";
+}
+
+.icon-a-60-yuyinzhibo:before {
+  content: "\e869";
+}
+
+.icon-a-60-shipinzhibo:before {
+  content: "\e86a";
+}
+
+.icon-a-60-jiankao:before {
+  content: "\e86b";
+}
+
+.icon-a-60-banshu:before {
+  content: "\e86c";
+}
+
+.icon-a-60-hudong:before {
+  content: "\e86d";
 }
 
 .icon-48-jieru2:before {

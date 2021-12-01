@@ -20,26 +20,27 @@
          <!-- 解析内容 -->
         <analysis :problem.sync="problem"></analysis>
       </div>
+      <!-- 底部操作 -->
+      <div class="analysis__footer">
+        <!-- 投屏/取消投屏 -->
+        <div class="item">
+          <p class="analysis--closed f17" @click="handleScreen">
+            <template v-if="!hasThrownScreen">{{ $t('screenmode') }}</template>
+            <template v-else>{{ $t('screenmodeoff') }}</template>
+          </p>
+        </div>
+        <div class="item">
+          <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu">
+            <!-- 发送给学生 -->{{ $t('sendtostus') }}
+          </p>
+          <p v-else class="analysis--closed f17 c9b" >
+            <!-- 已发给学生 -->{{ $t('hasbeensend') }}
+          </p>
+        </div>
+      </div>
     </article>
 
-    <!-- 底部操作 -->
-    <footer class="analysis__footer">
-      <!-- 投屏/取消投屏 -->
-      <div class="item">
-        <p class="analysis--closed f17" @click="handleScreen">
-          <template v-if="!hasThrownScreen">{{ $t('screenmode') }}</template>
-          <template v-else>{{ $t('screenmodeoff') }}</template>
-        </p>
-      </div>
-      <div class="item">
-        <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu">
-          <!-- 发送给学生 -->{{ $t('sendtostus') }}
-        </p>
-        <p v-else class="analysis--closed f17 c9b" >
-          <!-- 已发给学生 -->{{ $t('hasbeensend') }}
-        </p>
-      </div>
-    </footer>
+    
   </section>
 </template>
 
@@ -58,11 +59,7 @@
   }
 
   .analysis__footer {
-    z-index: 1001;
-    position: absolute;
-    bottom: 0.666667rem;
-    left: 0.533333rem;
-    right: 0.533333rem;
+    position: relative;
     display: flex;
     align-items: center;
     height: px2rem(98px);
@@ -99,15 +96,15 @@
     top: 0.533333rem;
     left: 0.533333rem;
     right: 0.533333rem;
-    bottom: 1.866667rem;
+    bottom: 0.533333rem;
+    
     background-color: #fff;
     border-radius: 0.106667rem;
     box-shadow: 0 0.106667rem 0.16rem rgba(0,0,0,0.2);
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    
     display: flex;
-    flex-flow: column nowrap;
-    -webkit-overflow-scrolling: touch;
+    flex-direction: column;
     .title {
       font-weight: normal;
       color: #333;
@@ -125,9 +122,10 @@
       }
     }
     .analysis-wrapper{
-      overflow-y: auto;
-      overflow-x: hidden;
+      padding: 0 0.453333rem;
       flex: 1;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
   }
 
