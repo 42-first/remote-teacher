@@ -501,6 +501,7 @@
         'setCards',
         'setLessonId',
         'setObserverMode',
+        'setInvitationLink'
       ]),
 
       /*

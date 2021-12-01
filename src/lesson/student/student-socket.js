@@ -154,6 +154,11 @@ var mixin = {
               !this.isLive && (this.isLive = true);
             }
 
+            // 是否开启腾讯会议
+            if(msg.tencentInteractive) {
+              this.liveType = 3;
+            }
+
             if(timeline && timeline.length) {
               this.getAllPres(msg);
             }
@@ -449,6 +454,25 @@ var mixin = {
             break;
 
           // todo: 是否开启了腾讯会议
+          case 'starttencentinteractive':
+            // TODO：腾讯会议测试
+            this.liveType = 3;
+
+            if(msg.url) {
+              this.setInvitationLink(msg.url);
+            }
+
+            break;
+
+          // 关闭腾讯会议
+          case 'endtencentinteractive':
+            this.liveType = 0;
+
+            if(this.invitationLink) {
+              this.setInvitationLink(null);
+            }
+
+            break;
 
           default:
             hasMsg = false;

@@ -51,6 +51,8 @@ export default {
   mixins: [ ],
   computed: {
     ...mapState([
+      'lessonId',
+      'invitationLink'
     ])
   },
   created() {
@@ -72,7 +74,7 @@ export default {
      */
     async init() {
       try {
-        this.lessonId = this.$route.params.lessonID;
+        // this.lessonId = this.$route.params.lessonID;
         console.log('lessonId:', this.lessonId);
 
         this.verifyBinding();
@@ -83,7 +85,6 @@ export default {
 
     /**
      * @method 腾讯会议账号是否绑定到雨课堂
-     *
      */
     async verifyBinding() {
       // 需要返回状态
