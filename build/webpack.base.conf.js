@@ -58,7 +58,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')],
-        exclude: [resolve('src/util/kwai-player-v1.0.0')]
+        exclude: [resolve('src/util/kwai-player-v1.0.0')],
+        query: {
+          presets: ['es2015']
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
