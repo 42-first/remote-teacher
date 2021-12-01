@@ -103,7 +103,11 @@ export default {
               this.openId = openId;
             }
 
-            this.getInvitation(this.lessonId);
+            if(this.invitationLink) {
+              location.href = this.invitationLink;
+            } else {
+              this.getInvitation(this.lessonId);
+            }
           } else {
             // 需要绑定
             // location.href = this.bindUri + `?id=${this.lessonId}`;
