@@ -108,9 +108,6 @@ export default {
             } else {
               this.getInvitation(this.lessonId);
             }
-          } else {
-            // 需要绑定
-            // location.href = this.bindUri + `?id=${this.lessonId}`;
           }
         }
       } catch(error) {
@@ -128,9 +125,26 @@ export default {
     /**
      * @method 获取会议邀请信息
      */
-    getInvitation(id) {
-      // TODO：通过lessonId读取会议邀请信息
-      // 跳转到会议邀请页面
+    async getInvitation(id) {
+      // 通过lessonId读取会议邀请信息
+      try {
+        let url = API.lesson.get_meet_invitation;
+        let params = {
+          lessonId: id
+        }
+
+        let res = await request.get(url, params);
+        console.log('getInvitation:', res);
+        if (res && res.code == 0) {
+          let { meetingId, joinUrl } = res.data;
+
+          if(joinUrl) {
+            location.href = joinUrl;
+          }
+        }
+      } catch(error) {
+        console.info(error);
+      }
     },
 
     handleClosed(evt) {

@@ -162,6 +162,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
       // 是否绑定腾讯会议账号
       check_bind: '/api/v3/lesson/meeting/tencent/check-bind',
+      get_meet_invitation: '/api/v3/lesson/meeting/tencent/meeting-info',
 
       // 教师接口
       // 发题
