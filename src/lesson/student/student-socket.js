@@ -157,6 +157,8 @@ var mixin = {
             // 是否开启腾讯会议
             if(msg.tencentInteractive && this.from !== 'txmeet') {
               this.liveType = 3;
+
+              this.setInvitationLink(msg.tencentInteractive);
             }
 
             if(timeline && timeline.length) {
