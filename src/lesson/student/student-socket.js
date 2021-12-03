@@ -155,7 +155,7 @@ var mixin = {
             }
 
             // 是否开启腾讯会议
-            if(msg.tencentInteractive) {
+            if(msg.tencentInteractive && this.from !== 'txmeet') {
               this.liveType = 3;
             }
 
@@ -453,10 +453,11 @@ var mixin = {
             this.changeLiveStatusTips(msg.status, msg.voice)
             break;
 
-          // todo: 是否开启了腾讯会议
+          // 是否开启了腾讯会议
           case 'starttencentinteractive':
-            // TODO：腾讯会议测试
-            this.liveType = 3;
+            if(this.from !== 'txmeet') {
+              this.liveType = 3;
+            }
 
             if(msg.url) {
               this.setInvitationLink(msg.url);
@@ -466,7 +467,9 @@ var mixin = {
 
           // 关闭腾讯会议
           case 'endtencentinteractive':
-            this.liveType = 0;
+            if(this.liveType === 3) {
+              this.liveType = 0;
+            }
 
             if(this.invitationLink) {
               this.setInvitationLink(null);

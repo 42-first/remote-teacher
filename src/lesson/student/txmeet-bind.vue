@@ -44,6 +44,8 @@ export default {
       // 腾讯会议绑定地址
       // bindUri: location.origin + 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
       bindUri: 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
+      // 是否绑定
+      hasBind: false,
     };
   },
   components: {
@@ -74,7 +76,6 @@ export default {
      */
     async init() {
       try {
-        // this.lessonId = this.$route.params.lessonID;
         console.log('lessonId:', this.lessonId);
 
         this.verifyBinding();

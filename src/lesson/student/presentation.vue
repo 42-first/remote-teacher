@@ -453,7 +453,8 @@
     computed: {
       ...mapState([
         'cards',
-        'observerMode'
+        'observerMode',
+        'invitationLink'
       ])
     },
     watch: {
@@ -523,6 +524,11 @@
           this.source = query.source;
         }
 
+        // 是否从腾讯会议应用内打开
+        if(query.from) {
+          this.from = query.from;
+        }
+
         this.iniTimeline(this.lessonID);
 
         // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
@@ -542,9 +548,6 @@
             this.openDebug();
           }, 1000*10)
         }
-
-        // TODO：腾讯会议测试
-        this.liveType = 3;
       },
 
       /*
