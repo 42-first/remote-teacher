@@ -102,16 +102,6 @@ function socketProcessMessage(msg){
         self.$store.commit('set_isMsgMaskHidden', true)
 
         self.showQrcodeMask()
-      } else if(msg.mask && msg.mask.type === 'wordcloud'){
-        if(msg.mask.cat == 'danmu'){
-          self.$store.commit('set_postWordCloudOpen', false)
-          self.$store.commit('set_danmuWordCloudOpen', true)
-        }else {
-          self.$store.commit('set_postWordCloudOpen', true)
-          self.$store.commit('set_danmuWordCloudOpen', false)
-        }
-      } else if(msg.mask && msg.mask.type === 'remark'){
-        self.$store.commit('set_analysisRemarkId', msg.mask.prob)
       } else {
         // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
         self.setData({
@@ -174,7 +164,15 @@ function socketProcessMessage(msg){
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
     }
 
-    if(msg.mask && msg.mask.type === 'remark'){
+    if(msg.mask && msg.mask.type === 'wordcloud'){
+      if(msg.mask.cat == 'danmu'){
+        self.$store.commit('set_postWordCloudOpen', false)
+        self.$store.commit('set_danmuWordCloudOpen', true)
+      }else {
+        self.$store.commit('set_postWordCloudOpen', true)
+        self.$store.commit('set_danmuWordCloudOpen', false)
+      }
+    } else if(msg.mask && msg.mask.type === 'remark'){
       self.$store.commit('set_analysisRemarkId', msg.mask.prob)
     }
 
