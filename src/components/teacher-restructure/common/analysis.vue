@@ -230,7 +230,7 @@
           this.sendStatus = 2
           
           // 这里记录是否发送
-          let key = 'analysis-sendstatus-' + this.problem.problemId;
+          let key = 'analysis-sendstatus-' + this.problem.ProblemID;
           if(isSupported(window.localStorage)) {
             localStorage.setItem(key, this.sendStatus);
           }
