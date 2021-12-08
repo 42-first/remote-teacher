@@ -23,7 +23,7 @@
         <p>以便在腾讯会议中使用雨课堂</p>
       </section>
 
-      <section class="bind--btn box-center f17 cfff" @click="handleBindMeetAccount">前往绑定</section>
+      <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount">前往绑定</section>
 
       <!-- 关闭 -->
       <p class="bind__closed cfff" @click="handleClosed">
