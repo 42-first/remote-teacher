@@ -167,7 +167,8 @@
         'socket',
         'presentationid',
         'current',
-        'pptData'
+        'pptData',
+        'analysisRemarkId'
       ]),
       problemid() {
         return typeof this.problem === "object" && this.problem.problemId
@@ -185,18 +186,16 @@
         if(isSupported(window.localStorage)) {
           this.sendStatus = +localStorage.getItem(key);
         }
-        if (this.analysisRemarkId === this.problemid) {
+        if (this.analysisRemarkId == this.problemid) {
           this.handleScreen(2)
         }
-
-        this.msgHandle()
       },
 
       /** 
        * @method 处理发布订阅
       */
       initPubSub(){
-        PubSub.unsubscribe('problem-remark')
+        PubSub.unsubscribe('remark-msg')
 
         PubSub.subscribe('remark-msg.send', (msg, data) => {
           // 发送成功
@@ -209,38 +208,14 @@
             localStorage.setItem(key, this.sendStatus);
           }
         })
-      },
 
-      /**
-       * 状态消息接收
-       */
-      msgHandle() {
-        let self = this
-        this.socket.onmessage = e => {
-          try {
-            const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data
-            if (data.op === 'problemremarkshown') {
-              self.hasThrownScreen = true
-            }
-            if (data.op === 'closedmask') {
-              self.hasThrownScreen = false
-            }
-            if(data.op === 'problemremark') {
-              const { remark } = data
-              if (remark.prob === self.problemid) {
-                // 发送成功
-                self.sendStatus = 2;
-                // 这里记录是否发送
-                let key = 'analysis-sendstatus-' + self.problemid;
-                if(isSupported(window.localStorage)) {
-                  localStorage.setItem(key, self.sendStatus);
-                }
-              }
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        }
+        PubSub.subscribe('remark-msg.shown', (msg, data) => {
+          this.hasThrownScreen = true
+        })
+
+        PubSub.subscribe('remark-msg.closedshown', (msg, data) => {
+          this.hasThrownScreen = false
+        })
       },
 
       /**
@@ -312,7 +287,7 @@
 
     },
     created() {
-      // this.initPubSub()
+      this.initPubSub()
       this.init();
     }
   }

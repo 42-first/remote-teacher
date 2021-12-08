@@ -184,7 +184,6 @@
         if (this.analysisRemarkId === this.problemid) {
           this.handleScreen(2)
         }
-        this.msgHandle()
       },
       /**
        * @method 关闭答案解析页面
@@ -219,35 +218,31 @@
         }
         this.socket.send(JSON.stringify(params))
       },
-      /**
-       * 状态消息接收
-       */
-      msgHandle() {
-        this.socket.onmessage = e => {
-          try {
-            const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data
-            if (data.op === 'problemremarkshown') {
-              this.hasThrownScreen = true
-            }
-            if (data.op === 'closedmask') {
-              this.hasThrownScreen = false
-            }
-            if(data.op === 'problemremark') {
-              const { remark } = data
-              if (remark.prob === this.problemid) {
-                // 发送成功
-                this.sendStatus = 2;
-                // 这里记录是否发送
-                let key = 'analysis-sendstatus-' + this.problemid;
-                if(isSupported(window.localStorage)) {
-                  localStorage.setItem(key, this.sendStatus);
-                }
-              }
-            }
-          } catch (error) {
-            console.log(error)
+      /** 
+       * @method 处理发布订阅
+      */
+      initPubSub(){
+        PubSub.unsubscribe('remark-msg')
+
+        PubSub.subscribe('remark-msg.send', (msg, data) => {
+          // 发送成功
+          
+          this.sendStatus = 2
+          
+          // 这里记录是否发送
+          let key = 'analysis-sendstatus-' + this.problem.problemId;
+          if(isSupported(window.localStorage)) {
+            localStorage.setItem(key, this.sendStatus);
           }
-        }
+        })
+
+        PubSub.subscribe('remark-msg.shown', (msg, data) => {
+          this.hasThrownScreen = true
+        })
+
+        PubSub.subscribe('remark-msg.closedshown', (msg, data) => {
+          this.hasThrownScreen = false
+        })
       },
       /**
        * @method 发送给全班
@@ -288,7 +283,9 @@
       }
     },
     created() {
+      this.initPubSub()
       this.init();
+
     }
   }
 </script>
