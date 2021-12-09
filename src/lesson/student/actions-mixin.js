@@ -1135,7 +1135,50 @@ var actionsMixin = {
       setTimeout(() => {
         this.liveStatusTips = ''
       }, 5000)
-    }
+    },
+
+    /*
+     * @method 打开腾讯会议
+     * @param
+     */
+    async handleOpenTXMeet() {
+      let hasBind = await this.verifyBinding();
+
+      if(!hasBind) {
+        this.$router.push({
+          path: `/v3/${this.lessonID}/bind/`
+        })
+      }
+    },
+
+    /**
+     * @method 腾讯会议账号是否绑定到雨课堂
+     */
+    async verifyBinding() {
+      let hasBind = false;
+
+      try {
+        let url = API.lesson.check_bind;
+        let res = await request.get(url);
+        console.log('verifyBinding:', res);
+        if (res && res.code == 0) {
+          let { bind, bindList } = res.data;
+
+          if(bind) {
+            if(this.invitationLink) {
+              location.href = this.invitationLink;
+            }
+
+            hasBind = bind;
+          }
+        }
+
+        return hasBind;
+      } catch(error) {
+        console.info(error);
+        return hasBind;
+      }
+    },
 
   }
 }
