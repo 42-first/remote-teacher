@@ -28,6 +28,8 @@ const store = new Vuex.Store({
     observerMode: false,
     // 白板命令
     boardMsg: null,
+    // 腾讯会议邀请链接
+    invitationLink: '',
   },
   mutations: {
     // 重置课堂信息
@@ -37,6 +39,7 @@ const store = new Vuex.Store({
       state.classroomId = 0;
       state.presentationId = 0;
       state.observerMode = false;
+      state.invitationLink = '';
     },
 
     setCards(state, data) {
@@ -61,6 +64,10 @@ const store = new Vuex.Store({
 
     setObserverMode(state, data) {
       state.observerMode = data;
+    },
+
+    setInvitationLink(state, data) {
+      state.invitationLink = data;
     },
   },
 
@@ -91,6 +98,10 @@ const store = new Vuex.Store({
 
     setObserverMode({commit}, slide) {
       commit('setObserverMode', slide)
+    },
+
+    setInvitationLink({commit}, data) {
+      commit('setInvitationLink', data)
     },
   },
 

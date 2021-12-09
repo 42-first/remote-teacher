@@ -437,11 +437,18 @@ let actionsMixin = {
         isComplete: problem['result'] ? true : false,
         problemID: problem['problemId'],
         options: problem['bullets'] || problem['options'],
+        submit: problem['submit'],
         cover: slideData['cover'],
         src: slideData['cover'],
         index,
         pageURL,
-        groupid: data.event['groupid']
+        groupid: data.event['groupid'],
+        rate: presentation.width / presentation.height,
+        Width: presentation.width,
+        Height: presentation.height,
+        score: problem['score'],
+        body: problem['body'],
+        pollingCount: problemType ===3 ? problem['pollingCount'] : undefined
       })
 
       // 消息box弹框
