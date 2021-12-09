@@ -55,12 +55,12 @@ let AllApp = {
   },
   'www.yuketang.cn': {
     corpId: '200042044',
-    sdkId: '17980163426'
+    sdkId: '18220104717'
   }
 };
 let txmeetApp = AllApp[host] || {
   corpId: '200042044',
-  sdkId: '17980163426'
+  sdkId: '18220104717'
 };
 
 const corpId = txmeetApp.corpId;
