@@ -37,12 +37,12 @@
 import { mapState } from 'vuex';
 
 const AllHosts = {
-  'pre-apple-ykt.xuetangonline.com': 'https://pre-apple-ykt.xuetangonline.com',
-  'www.yuketang.cn': 'https://www.yuketang.cn',
-  'pro.yuketang.cn': 'https://www.yuketang.cn',
-  'changjiang.yuketang.cn': 'https://www.yuketang.cn',
-  'huanghe.yuketang.cn': 'https://www.yuketang.cn',
-  'rain.xuetangonline.com': 'https://www.yuketang.cn'
+  'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt.xuetangonline.com',
+  'www.yuketang.cn': 'www.yuketang.cn',
+  'pro.yuketang.cn': 'www.yuketang.cn',
+  'changjiang.yuketang.cn': 'www.yuketang.cn',
+  'huanghe.yuketang.cn': 'www.yuketang.cn',
+  'rain.xuetangonline.com': 'www.yuketang.cn'
 };
 let host = AllHosts[location.host] || 'www.yuketang.cn';
 let origin = `https://${host}`;
