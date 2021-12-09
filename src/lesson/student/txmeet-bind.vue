@@ -36,14 +36,45 @@
 <script>
 import { mapState } from 'vuex';
 
+const AllHosts = {
+  'pre-apple-ykt.xuetangonline.com': 'https://pre-apple-ykt.xuetangonline.com',
+  'www.yuketang.cn': 'https://www.yuketang.cn',
+  'pro.yuketang.cn': 'https://www.yuketang.cn',
+  'changjiang.yuketang.cn': 'https://www.yuketang.cn',
+  'huanghe.yuketang.cn': 'https://www.yuketang.cn',
+  'rain.xuetangonline.com': 'https://www.yuketang.cn'
+};
+let host = AllHosts[location.host] || 'www.yuketang.cn';
+let origin = `https://${host}`;
+
+
+let AllApp = {
+  'pre-apple-ykt.xuetangonline.com': {
+    corpId: '200042044',
+    sdkId: '17980163426'
+  },
+  'www.yuketang.cn': {
+    corpId: '200042044',
+    sdkId: '17980163426'
+  }
+};
+let txmeetApp = AllApp[host] || {
+  corpId: '200042044',
+  sdkId: '17980163426'
+};
+
+const corpId = txmeetApp.corpId;
+const sdkId = txmeetApp.sdkId;
+
 
 export default {
   name: 'meeting-bind',
   data() {
     return {
       // 腾讯会议绑定地址
-      // bindUri: location.origin + 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
-      bindUri: 'https://pre-apple-ykt.xuetangonline.com/authorize/bind',
+      bindUri: location.origin + '/authorize/bind',
+      // 回调地址
+      redirectUri: origin + '/authorize/callback',
       // 是否绑定
       hasBind: false,
     };
@@ -120,7 +151,16 @@ export default {
      * @method 绑定会议账号
      */
     handleBindMeetAccount(evt) {
-      location.href = this.bindUri + `?id=${this.lessonId}`;
+      // location.href = this.bindUri + `?id=${this.lessonId}`;
+
+      // 新增绑定
+      let redirect = this.redirectUri;
+      let pathname = this.bindUri + `?id=${this.lessonId}`;
+      let next = encodeURIComponent(pathname);
+      redirect = redirect + encodeURIComponent(`?next=${next}`);
+
+      let authorizeLink = encodeURIComponent(`authorize.html?corp_id=${corpId}&sdk_id=${sdkId}&redirect_uri=${redirect}&&state=STATE`);
+      location.href = `https://meeting.tencent.com/mobile/login.html?redirect_link=${authorizeLink}`;
     },
 
     /**
