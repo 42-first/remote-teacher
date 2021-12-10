@@ -35,7 +35,10 @@
 
 <script>
 import { mapState } from 'vuex';
+import { isSupported } from '@/util/util'
 
+// 本地缓存KEY
+const LocalTokenKey = 'tx.meeting.next';
 const AllHosts = {
   'pre-apple-ykt.xuetangonline.com': 'pre-apple-ykt.xuetangonline.com',
   'www.yuketang.cn': 'www.yuketang.cn',
@@ -158,6 +161,14 @@ export default {
       let pathname = this.bindUri + `?id=${this.lessonId}`;
       let next = encodeURIComponent(pathname);
       redirect = redirect + encodeURIComponent(`?next=${next}`);
+
+      // 防止进入到腾讯会议登录乱点导致绑定后无法正常进入邀请码页面
+      try {
+        if(isSupported(localStorage)) {
+          localStorage.setItem(LocalTokenKey, next);
+        }
+      } catch(error) {
+      }
 
       let authorizeLink = encodeURIComponent(`authorize.html?corp_id=${corpId}&sdk_id=${sdkId}&redirect_uri=${redirect}&&state=STATE`);
       location.href = `https://meeting.tencent.com/mobile/login.html?redirect_link=${authorizeLink}`;
