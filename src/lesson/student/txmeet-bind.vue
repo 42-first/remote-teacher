@@ -154,24 +154,24 @@ export default {
      * @method 绑定会议账号
      */
     handleBindMeetAccount(evt) {
-      // location.href = this.bindUri + `?id=${this.lessonId}`;
+      location.href = this.bindUri + `?id=${this.lessonId}`;
 
-      // 新增绑定
-      let redirect = this.redirectUri;
-      let pathname = this.bindUri + `?id=${this.lessonId}`;
-      let next = encodeURIComponent(pathname);
-      redirect = redirect + encodeURIComponent(`?next=${next}`);
+      // // 新增绑定
+      // let redirect = this.redirectUri;
+      // let pathname = this.bindUri + `?id=${this.lessonId}`;
+      // let next = encodeURIComponent(pathname);
+      // redirect = redirect + encodeURIComponent(`?next=${next}`);
 
-      // 防止进入到腾讯会议登录乱点导致绑定后无法正常进入邀请码页面
-      try {
-        if(isSupported(localStorage)) {
-          localStorage.setItem(LocalTokenKey, next);
-        }
-      } catch(error) {
-      }
+      // // 防止进入到腾讯会议登录乱点导致绑定后无法正常进入邀请码页面
+      // try {
+      //   if(isSupported(localStorage)) {
+      //     localStorage.setItem(LocalTokenKey, next);
+      //   }
+      // } catch(error) {
+      // }
 
-      let authorizeLink = encodeURIComponent(`authorize.html?corp_id=${corpId}&sdk_id=${sdkId}&redirect_uri=${redirect}&&state=STATE`);
-      location.href = `https://meeting.tencent.com/mobile/login.html?redirect_link=${authorizeLink}`;
+      // let authorizeLink = encodeURIComponent(`authorize.html?corp_id=${corpId}&sdk_id=${sdkId}&redirect_uri=${redirect}&&state=STATE`);
+      // location.href = `https://meeting.tencent.com/mobile/login.html?redirect_link=${authorizeLink}`;
     },
 
     /**
