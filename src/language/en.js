@@ -464,6 +464,17 @@ let pages = {
     "studentId": "Students ID",
     "pleaseenterinteger": "Integer required"
   },
+
+  // 课上部分扩展
+  lesson: {
+    "notinclass": "Oh... You are not in this class.",
+    "dontjoinclass": "Back",
+    "havecode": "Class Code",
+    "entercode": "Class Code",
+    "enterwrong": "Wrong Code, Please try again",
+    'codedone': "Done",
+  },
+
   // 引导页
   guide: {
     "welcome": "Welcome to RainClassroom",

@@ -466,7 +466,15 @@ let pages = {
     "pleaseenterinteger": "请输入整数"
   },
 
-
+  // 课上部分扩展
+  lesson: {
+    "notinclass": "啊哦～你还未加入这个班级",
+    "dontjoinclass": "暂不加入",
+    "havecode": "我有暗号",
+    "entercode": "输入暗号",
+    "enterwrong": "输入有误，请重输",
+    'codedone': "完成",
+  },
 
   // 引导页
   guide: {

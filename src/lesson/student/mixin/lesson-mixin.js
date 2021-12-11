@@ -20,12 +20,16 @@ let lessonMixin = {
       // 先签到
       source = source || this.source;
       let joined = await this.checkin(source);
-      // TODO： 签到发现没有权限处理
+      // 签到发现没有权限处理
       if(joined !== 0) {
         // 50004 lesson end
         if(joined === 50004) {
           location.href = `/v/index/learning_lesson_detail_v3/${this.lessonID}`;
-          // location.href = `/v/index/lessonend?id=${this.lessonID}&version=5`
+        }  else if(joined === 50002 || joined === 50027) {
+          // 无权限
+          this.$router.push({
+            path: `/v3/${this.lessonID}/join/`
+          })
         }
 
         return this;
