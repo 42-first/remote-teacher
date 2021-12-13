@@ -684,7 +684,7 @@ let pages = {
     '50024': 'The resource that you requested does not exist or you do not have such permissions.',
     '50025': 'You requested too often, please retry later.',
     '50026': 'The answering is over',
-    '50027': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50027': 'Oh... You are not in this class.',
     '50028': 'The answer had been submitted.',
     '50029': 'You requested too often, please retry later.',
     '50030': 'The class is not over yet.',
