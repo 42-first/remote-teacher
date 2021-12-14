@@ -268,6 +268,7 @@ const store = new Vuex.Store({
       commit('set_toastCtrlMaskTpl', '')
       commit('set_msgMaskTpl', 'Reconnect')
       commit('set_isMsgMaskHidden', false)
+      commit('set_noWakeuid', false)
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
