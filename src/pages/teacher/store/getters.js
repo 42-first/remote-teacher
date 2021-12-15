@@ -53,5 +53,6 @@ const getters = {
   toolbarIndex: state => state.toolbarIndex,
   isCloneClass: state => state.isCloneClass,
   pretendSeizeAuth: state => state.pretendSeizeAuth,
+  noWakeuid: state => state.noWakeuid,
 };
 export default getters

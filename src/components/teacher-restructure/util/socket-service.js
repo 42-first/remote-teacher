@@ -216,8 +216,13 @@ let mixin = {
         } else {
           // 也有可能是专业版的虚id,所以接口获取一次实id
           this.keepReal().then(id => {
-            if(id == wakeuid) {
+            if(id == wakeuid && wakeuid) {
               this.sayHello();
+            } else if(!wakeuid) {
+              // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案
+              this.set_noWakeuid(true)
+              this.$store.commit('set_isMsgMaskHidden', true);
+              this.openDeprive('isRobber');
             } else {
               this.$store.commit('set_isMsgMaskHidden', true);
               this.openDeprive('isRobber');

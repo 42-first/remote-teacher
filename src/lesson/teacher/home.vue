@@ -184,6 +184,8 @@
 	let oldDoubt = 0                       // 记录不懂人次，便于教师点击过后清零
 	let doubtTotalSum = 0                  // 不懂总数
 
+	let fromIndex = false     // 初次进入遥控器
+
 	export default {
 	  name: 'Remote',
 	  // 找不到的data在 mixins 中
@@ -276,8 +278,23 @@
 			endshow
 	  },
 	  created () {
+			if(fromIndex) {
+				// 默认进入展示正在连接中 清除原有modal状态
+				this.$store.dispatch('resetModal')
+				this.isConnectingHidden = false
+
+				fromIndex = false
+			}
+			
 	    this.init()
 	  },
+		beforeRouteEnter (to, from, next) {
+			// ...
+			if(!from.name) {
+				fromIndex = true
+			}
+			next()
+		},
 	  beforeDestroy () {
     	clearInterval(pollingPresentationTagTimer)
 			// clearInterval(pollingTougaoTimer)
@@ -309,6 +326,7 @@
 			...mapActions([
 				'set_isCloneClass',
 				'set_pretendSeizeAuth',
+				'set_noWakeuid',
 			]),
 			showNote(text) {
 				this.noteText = text
