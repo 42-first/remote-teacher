@@ -181,6 +181,8 @@ let pages = {
   "LIVE_OFF": "Live Off",
   "INTERACTIVE_ON": "Interactive On",
   "INTERACTIVE_OFF": "Interactive Off",
+  "TencentInteractive_ON": "老师已开启腾讯会议",
+  "TencentInteractive_OFF": "老师已关闭腾讯会议",
 
   // 个人信息完善
   "merealname": "Name",

@@ -1,6 +1,6 @@
 {
   "name": "remote-teacher",
-  "version": "3.3.139",
+  "version": "3.3.140",
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,
@@ -82,7 +82,7 @@
     "inject-loader": "^3.0.0",
     "js-cookie": "^2.1.4",
     "lolex": "^1.5.2",
-    "mediasoup-client": "^3.6.21",
+    "mediasoup-client": "3.6.21",
     "mint-loadmore": "^2.0.0",
     "moment": "^2.18.1",
     "node-sass": "^4.5.1",

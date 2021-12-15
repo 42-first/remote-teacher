@@ -119,6 +119,12 @@ const studentRouter = new Router({
           name: 'analysis',
           component: () => import('@/lesson/student/problem-analysis')
         },
+        // 腾讯会议引导绑定
+        {
+          path: 'bind',
+          name: 'bind-txmeet',
+          component: () => import('@/lesson/student/txmeet-bind')
+        },
       ]
     },
     {
