@@ -181,8 +181,8 @@ let pages = {
   "LIVE_OFF": "Live Off",
   "INTERACTIVE_ON": "Interactive On",
   "INTERACTIVE_OFF": "Interactive Off",
-  "TencentInteractive_ON": "老师已开启腾讯会议",
-  "TencentInteractive_OFF": "老师已关闭腾讯会议",
+  "TencentInteractive_ON": "Tencent Meeting is on.",
+  "TencentInteractive_OFF": "Tencent Meeting is off.",
 
   // 个人信息完善
   "merealname": "Name",
@@ -464,6 +464,17 @@ let pages = {
     "studentId": "Students ID",
     "pleaseenterinteger": "Integer required"
   },
+
+  // 课上部分扩展
+  lesson: {
+    "notinclass": "Oh... You are not in this class.",
+    "dontjoinclass": "Back",
+    "havecode": "Class Code",
+    "entercode": "Class Code",
+    "enterwrong": "Wrong Code, Please try again",
+    'codedone': "Done",
+  },
+
   // 引导页
   guide: {
     "welcome": "Welcome to RainClassroom",
@@ -673,7 +684,7 @@ let pages = {
     '50024': 'The resource that you requested does not exist or you do not have such permissions.',
     '50025': 'You requested too often, please retry later.',
     '50026': 'The answering is over',
-    '50027': 'The resource that you requested does not exist or you do not have such permissions.',
+    '50027': 'Oh... You are not in this class.',
     '50028': 'The answer had been submitted.',
     '50029': 'You requested too often, please retry later.',
     '50030': 'The class is not over yet.',
