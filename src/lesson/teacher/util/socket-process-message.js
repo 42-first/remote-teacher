@@ -35,10 +35,10 @@ function socketProcessMessage(msg){
   }
 
   // 没有在上课则直接跳走
-  if (msg.op === 'hello' && !msg.isAlive) {
-    // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
-    return
-  }
+  // if (msg.op === 'hello' && !msg.isAlive) {
+  //   // location.href = '/v/index/course/normalcourse/manage_classroom/'+ self.courseid +'/'+ self.classroomid +'/';
+  //   return
+  // }
 
   // 1.1版本及以上采用了 ppt指纹机制
   if (self.isPPTVersionAboveOne) {
