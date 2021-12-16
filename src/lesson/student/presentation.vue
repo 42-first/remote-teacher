@@ -11,7 +11,8 @@
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
-        <p class="student__header--back" @click="handleBack"><i class="iconfont icon-fanhui f25"></i></p>
+        <p class="student__header--back" v-if="from === 'txmeet'"></p>
+        <p class="student__header--back" @click="handleBack" v-else><i class="iconfont icon-fanhui f25"></i></p>
         <h3 class="header-title f18">{{ title }}</h3>
         <div class="student__header--more J_more" @click.stop.prevent="handleMoreActions">
           <i class="iconfont icon-add f25"></i>
@@ -435,7 +436,9 @@
         weappConfig: null,
         // 是都有会议
         hasMeeting: false,
-        is_agreement: true
+        is_agreement: true,
+        // 来源
+        from: '',
       };
     },
     components: {
@@ -909,7 +912,9 @@
        *
        */
       handleBack() {
-        if(this.backURL) {
+        if(this.from === 'txmeet') {
+          this.$router.back();
+        } else if(this.backURL) {
           location.href = this.backURL;
         } else if(this.returnRemote){
           this.$router.back();

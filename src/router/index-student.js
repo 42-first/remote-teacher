@@ -125,6 +125,12 @@ const studentRouter = new Router({
           name: 'bind-txmeet',
           component: () => import('@/lesson/student/txmeet-bind')
         },
+        // 加入班级
+        {
+          path: 'join',
+          name: 'join',
+          component: () => import('@/lesson/student/join')
+        },
       ]
     },
     {

@@ -64,6 +64,7 @@ const store = new Vuex.Store({
 
     isCloneClass: false,                     // 是不是克隆班
     pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
+    noWakeuid: false,                        // 进入遥控器时发现没有wakeuid（开课的uid） 需要展示特殊的夺权页面以便后查问题
 
   },
 
@@ -225,6 +226,11 @@ const store = new Vuex.Store({
     set_pretendSeizeAuth(state, status) {
       state.pretendSeizeAuth = status;
     },
+
+    set_noWakeuid(state, status) {
+      state.noWakeuid = status;
+    },
+
   },
 
   actions: {
@@ -257,6 +263,13 @@ const store = new Vuex.Store({
       commit('set_newtougao', 0)
 
     },
+    resetModal: ({commit}) => {
+      commit('set_isToastCtrlMaskHidden', true)
+      commit('set_toastCtrlMaskTpl', '')
+      commit('set_msgMaskTpl', 'Reconnect')
+      commit('set_isMsgMaskHidden', false)
+      commit('set_noWakeuid', false)
+    },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
     },
@@ -278,6 +291,11 @@ const store = new Vuex.Store({
     set_pretendSeizeAuth({commit}, status) {
       commit('set_pretendSeizeAuth', status)
     },
+
+    set_noWakeuid({commit}, status) {
+      commit('set_noWakeuid', status)
+    },
+    
   },
   getters
 })
