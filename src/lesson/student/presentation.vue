@@ -254,7 +254,7 @@
 
   import request from '@/util/request-v3'
   import API from '@/util/api'
-  import { compareVersion } from '@/util/util'
+  import { compareVersion, isTMWebview } from '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import '@/util/directive-util'
@@ -530,6 +530,8 @@
         // 是否从腾讯会议应用内打开
         if(query.from) {
           this.from = query.from;
+        } else if(isTMWebview()) {
+          this.from = 'txmeet';
         }
 
         this.iniTimeline(this.lessonID);
