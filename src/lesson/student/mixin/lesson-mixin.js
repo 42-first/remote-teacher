@@ -34,6 +34,16 @@ let lessonMixin = {
         } else if(code === 50019) {
           // 未绑定专业版
           this.bindSchool(data);
+        } else {
+          // 一直提示等用户处理
+          let msgOptions = {
+            confirmButtonText: this.$t('gotit') || '知道了'
+          };
+          let message = this.$t(`code.${code}`) || '';
+          this.$messagebox.alert(message, msgOptions).then(action => {
+            if(action === 'confirm') {
+            }
+          });
         }
 
         return this;
