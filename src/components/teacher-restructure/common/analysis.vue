@@ -22,13 +22,13 @@
       </div>
       <!-- 底部操作 -->
       <div class="analysis__footer">
-        <!-- 投屏/取消投屏 -->
-        <div class="item">
+        <!-- 投屏/取消投屏 旧课不支持投屏 -->
+        <!-- <div class="item">
           <p class="analysis--closed f17" @click="handleScreen">
             <template v-if="!hasThrownScreen">{{ $t('screenmode') }}</template>
             <template v-else>{{ $t('screenmodeoff') }}</template>
           </p>
-        </div>
+        </div> -->
         <div class="item">
           <p v-if="sendStatus<2" class="analysis--closed f17" :class="[ sendStatus ? 'c9b' : '' ]" @click="handleSendToStu">
             <!-- 发送给学生 -->{{ $t('sendtostus') }}
@@ -68,7 +68,7 @@
     color: #639EF4;
     background-color: #fff;
     .item{
-      width: 50%;
+      flex: 1;
       position: relative;
     }
     .item:nth-of-type(2n)::before {

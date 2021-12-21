@@ -22,8 +22,8 @@
       </section>
       <!-- 底部操作 -->
       <div class="analysis__footer">
-        <!-- 投屏/取消投屏 -->
-        <div class="item">
+        <!-- 投屏/取消投屏 符合要求的插件版本才显示 -->
+        <div class="item" v-if="showScreen">
           <p class="analysis--closed f17" @click="handleScreen">
             <template v-if="!hasThrownScreen">{{ $t('screenmode') }}</template>
             <template v-else>{{ $t('screenmodeoff') }}</template>
@@ -65,7 +65,7 @@
     color: #639EF4;
     background-color: #fff;
     .item{
-      width: 50%;
+      flex: 1;
       position: relative;
     }
     .item:nth-of-type(2n)::before {
@@ -168,10 +168,20 @@
         'presentationid',
         'current',
         'pptData',
-        'analysisRemarkId'
+        'analysisRemarkId',
+        'addinversion',
       ]),
       problemid() {
         return typeof this.problem === "object" && this.problem.problemId
+      },
+      showScreen() {
+        // 插件开课
+        if(this.addinversion < 5) {
+          return this.addinversion >= 1.7
+        }else {
+          // 桌面端开课
+          return this.addinversion >= 5.2
+        }
       }
     },
     components: {
