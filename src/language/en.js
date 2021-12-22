@@ -476,13 +476,13 @@ let pages = {
     "codedone": "Done",
     "isprotips": "You are not bound. Only {name} personnel are allowed to enter the class. Please join the class again after binding",
 
-    "openedtxmeet": "老师开启了腾讯会议",
-    "gototxmeet": "前往腾讯会议",
-    "txmeetbind": "请先绑定腾讯会议账号",
-    "usetxmeet": "以便在腾讯会议中使用雨课堂",
-    "gotobind": "前往绑定",
-    "txmeetforclass": "老师开启了腾讯会议前往腾讯会议上课",
-    "whybindtxmeet": "为了在腾讯会议中使用你当前的雨课堂账号",
+    "openedtxmeet": "Teacher opened the Tencent Meeting",
+    "gototxmeet": "Go to Tencent Meeting",
+    "txmeetbind": "Bind Tencent Meeting account first",
+    "usetxmeet": "In order to use Rain Classroom in Tencent Meeting",
+    "gotobind": "Go to bind",
+    "txmeetforclass": "Teacher opened the Tencent Meeting and invited you to Tencent Meeting for class",
+    "whybindtxmeet": "To use your current Rain Classroom account in Tencent Meeting",
   },
 
   // 引导页
