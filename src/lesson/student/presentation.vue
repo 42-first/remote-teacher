@@ -114,10 +114,10 @@
         <section class="live__fold" @click="handleOpenTXMeet">
           <div class="box-center">
             <img class="icon-laba" src="~images/student/txmeet-logo.png" >
-            <span class="f12">老师开启了腾讯会议</span>
+            <span class="f12"><!-- 老师开启了腾讯会议 -->{{ $t('lesson.openedtxmeet') }}</span>
           </div>
           <div class="box-center">
-            <span class="f12">前往腾讯会议</span>
+            <span class="f12"><!-- 前往腾讯会议 -->{{ $t('lesson.gototxmeet') }}</span>
             <i class="iconfont icon--danjiantouxiangyou f16"></i>
           </div>
         </section>

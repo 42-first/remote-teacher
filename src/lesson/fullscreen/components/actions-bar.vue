@@ -95,7 +95,7 @@
 
           <!-- 腾讯会议互动加入提示 -->
           <section class="meeting__tips box-start" v-if="visibleTXMeetingTips">
-            <div class="tips__content f16 cfff">老师开启了腾讯会议前往腾讯会议上课</div>
+            <div class="tips__content f16 cfff"><!-- 老师开启了腾讯会议前往腾讯会议上课 -->{{ $t('lesson.txmeetforclass') }}</div>
             <p class="tips__closed box-center" @click="handleClosedTXMeetTips">
               <i class="iconfont icon-guanbi1 f12 cfff"></i>
             </p>

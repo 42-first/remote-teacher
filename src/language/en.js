@@ -475,6 +475,14 @@ let pages = {
     "enterwrong": "Wrong Code, Please try again",
     "codedone": "Done",
     "isprotips": "You are not bound. Only {name} personnel are allowed to enter the class. Please join the class again after binding",
+
+    "openedtxmeet": "老师开启了腾讯会议",
+    "gototxmeet": "前往腾讯会议",
+    "txmeetbind": "请先绑定腾讯会议账号",
+    "usetxmeet": "以便在腾讯会议中使用雨课堂",
+    "gotobind": "前往绑定",
+    "txmeetforclass": "老师开启了腾讯会议前往腾讯会议上课",
+    "whybindtxmeet": "为了在腾讯会议中使用你当前的雨课堂账号",
   },
 
   // 引导页

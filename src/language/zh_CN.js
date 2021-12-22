@@ -477,6 +477,14 @@ let pages = {
     "codedone": "完成",
 
     "isprotips": "您未作身份绑定，该班级只允许{name}人员进入，请绑定后重新加入班级。",
+
+    "openedtxmeet": "老师开启了腾讯会议",
+    "gototxmeet": "前往腾讯会议",
+    "txmeetbind": "请先绑定腾讯会议账号",
+    "usetxmeet": "以便在腾讯会议中使用雨课堂",
+    "gotobind": "前往绑定",
+    "txmeetforclass": "老师开启了腾讯会议前往腾讯会议上课",
+    "whybindtxmeet": "为了在腾讯会议中使用你当前的雨课堂账号",
   },
 
   // 引导页

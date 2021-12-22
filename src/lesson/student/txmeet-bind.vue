@@ -19,11 +19,11 @@
 
       <!--  -->
       <section class="bind__tips f17 c333">
-        <p>请先绑定腾讯会议账号</p>
-        <p>以便在腾讯会议中使用雨课堂</p>
+        <p><!-- 请先绑定腾讯会议账号 -->{{ $t('lesson.txmeetbind') }}</p>
+        <p><!-- 以便在腾讯会议中使用雨课堂 -->{{ $t('lesson.usetxmeet') }}</p>
       </section>
 
-      <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount">前往绑定</section>
+      <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount"><!-- 前往绑定 -->{{ $t('lesson.gotobind') }}</section>
 
       <!-- 关闭 -->
       <p class="bind__closed cfff" @click="handleClosed">

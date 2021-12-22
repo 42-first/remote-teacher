@@ -17,13 +17,12 @@
         </div>
       </div>
 
-      <!--  -->
       <section class="bind__tips f16 c666">
-        <p>为了在腾讯会议中使用你当前的雨课堂账号</p>
-        <p>请先绑定腾讯会议账号</p>
+        <p><!-- 为了在腾讯会议中使用你当前的雨课堂账号 -->{{ $t('lesson.whybindtxmeet') }}</p>
+        <p><!-- 请先绑定腾讯会议账号 -->{{ $t('lesson.txmeetbind') }}</p>
       </section>
 
-      <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount">前往绑定</section>
+      <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount"><!-- 前往绑定 -->{{ $t('lesson.gotobind') }}</section>
 
       <!-- 关闭 -->
       <p class="bind__closed cfff" @click="handleClosed">
