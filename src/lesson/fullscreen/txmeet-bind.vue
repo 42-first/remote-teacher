@@ -86,7 +86,7 @@ export default {
   mixins: [ ],
   computed: {
     ...mapState([
-      'lessonId',
+      'lesson',
       'invitationLink'
     ])
   },
@@ -109,7 +109,9 @@ export default {
      */
     async init() {
       try {
-        console.log('lessonId:', this.lessonId);
+        const lessonId = this.lesson && this.lesson.lessonID;
+        this.lessonId = lessonId;
+        console.log('lessonId:', lessonId);
 
         this.verifyBinding();
       } catch (error) {
@@ -132,7 +134,7 @@ export default {
           let { bind, bindList } = res.data;
 
           if(bind) {
-            let { openId }= bindList[0] || {};
+            let { openId } = bindList[0] || {};
             if(openId) {
               this.openId = openId;
             }
@@ -170,7 +172,7 @@ export default {
         let res = await request.get(url, params);
         console.log('getInvitation:', res);
         if (res && res.code == 0) {
-          let { meetingId, joinUrl } = res.data;
+          let { joinUrl } = res.data;
 
           if(joinUrl) {
             location.href = joinUrl;
