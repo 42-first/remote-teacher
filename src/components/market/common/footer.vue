@@ -10,7 +10,7 @@
           <div class="footer-cr">
             <p>©2021 清华大学&学堂在线</p>
             <p>
-            <a target="_blank" href="https://qn-sfe.yuketang.cn/o_1ervsalmp6omhsq1c2t2e31npp9.pdf" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;">京ICP证140571号</a> | <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802033052" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;"><img src="https://qn-sfe.yuketang.cn/o_1ek0bqrhrrj69vi1q681h091k069.png" style="vertical-align: middle;"/>&nbsp;<span>京公网安备 11010802033052号</span></a>
+            <a target="_blank" href="https://beian.miit.gov.cn" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;">京ICP备14019655号</a> | <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802033052" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;"><img src="https://qn-sfe.yuketang.cn/o_1ek0bqrhrrj69vi1q681h091k069.png" style="vertical-align: middle;"/>&nbsp;<span>京公网安备 11010802033052号</span></a>
             <span>| 北京慕华信息科技有限公司</span>
             </p>
           </div>
