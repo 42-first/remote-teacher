@@ -221,6 +221,8 @@
                 break;
               case 2:
               case 6:
+              case 14:
+              case 15:
               case 22:
               case 43:
                 source_name = i18n.locale === 'zh_CN' ? '课堂暗号' : 'Class Code'
@@ -235,6 +237,7 @@
               case 42:
               case 11:
               case 12:
+              case 13:
                 source_name = i18n.locale === 'zh_CN' ? '“正在上课”提示' : 'Class Tip'
                 break;
               case 9:
@@ -247,6 +250,9 @@
               case 25:
               case 10:
                 source_name = i18n.locale === 'zh_CN' ? '上课提醒' : 'Lesson Reminder'
+                break;
+              case 80:
+                source_name = i18n.locale === 'zh_CN' ?  '腾讯会议' : 'Tencent meeting'
                 break;
             }
             res.data['source_name'] = source_name

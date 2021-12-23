@@ -1150,7 +1150,7 @@ let actionsMixin = {
       setTimeout(() => {
         self.liveStatusTips = ''
       }, 5000)
-    }
+    },
 
   }
 }

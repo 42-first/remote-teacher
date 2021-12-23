@@ -85,6 +85,23 @@
         </section>
       </template>
 
+      <!-- 腾讯扩展应用 -->
+      <template v-if="hasTXMeeting">
+        <div class="line"></div>
+        <section class="action box-center join__wrap">
+          <div class="txmeet__join box-center" @click="handleOpenTXMeet">
+            <img class="icon-txmeet" src="~images/student/txmeet-logo2.png" >
+          </div>
+
+          <!-- 腾讯会议互动加入提示 -->
+          <section class="meeting__tips box-start" v-if="visibleTXMeetingTips">
+            <div class="tips__content f16 cfff"><!-- 老师开启了腾讯会议前往腾讯会议上课 -->{{ $t('lesson.txmeetforclass') }}</div>
+            <p class="tips__closed box-center" @click="handleClosedTXMeetTips">
+              <i class="iconfont icon-guanbi1 f12 cfff"></i>
+            </p>
+          </section>
+        </section>
+      </template>
     </section>
 
     <!-- 弹幕直播 -->
@@ -131,6 +148,8 @@
         // 是否支持webrtc
         isWebRTCSupported: true,
         visibleWebRTCNoSupported: false,
+        // 腾讯会议扩展应用第一次提示
+        visibleTXMeetingTips: true,
       };
     },
     components: {
@@ -150,7 +169,9 @@
         // 是否已进入会议
         'joined',
         'observerMode',
-        'rightType'
+        'rightType',
+        'hasTXMeeting',
+        'invitationLink',
       ]),
 
       ...mapState('meeting', [
@@ -222,6 +243,12 @@
           let hasClosedMeetignTips = !!localStorage.getItem(key);
           if(hasClosedMeetignTips) {
             this.visibleMeetingTips = false;
+          }
+
+          key = 'lesson-txmettingtips-cloesed';
+          let hasClosedTXMeetingTips = !!localStorage.getItem(key);
+          if(hasClosedTXMeetingTips) {
+            this.visibleTXMeetingTips = false;
           }
 
           // 自否自动加入会议
@@ -439,6 +466,19 @@
       },
 
       /**
+       * @method 关闭腾讯扩展会议加入提示
+       * @params
+       */
+      handleClosedTXMeetTips(evt) {
+        this.visibleTXMeetingTips = false;
+
+        let key = 'lesson-txmettingtips-cloesed';
+        if(isSupported(window.localStorage)) {
+          localStorage.setItem(key, true);
+        }
+      },
+
+      /**
        * @method 显示分组
        * @params
        */
@@ -453,6 +493,54 @@
         let src = '/team/student/' + this.lesson.classroomId + '?lessonid=' + this.lesson.lessonID;
 
         this.$router.push({ name: 'team-v3', query: { src: encodeURIComponent(src) } });
+      },
+
+      /*
+       * @method 打开腾讯会议
+       * @param
+       */
+      async handleOpenTXMeet() {
+        const lessonId = this.lesson && this.lesson.lessonID;
+        let hasBind = await this.verifyBinding();
+
+        if(!hasBind) {
+          this.$router.push({
+            path: `/v3/${lessonId}/bind/`
+          })
+        }
+
+        if(this.visibleTXMeetingTips) {
+          this.handleClosedTXMeetTips();
+        }
+      },
+
+      /**
+       * @method 腾讯会议账号是否绑定到雨课堂
+       */
+      async verifyBinding() {
+        let hasBind = false;
+
+        try {
+          let url = API.lesson.check_bind;
+          let res = await request.get(url);
+          console.log('verifyBinding:', res);
+          if (res && res.code == 0) {
+            let { bind } = res.data;
+
+            if(bind) {
+              if(this.invitationLink) {
+                location.href = this.invitationLink;
+              }
+
+              hasBind = bind;
+            }
+          }
+
+          return hasBind;
+        } catch(error) {
+          console.info(error);
+          return hasBind;
+        }
       },
     }
   };
@@ -544,6 +632,7 @@
       }
     }
 
+    .txmeet__join,
     .meeting__join {
       width: 36px;
       height: 36px;
@@ -552,6 +641,14 @@
       background: #08BC72;
     }
 
+    .txmeet__join {
+      background: #5096F5;
+
+      .icon-txmeet {
+        width: 28px;
+        height: 28px;
+      }
+    }
   }
 
   .line {

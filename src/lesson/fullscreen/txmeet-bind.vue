@@ -17,10 +17,9 @@
         </div>
       </div>
 
-      <!--  -->
-      <section class="bind__tips f17 c333">
+      <section class="bind__tips f16 c666">
+        <p><!-- 为了在腾讯会议中使用你当前的雨课堂账号 -->{{ $t('lesson.whybindtxmeet') }}</p>
         <p><!-- 请先绑定腾讯会议账号 -->{{ $t('lesson.txmeetbind') }}</p>
-        <p><!-- 以便在腾讯会议中使用雨课堂 -->{{ $t('lesson.usetxmeet') }}</p>
       </section>
 
       <section class="bind--btn box-center f17 cfff" v-show="!hasBind" @click="handleBindMeetAccount"><!-- 前往绑定 -->{{ $t('lesson.gotobind') }}</section>
@@ -87,7 +86,7 @@ export default {
   mixins: [ ],
   computed: {
     ...mapState([
-      'lessonId',
+      'lesson',
       'invitationLink'
     ])
   },
@@ -110,7 +109,9 @@ export default {
      */
     async init() {
       try {
-        console.log('lessonId:', this.lessonId);
+        const lessonId = this.lesson && this.lesson.lessonID;
+        this.lessonId = lessonId;
+        console.log('lessonId:', lessonId);
 
         this.verifyBinding();
       } catch (error) {
@@ -133,7 +134,7 @@ export default {
           let { bind, bindList } = res.data;
 
           if(bind) {
-            let { openId }= bindList[0] || {};
+            let { openId } = bindList[0] || {};
             if(openId) {
               this.openId = openId;
             }
@@ -155,23 +156,6 @@ export default {
      */
     handleBindMeetAccount(evt) {
       location.href = this.bindUri + `?id=${this.lessonId}`;
-
-      // // 新增绑定
-      // let redirect = this.redirectUri;
-      // let pathname = this.bindUri + `?id=${this.lessonId}`;
-      // let next = encodeURIComponent(pathname);
-      // redirect = redirect + encodeURIComponent(`?next=${next}`);
-
-      // // 防止进入到腾讯会议登录乱点导致绑定后无法正常进入邀请码页面
-      // try {
-      //   if(isSupported(localStorage)) {
-      //     localStorage.setItem(LocalTokenKey, next);
-      //   }
-      // } catch(error) {
-      // }
-
-      // let authorizeLink = encodeURIComponent(`authorize.html?corp_id=${corpId}&sdk_id=${sdkId}&redirect_uri=${redirect}&&state=STATE`);
-      // location.href = `https://meeting.tencent.com/mobile/login.html?redirect_link=${authorizeLink}`;
     },
 
     /**
@@ -188,7 +172,7 @@ export default {
         let res = await request.get(url, params);
         console.log('getInvitation:', res);
         if (res && res.code == 0) {
-          let { meetingId, joinUrl } = res.data;
+          let { joinUrl } = res.data;
 
           if(joinUrl) {
             location.href = joinUrl;
@@ -209,7 +193,7 @@ export default {
 
 <style lang="scss" scoped>
   .meeting__bind {
-    z-index: 1;
+    z-index: 11;
 
     position: fixed;
     top: 0;
@@ -222,60 +206,61 @@ export default {
 
   .bind__container {
     position: relative;
-    width: 7.199999999999999rem;
-    height: 8.120000000000001rem;
+    padding: 0 30px;
+    width: 380px;
+    height: 310px;
 
-    border-radius: 0.16rem;
+    border-radius: 7px;
     background: #fff;
 
     .bind__logos {
-      padding-top: 0.8rem;
+      padding-top: 40px;
 
       .logo__wrap {
-        width: 2.92rem;
-        height: 1.56rem;
-
-        // border-radius: 50%;
-        // background: #F1F7FF;
+        width: 112px;
+        height: 60px;
 
         .icon-logo {
-          width: 2.92rem;
-          height: 1.56rem;
+          width: 112px;
+          height: 60px;
         }
       }
     }
 
     .bind__tips {
-      padding-top: 0.8rem;
+      padding: 30px 0 40px;
+      border-bottom: 1px solid #ddd;
     }
 
     .bind--btn {
       position: absolute;
-      bottom: 0.8rem;
+      bottom: 30px;
       left: 0;
       right: 0;
 
       margin: 0 auto;
-      width: 3.466666666666667rem;
-      height: 1.1733333333333333rem;
+      width: 140px;
+      height: 34px;
 
-      border-radius: 0.58667rem/50%;
+      border-radius: 4px;
       background: #5096F5;
+      cursor: pointer;
     }
   }
 
   .bind__closed {
     position: absolute;
-    bottom: -1.76rem;
+    bottom: -40px;
     left: 0;
     right: 0;
 
     margin: 0 auto;
-    width: 0.6933333333333334rem;
-    height: 0.6933333333333334rem;
+    width: 28px;
+    height: 28px;
 
     border-radius: 50%;
-    border: 2px solid #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
   }
 
 </style>
