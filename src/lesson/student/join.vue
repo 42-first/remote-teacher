@@ -28,7 +28,11 @@
       <section class="input__wrap">
         <p class="placeholder f16"><!-- 输入暗号 -->{{ $t('lesson.entercode') }}</p>
         <input class="f16" ref="input" type="text" v-model="lessonCode" autofocus maxlength="5" @focus="handleFocus" @blur="handleBlur" />
-        <p class="error__tips f14">{{errorTips}}</p>
+        <!-- 错误提示及绑定 -->
+        <div class="box-between f14">
+          <p class="error__tips">{{errorTips}}</p>
+          <a class="error__bind blue" :href="bindURL" v-if="bindURL">点击绑定</a>
+        </div>
       </section>
     </section>
   </section>
@@ -36,7 +40,6 @@
 
 <script>
 import { mapState } from 'vuex';
-// import { isSupported } from '@/util/util'
 
 
 export default {
@@ -51,6 +54,8 @@ export default {
       // 课堂暗号
       lessonCode: '',
       isFocus: false,
+      // 绑定地址
+      bindURL: '',
     };
   },
   components: {
@@ -120,11 +125,12 @@ export default {
           }
         }
 
-        return res.code;
+        // return res.code;
+        return res;
       })
       .catch(error => {
         console.log('checkin:', error);
-        return -1;
+        return { code: -1 };
       })
     },
 
@@ -132,20 +138,25 @@ export default {
      * @methos 加入班级验证
      */
     async handleJoinClass() {
-      let code = this.lessonCode.replace(/^\s+|\s+$/g, '');
-      if (code && code.length === 5 && /^([A-Za-z0-9])*?$/.test(code)) {
-        let joined = await this.checkin(6, code);
+      let lessonCode = this.lessonCode.replace(/^\s+|\s+$/g, '');
+      if (lessonCode && lessonCode.length === 5 && /^([A-Za-z0-9])*?$/.test(lessonCode)) {
+        let { code, data, msg } = await this.checkin(6, lessonCode);
 
-        if(joined === 0) {
+        if(code === 0) {
           // 重新访问下页面
           this.$parent.init();
           this.handleClosed();
+        } else if(code === 50019) {
+          // 专业版未绑定
+          const { university_id, university_name: name, university_authen_url } = data || {};
+          this.errorTips = this.$t('lesson.isprotips', { name }) || `您未作身份绑定，该班级只允许${name}人员进入，请绑定后重新加入班级。`
+          this.bindURL = university_authen_url ? `/v/index/bindSchool_cas/${university_id}` : `/v/index/bindSchool/${university_id}`;
         } else  {
           // 加入不成功的错误码信息
-          this.errorTips = this.$i18n.t('lesson.enterwrong');
+          this.errorTips = this.$t(`code.${code}`) || this.$t('lesson.enterwrong');
         }
       } else {
-        this.errorTips = this.$i18n.t('lesson.enterwrong');
+        this.errorTips = this.$t('lesson.enterwrong');
       }
     },
 
@@ -233,7 +244,7 @@ export default {
     width: 100%;
     padding: 2.666666666666667vw 0 3.2vw;
     display:flex;
-    justify-content:space-between;
+    justify-content: space-between;
     position: relative;
     font-size: 4.533333333333333vw;
 
@@ -300,6 +311,11 @@ export default {
     padding-left: 1.3333333333333334vw;
     color: #F84F41;
     margin-top: 1.3333333333333334vw;
+    text-align: left;
+  }
+
+  .error__bind {
+    width: 20vw;
   }
 
 </style>

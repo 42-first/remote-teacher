@@ -63,7 +63,11 @@ const store = new Vuex.Store({
     // 课程状态 1 已结课
     lessonStatus: 0,
     // 右侧展示内容
-    rightType: ''
+    rightType: '',
+    // 是否开启了腾讯会议扩展应用
+    hasTXMeeting: false,
+    // 腾讯会议邀请链接
+    invitationLink: '',
   },
   mutations: {
     // 重置课堂信息
@@ -81,6 +85,8 @@ const store = new Vuex.Store({
       state.isGuestStudent = false;
       state.layoutSize = {}
       state.lessonStatus = 0
+      state.invitationLink = '';
+      state.hasTXMeeting = false;
     },
 
     setLines(state, lines) {
@@ -161,7 +167,15 @@ const store = new Vuex.Store({
 
     setRightType(state, data) {
       state.rightType = data
-    }
+    },
+
+    setHasTXMeeting(state, data) {
+      state.hasTXMeeting = data;
+    },
+
+    setInvitationLink(state, data) {
+      state.invitationLink = data;
+    },
   },
 
   actions: {
@@ -245,7 +259,15 @@ const store = new Vuex.Store({
 
     setRightType({commit}, data) {
       commit('setRightType', data)
-    }
+    },
+
+    setHasTXMeeting({commit}, data) {
+      commit('setHasTXMeeting', data)
+    },
+
+    setInvitationLink({commit}, data) {
+      commit('setInvitationLink', data)
+    },
   },
 
   modules: {

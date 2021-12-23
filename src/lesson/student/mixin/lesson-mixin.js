@@ -19,17 +19,31 @@ let lessonMixin = {
 
       // 先签到
       source = source || this.source;
-      let joined = await this.checkin(source);
+      // let joined = await this.checkin(source);
+      let { code, data, msg } = await this.checkin(source) || {};
       // 签到发现没有权限处理
-      if(joined !== 0) {
+      if(code !== 0) {
         // 50004 lesson end
-        if(joined === 50004) {
+        if(code === 50004) {
           location.href = `/v/index/learning_lesson_detail_v3/${this.lessonID}`;
-        }  else if(joined === 50002 || joined === 50027) {
+        } else if(code === 50002 || code === 50027) {
           // 无权限
           this.$router.push({
             path: `/v3/${this.lessonID}/join/`
           })
+        } else if(code === 50019) {
+          // 未绑定专业版
+          this.bindSchool(data);
+        } else {
+          // 一直提示等用户处理
+          let msgOptions = {
+            confirmButtonText: this.$t('gotit') || '知道了'
+          };
+          let message = this.$t(`code.${code}`) || '';
+          this.$messagebox.alert(message, msgOptions).then(action => {
+            if(action === 'confirm') {
+            }
+          });
         }
 
         return this;
@@ -297,11 +311,12 @@ let lessonMixin = {
           }
         }
 
-        return res.code;
+        // return res.code;
+        return res;
       }).
       catch(error => {
         console.log('checkin:', error);
-        return -1;
+        return { code: -1 };
       })
     },
 
@@ -587,7 +602,31 @@ let lessonMixin = {
         console.log('getReviewStatus:', error)
         return {}
       })
-    }
+    },
+
+    /**
+     * @method 专业版班级绑定引导
+     */
+    bindSchool(data) {
+      const { university_id, university_name: name, university_authen_url } = data || {};
+      const errorTips = this.$t('lesson.isprotips', { name }) || `您未作身份绑定，该班级只允许${name}人员进入，请绑定后重新加入班级。`
+      const bindURL = university_authen_url ? `/v/index/bindSchool_cas/${university_id}` : `/v/index/bindSchool/${university_id}`;
+
+      // 国际化confirm
+      const msgOptions = {
+        confirmButtonText: '点击绑定',
+        cancelButtonText: '已完成绑定'
+      };
+
+      this.$messagebox.confirm(errorTips, msgOptions)
+      .then(action => {
+        if(action === 'confirm') {
+          location.href = bindURL;
+        } else {
+          this.init();
+        }
+      });
+    },
   }
 }
 

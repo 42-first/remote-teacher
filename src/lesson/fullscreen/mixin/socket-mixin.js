@@ -162,6 +162,12 @@ var mixin = {
               !this.isLive && (this.isLive = true);
             }
 
+            // 是否开启腾讯会议
+            if(msg.tencentInteractive) {
+              this.setInvitationLink(msg.tencentInteractive);
+              this.setHasTXMeeting(true);
+            }
+
             if(timeline && timeline.length) {
               this.getAllPres(msg);
             }
@@ -538,6 +544,24 @@ var mixin = {
           // 直播状态
           case 'livestatus':
             this.changeLiveStatusTips(msg.status, msg.voice)
+            break;
+
+          // 是否开启了腾讯会议
+          case 'starttencentinteractive':
+            if(msg.url) {
+              this.setInvitationLink(msg.url);
+              this.setHasTXMeeting(true);
+            }
+
+            break;
+
+          // 关闭腾讯会议
+          case 'endtencentinteractive':
+            if(this.invitationLink) {
+              this.setInvitationLink(null);
+              this.setHasTXMeeting(false);
+            }
+
             break;
 
           default:

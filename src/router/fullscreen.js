@@ -141,7 +141,13 @@ const fullscreenRouter = new Router({
           path: 'team',
           name: 'team-v3',
           component: () => import('@/lesson/fullscreen/team')
-        }
+        },
+        // 腾讯会议引导绑定
+        {
+          path: 'bind',
+          name: 'bind-txmeet',
+          component: () => import('@/lesson/fullscreen/txmeet-bind')
+        },
       ]
     },
     {

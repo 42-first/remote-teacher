@@ -256,3 +256,13 @@ export function loadScript(src) {
     }
   });
 }
+
+// 是否腾讯会议应用内
+export function isTMWebview() {
+  try {
+    const ua = window.navigator.userAgent;
+    return ua.includes('app/tencent_wemeet');
+  } catch(error) {
+    return false;
+  }
+}

@@ -114,10 +114,10 @@
         <section class="live__fold" @click="handleOpenTXMeet">
           <div class="box-center">
             <img class="icon-laba" src="~images/student/txmeet-logo.png" >
-            <span class="f12">老师开启了腾讯会议</span>
+            <span class="f12"><!-- 老师开启了腾讯会议 -->{{ $t('lesson.openedtxmeet') }}</span>
           </div>
           <div class="box-center">
-            <span class="f12">前往腾讯会议</span>
+            <span class="f12"><!-- 前往腾讯会议 -->{{ $t('lesson.gototxmeet') }}</span>
             <i class="iconfont icon--danjiantouxiangyou f16"></i>
           </div>
         </section>
@@ -254,7 +254,7 @@
 
   import request from '@/util/request-v3'
   import API from '@/util/api'
-  import { compareVersion } from '@/util/util'
+  import { compareVersion, isTMWebview } from '@/util/util'
   import { configWX } from '@/util/wx-util'
 
   import '@/util/directive-util'
@@ -530,6 +530,8 @@
         // 是否从腾讯会议应用内打开
         if(query.from) {
           this.from = query.from;
+        } else if(isTMWebview()) {
+          this.from = 'txmeet';
         }
 
         this.iniTimeline(this.lessonID);

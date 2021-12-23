@@ -356,7 +356,9 @@
         'setDanmus',
         'setAddinVersion',
         'setIsGuestStudent',
-        'setLessonStatus'
+        'setLessonStatus',
+        'setHasTXMeeting',
+        'setInvitationLink',
       ]),
 
       /*
