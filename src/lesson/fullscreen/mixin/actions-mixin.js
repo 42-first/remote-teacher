@@ -207,6 +207,18 @@ let actionsMixin = {
     },
 
     /*
+     * @method 隐藏动画蒙版
+     * param:
+     */
+    hideAnimationMask() {
+      this.cards.forEach((item) => {
+        if (item.type === 2 && item.animation === 1) {
+          Object.assign(item, { animation: 0 });
+        }
+      })
+    },
+
+    /*
     * @method 新增PPT
     * data: { type: 2, sid: 1234, pageIndex: 2, presentationid: 100, time: '', event }
     */
@@ -264,6 +276,9 @@ let actionsMixin = {
         // 是否web开课的动画 Shapes里面有动画步骤
         let Shapes = slideData.Shapes;
         let isWebLesson = this.isWebLesson;
+
+        // 之前有动画隐藏蒙版
+        this.hideAnimationMask();
 
         // ppt 动画处理 animation 0: 没有动画 1：动画开始 2:动画结束 !data.isTimeline
         if(data.event && typeof data.event.total !== 'undefined' && data.event.total > 0) {
@@ -469,6 +484,8 @@ let actionsMixin = {
       }
 
       if(!hasEvent) {
+        // 之前有动画隐藏蒙版
+        this.hideAnimationMask();
         this.cards.push(data);
         problem && this.problemMap.set(problem['problemId'], slideData);
         this.setCards(this.cards)

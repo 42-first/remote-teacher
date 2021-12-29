@@ -15,7 +15,7 @@
       <slide :item="slide" v-show="slide.animation != 1"></slide>
       <!-- 动画蒙版 -->
       <div class="ppt__modal box-center" v-show="slide.animation === 1">
-        <div class="modal__center f30 cfff">
+        <div class="modal__center f30 c666">
           <p><!-- 当前页面有动画 --> {{ $t('currhasanimate') }} </p>
           <p><!-- 请先听老师讲解 --> {{ $t('listenteacher') }} </p>
         </div>
@@ -264,6 +264,13 @@ export default {
       object-fit: contain;
       max-height: 100%;
     }
+  }
+
+  .ppt__modal {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #fff;
   }
 
   .ppt__opt {
