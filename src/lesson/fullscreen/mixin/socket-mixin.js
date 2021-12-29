@@ -563,10 +563,8 @@ var mixin = {
             item = msg['event'];
             this.addMessage({ type: 1, message: item['title'], event: item });
 
-            if(this.invitationLink) {
-              this.setInvitationLink(null);
-              this.setHasTXMeeting(false);
-            }
+            this.setInvitationLink(null);
+            this.setHasTXMeeting(false);
 
             break;
 
