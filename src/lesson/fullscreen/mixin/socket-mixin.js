@@ -548,6 +548,9 @@ var mixin = {
 
           // 是否开启了腾讯会议
           case 'starttencentinteractive':
+            item = msg['event'];
+            this.addMessage({ type: 1, message: item['title'], event: item });
+
             if(msg.url) {
               this.setInvitationLink(msg.url);
               this.setHasTXMeeting(true);
@@ -557,10 +560,11 @@ var mixin = {
 
           // 关闭腾讯会议
           case 'endtencentinteractive':
-            if(this.invitationLink) {
-              this.setInvitationLink(null);
-              this.setHasTXMeeting(false);
-            }
+            item = msg['event'];
+            this.addMessage({ type: 1, message: item['title'], event: item });
+
+            this.setInvitationLink(null);
+            this.setHasTXMeeting(false);
 
             break;
 

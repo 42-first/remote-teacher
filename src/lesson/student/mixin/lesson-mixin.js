@@ -42,6 +42,7 @@ let lessonMixin = {
           let message = this.$t(`code.${code}`) || '';
           this.$messagebox.alert(message, msgOptions).then(action => {
             if(action === 'confirm') {
+              history.back();
             }
           });
         }

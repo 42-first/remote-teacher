@@ -457,6 +457,9 @@ var mixin = {
 
           // 是否开启了腾讯会议
           case 'starttencentinteractive':
+            item = msg['event'];
+            this.addMessage({ type: 1, message: item['title'], event: item });
+
             if(this.from !== 'txmeet') {
               this.liveType = 3;
             }
@@ -469,6 +472,9 @@ var mixin = {
 
           // 关闭腾讯会议
           case 'endtencentinteractive':
+            item = msg['event'];
+            this.addMessage({ type: 1, message: item['title'], event: item });
+
             if(this.liveType === 3) {
               this.liveType = 0;
             }
