@@ -31,6 +31,8 @@ let pages = {
   "screenshot": "截图分享",
   "blackboard": "板书分享",
   "board": "板书",
+  "currhasanimate": "当前页面有动画",
+  "listenteacher": "请先听老师讲解",
 
   "newfeed": "您有新的课堂动态",
   "connerr": '连接异常，<span class="countTime">{second}</span>秒后尝试重连',
