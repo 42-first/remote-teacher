@@ -31,6 +31,8 @@ let pages = {
   "screenshot": "Screenshot",
   "blackboard": "Blackboard writing",
   "board": "Board",
+  "currhasanimate": "The current page contains animation.",
+  "listenteacher": "Please look at the screen.",
 
   "newfeed": "You have a new class message.",
   "connerr": 'Error Connection. Please try again in <span class="countTime">{second}</span> seconds',

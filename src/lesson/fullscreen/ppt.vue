@@ -13,6 +13,13 @@
     <div class="cover__container box-center" v-if="slide">
       <!-- <img class="cover" :src="slide.src" :style="style" alt="" /> -->
       <slide :item="slide" v-show="slide.animation != 1"></slide>
+      <!-- 动画蒙版 -->
+      <div class="ppt__modal box-center" v-show="slide.animation === 1">
+        <div class="modal__center f30 cfff">
+          <p><!-- 当前页面有动画 --> {{ $t('currhasanimate') }} </p>
+          <p><!-- 请先听老师讲解 --> {{ $t('listenteacher') }} </p>
+        </div>
+      </div>
     </div>
 
     <!-- 不懂收藏 -->
