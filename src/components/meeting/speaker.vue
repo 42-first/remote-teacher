@@ -96,6 +96,7 @@ export default {
     ]),
 
     ...mapState('meeting', [
+      'local',
       // 会议状态
       'meeting',
       // 会议成员
@@ -118,7 +119,10 @@ export default {
   },
   watch: {
     'activeSpeakers'(newVal, oldVal) {
+      // TODO：去掉订阅视频流 之前播放结构没有销毁 可能导致串名现象
       if(newVal && newVal.length) {
+        // 取消订阅远端流 排除共享和老师流
+        this.unsubscribeNoActiveSpeakers();
         this.initPages();
         this.getMembers(this.page);
       }
@@ -128,6 +132,7 @@ export default {
     ...mapActions('meeting', [
       'setMeeting',
       'setMeetingLayout',
+      'setSpeakers',
     ]),
 
     init() {
@@ -196,6 +201,48 @@ export default {
      */
     handleFold() {
       this.fold = !this.fold;
+    },
+
+    /**
+     * @method 取消订阅没有发言的流
+     * @params
+     */
+    async unsubscribeNoActiveSpeakers() {
+      let rtcEngine = window.rtcEngine;
+      const members = rtcEngine.members;
+      const client = rtcEngine.client;
+      let speakers = this.speakers;
+      // 开课老师
+      let teacher = this.teacher;
+
+      try {
+        for(let user of speakers) {
+          let uid = String(user.id);
+          // 排除老师流，自己的流
+          const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
+          if(!teacherAndMeIds.includes(uid)) {
+            let stream = members.get(uid);
+            // 普通用户 没有发言就去掉订阅
+            if(stream && user.subscribe && !user.audio) {
+              user.subscribe = false;
+
+              if(stream.videoPlayer_) {
+                if(stream.isPlaying_) {
+                  stream.stop();
+
+                  console.log('stream stop ' + user.name);
+                }
+              }
+
+              await client.unsubscribe(stream);
+            }
+          }
+        }
+
+        this.setSpeakers(speakers);
+      } catch (error) {
+        console.error('unsubscribeNoActiveSpeakers! ' + error);
+      }
     },
 
   }
