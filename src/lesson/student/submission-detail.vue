@@ -32,7 +32,7 @@
           <img v-if="result.picture" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.thumb" :data-src="result.picture" alt="" />
           <!-- 视频展示 -->
           <div class="video__preview" v-if="result.video && result.video.url">
-            <video :src="result.video.url" :style="result.video|setStyle" controls ></video>
+            <video :src="result.video.url" :style="result.video|setStyle" controls controlslist="nodownload"></video>
           </div>
           <p class="date-time f15">{{ result.createTime|formatTime('HH:mm') }}</p>
         </div>
