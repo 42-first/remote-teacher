@@ -188,6 +188,14 @@ var mixin = {
           // 结束互动 { op: 'endinteractive', lessonid }
           case 'endinteractive':
             if(msg.lessonid) {
+              try {
+                // 这里需要关闭摄像头
+                if(window.rtcEngine) {
+                  window.rtcEngine.unpublish();
+                }
+              } catch(error) {
+              }
+
               // 不显示直播
               this.liveURL = '';
               this.setHasMeeting(false);
