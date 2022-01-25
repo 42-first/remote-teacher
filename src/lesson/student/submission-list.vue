@@ -41,7 +41,7 @@
                 </div>
                 <!-- 视频展示 -->
                 <div class="video__preview" v-if="item.video && item.video.url">
-                  <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" ></video>
+                  <video :src="item.video.url" :style="item.video|setStyle" controls :poster="item.video.thumb" controlslist="nodownload" ></video>
                 </div>
                 <div v-if="item.is_group" @click="showCurGroupList(index)">
                   <img-group :groupdata="item.team_info"></img-group>
