@@ -222,8 +222,8 @@ export default {
           const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
           if(!teacherAndMeIds.includes(uid)) {
             let stream = members.get(uid);
-            // 普通用户 没有发言就去掉订阅
-            if(stream && user.subscribe && !user.audio) {
+            // 普通用户 没有发言就去掉订阅 stream && user.subscribe && !user.audio
+            if(stream && user.subscribe) {
               user.subscribe = false;
 
               if(stream.videoPlayer_) {
