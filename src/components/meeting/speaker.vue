@@ -223,7 +223,7 @@ export default {
           if(!teacherAndMeIds.includes(uid)) {
             let stream = members.get(uid);
             // 普通用户 没有发言就去掉订阅 stream && user.subscribe && !user.audio
-            if(stream && user.subscribe) {
+            if(stream && user.subscribe && !user.audio) {
               user.subscribe = false;
 
               if(stream.videoPlayer_) {
