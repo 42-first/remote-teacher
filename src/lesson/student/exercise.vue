@@ -53,8 +53,6 @@
         <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
-      <!-- <div class="commit-diff" v-if="isShowSubmit&&!timeOver"><a class="commit-diff-link f15" :href="commitDiffURL">{{ $t('cannotsubmit') }}？</a></div> -->
-
     </div>
 
     <!-- 图片放大结构 -->
@@ -138,7 +136,7 @@
         // 问题定时通信ID
         msgid: 1,
         timer: null,
-        commitDiffURL: '/lesson/lesson_submit_difficulties/',
+        // commitDiffURL: '/lesson/lesson_submit_difficulties/',
         rate: 1
       };
     },
@@ -209,76 +207,77 @@
 
         this.problemID = problemID;
 
-        // event消息订阅
-        this.initPubSub();
+        try {
+          // event消息订阅
+          this.initPubSub();
 
-        this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
-        // 问题类型
-        this.problemType = this.oProblem['problemType'];
-        // 选项做下兼容
-        if(data.options) {
-          data.options.forEach((item)=>{
-            item.label = item.label || item.key;
-          })
-        }
-        this.options = data.options;
+          this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
+          // 问题类型
+          this.problemType = this.oProblem['problemType'];
+          // 选项做下兼容
+          if(data.options) {
+            data.options.forEach((item)=>{
+              item.label = item.label || item.key;
+            })
+          }
+          this.options = data.options;
 
-        // 投票类型
-        if(this.problemType === 3) {
-          this.selectedPollingCount = this.pollingCount = this.oProblem.pollingCount;
-          this.anonymous = this.oProblem['anonymous'];
-        }
+          // 投票类型
+          if(this.problemType === 3) {
+            this.selectedPollingCount = this.pollingCount = this.oProblem.pollingCount;
+            this.anonymous = this.oProblem['anonymous'];
+          }
 
-        // 是否观察者模式
-        if(this.observerMode) {
-          this.isShowOption = false;
-          this.isShowSubmit = false;
-        }
+          // 是否观察者模式
+          if(this.observerMode) {
+            this.isShowOption = false;
+            this.isShowSubmit = false;
+          }
 
-        // 是否完成
-        if(data.isComplete) {
-          this.isShowSubmit = false;
+          // 是否完成
+          if(data.isComplete) {
+            this.isShowSubmit = false;
 
-          let result = this.oProblem['result'];
-          result && result.forEach((option) => {
-            this.setOptions(option, true, true);
-          });
+            let result = this.oProblem['result'];
+            result && result.forEach((option) => {
+              this.setOptions(option, true, true);
+            });
 
-          this.sLeaveTime = this.$i18n.t('done') || '已完成';
-          this.isComplete = true;
-        } else {
-          // 开始启动定时
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-          this.limit = data.limit;
+            this.sLeaveTime = this.$i18n.t('done') || '已完成';
+            this.isComplete = true;
+          } else {
+            // 开始启动定时
+            this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+            this.limit = data.limit;
 
-          this.options.forEach((item) => {
-            // 是否有选项
-            if(item.selected) {
-              this.canSubmit = 1;
-              this.optionsSet.add(item.label);
+            this.options.forEach((item) => {
+              // 是否有选项
+              if(item.selected) {
+                this.canSubmit = 1;
+                this.optionsSet.add(item.label);
 
-              this.problemType === 3 && this.selectedPollingCount--;
+                this.problemType === 3 && this.selectedPollingCount--;
+              }
+            })
+
+            if (process.env.NODE_ENV !== 'production') {
+              // this.setTiming(data.limit)
+            }
+          }
+
+          setTimeout(()=>{
+            this.opacity = 1;
+          }, 20)
+
+          // 处理弹出的消息
+          this.$parent.msgBoxs.forEach((item, index) => {
+            if(item.type === 3 && item.problemID == problemID) {
+              this.$parent.msgBoxs.splice(index, 1);
             }
           })
-
-          // 提交有困难地址
-          this.commitDiffURL = this.commitDiffURL + problemID;
-
-          if (process.env.NODE_ENV !== 'production') {
-            // this.setTiming(data.limit)
-          }
+        } catch(error) {
+          this.handleBack();
         }
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
       },
 
       /*
@@ -563,7 +562,7 @@
       let cards = this.cards;
       this.summary = cards[this.index];
 
-      if(this.summary) {
+      if(this.summary && this.summary.problemID) {
         this.init(this.summary);
       } else {
         this.$router.back();

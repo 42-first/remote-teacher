@@ -457,13 +457,15 @@ var actionsMixin = {
       }
 
       if (!hasEvent) {
-        this.cards.push(data);
         // 之前有动画隐藏蒙版
         this.hideAnimationMask();
 
-        this.setCards(this.cards)
-        problem && this.problemMap.set(problem['problemId'], slideData);
+        this.cards.push(data);
+        this.setCards(this.cards);
+        // problem && this.problemMap.set(problem['problemId'], slideData);
       }
+
+      problem && this.problemMap.set(problem['problemId'], slideData);
     },
 
     /**

@@ -193,62 +193,66 @@
 
         this.problemID = problemID;
 
-        // event消息订阅
-        this.initPubSub();
+        try {
+          // event消息订阅
+          this.initPubSub();
 
-        this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
-        // 问题类型
-        this.problemType = this.oProblem['problemType'];
-        this.result = this.oProblem['result'] || this.result;
-        // 选项
-        let blanks = this.oProblem.blanks;
+          this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
+          // 问题类型
+          this.problemType = this.oProblem['problemType'];
+          this.result = this.oProblem['result'] || this.result;
+          // 选项
+          let blanks = this.oProblem.blanks;
 
-        // 是否观察者模式
-        if(this.observerMode) {
-          this.isShowOption = false;
-          this.isShowSubmit = false;
-        }
+          // 是否观察者模式
+          if(this.observerMode) {
+            this.isShowOption = false;
+            this.isShowSubmit = false;
+          }
 
-        // 是否完成
-        if(data.isComplete) {
-          this.isShowSubmit = false;
-          this.sLeaveTime = this.$i18n.t('done') || '已完成';
-          this.isComplete = true;
-        } else {
-          // 开始启动定时
-          this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
-          this.limit = data.limit;
+          // 是否完成
+          if(data.isComplete) {
+            this.isShowSubmit = false;
+            this.sLeaveTime = this.$i18n.t('done') || '已完成';
+            this.isComplete = true;
+          } else {
+            // 开始启动定时
+            this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+            this.limit = data.limit;
 
-          blanks.forEach((item, index) => {
-            // 是否有作答
-            if(!this.result[index]) {
-              this.result[index] = '';
+            blanks.forEach((item, index) => {
+              // 是否有作答
+              if(!this.result[index]) {
+                this.result[index] = '';
+              }
+            })
+
+            if (process.env.NODE_ENV !== 'production') {
+              // this.setTiming(data.limit)
+            }
+          }
+
+          setTimeout(()=>{
+            this.$el.querySelectorAll('textarea').forEach((ele) => {
+              ele.style.height = (ele.scrollHeight) + 'px';
+            })
+          }, 300)
+
+          this.blanks = blanks;
+
+          setTimeout(()=>{
+            this.opacity = 1;
+          }, 20)
+
+          // 处理弹出的消息
+          this.$parent.msgBoxs.forEach((item, index) => {
+            if(item.type === 3 && item.problemID == problemID) {
+              this.$parent.msgBoxs.splice(index, 1);
             }
           })
-
-          if (process.env.NODE_ENV !== 'production') {
-            // this.setTiming(data.limit)
-          }
+        } catch(error) {
+          this.handleBack();
         }
-
-        setTimeout(()=>{
-          this.$el.querySelectorAll('textarea').forEach((ele) => {
-            ele.style.height = (ele.scrollHeight) + 'px';
-          })
-        }, 300)
-
-        this.blanks = blanks;
-
-        setTimeout(()=>{
-          this.opacity = 1;
-        }, 20)
-
-        // 处理弹出的消息
-        this.$parent.msgBoxs.forEach((item, index) => {
-          if(item.type === 3 && item.problemID == problemID) {
-            this.$parent.msgBoxs.splice(index, 1);
-          }
-        })
       },
 
       /*
@@ -509,7 +513,7 @@
       let cards = this.cards;
       this.summary = cards[this.index];
 
-      if(this.summary) {
+      if(this.summary && this.summary.problemID) {
         this.init(this.summary);
       } else {
         this.$router.back();
