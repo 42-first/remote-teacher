@@ -305,6 +305,8 @@ let meetingMixin = {
       const members = rtcEngine.members;
       const client = rtcEngine.client;
       let speakers = this.speakers;
+      // 开课老师
+      let teacher = this.teacher;
 
       // 取消订阅流期间（异步的）需要锁定不能订阅播放
       this.setSubscribeLoading(true);
@@ -319,22 +321,32 @@ let meetingMixin = {
         for(let user of speakers) {
           let uid = user.id;
           // 排除老师流，自己的流
-          if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
+          const teacherAndMeIds = [ String(teacher.identityId), String(teacher.userId), String(this.local) ];
+          if(!teacherAndMeIds.includes(String(uid))) {
             let stream = members.get(String(uid));
             if(stream && user.subscribe) {
               user.subscribe = false;
 
-              // 删除之前的播放结构 否则可能还会显示之前的
-              if(stream.audioPlayer_ || stream.videoPlayer_) {
-                if(stream.isPlaying_) {
-                  // stream.stop();
-                }
-              }
-
               await client.unsubscribe(stream);
-              // stream.close();
             }
           }
+
+          // if(user.role !== 'lecturer' && user.role !== 'collaborator' && uid != this.local) {
+          //   let stream = members.get(String(uid));
+          //   if(stream && user.subscribe) {
+          //     user.subscribe = false;
+
+          //     // 删除之前的播放结构 否则可能还会显示之前的
+          //     if(stream.audioPlayer_ || stream.videoPlayer_) {
+          //       if(stream.isPlaying_) {
+          //         // stream.stop();
+          //       }
+          //     }
+
+          //     await client.unsubscribe(stream);
+          //     // stream.close();
+          //   }
+          // }
         }
 
         this.setSpeakers(speakers);
