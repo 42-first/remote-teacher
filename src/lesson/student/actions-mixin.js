@@ -1151,6 +1151,8 @@ var actionsMixin = {
           // 如果是iframe打开的 直接展示会议邀请页
           if(window.top && window.self && window.self != window.top && this.invitationLink) {
             window.top.location.href = this.invitationLink;
+
+            return this;
           }
         } catch(error) {
         }
