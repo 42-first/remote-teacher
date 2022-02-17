@@ -158,11 +158,13 @@ export default {
       let bindUri = this.bindUri + `?id=${this.lessonId}`;
 
       try {
-        // TODO: 如果是iframe打开的需要tab
-        if(self == top) {
+        // TODO: 如果是iframe打开的 暂时默认是督导
+        if(window.self == window.top) {
           location.href = bindUri;
+        } else if(window.top) {
+          window.top.location.href = this.invitationLink;
         } else {
-          top.location.href = bindUri;
+          location.href = bindUri;
         }
       } catch(error) {
         location.href = bindUri;
