@@ -1147,6 +1147,14 @@ var actionsMixin = {
       let hasBind = await this.verifyBinding();
 
       if(!hasBind) {
+        try {
+          // 如果是iframe打开的 直接展示会议邀请页
+          if(window.top && window.self && window.self != window.top && this.invitationLink) {
+            window.top.location.href = this.invitationLink;
+          }
+        } catch(error) {
+        }
+
         this.$router.push({
           path: `/v3/${this.lessonID}/bind/`
         })
