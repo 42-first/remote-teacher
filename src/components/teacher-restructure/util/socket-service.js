@@ -211,12 +211,12 @@ let mixin = {
       } else {
         // 当前遥控器没有使用:
         // 当前用户为开课开课老师
-        if(wakeuid == userid) {
+        if(wakeuid == userid || this.openTeacherId == userid) {
           this.sayHello();
         } else {
           // 也有可能是专业版的虚id,所以接口获取一次实id
           this.keepReal().then(id => {
-            if(id == wakeuid && wakeuid) {
+            if(id == wakeuid || id == this.openTeacherId) {
               this.sayHello();
             } else if(!wakeuid) {
               // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案

@@ -65,7 +65,7 @@ const store = new Vuex.Store({
     isCloneClass: false,                     // 是不是克隆班
     pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
     noWakeuid: false,                        // 进入遥控器时发现没有wakeuid（开课的uid） 需要展示特殊的夺权页面以便后查问题
-
+    openTeacherId: 0,                        // 开启授课的老师id
   },
 
   mutations: {
@@ -231,6 +231,10 @@ const store = new Vuex.Store({
       state.noWakeuid = status;
     },
 
+    set_openTeacherId(state, data) {
+      state.openTeacherId = data
+    },
+
   },
 
   actions: {
@@ -261,6 +265,8 @@ const store = new Vuex.Store({
 
       commit('set_newdoubt', 0)
       commit('set_newtougao', 0)
+
+      commit('set_openTeacherId', 0)
 
     },
     resetModal: ({commit}) => {
@@ -294,6 +300,10 @@ const store = new Vuex.Store({
 
     set_noWakeuid({commit}, status) {
       commit('set_noWakeuid', status)
+    },
+
+    set_openTeacherId({commit}, data) {
+      commit('set_openTeacherId', data)
     },
     
   },

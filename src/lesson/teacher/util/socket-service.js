@@ -180,7 +180,7 @@ let mixin = {
       } else {
         // 当前遥控器没有使用:
         // 当前用户为开课开课老师
-        if(wakeuid && wakeuid == userid) {
+        if(wakeuid && wakeuid == userid || this.openTeacherId == userid) {
           this.sayHello();
         } else if(!wakeuid) {
           // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案

@@ -260,7 +260,8 @@
 				'initiativeCtrlMaskTpl',
 				'toolbarIndex',
 
-				'isCloneClass'
+				'isCloneClass',
+				'openTeacherId',
 			])
 	  },
 	  components: {
@@ -483,7 +484,7 @@
 						user_auth: joined.data.lessonToken
 					}
 				}
-
+				this.$store.dispatch('set_openTeacherId', basic.teacher.userId)
 				this.$store.dispatch('saveUserInfo', data)
 				}
 
