@@ -74,7 +74,7 @@ let logMixin = {
             }
             return "web"
           })(),
-          u: this.userID,
+          u: this.identityId || this.userID,
           t: this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live',
           classroomid: this.classroom && this.classroom.classroomId,
           c: this.classroom && this.classroom.courseId,
