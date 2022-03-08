@@ -257,7 +257,6 @@
 				'toolbarIndex',
 
 				'isCloneClass',
-				'openTeacherId',
 			])
 	  },
 	  components: {
@@ -435,7 +434,6 @@
 				.then(jsonData => {
 					window.USERID = jsonData.data.user.user_id
 					self.$store.dispatch('saveUserInfo', jsonData.data)
-					self.$store.dispatch('set_openTeacherId', jsonData.data.lesson.teacher_id)
 				})
 				.catch(() => {
 					console.error('获取用户信息失败')

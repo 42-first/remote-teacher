@@ -261,7 +261,7 @@
 				'toolbarIndex',
 
 				'isCloneClass',
-				'openTeacherId',
+				'openTeacher',
 			])
 	  },
 	  components: {
@@ -484,7 +484,7 @@
 						user_auth: joined.data.lessonToken
 					}
 				}
-				this.$store.dispatch('set_openTeacherId', basic.teacher.userId)
+				this.$store.dispatch('set_openTeacher', basic.teacher)
 				this.$store.dispatch('saveUserInfo', data)
 				}
 

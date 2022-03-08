@@ -174,23 +174,28 @@ let mixin = {
         userid = this.identityId;
       }
       console.log(userid);
+      let {userId, identityId} = this.openTeacher
+
       // console.log(remoteuid, wakeuid);
       if (!!remoteuid) {
         this.sayHello();
       } else {
         // 当前遥控器没有使用:
         // 当前用户为开课开课老师
-        if(wakeuid && wakeuid == userid || this.openTeacherId == userid) {
+        // 插件中途可能断连了 此时addinversion为-1 需要比对下虚id  或者当前userid 和 开课教师的实虚id 有一个是相同的 就直接sayhello
+        if(wakeuid == userid || wakeuid == identityId || userid == userId || userid == identityId) {
           this.sayHello();
         } else if(!wakeuid) {
           // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案
           this.set_noWakeuid(true)
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
-        } else {
+        } else if(wakeuid != userid) {
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
           this.set_pretendSeizeAuth(true);
+        } else {
+          this.sayHello()
         }
       }
     },
