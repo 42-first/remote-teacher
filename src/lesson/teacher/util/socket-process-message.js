@@ -58,7 +58,7 @@ function socketProcessMessage(msg){
     // computed 数据有缓存，这里直接用store中的数据，而不是computed传过来的数据
     // 这两个数据是基本型
     let oldAtAcitvity = !_state.isInitiativeCtrlMaskHidden && _state.initiativeCtrlMaskTpl === 'Activity'
-    self.killMask()
+    msg.op !== 'slidenav' && self.killMask()
 
     oldAtAcitvity && self.showActivity()
     _state = null
@@ -267,7 +267,7 @@ function socketProcessMessage(msg){
     }
 
     self.showWhichPage(msg)
-    goHome.call(self)
+    // goHome.call(self)
     return
   }
 
