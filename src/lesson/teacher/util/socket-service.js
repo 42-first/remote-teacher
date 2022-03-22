@@ -185,15 +185,15 @@ let mixin = {
         // 分别用当前用户id 和 开课教师的实虚id 对比 有一个相同的就是开课教师
         if(wakeuid == userid || userid == openTeacherUId || userid == openTeacherIdentityId) {
           this.sayHello();
+        } else if(wakeuid != userid) {
+          this.$store.commit('set_isMsgMaskHidden', true);
+          this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
         } else if(!wakeuid) {
           // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案
           this.set_noWakeuid(true)
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
-        } else if(wakeuid != userid) {
-          this.$store.commit('set_isMsgMaskHidden', true);
-          this.openDeprive('isRobber');
-          this.set_pretendSeizeAuth(true);
         } else {
           this.sayHello()
         }
