@@ -112,9 +112,10 @@ function socketProcessMessage(msg){
         }
       } else {
         // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
-        self.setData({
-          isRobbing: false
-        })
+        // self.setData({
+        //   isRobbing: false
+        // })
+        self.$store.commit('set_isRobbing', false)
         // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
         self.showEscMask()
       }
@@ -123,9 +124,10 @@ function socketProcessMessage(msg){
     }
 
     // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
-    self.setData({
-      isRobbing: false
-    })
+    // self.setData({
+    //   isRobbing: false
+    // })
+    self.$store.commit('set_isRobbing', false)
 
     // 初始化弹幕按钮
     msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
@@ -185,8 +187,12 @@ function socketProcessMessage(msg){
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
+    // 先把正在夺权取消掉  然后展示夺权页面
+    self.$store.commit('set_isRobbing', false)
+    self.$store.commit('set_isMsgMaskHidden', true)
     self.openDeprive('notRobber', msg.byself)
-    T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
+    // 二级页面才展示 需要刷新夺权
+    self.$route.name !== 'teacher-v3' && T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
 
     return
   }

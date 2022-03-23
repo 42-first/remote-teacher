@@ -4,10 +4,8 @@
 		<div class="_inner">
       <div class="_title">{{msg}}</div>
       <div class="_btn-box">
-        <template v-show="!isCancelHidden">
-          <v-touch class="_btn" v-on:tap="cancel"><!-- 取消 -->{{ $t('cancel') }}</v-touch>
-          <div class="_bar"></div>
-        </template>
+          <v-touch v-show="!isCancelHidden" class="_btn" v-on:tap="cancel"><!-- 取消 -->{{ $t('cancel') }}</v-touch>
+          <div v-show="!isCancelHidden" class="_bar"></div>
         <v-touch class="_btn" style="color: #639EF4;" v-on:tap="confirm"><!-- 确定 -->{{ $t('confirm') }}</v-touch>
       </div>
     </div>
@@ -59,7 +57,7 @@
 
         switch (self.msg) {
           case config.pubsubmsg.modal[0]:
-            location.reload();
+            this.$router.back()
             break;
           case config.pubsubmsg.modal[1]:
             T_PUBSUB.publish('pro-msg.shoutih5', {problemid: +mark});
