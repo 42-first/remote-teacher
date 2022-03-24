@@ -291,6 +291,7 @@ const store = new Vuex.Store({
       commit('set_msgMaskTpl', 'Reconnect')
       commit('set_isMsgMaskHidden', false)
       commit('set_noWakeuid', false)
+      commit('set_pretendSeizeAuth', false)
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)

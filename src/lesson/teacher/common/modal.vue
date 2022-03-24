@@ -57,6 +57,8 @@
 
         switch (self.msg) {
           case config.pubsubmsg.modal[0]:
+            // 新课二级页面是二级路由 需要手动关闭弹窗 
+            self.isShown = false
             this.$router.back()
             break;
           case config.pubsubmsg.modal[1]:
