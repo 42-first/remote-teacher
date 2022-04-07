@@ -301,7 +301,7 @@ let pages = {
   "scorechart": "Score Chart",
   "submittedstudent": "Submission: {ss1} / {ss2}",
   "nosubmit": "No submission yet.",
-  "allvote": "Type of question: vote.",
+  "allvote": "Quiz with no scores~~",
   "cancel": "Cancel",
   "confirm": "Confirm",
   "publish": "Publish",
