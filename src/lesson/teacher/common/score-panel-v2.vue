@@ -278,10 +278,13 @@
        */
       decide (evt) {
         let self = this
-        if (self.problem_group_review_id && self.groupReviewScore && self.teacherScore){
-          self.validate('teacherScore') && self.validate('groupReviewScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
+        if (self.problem_group_review_id){
+          // 互评的时候 要两个都验证下 未打分的情况下 就直接为true
+          let teacherResult = self.teacherScore ? self.validate('teacherScore') : true
+          let reviewResult = self.groupReviewScore ? self.validate('groupReviewScore') : true
+          teacherResult && reviewResult && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }else {
-          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore || self.tempTeacherScore, self.groupReviewScore || self.tempReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
+          self.validate('teacherScore') && self.$emit('giveScore', self.answerindex, self.teacherScore, self.groupReviewScore, self.remark, self.teacherProportion, self.groupReviewProportion, self.answerId)
         }
 
 
