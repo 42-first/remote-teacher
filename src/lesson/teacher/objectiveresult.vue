@@ -660,11 +660,21 @@
 	      let self = this
 				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
+
+				// 填空题新增每个空的答题详情  可直接定位到那个空
+				let blank
+				if(this.addinversion > 5.0) {
+					blank = this.curTab	
+				}else {
+					blank = this.curTab + 1
+				}
+
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
 					'problemid': self.problemid,
-					'showresult': this.showAnswer
+					'showresult': this.showAnswer,
+					blank: self.problemType == 4 ? blank : undefined
 	      })
 	      self.socket.send(str)
 			},
