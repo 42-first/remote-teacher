@@ -40,7 +40,7 @@
         <div class="btn-desc f14">{{ $tc('screenmodeonoff', !isTouping) }}</div>
       </v-touch>
 
-      <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail_v3', params: { quizid: quizid }}">
+      <router-link tag="div" class="btn-item" :to="{name: 'quizresultdetail_v3', params: { quizid: quizid }, query: {nojump: 1}}">
         <div class="iconbox" style="background: #EEBC28;">
           <i class="iconfont icon-shiti_chakanxiangqing f28"></i>
         </div>

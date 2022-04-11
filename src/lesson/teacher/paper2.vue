@@ -30,7 +30,7 @@
       <section class="list downer" v-show="activeTab === 0">
         <!-- <div class="title f17">{{ $t('myquiz') }}</div> -->
 
-        <router-link tag="div" :to="{name: 'paperfolder_v3', params: {folderid: folder.dirId}}" class="folder f15" v-for="(folder, index) in dirList" :key="index">
+        <router-link tag="div" :to="{name: 'paperfolder_v3', params: {folderid: folder.dirId}, query: {nojump: 1}}" class="folder f15" v-for="(folder, index) in dirList" :key="index">
           <div class="left ellipsis">
             <img class="foldericon" src="~images/teacher/folder.png" alt="">
             {{folder.title}}
@@ -252,7 +252,8 @@
           name: 'quizresult_v3',
           params: {
             quizid,
-          }
+          },
+          query: {nojump: 1}
         }
 
         self.$router.push(to)

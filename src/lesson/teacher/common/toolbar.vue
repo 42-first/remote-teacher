@@ -228,7 +228,7 @@
       },
       goSet () {
         this.$emit('stateSet', 1)
-        this.$router.push({name: 'stateSet_v3'})
+        this.$router.push({name: 'stateSet_v3', query: {nojump: 1}})
         this.closeMore()
       },
       // 延迟关闭当前浮窗
