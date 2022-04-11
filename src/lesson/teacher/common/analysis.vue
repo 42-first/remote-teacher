@@ -221,10 +221,14 @@
 
         PubSub.subscribe('remark-msg.shown', (msg, data) => {
           this.hasThrownScreen = true
+
+          this.$store.commit('set_analysisRemarkId', data.prob)
         })
 
         PubSub.subscribe('remark-msg.closedshown', (msg, data) => {
           this.hasThrownScreen = false
+
+          this.$store.commit('set_analysisRemarkId', 0)
         })
       },
 
