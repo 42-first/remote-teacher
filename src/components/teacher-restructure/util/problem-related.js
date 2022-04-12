@@ -16,6 +16,7 @@ export default {
     return {
       unlockedproblem: [],                    // 已发布试题的页码的数组，页码是从1开始
       problemType: '',                        // 当前页题目的类型 主观题： ShortAnswer; 单选题: MultipleChoice; 多选题: MultipleChoiceMA; 投票题: Polling
+      isPending: false,
     }
   },
   components: {
@@ -80,6 +81,11 @@ export default {
      */
     unlockProblem (duration, groupid) {
       let self = this
+      if(this.isPending) {
+        return
+      }
+
+      this.isPending = true
 
       let current = self.current - 1
       let pptData = self.pptData
@@ -108,6 +114,10 @@ export default {
           } else {
             self.goHome()
           }
+
+          this.isPending = false
+        }).catch(err => {
+          this.isPending = false
         })
     },
 

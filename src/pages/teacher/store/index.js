@@ -67,7 +67,11 @@ const store = new Vuex.Store({
     isCloneClass: false,                     // 是不是克隆班
     pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
     noWakeuid: false,                        // 进入遥控器时发现没有wakeuid（开课的uid） 需要展示特殊的夺权页面以便后查问题
-
+    openTeacher: null,                        // 开启授课的老师
+    // 夺权相关的移到store中 
+    isRobber: false,                        // 是夺权者
+    isRobbing: false,                       // 正在夺权
+    byself: false,                          // 是自己夺权
   },
 
   mutations: {
@@ -239,6 +243,22 @@ const store = new Vuex.Store({
       state.noWakeuid = status;
     },
 
+    set_openTeacher(state, data) {
+      state.openTeacher = data
+    },
+
+    set_isRobber(state, status) {
+      state.isRobber = status
+    },
+
+    set_isRobbing(state, status) {
+      state.isRobbing = status
+    },
+
+    set_byself(state, status) {
+      state.byself = status
+    },
+
   },
 
   actions: {
@@ -270,6 +290,8 @@ const store = new Vuex.Store({
       commit('set_newdoubt', 0)
       commit('set_newtougao', 0)
 
+      commit('set_openTeacher', null)
+
     },
     resetModal: ({commit}) => {
       commit('set_isToastCtrlMaskHidden', true)
@@ -277,6 +299,7 @@ const store = new Vuex.Store({
       commit('set_msgMaskTpl', 'Reconnect')
       commit('set_isMsgMaskHidden', false)
       commit('set_noWakeuid', false)
+      commit('set_pretendSeizeAuth', false)
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
@@ -308,6 +331,22 @@ const store = new Vuex.Store({
 
     set_noWakeuid({commit}, status) {
       commit('set_noWakeuid', status)
+    },
+
+    set_openTeacher({commit}, data) {
+      commit('set_openTeacher', data)
+    },
+
+    set_isRobber({commit}, data) {
+      commit('set_isRobber', data)
+    },
+
+    set_isRobbing({commit}, data) {
+      commit('set_isRobbing', data)
+    },
+
+    set_byself({commit}, data) {
+      commit('set_byself', data)
     },
     
   },

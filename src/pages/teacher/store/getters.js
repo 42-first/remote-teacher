@@ -56,5 +56,9 @@ const getters = {
   isCloneClass: state => state.isCloneClass,
   pretendSeizeAuth: state => state.pretendSeizeAuth,
   noWakeuid: state => state.noWakeuid,
+  openTeacher: state => state.openTeacher,
+  isRobber: state => state.isRobber,
+  isRobbing: state => state.isRobbing,
+  byself: state => state.byself,
 };
 export default getters
