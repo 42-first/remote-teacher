@@ -102,14 +102,6 @@ function socketProcessMessage(msg){
         self.$store.commit('set_isMsgMaskHidden', true)
 
         self.showQrcodeMask()
-      } else if(msg.mask && msg.mask.type === 'wordcloud'){
-        if(msg.mask.cat == 'danmu'){
-          self.$store.commit('set_postWordCloudOpen', false)
-          self.$store.commit('set_danmuWordCloudOpen', true)
-        }else {
-          self.$store.commit('set_postWordCloudOpen', true)
-          self.$store.commit('set_danmuWordCloudOpen', false)
-        }
       } else {
         // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
         self.setData({
@@ -170,6 +162,18 @@ function socketProcessMessage(msg){
 
       // 教师可能刷新页面，得到当前的二维码状态并确定操作按钮的内容
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
+    }
+
+    if(msg.mask && msg.mask.type === 'wordcloud'){
+      if(msg.mask.cat == 'danmu'){
+        self.$store.commit('set_postWordCloudOpen', false)
+        self.$store.commit('set_danmuWordCloudOpen', true)
+      }else {
+        self.$store.commit('set_postWordCloudOpen', true)
+        self.$store.commit('set_danmuWordCloudOpen', false)
+      }
+    } else if(msg.mask && msg.mask.type === 'remark'){
+      self.$store.commit('set_analysisRemarkId', msg.mask.prob)
     }
 
     if(!msg.shownow){
@@ -466,6 +470,11 @@ function socketProcessMessage(msg){
       T_PUBSUB.publish('submission-msg.closepostwc', msg)
     }
 
+    // 退出答案解析投屏
+    if(msg.type == 'remark') {
+      T_PUBSUB.publish('remark-msg.closedshown', msg)
+    }
+
   }
 
   // 获取随机点名名单列表
@@ -516,6 +525,11 @@ function socketProcessMessage(msg){
   // 发送答案解析回执
   if (msg.op == 'problemremark'){
     T_PUBSUB.publish('remark-msg.send', msg)
+  }
+
+  // 答案解析投屏了
+  if(msg.op == 'problemremarkshown') {
+    T_PUBSUB.publish('remark-msg.shown', msg)
   }
 
 }

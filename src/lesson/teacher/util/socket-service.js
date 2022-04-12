@@ -89,11 +89,13 @@ let mixin = {
         // 上报连接 socket 动作
 
 
-        this.socket.onerror = function(event) {
+        self.socket.onerror = function(event) {
         }
 
         // 关闭
-        this.socket.onclose = function(event) {
+        self.socket.onclose = function(event) {
+
+          console.log('websocket 关闭了')
 
           self.closews()
           self.isSocketConnected = false
@@ -119,7 +121,7 @@ let mixin = {
         }
 
         // 接收socket信息
-        this.socket.onopen = function(event) {
+        self.socket.onopen = function(event) {
           isReconnect = false
           self.isSocketConnected = true
           // self.sendXinTiao()

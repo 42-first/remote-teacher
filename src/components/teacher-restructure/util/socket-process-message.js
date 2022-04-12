@@ -24,6 +24,21 @@ function remoteReset() {
 
 function socketProcessMessage(msg){
   let self = this
+  const { op, mask } = msg
+  if(op === "hello") {
+    if (mask && mask.type === "remark") {
+      const { prob } = mask
+
+      this.socket.send(JSON.stringify({
+        'op': 'closemask',
+        'lessonid': this.lessonid,
+        'type': 'remark',
+        'msgid': 1
+      }));
+
+      // this.$store.commit('set_analysisRemarkId', prob)
+    }
+  }
 
   if(msg.op === "detectlesson") {
     this.detectlessonHandle(msg);
@@ -94,14 +109,6 @@ function socketProcessMessage(msg){
         self.$store.commit('set_isMsgMaskHidden', true)
 
         self.showQrcodeMask()
-      } else if(msg.mask && msg.mask.type === 'wordcloud'){
-        if(msg.mask.cat == 'danmu'){
-          self.$store.commit('set_postWordCloudOpen', false)
-          self.$store.commit('set_danmuWordCloudOpen', true)
-        }else {
-          self.$store.commit('set_postWordCloudOpen', true)
-          self.$store.commit('set_danmuWordCloudOpen', false)
-        }
       } else {
         // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
         self.setData({
@@ -158,6 +165,18 @@ function socketProcessMessage(msg){
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
     }
 
+    if(msg.mask && msg.mask.type === 'wordcloud'){
+      if(msg.mask.cat == 'danmu'){
+        self.$store.commit('set_postWordCloudOpen', false)
+        self.$store.commit('set_danmuWordCloudOpen', true)
+      }else {
+        self.$store.commit('set_postWordCloudOpen', true)
+        self.$store.commit('set_danmuWordCloudOpen', false)
+      }
+    } else if(msg.mask && msg.mask.type === 'remark'){
+      self.$store.commit('set_analysisRemarkId', msg.mask.prob)
+    }
+
     if(!msg.shownow){
       // qrcode为0时，有可能是第一次打开页面，此时并未播放，要在手机上点击开始上课，也显示二维码控制页
       self.$store.commit('set_isMsgMaskHidden', true)
@@ -168,6 +187,10 @@ function socketProcessMessage(msg){
     return
   }
 
+  // todo: 针对首次进入页面，已经有在投屏的答案解析的习题存储
+  if (msg.op === 'hello') {
+    console.log(msg.op)
+  }
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
@@ -280,12 +303,20 @@ function socketProcessMessage(msg){
   //习题柱状图投屏了
   if (msg.op == 'postproblemresult') {
     T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: +msg.problemid});
+    this.$store.dispatch('toupinginfo', {
+      id: msg.problemid,
+      status: true
+    })
     return
   }
   //习题柱状图取消投屏了
   if (msg.op == 'closeproblemresult') {
     T_PUBSUB.publish('pro-msg.closeproblemresult', {problemid: +msg.problemid});
     localStorage.removeItem('posting-problem'+msg.problemid)
+    this.$store.dispatch('toupinginfo', {
+      id: msg.problemid,
+      status: false
+    })
     return
   }
 
@@ -454,6 +485,11 @@ function socketProcessMessage(msg){
       T_PUBSUB.publish('submission-msg.closepostwc', msg)
     }
 
+    // 退出答案解析投屏
+    if(msg.type == 'remark') {
+      T_PUBSUB.publish('remark-msg.closedshown', msg)
+    }
+
   }
 
   // 获取随机点名名单列表
@@ -499,6 +535,16 @@ function socketProcessMessage(msg){
   // 投稿未读数目
   if (msg.op == 'unreadpost') {
     self.$store.commit('set_newtougao', msg.number || 0)
+  }
+
+  // 发送答案解析回执
+  if (msg.op == 'problemremark'){
+    T_PUBSUB.publish('remark-msg.send', msg)
+  }
+
+  // 答案解析投屏了
+  if(msg.op == 'problemremarkshown') {
+    T_PUBSUB.publish('remark-msg.shown', msg)
   }
 
 }

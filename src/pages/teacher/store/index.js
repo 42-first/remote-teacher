@@ -59,8 +59,10 @@ const store = new Vuex.Store({
 
     newToolBar: !1,
     addinversion: 0,                        // 插件协议版本号
+    toupinginfo: 0,                          // 记录当前投屏的problemid
     postWordCloudOpen: false,               // 投稿词云是否开启
     danmuWordCloudOpen: false,               // 弹幕词云是否开启
+    analysisRemarkId: 0,                    // 标示当前答案解析投屏状态的problemid
 
     isCloneClass: false,                     // 是不是克隆班
     pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
@@ -211,11 +213,17 @@ const store = new Vuex.Store({
     addinversion(state, addinversion) {
       state.addinversion = addinversion
     },
+    set_toupinginfo(state, toupinginfo) {
+      state.toupinginfo = toupinginfo
+    },
     set_postWordCloudOpen(state, isWordCloudOpen){
       state.postWordCloudOpen = isWordCloudOpen
     },
     set_danmuWordCloudOpen(state, isWordCloudOpen){
       state.danmuWordCloudOpen = isWordCloudOpen
+    },
+    set_analysisRemarkId(state, id) {
+      state.analysisRemarkId = id
     },
     set_toolbarIndex(state, index) {
       state.toolbarIndex = index
@@ -273,11 +281,17 @@ const store = new Vuex.Store({
     addinversion({commit}, payload) {
       commit('addinversion', payload)
     },
+    toupinginfo({ commit }, payload) {
+      commit('set_toupinginfo', payload)
+    },
     set_postWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_postWordCloudOpen', isWordCloudOpen)
     },
     set_danmuWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_danmuWordCloudOpen', isWordCloudOpen)
+    },
+    set_analysisRemarkId({commit}, id) {
+      commit("set_analysisRemarkId", id)
     },
     set_toolbarIndex({commit}, index) {
       commit('set_toolbarIndex', index);
