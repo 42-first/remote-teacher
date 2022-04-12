@@ -144,7 +144,8 @@ if (process.env.NODE_ENV === 'production' || 1) {
     // 设置语言
     set_lang_en: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/en',
     set_lang_zh_cn: 'http://apimock.xuetangx.com/mock/115/v/user/set_language/zh_cn',
-    get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    // get_classroom_group_list:           'http://apimock.xuetangx.com/mock/115/group/get_classroom_group_list/',
+    get_classroom_group_list:           '/group/get_classroom_group_list/',
     publish_subj_problem_group_review:  'http://apimock.xuetangx.com/mock/115/v/lesson/publish_subj_problem_group_review/',
     get_subj_result_score_detail:       'http://apimock.xuetangx.com/mock/115/v/lesson/get_subj_result_score_detail/',
     edit_subj_problem_score_proportion: 'http://apimock.xuetangx.com/mock/115/v/lesson/edit_subj_problem_score_proportion',

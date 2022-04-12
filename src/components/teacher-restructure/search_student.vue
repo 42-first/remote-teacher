@@ -1,6 +1,7 @@
 <!-- 搜索列表 -->
 <template>
 	<section class="search-wrapper">
+		<slot name="ykt-msg"></slot>
     <div class="search-header flexbetween">
 			<div class="search-box">
 				<i class="iconfont icon-sousuo search"></i>

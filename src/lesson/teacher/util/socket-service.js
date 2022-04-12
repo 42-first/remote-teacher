@@ -89,11 +89,13 @@ let mixin = {
         // 上报连接 socket 动作
 
 
-        this.socket.onerror = function(event) {
+        self.socket.onerror = function(event) {
         }
 
         // 关闭
-        this.socket.onclose = function(event) {
+        self.socket.onclose = function(event) {
+
+          console.log('websocket 关闭了')
 
           self.closews()
           self.isSocketConnected = false
@@ -119,7 +121,7 @@ let mixin = {
         }
 
         // 接收socket信息
-        this.socket.onopen = function(event) {
+        self.socket.onopen = function(event) {
           isReconnect = false
           self.isSocketConnected = true
           // self.sendXinTiao()
@@ -154,7 +156,7 @@ let mixin = {
     },
     sayHello () {
       // 握手开始通信
-      const userid =  this.userid;
+      const userid = this.identityId || this.userid;
       console.log(userid);
       this.socket.send(JSON.stringify({
         'op': 'hello',
@@ -174,23 +176,28 @@ let mixin = {
         userid = this.identityId;
       }
       console.log(userid);
+      let {userId: openTeacherUId, identityId: openTeacherIdentityId} = this.openTeacher
+
       // console.log(remoteuid, wakeuid);
       if (!!remoteuid) {
         this.sayHello();
       } else {
         // 当前遥控器没有使用:
         // 当前用户为开课开课老师
-        if(wakeuid && wakeuid == userid) {
+        // 分别用当前用户id 和 开课教师的实虚id 对比 有一个相同的就是开课教师
+        if(wakeuid == userid || userid == openTeacherUId || userid == openTeacherIdentityId) {
           this.sayHello();
+        } else if(wakeuid != userid) {
+          this.$store.commit('set_isMsgMaskHidden', true);
+          this.openDeprive('isRobber');
+          this.set_pretendSeizeAuth(true);
         } else if(!wakeuid) {
           // 没有wakeuid 需要记录下状态 夺权页面展示不同的文案
           this.set_noWakeuid(true)
           this.$store.commit('set_isMsgMaskHidden', true);
           this.openDeprive('isRobber');
         } else {
-          this.$store.commit('set_isMsgMaskHidden', true);
-          this.openDeprive('isRobber');
-          this.set_pretendSeizeAuth(true);
+          this.sayHello()
         }
       }
     },

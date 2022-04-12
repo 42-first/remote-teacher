@@ -102,19 +102,12 @@ function socketProcessMessage(msg){
         self.$store.commit('set_isMsgMaskHidden', true)
 
         self.showQrcodeMask()
-      } else if(msg.mask && msg.mask.type === 'wordcloud'){
-        if(msg.mask.cat == 'danmu'){
-          self.$store.commit('set_postWordCloudOpen', false)
-          self.$store.commit('set_danmuWordCloudOpen', true)
-        }else {
-          self.$store.commit('set_postWordCloudOpen', true)
-          self.$store.commit('set_danmuWordCloudOpen', false)
-        }
       } else {
         // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
-        self.setData({
-          isRobbing: false
-        })
+        // self.setData({
+        //   isRobbing: false
+        // })
+        self.$store.commit('set_isRobbing', false)
         // 电脑结束放映，显示 '已退出全屏放映\n或放映正在连接中'
         self.showEscMask()
       }
@@ -123,9 +116,10 @@ function socketProcessMessage(msg){
     }
 
     // 到这一步，如果是夺权，夺权成功了，隐藏 '正在夺权...'
-    self.setData({
-      isRobbing: false
-    })
+    // self.setData({
+    //   isRobbing: false
+    // })
+    self.$store.commit('set_isRobbing', false)
 
     // 初始化弹幕按钮
     msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
@@ -172,6 +166,18 @@ function socketProcessMessage(msg){
       self.$store.commit('set_qrcodeStatus', +msg.mask.qrcode)
     }
 
+    if(msg.mask && msg.mask.type === 'wordcloud'){
+      if(msg.mask.cat == 'danmu'){
+        self.$store.commit('set_postWordCloudOpen', false)
+        self.$store.commit('set_danmuWordCloudOpen', true)
+      }else {
+        self.$store.commit('set_postWordCloudOpen', true)
+        self.$store.commit('set_danmuWordCloudOpen', false)
+      }
+    } else if(msg.mask && msg.mask.type === 'remark'){
+      self.$store.commit('set_analysisRemarkId', msg.mask.prob)
+    }
+
     if(!msg.shownow){
       // qrcode为0时，有可能是第一次打开页面，此时并未播放，要在手机上点击开始上课，也显示二维码控制页
       self.$store.commit('set_isMsgMaskHidden', true)
@@ -185,8 +191,12 @@ function socketProcessMessage(msg){
   //控制权被夺
   if (msg.op == 'remotedeprived') {
     // TODO 是否需要关闭定时器
+    // 先把正在夺权取消掉  然后展示夺权页面
+    self.$store.commit('set_isRobbing', false)
+    self.$store.commit('set_isMsgMaskHidden', true)
     self.openDeprive('notRobber', msg.byself)
-    T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
+    // 二级页面才展示 需要刷新夺权
+    self.$route.name !== 'teacher-v3' && T_PUBSUB.publish('ykt-msg-modal', {msg: config.pubsubmsg.modal[0], isCancelHidden: true})
 
     return
   }
@@ -438,7 +448,7 @@ function socketProcessMessage(msg){
       // 随机点名页面关闭时触发的，不需要响应
       // T_PUBSUB.publish('call-msg.callpaused', msg)
       // 随机点名的时候，继续上课没有搞懂为啥回来就存在面板遮盖，这里强制刷新一次解决
-      location.reload()
+      // location.reload()
       return
     }
 
@@ -464,6 +474,11 @@ function socketProcessMessage(msg){
     if (msg.type == 'wordcloud') {
       T_PUBSUB.publish('danmu-msg.closedanmuwc', msg)
       T_PUBSUB.publish('submission-msg.closepostwc', msg)
+    }
+
+    // 退出答案解析投屏
+    if(msg.type == 'remark') {
+      T_PUBSUB.publish('remark-msg.closedshown', msg)
     }
 
   }
@@ -516,6 +531,11 @@ function socketProcessMessage(msg){
   // 发送答案解析回执
   if (msg.op == 'problemremark'){
     T_PUBSUB.publish('remark-msg.send', msg)
+  }
+
+  // 答案解析投屏了
+  if(msg.op == 'problemremarkshown') {
+    T_PUBSUB.publish('remark-msg.shown', msg)
   }
 
 }
