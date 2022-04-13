@@ -24,7 +24,7 @@
       <!-- 填空题条形图 -->
       <template v-if="problemType === 4">
 				<div class="return-btn box-start cfff f14" v-if="curTab !== -1 && showEachBlankDetail" @click="handleChangeCurTab(-1)"> 
-					<i class="iconfont icon-fanhui f20"></i> 返回 
+					<i class="iconfont icon-a-30-youjiantou f20"></i> 返回 
 				</div>
         <FillblankBox class="FillblankBox"
           :total="checkinCount"
@@ -797,13 +797,13 @@
 		.upper {
 			margin: 0 auto;
 			width: 9.7rem;
-			height: 4.0rem;
-			padding-top: 0.8rem; 
+			height: 2.93333333rem;
+			padding-top: 0.26666667rem; 
 		}
 
 		.return-btn {
 			padding-left: 0.53333333rem;
-			margin-top: 0.13333333rem;
+			margin: 0.53333333rem 0 -0.4rem;
 		}
 
 	  /* 调整中间条形头的高度 */
@@ -818,7 +818,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 1.2rem 0 0.5rem;
+		  padding: 0.8rem 0 0.53333333rem;
 
 		  .btn-item {
 			  width: 1.8rem;

@@ -20,6 +20,7 @@ let pages = {
   "prob2": "Questions",
   "quiz2": "Quizzes",
   "bonus": "Bonus",
+  "allright": "All right",
 
   // 空状态
   "noslides": "No slides yet.",

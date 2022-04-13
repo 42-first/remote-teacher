@@ -35,7 +35,7 @@
     <div class="realdata f14">
       <div class="real-item real-item-qb" v-if="result_graph.length > 2 && curTab == -1">
         <div class="left-bar">
-          <span class="desc"><!-- 全部 -->{{ $t('total') }}</span>
+          <span class="desc"><!-- 全对 -->{{ $t('allright') }}</span>
           <div class="fill blue" :style="{width: `${correctNum/total*100}%`}"></div>
         </div>
         <div class="rightnum f17">{{correctNum}}</div>	
@@ -45,10 +45,10 @@
         <div class="left-bar" @click="handleChangeTab(index)">
           <span class="desc" :style="{'opacity': showDesc(item)}">{{curTab == -1 ? index + 1 : curTab + 1}}</span>
           <div class="fill" :class="item.isCorrect && curTab != -1 ? 'blue' : ''" :style="{width: `${item.count/total*100}%`}"></div>
-          <div class="answer ellipsis">{{item.label}}</div>
+          <div class="answer ellipsis">答案：{{item.label}}</div>
           <div class="detail box-center cfff f14" v-if="blankNum > 1 && !orderInsensitive && curTab == -1 && showEachBlankDetail">
             详情 
-            <i class="iconfont icon-dakai f16"></i>
+            <i class="iconfont icon--danjiantouxiangyou f16"></i>
           </div>
         </div>
         <div class="rightnum f17">{{item.count}}</div>
@@ -147,7 +147,7 @@
   /* 中间条形图 */
   .fillblank-box {
     position: relative;
-    margin: 0.5rem auto;
+    margin: 0.74666667rem auto 0;
     width: 8.8rem;
     height: 5.0rem;
     border-bottom: 0.0133rem solid #AAAAAA;
@@ -194,7 +194,7 @@
     .real-item {
       display: flex;
       align-items: center;
-      margin-bottom: 60px;
+      margin-bottom: 0.9rem;
 
       .left-bar {
         position: relative;
@@ -229,6 +229,9 @@
           &.detail {
             left: unset;
             right: 0;
+            .iconfont {
+              margin-left: 0.10666667rem;
+            }
           }
         }
       }
@@ -240,7 +243,7 @@
     }
 
     .real-item-qb {
-      margin-bottom: 30px;
+      margin-bottom: 0.4rem;
     }
   }
 
