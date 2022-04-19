@@ -24,7 +24,7 @@
       <!-- 填空题条形图 -->
       <template v-if="problemType === 4">
 				<div class="return-btn box-start cfff f14" v-if="curTab !== -1 && showEachBlankDetail" @click="handleChangeCurTab(-1)"> 
-					<i class="iconfont icon-a-30-youjiantou f20"></i> 返回 
+					<i class="iconfont icon-a-30-youjiantou f20"></i> <!-- 返回 --> {{ $t('back') }}
 				</div>
         <FillblankBox class="FillblankBox"
           :total="checkinCount"
