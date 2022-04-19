@@ -21,6 +21,9 @@ let pages = {
   "quiz2": "试卷",
   "bonus": "红包",
   "allright": "全对",
+  "renshu": "人数",
+  "blankanswer": "答案：",
+  "blankdetail": "详情",
 
   // 空状态
   "noslides": "还没有开始播放幻灯片~",

@@ -21,6 +21,9 @@ let pages = {
   "quiz2": "Quizzes",
   "bonus": "Bonus",
   "allright": "All right",
+  "renshu": "Answered",
+  "blankanswer": "Answer: ",
+  "blankdetail": "Details",
 
   // 空状态
   "noslides": "No slides yet.",

@@ -28,7 +28,7 @@
         <span class="num">100%</span>
         <span class="line"></span>
       </div>
-      <div class="rightnum"><!-- {{ $t('zqrs') }} -->人数</div>
+      <div class="rightnum"><!--  人数 -->{{ $t('renshu') }}</div>
     </div>
     
     <!-- 真实数据 -->
@@ -45,9 +45,9 @@
         <div class="left-bar" @click="handleChangeTab(index)">
           <span class="desc" :style="{'opacity': showDesc(item)}">{{curTab == -1 ? index + 1 : curTab + 1}}</span>
           <div class="fill" :class="item.isCorrect && curTab != -1 ? 'blue' : ''" :style="{width: `${item.count/total*100}%`}"></div>
-          <div class="answer ellipsis">答案：{{item.label}}</div>
+          <div class="answer ellipsis">{{ item.isCorrect ? $t('blankanswer') : '' }}{{item.label}}</div>
           <div class="detail box-center cfff f14" v-if="blankNum > 1 && !orderInsensitive && curTab == -1 && showEachBlankDetail">
-            详情 
+            <!-- 详情  --> {{ $t('blankdetail') }}
             <i class="iconfont icon--danjiantouxiangyou f16"></i>
           </div>
         </div>
@@ -85,7 +85,7 @@
           }
         } else {
           // 乱序 或者 只有一个空时直接取0
-          return this.orderInsensitive ? this.blankDetail[0].splice(0,5) : this.blankDetail[0]
+          return this.blankDetail[0]
         }
         
       },
@@ -100,9 +100,7 @@
           if(this.orderInsensitive) {
             return [...this.result_graph.sort((a,b) => {
               return b.count - a.count
-            }), ...this.curBlankResults.sort((a,b) => {
-              return b.count - a.count
-            })]
+            }), ...this.curBlankResults]
           } else {
             // 非乱序 不展示错误答案  直接展示graph
             return this.result_graph
@@ -117,7 +115,7 @@
           }
 
           // 展示答案 正确答案排前面  错误答案降序
-          return [...blank, ...this.curBlankResults.sort((a, b) => {b.count - a.count})]
+          return [...blank, ...this.curBlankResults]
         }
       
       },
