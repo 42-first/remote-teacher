@@ -22,7 +22,7 @@ let pages = {
   "bonus": "红包",
   "allright": "全对",
   "renshu": "人数",
-  "blankanswer": "答案：",
+  "remoteblankanswer": "答案：",
   "blankdetail": "详情",
 
   // 空状态

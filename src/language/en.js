@@ -22,7 +22,7 @@ let pages = {
   "bonus": "Bonus",
   "allright": "All right",
   "renshu": "Answered",
-  "blankanswer": "Answer: ",
+  "remoteblankanswer": "Answer: ",
   "blankdetail": "Details",
 
   // 空状态
