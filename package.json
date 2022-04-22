@@ -1,6 +1,6 @@
 {
   "name": "remote-teacher",
-  "version": "3.3.149",
+  "version": "3.3.151",
   "description": "雨课堂遥控器接收器",
   "author": "liujunyang <liujunyangscript@gmail.com>",
   "private": true,
@@ -9,6 +9,7 @@
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "build-qiniu": "cross-env BUILD_ENV=qiniu node build/build.js",
+    "build-aliyun": "cross-env BUILD_ENV=ykt node build/build.js",
     "ws": "node build/dev-ws-server.js",
     "onthunder": "npm run build && ./bin/onnewthunder",
     "on199": "npm run build && ./bin/on199",
