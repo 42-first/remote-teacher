@@ -91,6 +91,9 @@
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid,
 						'userid': user_id
+					},
+					query: {
+						nojump: 1
 					}
 				})
 			},
