@@ -124,8 +124,9 @@
 	  },
 	  methods: {
 	  	handleChangeTab(index) {
-        if(!this.showEachBlankDetail || this.curTab != -1) return 
-        this.$emit('changeTab', index)
+        if(this.blankNum > 1 && !this.orderInsensitive && this.curTab == -1) {
+          this.$emit('changeTab', index)
+        }
       },
       showDesc(item){
         if(!this.showEachBlankDetail) return 1
