@@ -287,7 +287,7 @@ function socketProcessMessage(msg){
     }
 
     self.showWhichPage(msg)
-    !self.$route.query.nojump && self.$route.name != 'teacher-v3' && goHome.call(self)
+    !self.$route.query.nojump && self.$route.name != 'home' && goHome.call(self)
     // goHome.call(self)
     return
   }
