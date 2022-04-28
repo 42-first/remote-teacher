@@ -32,17 +32,21 @@
       >
       <div class="item-with-gap" v-for="(item, index) in dataList" :key="index">
         <div class="item">
+          <div class="box-between">
+            <div class="user-box box-start">
+              <img :src="item.avatar" alt="">
+              <span class="f14 c666">{{ item.userName }}</span>
+            </div>
+            <div class="time f15">{{item.sendTime | formatTime}}</div>
+          </div>
           <div class="detail">
-            <img :src="item.avatar" alt="">
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
-            <div class="time f15">{{item.sendTime | formatTime}}</div>
             <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
             <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
           </div>
         </div>
-        <div class="gap"></div>
       </div>
       <div v-show="isAllLoaded" class="nomore f15">
         <div class="bgline"></div>
@@ -433,8 +437,8 @@
   .danmu-box {
     position: relative;
     height: 100%;
-    padding: px2rem(110px) 0 px2rem(140px) 0;
-    background: #EDF2F6;
+    padding: px2rem(110px) 0;
+    background: #fff;
     color: #4A4A4A;
     overflow: hidden;
 
@@ -568,8 +572,8 @@
     }
 
     .gap {
-      height: 0.266667rem;
-      background: #EDF2F6;
+      height: 0.13333333rem;
+      background: #eee;
     }
 
     .list {
@@ -579,8 +583,18 @@
       -webkit-overflow-scrolling: touch;
       
       .item {
-        padding: 0 0.4rem;
+        padding: 0.4rem 0.4rem 0.26666667rem;
         background: $white;
+        border-bottom: 1px solid #eee;
+
+        .user-box {
+          img {
+            margin-right: 0.26666667rem;
+            width: 0.96rem;
+            height: 0.96rem;
+            border-radius: 50%;
+          }
+        }
 
         .detail {
           display: flex;
@@ -588,21 +602,16 @@
           margin-bottom: 0.4rem;
           padding-top: 0.266667rem;
 
-          img {
-            margin-right: 0.4rem;
-            width: 0.986667rem;
-            height: 0.986667rem;
-            border-radius: 50%;
-          }
           .danmu {
             flex: 1;
             word-break: break-word;
+            padding-left: 1.22666667rem;
           }
         }
 
         .action-box {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
           align-items: center;
           height: 1rem;
           margin-left: 1.386667rem;
@@ -627,7 +636,7 @@
       .nomore {
         position: relative;
         height: px2rem(45px);
-        margin: 0 0.6rem;
+        margin: 0.4rem 0.6rem;
         text-align: center;
         color: $graybg;
 
@@ -635,7 +644,7 @@
           position: relative;
           margin: 0 auto;
           width: 2.093333rem;
-          background: #EDF2F6;
+          // background: #EDF2F6;
         }
 
         .bgline {
@@ -643,7 +652,7 @@
           top: 0.293333rem;
           width: 100%;
           height: 1px;
-          background: #c8c8c8;
+          // background: #c8c8c8;
         }
       }
     }
