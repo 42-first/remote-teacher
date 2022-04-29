@@ -45,7 +45,7 @@
         <div class="left-bar" @click="handleChangeTab(index)">
           <span class="desc" :style="{'opacity': showDesc(item)}">{{curTab == -1 ? index + 1 : curTab + 1}}</span>
           <div class="fill" :class="item.isCorrect && curTab != -1 ? 'blue' : ''" :style="{width: `${item.count/total*100}%`}"></div>
-          <div class="answer ellipsis">{{ item.isCorrect ? $t('remoteblankanswer') : '' }}{{item.label}}</div>
+          <div class="answer" :class="{'ellipsis': curTab == -1}">{{ item.isCorrect ? $t('remoteblankanswer') : '' }}{{item.label}}</div>
           <div class="detail box-center cfff f14" v-if="blankNum > 1 && !orderInsensitive && curTab == -1 && showEachBlankDetail">
             <!-- 详情  --> {{ $t('blankdetail') }}
             <i class="iconfont icon--danjiantouxiangyou f16"></i>
@@ -224,6 +224,11 @@
           left: 0;
           top: 32px;
           max-width: 100%;
+          text-align: left;
+
+          &.ellipsis {
+            max-width: calc(100% - 1.6rem);
+          }
 
           &.detail {
             left: unset;
