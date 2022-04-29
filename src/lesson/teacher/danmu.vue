@@ -37,7 +37,7 @@
               <img :src="item.avatar" alt="">
               <span class="f14 c666">{{ item.userName }}</span>
             </div>
-            <div class="time f15">{{item.sendTime | formatTime}}</div>
+            <div class="time f14 c666">{{item.sendTime | formatTime}}</div>
           </div>
           <div class="detail">
             <div class="danmu f18">{{item.message}}</div>
@@ -583,7 +583,7 @@
       -webkit-overflow-scrolling: touch;
       
       .item {
-        padding: 0.4rem 0.4rem 0.26666667rem;
+        padding: 0.4rem 0.4rem 0;
         background: $white;
         border-bottom: 1px solid #eee;
 
@@ -599,7 +599,7 @@
         .detail {
           display: flex;
           // align-items: center;
-          margin-bottom: 0.4rem;
+          margin-bottom: 0.13333333rem;
           padding-top: 0.266667rem;
 
           .danmu {
@@ -615,19 +615,21 @@
           align-items: center;
           height: 1rem;
           margin-left: 1.386667rem;
+          margin-right: -0.4rem;
 
-          .time {
-            color: $graybg;
-          }
           .gray {
             color: $graybg;
+            height: 1.06666667rem;
+            line-height: 1.06666667rem;
+            padding: 0 0.4rem;
           }
           .cancel-post-btn {
             background: $blue;
-            width: 2.733333rem;
+            // width: 2.733333rem;
             text-align: center;
-            height: 0.826667rem;
-            line-height: 0.826667rem;
+            height: 1.06666667rem;
+            line-height: 1.06666667rem;
+            padding: 0 0.4rem;
             color: $white;
           }
         }
