@@ -34,24 +34,30 @@
     <!-- 真实数据 -->
     <div class="realdata f14">
       <div class="real-item real-item-qb" v-if="result_graph.length > 2 && curTab == -1">
-        <div class="left-bar">
-          <span class="desc"><!-- 全对 -->{{ $t('allright') }}</span>
-          <div class="fill blue" :style="{width: `${correctNum/total*100}%`}"></div>
+        <div class="box-center">
+          <div class="left-bar">
+            <span class="desc"><!-- 全对 -->{{ $t('allright') }}</span>
+            <div class="fill blue" :style="{width: `${correctNum/total*100}%`}"></div>
+          </div>
+          <div class="rightnum f17">{{correctNum}}</div>
         </div>
-        <div class="rightnum f17">{{correctNum}}</div>	
       </div>
 
       <div class="real-item" v-for="(item, index) in finalResult" :key="index">
-        <div class="left-bar" @click="handleChangeTab(index)">
-          <span class="desc" :style="{'opacity': showDesc(item)}">{{curTab == -1 ? index + 1 : curTab + 1}}</span>
-          <div class="fill" :class="item.isCorrect && curTab != -1 ? 'blue' : ''" :style="{width: `${item.count/total*100}%`}"></div>
+        <div class="box-center">
+          <div class="left-bar" @click="handleChangeTab(index)">
+            <span class="desc" :style="{'opacity': showDesc(item)}">{{curTab == -1 ? index + 1 : curTab + 1}}</span>
+            <div class="fill" :class="item.isCorrect && curTab != -1 ? 'blue' : ''" :style="{width: `${item.count/total*100}%`}"></div>
+          </div>
+          <div class="rightnum f17">{{item.count}}</div>
+        </div> 
+        <div class="box-between answer-box" @click="handleChangeTab(index)">
           <div class="answer" :class="{'ellipsis': curTab == -1}">{{ item.isCorrect ? $t('remoteblankanswer') : '' }}{{item.label}}</div>
           <div class="detail box-center cfff f14" v-if="blankNum > 1 && !orderInsensitive && curTab == -1 && showEachBlankDetail">
             <!-- 详情  --> {{ $t('blankdetail') }}
             <i class="iconfont icon--danjiantouxiangyou f16"></i>
           </div>
         </div>
-        <div class="rightnum f17">{{item.count}}</div>
       </div>
 
     </div>
@@ -192,8 +198,9 @@
 
     .real-item {
       display: flex;
-      align-items: center;
-      margin-bottom: 0.9rem;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 0.2rem;
 
       .left-bar {
         position: relative;
@@ -219,10 +226,17 @@
           }
         }
 
+        
+      }
+
+      .rightnum {
+        flex: 1;
+        padding-left: 0.62rem;
+      }
+
+      .answer-box {
+        width: 6.2rem;
         .answer, .detail {
-          position: absolute;
-          left: 0;
-          top: 32px;
           max-width: 100%;
           text-align: left;
 
@@ -231,18 +245,11 @@
           }
 
           &.detail {
-            left: unset;
-            right: 0;
             .iconfont {
               margin-left: 0.10666667rem;
             }
           }
         }
-      }
-
-      .rightnum {
-        flex: 1;
-        padding-left: 0.62rem;
       }
     }
 
