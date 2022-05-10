@@ -7,7 +7,7 @@
         <span class="coursename ellipsis">{{coursename}}</span>
       </div>
       <div class="head-link-wrap">
-        <router-link tag="div" :to="{name: 'member', query: {count: studentCount}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
+        <router-link tag="div" :to="{name: 'member', query: {count: studentCount, nojump: 1}}" class="student f17 J_ga" data-category="5" data-label="课堂动态页">
           <div class="avatar-box">
             <img v-for="(item, index) in participantList.slice(0, 10).reverse()" :key="index" :src="item ||'https://qn-sfe.yuketang.cn/o_1bsn23hg89klt0h1lb01p63dd69.jpg'" alt="">
           </div>
@@ -22,7 +22,7 @@
       </div>
       
     </section>
-    <router-link :to="{name: 'paper'}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
+    <router-link :to="{name: 'paper', query: {nojump: 1}}" class="activity-item f18 J_ga" data-category="16" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #50E3C2;">
           <i class="iconfont icon-shiti_shijuan f21"></i>
@@ -33,7 +33,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link tag="div" :to="{name: 'danmu'}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
+    <router-link tag="div" :to="{name: 'danmu', query: {nojump: 1}}" class="activity-item f18 J_ga" data-category="6" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #BF7EF8;">
           <i class="iconfont icon-ykq_tab_danmu f21"></i>
@@ -45,7 +45,7 @@
         <i class="iconfont icon-dakai f21"></i>
       </div>
     </router-link>
-    <router-link :to="{name: 'submission'}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
+    <router-link :to="{name: 'submission', query: {nojump: 1}}" class="activity-item f18 J_ga" data-category="8" data-label="课堂动态页">
       <div>
         <div class="iconbox" style="background: #FF576B;">
           <i class="iconfont icon-ykq_tab_tougao f21"></i>
@@ -170,7 +170,7 @@
 			toTeam() {
 				let self = this;
 				console.log(self.classroomid + '--' + self.lessonid);
-				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid;
+				location.href = '/team/teacher/' + self.classroomid + '?from=lesson&lessonid=' + self.lessonid + '&nojump=1';
       },
       /** 
        * 新增随机点名入口

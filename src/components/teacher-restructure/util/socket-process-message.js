@@ -70,7 +70,10 @@ function socketProcessMessage(msg){
     // computed 数据有缓存，这里直接用store中的数据，而不是computed传过来的数据
     // 这两个数据是基本型
     let oldAtAcitvity = !_state.isInitiativeCtrlMaskHidden && _state.initiativeCtrlMaskTpl === 'Activity'
-    self.killMask()
+    // 发题面板时 需要killmask
+    if(!_state.isInitiativeCtrlMaskHidden && _state.initiativeCtrlMaskTpl == 'Problemtime' && msg.op == 'slidenav' || msg.op !== 'slidenav'){
+      self.killMask()
+    }
 
     oldAtAcitvity && self.showActivity()
     _state = null
@@ -284,7 +287,8 @@ function socketProcessMessage(msg){
     }
 
     self.showWhichPage(msg)
-    goHome.call(self)
+    !self.$route.query.nojump && self.$route.name != 'home' && goHome.call(self)
+    // goHome.call(self)
     return
   }
 
@@ -461,7 +465,7 @@ function socketProcessMessage(msg){
     // 点击随机点名继续上课的回执
     if (msg.type == 'call') {
       // 随机点名页面关闭时触发的，不需要响应
-      // T_PUBSUB.publish('call-msg.callpaused', msg)
+      T_PUBSUB.publish('call-msg.closedmask', msg)
       // 随机点名的时候，继续上课没有搞懂为啥回来就存在面板遮盖，这里强制刷新一次解决
       // location.reload()
       return

@@ -693,6 +693,9 @@
           name: 'postsubmission',
           params: {
             'lessonID': this.lessonid
+          },
+          query: {
+            nojump: 1
           }
         })
       }

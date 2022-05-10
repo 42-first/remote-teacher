@@ -210,6 +210,8 @@
           return;
         }
 
+        self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
+        
         let str = JSON.stringify({
           'op': 'navtoslide',
           'lessonid': self.lessonid,

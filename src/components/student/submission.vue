@@ -50,7 +50,7 @@
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
-      <router-link :to="'/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
+      <router-link :to="'/'+lessonID+'/submission_list/?nojump=1'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
 
       <section class="camera-list none">
         <a><input type=file accept="image/*" value="拍照/选择照片" >拍照/选择照片</a>
