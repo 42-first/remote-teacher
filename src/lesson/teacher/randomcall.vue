@@ -71,7 +71,8 @@
           num: '',
           uid: ''
         },
-        selectStudentIndex: null
+        selectStudentIndex: null,
+        noSendMsg: false
       }
     },
     computed: {
@@ -118,7 +119,7 @@
     beforeRouteLeave (to, from, next) {
       // ...
       T_PUBSUB.unsubscribe('call-msg')
-      if(to.name !== 'stuexpression_v3'){
+      if(to.name !== 'stuexpression_v3' && !this.noSendMsg){
         this.giveupRoll()
       }
       next()
@@ -153,6 +154,14 @@
             uid: msg.uid
           }
         })
+
+        T_PUBSUB.subscribe('call-msg.closedmask', (_name, msg) => {
+          if(self.noSendMsg) return 
+          self.noSendMsg = true
+          self.$router.back()
+        })
+
+        
       },
       /**
        * 继续上课 按钮
