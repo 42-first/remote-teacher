@@ -253,10 +253,12 @@
 				.then((res) => {
 					if (res && res.code === 0 && res.data) {
 						let time = ''
-						if (duration > 30) {
-							time = duration / 60 + '分钟'
-						} else if (duration == 30) {
-							time = duration + '秒'
+						if (duration > 0) {
+							let min = Math.floor(duration / 60)
+							let sec = duration % 60
+							min = min ? min + '分钟' : ''
+							sec = sec ? sec + '秒' : ''
+							time = min + sec
 						} else {
 							time = '不限时'
 						}
