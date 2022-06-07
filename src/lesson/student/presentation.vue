@@ -554,7 +554,7 @@
           }, 1000*10)
         }
       },
-
+           
       /*
        * @method 直播悬停反面等事件
        */
@@ -688,10 +688,15 @@
       bindTouchEvents() {
         this.$el.querySelector('.J_timeline').addEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').addEventListener('touchend', this.handleTouchMove);
+
+        // 监听页面隐藏
+        document.addEventListener("visibilitychange", this.handleVisibilityChange);
       },
       unbindTouchEvents() {
         this.$el.querySelector('.J_timeline').removeEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').removeEventListener('touchend', this.handleTouchMove);
+
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
       },
 
       /*
@@ -926,7 +931,23 @@
         } else {
           this.$router.back();
         }
-      }
+      },
+
+
+      handleVisibilityChange () {
+        if (document.visibilityState === 'visible') {
+          console.log('show time:', moment(new Date()).format('hh:mm:ss'))
+        } else {
+          console.log('hide time:', moment(new Date()).format('hh:mm:ss'))
+          WebSocket.OPEN === this.socket.readyState &&
+          this.socket.send(JSON.stringify({
+            'op': 'leave',
+            'lessonid': this.lessonID,
+            'msgid': this.msgid++
+          }));
+        }
+      },
+
     },
     created() {
       this.init();
