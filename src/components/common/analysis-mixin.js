@@ -20,7 +20,8 @@ let analysisMixin = {
   computed: {
     ...mapGetters([
       'lessonid',
-      'pptData'
+      'pptData',
+      'analysisRemarkId'
     ])
   },
   methods: {
@@ -40,7 +41,12 @@ let analysisMixin = {
           this.problem.Answer = card.Answer;
         }
 
-        console.info(this.problem);
+        // console.info(this.problem);
+
+        // 刷新页面重新进入答案详情时，判断是否要展示答案解析窗口
+        if(this.analysisRemarkId === id && this.problem.HasRemark) {
+          this.handleVisibleAnalysis()
+        }
       }
     },
 

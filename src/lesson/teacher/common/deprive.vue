@@ -29,7 +29,7 @@
 
 	export default {
 	  name: 'Deprive',
-	  props: ['isRobber', 'isRobbing', 'byself'],
+	  props: [],
 	  data () {
 	    return {
 	    }
@@ -43,6 +43,9 @@
 				'isCloneClass',
 				'pretendSeizeAuth',
 				'noWakeuid',
+				'isRobber', 
+				'isRobbing', 
+				'byself',
       ])
     },
 	  methods: {
@@ -63,6 +66,9 @@
         //   });
         //   return
         // }
+				// 先 显示 '正在夺权...' 
+		    this.$emit('update:isRobbing', true)
+				
 				if(this.pretendSeizeAuth || this.noWakeuid) {
 					this.pretendSeizeAuth && this.set_pretendSeizeAuth(false);
 					this.noWakeuid && this.set_noWakeuid(false)
@@ -77,8 +83,6 @@
 
 		    self.socket.send(str)
 
-		    // 显示 '正在夺权...'
-		    self.$emit('update:isRobbing', true)
 		  },
 		  /**
 		   * 退出遥控器

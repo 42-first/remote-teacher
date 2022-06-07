@@ -216,6 +216,16 @@ if(config.build.productionCDN) {
   )
 }
 
+// 是否部署到阿里云oss
+if(process.env && process.env.BUILD_ENV) {
+  console.log('BUILD_ENV:', process.env.BUILD_ENV);
+  // 部署阿里云开发环境
+  if(process.env.BUILD_ENV === 'ykt') {
+    webpackConfig.output.publicPath = 'https://ykt-static-dev.xuetangonline.com/dev/fe/static/lesson/';
+  }
+}
+
+
 if (config.build.productionGzip) {
   var CompressionWebpackPlugin = require('compression-webpack-plugin')
 

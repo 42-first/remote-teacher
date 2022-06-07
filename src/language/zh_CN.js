@@ -300,7 +300,7 @@ let pages = {
   "scorechart": "分数分布",
   "submittedstudent": "已有 {ss1} / {ss2} 位同学提交了试卷",
   "nosubmit": "还没有学生提交",
-  "allvote": "此试卷全部为投票题~",
+  "allvote": "试卷未赋分，无分数分布~~",
   "cancel": "取消",
   "confirm": "确定",
   "publish": "发布",

@@ -48,11 +48,17 @@ const getters = {
   stateSet: state => state.stateSet,
   newToolBar: state => state.newToolBar,
   addinversion: state => state.addinversion,
+  toupinginfo: state => state.toupinginfo,
   postWordCloudOpen: state => state.postWordCloudOpen,
   danmuWordCloudOpen: state => state.danmuWordCloudOpen,
+  analysisRemarkId: state => state.analysisRemarkId,
   toolbarIndex: state => state.toolbarIndex,
   isCloneClass: state => state.isCloneClass,
   pretendSeizeAuth: state => state.pretendSeizeAuth,
   noWakeuid: state => state.noWakeuid,
+  openTeacher: state => state.openTeacher,
+  isRobber: state => state.isRobber,
+  isRobbing: state => state.isRobbing,
+  byself: state => state.byself,
 };
 export default getters

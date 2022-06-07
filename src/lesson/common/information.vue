@@ -311,6 +311,11 @@
         request.get(URL)
           .then((res) => {
             if(res && res.data) {
+              // 接口返回的姓名和uid一样时，当成空处理
+              let { name, user_id } = res.data.user_profile;
+              if (name == user_id) {
+                res.data.user_profile.name = '';
+              }
               this.user_profile = res.data.user_profile;
 
               if(this.user_profile) {

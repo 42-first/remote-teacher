@@ -228,7 +228,7 @@
       },
       goSet () {
         this.$emit('stateSet', 1)
-        this.$router.push({name: 'stateSet'})
+        this.$router.push({name: 'stateSet', query: { nojump: 1}})
       },
       // 延迟关闭当前浮窗
       closeMore() {
@@ -256,8 +256,9 @@
   .toolbar-root {
     position: relative;
     color: #9b9b9b;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
   }
-
   .rc-toolbar {
     display: flex;
     align-items: center;

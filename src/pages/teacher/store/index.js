@@ -59,13 +59,19 @@ const store = new Vuex.Store({
 
     newToolBar: !1,
     addinversion: 0,                        // 插件协议版本号
+    toupinginfo: 0,                          // 记录当前投屏的problemid
     postWordCloudOpen: false,               // 投稿词云是否开启
     danmuWordCloudOpen: false,               // 弹幕词云是否开启
+    analysisRemarkId: 0,                    // 标示当前答案解析投屏状态的problemid
 
     isCloneClass: false,                     // 是不是克隆班
     pretendSeizeAuth: false,                 // 非开课教师进入遥控器，展示夺权界面，实际是hello 不是夺权，用这个字段标记
     noWakeuid: false,                        // 进入遥控器时发现没有wakeuid（开课的uid） 需要展示特殊的夺权页面以便后查问题
-
+    openTeacher: null,                        // 开启授课的老师
+    // 夺权相关的移到store中 
+    isRobber: false,                        // 是夺权者
+    isRobbing: false,                       // 正在夺权
+    byself: false,                          // 是自己夺权
   },
 
   mutations: {
@@ -211,11 +217,17 @@ const store = new Vuex.Store({
     addinversion(state, addinversion) {
       state.addinversion = addinversion
     },
+    set_toupinginfo(state, toupinginfo) {
+      state.toupinginfo = toupinginfo
+    },
     set_postWordCloudOpen(state, isWordCloudOpen){
       state.postWordCloudOpen = isWordCloudOpen
     },
     set_danmuWordCloudOpen(state, isWordCloudOpen){
       state.danmuWordCloudOpen = isWordCloudOpen
+    },
+    set_analysisRemarkId(state, id) {
+      state.analysisRemarkId = id
     },
     set_toolbarIndex(state, index) {
       state.toolbarIndex = index
@@ -229,6 +241,22 @@ const store = new Vuex.Store({
 
     set_noWakeuid(state, status) {
       state.noWakeuid = status;
+    },
+
+    set_openTeacher(state, data) {
+      state.openTeacher = data
+    },
+
+    set_isRobber(state, status) {
+      state.isRobber = status
+    },
+
+    set_isRobbing(state, status) {
+      state.isRobbing = status
+    },
+
+    set_byself(state, status) {
+      state.byself = status
     },
 
   },
@@ -262,6 +290,8 @@ const store = new Vuex.Store({
       commit('set_newdoubt', 0)
       commit('set_newtougao', 0)
 
+      commit('set_openTeacher', null)
+
     },
     resetModal: ({commit}) => {
       commit('set_isToastCtrlMaskHidden', true)
@@ -269,15 +299,22 @@ const store = new Vuex.Store({
       commit('set_msgMaskTpl', 'Reconnect')
       commit('set_isMsgMaskHidden', false)
       commit('set_noWakeuid', false)
+      commit('set_pretendSeizeAuth', false)
     },
     addinversion({commit}, payload) {
       commit('addinversion', payload)
+    },
+    toupinginfo({ commit }, payload) {
+      commit('set_toupinginfo', payload)
     },
     set_postWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_postWordCloudOpen', isWordCloudOpen)
     },
     set_danmuWordCloudOpen({commit}, isWordCloudOpen){
       commit('set_danmuWordCloudOpen', isWordCloudOpen)
+    },
+    set_analysisRemarkId({commit}, id) {
+      commit("set_analysisRemarkId", id)
     },
     set_toolbarIndex({commit}, index) {
       commit('set_toolbarIndex', index);
@@ -294,6 +331,22 @@ const store = new Vuex.Store({
 
     set_noWakeuid({commit}, status) {
       commit('set_noWakeuid', status)
+    },
+
+    set_openTeacher({commit}, data) {
+      commit('set_openTeacher', data)
+    },
+
+    set_isRobber({commit}, data) {
+      commit('set_isRobber', data)
+    },
+
+    set_isRobbing({commit}, data) {
+      commit('set_isRobbing', data)
+    },
+
+    set_byself({commit}, data) {
+      commit('set_byself', data)
     },
     
   },

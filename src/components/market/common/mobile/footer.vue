@@ -1,7 +1,7 @@
 <template>
   <footer>
       <div class="left">
-        <p>©2021 清华大学&学堂在线</p>
+        <p>©2022 清华大学&学堂在线</p>
         <a target="_blank" href="https://beian.miit.gov.cn" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;">京ICP备14019655号</a> | <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802033052" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;"><img src="https://qn-sfe.yuketang.cn/o_1ek0bqrhrrj69vi1q681h091k069.png" style="vertical-align: middle;"/>&nbsp;<span>京公网安备 11010802033052号</span></a>
       </div>
   </footer>
