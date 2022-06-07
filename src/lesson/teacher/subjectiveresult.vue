@@ -415,7 +415,18 @@
         return request.post(URL,params)
         .then((res) => {
           if (res && res.code === 0 && res.data) {
-            let msg = i18n.locale === 'zh_CN' ? `延时${duration > 0 ? duration / 60 + '分钟' : '不限时' }成功` : 'Successful'
+            let time = ''
+						if (duration > 0) {
+							let min = Math.floor(duration / 60)
+							let sec = duration % 60
+							min = min ? min + '分钟' : ''
+							sec = sec ? sec + '秒' : ''
+							time = min + sec
+						} else {
+							time = '不限时'
+						}
+
+            let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
             T_PUBSUB.publish('ykt-msg-toast', msg);
           }
         }).catch(error => {

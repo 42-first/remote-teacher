@@ -102,8 +102,8 @@
   .upper {
     margin: 0 auto;
     width: 9.7rem;
-    height: 4.0rem;
-    padding-top: 0.8rem;
+    height: 2.93333333rem;
+    padding-top: 0.26666667rem; 
 
     .xitixushi {
       display: flex;

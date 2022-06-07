@@ -162,17 +162,18 @@
   @import "~@/style/_variables";
   @import "~@/style/common";
   .show-wrapper{
-    height: px2rem(88px);
+    height: px2rem(40px);
   }
   .hide-show-name{
     width: 100%;
-    height: px2rem(88px);
-    line-height: px2rem(88px);
+    height: px2rem(40px);
+    line-height: px2rem(40px);
     background-color: #fff;
     box-sizing: border-box;
     padding: 0 px2rem(30px);
     font-size: 0;
     position: relative;
+    margin-top: 0.26666667rem;
     .iconfont{
       font-size: px2rem(30px);
       vertical-align: middle;
@@ -196,20 +197,20 @@
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 0.4rem);
-    border-top: 1px solid #aaa;
+    // border-top: 1px solid #aaa;
   }
   .no-border::before{
     border-top: none;
   }
   .hide-show-answer{
-    margin-top: px2rem(32px);
+    margin-top: px2rem(20px);
     padding: 0 px2rem(30px);
-    height: px2rem(88px);
-    line-height: px2rem(88px);
+    height: px2rem(40px);
+    line-height: px2rem(40px);
     color: #fff;
     font-size: px2rem(28px);
     display: flex;
-    border-top: px2rem(1px) solid #aaa;
+    // border-top: px2rem(1px) solid #aaa;
     .status{
       flex: 1;
     }

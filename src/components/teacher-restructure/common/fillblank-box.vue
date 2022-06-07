@@ -75,7 +75,7 @@
   /* 中间条形图 */
   .fillblank-box {
     position: relative;
-    margin: 0.5rem auto;
+    margin: 0.74666667rem auto 0;
     width: 8.8rem;
     height: 5.0rem;
     border-bottom: 0.0133rem solid #AAAAAA;
@@ -122,7 +122,7 @@
     .real-item {
       display: flex;
       align-items: center;
-      margin-bottom: 60px;
+      margin-bottom: 0.9rem;
 
       .left-bar {
         position: relative;
@@ -160,7 +160,7 @@
     }
 
     .real-item-qb {
-      margin-bottom: 30px;
+      margin-bottom: 0.4rem;
     }
   }
 

@@ -20,6 +20,10 @@ let pages = {
   "prob2": "习题",
   "quiz2": "试卷",
   "bonus": "红包",
+  "allright": "全对",
+  "renshu": "人数",
+  "remoteblankanswer": "答案：",
+  "blankdetail": "详情",
 
   // 空状态
   "noslides": "还没有开始播放幻灯片~",

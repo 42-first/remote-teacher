@@ -6,6 +6,188 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "25907192",
+      "name": "图片-面状",
+      "font_class": "tupian-mianzhuang",
+      "unicode": "e7a0",
+      "unicode_decimal": 59296
+    },
+    {
+      "icon_id": "25907217",
+      "name": "相机",
+      "font_class": "xiangji",
+      "unicode": "e7a1",
+      "unicode_decimal": 59297
+    },
+    {
+      "icon_id": "25907218",
+      "name": "相机-面状",
+      "font_class": "xiangji-mianzhuang",
+      "unicode": "e7a2",
+      "unicode_decimal": 59298
+    },
+    {
+      "icon_id": "25953842",
+      "name": "选择多项",
+      "font_class": "xuanzeduoxiang",
+      "unicode": "e7a9",
+      "unicode_decimal": 59305
+    },
+    {
+      "icon_id": "25953843",
+      "name": "圆圈叉-面状",
+      "font_class": "yuanquancha-mianzhuang",
+      "unicode": "e7ab",
+      "unicode_decimal": 59307
+    },
+    {
+      "icon_id": "25953844",
+      "name": "圆圈勾-面状",
+      "font_class": "yuanquangou-mianzhuang",
+      "unicode": "e7ac",
+      "unicode_decimal": 59308
+    },
+    {
+      "icon_id": "25967250",
+      "name": "开关-关",
+      "font_class": "kaiguan-guan",
+      "unicode": "e7b2",
+      "unicode_decimal": 59314
+    },
+    {
+      "icon_id": "25967251",
+      "name": "开关-开",
+      "font_class": "kaiguan-kai",
+      "unicode": "e7b3",
+      "unicode_decimal": 59315
+    },
+    {
+      "icon_id": "26120281",
+      "name": "文件夹黄",
+      "font_class": "wenjianjiahuang",
+      "unicode": "e7b9",
+      "unicode_decimal": 59321
+    },
+    {
+      "icon_id": "26232477",
+      "name": "单选未选中",
+      "font_class": "danxuanweixuanzhong",
+      "unicode": "e7ad",
+      "unicode_decimal": 59309
+    },
+    {
+      "icon_id": "26232478",
+      "name": "多选选中",
+      "font_class": "duoxuanxuanzhong",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "26232479",
+      "name": "单选选中",
+      "font_class": "danxuanxuanzhong",
+      "unicode": "e7af",
+      "unicode_decimal": 59311
+    },
+    {
+      "icon_id": "26232480",
+      "name": "多选未选中",
+      "font_class": "duoxuanweixuanzhong",
+      "unicode": "e7b0",
+      "unicode_decimal": 59312
+    },
+    {
+      "icon_id": "26238704",
+      "name": "问or说明",
+      "font_class": "wenorshuoming",
+      "unicode": "e7b1",
+      "unicode_decimal": 59313
+    },
+    {
+      "icon_id": "26428865",
+      "name": "课程回到顶部",
+      "font_class": "kechenghuidaodingbu",
+      "unicode": "e7ba",
+      "unicode_decimal": 59322
+    },
+    {
+      "icon_id": "26758236",
+      "name": "收起2",
+      "font_class": "shouqi2",
+      "unicode": "e7bd",
+      "unicode_decimal": 59325
+    },
+    {
+      "icon_id": "27413717",
+      "name": "更换",
+      "font_class": "genghuan",
+      "unicode": "e7be",
+      "unicode_decimal": 59326
+    },
+    {
+      "icon_id": "27413718",
+      "name": "手机",
+      "font_class": "shouji",
+      "unicode": "e7bf",
+      "unicode_decimal": 59327
+    },
+    {
+      "icon_id": "27843282",
+      "name": "加载",
+      "font_class": "jiazai",
+      "unicode": "e7c0",
+      "unicode_decimal": 59328
+    },
+    {
+      "icon_id": "28605002",
+      "name": "箭头单-向左-返回",
+      "font_class": "jiantoudan-xiangzuo-fanhui",
+      "unicode": "e7c1",
+      "unicode_decimal": 59329
+    },
+    {
+      "icon_id": "16296596",
+      "name": "16-复制",
+      "font_class": "16-fuzhi",
+      "unicode": "e7aa",
+      "unicode_decimal": 59306
+    },
+    {
+      "icon_id": "25623412",
+      "name": "雨课堂",
+      "font_class": "yuketang",
+      "unicode": "e79a",
+      "unicode_decimal": 59290
+    },
+    {
+      "icon_id": "27006645",
+      "name": "30-圆圈打勾",
+      "font_class": "a-30-yuanquandagou",
+      "unicode": "e816",
+      "unicode_decimal": 59414
+    },
+    {
+      "icon_id": "27006646",
+      "name": "30-右箭头",
+      "font_class": "a-30-youjiantou",
+      "unicode": "e817",
+      "unicode_decimal": 59415
+    },
+    {
+      "icon_id": "27006647",
+      "name": "30-左箭头",
+      "font_class": "a-30-zuojiantou",
+      "unicode": "e818",
+      "unicode_decimal": 59416
+    },
+    {
+      "icon_id": "27006648",
+      "name": "30-圆圈空心",
+      "font_class": "a-30-yuanquankongxin",
+      "unicode": "e819",
+      "unicode_decimal": 59417
+    },
+    {
       "icon_id": "9373533",
       "name": "40-视频",
       "font_class": "-shipin1",
