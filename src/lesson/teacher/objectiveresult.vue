@@ -23,10 +23,18 @@
 			
       <!-- 填空题条形图 -->
       <template v-if="problemType === 4">
+				<div class="return-btn box-start cfff f14" v-if="curTab !== -1 && showEachBlankDetail" @click="handleChangeCurTab(-1)"> 
+					<i class="iconfont icon-a-30-youjiantou f20"></i> <!-- 返回 --> {{ $t('back') }}
+				</div>
         <FillblankBox class="FillblankBox"
           :total="checkinCount"
           :correctNum="correctCount"
           :result_graph="graph"
+					:orderInsensitive="orderInsensitive"
+					:blankDetail="blankDetail"
+					:curTab="curTab"
+					:showEachBlankDetail="showEachBlankDetail"
+					@changeTab="handleChangeCurTab"
         ></FillblankBox>
       </template>
 
@@ -155,7 +163,13 @@
         showAnswer: false,             // 投屏现实答案
         is_sensitive: false,					 // true代表该填空题顺序敏感，可以展示每个空的填写情况;false代表不敏感，不能展示每个空的填写情况
         // 问题详细信息
-        problem: null
+        problem: null,
+				// 填空题当前选中的空
+				curTab: -1,
+				// 是否乱序
+				orderInsensitive: false,
+				// 每个空的作答详情
+				blankDetail: {},
 	    }
 	  },
 	  computed: {
@@ -164,7 +178,8 @@
         'socket',
         'isGuideDelayHidden',
 				'pptData',
-				'isCloneClass'
+				'isCloneClass',
+				'addinversion',
       ]),
 			isGc() {
 				return [
@@ -173,6 +188,15 @@
 					'rain.xuetangonline.com',
 					// 'localhost:8088', // 这个本地测试
 				].indexOf(location.host) > -1
+			},
+			showEachBlankDetail(){ 
+				if(this.addinversion >= 5.2) {
+					return true
+				} else if(this.addinversion >= 1.8 && this.addinversion < 5){
+					return true
+				}
+
+				return false
 			}
 	  },
 	  components: {
@@ -229,10 +253,12 @@
 				.then((res) => {
 					if (res && res.code === 0 && res.data) {
 						let time = ''
-						if (duration > 30) {
-							time = duration / 60 + '分钟'
-						} else if (duration == 30) {
-							time = duration + '秒'
+						if (duration > 0) {
+							let min = Math.floor(duration / 60)
+							let sec = duration % 60
+							min = min ? min + '分钟' : ''
+							sec = sec ? sec + '秒' : ''
+							time = min + sec
 						} else {
 							time = '不限时'
 						}
@@ -539,12 +565,14 @@
 						let jsonData = res.data
 						let _answer = jsonData.answer.join('')
 						let _graph = [...jsonData.graph]
-						if(self.problemType !== 4){
-							_graph.forEach(item => {
+						_graph.forEach(item => {
+							if(self.problemType !== 4){
 								item.isRight = new RegExp(item.label).test(_answer)
 								return item
-							})
-						}
+							}else {
+								item.isCorrect = true
+							}
+						})
 						self.setData({
 							correctCount: jsonData.correctCount,
 							checkinCount: jsonData.checkInCount,
@@ -552,6 +580,8 @@
 							ma_answer: _answer,
 							finishedCount: jsonData.finishedCount,
 							RedEnvelopeID: jsonData.redEnvelopeId || -1,
+							orderInsensitive: jsonData.orderInsensitive,
+          		blankDetail: jsonData.answerDistribution,
 						})
 					}
 				})
@@ -632,11 +662,21 @@
 	      let self = this
 				this.isTouping = isTouping
 	      let op = !isTouping ? 'postproblemresult' : 'closeproblemresult'
+
+				// 填空题新增每个空的答题详情  可直接定位到那个空
+				let blank
+				if(this.addinversion > 5.0) {
+					blank = this.curTab	
+				}else {
+					blank = this.curTab + 1
+				}
+
 	      let str = JSON.stringify({
 	        op,
 	        'lessonid': self.lessonid,
 					'problemid': self.problemid,
-					'showresult': this.showAnswer
+					'showresult': this.showAnswer,
+					blank: self.problemType == 4 ? blank : undefined
 	      })
 	      self.socket.send(str)
 			},
@@ -730,6 +770,10 @@
 				}else {
 					this.$router.push({name: 'collumresult-detail_v3', params: { problemid: this.problemid }})
 				}
+			},
+
+			handleChangeCurTab(tab){
+				this.curTab = tab
 			}
 	  }
 	}
@@ -755,8 +799,13 @@
 		.upper {
 			margin: 0 auto;
 			width: 9.7rem;
-			height: 4.0rem;
-			padding-top: 0.8rem; 
+			height: 2.93333333rem;
+			padding-top: 0.26666667rem; 
+		}
+
+		.return-btn {
+			padding-left: 0.53333333rem;
+			margin: 0.53333333rem 0 -0.4rem;
 		}
 
 	  /* 调整中间条形头的高度 */
@@ -771,7 +820,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 1.2rem 0 0.5rem;
+		  padding: 0.8rem 0 0.53333333rem;
 
 		  .btn-item {
 			  width: 1.8rem;

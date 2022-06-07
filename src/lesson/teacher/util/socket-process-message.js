@@ -307,6 +307,9 @@ function socketProcessMessage(msg){
   //习题柱状图投屏了
   if (msg.op == 'postproblemresult') {
     T_PUBSUB.publish('pro-msg.postproblemresult', {problemid: msg.problemid});
+
+    // 有可能遥控器不在作答详情页
+    localStorage.setItem('posting-problem'+msg.problemid, true)
     return
   }
   //习题柱状图取消投屏了

@@ -11,7 +11,7 @@
 	      		<v-touch class="btn f17" :class="sendTime == 180 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(180)">3{{ $t('min') }}</v-touch>
 	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
 	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime | formatTime}}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -43,7 +43,7 @@
 	      		<v-touch class="btn f17" :class="sendTime == 900 && !custom ? 'activeSendTime' : ''" v-on:tap="chooseTime(900)">15{{ $t('min') }}</v-touch>
 	      		<v-touch class="btn f17 big_btn" :class="sendTime == -1 ? 'activeSendTime' : ''" v-on:tap="chooseTime(-1)"><!-- 不限时 -->{{$t('no_time_limit')}}</v-touch>
 	      		<v-touch v-if="!custom" class="btn f17 big_btn" v-on:tap="handlePicker2"><!-- 自定义 -->{{$t('user_defined')}}</v-touch>
-						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime}}{{ $t('min') }}<i class="iconfont icon-dakai f20"></i>
+						<v-touch class="btn f17 big_btn pl30" :class="custom ? 'activeSendTime' : ''" v-else v-on:tap="handlePicker2">{{tempTime | formatTime}}<i class="iconfont icon-dakai f20"></i>
 						</v-touch>
 	      	</div>
 	      </div>
@@ -71,7 +71,7 @@
 						<v-touch class="f16" v-on:tap="handlepickerclosed2">{{$t('cancel')}}<!-- 取消 --></v-touch>
 						<v-touch class="f16" v-on:tap="handlepickerConfirm2">{{$t('confirm')}}<!-- 确定 --></v-touch>
 					</div>
-					<mt-picker :slots="slots2" :item-height="height" @change="onValuesChange2"></mt-picker>
+					<mt-picker ref="timepicker" :slots="slots2" :item-height="height" @change="onValuesChange2"></mt-picker>
 				</section>
 			</section>
 		</section>
@@ -108,15 +108,24 @@
 				showPicker2: false,
 				slots2: [{
           flex: 1,
-          values: ['1', '2', '3', '4', '5', '6', '7', '8', '9','10','11','12','13','14','15','16','17','18','19','20','21', '22', '23', '24', '25', '26', '27', '28', '29','30','31','32','33','34','35','36','37','38','39','40','41', '42', '43', '44', '45', '46', '47', '48', '49','50','51', '52', '53', '54', '55', '56', '57', '58', '59','60'],
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21, 22, 23, 24, 25, 26, 27, 28, 29,30,31,32,33,34,35,36,37,38,39,40,41, 42, 43, 44, 45, 46, 47, 48, 49,50,51, 52, 53, 54, 55, 56, 57, 58, 59,60],
           className: 'slot1',
-          textAlign: 'right'
-        },  {
+          textAlign: 'right',
+					
+        }, {
+					flex: 1,
+					divider: true,
+					content: i18n.t('min')
+				},  {
           flex: 1,
-          values: [i18n.locale === 'zh_CN' ? '分钟' : 'min'],
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21, 22, 23, 24, 25, 26, 27, 28, 29,30,31,32,33,34,35,36,37,38,39,40,41, 42, 43, 44, 45, 46, 47, 48, 49,50,51, 52, 53, 54, 55, 56, 57, 58, 59],
           className: 'slot2',
-          textAlign: 'left'
-        }],
+          textAlign: 'right',
+        }, {
+					flex: 1,
+					divider: true,
+					content: i18n.t('sec')
+				}],
 				custom: false,
 				isActive: false
 	    }
@@ -131,6 +140,14 @@
 			this.height = this.height * window.dpr || 70;
 
 	  },
+		filters: {
+			formatTime(values) {
+				let min = values[0] ? values[0] + i18n.t('min') : ''
+				let seconds = values[1] ? values[1] + i18n.t('sec') : ''
+
+				return `${min}${seconds}`
+			}
+		},
 		mounted() {
 			this.getGroupList();
 		},
@@ -252,23 +269,29 @@
 			 chooseTime(time){
 				 this.sendTime = time
 				 this.custom = false
+
+				 this.tempTime = [0, 0]
 			 },
 			 handlePicker2(){
 				 this.showPicker2 = true
 			 },
 			 handlepickerclosed2() {
          this.showPicker2 = false;
+
+				if(this.custom && this.sendTime) {
+					this.tempTime = [Math.floor(this.sendTime / 60), this.sendTime % 60]
+				}
        },
        handlepickerConfirm2() {
-         this.sendTime = +this.tempTime * 60;
+         this.tempTime = this.$refs.timepicker.getValues()
+				 if(!this.tempTime[0] && !this.tempTime[1]) return 
+
+         this.sendTime = this.tempTime[0] * 60 + this.tempTime[1];
 				 this.custom = true
          this.handlepickerclosed2();
        },
 			 onValuesChange2(picker, values){
-				 let limit = values[0];
-         console.log(values[0]);
-
-         this.tempTime = limit;
+         this.tempTime = values;
 			 }
 	  }
 	}
@@ -523,6 +546,7 @@
   .picker {
     width: 100%;
     height: 5.066667rem;
+		padding: 0 1rem;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -537,4 +561,7 @@
   .picker-item {
     font-size: .48rem;
   }
+	.picker-slot.picker-slot-divider {
+		font-size: .48rem;
+	}
 </style>
