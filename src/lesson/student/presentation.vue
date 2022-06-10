@@ -941,9 +941,8 @@
           console.log('hide time:', moment(new Date()).format('hh:mm:ss'))
           WebSocket.OPEN === this.socket.readyState &&
           this.socket.send(JSON.stringify({
-            'op': 'leave',
-            'lessonid': this.lessonID,
-            'msgid': this.msgid++
+            'op': 'leavelesson',
+            'lessonid': this.lessonID
           }));
         }
       },
