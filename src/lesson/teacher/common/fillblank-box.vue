@@ -130,6 +130,8 @@
 	  },
 	  methods: {
 	  	handleChangeTab(index) {
+        if(!this.showEachBlankDetail) return
+
         if(this.blankNum > 1 && !this.orderInsensitive && this.curTab == -1) {
           this.$emit('changeTab', index)
         }
