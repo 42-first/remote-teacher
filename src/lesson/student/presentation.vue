@@ -940,6 +940,15 @@
           if(WebSocket.CLOSED == this.socket.readyState) {
             // 恢复显示的时候 如果websocket 断了 需要重新连一下
             this.initws()
+          }else if(WebSocket.OPEN === this.socket.readyState) {
+            let userId = this.identityId || this.userID;
+            this.socket.send(JSON.stringify({
+              'op': 'hello',
+              'userid': userId,
+              'role': 'student',
+              'auth': self.token,
+              'lessonid': self.lessonID
+            }))
           }
         } else {
           console.log('hide time:', moment(new Date()).format('hh:mm:ss'))
