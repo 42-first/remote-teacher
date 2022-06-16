@@ -410,7 +410,7 @@ let lessonMixin = {
 
           // 日志上报
           setTimeout(() => {
-            this.handleLogEvent();
+            this.handleLogEvent(this.hasMeeting ? 'kwai_rtmp' : '');
           }, 30000)
         }
       }).catch(error => {

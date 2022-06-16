@@ -134,7 +134,7 @@ let logMixin = {
      * @method 视频事件监听
      * @params
      */
-    handleLogEvent() {
+    handleLogEvent(n = 'kwai') {
       let liveEl = document.getElementById('player');
       // let events = ['play', 'pause', 'error', 'stalled', 'waiting', 'loadstart', 'loadeddata' ];
       let events = [ 'error', 'stalled', 'waiting' ];
@@ -156,7 +156,7 @@ let logMixin = {
 
       // 新增直播打点事件
       if(liveEl) {
-        this.initHeartLog();
+        this.initHeartLog(n);
         liveEl.addEventListener('timeupdate', this.handleTimeupdate)
       }
     },
