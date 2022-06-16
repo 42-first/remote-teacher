@@ -370,7 +370,18 @@ let logMixin = {
       this.interactiveLogTimer = setInterval(() => {
         this.handleTimeupdate()
       }, 1000)
-    }
+    },
+
+    /**
+     * @method 上报一次
+     * @params
+     */
+    forceReport() {
+      let liveLogs = this.liveLogs;
+      if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
+        this.reportLiveLog(liveLogs.logs);
+      }
+    },
 
   }
 }
