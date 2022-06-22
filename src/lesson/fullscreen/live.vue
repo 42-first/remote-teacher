@@ -109,9 +109,9 @@
         );
       }
 
-      this.init()
     },
     mounted() {
+      this.init()
       this.initEvent()
     },
     beforeDestroy() {
@@ -133,6 +133,7 @@
   video {
     width: 100%;
     max-height: 100%;
+    background: #333;
   }
 
   .toLog {
