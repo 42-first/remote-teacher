@@ -61,9 +61,12 @@
         this.liveurl = data;
         this.liveURL = data.flv;
         this.courseid = data.courseid
-
-        this.handleplayVideo()
         document.title = data.coursename
+
+        this.$nextTick(() => {
+          this.handleplayVideo()
+        })
+        
       },
 
       handlePlay(){
