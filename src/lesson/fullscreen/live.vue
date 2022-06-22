@@ -36,8 +36,8 @@
     },
     methods: {
       init(){
-        let liveData = sessionStorage.getItem('liveData') || {}
-        let curData = liveData[this.cid]
+        let liveData = sessionStorage.getItem('liveData')
+        let curData = liveData && JSON.parse(liveData)[this.cid] || ''
 
         if(curData) {
           this.handleSetData(curData)
