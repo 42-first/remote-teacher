@@ -223,7 +223,7 @@ const fullscreenRouter = new Router({
       ]
     },
     {
-      path: '/huge/live',
+      path: '/huge/live/:cid',
       name: 'huge_live',
       component: () => import('@/lesson/fullscreen/live')
     }

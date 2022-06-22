@@ -10,6 +10,9 @@
 <template>
   <section class="live__page" >
     <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer controls autoplay></video>
+    <div class="play-btn" v-if="showBtn" @click="handlePlay">
+      <i class="iconfont icon-bofang1 cfff"></i>
+    </div>
   </section>
 </template>
 <script>
@@ -21,7 +24,8 @@
     },
     data() {
       return {
-        
+        cid: 0,
+        showBtn: true
       }
     },
     mixins: [liveMixin],
@@ -30,9 +34,26 @@
     },
     methods: {
       init(){
-        var jsonSrc = 'https://ykt-fe.yuketang.cn/liveJson.js'
+        let liveData = localStorage.getItem('liveData') || {}
+        let curData = liveData[this.cid]
+
+        if(curData) {
+          this.liveType = data.type || 1;
+          this.liveurl = data;
+          this.liveURL = data.flv;
+
+          this.handleplayVideo()
+
+          return 
+        }
+
+        this.fetchLiveData()
+      },
+
+      fetchLiveData(){
+        var jsonSrc = `https://ykt-fe.yuketang.cn/liveData.js?_t=${new Date().getTime()}`
         loadScript(jsonSrc).then(res => {
-          let data = jsonData
+          let data = jsonData[this.cid]
 
           this.liveType = data.type || 1;
           this.liveurl = data;
@@ -40,15 +61,40 @@
 
           this.handleplayVideo()
         })
+      },
 
-       
+      handlePlay(){
+        let videoEl = document.getElementById('player');
+
+        videoEl.play()
+        this.showBtn = false
+      },
+
+      initEvent(){
+        let videoEl = document.getElementById('player');
+
+        videoEl.addEventListener('timeupdate', this.handleTimeUpdate)
+      },
+
+      handleTimeUpdate(){
+        this.showBtn = false
+        if(videoEl.paused) {
+          this.showBtn = true
+        }
       }
     },
     created() {
+      this.cid = this.$route.params.cid
+
       this.init()
     },
+    mounted() {
+      this.initEvent()
+    },
     beforeDestroy() {
-      
+      let videoEl = document.getElementById('player');
+
+      videoEl.removeEventListener('timeupdate', this.handleTimeUpdate)
     }
   }
 </script>
@@ -56,10 +102,24 @@
 .live__page {
   width: 100vw;
   height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   video {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    max-height: 100%;
+  }
+
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .iconfont {
+      font-size: 80px;
+    }
   }
 }  
 
