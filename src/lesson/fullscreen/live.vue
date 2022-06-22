@@ -77,6 +77,7 @@
       },
 
       handleTimeUpdate(){
+        let videoEl = document.getElementById('player');
         this.showBtn = false
         if(videoEl.paused) {
           this.showBtn = true
