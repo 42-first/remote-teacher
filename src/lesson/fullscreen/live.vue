@@ -9,7 +9,7 @@
 
 <template>
   <section class="live__page" >
-    <div class="toLog f14" v-if="!type" >关闭直播</div>
+    <div class="toLog f14" v-if="!type" @click="handleGoLog">关闭直播</div>
     <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer controls autoplay></video>
     <div class="play-btn" v-if="showBtn" @click="handlePlay">
       <i class="iconfont icon-bofang1 cfff" :class="!type ? 'f40' : 'f80'"></i>
@@ -36,15 +36,11 @@
     },
     methods: {
       init(){
-        let liveData = localStorage.getItem('liveData') || {}
+        let liveData = sessionStorage.getItem('liveData') || {}
         let curData = liveData[this.cid]
 
         if(curData) {
-          this.liveType = data.type || 1;
-          this.liveurl = data;
-          this.liveURL = data.flv;
-
-          this.handleplayVideo()
+          this.handleSetData(curData)
 
           return 
         }
@@ -57,12 +53,17 @@
         loadScript(jsonSrc).then(res => {
           let data = window.jsonData[this.cid]
 
-          this.liveType = data.type || 1;
-          this.liveurl = data;
-          this.liveURL = data.flv;
-
-          this.handleplayVideo()
+          this.handleSetData(data)
         })
+      },
+
+      handleSetData(data){
+        this.liveurl = data;
+        this.liveURL = data.flv;
+        this.courseid = data.courseid
+
+        this.handleplayVideo()
+        document.title = data.coursename
       },
 
       handlePlay(){
@@ -84,6 +85,10 @@
         if(videoEl.paused) {
           this.showBtn = true
         }
+      },
+
+      handleGoLog(){
+        location.href = `/v/index/course/normalcourse/logs/${this.courseid}/${this.cid}`;
       }
     },
     created() {
