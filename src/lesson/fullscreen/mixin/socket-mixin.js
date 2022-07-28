@@ -155,7 +155,7 @@ var mixin = {
 
             // 是否开启了互动 加入会议
             if(msg.interactive) {
-               // 非导播课或者导播课嘉宾可以加入互动
+              // 非导播课或者导播课嘉宾可以加入互动
               if(!this.hasLiveCaster || this.hasLiveCaster && this.isGuest) {
                 // 学生可自行加入会议
                 this.setHasMeeting(true);

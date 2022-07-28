@@ -61,6 +61,13 @@ let lessonMixin = {
         this.teacherName = lesson.teacher.name;
       }
 
+      // 导播课设置
+      if(lesson && lesson.hasLiveCaster) {
+        this.hasLiveCaster = lesson.hasLiveCaster;
+        // mode 0录制 1导播模式
+        this.liveCasterMode = lesson.liveCasterMode;
+      }
+
       // 班级信息
       lesson && this.getClassroom(lesson.classroomId);
 
@@ -309,6 +316,11 @@ let lessonMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
+          }
+
+          // 是否导播嘉宾
+          if(data.isGuest) {
+            this.isGuest = data.isGuest;
           }
         }
 
