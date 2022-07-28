@@ -150,6 +150,13 @@ var commandMixin = {
         this.setTeacher(lesson.teacher);
       }
 
+      // 导播课设置
+      if(lesson && lesson.hasLiveCaster) {
+        this.hasLiveCaster = lesson.hasLiveCaster;
+        // mode 0录制 1导播模式
+        this.liveCasterMode = lesson.liveCasterMode;
+      }
+
       // 班级信息
       lesson && this.getClassroom(lesson.classroomId);
 
@@ -405,6 +412,11 @@ var commandMixin = {
           if(data.identityId) {
             this.identityId = data.identityId;
             window.identityId = data.identityId;
+          }
+
+          // 是否导播嘉宾
+          if(data.isGuest) {
+            this.isGuest = data.isGuest;
           }
         }
 
