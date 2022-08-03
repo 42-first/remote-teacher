@@ -387,6 +387,21 @@ var mixin = {
             // this.danmuStatus = false;
             this.setDanmuStatus(false);
 
+            // 是否有互动直播
+            if(this.hasMeeting) {
+              try {
+                // 这里需要关闭摄像头
+                if(window.rtcEngine) {
+                  window.rtcEngine.unpublish();
+                }
+              } catch(error) {
+              }
+
+              // 不显示直播
+              this.liveURL = '';
+              this.setHasMeeting(false);
+            }
+
             break
 
           // 习题定时开始
