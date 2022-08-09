@@ -882,7 +882,7 @@ var actionsMixin = {
         // 日志上报
         this.liveId = data.liveid;
         setTimeout(() => {
-          this.handleLogEvent();
+          this.handleLogEvent(this.hasMeeting ? 'kwai_rtmp' : '');
         }, 1000)
       }
     },
