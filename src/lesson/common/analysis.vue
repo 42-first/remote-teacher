@@ -28,7 +28,7 @@
       </div>
     </section>
     <!-- 兼容老的解析处理 -->
-    <section class="remark f17" v-else="problem.remark">{{ problem.remark }}</section>
+    <section class="remark f17" v-else-if="problem.remark">{{ problem.remark }}</section>
   </section>
 
 </template>
