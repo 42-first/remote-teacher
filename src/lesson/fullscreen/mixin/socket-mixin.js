@@ -155,15 +155,16 @@ var mixin = {
 
             // 是否开启了互动 加入会议
             if(msg.interactive) {
-              // 非导播课或者导播课嘉宾可以加入互动
-              if(!this.hasLiveCaster || this.hasLiveCaster && this.isGuest) {
-                // 学生可自行加入会议
-                this.setHasMeeting(true);
-              }
+              // 学生可自行加入会议
+              this.setHasMeeting(true);
 
-              // this.setHasMeeting(true);
               // 标记这是一堂直播远程课 方便后面对直播远程课处理
               !this.isLive && (this.isLive = true);
+            } else {
+              // 导播课嘉宾可以加入互动
+              if(this.hasLiveCaster && this.isGuest) {
+                this.setHasMeeting(true);
+              }
             }
 
             // 是否开启腾讯会议
