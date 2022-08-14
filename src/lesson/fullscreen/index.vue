@@ -383,6 +383,11 @@
         let observerMode = query && query.teacher ? true : false;
         this.setObserverMode(observerMode);
 
+        // 通过邀请码加入课堂
+        if(query && query.code) {
+          this.inviteCode = query.code;
+        }
+
         this.iniTimeline(this.lessonID);
 
         // 调试模式

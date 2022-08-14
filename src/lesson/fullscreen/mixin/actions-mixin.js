@@ -890,6 +890,13 @@ let actionsMixin = {
         }}
      */
     startLive(data) {
+      // 如果是导播课 嘉宾需要互动其他角色进入视频直播
+      if(data && data.caster) {
+        if(this.isGuest) {
+          return this
+        }
+      }
+
       if(data && data.liveurl) {
         this.liveurl = data.liveurl;
         // 直播类型
