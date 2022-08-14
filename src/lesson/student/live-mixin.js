@@ -493,6 +493,9 @@ let liveMixin = {
       if(this.qos && this.logLiveurl) {
         this.qos.onEnd();
       }
+
+      // 停止播放时上报下当前数据
+      this.forceReport()
     },
 
     /*

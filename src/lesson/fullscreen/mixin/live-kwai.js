@@ -41,6 +41,9 @@ let liveMixin = {
       this.saveLiveStatus(this.playState);
 
       this.destroyKwai();
+
+      // 停止播放时上报下当前数据
+      this.forceReport()
     },
 
     /*
@@ -91,6 +94,9 @@ let liveMixin = {
       }
 
       this.destroyKwai();
+
+      // 停止播放时上报下当前数据
+      this.forceReport()
     },
 
     /*
