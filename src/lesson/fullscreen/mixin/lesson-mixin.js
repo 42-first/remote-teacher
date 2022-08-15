@@ -124,15 +124,34 @@ var commandMixin = {
      * @param id: 课程ID
      */
     async initLesson(id, source) {
-
       // 先签到
       source = source || this.source;
-      let joined = await this.checkin(source);
+      const inviteCode = this.inviteCode || 0;
+      // let joined = await this.checkin(source, inviteCode);
+      let { code, data, msg } = await this.checkin(source, inviteCode);
       // 签到发现没有权限处理
-      if(joined !== 0) {
+      if(code !== 0) {
         // 50004 lesson end
-        if(joined === 50004) {
+        if(code === 50004) {
           location.href = '/v/index/lessonend';
+        } else if(code === 50019) {
+          // 未绑定专业版
+          this.bindSchool(data);
+        } else {
+          // 确认框提示
+          this.$rainConfirm({
+            data: {
+              title: this.$i18n.t('tips') || "提示",
+              message: msg || this.$t(`code.${code}`),
+              showCancel: false,
+              confirmText: this.$t('gotit') || '知道了',
+              confirmClass: '',
+            },
+            cancel: () => {
+            },
+            confirm: () => {
+            },
+          });
         }
 
         return this;
@@ -148,6 +167,13 @@ var commandMixin = {
       if(lesson && lesson.teacher) {
         this.teacherName = lesson.teacher.name;
         this.setTeacher(lesson.teacher);
+      }
+
+      // 导播课设置
+      if(lesson && lesson.hasLiveCaster) {
+        this.hasLiveCaster = lesson.hasLiveCaster;
+        // mode 0录制 1导播模式
+        this.liveCasterMode = lesson.liveCasterMode;
       }
 
       // 班级信息
@@ -381,6 +407,7 @@ var commandMixin = {
 
       if(code) {
         params['inviteCode'] = code;
+        params['joinIfNotIn'] = true;
       } else {
         params['lessonId'] = this.lessonID;
       }
@@ -406,13 +433,19 @@ var commandMixin = {
             this.identityId = data.identityId;
             window.identityId = data.identityId;
           }
+
+          // 是否导播嘉宾
+          if(data.isGuest) {
+            this.isGuest = data.isGuest;
+          }
         }
 
-        return res.code;
+        return res;
+        // return res.code;
       }).
       catch(error => {
         console.log('checkin:', error);
-        return -1;
+        return { code: -1 };
       })
     },
 
@@ -677,7 +710,34 @@ var commandMixin = {
         console.log('getReviewStatus:', error)
         return {}
       })
-    }
+    },
+
+    /**
+     * @method 专业版班级绑定引导
+     */
+    bindSchool(data) {
+      const { university_id, university_name: name, university_authen_url } = data || {};
+      const message = this.$t('lesson.isprotips', { name }) || `您未作身份绑定，该班级只允许${name}人员进入，请绑定后重新加入班级。`
+      const bindURL = university_authen_url ? `/v/index/bindSchool_cas/${university_id}` : `/v/index/bindSchool/${university_id}`;
+
+      this.$rainConfirm({
+        data: {
+          title: this.$t('tips') || "提示",
+          message: message,
+          showCancel: true,
+          confirmText: '点击绑定',
+          cancelText: '已完成绑定',
+          confirmClass: '',
+          // reverse: true
+        },
+        cancel: () => {
+          this.init();
+        },
+        confirm: () => {
+          location.href = bindURL;
+        }
+      });
+    },
 
   }
 }

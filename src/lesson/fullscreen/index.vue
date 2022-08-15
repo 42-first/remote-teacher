@@ -229,6 +229,7 @@
         boardList: null,
         // 是否直播课
         isLive: false,
+        liveId: 0,
         // 当前正在播放的ppt
         // currSlide: { src: 'https://qn-sfe.yuketang.cn/o_1d6vdogohj6tnt712ra1a2s1q0u9.png' },
         isFullscreen: false,
@@ -330,6 +331,16 @@
         // if(this.isHuanghe || this.isWind){
         //   this.getUserAgreement()
         // }
+      },
+
+      joined(newVal){ 
+        if(newVal) {
+          // 加入互动开始记录日志上报videolog
+          this.handleReportInteractiveToVideoLog()
+        }else {
+          // 离开取消定时器
+          this.removeEventListeners()
+        }
       }
     },
     filters: {
@@ -371,6 +382,11 @@
         this.source = query && query.source || 5;
         let observerMode = query && query.teacher ? true : false;
         this.setObserverMode(observerMode);
+
+        // 通过邀请码加入课堂
+        if(query && query.code) {
+          this.inviteCode = query.code;
+        }
 
         this.iniTimeline(this.lessonID);
 
