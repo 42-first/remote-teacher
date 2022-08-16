@@ -31,6 +31,7 @@ export default {
       // 针对夺权蒙版
       self.$store.commit('set_isToastCtrlMaskHidden', true)
       self.$store.commit('set_isInitiativeCtrlMaskHidden', true)
+      self.$store.commit('set_errType', 5)
     },
     /**
      * 点亮弹幕按钮
