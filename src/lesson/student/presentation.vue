@@ -946,8 +946,8 @@
               'op': 'hello',
               'userid': userId,
               'role': 'student',
-              'auth': self.token,
-              'lessonid': self.lessonID
+              'auth': this.token,
+              'lessonid': this.lessonID
             }))
           }
         } else {
