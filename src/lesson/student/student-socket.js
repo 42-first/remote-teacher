@@ -6,7 +6,7 @@
  *
  */
 
-
+import moment from 'moment'
 
 const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pre-apple-ykt.xuetangonline.com' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
