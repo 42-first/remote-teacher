@@ -21,7 +21,6 @@ const getters = {
   finishedQuizList: state => state.finishedQuizList,
   participantList: state => state.participantList,
   notParticipantList: state => state.notParticipantList,
-  newtougao: state => state.newtougao,
   isPPTVersionAboveOne: state => state.isPPTVersionAboveOne,
 
   qrcodeStatus: state => state.qrcodeStatus,
@@ -59,6 +58,6 @@ const getters = {
   openTeacher: state => state.openTeacher,
   isRobber: state => state.isRobber,
   isRobbing: state => state.isRobbing,
-  byself: state => state.byself,
-};
+  byself: state => state.byself
+}
 export default getters
