@@ -562,7 +562,7 @@
           }, 1000*10)
         }
       },
-
+           
       /*
        * @method 直播悬停反面等事件
        */
@@ -696,10 +696,15 @@
       bindTouchEvents() {
         this.$el.querySelector('.J_timeline').addEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').addEventListener('touchend', this.handleTouchMove);
+
+        // 监听页面隐藏
+        document.addEventListener("visibilitychange", this.handleVisibilityChange);
       },
       unbindTouchEvents() {
         this.$el.querySelector('.J_timeline').removeEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').removeEventListener('touchend', this.handleTouchMove);
+
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
       },
 
       /*
@@ -934,7 +939,35 @@
         } else {
           this.$router.back();
         }
-      }
+      },
+
+
+      handleVisibilityChange () {
+        if (document.visibilityState === 'visible') {
+          console.log('show time:', moment(new Date()).format('hh:mm:ss'))
+          if(WebSocket.CLOSED == this.socket.readyState) {
+            // 恢复显示的时候 如果websocket 断了 需要重新连一下
+            this.initws()
+          }else if(WebSocket.OPEN === this.socket.readyState) {
+            let userId = this.identityId || this.userID;
+            this.socket.send(JSON.stringify({
+              'op': 'hello',
+              'userid': userId,
+              'role': 'student',
+              'auth': this.token,
+              'lessonid': this.lessonID
+            }))
+          }
+        } else {
+          console.log('hide time:', moment(new Date()).format('hh:mm:ss'))
+          WebSocket.OPEN === this.socket.readyState &&
+          this.socket.send(JSON.stringify({
+            'op': 'leavelesson',
+            'lessonid': this.lessonID
+          }));
+        }
+      },
+
     },
     created() {
       this.init();
