@@ -6,7 +6,7 @@
  *
  */
 
-
+import moment from 'moment'
 
 const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'pre-apple-ykt.xuetangonline.com' : location.host || location.host || 'b.yuketang.cn'
 window.socket = null
@@ -52,23 +52,27 @@ var mixin = {
 
         // 关闭
         this.socket.onclose = function(event) {
+          console.log('ws close time:', moment(new Date()).format('hh:mm:ss'))
           console.log('onclose');
-          // 先尝试连接三次
-          if(self.reconnectcount < 3) {
-            self.initws(true);
-          } else if(self.reconnectcount === 3) {
-            setTimeout(() => {
+          // 接收器是显示状态再重连
+          if (document.visibilityState === 'visible') {
+            // 先尝试连接三次
+            if(self.reconnectcount < 3) {
               self.initws(true);
-            }, 3000)
-          } else if(self.reconnectcount >= 4) {
-            if(!self.isResetSocket) {
+            } else if(self.reconnectcount === 3) {
               setTimeout(() => {
-                self.reconnect();
-              }, 1000)
+                self.initws(true);
+              }, 3000)
+            } else if(self.reconnectcount >= 4) {
+              if(!self.isResetSocket) {
+                setTimeout(() => {
+                  self.reconnect();
+                }, 1000)
+              }
             }
-          }
 
-          self.reconnectcount++;
+            self.reconnectcount++;
+          }
         }
 
         // 接收socket信息
