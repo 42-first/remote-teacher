@@ -1,0 +1,3 @@
+include:
+    - project: 'ops/devops'
+      file: 'cicd/.gitlab-ci.yml'
