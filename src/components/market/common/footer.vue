@@ -17,7 +17,7 @@
         </div>
         <div class="footer-right fr">
           <img class="link-time" src="https://qn-sfe.yuketang.cn/o_1bpfokdd1k9d53cifn1n271p1n9.png" alt="雨课堂客服">
-          <p class="link-tel">400-099-6061</p>
+          <p class="link-tel">400-689-1199</p>
           <!-- 联系方式 -->
           <div class="link-us clearfix">
             <div class="link-us-email fr">
