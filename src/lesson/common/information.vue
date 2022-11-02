@@ -47,8 +47,8 @@
           <label class="item--label" for="school" title="组织/机构"><!-- 组织/机构 -->{{ $t('infoorg') }}</label>
           <input class="item--ipt" type="text" name="school" v-model="school" :placeholder="$t('infoorgtip')">
         </div>
-        <!-- 英华定制显示学院 -->
-        <div class="form__item" v-if="showDepartment && (role===1 || role===2)">
+        <!-- 英华定制显示学院，不区分角色 -->
+        <div class="form__item" v-if="showDepartment && (role===1 || role===2 || role===3)">
           <label class="item--label" for="department" title="学院"><!-- 学院 -->{{ $t('medepartment') }}</label>
           <input class="item--ipt" type="text" name="department" v-model="department" :placeholder="$t('medepartmenteg')">
         </div>
