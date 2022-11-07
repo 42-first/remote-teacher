@@ -300,7 +300,7 @@
         this.checkUserInfo();
       },
       'school'(newVal, oldVal) {
-        this.showDepartment = DEPARTMENT_SHOW_LIST.indexOf(newVal) !== -1;
+        this.showDepartment = newVal ? DEPARTMENT_SHOW_LIST.indexOf(newVal) !== -1 : false;
         this.checkUserInfo();
       },
       'school_number'(newVal, oldVal) {
