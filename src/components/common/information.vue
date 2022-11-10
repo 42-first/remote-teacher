@@ -47,6 +47,11 @@
           <label class="item--label" for="school" title="组织/机构"><!-- 组织/机构 -->{{ $t('infoorg') }}</label>
           <input class="item--ipt" type="text" name="school" v-model="school" :placeholder="$t('infoorgtip')">
         </div>
+        <!-- 英华定制显示学院，不区分角色 -->
+        <div class="form__item" v-if="showDepartment && (role===1 || role===2 || role===3)">
+          <label class="item--label" for="department" title="学院"><!-- 学院 -->{{ $t('medepartment') }}</label>
+          <input class="item--ipt" type="text" name="department" v-model="department" :placeholder="$t('medepartmenteg')">
+        </div>
         <div class="form__item" v-if="role===2">
           <label class="item--label" for="school_number" title="在校学号"><!-- 在校学号 -->{{ $t('mestudentid') }}</label>
           <input class="item--ipt" type="text" name="school_number" v-model="school_number" :placeholder="$t('infonumbereg')">
@@ -253,7 +258,7 @@
 
 </style>
 <script>
-
+  import { DEPARTMENT_SHOW_LIST } from '@/util/personal_info_customized.js'
   export default {
     props: {
       showInfo: {
@@ -274,6 +279,8 @@
         name: '',
         school: '',
         school_number: '',
+        department: '',
+        showDepartment: false,
         // 是否显示学校提示
         showHint: false,
         // 学校提示列表
@@ -293,11 +300,15 @@
         this.checkUserInfo();
       },
       'school'(newVal, oldVal) {
+        this.showDepartment = newVal ? DEPARTMENT_SHOW_LIST.indexOf(newVal) !== -1 : false;
         this.checkUserInfo();
       },
       'school_number'(newVal, oldVal) {
         this.checkUserInfo();
-      }
+      },
+      'department'(newVal, oldVal) {
+        this.checkUserInfo();
+      },
     },
     methods: {
       /**
@@ -322,6 +333,13 @@
                 this.role = this.user_profile['role'];
                 this.school_number = this.user_profile['school_number'];
                 this.school = this.user_profile['school'];
+
+                // 定制展示学院
+                if (this.user_profile.school && this.user_profile.school.indexOf(' - ') !== -1) {
+                  this.school = this.user_profile.school.split(' - ')[0];
+                  this.department = this.user_profile.school.split(' - ')[1];
+                  this.showDepartment = true;      
+                }
               }
             }
           });
@@ -347,6 +365,11 @@
         // 学号
         if(this.role === 2 && !this.school_number) {
           cansubmit = false;
+        }
+
+        // 英华定制学院必填
+        if (this.showDepartment) {
+          cansubmit = cansubmit && !!this.department;
         }
 
         this.cansubmit = cansubmit;
@@ -464,6 +487,14 @@
           'role': this.role,
           'school_number': this.school_number
         };
+
+        // 特殊处理一下定制学院
+        if (this.showDepartment) {
+          params = {
+            ...params,
+            school: `${this.school} - ${this.department}`
+          }
+        }
 
         if(this.cansubmit) {
           this.cansubmit = false;
