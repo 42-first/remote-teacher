@@ -15,7 +15,7 @@
         </div>
 
         <div class="img-wrapper">
-        	<template v-if="pptData.length && pptData[current - 1].shapes && pptData[current - 1].shapes.length">
+        	<template v-if="pptData.length && pptData[current - 1] && pptData[current - 1].shapes && pptData[current - 1].shapes.length">
         		<v-touch class="dontcallback" :class="btnItem.URL ? (btnItem.URL.indexOf('rain://xtvideo') !== -1 ? 'video-btn' : 'audio-btn') : 'video-btn'" v-for="btnItem in pptData[current - 1].shapes" :key="btnItem.PPTShapeId" v-if="btnItem.PPTShapeType === 16" :style="{left: `calc(${btnItem.Left*100/cardWidth}% - 0.066667rem)`, top: `calc(${btnItem.Top*100/cardHeight}% - 0.133333rem)`, width: `calc(${btnItem.Width*100/cardWidth}% + 0.066667rem)`, height: `calc(${btnItem.Height*100/cardHeight}% + 0.133333rem)`, zIndex: btnItem.ZOrderPosition}" v-on:tap="videoControl(pptData[current - 1].id, btnItem.PPTShapeId)">
         			<div class="video-hint f12" v-if="btnItem.URL && btnItem.URL.indexOf('rain://xtvideo') !== -1"><!-- 点击 播放/暂停 视频 -->{{ $t('djbfztsp') }}</div>
         		</v-touch>
