@@ -573,13 +573,14 @@
 							let jsonData = res.data
 							let pptData = jsonData.slides
 							let current = self.current
-							let isProblem = (typeof pptData[current - 1].problem) !== 'undefined'
+              let currSlide = pptData[current - 1] || {};
+							let isProblem = (typeof currSlide.problem) !== 'undefined'
 							// let isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码
 
 							let isProblemPublished
 
 							if (self.isPPTVersionAboveOne && isProblem) {
-								isProblemPublished = self.unlockedproblem.includes(pptData[current - 1].id)
+								isProblemPublished = self.unlockedproblem.includes(currSlide.id)
 							} else {
 								isProblemPublished = self.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
 							}
