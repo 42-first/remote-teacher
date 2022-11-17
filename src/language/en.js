@@ -200,6 +200,8 @@ let pages = {
   "meschoolbelongs": "School",
   "schooleg": "Enter your school",
   "mestudentid": "Student ID",
+  "medepartment": "Department",
+  "medepartmenteg": "Enter your department",
   "infocosttime": "Fill in your personal information in 30sec",
   "infogood": "",
   "infoorg": "Organ.",

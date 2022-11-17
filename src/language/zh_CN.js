@@ -200,6 +200,8 @@ let pages = {
   "meschoolbelongs": "所属学校",
   "schooleg": "请输入学校",
   "mestudentid": "在校学号",
+  "medepartment": "学院",
+  "medepartmenteg": "请输入学院",
   "infocosttime": "花30秒完善你的信息",
   "infogood": "方便老师快速认识你",
   "infoorg": "组织/机构",

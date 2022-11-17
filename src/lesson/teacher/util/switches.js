@@ -93,12 +93,12 @@ export default {
 
       // 有可能打开遥控器的时候ppt还没有开始上课，此时hello返回的slideindex可能是0
       let current = msg.slideindex || 1
+      let slideData = self.pptData && self.pptData[current - 1] || {};
       // 防止一开始hello的时候数据还没有加载进来
-      let isProblem = self.pptData.length && typeof self.pptData[current - 1].problem !== 'undefined'
+      let isProblem = slideData && typeof slideData.problem !== 'undefined'
       // let isProblemPublished = msg.unlockedproblem.includes(current)// 也是从1开始的页码，但是unlockedproblem是从0开始的
       let isProblemPublished
 
-      let slideData = self.pptData[current - 1]
       let pid = null
 
       if (self.isPPTVersionAboveOne && isProblem) {
