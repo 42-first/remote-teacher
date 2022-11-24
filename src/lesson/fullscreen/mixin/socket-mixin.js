@@ -53,6 +53,9 @@ var mixin = {
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
+          // 如果已经下课了 不再重连
+          if(this.lessonFinished) return
+          
           // 先尝试连接三次
           if(self.reconnectcount < 3) {
             self.initws(true);
@@ -387,6 +390,8 @@ var mixin = {
             this.setLessonStatus(1)
             // this.danmuStatus = false;
             this.setDanmuStatus(false);
+
+            this.lessonFinished = true;
 
             // 是否有互动直播
             if(this.hasMeeting) {

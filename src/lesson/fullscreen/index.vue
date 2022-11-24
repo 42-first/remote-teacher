@@ -255,7 +255,9 @@
         // 小程序码
         miniCode: '',
         is_agreement: true,
-        classroom: {}
+        classroom: {},
+        // 课是否已结束
+        lessonFinished: false,
       };
     },
     components: {
