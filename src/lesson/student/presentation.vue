@@ -281,6 +281,7 @@
 
   import userAgreement from '@/components/common/agreement'
   import watermark from '@/util/watermark-h5'
+  import {getPlatformKey} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -450,7 +451,6 @@
         is_agreement: true,
         // 来源
         from: '',
-        userInfo: {},
       };
     },
     components: {
@@ -973,16 +973,14 @@
       },
 
       drawWaterMark() {
-        this.getUser().then(data => {
-          const { name, schoolNumber } = data
-          this.userInfo = {
-            name,
-            schoolNumber
-          };
-          if (this.classroom.pro) {
-            watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
-          }
-        })
+        // 荷塘专业版直播加水印
+        const key = getPlatformKey();
+        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+          this.getUser().then(data => {
+            const { name='', schoolNumber='' } = data || {};
+            watermark.set('#watermark_layer', [name, schoolNumber]);
+          })
+        }
       }
 
     },

@@ -231,7 +231,11 @@ export function getPlatformKey() {
     // 清华继教学院定制需求 单独判断该学校使用的域名
     'online1.yuketang.cn': 'huanghe',
     'www.itsinghua.com': 'huanghe',
-    'home.itsinghua.com': 'huanghe'
+    'home.itsinghua.com': 'huanghe',
+    // 镜泊雨课堂
+    'ykt-envning.rainclassroom.com': 'envning',
+    // 鸣泉雨课堂
+    'ykt-env-example.rainclassroom.com': 'env-example',
   }
 
   key = host[location.host] || '';

@@ -144,7 +144,7 @@
 
   import userAgreement from '@/components/common/agreement-pc'
   import watermark from '@/util/watermark'
-
+  import {getPlatformKey} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -260,7 +260,6 @@
         classroom: {},
         // 课是否已结束
         lessonFinished: false,
-        userInfo: {},
       };
     },
     components: {
@@ -528,16 +527,14 @@
 
         this.miniCode = host[location.host] || 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg';
 
-        this.getUser().then(data => {
-          const { name, schoolNumber } = data
-          this.userInfo = {
-            name,
-            schoolNumber
-          };
-          if (this.classroom.pro) {
-            watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
-          }
-        })
+        // 荷塘专业版直播加水印
+        const key = getPlatformKey();
+        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+          this.getUser().then(data => {
+            const { name='', schoolNumber='' } = data || {};
+            watermark.set('#watermark_layer', [name, schoolNumber]);
+          })
+        }
       }, 1000)
     },
     updated() {
