@@ -534,7 +534,9 @@
             name,
             schoolNumber
           };
-          watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
+          if (this.classroom.pro) {
+            watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
+          }
         })
       }, 1000)
     },

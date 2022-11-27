@@ -974,13 +974,15 @@
 
       drawWaterMark() {
         this.getUser().then(data => {
-        const { name, schoolNumber } = data
-        this.userInfo = {
-          name,
-          schoolNumber
-        };
-        watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
-      })
+          const { name, schoolNumber } = data
+          this.userInfo = {
+            name,
+            schoolNumber
+          };
+          if (this.classroom.pro) {
+            watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
+          }
+        })
       }
 
     },
