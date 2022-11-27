@@ -655,6 +655,7 @@ let liveMixin = {
     handlePlayVideo() {
       this.liveVisible = true;
       this.handleplay();
+      this.drawWaterMark();
     },
 
     /*

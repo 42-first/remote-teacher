@@ -4,7 +4,7 @@ var path = require('path')
 var proxyUrl = 'https://b.yuketang.cn'
 
 // proxyUrl = 'https://protest.xuetangonline.com'
-proxyUrl = 'https://pre-apple-ykt.xuetangonline.com'
+proxyUrl = 'https://ykt-envning.rainclassroom.com'
 
 
 function proxyConfig () {
@@ -56,7 +56,7 @@ module.exports = {
     proxyTable: {
       '/wsapp/': {
         // target: 'wss://protest.xuetangonline.com',
-        target: 'wss://pre-apple-ykt.xuetangonline.com',
+        target: 'wss://ykt-envning.rainclassroom.com',
         changeOrigin: true,
         ws: true,
         secure: false

@@ -34,6 +34,8 @@
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
+        <!-- 视频水印层 -->
+        <div class="watermark_layer" id="watermark_layer"></div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
       <div class="video__controls cfff f18">
@@ -141,7 +143,7 @@
   import agreementMixin from '@/components/common/agreement-mixin'
 
   import userAgreement from '@/components/common/agreement-pc'
-
+  import watermark from '@/util/watermark'
 
 
   // 子组件不需要引用直接使用
@@ -258,6 +260,7 @@
         classroom: {},
         // 课是否已结束
         lessonFinished: false,
+        userInfo: {},
       };
     },
     components: {
@@ -524,6 +527,15 @@
         this.initDanmu();
 
         this.miniCode = host[location.host] || 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg';
+
+        this.getUser().then(data => {
+          const { name, schoolNumber } = data
+          this.userInfo = {
+            name,
+            schoolNumber
+          };
+          watermark.set('#watermark_layer', [ this.userInfo.name, this.userInfo.schoolNumber ]);
+        })
       }, 1000)
     },
     updated() {
@@ -748,6 +760,15 @@
         opacity: 1;
         pointer-events: auto;
       }
+    }
+
+    .watermark_layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
   }
 
