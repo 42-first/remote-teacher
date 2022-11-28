@@ -351,6 +351,31 @@ var commandMixin = {
     },
 
     /**
+     * @method 用户虚id
+     * @param
+     */
+    getUserIdentity() {
+      let URL = API.lesson.get_user_identity;
+      let params = {
+        'lessonId': this.lessonID
+      };
+
+      return request.get(URL, params).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          return res.data;
+        }
+      }).catch(error => {
+        return {
+          "name": "name",
+          "schoolNumber": "3425235",
+          "department": "aaaaaaa"
+        }
+        console.log('get_user_identity:', error);
+      })
+    },
+
+    /**
      * @method 课程基本信息
      * @param
      */
