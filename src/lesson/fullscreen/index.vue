@@ -321,6 +321,16 @@
           newVal && this.initKwai();
 
           this.liveType === 2 && this.initEvent();
+
+          // 荷塘专业版直播加水印
+          const key = getPlatformKey();
+          if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+            watermark.close('#watermark_layer');
+            this.getUser().then(data => {
+              const { name='', schoolNumber='' } = data || {};
+              watermark.set('#watermark_layer', [name, schoolNumber]);
+            })
+          }
         }, 1000)
       },
       visibleDanmu(newVal, oldVal) {
@@ -526,15 +536,6 @@
         this.initDanmu();
 
         this.miniCode = host[location.host] || 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg';
-
-        // 荷塘专业版直播加水印
-        const key = getPlatformKey();
-        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
-          this.getUser().then(data => {
-            const { name='', schoolNumber='' } = data || {};
-            watermark.set('#watermark_layer', [name, schoolNumber]);
-          })
-        }
       }, 1000)
     },
     updated() {

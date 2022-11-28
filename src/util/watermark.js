@@ -11,12 +11,12 @@ function setWatermark(pls,args) {
     }
 	//利用canvas绘制水印信息
     var canvas = document.createElement('canvas');
-    canvas.width = 300;
+    canvas.width = 260;
     canvas.height = 220;
     var shuiyin = canvas.getContext('2d');
     shuiyin.rotate(-30 * Math.PI / 180);
     shuiyin.font = '18px Vedana';
-    shuiyin.fillStyle = 'rgba(51, 51, 51, 0.2)';
+    shuiyin.fillStyle = 'rgba(153, 153, 153, 0.2)';
     // shuiyin.textAlign = 'center';
     let content = args.join(' '); //多个标签拼接
     // let content="徐同学123 xutongxue  11112222333344445555 风测试"
