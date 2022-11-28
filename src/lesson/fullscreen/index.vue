@@ -34,6 +34,8 @@
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
+        <!-- 视频水印层 -->
+        <div class="watermark_layer" id="watermark_layer"></div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
       <div class="video__controls cfff f18">
@@ -141,8 +143,8 @@
   import agreementMixin from '@/components/common/agreement-mixin'
 
   import userAgreement from '@/components/common/agreement-pc'
-
-
+  import watermark from '@/util/watermark'
+  import {getPlatformKey} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -319,6 +321,18 @@
           newVal && this.initKwai();
 
           this.liveType === 2 && this.initEvent();
+
+          // 荷塘专业版直播加水印
+          if (newVal && this.liveType === 2) {
+            const key = getPlatformKey();
+            if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+              watermark.close('#watermark_layer');
+              this.getUser().then(data => {
+                const { name='', schoolNumber='' } = data || {};
+                watermark.set('#watermark_layer', [name, schoolNumber]);
+              })
+            }
+          }
         }, 1000)
       },
       visibleDanmu(newVal, oldVal) {
@@ -748,6 +762,16 @@
         opacity: 1;
         pointer-events: auto;
       }
+    }
+
+    .watermark_layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9;
     }
   }
 

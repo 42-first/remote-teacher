@@ -49,6 +49,9 @@
         <section class="player__box" v-show="liveVisible">
           <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
           <div class="live__status f14" v-show="liveStatusTips">{{liveStatusTips}}</div>
+          <!-- 视频水印层 -->
+          <div class="watermark_layer" id="watermark_layer"></div>
+
           <section class="live__unfold box-end f14">
             <!-- 展开状态 只听声音 关闭直播 -->
             <p class="box-center" @click="handleLiveVisible(false)">
@@ -277,7 +280,8 @@
   import agreementMixin from '@/components/common/agreement-mixin'
 
   import userAgreement from '@/components/common/agreement'
-
+  import watermark from '@/util/watermark-h5'
+  import {getPlatformKey} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -968,6 +972,17 @@
         }
       },
 
+      drawWaterMark() {
+        // 荷塘专业版直播加水印
+        const key = getPlatformKey();
+        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+          this.getUser().then(data => {
+            const { name='', schoolNumber='' } = data || {};
+            watermark.set('#watermark_layer', [name, schoolNumber]);
+          })
+        }
+      }
+
     },
     created() {
       this.init();
@@ -1172,6 +1187,15 @@
           width: 100%;
           min-height: 5rem;
           background: rgba(0,0,0,0.45);
+        }
+        .watermark_layer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 9;
         }
         .live__status {
           position: absolute;
