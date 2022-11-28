@@ -246,7 +246,8 @@ let lessonMixin = {
      * @method 用户虚id
      * @param
      */
-    getUserIdentity() {
+    async getUserIdentity() {
+      let user = await this.getUser();
       let URL = API.lesson.get_user_identity;
       let params = {
         'lessonId': this.lessonID
@@ -259,9 +260,9 @@ let lessonMixin = {
         }
       }).catch(error => {
         return {
-          "name": "name",
-          "schoolNumber": "3425235",
-          "department": "aaaaaaa"
+          "name": user.name,
+          "schoolNumber": user.schoolNumber,
+          "department": ''
         }
         console.log('get_user_identity:', error);
       })

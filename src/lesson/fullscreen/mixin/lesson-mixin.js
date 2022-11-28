@@ -367,9 +367,9 @@ var commandMixin = {
         }
       }).catch(error => {
         return {
-          "name": "name",
-          "schoolNumber": "3425235",
-          "department": "aaaaaaa"
+          "name": user.name,
+          "schoolNumber": user.schoolNumber,
+          "department": ''
         }
         console.log('get_user_identity:', error);
       })

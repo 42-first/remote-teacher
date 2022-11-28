@@ -323,13 +323,15 @@
           this.liveType === 2 && this.initEvent();
 
           // 荷塘专业版直播加水印
-          const key = getPlatformKey();
-          if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
-            watermark.close('#watermark_layer');
-            this.getUserIdentity().then(data => {
-              const { name='', schoolNumber='', department='' } = data || {};
-              watermark.set('#watermark_layer', [name, schoolNumber, department]);
-            })
+          if (newVal && this.liveType === 2) {
+            const key = getPlatformKey();
+            if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+              watermark.close('#watermark_layer');
+              this.getUserIdentity().then(data => {
+                const { name='', schoolNumber='', department='' } = data || {};
+                watermark.set('#watermark_layer', [name, schoolNumber, department]);
+              })
+            }
           }
         }, 1000)
       },
