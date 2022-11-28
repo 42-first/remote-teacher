@@ -327,9 +327,9 @@
             const key = getPlatformKey();
             if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
               watermark.close('#watermark_layer');
-              this.getUserIdentity().then(data => {
-                const { name='', schoolNumber='', department='' } = data || {};
-                watermark.set('#watermark_layer', [name, schoolNumber, department]);
+              this.getUser().then(data => {
+                const { name='', schoolNumber='' } = data || {};
+                watermark.set('#watermark_layer', [name, schoolNumber]);
               })
             }
           }
