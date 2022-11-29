@@ -196,6 +196,11 @@ const studentRouter = new Router({
           component: ProblemAnalysis
         },
       ]
+    },
+    {
+      path: 'subscribe',
+      name: 'subscribe',
+      component: () => import('@/lesson/subscribe/index')
     }
   ]
 })
