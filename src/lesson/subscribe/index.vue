@@ -56,7 +56,7 @@
           let height = rem2px && rem2px(1) || 35;
           let script = document.createElement('script');
           script.type = 'text/wxtag-template';
-          script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center; color: #fff;font-size:16px;">消息订阅</div>`;
+          script.text = `<div style="width:100%;height:${height}px;display:flex;justify-content:center;align-items: center; color: #fff;font-size:32px;">消息订阅</div>`;
 
           let weappEl = document.createElement('wx-open-subscribe');
           weappEl.setAttribute('id', 'J_subscribe');
@@ -95,7 +95,7 @@
     width: 100%;
     height: 100%;
 
-    background: #EDF2F6;
+    background: #333;
   }
 
 </style>
