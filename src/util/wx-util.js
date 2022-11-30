@@ -30,7 +30,7 @@ function configWX () {
         'translateVoice', 'startRecord', 'stopRecord', 'onVoiceRecordEnd', 'playVoice', 'onVoicePlayEnd', 'pauseVoice','stopVoice', 'uploadVoice',
         'downloadVoice', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType',  'scanQRCode',  'chooseWXPay',
         'openProductSpecificView',  'addCard',  'chooseCard', 'openCard', 'hideMenuItems' ],
-        openTagList: ['wx-open-launch-weapp'] // 可选，需要使用的开放标签列表，例如['wx-open-launch-app']
+        openTagList: ['wx-open-launch-weapp', 'wx-open-subscribe'] // 可选，需要使用的开放标签列表，例如['wx-open-launch-app']
       });
     }).catch(() => {
       console.error('微信配置失败')
