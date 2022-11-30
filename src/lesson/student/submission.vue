@@ -50,7 +50,7 @@
 
       <section :class="['submission__submit', 'f17', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 ? 'disable': '']" @click="handleSend">{{ submitText }}</section>
 
-      <router-link :to="'/v3/'+lessonID+'/submission_list/'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
+      <router-link :to="'/v3/'+lessonID+'/submission_list/?nojump=1'" tag="p" class="submission-mine-link f15">{{ $t('viewpost') }}</router-link>
 
     </div>
 

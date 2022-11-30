@@ -53,6 +53,9 @@ var mixin = {
         // 关闭
         this.socket.onclose = function(event) {
           console.log('onclose');
+          // 如果已经下课了 不再重连
+          if(this.lessonFinished) return
+          
           // 先尝试连接三次
           if(self.reconnectcount < 3) {
             self.initws(true);
@@ -156,10 +159,15 @@ var mixin = {
             // 是否开启了互动 加入会议
             if(msg.interactive) {
               // 学生可自行加入会议
-              // this.hasMeeting = true;
               this.setHasMeeting(true);
+
               // 标记这是一堂直播远程课 方便后面对直播远程课处理
               !this.isLive && (this.isLive = true);
+            } else {
+              // 导播课嘉宾可以加入互动
+              if(this.hasLiveCaster && this.isGuest) {
+                this.setHasMeeting(true);
+              }
             }
 
             // 是否开启腾讯会议
@@ -188,6 +196,14 @@ var mixin = {
           // 结束互动 { op: 'endinteractive', lessonid }
           case 'endinteractive':
             if(msg.lessonid) {
+              try {
+                // 这里需要关闭摄像头
+                if(window.rtcEngine) {
+                  window.rtcEngine.unpublish();
+                }
+              } catch(error) {
+              }
+
               // 不显示直播
               this.liveURL = '';
               this.setHasMeeting(false);
@@ -374,6 +390,23 @@ var mixin = {
             this.setLessonStatus(1)
             // this.danmuStatus = false;
             this.setDanmuStatus(false);
+
+            this.lessonFinished = true;
+
+            // 是否有互动直播
+            if(this.hasMeeting) {
+              try {
+                // 这里需要关闭摄像头
+                if(window.rtcEngine) {
+                  window.rtcEngine.unpublish();
+                }
+              } catch(error) {
+              }
+
+              // 不显示直播
+              this.liveURL = '';
+              this.setHasMeeting(false);
+            }
 
             break
 

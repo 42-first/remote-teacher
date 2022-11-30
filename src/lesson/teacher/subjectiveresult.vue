@@ -415,7 +415,18 @@
         return request.post(URL,params)
         .then((res) => {
           if (res && res.code === 0 && res.data) {
-            let msg = i18n.locale === 'zh_CN' ? `延时${duration > 0 ? duration / 60 + '分钟' : '不限时' }成功` : 'Successful'
+            let time = ''
+						if (duration > 0) {
+							let min = Math.floor(duration / 60)
+							let sec = duration % 60
+							min = min ? min + '分钟' : ''
+							sec = sec ? sec + '秒' : ''
+							time = min + sec
+						} else {
+							time = '不限时'
+						}
+
+            let msg = i18n.locale === 'zh_CN' ? `延时${time}成功` : 'Successful'
             T_PUBSUB.publish('ykt-msg-toast', msg);
           }
         }).catch(error => {
@@ -1032,13 +1043,13 @@
 	          .then(res => {
               if(res && res.code === 0 && res.data){
                 let data = res.data
-                self.tProportion = 100 - data.reviewPercent
-                self.gProportion = data.reviewPercent
+                self.tProportion = data.reviewPercent ? 100 - data.reviewPercent : 100
+                self.gProportion = data.reviewPercent || 0 
                 
                 let teacherScore = data.teacherScore > -1 ? data.teacherScore/100 : data.teacherScore
                 let reviewScore = data.reviewScore > -1 ? data.reviewScore/100 : data.reviewScore
 
-                self.$refs.StarPanel.$emit('enter', self.problem_group_review_id, answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100, index, data.comment.content || remark)
+                self.$refs.StarPanel.$emit('enter', self.problem_group_review_id, answerindex, resultId, scoreTotal, teacherScore, reviewScore, self.tProportion/100, data.reviewPercent/100 || 0, index, data.comment.content || remark)
               }
 	          }).catch(error => {
 	            console.error('error', error)
@@ -1067,7 +1078,7 @@
 	      let url = API.lesson.post_grade
 	      let postData = {
           problemId: self.problemid,
-          score: Math.round(teacherScore*100),
+          score: typeof teacherScore == 'number' || +teacherScore ? (teacherScore > 0 ? Math.round(teacherScore*100) : teacherScore > -1 ? 0 : undefined) : -1,
           userId: self.dataList[self.scoringIndex].user && self.dataList[self.scoringIndex].user.userId,
           comment: {
             content: remark

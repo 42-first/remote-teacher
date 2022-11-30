@@ -20,6 +20,10 @@ let pages = {
   "prob2": "Questions",
   "quiz2": "Quizzes",
   "bonus": "Bonus",
+  "allright": "All right",
+  "renshu": "Answered",
+  "remoteblankanswer": "Answer: ",
+  "blankdetail": "Details",
 
   // 空状态
   "noslides": "No slides yet.",
@@ -196,6 +200,8 @@ let pages = {
   "meschoolbelongs": "School",
   "schooleg": "Enter your school",
   "mestudentid": "Student ID",
+  "medepartment": "Department",
+  "medepartmenteg": "Enter your department",
   "infocosttime": "Fill in your personal information in 30sec",
   "infogood": "",
   "infoorg": "Organ.",
@@ -301,7 +307,7 @@ let pages = {
   "scorechart": "Score Chart",
   "submittedstudent": "Submission: {ss1} / {ss2}",
   "nosubmit": "No submission yet.",
-  "allvote": "Type of question: vote.",
+  "allvote": "Quiz with no scores~~",
   "cancel": "Cancel",
   "confirm": "Confirm",
   "publish": "Publish",

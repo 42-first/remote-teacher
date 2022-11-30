@@ -155,7 +155,22 @@ export default {
      * @method 绑定会议账号
      */
     handleBindMeetAccount(evt) {
-      location.href = this.bindUri + `?id=${this.lessonId}`;
+      // location.href = this.bindUri + `?id=${this.lessonId}`;
+
+      let bindUri = this.bindUri + `?id=${this.lessonId}`;
+
+      try {
+        //  如果是iframe打开的
+        if(window.self == window.top) {
+          location.href = bindUri;
+        } else if(window.top) {
+          window.top.location.href = bindUri;
+        } else {
+          location.href = bindUri;
+        }
+      } catch(error) {
+        location.href = bindUri;
+      }
     },
 
     /**

@@ -1,6 +1,7 @@
 <!-- 投稿控制页 -->
 <template>
 	<div class="page">
+    <slot name="ykt-msg"></slot>
     <div class="ppt-show-set w100 color3 border-box" @click="pickerfn"  v-if="addinversionRight >= 1.1">
       <span class="text">
           <span>{{ $t('studentsVisible') }}</span><!--学生可见-->

@@ -457,13 +457,15 @@ var actionsMixin = {
       }
 
       if (!hasEvent) {
-        this.cards.push(data);
         // 之前有动画隐藏蒙版
         this.hideAnimationMask();
 
-        this.setCards(this.cards)
-        problem && this.problemMap.set(problem['problemId'], slideData);
+        this.cards.push(data);
+        this.setCards(this.cards);
+        // problem && this.problemMap.set(problem['problemId'], slideData);
       }
+
+      problem && this.problemMap.set(problem['problemId'], slideData);
     },
 
     /**
@@ -880,7 +882,7 @@ var actionsMixin = {
         // 日志上报
         this.liveId = data.liveid;
         setTimeout(() => {
-          this.handleLogEvent();
+          this.handleLogEvent(this.hasMeeting ? 'kwai_rtmp' : '');
         }, 1000)
       }
     },
@@ -1145,6 +1147,16 @@ var actionsMixin = {
       let hasBind = await this.verifyBinding();
 
       if(!hasBind) {
+        try {
+          // 如果是iframe打开的 直接展示会议邀请页
+          if(window.top && window.self && window.self != window.top && this.invitationLink) {
+            window.top.location.href = this.invitationLink;
+
+            return this;
+          }
+        } catch(error) {
+        }
+
         this.$router.push({
           path: `/v3/${this.lessonID}/bind/`
         })

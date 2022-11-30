@@ -87,6 +87,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
     lesson: {
       // 签到/暗号加入班级
       get_user: '/api/v3/user/basic-info',
+      // 获取虚id信息
+      get_user_identity: '/api/v3/user/getIdentityBasicInfo',
       // 签到/暗号加入班级
       checkin: '/api/v3/lesson/checkin',
       // 读取课程基本信息

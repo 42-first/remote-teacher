@@ -221,6 +221,11 @@ const fullscreenRouter = new Router({
           component: Team
         },
       ]
+    },
+    {
+      path: '/huge/live/:cid',
+      name: 'huge_live',
+      component: () => import('@/lesson/fullscreen/live')
     }
   ]
 })

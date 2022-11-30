@@ -20,6 +20,10 @@ let pages = {
   "prob2": "习题",
   "quiz2": "试卷",
   "bonus": "红包",
+  "allright": "全对",
+  "renshu": "人数",
+  "remoteblankanswer": "答案：",
+  "blankdetail": "详情",
 
   // 空状态
   "noslides": "还没有开始播放幻灯片~",
@@ -196,6 +200,8 @@ let pages = {
   "meschoolbelongs": "所属学校",
   "schooleg": "请输入学校",
   "mestudentid": "在校学号",
+  "medepartment": "学院",
+  "medepartmenteg": "请输入学院",
   "infocosttime": "花30秒完善你的信息",
   "infogood": "方便老师快速认识你",
   "infoorg": "组织/机构",
@@ -300,7 +306,7 @@ let pages = {
   "scorechart": "分数分布",
   "submittedstudent": "已有 {ss1} / {ss2} 位同学提交了试卷",
   "nosubmit": "还没有学生提交",
-  "allvote": "此试卷全部为投票题~",
+  "allvote": "试卷未赋分，无分数分布~~",
   "cancel": "取消",
   "confirm": "确定",
   "publish": "发布",

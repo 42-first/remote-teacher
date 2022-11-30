@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var webpack = require('webpack')
 var config = require('../config')
+const pjson = require('../package.json')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -215,6 +216,23 @@ if(config.build.productionCDN) {
     })
   )
 }
+
+// 是否部署到阿里云oss
+if(process.env && process.env.BUILD_ENV) {
+  console.log('BUILD_ENV:', process.env.BUILD_ENV);
+  // 部署阿里云开发环境
+  if(process.env.BUILD_ENV === 'dev') {
+    webpackConfig.output.publicPath = 'https://ykt-static-dev.xuetangonline.com/dev/fe/static/lesson/';
+  }
+
+  // 正式环境部署
+  if(process.env.BUILD_ENV === 'ykt') {
+    let version = pjson && pjson.version;
+    console.log('version:', version);
+    webpackConfig.output.publicPath = `https://fe-static-yuketang.rainclassroom.com/fe/static/lesson/${version}/`;
+  }
+}
+
 
 if (config.build.productionGzip) {
   var CompressionWebpackPlugin = require('compression-webpack-plugin')

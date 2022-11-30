@@ -407,7 +407,7 @@
 
           setTimeout(()=>{
             this.audioPending = false;
-          }, 1000)
+          }, 1000 * 2)
         }
 
         meeting.audio = audio;
@@ -445,7 +445,7 @@
 
           setTimeout(()=>{
             this.videoPending = false;
-          }, 1000)
+          }, 1000 * 2)
         }
 
         meeting.video = video;
@@ -529,7 +529,18 @@
 
             if(bind) {
               if(this.invitationLink) {
-                location.href = this.invitationLink;
+                // location.href = this.invitationLink;
+
+                try {
+                  if(window.self == window.top) {
+                    location.href = this.invitationLink;
+                  } else if(window.top) {
+                    // 如果是iframe打开的
+                    window.top.location.href = this.invitationLink;
+                  }
+                } catch(error) {
+                  location.href = this.invitationLink;
+                }
               }
 
               hasBind = bind;

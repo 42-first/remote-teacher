@@ -102,6 +102,11 @@ let boardMixin = {
           // to the current coords
           let point2 = coords[index + 1];
           let lineWidth = +point2.w;
+          // 这里定义最小线宽（插件过来的数据线宽有时候会出现0.65这种）
+          if(lineWidth < 2) {
+            lineWidth = 2;
+          }
+
           context.lineWidth = lineWidth || 1;
           context.beginPath();
           context.moveTo(point.x, point.y);
@@ -151,6 +156,11 @@ let boardMixin = {
         for(let i = 1; i < coords.length; i++) {
           let point = coords[i];
           let lineWidth = +point.w;
+          // 这里定义最小线宽（插件过来的数据线宽有时候会出现0.65这种）
+          if(lineWidth < 2) {
+            lineWidth = 2;
+          }
+
           context.lineWidth = lineWidth;
           context.lineTo(point.x, point.y);
 

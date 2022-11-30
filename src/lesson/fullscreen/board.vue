@@ -11,7 +11,7 @@
   <section class="board__page">
     <!-- 白板屏幕宽高 增加自定义指令解决数据改变canvas被清空大坑 v-canvas="slide" -->
     <div class="board__info" v-if="slide" >
-      <canvas :id="'canvas_'+slide.boardid" class="board__canvas" :width="slide.devwidth" :height="slide.devheight" :style="slide|scaleCanvas" ></canvas>
+      <canvas :id="'canvas_'+slide.boardid" class="board__canvas" :width="slide.devwidth" :height="slide.devheight" :style="{transform: 'scale(' + scaleValue + ')'}" ></canvas>
     </div>
 
     <!-- 不懂收藏 -->
@@ -41,7 +41,8 @@ export default {
     return {
       index: 0,
       slide: null,
-      boardInfo: null
+      boardInfo: null,
+      scaleValue: 1
     };
   },
   computed: {
@@ -62,16 +63,14 @@ export default {
     if(slide) {
       this.slide = slide;
     }
+
+    window.addEventListener('resize', this.scaleCanvas);
   },
   updated() {},
   beforeDestroy() {
-    // window.removeEventListener('resize', this.resize);
+    window.removeEventListener('resize', this.scaleCanvas);
   },
   filters: {
-    scaleCanvas(item) {
-      let scaleValue = (window.innerWidth - 220 - 40) / item.devwidth;
-      return { transform: 'scale(' + scaleValue + ')' };
-    }
   },
   watch: {
     '$route' (to, from) {
@@ -133,6 +132,8 @@ export default {
           this.initBoard(id);
         }, 1500)
       }
+
+      this.scaleCanvas()
     },
 
     /*
@@ -168,6 +169,17 @@ export default {
       catch(error => {
         console.log('handleBoardTag:', error);
       })
+    },
+
+    scaleCanvas() {
+      let item = this.slide
+      if(item) {
+        let wrapWidth = document.querySelector('.J_container').clientWidth - 40
+        let wrapHeight = document.querySelector('.J_container').clientHeight - 40
+        let wrapRate = wrapWidth / wrapHeight
+        let innerRate = item.devwidth / item.devheight
+        this.scaleValue = wrapRate > innerRate ?  wrapHeight / item.devheight : wrapWidth / item.devwidth;
+      }
     },
 
   }

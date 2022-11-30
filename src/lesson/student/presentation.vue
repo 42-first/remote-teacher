@@ -49,6 +49,9 @@
         <section class="player__box" v-show="liveVisible">
           <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
           <div class="live__status f14" v-show="liveStatusTips">{{liveStatusTips}}</div>
+          <!-- 视频水印层 -->
+          <div class="watermark_layer" id="watermark_layer"></div>
+
           <section class="live__unfold box-end f14">
             <!-- 展开状态 只听声音 关闭直播 -->
             <p class="box-center" @click="handleLiveVisible(false)">
@@ -277,7 +280,8 @@
   import agreementMixin from '@/components/common/agreement-mixin'
 
   import userAgreement from '@/components/common/agreement'
-
+  import watermark from '@/util/watermark-h5'
+  import {getPlatformKey} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -294,7 +298,11 @@
     'changjiang.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e1mahsin1302iubd1e94difd9.png',
     'huanghe.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1e24ml9tq18rd1d201m3gd3q1mul9.jpg',
     'pre-apple-ykt.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1eobsniqm9om1da4g2h1k591q8e9.jpg',
-    'rain.xuetangonline.com': 'https://qn-sfe.yuketang.cn/o_1f0kreooe16b6mh9k618ep1a4j9.jpeg',
+    'rain.gdufemooc.cn': 'https://qn-sfe.yuketang.cn/o_1f0kreooe16b6mh9k618ep1a4j9.jpeg',
+    // 镜泊雨课堂
+    'ykt-envning.rainclassroom.com': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
+    // 雨豆课堂
+    'yudou.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1gafnok0pipg1po010a11ktq1n8u9.jpeg',
   }
 
   const miniAppIds = {
@@ -304,7 +312,11 @@
     'changjiang.yuketang.cn': 'gh_731c9c765693',
     'huanghe.yuketang.cn': 'gh_67c3b8305643',
     'pre-apple-ykt.xuetangonline.com': 'gh_b82950979ac8',
-    'rain.xuetangonline.com': 'gh_8ebceaef4044',
+    'rain.gdufemooc.cn': 'gh_8ebceaef4044',
+    // 镜泊雨课堂
+    'ykt-envning.rainclassroom.com': 'gh_65ef1ae7b1e7',
+    // 雨豆课堂
+    'yudou.yuketang.cn': 'gh_b9baab2c874f',
   }
 
   export default {
@@ -554,7 +566,7 @@
           }, 1000*10)
         }
       },
-
+           
       /*
        * @method 直播悬停反面等事件
        */
@@ -688,10 +700,15 @@
       bindTouchEvents() {
         this.$el.querySelector('.J_timeline').addEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').addEventListener('touchend', this.handleTouchMove);
+
+        // 监听页面隐藏
+        document.addEventListener("visibilitychange", this.handleVisibilityChange);
       },
       unbindTouchEvents() {
         this.$el.querySelector('.J_timeline').removeEventListener('touchmove', this.handleTouchMove);
         this.$el.querySelector('.J_timeline').removeEventListener('touchend', this.handleTouchMove);
+
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
       },
 
       /*
@@ -926,7 +943,46 @@
         } else {
           this.$router.back();
         }
+      },
+
+
+      handleVisibilityChange () {
+        if (document.visibilityState === 'visible') {
+          console.log('show time:', moment(new Date()).format('hh:mm:ss'))
+          if(WebSocket.CLOSED == this.socket.readyState) {
+            // 恢复显示的时候 如果websocket 断了 需要重新连一下
+            this.initws()
+          }else if(WebSocket.OPEN === this.socket.readyState) {
+            let userId = this.identityId || this.userID;
+            this.socket.send(JSON.stringify({
+              'op': 'hello',
+              'userid': userId,
+              'role': 'student',
+              'auth': this.token,
+              'lessonid': this.lessonID
+            }))
+          }
+        } else {
+          console.log('hide time:', moment(new Date()).format('hh:mm:ss'))
+          WebSocket.OPEN === this.socket.readyState &&
+          this.socket.send(JSON.stringify({
+            'op': 'leavelesson',
+            'lessonid': this.lessonID
+          }));
+        }
+      },
+
+      drawWaterMark() {
+        // 荷塘专业版直播加水印
+        const key = getPlatformKey();
+        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+          this.getUser().then(data => {
+            const { name='', schoolNumber='' } = data || {};
+            watermark.set('#watermark_layer', [name, schoolNumber]);
+          })
+        }
       }
+
     },
     created() {
       this.init();
@@ -1131,6 +1187,15 @@
           width: 100%;
           min-height: 5rem;
           background: rgba(0,0,0,0.45);
+        }
+        .watermark_layer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1;
         }
         .live__status {
           position: absolute;

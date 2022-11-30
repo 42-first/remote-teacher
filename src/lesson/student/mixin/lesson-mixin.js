@@ -61,6 +61,13 @@ let lessonMixin = {
         this.teacherName = lesson.teacher.name;
       }
 
+      // 导播课设置
+      if(lesson && lesson.hasLiveCaster) {
+        this.hasLiveCaster = lesson.hasLiveCaster;
+        // mode 0录制 1导播模式
+        this.liveCasterMode = lesson.liveCasterMode;
+      }
+
       // 班级信息
       lesson && this.getClassroom(lesson.classroomId);
 
@@ -236,6 +243,32 @@ let lessonMixin = {
     },
 
     /**
+     * @method 用户虚id
+     * @param
+     */
+    async getUserIdentity() {
+      let user = await this.getUser();
+      let URL = API.lesson.get_user_identity;
+      let params = {
+        'lessonId': this.lessonID
+      };
+
+      return request.get(URL, params).
+      then( res => {
+        if (res && res.code === 0 && res.data) {
+          return res.data;
+        }
+      }).catch(error => {
+        return {
+          "name": user.name,
+          "schoolNumber": user.schoolNumber,
+          "department": ''
+        }
+        console.log('get_user_identity:', error);
+      })
+    },
+
+    /**
      * @method 课程基本信息
      * @param
      */
@@ -309,6 +342,11 @@ let lessonMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
+          }
+
+          // 是否导播嘉宾
+          if(data.isGuest) {
+            this.isGuest = data.isGuest;
           }
         }
 
@@ -410,7 +448,7 @@ let lessonMixin = {
 
           // 日志上报
           setTimeout(() => {
-            this.handleLogEvent();
+            this.handleLogEvent(this.hasMeeting ? 'kwai_rtmp' : '');
           }, 30000)
         }
       }).catch(error => {

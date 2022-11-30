@@ -53,10 +53,12 @@ export default {
     openDeprive: function (str, byself = false) {
       let self = this
 
-      this.setData({
-        isRobber: str === 'isRobber',
-        byself,
-      })
+      // this.setData({
+      //   isRobber: str === 'isRobber',
+      //   byself,
+      // })
+      self.$store.commit('set_isRobber', str === 'isRobber')
+      self.$store.commit('set_byself', byself)
       self.$store.commit('set_toastCtrlMaskTpl', 'Deprive')
       self.$store.commit('set_isToastCtrlMaskHidden', false)
     },

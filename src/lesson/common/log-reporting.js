@@ -49,26 +49,41 @@ let logMixin = {
         sp: 1,
         sq: 1,
       },
+      // 互动直播上报video-log timer
+      interactiveLogTimer: null
     }
   },
   methods: {
     /**
      * @method 直播打点
-     * @params
+     * @params n 默认都是kwai 互动直播的是kwai_rtmp
      */
-    initHeartLog() {
+    initHeartLog(n = 'kwai') {
       let log = this.heartLog;
 
       try {
         this.heartLog = Object.assign({}, log, {
-          p: 'web',
-          u: this.userID,
+          p: (function() {
+            var sUserAgent = navigator.userAgent.toLowerCase();
+            if(sUserAgent && /flutterapp/i.test(sUserAgent)){
+              return 'app-h5'
+            }else if(window.__wxjs_environment && window.__wxjs_environment === 'miniprogram'){
+              return 'minimp-h5'
+            }else if(sUserAgent && /MicroMessenger/i.test(sUserAgent)){
+              return 'gzh-h5'
+            }else if(sUserAgent && /(ipad|iphone os|midp|rv:1.2.3.4|ucweb|android|windows ce|windows mobile|webview)/i.test(sUserAgent)){
+              return 'h5'
+            }
+            return "web"
+          })(),
+          u: this.identityId || this.userID,
           t: this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live',
           classroomid: this.classroom && this.classroom.classroomId,
           c: this.classroom && this.classroom.courseId,
           lesson_id: this.lessonID,
           ts: (new Date()).getTime(),
-          v: this.liveId || 1
+          v: this.liveId || 1,
+          n
         });
       } catch(error) {
         console.error('[initHeartLog] exception:%s', error.message);
@@ -119,7 +134,7 @@ let logMixin = {
      * @method 视频事件监听
      * @params
      */
-    handleLogEvent() {
+    handleLogEvent(n = 'kwai') {
       let liveEl = document.getElementById('player');
       // let events = ['play', 'pause', 'error', 'stalled', 'waiting', 'loadstart', 'loadeddata' ];
       let events = [ 'error', 'stalled', 'waiting' ];
@@ -141,7 +156,7 @@ let logMixin = {
 
       // 新增直播打点事件
       if(liveEl) {
-        this.initHeartLog();
+        this.initHeartLog(n);
         liveEl.addEventListener('timeupdate', this.handleTimeupdate)
       }
     },
@@ -155,12 +170,15 @@ let logMixin = {
 
       if(liveEl) {
         liveEl.removeEventListener('timeupdate', this.handleTimeupdate)
+      }
 
-        // 上报一次打点数据
-        let liveLogs = this.liveLogs;
-        if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
-          this.reportLiveLog(liveLogs.logs);
-        }
+      // 有互动直播的timer 清除掉
+      this.interactiveLogTimer && clearInterval(this.interactiveLogTimer)
+
+      // 上报一次打点数据
+      let liveLogs = this.liveLogs;
+      if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
+        this.reportLiveLog(liveLogs.logs);
       }
     },
 
@@ -341,6 +359,28 @@ let logMixin = {
           reject('加载失败');
         }
       });
+    },
+
+    /**
+     * @method 互动直播 上报video-log
+     * @params
+     */
+    handleReportInteractiveToVideoLog(){
+      this.initHeartLog('kwai_rtmp')
+      this.interactiveLogTimer = setInterval(() => {
+        this.handleTimeupdate()
+      }, 1000)
+    },
+
+    /**
+     * @method 上报一次
+     * @params
+     */
+    forceReport() {
+      let liveLogs = this.liveLogs;
+      if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
+        this.reportLiveLog(liveLogs.logs);
+      }
     },
 
   }

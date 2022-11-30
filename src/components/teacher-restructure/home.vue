@@ -1,6 +1,7 @@
 <!-- 教师遥控器根组件 -->
 <template>
   <div class="root J_page J_tip">
+		<slot name="ykt-msg"></slot>
     <div id="rc-home" :class="['rc-home',{'shuban': isShuban}]" v-show="isEnterEnded">
       <!-- 当前幻灯片 -->
       <div id="upper" class="card-box upper">
@@ -77,9 +78,6 @@
         <component
           ref="ToastCtrlMask"
           :is="toastCtrlMaskTpl"
-          :is-robber="isRobber"
-          :is-robbing.sync="isRobbing"
-          :byself="byself"
 					@sayhello="sayHello"
         ></component>
       </div>
@@ -118,7 +116,7 @@
 		<div class="note-box" v-show="noteText">
 			<div class="note-box-content">
 				<div class="title">备注：</div>
-				<div class="text">{{noteText}}</div>
+				<div class="text" v-html="noteText"></div>
 				<div class="close">
 					<i class="icon-ykq-shiti-guanbi iconfont" @touchend.self="showNote('')"></i>
 				</div>
@@ -195,9 +193,10 @@
 	      // 否则要再根据socket是否已经存在处理一遍监听
 	      socket: null,                           // 全局 Websocket 实例对象
 
-	      isRobber: false,                        // 是夺权者
-	      isRobbing: false,                       // 正在夺权
-	      byself: false,                          // 是自己夺权
+				// 夺权的弹窗只在二级页面出现  且点击确定不刷新页面 需要把夺权相关的变量移到vuex中
+	      // isRobber: false,                        // 是夺权者
+	      // isRobbing: false,                       // 正在夺权
+	      // byself: false,                          // 是自己夺权
 	      startPoint: [0, 0],
 
 	      connectCountDown: 10,
@@ -254,9 +253,10 @@
         'msgMaskTpl',
         'toastCtrlMaskTpl',
 				'initiativeCtrlMaskTpl',
+				'toupinginfo',
 				'toolbarIndex',
 
-				'isCloneClass'
+				'isCloneClass',
 			])
 	  },
 	  components: {
@@ -313,7 +313,7 @@
 				'set_noWakeuid',
 			]),
 			showNote(text) {
-				this.noteText = text
+				this.noteText = text.split(/\r\n/).join("<br/>")
 			},
 	  	/**
 	     * 复用页面，需要watch route
@@ -429,7 +429,7 @@
 	     */
 	    fetchUserInfo () {
 	      let self = this
-	      let url = API.userinfo
+				let url = API.userinfo
 	      return request.get(url, {'lesson_id': self.lessonid})
 				.then(jsonData => {
 					window.USERID = jsonData.data.user.user_id

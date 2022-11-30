@@ -322,6 +322,9 @@
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid,
 						'userid': userid
+					},
+					query: {
+						nojump: 1
 					}
 				})
 			},
@@ -331,6 +334,9 @@
 					params: {
 						'classroomid': this.classroomid,
 						'lessonid': this.lessonid
+					},
+					query: {
+						nojump: 1
 					}
 				})
       }

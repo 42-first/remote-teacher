@@ -176,6 +176,7 @@
         'socket',
         'isGuideDelayHidden',
 				'pptData',
+				'toupinginfo',
 				'isCloneClass'
       ]),
 			isGc() {
@@ -203,7 +204,7 @@
 	  watch: {
 	  	'$route' () {
 	  		this.init()
-	  	}
+			}
 	  },
 	  methods: {
 	  	/**
@@ -314,7 +315,11 @@
 	    	self.handlePubSub()
 
         // 读取问题信息
-        this.getProlemById(this.problemid);
+				this.getProlemById(this.problemid);
+				// 插件或web端投屏，接收到id 与当前problemid 一致，显示投屏状态
+				if (this.problemid === this.toupinginfo.id) { 
+					this.toggleTouping(!!this.toupinginfo.status)
+				}
 	    },
 	    /**
        * 处理计时
@@ -785,7 +790,7 @@
 		  align-items: center;
 		  justify-content: space-between;
 		  width: 7.466667rem;
-		  padding: 1.2rem 0 0.5rem;
+		  padding: 0.8rem 0 0.53333333rem;
 
 		  .btn-item {
 			  width: 1.8rem;
