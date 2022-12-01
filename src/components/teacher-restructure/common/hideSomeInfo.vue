@@ -1,5 +1,5 @@
 <template>
-	<div class="w100 show-wrapper">
+	<div class="w100 show-wrapper" :class="{'large': size == 'large'}">
     <div class="hide-show-answer w100" v-if="!isUserInfo">
       <div class="status text-left">{{ $t('submittotal2', { ss1: total, ss2: members }) }}</div>
       <div class="text-right hide-answer-wrapper" v-if="showAnswerText">
@@ -35,7 +35,7 @@
   import explainbox from "@/components/teacher-restructure/common/explainbox"
   export default {
     name: 'hideSomeInfo',
-    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype', 'position'],
+    props: ['isTouping', 'isUserInfo', 'total', 'members', 'problemid', 'problemtype', 'position', 'size'],
     computed: {
       ...mapGetters([
         'lessonid',
@@ -147,6 +147,26 @@
   @import "~@/style/common";
   .show-wrapper{
     height: px2rem(40px);
+    &.large {
+      height: px2rem(88px);
+
+      .hide-show-name {
+        height: px2rem(88px);
+        line-height: px2rem(88px);
+        margin-top: 0;
+
+        &::before {
+          border-top: 1px solid #aaa;
+        }
+      }
+
+      .hide-show-answer{
+        margin-top: px2rem(32px);
+        height: px2rem(88px);
+        line-height: px2rem(88px);
+        border-top: px2rem(1px) solid #aaa;
+      }
+    }
   }
   .hide-show-name{
     width: 100%;
