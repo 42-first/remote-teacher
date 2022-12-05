@@ -451,6 +451,7 @@
         is_agreement: true,
         // 来源
         from: '',
+        reJoin: false
       };
     },
     components: {
@@ -949,6 +950,7 @@
       handleVisibilityChange () {
         if (document.visibilityState === 'visible') {
           console.log('show time:', moment(new Date()).format('hh:mm:ss'))
+          this.reJoin = true
           if(WebSocket.CLOSED == this.socket.readyState) {
             // 恢复显示的时候 如果websocket 断了 需要重新连一下
             this.initws()
