@@ -451,7 +451,8 @@
         is_agreement: true,
         // 来源
         from: '',
-        reJoin: false
+        reJoin: false,
+        watermarkInfo: null
       };
     },
     components: {
@@ -975,13 +976,15 @@
       },
 
       drawWaterMark() {
-        // 荷塘专业版直播加水印
-        const key = getPlatformKey();
-        if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
-          this.getUser().then(data => {
-            const { name='', schoolNumber='' } = data || {};
-            watermark.set('#watermark_layer', [name, schoolNumber]);
-          })
+        if (this.watermarkInfo) {
+          let {text_name = '', text_school_number = '', text_department = '', text_classroom = ''} = this.watermarkInfo
+          let textArr = []
+          text_name && textArr.push(text_name)
+          text_school_number && textArr.push(text_school_number)
+          text_department && textArr.push(text_department)
+          text_classroom && textArr.push(text_classroom)
+
+          watermark.set('#watermark_layer', textArr);
         }
       }
 
