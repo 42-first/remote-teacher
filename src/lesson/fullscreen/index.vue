@@ -327,12 +327,12 @@
           if (newVal && this.liveType === 2) {
             if (this.watermarkInfo) {
               watermark.close('#watermark_layer');
-              let {text_name = '', text_school_number = '', text_department = '', text_classroom = ''} = this.watermarkInfo
+              let {name = '', shcoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
               let textArr = []
-              text_name && textArr.push(text_name)
-              text_school_number && textArr.push(text_school_number)
-              text_department && textArr.push(text_department)
-              text_classroom && textArr.push(text_classroom)
+              name && textArr.push(name)
+              shcoolNumber && textArr.push(shcoolNumber)
+              department && textArr.push(department)
+              classroom && textArr.push(classroom)
 
               watermark.set('#watermark_layer', textArr);
             }
