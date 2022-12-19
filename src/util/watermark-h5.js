@@ -24,7 +24,7 @@ function setWatermark(pls, args) {
 
 
   ctx.rotate(-20 * Math.PI / 180);
-  ctx.font = "lighter 18px PingFang SC";
+  ctx.font = "18px PingFang SC";
   ctx.fillStyle = "rgba(153, 153, 153, 0.2)";
   ctx.textAlign = 'center';
 
