@@ -26,7 +26,7 @@ function setWatermark(pls, args) {
   ctx.rotate(-20 * Math.PI / 180);
   ctx.font = "lighter 18px PingFang SC";
   ctx.fillStyle = "rgba(153, 153, 153, 0.2)";
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
 
   let drawY = 0
   let text1Width = ctx.measureText(text1).width
@@ -84,6 +84,7 @@ function setWatermark(pls, args) {
         background-repeat:repeat;
         background-position: left top;
         mix-blend-mode: multiply;
+        background-size: 260px;
         background-image:url('${canvas.toDataURL("image/png")}')`;
 
   watermark.setAttribute('style', styleStr);

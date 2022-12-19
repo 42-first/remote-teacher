@@ -977,10 +977,10 @@
 
       drawWaterMark() {
         if (this.watermarkInfo) {
-          let {name = '', shcoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
+          let {name = '', schoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
           let textArr = []
           name && textArr.push(name)
-          shcoolNumber && textArr.push(shcoolNumber)
+          schoolNumber && textArr.push(schoolNumber)
           department && textArr.push(department)
           classroom && textArr.push(classroom)
 

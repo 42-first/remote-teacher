@@ -327,10 +327,10 @@
           if (newVal && this.liveType === 2) {
             if (this.watermarkInfo) {
               watermark.close('#watermark_layer');
-              let {name = '', shcoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
+              let {name = '', schoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
               let textArr = []
               name && textArr.push(name)
-              shcoolNumber && textArr.push(shcoolNumber)
+              schoolNumber && textArr.push(schoolNumber)
               department && textArr.push(department)
               classroom && textArr.push(classroom)
 
