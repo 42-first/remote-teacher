@@ -260,6 +260,7 @@
         classroom: {},
         // 课是否已结束
         lessonFinished: false,
+        watermarkInfo: null
       };
     },
     components: {
@@ -324,13 +325,16 @@
 
           // 荷塘专业版直播加水印
           if (newVal && this.liveType === 2) {
-            const key = getPlatformKey();
-            if (['envning', 'env-example', 'thu'].includes(key) && this.classroom.pro) {
+            if (this.watermarkInfo) {
               watermark.close('#watermark_layer');
-              this.getUser().then(data => {
-                const { name='', schoolNumber='' } = data || {};
-                watermark.set('#watermark_layer', [name, schoolNumber]);
-              })
+              let {name = '', schoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
+              let textArr = []
+              name && textArr.push(name)
+              schoolNumber && textArr.push(schoolNumber)
+              department && textArr.push(department)
+              classroom && textArr.push(classroom)
+
+              watermark.set('#watermark_layer', textArr);
             }
           }
         }, 1000)
