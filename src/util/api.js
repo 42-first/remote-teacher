@@ -161,6 +161,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       submit_review_score: '/api/v3/lesson/review/submit-review-score',
       // 获取互评状态列表
       get_review_status_list: '/api/v3/lesson/review/status-list',
+      // 获取水印
+      get_watermark: '/api/v3/lesson/live/get-student-text-watermark',
 
       // 是否绑定腾讯会议账号
       check_bind: '/api/v3/lesson/meeting/tencent/check-bind',

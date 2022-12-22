@@ -414,6 +414,10 @@ var commandMixin = {
           // 课程title
           document.title = data.courseName;
           this.classroom = data;
+
+          if(data.pro) {
+            this.getWaterMarkInfo()
+          }
         }
       }).catch(error => {
         console.log('getClassroom:', error);
@@ -763,6 +767,19 @@ var commandMixin = {
         }
       });
     },
+
+    /**
+     * @method 获取水印信息
+     */
+    getWaterMarkInfo() {
+      let URL = API.lesson.get_watermark
+      return request.get(URL)
+        .then(res => {
+          if(res && res.code == 0) {
+            this.watermarkInfo = res.data
+          }
+        })
+    }
 
   }
 }
