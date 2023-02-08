@@ -8,7 +8,7 @@
             <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
           </p>
           <div class="footer-cr">
-            <p>©2022 清华大学&学堂在线</p>
+            <p>©{{year}} 清华大学&学堂在线</p>
             <p>
             <a target="_blank" href="https://beian.miit.gov.cn" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;">京ICP备14019655号</a> | <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802033052" style="display:inline-block;vertical-align: middle;color: #666;text-decoration: none;vertical-align: middle;"><img src="https://qn-sfe.yuketang.cn/o_1ek0bqrhrrj69vi1q681h091k069.png" style="vertical-align: middle;"/>&nbsp;<span>京公网安备 11010802033052号</span></a>
             <span>| 北京慕华信息科技有限公司</span>
@@ -58,7 +58,8 @@
     data: function () {
       return {
         codeShow: !1,
-        imShow: !0
+        imShow: !0,
+        year: new Date().getFullYear()
       }
     },
     created: function () {
