@@ -303,6 +303,7 @@
     'ykt-envning.rainclassroom.com': 'https://qn-sfe.yuketang.cn/o_1bt6o8jqh1iv7ci71pk91ad3st19.jpeg',
     // 雨豆课堂
     'yudou.yuketang.cn': 'https://qn-sfe.yuketang.cn/o_1gafnok0pipg1po010a11ktq1n8u9.jpeg',
+    'www.yudou.cn': 'https://qn-sfe.yuketang.cn/o_1gafnok0pipg1po010a11ktq1n8u9.jpeg',
   }
 
   const miniAppIds = {
@@ -317,6 +318,7 @@
     'ykt-envning.rainclassroom.com': 'gh_65ef1ae7b1e7',
     // 雨豆课堂
     'yudou.yuketang.cn': 'gh_b9baab2c874f',
+    'www.yudou.cn': 'gh_b9baab2c874f',
   }
 
   export default {
