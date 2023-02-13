@@ -546,7 +546,7 @@
 						let data = res.data
 						return res.data
 					} else if(res && res.code === 50004) {
-            location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + this.lessonid;
+            location.href = '/m/v2/lesson/teacher/' + this.lessonid;
 
             return null;
           }

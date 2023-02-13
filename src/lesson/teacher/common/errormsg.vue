@@ -82,7 +82,7 @@
 	      return request.post(url)
         .then((res) => {
           if(res && res.code === 0 && res.data){
-            location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + self.lessonid
+            location.href = '/m/v2/lesson/teacher/' + self.lessonid
           }
         }).catch(error => {
 
