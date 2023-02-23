@@ -158,7 +158,7 @@ let mixin = {
       // 握手开始通信
       const userid = this.identityId || this.userid;
       console.log(userid);
-      this.socket.send(JSON.stringify({
+      this.token && this.socket.send(JSON.stringify({
         'op': 'hello',
         'userid': userid,
         'avatar': this.avatar,

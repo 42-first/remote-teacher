@@ -259,7 +259,7 @@ function socketProcessMessage(msg){
 
   if (msg.op == 'lessonfinished') {
     // 结束授课
-    location.href = '/v/index/teacher_v3/teaching_lesson_detail/' + self.lessonid;
+    location.href = '/m/v2/lesson/teacher/' + self.lessonid;
     return
   }
 
