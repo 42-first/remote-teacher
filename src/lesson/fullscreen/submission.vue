@@ -384,7 +384,7 @@
 
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
-        this.imageThumbURL = '/vue_images/images/loading-3.gif';
+        this.imageThumbURL = 'https://fe-static-yuketang.rainclassroom.com/fe/static/vue_images/2.2.561/images/loading-3.gif';
         this.uploadImage(file, fileType);
         // compress(file, options, function(dataUrl) {
         //   if(dataUrl) {
