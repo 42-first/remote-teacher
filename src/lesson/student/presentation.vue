@@ -543,6 +543,10 @@
           this.source = query.source;
         }
 
+        if(query.inspector) {
+          this.source = 91
+        }
+
         // 是否从腾讯会议应用内打开
         if(query.from) {
           this.from = query.from;
