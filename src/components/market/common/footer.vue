@@ -5,7 +5,7 @@
       <div class="footer-wrapper clearfix">
         <div class="fl">
           <p class="footer-links">
-            <a href="/join_us" class="right" style="padding-left: 0;">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
+            <a target="_blank" href="https://www.yudou.cn" class="right" style="padding-left: 0;">雨豆官网</a>|<a href="/join_us" class="right">加入我们</a>|<a href="/download" class="right">下载中心</a>|<a href="/help" class="right">帮助中心</a>
           </p>
           <div class="footer-cr">
             <p>©{{year}} 清华大学&学堂在线</p>
