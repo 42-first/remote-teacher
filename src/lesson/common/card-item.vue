@@ -736,10 +736,6 @@
     transform: scale(0.5);
   }
 
-  .pswp--zoom-allowed .pswp__img {
-    background: #fff;
-  }
-
 </style>
 
 
