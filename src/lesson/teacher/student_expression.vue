@@ -254,6 +254,21 @@
               case 80:
                 source_name = i18n.locale === 'zh_CN' ?  '腾讯会议' : 'Tencent meeting'
                 break;
+              case 81:
+                source_name = i18n.locale === 'zh_CN' ?  '答题器' : 'Vote'
+                break;
+              case 82:
+                source_name = i18n.locale === 'zh_CN' ?  '点阵笔' : 'Digital pen'
+                break;
+              case 83:
+                source_name = i18n.locale === 'zh_CN' ?  '人脸识别' : 'Face recognition'
+                break;
+              case 16:
+              case 17:
+              case 26:
+              case 45:
+                source_name = i18n.locale === 'zh_CN' ?  '分享链接' : 'Share link'
+                break;
             }
             res.data['source_name'] = source_name
             this.checkinDetail = res.data

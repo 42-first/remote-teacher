@@ -94,6 +94,10 @@ function socketProcessMessage(msg){
       self.openDeprive('isRobber')
       return
     }
+
+    // 有可能未放映课件就打开了弹幕 需要更改弹幕状态 初始化弹幕按钮
+    msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
+
     // 参考 https://www.tapd.cn/20392061/bugtrace/bugs/view?bug_id=1120392061001004274
     if(!msg.presentation){
       if (msg.mask && msg.mask.type === 'qrcode') {
@@ -125,8 +129,6 @@ function socketProcessMessage(msg){
     // })
     self.$store.commit('set_isRobbing', false)
 
-    // 初始化弹幕按钮
-    msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
 
     // TODO 初次联通，node有时会丢失msg.presentation
     // 有可能中间换课件，这时不要显示老的课件
@@ -242,6 +244,9 @@ function socketProcessMessage(msg){
     self.$store.commit('set_isBrandNewPpt', false)
     self.showWhichPage(msg)
     self.killMask()
+
+    // 初始化弹幕按钮
+    msg.danmu ? self.openDanmuBtn() : self.closeDanmuBtn()
 
     if (self.presentationid !== msg.presentation) {
       self.$store.commit('set_presentationid', msg.presentation)

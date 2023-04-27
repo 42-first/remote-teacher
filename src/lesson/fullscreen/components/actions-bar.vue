@@ -89,14 +89,14 @@
       <template v-if="hasTXMeeting">
         <div class="line"></div>
         <section class="action box-center join__wrap">
-          <div class="txmeet__join box-center" @click="handleOpenTXMeet">
+          <div class="txmeet__join box-center" @click="handleOpenTXMeet" @mouseover="handleToggleHoverTXMeetingTips" @mouseout="handleToggleHoverTXMeetingTips">
             <img class="icon-txmeet" src="~images/student/txmeet-logo2.png" >
           </div>
 
           <!-- 腾讯会议互动加入提示 -->
-          <section class="meeting__tips box-start" v-if="visibleTXMeetingTips">
+          <section class="meeting__tips box-start" :class="!visibleTXMeetingTips ? 'noclose' : ''" v-if="visibleTXMeetingTips || (!visibleTXMeetingTips && showTXMeetingTips)">
             <div class="tips__content f16 cfff"><!-- 老师开启了腾讯会议前往腾讯会议上课 -->{{ $t('lesson.txmeetforclass') }}</div>
-            <p class="tips__closed box-center" @click="handleClosedTXMeetTips">
+            <p class="tips__closed box-center" v-if="visibleTXMeetingTips" @click="handleClosedTXMeetTips">
               <i class="iconfont icon-guanbi1 f12 cfff"></i>
             </p>
           </section>
@@ -150,6 +150,7 @@
         visibleWebRTCNoSupported: false,
         // 腾讯会议扩展应用第一次提示
         visibleTXMeetingTips: true,
+        showTXMeetingTips: false
       };
     },
     components: {
@@ -553,6 +554,10 @@
           return hasBind;
         }
       },
+
+      handleToggleHoverTXMeetingTips() {
+        this.showTXMeetingTips = !this.showTXMeetingTips
+      }
     }
   };
 </script>
@@ -781,6 +786,15 @@
 
       border: 9px solid transparent;
       border-top-color: #5096F5;
+    }
+
+    &.noclose {
+      width: 180px;
+      .tips__content {
+        width: 100%;
+
+        border-right: 0;
+      }
     }
 
     .tips__content {

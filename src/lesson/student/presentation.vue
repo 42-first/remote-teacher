@@ -1476,4 +1476,7 @@
     background: #08BC72;
   }
 
+  .J_pswp .pswp__img {
+    background: #fff !important;
+  }
 </style>
