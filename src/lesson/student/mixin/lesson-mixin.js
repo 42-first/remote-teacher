@@ -25,7 +25,7 @@ let lessonMixin = {
       if(code !== 0) {
         // 50004 lesson end
         if(code === 50004) {
-          location.href = `/v/index/learning_lesson_detail_v3/${this.lessonID}`;
+          location.href = `/m/v2/lesson/student/${this.lessonID}`;
         } else if(code === 50002 || code === 50027) {
           // 无权限
           this.$router.push({
