@@ -10,7 +10,7 @@ import socketProcessMessage from './socket-process-message'
 
 const isLocal = location.host.indexOf('localhost') !== -1 || location.host.indexOf('192.168') !== -1
 
-const SOCKET_HOST = isLocal ? 'pre-apple-ykt.xuetangonline.com' : location.host
+const SOCKET_HOST = isLocal ? 'ykt-envning.rainclassroom.com' : location.host
 
 let xintiaoTimer = null
 let isReconnect = false
