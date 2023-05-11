@@ -29,7 +29,7 @@
             <section class="card__buy text-center">
               <div class="front">
                 <p class="card--price font24">¥ {{item.discount_price|formatPrice}}</p>
-                <p class="card--price2 font12">¥ {{item.price|formatPrice}}</p>
+                <!-- <p class="card--price2 font12">¥ {{item.price|formatPrice}}</p> -->
               </div>
               <div class="back">
                 <a class="buy-btn font14" :href="item.buy_link">立即购买</a>

@@ -25,9 +25,9 @@
               <div class="price">
                 ¥ {{i.discount_price}}
               </div>
-              <div class="font14 old-price">
+              <!-- <div class="font14 old-price">
                 ¥ {{i.price}}
-              </div>
+              </div> -->
               <a :href="i.buy_link" class="inline-block font16 buy" target=_blank>立即购买</a>
               <a href="javascript:;" class="download_courseware inline-block font16" @click="handleTip">免费下载样章</a>
             </div>
