@@ -497,7 +497,7 @@
       lessonStatus (newValue, oldValue) {
         // 下课啦
         if(newValue === 1) {
-          this.backURL = `/v/index/learning_lesson_detail_v3/${this.lessonID}`
+          this.backURL = `/m/v2/lesson/student/${this.lessonID}`
           // this.backURL = `/v/index/lessonend?id=${this.lessonID}&version=5`;
         }
       },
