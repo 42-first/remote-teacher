@@ -68,7 +68,13 @@ var exerciseMixin = {
       if(answerPostList && answerPostList.length ) {
         let problems = [];
         answerPostList.forEach((item) => {
-          problems.push(item)
+          if(item.problemType == 5 && (item.result.content || item.result.pics)) {
+            problems.push(item);
+          } else if(item.problemType == 4 && isArray(item.result)) {
+            problems.push(item);
+          } else if(item.problemType != 5 && item.problemType != 4 && !item.result.content && !item.result.pics) {
+            problems.push(item);
+          }
         })
 
         let params = { problems };

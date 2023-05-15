@@ -287,6 +287,12 @@
         this.initPubSub();
 
         this.oProblem = this.$parent.problemMap.get(problemID)['problem'];
+        if(this.oProblem.problemType !== 5) {
+          this.$router.back()
+
+          return this;
+        }
+
         // 问题分数
         let score = this.oProblem['score'];
         let getScore = this.oProblem['getScore'];
