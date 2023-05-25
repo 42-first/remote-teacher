@@ -5,7 +5,7 @@
     <div class="nav-menus" v-bind:class="{ios: isIos}">
       <a class="join-us" href="/presenter">翻页笔</a>
       <a class="join-us curr" href="/lesson/market/mobile_market">雨课件</a>
-      <a class="download" onclick="javascript:alert('请在电脑上打开 \n ykt.io \n下载雨课堂软件');">下载</a>
+      <a class="download" href="/bindmobile/download/app">下载</a>
       <a class="help" href="/help" >帮助</a>
     </div>
   </div>
