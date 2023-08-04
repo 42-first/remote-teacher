@@ -363,7 +363,7 @@
 
         // 预加载图片
         let oImg = new Image();
-        oImg.src = 'https://fe-static-yuketang.rainclassroom.com/fe/static/vue_images/2.2.561/images/loading-3.gif';
+        oImg.src = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
       },
 
       /*
@@ -1018,7 +1018,7 @@
 
         // 压缩 浏览器旋转 微信崩溃等问题
         this.hasImage = true;
-        this.imageThumbURL = 'https://fe-static-yuketang.rainclassroom.com/fe/static/vue_images/2.2.561/images/loading-3.gif';
+        this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
         this.uploadImage(file, fileType);
         // compress(file, options, function(dataUrl) {
         //   if(dataUrl) {

@@ -371,7 +371,7 @@
 
         // 预加载图片
         let oImg = new Image();
-        oImg.src = 'https://fe-static-yuketang.rainclassroom.com/fe/static/vue_images/2.2.561/images/loading-3.gif';
+        oImg.src = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
       },
 
       /*
