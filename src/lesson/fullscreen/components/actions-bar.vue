@@ -12,7 +12,7 @@
 <template>
   <!-- 操作栏 -->
   <section class="actions__cmp" :class="{ 'center': hasMeeting && joined, 'right': rightType}" tabindex="1">
-    <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting }">
+    <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting && !hasKMeeting }">
       <!-- 会议基本操作 -->
       <section class="meeting__actions box-center" v-if="hasMeeting && joined">
         <section class="actions__item" @click="handleSetAudio">
@@ -39,6 +39,27 @@
             </svg>
           </div>
         </section> -->
+        <div class="line"></div>
+      </section>
+
+      <!-- 直播连麦基本操作 -->
+      <section class="meeting__actions box-center" v-if="hasKMeeting && joined">
+        <section class="actions__item" @click="handleSetKAudio">
+          <div class="actions__btn box-center action__tips" :data-tips="kmeeting.audio ? $t('meeting.muteaudio') : $t('meeting.unmuteaudio')">
+            <svg class="icon f28 c666" aria-hidden="true">
+              <use xlink:href="#icon20-yuyin" v-if="kmeeting.audio"></use>
+              <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
+            </svg>
+          </div>
+        </section>
+        <section class="actions__item" @click="handleSetKVideo">
+          <div class="actions__btn box-center action__tips" :data-tips="kmeeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
+            <svg class="icon f28 c666" aria-hidden="true">
+              <use xlink:href="#icon20-shipin" v-if="kmeeting.video"></use>
+              <use xlink:href="#icon48-guanbishipin" v-else></use>
+            </svg>
+          </div>
+        </section>
         <div class="line"></div>
       </section>
 
@@ -102,6 +123,39 @@
           </section>
         </section>
       </template>
+
+      <!-- 快手直播连麦 -->
+      <template v-if="hasKMeeting">
+        <div class="line"></div>
+        <section class="actions__item" @click="handleHangupK" v-if="joined">
+          <div class="actions__btn over meeting__exit box-center f12 cfff">结束连麦</div>
+        </section>
+        <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else>
+          <div class="meeting__join kmeeting box-center" v-if="!kmeeting.status" @click.stop="handleJoinK">
+            <i class="iconfont icon-48-jieru f28 cfff"></i>
+          </div>
+
+          <div class="box-center" v-if="kmeeting.status == 1">
+            <i class="iconfont icon-48-jieru2 cgreen f24"></i>
+            <span class="join__status f14">申请中(30s)...</span>
+            <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK">取消申请</div>
+          </div>
+
+          <div class="box-center" v-if="kmeeting.status == 2">
+            <i class="iconfont icon-48-jieru2 cgreen f24"></i>
+            <span class="join__status f14">连线中...</span>
+          </div>
+
+
+          <!-- 互动加入提示 -->
+          <section class="meeting__tips kmeeting box-start" v-if="visibleKMeetingTips">
+            <div class="tips__content f16 cfff">申请连麦</div>
+            <p class="tips__closed box-center" @click="handleClosedKMeetingTips">
+              <i class="iconfont icon-guanbi1 f12 cfff"></i>
+            </p>
+          </section>
+        </section>
+      </template>
     </section>
 
     <!-- 弹幕直播 -->
@@ -150,7 +204,9 @@
         visibleWebRTCNoSupported: false,
         // 腾讯会议扩展应用第一次提示
         visibleTXMeetingTips: true,
-        showTXMeetingTips: false
+        showTXMeetingTips: false,
+        // 连麦提示
+        visibleKMeetingTips: true
       };
     },
     components: {
@@ -173,6 +229,7 @@
         'rightType',
         'hasTXMeeting',
         'invitationLink',
+        'hasKMeeting',
       ]),
 
       ...mapState('meeting', [
@@ -180,6 +237,10 @@
         'meeting',
         'meetingLayout',
       ]),
+
+      ...mapState('kmeeting', [
+        'kmeeting'
+      ])
     },
     created() {
     },
@@ -234,6 +295,10 @@
         'setMeetingLayout',
       ]),
 
+      ...mapActions('kmeeting', [
+        'setKMeeting'
+      ]),
+
       /**
        * @method 初始化
        * @param
@@ -250,6 +315,12 @@
           let hasClosedTXMeetingTips = !!localStorage.getItem(key);
           if(hasClosedTXMeetingTips) {
             this.visibleTXMeetingTips = false;
+          }
+
+          key = 'lesson-kmettingtips-cloesed';
+          let hasClosedKMeetingTips = !!localStorage.getItem(key);
+          if(hasClosedKMeetingTips) {
+            this.visibleKMeetingTips = false;
           }
 
           // 自否自动加入会议
@@ -480,6 +551,20 @@
       },
 
       /**
+       * @method 关闭直播连麦加入提示
+       * @params
+       */
+      handleClosedKMeetingTips(){
+        this.visibleKMeetingTips = false;
+
+        let key = 'lesson-kmettingtips-cloesed';
+        if(isSupported(window.localStorage)) {
+          localStorage.setItem(key, true);
+        }
+      },
+
+
+      /**
        * @method 显示分组
        * @params
        */
@@ -557,6 +642,37 @@
 
       handleToggleHoverTXMeetingTips() {
         this.showTXMeetingTips = !this.showTXMeetingTips
+      },
+
+      /**
+       * @method 申请连麦
+       */
+      handleJoinK() {
+        this.handleClosedKMeetingTips()
+        this.$rainConfirm({
+          data: {
+            title: '是否向老师发起连麦？',
+            showCancel: true,
+            confirmText: '确定',
+            cancelText: '取消',
+          },
+          cancel: () => {
+          },
+          confirm: () => {
+            let kmeeting = this.kmeeting
+            kmeeting.status = 1
+            this.setKMeeting(kmeeting)
+          },
+        })
+      },
+
+      /**
+       * 取消申请连麦
+       */
+      handleCancelJoinK() {
+        let kmeeting = this.kmeeting
+        kmeeting.status = 0
+        this.setKMeeting(kmeeting)
       }
     }
   };
@@ -633,6 +749,29 @@
           transition: opacity ease-in 0.35s;
         }
       }
+
+      &.widthAuto {
+        width: auto;
+      }
+
+      .join__status {
+        color: #656A72;
+        margin-left: 8px;
+      }
+
+      .cancel__join {
+        width: 84px;
+        height: 32px;
+        color: #F34848;
+        border-radius: 6px;
+        margin-left: 16px;
+        border: 1px solid #F34848;
+        background: #fff;
+
+        &:hover {
+          background: rgba(243, 72, 72, 0.1);
+        }
+      }
     }
 
     .action__danmu {
@@ -655,6 +794,10 @@
 
       border-radius: 50%;
       background: #08BC72;
+
+      &.kmeeting {
+        background: #3D7BFF;
+      }
     }
 
     .txmeet__join {
@@ -777,6 +920,23 @@
     border-radius: 8px;
     background: #5096F5;
     box-shadow: 0 2px 10px rgba(80, 150, 245, 0.5);
+
+    &.kmeeting {
+      background: #3D7BFF;
+      width: 142px;
+      height: 52px;
+      box-shadow: none;
+
+      &:before {
+        border-top-color: #3D7BFF;
+      }
+
+      .tips__content {
+        width: 100px;
+        white-space: nowrap;
+        padding: 0 16px 0 24px;
+      }
+    }
 
     &:before {
       content: '';

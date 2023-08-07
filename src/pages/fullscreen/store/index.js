@@ -12,6 +12,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
 import meeting from './modules/meeting'
+import kmeeting from './modules/kmeeting'
 
 
 Vue.use(Vuex)
@@ -68,6 +69,8 @@ const store = new Vuex.Store({
     hasTXMeeting: false,
     // 腾讯会议邀请链接
     invitationLink: '',
+    // 是否有直播连麦
+    hasKMeeting: true
   },
   mutations: {
     // 重置课堂信息
@@ -87,6 +90,7 @@ const store = new Vuex.Store({
       state.lessonStatus = 0
       state.invitationLink = '';
       state.hasTXMeeting = false;
+      state.hasKMeeting = false;
     },
 
     setLines(state, lines) {
@@ -175,6 +179,10 @@ const store = new Vuex.Store({
 
     setInvitationLink(state, data) {
       state.invitationLink = data;
+    },
+
+    setHasKMeeting(state, data) {
+      state.hasKMeeting = data
     },
   },
 
@@ -268,10 +276,15 @@ const store = new Vuex.Store({
     setInvitationLink({commit}, data) {
       commit('setInvitationLink', data)
     },
+
+    setHasKMeeting({commit}, data) {
+      commit('setHasKMeeting', data)
+    },
   },
 
   modules: {
-    meeting
+    meeting,
+    kmeeting
   }
 
 })
