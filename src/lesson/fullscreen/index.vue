@@ -104,6 +104,9 @@
     <!-- 会议演讲者模式 -->
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
 
+    <!-- 连麦 -->
+    <kmeeting ref="kmeeting" v-if="hasKMeeting && kmeeting.status > 1"></kmeeting>
+
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
   </section>
@@ -139,6 +142,7 @@
   import videomsg from './components/video-msg';
 
   import meeting from '@/components/meeting/meeting'
+  import kmeeting from '@/components/kmeeting/kmeeting'
 
   import agreementMixin from '@/components/common/agreement-mixin'
 
@@ -271,7 +275,8 @@
       videomsg,
       actionsCmp,
       meeting,
-      userAgreement
+      userAgreement,
+      kmeeting
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -289,6 +294,12 @@
         'joined',
         // 弹幕直播
         'danmus',
+        // 是否有连麦
+        'hasKMeeting',
+      ]),
+
+      ...mapState('kmeeting',[
+        'kmeeting'
       ])
     },
     watch: {

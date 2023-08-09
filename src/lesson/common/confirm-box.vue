@@ -39,7 +39,12 @@ name: 'messagebox',
 components: {},
 data() {
 return {
-reverse: false
+  reverse: false,
+  headerConfig: null,
+  showClose: false,
+  message: '',
+  cancelIcon: '',
+  confirmlIcon: ''
 };
 },
 filters: {},

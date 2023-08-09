@@ -660,8 +660,10 @@
           },
           confirm: () => {
             let kmeeting = this.kmeeting
-            kmeeting.status = 1
+            kmeeting.status = 2
             this.setKMeeting(kmeeting)
+
+            
           },
         })
       },

@@ -26,7 +26,7 @@ const kmeeting = {
       otherscreen: false,
       // 分享基本信息
       shareInfo: null,
-      // 当前连麦状态 0 初始状态 1 学生申请连麦（30s等待）2 接入中 
+      // 当前连麦状态 0 初始状态 1 学生申请连麦（30s等待）2 接入中 3 成功接入
       status: 0
     },
     localSharing: false,
