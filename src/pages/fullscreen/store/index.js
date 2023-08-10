@@ -70,7 +70,7 @@ const store = new Vuex.Store({
     // 腾讯会议邀请链接
     invitationLink: '',
     // 是否有直播连麦
-    hasKMeeting: true
+    hasKMeeting: false
   },
   mutations: {
     // 重置课堂信息

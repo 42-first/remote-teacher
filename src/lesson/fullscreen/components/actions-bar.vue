@@ -713,11 +713,17 @@
           cancel: () => {
           },
           confirm: () => {
-            let kmeeting = this.kmeeting
-            kmeeting.status = 2
-            this.setKMeeting(kmeeting)
+            let str = JSON.stringify({
+              'op': 'requestvc',
+              'lessonid': this.lesson && this.lesson.lessonID,
+              "name": window.user.name,	//学生端发，老师端收才有该字段，值是学生姓名
+              "avatar": window.user.avatar,	//学生端发，老师端收才有该字段，值是学生头像
+            })
 
-            
+            this.$parent.socket.send(str)
+            let kmeeting = this.kmeeting
+            kmeeting.status = 1
+            this.setKMeeting(kmeeting)
           },
         })
       },
@@ -726,6 +732,12 @@
        * 取消申请连麦
        */
       handleCancelJoinK() {
+        let str = JSON.stringify({
+          'op': 'cancelvc',
+          'lessonid': this.lesson && this.lesson.lessonID,
+        })
+
+        this.$parent.socket.send(str)
         let kmeeting = this.kmeeting
         kmeeting.status = 0
         this.setKMeeting(kmeeting)
@@ -743,6 +755,12 @@
           cancel: () => {
           },
           confirm: () => {
+            let str = JSON.stringify({
+              'op': 'endvc',
+              'lessonid': this.lesson && this.lesson.lessonID,
+            })
+
+            this.$parent.socket.send(str)
             let kmeeting = this.kmeeting
             kmeeting.joined = false
             this.setKMeeting(kmeeting)

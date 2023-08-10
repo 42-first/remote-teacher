@@ -184,10 +184,10 @@ let meetingMixin = {
       this.client.on("content-kicked-off", this.onContentKickOff);
       this.client.on("network-quality", this.onNetworkQualityUpdate);
 
-      this.client.join(this.options.appId, '123456', this.options.token, '333').then((uid) => {
+      this.client.join(this.options.appId, this.kmeeting.roomid, this.options.appToken, this.user.id).then((uid) => {
         this.isJoined = true;
-        console.log(`userId:${this.localUserId} join channel:${this.channelId} success`);
-        console.log(`${this.localUserId} join channel:${this.channelId} success`);
+        console.log(`userId:${this.user.id} join channel:${this.kmeeting.roomid} success`);
+        console.log(`${this.user.id} join channel:${this.kmeeting.roomid} success`);
 
         // 本地用户进入是否打开音视频
         let { audio, video, active } = this.kmeeting;
@@ -208,8 +208,8 @@ let meetingMixin = {
         this.setJoined(true)
       }).catch((err) => {
         this.stop();
-        console.log(`userId:${this.localUserId} join channel:${this.channelId} fail ${err}`);
-        console.log(`${this.localUserId} join channel:${this.channelId} fail`);
+        console.log(`userId:${this.user.id} join channel:${this.kmeeting.roomid} fail ${err}`);
+        console.log(`${this.user.id} join channel:${this.kmeeting.roomid} fail`);
       });
       this.client.on("active-track", this.onActiveTrack);
       this.client.on("error", (event) => {
@@ -326,7 +326,7 @@ let meetingMixin = {
         this.stop();
         this.closeDevice();
         if (reason === "uid_banned") {
-          console.log(`${this.localUserId} is kicked out`);
+          console.log(`${this.user.id} is kicked out`);
         }
       }
     },
@@ -723,7 +723,7 @@ let meetingMixin = {
       try {
         this.isJoining = false
         await this.client.leave()
-        console.log(`user:${this.localUserId} leave channel:${this.channelId} success`);
+        console.log(`user:${this.user.id} leave channel:${this.kmeeting.roomid} success`);
       } catch (error) {
         
       }

@@ -967,6 +967,8 @@ let actionsMixin = {
         this.qos.liveEnd();
       }
 
+      this.setHasKMeeting(false)
+
       this.removeEventListeners();
     },
 
@@ -1176,6 +1178,60 @@ let actionsMixin = {
         self.liveStatusTips = ''
       }, 5000)
     },
+
+
+    handleRequestvc() {
+      this.$rainConfirm({
+        data: {
+          title: '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?',
+          showCancel: true,
+          confirmText: '同意',
+          cancelText: '拒绝',
+          headerConfig: {
+            type: 'img',
+            img: this.teacher
+          }
+        },
+        cancel: () => {
+          let str = JSON.stringify({
+            'op': 'rejectvc',
+            'lessonid': this.lesson && this.lesson.lessonID
+          })
+
+          this.socket.send(str)
+        },
+        confirm: () => {
+          let str = JSON.stringify({
+            'op': 'acceptvc',
+            'lessonid': this.lesson && this.lesson.lessonID,
+          })
+
+          this.socket.send(str)
+          let kmeeting = this.kmeeting
+          kmeeting.status = 1
+          this.setKMeeting(kmeeting)
+        },
+      })
+    },
+
+    handleUnmute() {
+      this.$rainConfirm({
+        data: {
+          title: '老师邀请你发言，是否打开麦克风？?',
+          showCancel: true,
+          confirmText: '确定',
+          cancelText: '取消',
+        },
+        cancel: () => {
+          
+        },
+        confirm: () => {
+          let kmeeting = this.kmeeting
+          kmeeting.audio = true
+          this.setKMeeting(kmeeting)
+        },
+      })
+    }
 
   }
 }

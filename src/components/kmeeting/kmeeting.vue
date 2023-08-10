@@ -184,11 +184,8 @@ export default {
       this.setSpeakers([]);
 
       // 获取会议基本信息 token 房间号等
-      // let data = await this.getMeeting();
-      let data = {
-        appId: "f67ca63c38d272261634dfa52781cc09b3767f05", //KuaishouTest
-        token: "fccd8902f805e32211d0d38d656ec70d32cfd7cc"
-      }
+      let data = await this.getMeeting();
+     
       if(data) {
         setTimeout(()=>{
           // 初始化视频通话SDK
@@ -206,6 +203,16 @@ export default {
     handleSetTab(tab) {
       this.tab = tab;
     },
+
+    getMeeting() {
+      let URL = API.lesson.get_live_params
+      return request.get(URL)
+        .then(res => {
+          if(res && res.code == 0) {
+            return res.data
+          }
+        })
+    }
 
   }
 };

@@ -256,7 +256,10 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       // 教师端-发起主观题互评
       publish_review: '/api/v3/lesson/review/publish-review',
       // 教师端-查看题目打分情况
-      review_score_detail: '/api/v3/lesson/problem/teacher/score-detail'
+      review_score_detail: '/api/v3/lesson/problem/teacher/score-detail',
+
+      // 获取连麦参数
+      get_live_params: '/api/v3/lesson/live/new/get-params-after-class',
     },
 
     /*------------------*\

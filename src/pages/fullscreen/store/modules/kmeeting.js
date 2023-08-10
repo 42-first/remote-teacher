@@ -27,7 +27,9 @@ const kmeeting = {
       // 分享基本信息
       shareInfo: null,
       // 当前连麦状态 0 初始状态 1 学生申请连麦（30s等待）2 接入中 3 成功接入
-      status: 0
+      status: 0,
+      roomid: '',
+      canrequestvc: false
     },
     localSharing: false,
     // 发言列表
@@ -60,7 +62,9 @@ const kmeeting = {
         screen: false,
         // 别人是否分享了屏幕
         otherscreen: false,
-        status: 0
+        status: 0,
+        roomid: '',
+        canrequestvc: false
       };
       state.speakers = [];
       state.activeSpeakers = [];
