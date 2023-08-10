@@ -1,3 +1,41 @@
+let videoEncoderConfigs = new Map([
+    ["vga", {
+        width: 640,
+        height: 480,
+        frameRate: 15,
+        bitrateMax: 1000,
+        bitrateMin: 100
+    }],
+    ["vga1", {
+        width: 640,
+        height: 480,
+        frameRate: 15,
+        bitrateMax: 800,
+        bitrateMin: 100
+    }],
+    ["qvga", {
+        width: 320,
+        height: 240,
+        frameRate: 15,
+        bitrateMax: 200,
+        bitrateMin: 50
+    }],
+    ["hd", {
+        width: 1280,
+        height: 720,
+        frameRate: 15,
+        bitrateMax: 1200,
+        bitrateMin: 500
+    }],
+    ["1080p", {
+        width: 1920,
+        height: 1080,
+        frameRate: 15,
+        bitrateMax: 2000,
+        bitrateMin: 600
+    }]
+])
+
 let meetingMixin = {
   data() {
     return {
@@ -30,7 +68,7 @@ let meetingMixin = {
           newVal.forEach((member)=>{
             if(teacherAndMeIds.includes(String(member.id))) {
               activeSpeakers.push(member);
-            } else if(member.audio) {
+            } else if(member.audio || member.video) {
               activeSpeakers.push(member);
             }
           })
@@ -41,6 +79,20 @@ let meetingMixin = {
           this.setActiveSpeakers(activeSpeakers);
         }
       },
+
+      'kmeeting.audio'(newVal) {
+        this.setAudioLocal(newVal);
+      },
+
+      'kmeeting.video'(newVal) {
+        this.setVideoLocal(newVal);
+      },
+
+      'kmeeting.joined'(newVal) {
+        if(!newVal) {
+          this.handleHangup();
+        }
+      }
   },
 
   methods: {
@@ -409,6 +461,10 @@ let meetingMixin = {
               break;
           }
         })
+
+        this.cameraSelect = this.cameraList[0]
+        this.microphoneSelect = this.microphoneList[0]
+        this.speakerSelect = this.speakerList[0]
       } catch (error) {
 
       }
@@ -552,13 +608,156 @@ let meetingMixin = {
                 } else {
                     this.addRemoteVideoTrack(track);
                 }
-            }).catch(e => console.log(`${LogPrefix()} subscribe userId:${uid} mediaType:${mediaType} error:${e}`));
+            }).catch(e => console.log(`subscribe userId:${uid} mediaType:${mediaType} error:${e}`));
         } else if (mediaType === "av") {
             this.subScribe_(uid, "audio");
             this.subScribe_(uid, "video");
         } else {
             console.log(`subscribe userId:${remoteUser.uid} mediaType:${mediaType} user does not has ${mediaType}`);
         }
+    },
+
+    async setAudioLocal(audio) {
+        let tracks = null
+        if(!this.localAudioTrack) {
+          await this.openDevice()
+        }
+
+        tracks = this.localAudioTrack
+
+        if(audio) {
+          this.client.publish(tracks).then(() => {
+            console.log(`publish audio track success`)
+          })
+        } else {
+          this.client.unpublish(tracks).then(() => {
+            console.log(`unpublish audio track success`)
+          })
+        }
+        
+        
+    },
+
+    async setVideoLocal(video) {
+      let tracks = null
+      if(!this.localVideoTrack) {
+        await this.openDevice()
+      }
+
+      tracks = this.localVideoTrack
+
+      if(video) {
+        this.client.publish(tracks).then(() => {
+          console.log(`publish audio track success`)
+        })
+      } else {
+        this.client.unpublish(tracks).then(() => {
+          console.log(`unpublish audio track success`)
+        })
+      }
+    },
+
+
+
+    async openDevice() {
+        let audioConfig = {
+            deviceId: this.microphoneSelect.deviceId,
+            AEC: true,
+            ANS: true,
+            AGC: true,
+        };
+
+        let videoEncoderConfig = videoEncoderConfigs.get('1080p');
+        let videoConfig = {
+            encoderConfig: videoEncoderConfig,
+            deviceId: this.cameraSelect.deviceId
+        };
+
+        try {
+            if (this.localAudioTrack === null && this.localVideoTrack === null) {
+                [this.localAudioTrack, this.localVideoTrack] = await KRTC.createMicrophoneAndCameraTracks(audioConfig, videoConfig);
+                // this.localAudioTrack.play();
+                if (true) {
+                    try{
+                        await this.localVideoTrack.setBeautyEffect(true);
+                    }catch(error){
+                        console.log(`set beautyEffect error:${error}`);
+                    }
+                }
+                // this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
+                this.localVideoTrack.setOptimizationMode('motion');
+                // this.beautySelect.removeAttribute('disabled');
+            } else {
+                if (this.localAudioTrack === null) {
+                    this.localAudioTrack = await KRTC.createMicrophoneAudioTrack(audioConfig);
+                    
+                }
+    
+                if (this.localVideoTrack === null) {
+                    this.localVideoTrack = await KRTC.createCameraVideoTrack(videoConfig);
+                    if (true) {
+                        try{
+                            await this.localVideoTrack.setBeautyEffect(true);
+                        }catch(error){
+                            console.log(`set beautyEffect error:${error}`);
+                        }
+                    }
+                    this.localVideoTrack.setOptimizationMode('motion');
+                    // this.localVideoTrack.play(this.localVideoView, { mirror: true });
+                    // this.beautySelect.removeAttribute('disabled');
+                }
+            }
+            this.localVideoTrack.on("player-state-changed", (event)=>{
+                console.log(`localVideo player player-state-changed is ${event.state} because of ${event.reason}`);
+            })
+            this.localAudioTrack.on("player-state-changed", (event)=>{
+                console.log(`localAudio player player-state-changed is ${event.state} because of ${event.reason}`);
+            })
+        } catch (error) {
+            console.log(`openDevice error`);
+            throw error;
+        }
+    },
+
+    async handleHangup() {
+      try {
+        this.isJoining = false
+        await this.client.leave()
+        console.log(`user:${this.localUserId} leave channel:${this.channelId} success`);
+      } catch (error) {
+        
+      }
+
+      this.stop();
+      this.closeDevice();
+      
+      let kmeeting = this.kmeeting
+      kmeeting.status = 0
+      this.setKMeeting(kmeeting)
+
+    },
+
+    closeDevice() {
+      if (this.localAudioTrack) {
+        this.localAudioTrack.close();
+        this.localAudioTrack = null;
+      }
+      if (this.localVideoTrack) {
+          this.localVideoTrack.close();
+          this.localVideoTrack = null;
+      }
+      if (this.localScreenVideoTrack) {
+          this.removeScreenDisplayElement();
+          this.localScreenVideoTrack.close();
+          this.localScreenVideoTrack = null;
+      }
+      if (this.localScreenAudioTrack) {
+          this.localScreenAudioTrack.close();
+          this.localScreenAudioTrack = null;
+      }
+      this.activeTrack = null;
+      this.activeTrackTimerId && clearInterval(this.activeTrackTimerId);
+      console.log(`close devices end`);
     }
 
   },

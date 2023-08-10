@@ -524,6 +524,60 @@
         this.setMeeting(meeting);
       },
 
+
+      /**
+       * 
+       */
+      handleSetKAudio(evt) {
+        let kmeeting = this.kmeeting
+        let audio = !kmeeting.audio;
+
+        // todo: 没有音频权限
+        if(audio && !kmeeting.hasAudioAuth) {
+          return this;
+        }
+
+        // 处理连击问题
+        if(this.audioPending) {
+          return this;
+        } else {
+          this.audioPending = true;
+
+          setTimeout(()=>{
+            this.audioPending = false;
+          }, 1000 * 2)
+        }
+
+        kmeeting.audio = audio;
+        this.setKMeeting(kmeeting);
+      },
+
+      /**
+       * 
+       */
+      handleSetKVideo(evt) {
+        let kmeeting = this.kmeeting
+        let video = !kmeeting.video;
+
+        // todo: 没有音频权限
+        if(video && !kmeeting.hasVideoAuth) {
+          return this;
+        }
+
+        // 处理连击问题
+        if(this.videoPending) {
+          return this;
+        } else {
+          this.videoPending = true;
+
+          setTimeout(()=>{
+            this.videoPending = false;
+          }, 1000 * 2)
+        }
+
+        kmeeting.video = video;
+        this.setKMeeting(kmeeting);
+      },
       /**
        * @method 关闭会议加入提示
        * @params
@@ -675,6 +729,27 @@
         let kmeeting = this.kmeeting
         kmeeting.status = 0
         this.setKMeeting(kmeeting)
+      },
+
+      handleHangupK() {
+        this.$rainConfirm({
+          data: {
+            title: '是否结束连麦？',
+            showCancel: true,
+            confirmText: '确定',
+            cancelText: '取消',
+            canfirmClass: 'button-red-fill'
+          },
+          cancel: () => {
+          },
+          confirm: () => {
+            let kmeeting = this.kmeeting
+            kmeeting.joined = false
+            this.setKMeeting(kmeeting)
+
+            this.setJoined(false)
+          },
+        })
       }
     }
   };
