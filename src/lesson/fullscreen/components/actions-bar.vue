@@ -126,11 +126,11 @@
 
       <!-- 快手直播连麦 -->
       <template v-if="hasKMeeting">
-        <div class="line"></div>
+        <div class="line" v-if="joined || kmeeting.canrequestvc"></div>
         <section class="actions__item" @click="handleHangupK" v-if="joined">
           <div class="actions__btn over meeting__exit box-center f12 cfff">结束连麦</div>
         </section>
-        <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else>
+        <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else-if="kmeeting.canrequestvc">
           <div class="meeting__join kmeeting box-center" v-if="!kmeeting.status" @click.stop="handleJoinK">
             <i class="iconfont icon-48-jieru f28 cfff"></i>
           </div>

@@ -18,9 +18,9 @@ const kmeeting = {
       hasVideoAuth: true,
       joined: true,
       // 是否开启音频
-      audio: false,
+      audio: true,
       // 是否开启音频
-      video: false,
+      video: true,
       active: false,
       // 别人是否分享了屏幕
       otherscreen: false,
