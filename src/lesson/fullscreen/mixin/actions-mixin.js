@@ -1215,6 +1215,7 @@ let actionsMixin = {
     },
 
     handleUnmute() {
+      window.teacherInviteJoin = true
       this.$rainConfirm({
         data: {
           title: '老师邀请你发言，是否打开麦克风？?',
