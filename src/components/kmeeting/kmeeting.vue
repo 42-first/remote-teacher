@@ -30,20 +30,17 @@
       <!-- 浮窗模式 -->
       <section class='speakers__container box-start' v-show="tab === 'default'">
         <!-- 共享 -->
-        <!-- <section class="member__container share__container" v-show="meeting.otherscreen">
-          <template v-if="meetingSDK === 'local'">
-            <video class="video" id="J_screenshare"></video>
-          </template>
-          <div class="video" id="J_screenshare" v-else></div>
+        <section class="member__container share__container" v-show="kmeeting.otherscreen">
+          <div class="video" id="J_screenshare"></div>
           <div class="share-info box-between">
-            <div class="share-name cfff box-center" v-if="meeting.shareName">
+            <div class="share-name cfff box-center" v-if="kmeeting.shareName">
               <svg class="icon f20 blue" aria-hidden="true">
                 <use xlink:href="#icon20-gongxiangpingmu"></use>
               </svg>
-              <span class="name pl5 f12 ellipsis">{{meeting.shareName}}的共享窗口{{ $t('meeting.screenshare', { name: meeting.shareName }) }}</span>
+              <span class="name pl5 f12 ellipsis">{{kmeeting.shareName}}的共享窗口{{ $t('meeting.screenshare', { name: kmeeting.shareName }) }}</span>
             </div>
           </div>
-        </section> -->
+        </section>
         <!-- 会议成员列表 -->
         <section class="member__container" v-for="(member, index) in activeSpeakers.slice(0, 3)" v-if="activeSpeakers && activeSpeakers.length" :key="index">
           <avatar :member="member" :mode="1" v-if="!subscribeLoading"></avatar>
@@ -346,6 +343,7 @@ export default {
       .video {
         width: 100%;
         object-fit: cover;
+        height: 100%;
       }
 
       .share-info {

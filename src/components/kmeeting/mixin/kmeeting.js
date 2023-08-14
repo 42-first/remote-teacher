@@ -202,6 +202,9 @@ let meetingMixin = {
             speakers.push(user);
             this.setSpeakers(speakers);
         }
+
+        this.publish()
+
         let kmeeting = this.kmeeting
         kmeeting.status = 3
         this.setKMeeting(kmeeting)
@@ -354,7 +357,7 @@ let meetingMixin = {
 
         this.setKMeeting(kmeeting);
 
-        this.addRemoteVideoTrack(track);
+        this.addRemoteVideoTrack(track, true);
       }
     },
 
@@ -479,7 +482,7 @@ let meetingMixin = {
       }
     },
 
-    addRemoteVideoTrack(videoTrack) {
+    addRemoteVideoTrack(videoTrack, isScreen) {
       console.log(`addRemoteVideoTrack`, videoTrack);
       if (!videoTrack) {
         return;
@@ -490,7 +493,7 @@ let meetingMixin = {
       let fit = sourceType === "people" ? "cover" : "contain";
       let controls = sourceType === "people" ? false : true;
 
-      let remoteVideoElement = document.querySelector(`#uid-${userId}`)
+      let remoteVideoElement = isScreen ? document.querySelector(`#J_screenshare`) :  document.querySelector(`#uid-${userId}`)
 
       try {
         videoTrack.play(remoteVideoElement, {
@@ -505,20 +508,26 @@ let meetingMixin = {
 
     removeRemoteVideoTrack(userId, sourceType) {
       console.log(`removeRemoteVideoTrack userId:`, userId);
-      // 修改活跃用户的摄像头状态
-      let speakers = this.speakers
-      let index = speakers.findIndex(user => user.id == userId)
+      if(sourceType == 'content') {
+        let kmeeting = this.kmeeting
+        kmeeting.otherscreen = false
+        this.setKMeeting(kmeeting)
+      } else {
+        // 修改活跃用户的摄像头状态
+        let speakers = this.speakers
+        let index = speakers.findIndex(user => user.id == userId)
 
-      if (~index) {
-        let user = speakers[index];
-        Object.assign(user, {
-          video: false
-        })
+        if (~index) {
+          let user = speakers[index];
+          Object.assign(user, {
+            video: false
+          })
 
-        speakers.splice(index, 1, user);
+          speakers.splice(index, 1, user);
+        }
+
+        this.setSpeakers(speakers)
       }
-
-      this.setSpeakers(speakers)
     },
 
 
@@ -625,16 +634,19 @@ let meetingMixin = {
 
         tracks = this.localAudioTrack
 
-        if(audio) {
-          this.client.publish(tracks).then(() => {
-            console.log(`publish audio track success`)
-          })
-        } else {
-          this.client.unpublish(tracks).then(() => {
-            console.log(`unpublish audio track success`)
-          })
-        }
+        // if(audio) {
+        //   this.client.publish(tracks).then(() => {
+        //     console.log(`publish audio track success`)
+        //   })
+        // } else {
+        //   this.client.unpublish(tracks).then(() => {
+        //     console.log(`unpublish audio track success`)
+        //   })
+        // }
+
+        this.localAudioTrack.setEnabled(audio)
         
+        this.updateUserStatus(window.user.identityId, 'audio', audio)
         
     },
 
@@ -646,15 +658,18 @@ let meetingMixin = {
 
       tracks = this.localVideoTrack
 
-      if(video) {
-        this.client.publish(tracks).then(() => {
-          console.log(`publish audio track success`)
-        })
-      } else {
-        this.client.unpublish(tracks).then(() => {
-          console.log(`unpublish audio track success`)
-        })
-      }
+      // if(video) {
+      //   this.client.publish(tracks).then(() => {
+      //     console.log(`publish video track success`)
+      //   })
+      // } else {
+      //   this.client.unpublish(tracks).then(() => {
+      //     console.log(`unpublish video track success`)
+      //   })
+      // }
+
+      this.localVideoTrack.setEnabled(video)
+      this.updateUserStatus(window.user.identityId, 'video', video)
     },
 
 
@@ -673,6 +688,8 @@ let meetingMixin = {
             deviceId: this.cameraSelect.deviceId
         };
 
+        this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
+
         try {
             if (this.localAudioTrack === null && this.localVideoTrack === null) {
                 [this.localAudioTrack, this.localVideoTrack] = await KRTC.createMicrophoneAndCameraTracks(audioConfig, videoConfig);
@@ -684,8 +701,8 @@ let meetingMixin = {
                         console.log(`set beautyEffect error:${error}`);
                     }
                 }
-                // this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
                 this.localVideoTrack.setOptimizationMode('motion');
+                this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
                 // this.beautySelect.removeAttribute('disabled');
             } else {
                 if (this.localAudioTrack === null) {
@@ -703,7 +720,7 @@ let meetingMixin = {
                         }
                     }
                     this.localVideoTrack.setOptimizationMode('motion');
-                    // this.localVideoTrack.play(this.localVideoView, { mirror: true });
+                    this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
                     // this.beautySelect.removeAttribute('disabled');
                 }
             }
@@ -722,6 +739,7 @@ let meetingMixin = {
     async handleHangup() {
       try {
         this.isJoining = false
+        this.unpublish()
         await this.client.leave()
         console.log(`user:${this.user.id} leave channel:${this.kmeeting.roomid} success`);
       } catch (error) {
@@ -758,6 +776,30 @@ let meetingMixin = {
       this.activeTrack = null;
       this.activeTrackTimerId && clearInterval(this.activeTrackTimerId);
       console.log(`close devices end`);
+    },
+
+    async publish() {
+      let tracks = null;
+
+      try {
+        await this.openDevice()
+        tracks = [this.localAudioTrack, this.localVideoTrack]
+      } catch (error) {
+        
+      }
+
+      this.client.publish(tracks).then(() => {
+        console.log('publish video&audio track success')
+        this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
+        this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
+      })
+    },
+
+    unpublish() {
+      let tracks = [this.localAudioTrack, this.localVideoTrack]
+      this.client.unpublish(tracks).then(() => {
+        console.log('unpublish video&audio track success')
+      })
     }
 
   },
