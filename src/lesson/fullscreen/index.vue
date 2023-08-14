@@ -563,14 +563,14 @@
     updated() {
     },
     beforeDestroy() {
-      if(window.teacherInviteJoin) {
-        let str = JSON.stringify({
-          'op': 'rejectvc',
-          'lessonid': this.lesson && this.lesson.lessonID,
-        })
+      // if(window.teacherInviteJoin) {
+      //   let str = JSON.stringify({
+      //     'op': 'rejectvc',
+      //     'lessonid': this.lesson && this.lesson.lessonID,
+      //   })
 
-        this.socket.send(str)
-      }
+      //   this.socket.send(str)
+      // }
     }
   };
 </script>

@@ -250,9 +250,9 @@
     },
     updated() {},
     beforeDestroy() {
-      if(this.kmeeting.status == 1) {
-        this.handleCancelJoinK()
-      }
+      // if(this.kmeeting.status == 1) {
+      //   this.handleCancelJoinK()
+      // }
     },
     filters: {
     },

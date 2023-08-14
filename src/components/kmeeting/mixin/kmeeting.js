@@ -297,6 +297,8 @@ let meetingMixin = {
       this.joinUser(joinUser);
 
       this.subScribe_(user.uid, 'av')
+
+      this.getVCUsers()
     },
 
     /**
@@ -800,6 +802,19 @@ let meetingMixin = {
       this.client.unpublish(tracks).then(() => {
         console.log('unpublish video&audio track success')
       })
+    },
+
+
+    /**
+     * @method 获取已经连麦的用户信息
+     */
+    getVCUsers() {
+      let str = JSON.stringify({
+        'op': 'getvcusers',
+        'lessonid': this.lesson && this.lesson.lessonID
+      })
+
+      this.$parent.socket.send(str)
     }
 
   },
