@@ -137,7 +137,7 @@
 
           <div class="box-center" v-if="kmeeting.status == 1">
             <i class="iconfont icon-48-jieru2 cgreen f24"></i>
-            <span class="join__status f14">申请中(30s)...</span>
+            <span class="join__status f14">申请中({{joinCountDown}}s)...</span>
             <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK">取消申请</div>
           </div>
 
@@ -206,7 +206,8 @@
         visibleTXMeetingTips: true,
         showTXMeetingTips: false,
         // 连麦提示
-        visibleKMeetingTips: true
+        visibleKMeetingTips: true,
+        joinCountDown: 30
       };
     },
     components: {
@@ -249,6 +250,9 @@
     },
     updated() {},
     beforeDestroy() {
+      if(this.kmeeting.status == 1) {
+        this.handleCancelJoinK()
+      }
     },
     filters: {
     },
@@ -724,6 +728,15 @@
             let kmeeting = this.kmeeting
             kmeeting.status = 1
             this.setKMeeting(kmeeting)
+
+            this.joinTimer = setInterval(() => {
+              if(this.joinCountDown > 0) {
+                this.joinCountDown--
+              } else {
+                clearInterval(this.joinTimer)
+                this.handleCancelJoinK()
+              }
+            },1000)
           },
         })
       },
