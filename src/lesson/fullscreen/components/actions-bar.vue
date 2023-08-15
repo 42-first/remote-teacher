@@ -283,6 +283,11 @@
         if(!newVal) {
           this.visibleWebRTCNoSupported = true;
         }
+      },
+
+      'kmeeting.status'(newVal) {
+        clearInterval(this.joinTimer)
+        this.joinCountDown = 30
       }
     },
     methods: {
@@ -735,6 +740,7 @@
               } else {
                 clearInterval(this.joinTimer)
                 this.handleCancelJoinK()
+                this.joinCountDown = 30
               }
             },1000)
           },

@@ -296,6 +296,7 @@
         'danmus',
         // 是否有连麦
         'hasKMeeting',
+        'teacher',
       ]),
 
       ...mapState('kmeeting',[

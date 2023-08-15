@@ -212,16 +212,16 @@ export default {
     },
 
     updateVCUsersInfo(users){
-      // let speakers = this.speakers
-      // speakers.forEach(item => {
-      //   let userInfo = users.find(user => user.uid == item.id)
-      //   if(userInfo) {
-      //     item.avatar = userInfo.avatar
-      //     item.name = userInfo.name
-      //   }
-      // })
+      let speakers = this.speakers
+      speakers.forEach(item => {
+        let userInfo = users.find(user => user.uid == item.id)
+        if(userInfo) {
+          item.avatar = userInfo.avatar
+          item.name = userInfo.name
+        }
+      })
 
-      // this.setSpeakers(speakers)
+      this.setSpeakers(speakers)
     }
 
   }
