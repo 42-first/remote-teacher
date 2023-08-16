@@ -289,8 +289,10 @@
       },
 
       'kmeeting.status'(newVal) {
-        clearInterval(this.joinTimer)
-        this.joinCountDown = 30
+        if(newVal !== 1) {
+          clearInterval(this.joinTimer)
+          this.joinCountDown = 30
+        }
       }
     },
     methods: {
@@ -714,6 +716,7 @@
        * @method 申请连麦
        */
       handleJoinK() {
+        let self = this
         this.handleClosedKMeetingTips()
         this.$rainConfirm({
           data: {
@@ -737,15 +740,16 @@
             kmeeting.status = 1
             this.setKMeeting(kmeeting)
 
+            this.joinTimer && clearInterval(this.joinTimer)
             this.joinTimer = setInterval(() => {
               if(this.joinCountDown > 0) {
                 this.joinCountDown--
               } else {
                 clearInterval(this.joinTimer)
-                this.handleCancelJoinK()
+                self.handleCancelJoinK()
                 this.joinCountDown = 30
               }
-            },1000)
+            }, 1000)
           },
         })
       },
