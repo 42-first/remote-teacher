@@ -8,8 +8,8 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
-// const SOCKET_HOST = 'ykt-envning.rainclassroom.com'
+const SOCKET_HOST = location.host.indexOf('localhost:8088') != -1 ? 'ykt-envning.rainclassroom.com' : location.host || location.host || 'ykt-envning.rainclassroom.com'
+
 window.socket = null
 
 var mixin = {
@@ -702,7 +702,11 @@ var mixin = {
             this.setKMeeting(kmeeting)
             this.$toast('房间已满员')
 
-            break;  
+            break; 
+            
+          case 'getvcusers':
+            this.$refs.kmeeting.updateVCUsersInfo(msg.users)
+            break;
 
           default:
             hasMsg = false;

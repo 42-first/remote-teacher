@@ -1189,7 +1189,7 @@ let actionsMixin = {
           cancelText: '拒绝',
           headerConfig: {
             type: 'img',
-            img: this.teacher
+            img: this.teacher.avatar
           }
         },
         cancel: () => {

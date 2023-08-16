@@ -10,7 +10,7 @@
   <!-- 主页面布局 -->
   <section class="meeting__wrap J_meeting" >
     <!-- 会议悬浮框 -->
-    <section class="meeting__container">
+    <section class="meeting__container" v-if="kmeeting.status == 3">
       <!-- 最小化 列表模式 可以切到全屏模式 模式浮窗模式 -->
       <header class="meeting__header box-between" :class="{ 'bbl': tab === 'mini' }">
         <!-- 展开收起 -->
@@ -37,7 +37,7 @@
               <svg class="icon f20 blue" aria-hidden="true">
                 <use xlink:href="#icon20-gongxiangpingmu"></use>
               </svg>
-              <span class="name pl5 f12 ellipsis">{{kmeeting.shareName}}的共享窗口{{ $t('meeting.screenshare', { name: kmeeting.shareName }) }}</span>
+              <span class="name pl5 f12 ellipsis">{{ $t('meeting.screenshare', { name: kmeeting.shareName }) }}</span>
             </div>
           </div>
         </section>
@@ -84,6 +84,9 @@ export default {
   },
   components: {
     avatar,
+  },
+  props: {
+    liveType: Number
   },
   mixins: [ meeting, move ],
   computed: {

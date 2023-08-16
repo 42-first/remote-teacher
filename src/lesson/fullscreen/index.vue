@@ -71,7 +71,7 @@
     </section>
 
     <!-- 更多操作 新 -->
-    <actions-cmp></actions-cmp>
+    <actions-cmp :liveType="liveType"></actions-cmp>
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -105,7 +105,7 @@
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
 
     <!-- 连麦 -->
-    <kmeeting ref="kmeeting" v-if="hasKMeeting && kmeeting.status > 1"></kmeeting>
+    <kmeeting ref="kmeeting" v-if="hasKMeeting && kmeeting.status > 1" :liveType="liveType"></kmeeting>
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
@@ -367,11 +367,32 @@
 
       joined(newVal){ 
         if(newVal) {
-          // 加入互动开始记录日志上报videolog
-          this.handleReportInteractiveToVideoLog()
+          if(this.hasKMeeting) {
+            this.destroyKwai();
+
+            // 停止播放时上报下当前数据
+            this.forceReport()
+
+            // 直播连麦上报videolog
+            this.handleReportVCToVideoLog()
+          } else {
+            // 加入互动开始记录日志上报videolog
+            this.handleReportInteractiveToVideoLog()
+          }
+          
         }else {
           // 离开取消定时器
           this.removeEventListeners()
+        }
+      },
+      liveType(newVal){
+        let kmeeting = this.kmeeting
+        if(newVal == 1) {
+          kmeeting.video = false
+          this.setKMeeting(kmeeting)
+        }else if(newVal == 2) {
+          kmeeting.video = true
+          this.setKMeeting(kmeeting)
         }
       }
     },

@@ -52,7 +52,7 @@
             </svg>
           </div>
         </section>
-        <section class="actions__item" @click="handleSetKVideo">
+        <section class="actions__item" @click="handleSetKVideo" v-if="liveType == 2">
           <div class="actions__btn box-center action__tips" :data-tips="kmeeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
             <svg class="icon f28 c666" aria-hidden="true">
               <use xlink:href="#icon20-shipin" v-if="kmeeting.video"></use>
@@ -253,6 +253,9 @@
       // if(this.kmeeting.status == 1) {
       //   this.handleCancelJoinK()
       // }
+    },
+    props: {
+      liveType: Number
     },
     filters: {
     },

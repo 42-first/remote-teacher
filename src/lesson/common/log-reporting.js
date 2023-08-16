@@ -58,7 +58,7 @@ let logMixin = {
      * @method 直播打点
      * @params n 默认都是kwai 互动直播的是kwai_rtmp
      */
-    initHeartLog(n = 'kwai') {
+    initHeartLog(n = 'kwai', t = this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live') {
       let log = this.heartLog;
 
       try {
@@ -77,7 +77,7 @@ let logMixin = {
             return "web"
           })(),
           u: this.identityId || this.userID,
-          t: this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live',
+          t,
           classroomid: this.classroom && this.classroom.classroomId,
           c: this.classroom && this.classroom.courseId,
           lesson_id: this.lessonID,
@@ -175,11 +175,16 @@ let logMixin = {
       // 有互动直播的timer 清除掉
       this.interactiveLogTimer && clearInterval(this.interactiveLogTimer)
 
+      this.vcLogTimer && clearInterval(this.vcLogTimer)
+
       // 上报一次打点数据
       let liveLogs = this.liveLogs;
       if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
         this.reportLiveLog(liveLogs.logs);
       }
+
+      // 有可能先连了麦 后续退出连麦 需要更新打点状态
+      this.initHeartLog()
     },
 
     /**
@@ -383,6 +388,15 @@ let logMixin = {
       }
     },
 
+    /**
+     * @method 直播连麦 上报video-log
+     */
+    handleReportVCToVideoLog() {
+      this.initHeartLog('kwai', this.liveType == 1 ? 'ykt_live_audio_rtc' : 'ykt_live_rtc')
+      this.vcLogTimer = setInterval(() => {
+        this.handleTimeupdate()
+      }, 1000)
+    }
   }
 }
 

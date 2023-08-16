@@ -207,6 +207,7 @@ let meetingMixin = {
 
         let kmeeting = this.kmeeting
         kmeeting.status = 3
+        kmeeting.joined = true
         this.setKMeeting(kmeeting)
         this.setJoined(true)
       }).catch((err) => {
@@ -276,9 +277,10 @@ let meetingMixin = {
      */
     onUserJoined(user) {
       console.log("user-joined", user,  user.uid);
-      let name = '';
-      let avatar = "http://wx.qlogo.cn/mmopen/OUicWJdJoz3HNVF1oYxOQYibUZicpTD55udhicFPk9RBUuicwxiahv5nUJBx7MZPbl7tTkeZRlptRuhhMpaPNPxyplWQ/96";
-      let role = 'student';
+      let {identityId, name: teacherName, avatar: teacherAvatar } = this.teacher || {}
+      let name = identityId == user.uid ? teacherName : '';
+      let avatar = identityId == user.uid ? teacherAvatar : "http://wx.qlogo.cn/mmopen/OUicWJdJoz3HNVF1oYxOQYibUZicpTD55udhicFPk9RBUuicwxiahv5nUJBx7MZPbl7tTkeZRlptRuhhMpaPNPxyplWQ/96";
+      let role = identityId == user.uid ? 'teacher' : 'student';
       let joinUser = {
         id: user.uid,
         uid: user.uid,
@@ -296,7 +298,7 @@ let meetingMixin = {
 
       this.joinUser(joinUser);
 
-      this.subScribe_(user.uid, 'av')
+      this.subScribe_(user.uid, this.liveType == 2 ? 'av' : 'audio')
 
       this.getVCUsers()
     },
@@ -631,7 +633,7 @@ let meetingMixin = {
     async setAudioLocal(audio) {
         let tracks = null
         if(!this.localAudioTrack) {
-          await this.openDevice()
+          await this.openDevice('audio')
         }
 
         tracks = this.localAudioTrack
@@ -655,7 +657,7 @@ let meetingMixin = {
     async setVideoLocal(video) {
       let tracks = null
       if(!this.localVideoTrack) {
-        await this.openDevice()
+        await this.openDevice('video')
       }
 
       tracks = this.localVideoTrack
@@ -676,7 +678,7 @@ let meetingMixin = {
 
 
 
-    async openDevice() {
+    async openDevice(type) {
         let audioConfig = {
             deviceId: this.microphoneSelect.deviceId,
             AEC: true,
@@ -693,7 +695,7 @@ let meetingMixin = {
         this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
 
         try {
-            if (this.localAudioTrack === null && this.localVideoTrack === null) {
+            if (this.localAudioTrack === null && this.localVideoTrack === null && type == 'av') {
                 [this.localAudioTrack, this.localVideoTrack] = await KRTC.createMicrophoneAndCameraTracks(audioConfig, videoConfig);
                 // this.localAudioTrack.play();
                 if (true) {
@@ -707,12 +709,12 @@ let meetingMixin = {
                 this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
                 // this.beautySelect.removeAttribute('disabled');
             } else {
-                if (this.localAudioTrack === null) {
+                if (this.localAudioTrack === null && type == 'audio') {
                     this.localAudioTrack = await KRTC.createMicrophoneAudioTrack(audioConfig);
                     
                 }
     
-                if (this.localVideoTrack === null) {
+                if (this.localVideoTrack === null && type == 'video') {
                     this.localVideoTrack = await KRTC.createCameraVideoTrack(videoConfig);
                     if (true) {
                         try{
@@ -726,10 +728,10 @@ let meetingMixin = {
                     // this.beautySelect.removeAttribute('disabled');
                 }
             }
-            this.localVideoTrack.on("player-state-changed", (event)=>{
+            this.localVideoTrack && this.localVideoTrack.on("player-state-changed", (event)=>{
                 console.log(`localVideo player player-state-changed is ${event.state} because of ${event.reason}`);
             })
-            this.localAudioTrack.on("player-state-changed", (event)=>{
+            this.localAudioTrack && this.localAudioTrack.on("player-state-changed", (event)=>{
                 console.log(`localAudio player player-state-changed is ${event.state} because of ${event.reason}`);
             })
         } catch (error) {
@@ -784,8 +786,8 @@ let meetingMixin = {
       let tracks = null;
 
       try {
-        await this.openDevice()
-        tracks = [this.localAudioTrack, this.localVideoTrack]
+        await this.openDevice(this.liveType == 2 ? 'av' : 'audio')
+        tracks = this.liveType == 2 ? [this.localAudioTrack, this.localVideoTrack] : this.localAudioTrack
       } catch (error) {
         
       }
@@ -793,12 +795,12 @@ let meetingMixin = {
       this.client.publish(tracks).then(() => {
         console.log('publish video&audio track success')
         this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
-        this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
+        this.liveType == 2 && this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
       })
     },
 
     unpublish() {
-      let tracks = [this.localAudioTrack, this.localVideoTrack]
+      let tracks = this.liveType == 2 ? [this.localAudioTrack, this.localVideoTrack] : this.localAudioTrack
       this.client.unpublish(tracks).then(() => {
         console.log('unpublish video&audio track success')
       })
