@@ -355,7 +355,7 @@
         const joinedKey = 'lesson-metting-joined'+lessonId;
         const joined = !!localStorage.getItem(joinedKey);
         if(joined) {
-          this.handleJoin();
+          this.hasKMeeting ? this.handleAutoJoinK() : this.handleJoin();
         }
       },
 
@@ -790,6 +790,12 @@
             this.setJoined(false)
           },
         })
+      },
+
+      handleAutoJoinK() {
+        let kmeeting = this.kmeeting
+        kmeeting.status = 2;
+        this.setKMeeting(kmeeting)
       }
     }
   };

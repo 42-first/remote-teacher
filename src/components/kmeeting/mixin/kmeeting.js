@@ -361,7 +361,10 @@ let meetingMixin = {
 
         this.setKMeeting(kmeeting);
 
-        this.addRemoteVideoTrack(track, true);
+        this.$nextTick(() => {
+          this.addRemoteVideoTrack(track, true);
+        })
+        
       }
     },
 
@@ -414,7 +417,6 @@ let meetingMixin = {
       this.isJoining = false;
       this.uplinkNetworkQuality = 0;
       this.downlinkNetworkQuality = 0;
-    //   this.debugInfoText.value = "";
       this.client.off("user-published", this.onUserPublished);
       this.client.off("user-unpublished", this.onUserUnpublish);
       this.client.off("user-joined", this.onUserJoined);
@@ -424,18 +426,15 @@ let meetingMixin = {
       this.client.off("content-unpublished", this.onContentUnpublish);
       this.client.off("active-track", this.onActiveTrack);
       this.client.off("network-quality", this.onNetworkQualityUpdate);
-    //   this.remoteUsers.forEach((user, userId) => {
-    //     this.removeRemoteVideoTrack(userId, "people");
-    //     this.removeRemoteVideoTrack(userId, "content");
-    //   });
-    //   this.remoteUsers.clear();
       this.isJoined = false;
-    //   this.liveStreaming.innerHTML = "start live";
       this._updateDebugInfoInterval && window.clearInterval(this._updateDebugInfoInterval);
       this._updateDebugInfoInterval = null;
     },
 
-
+    /**
+     * @method 获取设备（一期没有修改设备）
+     * @param {*} type 
+     */
     async getDevice(type) {
       let devices = [];
       try {
@@ -477,6 +476,11 @@ let meetingMixin = {
       }
     },
 
+    /**
+     * @method 设备变化时更新列表
+     * @param {*} devicesArr 
+     * @param {*} deviceInfo 
+     */
     onDeviceChanged(devicesArr, deviceInfo) {
       let index = devicesArr.findIndex(device => device.deviceId == deviceInfo.device.deviceId)
       if (~index) {
@@ -486,6 +490,12 @@ let meetingMixin = {
       }
     },
 
+    /**
+     * @method 预览远端用户的视频
+     * @param {*} videoTrack 
+     * @param {*} isScreen 是否屏幕共享
+     * @returns 
+     */
     addRemoteVideoTrack(videoTrack, isScreen) {
       console.log(`addRemoteVideoTrack`, videoTrack);
       if (!videoTrack) {
@@ -510,6 +520,11 @@ let meetingMixin = {
       }
     },
 
+    /**
+     * @method 更改远端用户的摄像头状态
+     * @param {*} userId 
+     * @param {*} sourceType 
+     */
     removeRemoteVideoTrack(userId, sourceType) {
       console.log(`removeRemoteVideoTrack userId:`, userId);
       if(sourceType == 'content') {
@@ -534,7 +549,10 @@ let meetingMixin = {
       }
     },
 
-
+    /**
+     * @method 将远端用户加入speakers
+     * @param {*} data 
+     */
     joinUser(data) {
       let speakers = this.speakers;
       let index = speakers.findIndex(user => user.id == data.uid)
@@ -607,6 +625,12 @@ let meetingMixin = {
       this.setSpeakers(speakers)
     },
 
+    /**
+     * @method 订阅远端用户
+     * @param {*} uid 
+     * @param {*} mediaType 
+     * @returns 
+     */
     subScribe_(uid, mediaType) {
         let remoteUser = this.speakers.find(user => user.id == uid);
         if (!remoteUser) {
@@ -630,6 +654,10 @@ let meetingMixin = {
         }
     },
 
+    /**
+     * @method 更新音频状态
+     * @param {*} audio 
+     */
     async setAudioLocal(audio) {
         let tracks = null
         if(!this.localAudioTrack) {
@@ -654,6 +682,10 @@ let meetingMixin = {
         
     },
 
+    /**
+     * @method 更新视频频状态
+     * @param {*} video 
+     */
     async setVideoLocal(video) {
       let tracks = null
       if(!this.localVideoTrack) {
@@ -677,7 +709,10 @@ let meetingMixin = {
     },
 
 
-
+    /**
+     * @method 开启设备
+     * @param {*} type 
+     */
     async openDevice(type) {
         let audioConfig = {
             deviceId: this.microphoneSelect.deviceId,
@@ -740,6 +775,10 @@ let meetingMixin = {
         }
     },
 
+    /**
+     * @method 退出房间
+     * @param 
+     */
     async handleHangup() {
       try {
         this.isJoining = false
@@ -759,6 +798,10 @@ let meetingMixin = {
 
     },
 
+    /**
+     * @method 关闭所有设备
+     * @param {*}  
+     */
     closeDevice() {
       if (this.localAudioTrack) {
         this.localAudioTrack.close();
@@ -782,6 +825,10 @@ let meetingMixin = {
       console.log(`close devices end`);
     },
 
+    /**
+     * @method 发布音视频流
+     * @param {*}
+     */
     async publish() {
       let tracks = null;
 
@@ -799,6 +846,10 @@ let meetingMixin = {
       })
     },
 
+    /**
+     * @method 停止发布
+     * @param {*} 
+     */
     unpublish() {
       let tracks = this.liveType == 2 ? [this.localAudioTrack, this.localVideoTrack] : this.localAudioTrack
       this.client.unpublish(tracks).then(() => {
