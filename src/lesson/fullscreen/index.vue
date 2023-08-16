@@ -297,6 +297,7 @@
         // 是否有连麦
         'hasKMeeting',
         'teacher',
+        'isGuestStudent',
       ]),
 
       ...mapState('kmeeting',[

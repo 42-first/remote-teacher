@@ -183,8 +183,8 @@ var mixin = {
               this.getAllPres(msg);
             }
 
-            // 是否可以连麦
-            if(msg.rtc) {
+            // 是否可以连麦  旁听生不可以连麦
+            if(msg.rtc && !this.isGuestStudent) {
               msg.rtc.roomid && this.setHasKMeeting(true)
               
               kmeeting.canrequestvc = msg.rtc.canrequestvc
@@ -616,7 +616,8 @@ var mixin = {
 
           // 开启连麦
           case 'creatertc':
-            if(msg['roomid']) {
+            //  旁听生不可以连麦
+            if(msg['roomid'] && !this.isGuestStudent) {
               this.setHasKMeeting(true)
 
               kmeeting.roomid = msg['roomid']
