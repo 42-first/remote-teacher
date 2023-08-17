@@ -733,13 +733,13 @@ let meetingMixin = {
             if (this.localAudioTrack === null && this.localVideoTrack === null && type == 'av') {
                 [this.localAudioTrack, this.localVideoTrack] = await KRTC.createMicrophoneAndCameraTracks(audioConfig, videoConfig);
                 // this.localAudioTrack.play();
-                if (true) {
-                    try{
-                        await this.localVideoTrack.setBeautyEffect(true);
-                    }catch(error){
-                        console.log(`set beautyEffect error:${error}`);
-                    }
-                }
+                // if (true) {
+                //     try{
+                //         await this.localVideoTrack.setBeautyEffect(true);
+                //     }catch(error){
+                //         console.log(`set beautyEffect error:${error}`);
+                //     }
+                // }
                 this.localVideoTrack.setOptimizationMode('motion');
                 this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
                 // this.beautySelect.removeAttribute('disabled');
@@ -751,13 +751,13 @@ let meetingMixin = {
     
                 if (this.localVideoTrack === null && type == 'video') {
                     this.localVideoTrack = await KRTC.createCameraVideoTrack(videoConfig);
-                    if (true) {
-                        try{
-                            await this.localVideoTrack.setBeautyEffect(true);
-                        }catch(error){
-                            console.log(`set beautyEffect error:${error}`);
-                        }
-                    }
+                    // if (true) {
+                    //     try{
+                    //         await this.localVideoTrack.setBeautyEffect(true);
+                    //     }catch(error){
+                    //         console.log(`set beautyEffect error:${error}`);
+                    //     }
+                    // }
                     this.localVideoTrack.setOptimizationMode('motion');
                     this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
                     // this.beautySelect.removeAttribute('disabled');
