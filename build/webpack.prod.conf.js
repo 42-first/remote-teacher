@@ -229,7 +229,7 @@ if(process.env && process.env.BUILD_ENV) {
   if(process.env.BUILD_ENV === 'ykt') {
     let version = pjson && pjson.version;
     console.log('version:', version);
-    webpackConfig.output.publicPath = `https://fe-static-yuketang.rainclassroom.com/fe/static/lesson/${version}/`;
+    webpackConfig.output.publicPath = `https://fe-static-yuketang.yuketang.cn/fe/static/lesson/${version}/`;
   }
 }
 
