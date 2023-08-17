@@ -361,9 +361,9 @@ let meetingMixin = {
 
         this.setKMeeting(kmeeting);
 
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.addRemoteVideoTrack(track, true);
-        })
+        }, 1000)
         
       }
     },
