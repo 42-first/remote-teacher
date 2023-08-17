@@ -721,7 +721,7 @@ let meetingMixin = {
             AGC: true,
         };
 
-        let videoEncoderConfig = videoEncoderConfigs.get('1080p');
+        let videoEncoderConfig = videoEncoderConfigs.get('qvga');
         let videoConfig = {
             encoderConfig: videoEncoderConfig,
             deviceId: this.cameraSelect.deviceId
