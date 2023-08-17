@@ -715,7 +715,7 @@ let meetingMixin = {
      */
     async openDevice(type) {
         let audioConfig = {
-            deviceId: this.microphoneSelect && this.microphoneSelect.deviceId,
+            deviceId: this.microphoneSelect && this.microphoneSelect.deviceId || 'default',
             AEC: true,
             ANS: true,
             AGC: true,
