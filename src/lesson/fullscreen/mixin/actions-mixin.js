@@ -968,6 +968,7 @@ let actionsMixin = {
       }
 
       this.setHasKMeeting(false)
+      this.setJoined(false)
 
       this.removeEventListeners();
     },
