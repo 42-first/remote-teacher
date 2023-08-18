@@ -357,7 +357,10 @@
         const joinedKey = 'lesson-metting-joined'+lessonId;
         const joined = !!localStorage.getItem(joinedKey);
         if(joined) {
-          this.hasKMeeting ? this.handleAutoJoinK() : this.handleJoin();
+          // 互动直播的自动加入
+          if(!this.hasKMeeting) {
+            this.handleJoin();
+          } 
         }
       },
 

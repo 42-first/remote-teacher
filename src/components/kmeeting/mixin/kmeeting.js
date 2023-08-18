@@ -367,9 +367,11 @@ let meetingMixin = {
 
         this.setKMeeting(kmeeting);
 
-        setTimeout(() => {
-          this.addRemoteVideoTrack(track, true);
-        }, 1000)
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.addRemoteVideoTrack(track, true);
+          }, 1000)
+        })
         
       }
     },
@@ -800,6 +802,9 @@ let meetingMixin = {
       
       let kmeeting = this.kmeeting
       kmeeting.status = 0
+      // 音视频恢复默认值
+      kmeeting.video = true
+      kmeeting.audio = true
       this.setKMeeting(kmeeting)
       this.setJoined(false)
     },
