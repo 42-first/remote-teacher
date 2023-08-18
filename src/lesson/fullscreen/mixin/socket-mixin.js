@@ -657,7 +657,7 @@ var mixin = {
             kmeeting.status = 0
             this.setKMeeting(kmeeting)
             this.$toast({
-              message: '老师拒绝连麦',
+              message: '老师已拒绝你的连麦申请',
               duration: 3000
             });
 
