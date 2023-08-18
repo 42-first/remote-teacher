@@ -136,13 +136,13 @@
           </div>
 
           <div class="box-center" v-if="kmeeting.status == 1">
-            <i class="iconfont icon-48-jieru2 cgreen f24"></i>
+            <i class="iconfont icon-dianhuajieru cgreen f24"></i>
             <span class="join__status f14">申请中({{joinCountDown}}s)...</span>
             <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK">取消申请</div>
           </div>
 
           <div class="box-center" v-if="kmeeting.status == 2">
-            <i class="iconfont icon-48-jieru2 cgreen f24"></i>
+            <i class="iconfont icon-dianhuajieru cgreen f24"></i>
             <span class="join__status f14">连线中...</span>
           </div>
 
@@ -776,7 +776,7 @@
             showCancel: true,
             confirmText: '确定',
             cancelText: '取消',
-            canfirmClass: 'button-red-fill'
+            confirmClass: 'button-red-fill'
           },
           cancel: () => {
           },
@@ -837,7 +837,8 @@
     border-radius: 26px/50%;
 
     background: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 10px 0px #7B87B233;
+
 
     &.only {
       padding: 0;
@@ -924,6 +925,10 @@
 
       &.kmeeting {
         background: #3D7BFF;
+
+        &:hover {
+          background: #376FE6;
+        }
       }
     }
 
@@ -951,6 +956,7 @@
     position: absolute;
     bottom: 120%;
     right: -34px;
+    z-index: 2;
 
     padding: 10px 0;
     width: 120px;
@@ -998,9 +1004,13 @@
       }
 
       &.meeting__exit {
-        width: 72px;
-        border-radius: 17px;
+        width: 84px;
+        border-radius: 6px;
         background: #F34848;
+
+        &:hover {
+          background: #E13843;
+        }
       }
     }
 
@@ -1094,7 +1104,15 @@
     }
 
     .tips__closed {
-      flex: 1;
+      // flex: 1;
+      width: 28px;
+      height: 28px;
+      margin-left: 6px;
+      border-radius: 6px;
+
+      &:hover {
+        background: rgba(255,255,255,.1);
+      }
     }
   }
 

@@ -20,11 +20,11 @@
       <div class="message-content" v-if="message">{{message}}</div>
       <div class="message-btns">
         <div class="btn buttton-normal pointer cancel" :class="cancelClassProxy" v-if="showCancel" @click="cancel">
-          <i class="iconfont" :class="cancelIcon" v-if="cancelIcon"></i>
+          <i class="iconfont mr6 f16" :class="cancelIcon" v-if="cancelIcon"></i>
           {{cancelText}}
         </div>
         <div class="button-blue btn confirm pointer" :class="[confirmClassProxy, !showCancel ? 'only' : '']" @click="confirm">
-          <i class="iconfont" :class="confirmlIcon" v-if="confirmlIcon"></i>
+          <i class="iconfont mr6 f16" :class="confirmIcon" v-if="confirmIcon"></i>
           {{confirmText}}
         </div>
       </div>
@@ -44,7 +44,7 @@ return {
   showClose: false,
   message: '',
   cancelIcon: '',
-  confirmlIcon: ''
+  confirmIcon: ''
 };
 },
 filters: {},
@@ -92,6 +92,10 @@ destroyed() {},
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .mr6 {
+      margin-right: 6px;
+    }
 
     .message-box {
       width: 416px;

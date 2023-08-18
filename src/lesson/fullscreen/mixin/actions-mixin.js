@@ -1191,7 +1191,11 @@ let actionsMixin = {
           headerConfig: {
             type: 'img',
             img: this.teacher.avatar
-          }
+          },
+          cancelIcon: 'icon-dianhua-guaduan',
+          confirmIcon: 'icon-dianhua',
+          cancelClass: 'button-red',
+          confirmClass: 'button-green'
         },
         cancel: () => {
           let str = JSON.stringify({
