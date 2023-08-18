@@ -1182,9 +1182,10 @@ let actionsMixin = {
 
 
     handleRequestvc() {
+      let title = this.liveType == 2 ? '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : '老师邀请你进行连麦，是否同意并打开麦克风?'
       this.$rainConfirm({
         data: {
-          title: '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?',
+          title,
           showCancel: true,
           confirmText: '同意',
           cancelText: '拒绝',
