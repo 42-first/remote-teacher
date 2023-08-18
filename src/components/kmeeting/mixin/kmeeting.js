@@ -805,6 +805,7 @@ let meetingMixin = {
       // 音视频恢复默认值
       kmeeting.video = true
       kmeeting.audio = true
+      kmeeting.otherscreen = false
       this.setKMeeting(kmeeting)
       this.setJoined(false)
     },
