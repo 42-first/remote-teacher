@@ -332,8 +332,14 @@ let meetingMixin = {
       if (curState === "disconnected") {
         this.stop();
         this.closeDevice();
+        // 从另一端接入了  需要把当前端退出 但是不要发送ws消息
         if (reason === "uid_banned") {
           console.log(`${this.user.id} is kicked out`);
+          this.$toast({
+            message: '您已在其他端接入，退出当前连麦',
+            duration: 3000
+          });
+          this.handleHangup()
         }
       }
     },
@@ -795,7 +801,7 @@ let meetingMixin = {
       let kmeeting = this.kmeeting
       kmeeting.status = 0
       this.setKMeeting(kmeeting)
-
+      this.setJoined(false)
     },
 
     /**
