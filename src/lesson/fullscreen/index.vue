@@ -390,6 +390,21 @@
             setTimeout(() => {
               this.initKwai();
               this.liveType === 2 && this.initEvent();
+
+              // 荷塘专业版直播加水印
+              if (newVal && this.liveType === 2) {
+                if (this.watermarkInfo) {
+                  watermark.close('#watermark_layer');
+                  let {name = '', schoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
+                  let textArr = []
+                  name && textArr.push(name)
+                  schoolNumber && textArr.push(schoolNumber)
+                  department && textArr.push(department)
+                  classroom && textArr.push(classroom)
+
+                  watermark.set('#watermark_layer', textArr);
+                }
+              }
             }, 1000)
             
           }

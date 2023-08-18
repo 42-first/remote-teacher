@@ -89,7 +89,7 @@ function setWatermark(pls, args) {
 
   watermark.setAttribute('style', styleStr);
   watermark.classList.add('watermark')
-  document.querySelector(pls).appendChild(watermark);
+  document.querySelector(pls) && document.querySelector(pls).appendChild(watermark);
   //此方法是防止用户通过控制台修改样式去除水印效果
   /* MutationObserver 是一个可以监听DOM结构变化的接口。 */
   const observer = new MutationObserver(() => {
