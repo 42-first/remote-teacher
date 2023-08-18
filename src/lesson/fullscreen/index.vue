@@ -384,6 +384,15 @@
         }else {
           // 离开取消定时器
           this.removeEventListeners()
+
+          // 直播还存在的话 播放直播
+          if(this.liveType) {
+            setTimeout(() => {
+              this.initKwai();
+              this.liveType === 2 && this.initEvent();
+            }, 1000)
+            
+          }
         }
       },
       liveType(newVal){
