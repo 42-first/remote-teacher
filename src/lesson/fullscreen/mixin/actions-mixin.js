@@ -967,8 +967,12 @@ let actionsMixin = {
         this.qos.liveEnd();
       }
 
-      this.setHasKMeeting(false)
-      this.setJoined(false)
+      if(this.hasKMeeting) {
+        this.setHasKMeeting(false)
+        this.setJoined(false)
+        this.$refs.kmeeting.handleHangup()
+      }
+      
 
       this.removeEventListeners();
     },
