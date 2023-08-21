@@ -148,7 +148,7 @@
 
   import userAgreement from '@/components/common/agreement-pc'
   import watermark from '@/util/watermark'
-  import {getPlatformKey} from '@/util/util'
+  import {getPlatformKey, loadScript} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -264,7 +264,8 @@
         classroom: {},
         // 课是否已结束
         lessonFinished: false,
-        watermarkInfo: null
+        watermarkInfo: null,
+        loadKwaiSDK: false
       };
     },
     components: {
@@ -419,6 +420,15 @@
           kmeeting.video = true
           this.setKMeeting(kmeeting)
         }
+      },
+
+      hasKMeeting(newVal) {
+        if(newVal && !this.loadKwaiSDK) {
+          let KwaiSDKURL = 'https://ykt-fe.yuketang.cn/krtc-js-sdk.js'
+          loadScript(KwaiSDKURL)
+
+          this.loadKwaiSDK = true
+        }
       }
     },
     filters: {
@@ -480,6 +490,31 @@
             this.hasMeeting = true;
           }
         }
+
+        let self = this
+        // 关闭 刷新页面提示
+        window.onbeforeunload = window.onunload= function (e) {
+          if(self.kmeeting.status == 3){
+            let str = JSON.stringify({
+              'op': 'endvc',
+              'lessonid': self.lesson && self.lesson.lessonID,
+            })
+
+            self.socket.send(str)
+            self.$refs.kmeeting.handleHangup()
+            e.preventDefault()
+          } else if(window.teacherInviteJoin) {
+            let str = JSON.stringify({
+              'op': 'rejectvc',
+              'lessonid': self.lesson && self.lesson.lessonID,
+            })
+
+            self.socket.send(str)
+            e.preventDefault()
+          } else {
+            e.preventDefault()
+          }
+        };
       },
 
       /**

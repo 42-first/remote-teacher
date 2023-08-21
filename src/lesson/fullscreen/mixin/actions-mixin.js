@@ -970,7 +970,7 @@ let actionsMixin = {
       if(this.hasKMeeting) {
         this.setHasKMeeting(false)
         this.setJoined(false)
-        this.$refs.kmeeting.handleHangup()
+        this.$refs.kmeeting && this.$refs.kmeeting.handleHangup()
       }
       
 
@@ -1186,6 +1186,7 @@ let actionsMixin = {
 
 
     handleRequestvc() {
+      window.teacherInviteJoin = true
       let title = this.liveType == 2 ? '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : '老师邀请你进行连麦，是否同意并打开麦克风?'
       this.$rainConfirm({
         data: {
@@ -1225,7 +1226,6 @@ let actionsMixin = {
     },
 
     handleUnmute() {
-      window.teacherInviteJoin = true
       this.$rainConfirm({
         data: {
           title: '老师邀请你发言，是否打开麦克风？?',
