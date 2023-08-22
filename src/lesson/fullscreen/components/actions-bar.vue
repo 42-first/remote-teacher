@@ -137,7 +137,7 @@
 
           <div class="box-center" v-if="kmeeting.status == 1">
             <i class="iconfont icon-dianhuajieru cgreen f24"></i>
-            <span class="join__status f14">申请中({{joinCountDown}}s)...</span>
+            <span class="join__status f14">申请中...</span>
             <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK">取消申请</div>
           </div>
 
@@ -207,7 +207,6 @@
         showTXMeetingTips: false,
         // 连麦提示
         visibleKMeetingTips: true,
-        joinCountDown: 30
       };
     },
     components: {
@@ -287,13 +286,6 @@
           this.visibleWebRTCNoSupported = true;
         }
       },
-
-      'kmeeting.status'(newVal) {
-        if(newVal !== 1) {
-          clearInterval(this.joinTimer)
-          this.joinCountDown = 30
-        }
-      }
     },
     methods: {
       ...mapActions([
@@ -742,17 +734,6 @@
             let kmeeting = this.kmeeting
             kmeeting.status = 1
             this.setKMeeting(kmeeting)
-
-            this.joinTimer && clearInterval(this.joinTimer)
-            this.joinTimer = setInterval(() => {
-              if(this.joinCountDown > 0) {
-                this.joinCountDown--
-              } else {
-                clearInterval(this.joinTimer)
-                self.handleCancelJoinK()
-                this.joinCountDown = 30
-              }
-            }, 1000)
           },
         })
       },
