@@ -631,6 +631,23 @@ let pages = {
   "mypost": "我的投稿",
   "postrecalled": "投稿已被撤回",
 
+  "endvc": "结束连麦",
+  "cancelvc": "取消申请",
+  "applying": "申请中...",
+  "wired": "连线中...",
+  "requestvc": "申请连麦",
+  "vctimeout": "连麦申请未响应",
+  "teacherrejectvc": "老师已拒绝你的连麦申请",
+  "mutemicrophone": "老师关闭了你的麦克风",
+  "rtcroomfull": "房间已满员",
+  "requestvctips": "老师邀请你进行连麦，是否同意并打开麦克风与摄像头?",
+  "requestvctipsmic": "老师邀请你进行连麦，是否同意并打开麦克风?",
+  "agreevc": "同意",
+  "rejectvc": "拒绝",
+  "unmutemicrophone": "老师邀请你发言，是否打开麦克风？",
+  "requestvcconfirm": "是否向老师发起连麦？",
+  "endvcconfirm": "是否结束连麦？",
+
   meeting: {
     "showing": "正在放映",
     "dynamics": "课堂动态",

@@ -154,8 +154,9 @@ destroyed() {},
         //   flex-direction: row-reverse
         // }
         .btn {
-          width: 84px;
+          min-width: 84px;
           height: 32px;
+          padding: 0 12px;
           display: flex;
           align-items: center;
           justify-content: center;

@@ -128,7 +128,7 @@
       <template v-if="hasKMeeting">
         <div class="line" v-if="joined || kmeeting.canrequestvc"></div>
         <section class="actions__item" @click="handleHangupK" v-if="joined">
-          <div class="actions__btn over meeting__exit box-center f12 cfff">结束连麦</div>
+          <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 结束连麦 -->{{ $t('endvc') }} </div>
         </section>
         <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else-if="kmeeting.canrequestvc">
           <div class="meeting__join kmeeting box-center" v-if="!kmeeting.status" @click.stop="handleJoinK">
@@ -137,19 +137,19 @@
 
           <div class="box-center" v-if="kmeeting.status == 1">
             <i class="iconfont icon-dianhuajieru cgreen f24"></i>
-            <span class="join__status f14">申请中...</span>
-            <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK">取消申请</div>
+            <span class="join__status f14"><!-- 申请中... --> {{ $t('applying') }}</span>
+            <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK"><!-- 取消申请 -->{{ $t('cancelvc') }}</div>
           </div>
 
           <div class="box-center" v-if="kmeeting.status == 2">
             <i class="iconfont icon-dianhuajieru cgreen f24"></i>
-            <span class="join__status f14">连线中...</span>
+            <span class="join__status f14"><!-- 连线中... --> {{ $t('wired') }}</span>
           </div>
 
 
           <!-- 互动加入提示 -->
           <section class="meeting__tips kmeeting box-start" v-if="visibleKMeetingTips">
-            <div class="tips__content f16 cfff">申请连麦</div>
+            <div class="tips__content f16 cfff"><!-- 申请连麦 -->{{ $t('requestvc') }}</div>
             <p class="tips__closed box-center" @click="handleClosedKMeetingTips">
               <i class="iconfont icon-guanbi1 f12 cfff"></i>
             </p>
@@ -715,10 +715,10 @@
         this.handleClosedKMeetingTips()
         this.$rainConfirm({
           data: {
-            title: '是否向老师发起连麦？',
+            title: this.$i18n.t('requestvcconfirm') || '是否向老师发起连麦？',
             showCancel: true,
-            confirmText: '确定',
-            cancelText: '取消',
+            confirmText: this.$i18n.t('confirm') || '确定',
+            cancelText: this.$i18n.t('cancel') || '取消',
           },
           cancel: () => {
           },
@@ -756,10 +756,10 @@
       handleHangupK() {
         this.$rainConfirm({
           data: {
-            title: '是否结束连麦？',
+            title: this.$i18n.t('endvcconfirm') || '是否结束连麦？',
             showCancel: true,
-            confirmText: '确定',
-            cancelText: '取消',
+            confirmText: this.$i18n.t('confirm') || '确定',
+            cancelText: this.$i18n.t('cancel') || '取消',
             confirmClass: 'button-red-fill'
           },
           cancel: () => {
@@ -1044,18 +1044,24 @@
 
     &.kmeeting {
       background: #3D7BFF;
-      width: 142px;
+      min-width: 142px;
       height: 52px;
       box-shadow: none;
+      width: auto;
 
       &:before {
         border-top-color: #3D7BFF;
       }
 
       .tips__content {
-        width: 100px;
+        min-width: 100px;
         white-space: nowrap;
         padding: 0 16px 0 24px;
+        width: auto;
+      }
+
+      .tips__closed {
+        margin-right: 6px;
       }
     }
 

@@ -1189,13 +1189,13 @@ let actionsMixin = {
      */
     handleRequestvc() {
       window.teacherInviteJoin = true
-      let title = this.liveType == 2 ? '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : '老师邀请你进行连麦，是否同意并打开麦克风?'
+      let title = this.liveType == 2 ? this.$i18n.t('requestvctips') || '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : this.$i18n.t('requestvctipsmic') || '老师邀请你进行连麦，是否同意并打开麦克风?'
       confirmObj = this.$rainConfirm({
         data: {
           title,
           showCancel: true,
-          confirmText: '同意',
-          cancelText: '拒绝',
+          confirmText: this.$i18n.t('agreevc') || '同意',
+          cancelText: this.$i18n.t('rejectvc') || '拒绝',
           headerConfig: {
             type: 'img',
             img: this.teacher.avatar
@@ -1233,10 +1233,10 @@ let actionsMixin = {
     handleUnmute() {
       this.$rainConfirm({
         data: {
-          title: '老师邀请你发言，是否打开麦克风？?',
+          title: this.$i18n.t('unmutemicrophone') || '老师邀请你发言，是否打开麦克风？',
           showCancel: true,
-          confirmText: '确定',
-          cancelText: '取消',
+          confirmText: this.$i18n.t('confirm') || '确定',
+          cancelText: this.$i18n.t('cancel') || '取消',
         },
         cancel: () => {
           

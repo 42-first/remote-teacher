@@ -644,7 +644,7 @@ var mixin = {
             this.setKMeeting(kmeeting)
 
             this.$toast({
-              message: '连麦申请未响应',
+              message: this.$i18n.t('vctimeout') || '连麦申请未响应',
               duration: 3000
             });
 
@@ -665,7 +665,7 @@ var mixin = {
             kmeeting.status = 0
             this.setKMeeting(kmeeting)
             this.$toast({
-              message: '老师已拒绝你的连麦申请',
+              message: this.$i18n.t('teacherrejectvc') || '老师已拒绝你的连麦申请',
               duration: 3000
             });
 
@@ -694,7 +694,7 @@ var mixin = {
             kmeeting.audio = false
             this.setKMeeting(kmeeting)
             this.$toast({
-              message: '老师关闭了你的麦克风',
+              message:  this.$i18n.t('mutemicrophone') || '老师关闭了你的麦克风',
               duration: 3000
             })
           
@@ -709,7 +709,10 @@ var mixin = {
           case 'rtcroomfull': 
             kmeeting.status = 0;
             this.setKMeeting(kmeeting)
-            this.$toast('房间已满员')
+            this.$toast({
+              message:  this.$i18n.t('rtcroomfull') || '房间已满员',
+              duration: 3000
+            })
 
             break; 
             
