@@ -647,8 +647,11 @@ var mixin = {
           
           // 老师已接受连麦请求
           case 'acceptvc':
-            kmeeting.status = 2
-            this.setKMeeting(kmeeting)
+            if(kmeeting.status === 1) {
+              kmeeting.status = 2
+              this.setKMeeting(kmeeting)
+            }
+            
 
             break;
 
