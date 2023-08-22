@@ -40,6 +40,12 @@ const confirmObj = function(Vue) {
       }
     }).$mount();
     document.querySelector('#app').appendChild(this.HandleBar.$el);
+
+    return this;
+  }
+
+  Vue.prototype.$removeConfirm = function(_this) {
+    destroy.call(_this); 
   }
 }
 

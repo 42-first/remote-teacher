@@ -631,6 +631,11 @@ var mixin = {
           case 'requestvc':
             this.handleRequestvc()
             break;
+          
+          // 老师取消邀请
+          case 'cancelvc':
+            this.handleCancelvc()
+            break;
 
           
           // 连麦超时 
@@ -639,7 +644,7 @@ var mixin = {
             this.setKMeeting(kmeeting)
 
             this.$toast({
-              message: '连麦超时',
+              message: '连麦申请未响应',
               duration: 3000
             });
 

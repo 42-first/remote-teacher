@@ -6,7 +6,7 @@
  *
  */
 
-
+let confirmObj = null
 let actionsMixin = {
   methods: {
     /*
@@ -1184,11 +1184,13 @@ let actionsMixin = {
       }, 5000)
     },
 
-
+    /**
+     * @method 老师邀请连麦
+     */
     handleRequestvc() {
       window.teacherInviteJoin = true
       let title = this.liveType == 2 ? '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : '老师邀请你进行连麦，是否同意并打开麦克风?'
-      this.$rainConfirm({
+      confirmObj = this.$rainConfirm({
         data: {
           title,
           showCancel: true,
@@ -1225,6 +1227,9 @@ let actionsMixin = {
       })
     },
 
+    /**
+     * @method 老师邀请发言
+     */
     handleUnmute() {
       this.$rainConfirm({
         data: {
@@ -1242,6 +1247,15 @@ let actionsMixin = {
           this.setKMeeting(kmeeting)
         },
       })
+    },
+
+    /**
+     * @method 老师取消邀请
+     */
+    handleCancelvc() {
+      if(confirmObj) {
+        this.$removeConfirm(confirmObj);
+      }
     }
 
   }
