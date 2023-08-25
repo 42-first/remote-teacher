@@ -803,7 +803,7 @@ let meetingMixin = {
       let kmeeting = this.kmeeting
       kmeeting.status = 0
       // 音视频恢复默认值
-      kmeeting.video = true
+      kmeeting.video = this.liveType == 2 ? true : false
       kmeeting.audio = true
       kmeeting.otherscreen = false
       this.setKMeeting(kmeeting)
