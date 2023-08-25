@@ -640,6 +640,9 @@ var mixin = {
           
           // 连麦超时 
           case 'vctimeout':
+            if(kmeeting.status != 1) {
+              return;
+            }
             kmeeting.status = 0
             this.setKMeeting(kmeeting)
 
@@ -662,6 +665,9 @@ var mixin = {
 
           // 老师已拒绝连麦请求
           case 'rejectvc':
+            if(kmeeting.status != 1) {
+              return;
+            }
             kmeeting.status = 0
             this.setKMeeting(kmeeting)
             this.$toast({
@@ -683,6 +689,9 @@ var mixin = {
           case 'endvc':
           // 全部下麦
           case 'leavevc':
+            if(kmeeting.status != 3) {
+              return;
+            }
             kmeeting.joined = false
             this.setKMeeting(kmeeting)
 
@@ -691,6 +700,9 @@ var mixin = {
 
           // 静音
           case 'mute':
+            if(kmeeting.status != 3) {
+              return;
+            }
             kmeeting.audio = false
             this.setKMeeting(kmeeting)
             this.$toast({
@@ -702,11 +714,17 @@ var mixin = {
 
           // 解除静音
           case 'unmute':
+            if(kmeeting.status != 3) {
+              return;
+            }
             this.handleUnmute()
           
             break;
 
           case 'rtcroomfull': 
+            if(kmeeting.status != 1) {
+              return;
+            }
             kmeeting.status = 0;
             this.setKMeeting(kmeeting)
             this.$toast({
@@ -717,6 +735,9 @@ var mixin = {
             break; 
             
           case 'getvcusers':
+            if(kmeeting.status != 3) {
+              return;
+            }
             this.$refs.kmeeting.updateVCUsersInfo(msg.users)
             break;
 
