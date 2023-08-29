@@ -114,32 +114,74 @@ let meetingMixin = {
         codec: "H264"
       });
 
+      // KRTC.setLogLevel(4)
+
       // 音频采集设备状态变化回调：该回调提示有麦克风被添加或移除。
       KRTC.onMicrophoneChanged = (deviceInfo) => {
         console.log(`microphone state is changed label:${deviceInfo.device.label} state:${deviceInfo.state}`);
-        this.onDeviceChanged(this.microphoneSelect, deviceInfo);
+        this.onDeviceChanged(this.microphoneList, deviceInfo);
       };
 
       // 视频采集设备状态变化回调：该回调提示有摄像头被添加或移除。
       KRTC.onCameraChanged = (deviceInfo) => {
         console.log(`camera state is changed label:${deviceInfo.device.label} state:${deviceInfo.state}`);
-        this.onDeviceChanged(this.cameraSelect, deviceInfo);
+        this.onDeviceChanged(this.cameraList, deviceInfo);
       };
 
       // 音频播放设备状态变化回调：该回调提示有音频播放设备被添加或移除。
       KRTC.onPlaybackDeviceChanged = (deviceInfo) => {
         console.log(`playback state is changed label:${deviceInfo.device.label} state:${deviceInfo.state}`);
-        this.onDeviceChanged(this.speakerSelect, deviceInfo);
+        this.onDeviceChanged(this.speakerList, deviceInfo);
       };
 
       // 音频默认播放设备状态变化回调： 该回调提示有音频播放设备被添加或移除。
       KRTC.onDefaultSpeakerChanged = async (deviceInfo) => {
-        console.log(`default speaker state is changed label:${deviceInfo.device.label} state:${deviceInfo.state}`);
+        console.log(`default speaker state is changed label:${deviceInfo.device.label} state:${deviceInfo.state}, ${JSON.stringify(deviceInfo)}`);
+        if(this.speakerSelect.deviceId === 'default') {
+          this.speakers.forEach(async(user) => {
+            if(user.audioTrack !== undefined) {
+              try {
+                await user.audioTrack.setPlaybackDevice(deviceInfo.device.deviceId);
+                this.speakerSelect = deviceInfo.device
+                console.log(`onDefaultSpeakerChanged user audioTrack setPlaybackDevice success`);
+              } catch (error) {
+                console.log(`onDefaultSpeakerChanged setPlaybackDevice fail error:${error} user:${user.uid}`);
+              }
+            }
+          })
+        }
+        // if (this.activeTrack) {
+        //   try {
+        //       await this.activeTrack.setPlaybackDevice(this.speakerSelect.deviceId);
+        //       console.log(`onDefaultSpeakerChanged activeTrack setPlaybackDevice success`);
+        //   } catch (error) {
+        //       console.log(`onDefaultSpeakerChanged activeTrack setPlaybackDevice failed error:${error}`);
+        //   }
+        // }
+        if (this.contentAudioTrack) {
+            try {
+                await this.contentAudioTrack.setPlaybackDevice(this.speakerSelect.deviceId);
+                console.log(`onDefaultSpeakerChanged contentAudioTrack setPlaybackDevice success`);
+            } catch (error) {
+                console.log(`onDefaultSpeakerChanged contentAudioTrack setPlaybackDevice failed error:${error}`);
+            }
+        }
       };
 
       // 音频默认采集设备状态变化回调。 该回调提示有音频播放设备被添加或移除。
       KRTC.onDefaultMicrophoneChanged = async (deviceInfo) => {
         console.log(`default microphone is changed label:${deviceInfo.device.label} state:${deviceInfo.state}`)
+        if (this.microphoneSelect.deviceId === "default") {
+          if (this.localAudioTrack) {
+            try {
+                await this.localAudioTrack.setDevice(deviceInfo.device.deviceId);
+                console.log(`set microphone device:${this.microphoneSelect.value} success`);
+            } catch (error) {
+                console.log(`onDefaultMicrophoneChanged setDevice fail error:${error}`);
+            }
+
+          }
+        }
       };
 
       //  音频通讯播放设备状态变化回调。 该回调提示有音频播放设备被添加或移除。
@@ -227,17 +269,25 @@ let meetingMixin = {
      * @param {*} mediaType 
      */
     onUserPublished(user, mediaType) {
+      let speakers = this.speakers
+      let index = this.speakers.findIndex(speaker => speaker.id == user.uid)
+      let remoteUser = this.speakers[index]
       console.log("user-published", user.uid, mediaType);
       this.client.subscribe(user, mediaType).then((track) => {
         console.log(`subscribe userId:${user.uid} mediaType:${mediaType} success`);
         this.updateUserStatus(user.uid, mediaType, true, track)
 
         setTimeout(() => {
-            if (mediaType === "audio") {
-                track.play();
-              } else {
-                this.addRemoteVideoTrack(track);
-              }
+          if (mediaType === "audio") {
+            track.play();
+          } else {
+            this.addRemoteVideoTrack(track);
+          }
+
+          // 更新speaker的audioTrack
+          remoteUser.audioTrack = track;
+          speakers.splice(index, 1, remoteUser)
+          this.setSpeakers(speakers)
       
         }, 1000)
         
@@ -293,7 +343,8 @@ let meetingMixin = {
         subscribe: false,
         offline: false,
         hasAudio: user.hasAudio,
-        hasVideo: user.hasVideo
+        hasVideo: user.hasVideo,
+        audioTrack: user.audioTrack
       };
 
       this.joinUser(joinUser);
