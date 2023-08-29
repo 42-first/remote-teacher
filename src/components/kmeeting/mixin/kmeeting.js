@@ -564,7 +564,7 @@ let meetingMixin = {
       let sourceType = videoTrack.getSourceType();
       console.log(`addRemoteStream streamId`, userId);
       let fit = sourceType === "people" ? "cover" : "contain";
-      let controls = sourceType === "people" ? false : true;
+      let controls = false
 
       let remoteVideoElement = isScreen ? document.querySelector(`#J_screenshare`) :  document.querySelector(`#uid-${userId}`)
 
@@ -800,7 +800,7 @@ let meetingMixin = {
                 //     }
                 // }
                 this.localVideoTrack.setOptimizationMode('motion');
-                this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
+                this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls: false });
                 // this.beautySelect.removeAttribute('disabled');
             } else {
                 if (this.localAudioTrack === null && type == 'audio') {
@@ -818,7 +818,7 @@ let meetingMixin = {
                     //     }
                     // }
                     this.localVideoTrack.setOptimizationMode('motion');
-                    this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: true });
+                    this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls: false });
                     // this.beautySelect.removeAttribute('disabled');
                 }
             }
@@ -905,7 +905,7 @@ let meetingMixin = {
       this.client.publish(tracks).then(() => {
         console.log('publish video&audio track success')
         this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
-        this.liveType == 2 && this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:true });
+        this.liveType == 2 && this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:false });
       })
     },
 
