@@ -58,7 +58,7 @@ let logMixin = {
      * @method 直播打点
      * @params n 默认都是kwai 互动直播的是kwai_rtmp
      */
-    initHeartLog(n = 'kwai', t = this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live') {
+    initHeartLog(n = 'kwai') {
       let log = this.heartLog;
 
       try {
@@ -77,7 +77,7 @@ let logMixin = {
             return "web"
           })(),
           u: this.identityId || this.userID,
-          t,
+          t: this.liveType === 1 ? 'ykt_live_audio' : 'ykt_live',
           classroomid: this.classroom && this.classroom.classroomId,
           c: this.classroom && this.classroom.courseId,
           lesson_id: this.lessonID,
@@ -392,7 +392,7 @@ let logMixin = {
      * @method 直播连麦 上报video-log
      */
     handleReportVCToVideoLog() {
-      this.initHeartLog('kwai', this.liveType == 1 ? 'ykt_live_audio_rtc' : 'ykt_live_rtc')
+      this.initHeartLog('kwai_rtc')
       this.vcLogTimer = setInterval(() => {
         this.handleTimeupdate()
       }, 1000)
