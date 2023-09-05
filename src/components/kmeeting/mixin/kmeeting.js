@@ -114,7 +114,7 @@ let meetingMixin = {
         codec: "H264"
       });
 
-      // KRTC.setLogLevel(4)
+      KRTC.setLogLevel(4)
 
       // 音频采集设备状态变化回调：该回调提示有麦克风被添加或移除。
       KRTC.onMicrophoneChanged = (deviceInfo) => {

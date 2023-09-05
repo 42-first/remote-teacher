@@ -735,10 +735,10 @@ var mixin = {
             break; 
             
           case 'getvcusers':
-            if(kmeeting.status != 3) {
-              return;
-            }
-            this.$refs.kmeeting.updateVCUsersInfo(msg.users)
+            // if(kmeeting.status != 3) {
+            //   return;
+            // }
+            this.$refs.kmeeting && this.$refs.kmeeting.updateVCUsersInfo(msg.users)
             break;
 
           default:
