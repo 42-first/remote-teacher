@@ -42,7 +42,7 @@
           </div>
         </section>
         <!-- 会议成员列表 -->
-        <section class="member__container" v-for="(member, index) in activeSpeakers.slice(0, 3)" v-if="activeSpeakers && activeSpeakers.length" :key="index">
+        <section class="member__container" v-for="(member, index) in activeSpeakers.slice(0, 3)" v-if="activeSpeakers && activeSpeakers.length" :key="member.id">
           <avatar :member="member" :mode="1" v-if="!subscribeLoading"></avatar>
         </section>
       </section>
