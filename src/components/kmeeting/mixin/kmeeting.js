@@ -54,6 +54,8 @@ let meetingMixin = {
       cameraSelect: null,
       speakerSelect: null,
       supportH264: false,
+      publishAudio: false,
+      publishVideo: false
     }
   },
   watch: {
@@ -735,6 +737,10 @@ let meetingMixin = {
         //   })
         // }
 
+        if(!this.publishAudio) {
+          this.publish()
+        }
+
         this.localAudioTrack.setEnabled(audio)
         
         this.updateUserStatus(window.user.identityId, 'audio', audio)
@@ -762,7 +768,9 @@ let meetingMixin = {
       //     console.log(`unpublish video track success`)
       //   })
       // }
-
+      if(!this.publishVideo) {
+        this.publish()
+      }
       this.localVideoTrack.setEnabled(video)
       this.updateUserStatus(window.user.identityId, 'video', video)
     },
@@ -896,16 +904,22 @@ let meetingMixin = {
       let tracks = null;
 
       try {
-        await this.openDevice(this.liveType == 2 ? 'av' : 'audio')
-        tracks = this.liveType == 2 ? [this.localAudioTrack, this.localVideoTrack] : this.localAudioTrack
+        this.kmeeting.audio && await this.openDevice('audio')
+        this.kmeeting.video && await this.openDevice('video')
       } catch (error) {
         
       }
 
-      this.client.publish(tracks).then(() => {
-        console.log('publish video&audio track success')
+      !this.publishAudio && this.client.publish(this.localAudioTrack).then(() => {
+        console.log('publish audio track success')
+        this.publishAudio = true
+      })
+
+      !this.publishVideo && this.client.publish(this.localVideoTrack).then(() => {
+        console.log('publish video track success')
+        this.publishVideo = true
         this.localVideoView = document.querySelector(`#uid-${window.user.identityId}`)
-        this.liveType == 2 && this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:false });
+        this.localVideoView && this.localVideoTrack.play(this.localVideoView, { mirror: false, controls:false });
       })
     },
 
