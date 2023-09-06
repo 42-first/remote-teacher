@@ -504,7 +504,11 @@
 
             self.socket.send(str)
             self.$refs.kmeeting.handleHangup()
-            e.preventDefault()
+            e = e || window.event;
+            let dialogText = '确定退出课堂吗？';
+            e.returnValue = dialogText;
+
+            return dialogText;
           } else if(window.teacherInviteJoin) {
             let str = JSON.stringify({
               'op': 'rejectvc',
