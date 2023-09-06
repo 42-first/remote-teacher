@@ -406,6 +406,8 @@
                   watermark.set('#watermark_layer', textArr);
                 }
               }
+
+              this.handleLogEvent()
             }, 1000)
             
           }
