@@ -494,33 +494,7 @@
         }
 
         let self = this
-        // 关闭 刷新页面提示
-        window.onbeforeunload = window.onunload= function (e) {
-          if(self.kmeeting.status == 3){
-            let str = JSON.stringify({
-              'op': 'endvc',
-              'lessonid': self.lesson && self.lesson.lessonID,
-            })
-
-            self.socket.send(str)
-            self.$refs.kmeeting.handleHangup()
-            e = e || window.event;
-            let dialogText = '确定退出课堂吗？';
-            e.returnValue = dialogText;
-
-            return dialogText;
-          } else if(window.teacherInviteJoin) {
-            let str = JSON.stringify({
-              'op': 'rejectvc',
-              'lessonid': self.lesson && self.lesson.lessonID,
-            })
-
-            self.socket.send(str)
-            e.preventDefault()
-          } else {
-            e.preventDefault()
-          }
-        };
+        
       },
 
       /**
@@ -628,9 +602,9 @@
     },
     created() {
       this.init();
-
+      let self = this
       // 关闭 刷新页面 上报快手 window.onbeforeunload
-      window.onunload = (evt) => {
+      window.onbeforeunload = window.onunload = (evt) => {
         // 快手上报
         if(this.qos && this.liveURL) {
           this.qos.sendSummary({
@@ -638,6 +612,31 @@
             uid: this.userID,
             liveurl: this.liveURL
           });
+        }
+
+        if(self.kmeeting.status == 3){
+          let str = JSON.stringify({
+            'op': 'endvc',
+            'lessonid': self.lesson && self.lesson.lessonID,
+          })
+
+          self.socket.send(str)
+          self.$refs.kmeeting.handleHangup()
+          evt = evt || window.event;
+          let dialogText = '确定退出课堂吗？';
+          evt.returnValue = dialogText;
+
+          return dialogText;
+        } else if(window.teacherInviteJoin) {
+          let str = JSON.stringify({
+            'op': 'rejectvc',
+            'lessonid': self.lesson && self.lesson.lessonID,
+          })
+
+          self.socket.send(str)
+          evt.preventDefault()
+        } else {
+          evt.preventDefault()
         }
       };
     },
