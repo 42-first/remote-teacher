@@ -18,7 +18,7 @@
     </section>
 
     <!-- 直播入口 音频直播 -->
-    <section class="live" v-if="liveURL && liveType === 1 && !hasMeeting">
+    <section class="live" v-if="liveURL && liveType === 1 && !hasMeeting && !(hasKMeeting && joined)">
       <div class="live__audio">
         <i class="iconfont icon-quxiaojingyinx" v-if="playState" @click="handlestop"></i>
         <i class="iconfont icon-jingyin" v-else @click="handleplay"></i>
@@ -29,7 +29,7 @@
     </section>
 
     <!-- 直播入口 视频直播 加入会议不再显示直播 -->
-    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && !hasMeeting">
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && !hasMeeting && !(hasKMeeting && joined)">
       <!-- 定制video -->
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
@@ -71,7 +71,7 @@
     </section>
 
     <!-- 更多操作 新 -->
-    <actions-cmp></actions-cmp>
+    <actions-cmp :liveType="liveType"></actions-cmp>
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -103,6 +103,9 @@
 
     <!-- 会议演讲者模式 -->
     <meeting ref="meeting" v-if="hasMeeting && joined" ></meeting>
+
+    <!-- 连麦 -->
+    <kmeeting ref="kmeeting" v-if="hasKMeeting && kmeeting.status > 1" :liveType="liveType"></kmeeting>
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
@@ -139,12 +142,13 @@
   import videomsg from './components/video-msg';
 
   import meeting from '@/components/meeting/meeting'
+  import kmeeting from '@/components/kmeeting/kmeeting'
 
   import agreementMixin from '@/components/common/agreement-mixin'
 
   import userAgreement from '@/components/common/agreement-pc'
   import watermark from '@/util/watermark'
-  import {getPlatformKey} from '@/util/util'
+  import {getPlatformKey, loadScript} from '@/util/util'
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -260,7 +264,8 @@
         classroom: {},
         // 课是否已结束
         lessonFinished: false,
-        watermarkInfo: null
+        watermarkInfo: null,
+        loadKwaiSDK: false
       };
     },
     components: {
@@ -271,7 +276,8 @@
       videomsg,
       actionsCmp,
       meeting,
-      userAgreement
+      userAgreement,
+      kmeeting
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -289,6 +295,14 @@
         'joined',
         // 弹幕直播
         'danmus',
+        // 是否有连麦
+        'hasKMeeting',
+        'teacher',
+        'isGuestStudent',
+      ]),
+
+      ...mapState('kmeeting',[
+        'kmeeting'
       ])
     },
     watch: {
@@ -355,11 +369,67 @@
 
       joined(newVal){ 
         if(newVal) {
-          // 加入互动开始记录日志上报videolog
-          this.handleReportInteractiveToVideoLog()
+          if(this.hasKMeeting) {
+            this.destroyKwai();
+
+            // 停止播放时上报下当前数据
+            this.forceReport()
+
+            // 直播连麦上报videolog
+            this.handleReportVCToVideoLog()
+          } else {
+            // 加入互动开始记录日志上报videolog
+            this.handleReportInteractiveToVideoLog()
+          }
+          
         }else {
           // 离开取消定时器
           this.removeEventListeners()
+
+          // 直播还存在的话 播放直播
+          if(this.liveType) {
+            setTimeout(() => {
+              this.initKwai();
+              this.liveType === 2 && this.initEvent();
+
+              // 荷塘专业版直播加水印
+              if (newVal && this.liveType === 2) {
+                if (this.watermarkInfo) {
+                  watermark.close('#watermark_layer');
+                  let {name = '', schoolNumber = '', department = '', classroom = ''} = this.watermarkInfo
+                  let textArr = []
+                  name && textArr.push(name)
+                  schoolNumber && textArr.push(schoolNumber)
+                  department && textArr.push(department)
+                  classroom && textArr.push(classroom)
+
+                  watermark.set('#watermark_layer', textArr);
+                }
+              }
+
+              this.handleLogEvent()
+            }, 1000)
+            
+          }
+        }
+      },
+      liveType(newVal){
+        let kmeeting = this.kmeeting
+        if(newVal == 1) {
+          kmeeting.video = false
+          this.setKMeeting(kmeeting)
+        }else if(newVal == 2) {
+          kmeeting.video = true
+          this.setKMeeting(kmeeting)
+        }
+      },
+
+      hasKMeeting(newVal) {
+        if(newVal && !this.loadKwaiSDK) {
+          let KwaiSDKURL = 'https://ykt-fe.yuketang.cn/krtc-js-sdk.js'
+          loadScript(KwaiSDKURL)
+
+          this.loadKwaiSDK = true
         }
       }
     },
@@ -390,6 +460,11 @@
         'setLessonStatus',
         'setHasTXMeeting',
         'setInvitationLink',
+        'setHasKMeeting',
+      ]),
+
+      ...mapActions('kmeeting', [
+        'setKMeeting',
       ]),
 
       /*
@@ -417,6 +492,9 @@
             this.hasMeeting = true;
           }
         }
+
+        let self = this
+        
       },
 
       /**
@@ -524,9 +602,9 @@
     },
     created() {
       this.init();
-
+      let self = this
       // 关闭 刷新页面 上报快手 window.onbeforeunload
-      window.onunload = (evt) => {
+      window.onbeforeunload = window.onunload = (evt) => {
         // 快手上报
         if(this.qos && this.liveURL) {
           this.qos.sendSummary({
@@ -534,6 +612,31 @@
             uid: this.userID,
             liveurl: this.liveURL
           });
+        }
+
+        if(self.kmeeting.status == 3){
+          let str = JSON.stringify({
+            'op': 'endvc',
+            'lessonid': self.lesson && self.lesson.lessonID,
+          })
+
+          self.socket.send(str)
+          self.$refs.kmeeting.handleHangup()
+          evt = evt || window.event;
+          let dialogText = '确定退出课堂吗？';
+          evt.returnValue = dialogText;
+
+          return dialogText;
+        } else if(window.teacherInviteJoin) {
+          let str = JSON.stringify({
+            'op': 'rejectvc',
+            'lessonid': self.lesson && self.lesson.lessonID,
+          })
+
+          self.socket.send(str)
+          evt.preventDefault()
+        } else {
+          evt.preventDefault()
         }
       };
     },
@@ -547,6 +650,14 @@
     updated() {
     },
     beforeDestroy() {
+      // if(window.teacherInviteJoin) {
+      //   let str = JSON.stringify({
+      //     'op': 'rejectvc',
+      //     'lessonid': this.lesson && this.lesson.lessonID,
+      //   })
+
+      //   this.socket.send(str)
+      // }
     }
   };
 </script>

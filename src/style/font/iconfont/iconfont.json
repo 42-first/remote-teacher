@@ -6,6 +6,174 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "36835526",
+      "name": "新消息",
+      "font_class": "xinxiaoxi",
+      "unicode": "e887",
+      "unicode_decimal": 59527
+    },
+    {
+      "icon_id": "36818683",
+      "name": "监考or摄像头",
+      "font_class": "jiankaoorshexiangtou",
+      "unicode": "e808",
+      "unicode_decimal": 59400
+    },
+    {
+      "icon_id": "36748280",
+      "name": "监考or摄像头关",
+      "font_class": "jiankaoorshexiangtouguan",
+      "unicode": "e82f",
+      "unicode_decimal": 59439
+    },
+    {
+      "icon_id": "29454922",
+      "name": "视频开",
+      "font_class": "shipinkai",
+      "unicode": "e805",
+      "unicode_decimal": 59397
+    },
+    {
+      "icon_id": "29454936",
+      "name": "语音开",
+      "font_class": "yuyinkai",
+      "unicode": "e806",
+      "unicode_decimal": 59398
+    },
+    {
+      "icon_id": "34156935",
+      "name": "视频关-彩",
+      "font_class": "shipinguan-cai",
+      "unicode": "e83b",
+      "unicode_decimal": 59451
+    },
+    {
+      "icon_id": "34156936",
+      "name": "语音关-彩",
+      "font_class": "yuyinguan-cai",
+      "unicode": "e84c",
+      "unicode_decimal": 59468
+    },
+    {
+      "icon_id": "25454434",
+      "name": "错误",
+      "font_class": "cuowu",
+      "unicode": "e83f",
+      "unicode_decimal": 59455
+    },
+    {
+      "icon_id": "29454889",
+      "name": "电话",
+      "font_class": "dianhua",
+      "unicode": "e87c",
+      "unicode_decimal": 59516
+    },
+    {
+      "icon_id": "29454890",
+      "name": "电话接入",
+      "font_class": "dianhuajieru",
+      "unicode": "e87e",
+      "unicode_decimal": 59518
+    },
+    {
+      "icon_id": "36140413",
+      "name": "电话-挂断",
+      "font_class": "dianhua-guaduan",
+      "unicode": "e881",
+      "unicode_decimal": 59521
+    },
+    {
+      "icon_id": "25619949",
+      "name": "添加",
+      "font_class": "tianjia1",
+      "unicode": "e799",
+      "unicode_decimal": 59289
+    },
+    {
+      "icon_id": "33975970",
+      "name": "前往or右箭头2",
+      "font_class": "qianwangoryoujiantou2",
+      "unicode": "e82e",
+      "unicode_decimal": 59438
+    },
+    {
+      "icon_id": "36339177",
+      "name": "小程序提示or想法",
+      "font_class": "xiaochengxutishiorxiangfa",
+      "unicode": "e804",
+      "unicode_decimal": 59396
+    },
+    {
+      "icon_id": "25452893",
+      "name": "箭头单-向左",
+      "font_class": "jiantoudan-xiangzuo",
+      "unicode": "e78e",
+      "unicode_decimal": 59278
+    },
+    {
+      "icon_id": "25452868",
+      "name": "箭头单-向右",
+      "font_class": "jiantoudan-xiangyou",
+      "unicode": "e777",
+      "unicode_decimal": 59255
+    },
+    {
+      "icon_id": "29454908",
+      "name": "教学内容-7讨论",
+      "font_class": "jiaoxueneirong-7taolun",
+      "unicode": "e7d0",
+      "unicode_decimal": 59344
+    },
+    {
+      "icon_id": "33612182",
+      "name": "点赞-面状",
+      "font_class": "dianzan-mianzhuang",
+      "unicode": "e82b",
+      "unicode_decimal": 59435
+    },
+    {
+      "icon_id": "30441658",
+      "name": "回到首页",
+      "font_class": "huidaoshouye1",
+      "unicode": "e80a",
+      "unicode_decimal": 59402
+    },
+    {
+      "icon_id": "33568766",
+      "name": "切换身份",
+      "font_class": "qiehuanshenfen",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "33494269",
+      "name": "刷新",
+      "font_class": "shuaxin",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    },
+    {
+      "icon_id": "33485666",
+      "name": "点阵笔",
+      "font_class": "dianzhenbi",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    },
+    {
+      "icon_id": "33134546",
+      "name": "课件库",
+      "font_class": "kejianku",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "33134547",
+      "name": "试卷库",
+      "font_class": "shijuanku",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
+    },
+    {
       "icon_id": "25907192",
       "name": "图片-面状",
       "font_class": "tupian-mianzhuang",

@@ -8,7 +8,8 @@
 
 
 
-const SOCKET_HOST = location.host.indexOf('192.168') != -1 ? 'b.yuketang.cn' : location.host || location.host || 'b.yuketang.cn'
+const SOCKET_HOST = location.host.indexOf('localhost:8088') != -1 ? 'ykt-envning.rainclassroom.com' : location.host || location.host || 'ykt-envning.rainclassroom.com'
+
 window.socket = null
 
 var mixin = {
@@ -44,7 +45,8 @@ var mixin = {
           this.closews()
         }
 
-        let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+        // let wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+        let wsProtocol = 'wss://'
         window.socket = this.socket = new WebSocket(wsProtocol + SOCKET_HOST + '/wsapp/')
 
         // 记录socket链接
@@ -136,6 +138,7 @@ var mixin = {
       let item;
       let hasMsg = true;
       let userId = this.identityId || this.userID;
+      let kmeeting = this.kmeeting
 
       if(msg.op) {
         // 弹幕状态
@@ -178,6 +181,16 @@ var mixin = {
 
             if(timeline && timeline.length) {
               this.getAllPres(msg);
+            }
+
+            // 是否可以连麦  旁听生不可以连麦
+            if(msg.rtc && !this.isGuestStudent) {
+              msg.rtc.roomid && this.setHasKMeeting(true)
+              
+              kmeeting.canrequestvc = msg.rtc.canrequestvc
+              kmeeting.roomid = msg.rtc.roomid
+
+              this.setKMeeting(kmeeting)
             }
 
             break
@@ -599,6 +612,133 @@ var mixin = {
             this.setInvitationLink(null);
             this.setHasTXMeeting(false);
 
+            break;
+
+          // 开启连麦
+          case 'creatertc':
+            //  旁听生不可以连麦
+            if(msg['roomid'] && !this.isGuestStudent) {
+              this.setHasKMeeting(true)
+
+              kmeeting.roomid = msg['roomid']
+              kmeeting.canrequestvc = msg['canrequestvc']
+              this.setKMeeting(kmeeting)
+            }
+            
+            break;
+
+          // 老师邀请连麦
+          case 'requestvc':
+            this.handleRequestvc()
+            break;
+          
+          // 老师取消邀请
+          case 'cancelvc':
+            this.handleCancelvc()
+            break;
+
+          
+          // 连麦超时 
+          case 'vctimeout':
+            if(kmeeting.status != 1) {
+              return;
+            }
+            kmeeting.status = 0
+            this.setKMeeting(kmeeting)
+
+            this.$toast({
+              message: this.$i18n.t('vctimeout') || '连麦申请未响应',
+              duration: 3000
+            });
+
+            break;
+          
+          // 老师已接受连麦请求
+          case 'acceptvc':
+            if(kmeeting.status === 1) {
+              kmeeting.status = 2
+              this.setKMeeting(kmeeting)
+            }
+            
+
+            break;
+
+          // 老师已拒绝连麦请求
+          case 'rejectvc':
+            if(kmeeting.status != 1) {
+              return;
+            }
+            kmeeting.status = 0
+            this.setKMeeting(kmeeting)
+            this.$toast({
+              message: this.$i18n.t('teacherrejectvc') || '老师已拒绝你的连麦申请',
+              duration: 3000
+            });
+
+            break;
+
+          // 允许/拒绝连麦 控制是否展示连麦按钮
+          case 'canrequestvc':
+            kmeeting.canrequestvc = msg['value']
+            
+            this.setKMeeting(kmeeting)
+          
+            break;
+          
+          // 结束连麦
+          case 'endvc':
+          // 全部下麦
+          case 'leavevc':
+            if(kmeeting.status != 3) {
+              return;
+            }
+            kmeeting.joined = false
+            this.setKMeeting(kmeeting)
+
+            this.setJoined(false)
+            break;
+
+          // 静音
+          case 'mute':
+            if(kmeeting.status != 3) {
+              return;
+            }
+            kmeeting.audio = false
+            this.setKMeeting(kmeeting)
+            this.$toast({
+              message:  this.$i18n.t('mutemicrophone') || '老师关闭了你的麦克风',
+              duration: 3000
+            })
+          
+            break;
+
+          // 解除静音
+          case 'unmute':
+            if(kmeeting.status != 3) {
+              return;
+            }
+            this.handleUnmute()
+          
+            break;
+
+          case 'rtcroomfull': 
+            if(kmeeting.status != 1) {
+              return;
+            }
+            kmeeting.status = 0;
+            this.setKMeeting(kmeeting)
+            this.$toast({
+              message:  this.$i18n.t('rtcroomfull') || '房间已满员',
+              duration: 3000
+            })
+
+            break; 
+            
+          case 'getvcusers':
+            // if(kmeeting.status != 3) {
+            //   return;
+            // }
+            this.$refs.kmeeting && this.$refs.kmeeting.updateVCUsersInfo(msg.users)
             break;
 
           default:
