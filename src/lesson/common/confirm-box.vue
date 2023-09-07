@@ -7,12 +7,27 @@
 */
 <template>
 <section class='message-box-masking' :id="id">
-  <div class="message-box">
-    <div class="message-header f18 c333">{{title}}</div>
-    <div class="message-content c666">{{message}}</div>
-    <div class="message-btns" :class="reverse ? 'reverse' : ''">
-      <div class="btn buttton-normal pointer cancel" v-if="showCancel" @click="cancel">{{cancelText}}</div>
-      <div class="button-blue btn confirm pointer" :class="[confirmClassProxy, !showCancel ? 'only' : '']" @click="confirm">{{confirmText}}</div>
+  <div class="message-box box-between">
+    <div class="img_icon" :class="headerConfig.type == 'img' ? 'imgStyle' : 'iconStyle'" v-if="headerConfig">
+      <img v-if="headerConfig.type == 'img'" :src="headerConfig.img" alt="">
+      <i v-else class="iconfont" :class="headerConfig.icon"></i>
+    </div>
+    <div class="close-wrap box-center" v-if="showClose" @click="close">
+      <i class="iconfont icon-qingchuguanbi f16"></i>
+    </div>
+    <div class="message-container">
+      <div class="message-title f16">{{title}}</div>
+      <div class="message-content" v-if="message">{{message}}</div>
+      <div class="message-btns">
+        <div class="btn buttton-normal pointer cancel" :class="cancelClassProxy" v-if="showCancel" @click="cancel">
+          <i class="iconfont mr6 f16" :class="cancelIcon" v-if="cancelIcon"></i>
+          {{cancelText}}
+        </div>
+        <div class="button-blue btn confirm pointer" :class="[confirmClassProxy, !showCancel ? 'only' : '']" @click="confirm">
+          <i class="iconfont mr6 f16" :class="confirmIcon" v-if="confirmIcon"></i>
+          {{confirmText}}
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -24,7 +39,12 @@ name: 'messagebox',
 components: {},
 data() {
 return {
-reverse: false
+  reverse: false,
+  headerConfig: null,
+  showClose: false,
+  message: '',
+  cancelIcon: '',
+  confirmIcon: ''
 };
 },
 filters: {},
@@ -35,6 +55,10 @@ mixins: [  ],
 computed: {
   confirmClassProxy() {
     return this.confirmClass ? this.confirmClass : ''
+  },
+
+  cancelClassProxy() {
+    return this.cancelClass ? this.cancelClass : ''
   }
 },
 watch: {},
@@ -69,51 +93,135 @@ destroyed() {},
     align-items: center;
     justify-content: center;
 
+    .mr6 {
+      margin-right: 6px;
+    }
+
     .message-box {
-      width: 350px;
+      width: 416px;
       background: #fff;
-      border-radius: 4px;
-      .message-header {
+      border-radius: 6px;
+      padding: 16px 24px 24px;
+      text-align: left;
+
+      .img_icon {
+        align-self: flex-start;
+        &.imgStyle {
+          width: 40px;
+          height: 40px;
+          margin-right: 18px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
+        }
+
+        &.iconStyle {
+          width: 32px;
+          height: 32px;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      .message-container {
+        flex: 1;
+      }
+
+      .message-title {
         font-weight: bold;
-        padding: 30px 30px 20px;
+        color: #2B2E35;
+        padding: 5px 0;
+        line-height: 22px;
+        text-align: left;
       }
       .message-content {
-        padding: 0 0 30px;
-        margin: 0 30px;
-        text-align: center;
+        margin-top: 8px;
         white-space: pre-wrap;
-        color: #666;
-        font-size: 16px;
-        line-height: 22px;
-        border-bottom: 1px solid #eee;
+        color: #656A72;
+        font-size: 14px;
+        line-height: 20px;
       }
       .message-btns {
-        margin: 30px 0;
-        padding: 0 30px;
+        margin-top: 24px;
         display: flex;
-        justify-content: space-around;
-        &.reverse {
-          flex-direction: row-reverse
-        }
+        justify-content: flex-end;
+        // &.reverse {
+        //   flex-direction: row-reverse
+        // }
         .btn {
-          width: 100px;
-          height: 34px;
-          line-height: 34px;
-          background: #5096f5;
-          color: #fff;
-          border-radius: 4px;
+          min-width: 84px;
+          height: 32px;
+          padding: 0 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          margin-left: 12px;
           &.only {
-            width: 140px;
+            width: 96px;
           }
-          &.cancel {
+          
+
+          &.buttton-normal {
+            border: 1px solid rgba(45, 74, 148, 0.14);
+            color: #656A72;
+
+            &:hover {
+              background: rgba(123, 135, 178, 0.15);
+            }
+          }
+
+          &.button-blue {
+            color: #fff;
+            background: #3D7BFF;
+
+            &:hover {
+              background: #376FE6;
+            }
+          }
+
+          &.button-red {
+            color: #F34848;
+            border: 1px solid #F34848;
             background: #fff;
-            border: 1px solid #5096f5;
-            color: #5096f5;
+
+            &:hover {
+              background: rgba(243, 72, 72, 0.1);
+            }
           }
-          &.del {
-            background: #f84f41;
+
+          &.button-red-fill, 
+          &.del  {
+            color: #fff;
+            background: #F34848;
+
+            &:hover {
+              background: #E13843;
+            }
+          }
+
+          &.button-green {
+            color: #fff;
+            background: #14BF81;
+
+            &:hover {
+              background: #119B68;
+            }
           }
         }
+      }
+
+      .close-wrap {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
       }
     }
   }

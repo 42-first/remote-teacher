@@ -189,6 +189,8 @@ var commandMixin = {
         lessonID: id
       }));
 
+      user.identityId = data.identityId
+
       window.user = user;
     },
 

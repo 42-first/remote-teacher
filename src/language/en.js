@@ -630,6 +630,23 @@ let pages = {
   "mypost": "My posts",
   "postrecalled": "The post has been withdrawed.",
 
+  "endvc": "Disconnect",
+  "cancelvc": "Cancel",
+  "applying": "Waiting...",
+  "wired": "Connecting…",
+  "requestvc": "Request to connect",
+  "vctimeout": "Request unanswered.",
+  "teacherrejectvc": "Your request to join the live chat was rejected.",
+  "mutemicrophone": "Muted by the teacher.",
+  "rtcroomfull": "Number of live chat exceeded the maximum.",
+  "requestvctips": "The teacher invites you to join the live chat. Do you agree and turn on the microphone and camera?",
+  "requestvctipsmic": "The teacher invites you to join the live chat. Do you agree and turn on the microphone?",
+  "agreevc": "Agree",
+  "rejectvc": "Disagree",
+  "unmutemicrophone": "The teacher invites you to speak.Do you want to turn on the microphone?",
+  "requestvcconfirm": "Do you want to initiate a connection request to the teacher?",
+  "endvcconfirm": "Disconnected or not?",
+
   meeting: {
     "showing": "Showing",
     "dynamics": "Feed",

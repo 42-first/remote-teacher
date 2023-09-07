@@ -80,6 +80,10 @@ textarea { outline: none; resize: none; }
   color: #fff;
 }
 
+.cgreen {
+  color: #14BF82;
+}
+
 .mb10 {
   margin-bottom: 0.266667rem;
 }

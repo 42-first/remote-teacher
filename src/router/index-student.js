@@ -12,6 +12,8 @@ import Loadmore from 'mint-ui/lib/loadmore'
 import Toast from 'mint-ui/lib/toast'
 import MessageBox from 'mint-ui/lib/message-box';
 
+import { mConfirm } from '@/lesson/common/rain-element';
+
 import StudentPresentation from '@/components/student/student-presentation'
 import HongBao from '@/components/student/hongbao'
 import Exercise from '@/components/student/exercise'
@@ -33,6 +35,8 @@ Vue.component('loadmore', Loadmore);
 Vue.$messagebox = Vue.prototype.$messagebox = MessageBox;
 Vue.$toast = Vue.prototype.$toast = Toast;
 window.$toast = Toast;
+
+Vue.use(mConfirm);
 
 let key = getPlatformKey()
 if(key === 'thu'){

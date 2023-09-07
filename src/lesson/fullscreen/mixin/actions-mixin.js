@@ -6,7 +6,7 @@
  *
  */
 
-
+let confirmObj = null
 let actionsMixin = {
   methods: {
     /*
@@ -967,6 +967,13 @@ let actionsMixin = {
         this.qos.liveEnd();
       }
 
+      if(this.hasKMeeting) {
+        this.setHasKMeeting(false)
+        this.setJoined(false)
+        this.$refs.kmeeting && this.$refs.kmeeting.handleHangup()
+      }
+      
+
       this.removeEventListeners();
     },
 
@@ -1176,6 +1183,80 @@ let actionsMixin = {
         self.liveStatusTips = ''
       }, 5000)
     },
+
+    /**
+     * @method 老师邀请连麦
+     */
+    handleRequestvc() {
+      window.teacherInviteJoin = true
+      let title = this.liveType == 2 ? this.$i18n.t('requestvctips') || '老师邀请你进行连麦，是否同意并打开麦克风与摄像头?' : this.$i18n.t('requestvctipsmic') || '老师邀请你进行连麦，是否同意并打开麦克风?'
+      confirmObj = this.$rainConfirm({
+        data: {
+          title,
+          showCancel: true,
+          confirmText: this.$i18n.t('agreevc') || '同意',
+          cancelText: this.$i18n.t('rejectvc') || '拒绝',
+          headerConfig: {
+            type: 'img',
+            img: this.teacher.avatar
+          },
+          cancelIcon: 'icon-dianhua-guaduan',
+          confirmIcon: 'icon-dianhua',
+          cancelClass: 'button-red',
+          confirmClass: 'button-green'
+        },
+        cancel: () => {
+          let str = JSON.stringify({
+            'op': 'rejectvc',
+            'lessonid': this.lesson && this.lesson.lessonID
+          })
+
+          this.socket.send(str)
+        },
+        confirm: () => {
+          let str = JSON.stringify({
+            'op': 'acceptvc',
+            'lessonid': this.lesson && this.lesson.lessonID,
+          })
+
+          this.socket.send(str)
+          let kmeeting = this.kmeeting
+          kmeeting.status = 1
+          this.setKMeeting(kmeeting)
+        },
+      })
+    },
+
+    /**
+     * @method 老师邀请发言
+     */
+    handleUnmute() {
+      this.$rainConfirm({
+        data: {
+          title: this.$i18n.t('unmutemicrophone') || '老师邀请你发言，是否打开麦克风？',
+          showCancel: true,
+          confirmText: this.$i18n.t('confirm') || '确定',
+          cancelText: this.$i18n.t('cancel') || '取消',
+        },
+        cancel: () => {
+          
+        },
+        confirm: () => {
+          let kmeeting = this.kmeeting
+          kmeeting.audio = true
+          this.setKMeeting(kmeeting)
+        },
+      })
+    },
+
+    /**
+     * @method 老师取消邀请
+     */
+    handleCancelvc() {
+      if(confirmObj) {
+        this.$removeConfirm(confirmObj);
+      }
+    }
 
   }
 }

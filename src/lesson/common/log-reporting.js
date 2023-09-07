@@ -175,11 +175,16 @@ let logMixin = {
       // 有互动直播的timer 清除掉
       this.interactiveLogTimer && clearInterval(this.interactiveLogTimer)
 
+      this.vcLogTimer && clearInterval(this.vcLogTimer)
+
       // 上报一次打点数据
       let liveLogs = this.liveLogs;
       if(liveLogs && liveLogs.logs && liveLogs.logs.length) {
         this.reportLiveLog(liveLogs.logs);
       }
+
+      // 有可能先连了麦 后续退出连麦 需要更新打点状态
+      this.initHeartLog()
     },
 
     /**
@@ -383,6 +388,15 @@ let logMixin = {
       }
     },
 
+    /**
+     * @method 直播连麦 上报video-log
+     */
+    handleReportVCToVideoLog() {
+      this.initHeartLog('kwai_rtc')
+      this.vcLogTimer = setInterval(() => {
+        this.handleTimeupdate()
+      }, 1000)
+    }
   }
 }
 
