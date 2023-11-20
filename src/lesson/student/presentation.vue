@@ -51,6 +51,7 @@
           <div class="live__status f14" v-show="liveStatusTips">{{liveStatusTips}}</div>
           <!-- 视频水印层 -->
           <div class="watermark_layer" id="watermark_layer"></div>
+          <div class="definition__tips f15" v-show="definitionTips">{{ definitionTips }}</div>
 
           <section class="live__unfold box-end f14">
             <!-- 展开状态 只听声音 关闭直播 -->
@@ -63,6 +64,15 @@
               <i class="iconfont icon-tuichuzhibo f18 pr10"></i>
               <span class=""><!-- 关闭直播 -->{{ $t('liveoff') }}</span>
             </p>
+            <template v-if="hasDefinition">
+              <div class="line"></div>
+              <div class="box-center definition" >
+                <span class="" @click="handleToggleDefinition">{{ definitionData.level[curLevel] | formatLevel }}</span>
+                <div class="definition-list" v-show="showDefinition">
+                  <p class="box-center" v-for="(item, index) in definitionData.level" :key="index" @click="handleChangeDefinition(index)">{{ item | formatLevel }}</p>
+                </div>
+              </div>
+            </template>
           </section>
         </section>
         <!-- 收起 -->
@@ -454,7 +464,15 @@
         // 来源
         from: '',
         reJoin: false,
-        watermarkInfo: null
+        watermarkInfo: null,
+        // 是否有清晰度切换展示
+        hasDefinition: false,
+        // 清晰度数据
+        definitionData: null,
+        // 当前清晰度等级
+        curLevel: 0,
+        showDefinition: false,
+        definitionTips: ''
       };
     },
     components: {
@@ -514,6 +532,24 @@
       }
     },
     filters: {
+      formatLevel(level) {
+        let label = ''
+        switch(level) {
+          case 'SMOOTH': 
+            label = '流畅';
+            break;
+
+          case 'STANDARD': 
+            label = '高清';
+            break;
+
+          case 'HIGH': 
+            label = '超清';
+            break;
+        }
+
+        return label
+      }
     },
     mixins: [ wsmixin, actionsmixin, exercisemixin, livemixin, boardmixin, logmixin, localstoragemixin, lessonmixin, agreementMixin ],
     methods: {
@@ -1221,6 +1257,21 @@
           background: rgba(68,68,68,.4);
           border-radius: 0.05333333rem;
         }
+
+        .definition__tips {
+          position: absolute;
+          bottom: 1.2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 0.26666667rem 0.64rem;
+          max-width: 8.48rem;
+          line-height: 0.53333333rem;
+          color: #fff;
+          background: rgba(35, 43, 51, 0.9);
+          border-radius: 0.16rem;
+          box-sizing: border-box;
+          white-space: nowrap;
+        }
       }
 
       .live__unfold {
@@ -1236,6 +1287,26 @@
           margin: 0 0.266667rem;
           height: 0.4rem;
           border-right: 1px solid #fff;
+        }
+
+        .definition {
+          position: relative;
+        }
+
+        .definition-list {
+          position: absolute;
+          bottom: calc(100% + 10px);
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(35, 43, 51, 0.9);
+          border-radius: 0.08rem;
+          padding: 0.21333333rem 0;
+          > p {
+            height: 1.06666667rem;
+            line-height: 1.06666667rem;
+            padding: 0 0.53333333rem;
+            white-space: nowrap;
+          }
         }
       }
 

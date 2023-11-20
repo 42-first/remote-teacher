@@ -853,6 +853,26 @@ var actionsMixin = {
         this.liveType = data.type;
         this.liveURL = data.liveurl.hls;
 
+        // 有清晰度切换 默认使用最高清晰度低一个清晰度
+        if(data.streams){
+          let len = data.streams.hls.length > 2 ? data.streams.hls.length : 2
+          this.liveurl = {
+            hls: data.streams.hls[len - 2].url,
+            flv: data.streams.flv[len - 2].url
+          }
+
+          this.liveURL = this.liveurl.hls
+
+          this.hasDefinition = true
+          this.definitionData = {
+            hls: data.streams.hls,
+            flv: data.streams.flv,
+            level: data.streams.hls.map(item => item.quality)
+          }
+
+          this.curLevel = len - 2
+        }
+
         if (this.liveType === 1) {
           let isWeb = this.isWeb;
           if (isWeb) {
