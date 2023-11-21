@@ -36,6 +36,9 @@
         <div class="live__status_tip" v-if="liveStatusTips">{{liveStatusTips}}</div>
         <!-- 视频水印层 -->
         <div class="watermark_layer" id="watermark_layer"></div>
+        <div class="definition_tip box-center" v-if="definitionTips && videoFullscreen">
+         <i class="iconfont icon-weidingyue f20"></i> {{ definitionTips }}
+        </div>
       </div>
       <!-- 自定义控制条 因为全屏要展示提示信息和弹幕发送 -->
       <div class="video__controls cfff f18">
@@ -47,7 +50,15 @@
           <!-- 弹幕发送 -->
           <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
           <div class="ponter">
-            <volume @setvolume="handleSetVolume"></volume>
+            <template v-if="hasDefinition">
+              <div class="definition__wrap box-center" :class="videoFullscreen ? 'mr24' : 'mr6'">
+                <span :class="videoFullscreen ? 'f16' : 'f12'">{{ definitionData.level[curLevel] | formatLevel }}</span>
+                <div class="definition-list">
+                  <p class="box-center" v-for="(item, index) in definitionData.level" :class="[index == curLevel ? 'active' : '', videoFullscreen ? 'f14' : 'f12']" :key="index" @click="handleChangeDefinition(index)">{{ item | formatLevel }}</p>
+                </div>
+              </div>
+            </template>
+            <volume @setvolume="handleSetVolume" :fullscreen="videoFullscreen"></volume>
             <i class="iconfont icon-suoxiao" @click="handleVideoExitFullscreen" v-if="videoFullscreen"></i>
             <i class="iconfont icon-quanping1" @click="handleVideoFullscreen" v-else></i>
           </div>
@@ -72,6 +83,10 @@
 
     <!-- 更多操作 新 -->
     <actions-cmp :liveType="liveType"></actions-cmp>
+
+    <div class="definition_tip box-center" v-if="definitionTips && !videoFullscreen">
+      <i class="iconfont icon-weidingyue f20"></i>{{ definitionTips }}
+    </div>
 
     <!-- 图片放大结构 -->
     <section class="pswp J_pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -265,7 +280,14 @@
         // 课是否已结束
         lessonFinished: false,
         watermarkInfo: null,
-        loadKwaiSDK: false
+        loadKwaiSDK: false,
+        // 是否有清晰度切换展示
+        hasDefinition: false,
+        // 清晰度数据
+        definitionData: null,
+        // 当前清晰度等级
+        curLevel: 0,
+        definitionTips: '',
       };
     },
     components: {
@@ -434,6 +456,24 @@
       }
     },
     filters: {
+      formatLevel(level) {
+        let label = ''
+        switch(level) {
+          case 'SMOOTH': 
+            label = '流畅';
+            break;
+
+          case 'STANDARD': 
+            label = '高清';
+            break;
+
+          case 'HIGH': 
+            label = '超清';
+            break;
+        }
+
+        return label
+      }
     },
     mixins: [ wsmixin, actionsmixin, livemixin, eventmixin, logmixin, fullscreenMixin, lessonmixin, agreementMixin, exerciseMixin ],
     methods: {
@@ -926,6 +966,62 @@
         display: flex;
         align-items: center;
       }
+
+      .definition__wrap {
+        position: relative;
+        padding: 3px 8px;
+        border-radius: 6px;
+        color: #fff;
+        &.mr24 {
+          margin-right: 24px;
+        }
+        &.mr6 {
+          margin-right: 6px;
+        }
+        &::after {
+          width: 100%;
+          height: 20px;
+          bottom: 100%;
+          left: 0;
+          content: "";
+          position: absolute;
+        }
+        &:hover {
+          background: rgba(123, 135, 178, 0.15);
+          .definition-list {
+            display: block;
+          }
+        }
+        .definition-list {
+          position: absolute;
+          bottom: calc(100% + 10px);
+          left: 50%;
+          transform: translateX(-50%);
+          background: #161822;
+          border-radius: 6px;
+          width: 90px;
+          overflow: hidden;
+          display: none;
+          box-shadow: 0px 4px 16px 0px rgba(17, 19, 24, 0.3);
+
+
+          > p {
+            height: 32px;
+            line-height: 32px;
+            white-space: nowrap;
+            color: #C4C7D0;
+
+            &.active {
+              color: #3D7BFF;
+              font-weight: bold;
+            }
+
+            &:hover {
+              background: rgba(123, 135, 178, 0.15);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -938,6 +1034,24 @@
 
     width: 100vw;
     height: 50vh;
+  }
+
+  .definition_tip {
+    position: fixed;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(0deg, rgba(38, 43, 65, 0.9), rgba(38, 43, 65, 0.9)),
+      linear-gradient(0deg, rgba(45, 74, 148, 0.14), rgba(45, 74, 148, 0.14));
+    border: 1px solid rgba(45, 74, 148, 0.14);
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 6px;
+    .iconfont {
+      margin-right: 8px;
+      color: #F78600;
+    }
   }
 
 
