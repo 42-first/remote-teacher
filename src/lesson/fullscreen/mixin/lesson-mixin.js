@@ -549,7 +549,7 @@ var commandMixin = {
           this.liveURL = data.flv;
 
           // 有清晰度切换 默认使用最高清晰度低一个清晰度
-          if(data.adaptiveFlv.length) {
+          if(data.adaptiveFlv.length > 1) {
             let len = data.adaptiveFlv.length > 2 ? data.adaptiveFlv.length : 2
             this.liveurl = {
               hls: data.adaptiveHls[len - 2].url,
