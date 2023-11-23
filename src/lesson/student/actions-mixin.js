@@ -854,7 +854,7 @@ var actionsMixin = {
         this.liveURL = data.liveurl.hls;
 
         // 有清晰度切换 默认使用最高清晰度低一个清晰度
-        if(data.streams){
+        if(data.streams && data.streams.hls.length > 1){
           let len = data.streams.hls.length > 2 ? data.streams.hls.length : 2
           this.liveurl = {
             hls: data.streams.hls[len - 2].url,
@@ -945,6 +945,9 @@ var actionsMixin = {
         this.liveType = 0;
         this.playState = 0;
         this.liveVisible = false;
+        this.hasDefinition = false;
+        this.definitionData = null;
+        this.curLevel = 0;
       }, 3000)
 
       // 关闭弹幕直播
