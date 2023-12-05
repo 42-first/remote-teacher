@@ -236,7 +236,7 @@ let liveMixin = {
           }
         }
 
-        if(self.definitionTimer && liveEl.currentTime != 0) {
+        if(self.definitionTimer && liveEl.currentTime > 25) {
           clearTimeout(self.definitionTimer)
           self.definitionTimer = null
         }
@@ -320,6 +320,10 @@ let liveMixin = {
       };
 
       liveEl.addEventListener('stalled', stalledEvent);
+
+      liveEl.addEventListener('canplay', (evt) => {
+        liveEl.play()
+      })
     },
 
     /*
