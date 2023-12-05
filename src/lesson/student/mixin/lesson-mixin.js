@@ -728,11 +728,14 @@ let lessonMixin = {
       }
 
       this.definitionTimer = setTimeout(() => {
-        this.definitionTips = '切换失败，建议您降低清晰度~'
+        let liveEl = document.getElementById('player');
+        if(liveEl.paused) {
+          this.definitionTips = '切换失败'
 
-        setTimeout(() => {
-          this.definitionTips = ''
-        }, 5000)
+          setTimeout(() => {
+            this.definitionTips = ''
+          }, 5000)  
+        }
       }, 30 * 1000);
     },
 

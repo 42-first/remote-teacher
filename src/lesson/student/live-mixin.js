@@ -236,11 +236,6 @@ let liveMixin = {
           }
         }
 
-        if(self.definitionTimer && liveEl.currentTime > 25) {
-          clearTimeout(self.definitionTimer)
-          self.definitionTimer = null
-        }
-
         // 销毁重新拉流定时
         if(self.loadingTimer) {
           clearTimeout(self.loadingTimer);
