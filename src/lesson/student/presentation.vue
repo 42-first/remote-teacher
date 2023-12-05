@@ -67,7 +67,7 @@
             <template v-if="hasDefinition">
               <div class="line"></div>
               <div class="box-center definition" >
-                <span class="" @click="handleToggleDefinition">{{ definitionData.level[curLevel] | formatLevel }}</span>
+                <span class="" @click.stop="handleToggleDefinition">{{ definitionData.level[curLevel] | formatLevel }}</span>
                 <div class="definition-list" v-show="showDefinition">
                   <p class="box-center" v-for="(item, index) in definitionData.level" :key="index" @click="handleChangeDefinition(index)">{{ item | formatLevel }}</p>
                 </div>
@@ -968,6 +968,7 @@
        */
       handleFilter(evt) {
         this.isMore = false;
+        this.showDefinition = false
       },
 
       /*
