@@ -707,6 +707,7 @@ let lessonMixin = {
      * @param {*} index 
      */
     handleChangeDefinition(index) {
+      let liveEl = document.getElementById('player');
       if(this.curLevel == index) return
       this.curLevel = index
       this.liveurl = {
@@ -729,14 +730,14 @@ let lessonMixin = {
       }
 
       setTimeout(() => {
-        this.handleplay();
+        liveEl.play()
       }, 2000)
       
 
 
       this.definitionTimer && clearTimeout(this.definitionTimer)
       this.definitionTimer = setTimeout(() => {
-        let liveEl = document.getElementById('player');
+        
         if(liveEl.paused) {
           this.definitionTips = '切换失败'
 
