@@ -69,7 +69,7 @@
               <div class="box-center definition" >
                 <span class="" @click.stop="handleToggleDefinition">{{ definitionData.level[curLevel] | formatLevel }}</span>
                 <div class="definition-list" v-show="showDefinition">
-                  <p class="box-center" v-for="(item, index) in definitionData.level" :key="index" @click="handleChangeDefinition(index)">{{ item | formatLevel }}</p>
+                  <p class="box-center" :class="{'active': curLevel == index}" v-for="(item, index) in definitionData.level" :key="index" @click="handleChangeDefinition(index)">{{ item | formatLevel }}</p>
                 </div>
               </div>
             </template>
@@ -1307,6 +1307,10 @@
             line-height: 1.06666667rem;
             padding: 0 0.53333333rem;
             white-space: nowrap;
+
+            &.active {
+              color: #3D7BFF;
+            }
           }
         }
       }

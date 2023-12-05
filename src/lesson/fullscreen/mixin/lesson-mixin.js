@@ -806,6 +806,7 @@ var commandMixin = {
      * @param {*} index 
      */
     handleChangeDefinition(index) {
+      if(this.curLevel == index) return
       this.curLevel = index
       this.liveurl = {
         hls: this.definitionData.hls[index].url,

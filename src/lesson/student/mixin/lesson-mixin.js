@@ -707,6 +707,7 @@ let lessonMixin = {
      * @param {*} index 
      */
     handleChangeDefinition(index) {
+      if(this.curLevel == index) return
       this.curLevel = index
       this.liveurl = {
         hls: this.definitionData.hls[index].url,
@@ -727,6 +728,8 @@ let lessonMixin = {
         }, 5000)
       }
 
+
+      this.definitionTimer && clearTimeout(this.definitionTimer)
       this.definitionTimer = setTimeout(() => {
         let liveEl = document.getElementById('player');
         if(liveEl.paused) {
