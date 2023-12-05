@@ -813,7 +813,8 @@ var commandMixin = {
       }
       this.liveURL = this.liveurl.flv
 
-      this.handleplayVideo()
+      // watch中有监听liveURL变化时重新拉流 不需要手动播放
+      // this.handleplayVideo()
 
       // 超清提示
       if(this.definitionData.level[index] == 'HIGH') {
