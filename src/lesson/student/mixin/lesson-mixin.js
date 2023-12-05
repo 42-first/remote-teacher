@@ -732,20 +732,6 @@ let lessonMixin = {
       setTimeout(() => {
         liveEl.play()
       }, 2000)
-      
-
-
-      this.definitionTimer && clearTimeout(this.definitionTimer)
-      this.definitionTimer = setTimeout(() => {
-        
-        if(liveEl.paused) {
-          this.definitionTips = '切换失败'
-
-          setTimeout(() => {
-            this.definitionTips = ''
-          }, 5000)  
-        }
-      }, 30 * 1000);
     },
 
     /**
