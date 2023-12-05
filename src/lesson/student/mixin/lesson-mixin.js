@@ -728,6 +728,8 @@ let lessonMixin = {
         }, 5000)
       }
 
+      this.handleplay();
+
 
       this.definitionTimer && clearTimeout(this.definitionTimer)
       this.definitionTimer = setTimeout(() => {
