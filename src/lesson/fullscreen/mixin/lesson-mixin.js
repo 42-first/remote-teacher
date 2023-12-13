@@ -819,7 +819,7 @@ var commandMixin = {
       // this.handleplayVideo()
 
       // 超清提示
-      if(this.definitionData.level[index] == 'HIGH' && lastLevel == 'SMOOTH') {
+      if(this.definitionData.level[index] == 'HIGH' && lastLevel == 'STANDARD') {
         this.definitionTips = this.$t('hightips') || '超清模式对设备性能要求较高，请注意！'
 
         setTimeout(() => {
