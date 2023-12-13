@@ -807,6 +807,7 @@ var commandMixin = {
      */
     handleChangeDefinition(index) {
       if(this.curLevel == index) return
+      let lastLevel = this.definitionData.level[this.curLevel]
       this.curLevel = index
       this.liveurl = {
         hls: this.definitionData.hls[index].url,
@@ -818,7 +819,7 @@ var commandMixin = {
       // this.handleplayVideo()
 
       // 超清提示
-      if(this.definitionData.level[index] == 'HIGH') {
+      if(this.definitionData.level[index] == 'HIGH' && lastLevel == 'SMOOTH') {
         this.definitionTips = this.$t('hightips') || '超清模式对设备性能要求较高，请注意！'
 
         setTimeout(() => {
