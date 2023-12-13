@@ -648,6 +648,12 @@ let pages = {
   "requestvcconfirm": "是否向老师发起连麦？",
   "endvcconfirm": "是否结束连麦？",
 
+  "smooth": "流畅",
+  "standard": "高清",
+  "high": "原画",
+  "hightips": "超清模式对设备性能要求较高，请注意！",
+  "lowleveltips": "播放卡顿，建议您降低清晰度",
+
   meeting: {
     "showing": "正在放映",
     "dynamics": "课堂动态",

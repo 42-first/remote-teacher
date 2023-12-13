@@ -460,15 +460,15 @@
         let label = ''
         switch(level) {
           case 'SMOOTH': 
-            label = '流畅';
+            label = typeof i18n !== 'undefined' && i18n.t('smooth') || '流畅';
             break;
 
           case 'STANDARD': 
-            label = '高清';
+            label = typeof i18n !== 'undefined' && i18n.t('standard') || '高清';
             break;
 
           case 'HIGH': 
-            label = '超清';
+            label = typeof i18n !== 'undefined' && i18n.t('high') || '原画';
             break;
         }
 

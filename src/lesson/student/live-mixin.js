@@ -265,7 +265,7 @@ let liveMixin = {
 
           // 如果有清晰度切换 且当前不是最低清晰度的 提示降低清晰度
           if(this.hasDefinition && this.curLevel !== 0 && liveEl.currentTime > 2) {
-            this.definitionTips = '播放卡顿，建议您降低清晰度~'
+            this.definitionTips = this.$t('lowleveltips') || '播放卡顿，建议您降低清晰度~'
 
             setTimeout(() => {
               this.definitionTips = ''
