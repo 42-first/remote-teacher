@@ -37,7 +37,10 @@
         </div>
         <div class="pic-view" v-show="hasImage">
           <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handleLoadImg" @click="handleScaleImage" v-if="imageURL" />
-          <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
+          <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else-if="imageThumbURL" />
+          <!-- 视频 -->
+          <video class="video--preview" :src="video.url" controls :poster="video.thumb" v-if="video && video.url" >
+            </video>
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
@@ -374,13 +377,35 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          if(size >= 10) {
-            this.$toast({
-              message: '图片不可超过10M，请重试',
-              duration: 2000
+          let isVideo = 'video/mp4' === fileType;
+          if(isVideo) {
+            if(size >= 50) {
+              this.$toast({
+                message: '视频不可超过50M，请重试',
+                duration: 2000
+              });
+
+              return this;
+            }
+
+            Promise.all([upload.getToken()]).then(() => {
+              // 上传七牛
+              this.uploadFile(file).then((res)=>{
+                res && this.getVideoInfo(res.url);
+              });
             });
 
             return this;
+          } else {
+
+            if(size >= 10) {
+              this.$toast({
+                message: '图片不可超过10M，请重试',
+                duration: 2000
+              });
+
+              return this;
+            }
           }
         }
 
@@ -630,7 +655,51 @@
         }
         this.isShowPicker = false
         return null
-      }
+      },
+
+      /**
+       * method 视频源信息(?avinfo)
+       * params
+       */
+       getVideoInfo(url) {
+        let URL = url + '?avinfo';
+
+        $.ajax({
+          type: 'GET',
+          url: URL,
+          dataType: 'json',
+          success: (res) => {
+            let data = res;
+
+            if(data) {
+              let streams = data.streams;
+              let info = streams[0];
+              let iofo2 = streams[1];
+              let format = data.format;
+              let width = info.width || iofo2.width;
+              let height = info.height || iofo2.height;
+              let video =  {
+                'url': url,
+                'thumb': `${url}?vframe/jpg/offset/2/w/${width}/h/${height}`,
+                'duration': info.duration,
+                'size': format.size,
+                'height': height,
+                'width': width
+              };
+
+              console.dir(video);
+
+              this.hasImage = true;
+              this.sendStatus = 2;
+              this.video = video;
+
+              this.cacheResult();
+            }
+          },
+          error: (xhr, type) => {
+          }
+        })
+      },
     },
     created() {
       this.lessonID = this.$route.params.lessonID;
