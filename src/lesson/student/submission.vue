@@ -214,6 +214,10 @@
           // 'team_id': self.data.team_id,
         }
 
+        if(this.video) {
+          params['video'] = this.video;
+        }
+
         // 发送中
         this.sendStatus = 3;
         request.post(URL, params).
