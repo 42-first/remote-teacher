@@ -328,7 +328,7 @@
             }
           };
 
-          upload.upload(file, observer);
+          upload.upload(file, observer, 'file');
         });
       },
 
