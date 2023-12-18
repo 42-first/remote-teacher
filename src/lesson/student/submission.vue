@@ -32,7 +32,7 @@
       <section class="submission__pic">
         <div v-if="!hasImage">
           <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
-          <div class="submission__pic--add" v-else><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
+          <div class="submission__pic--add" v-else><input type=file accept="image/*,video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" ></div>
           <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
