@@ -33,7 +33,7 @@
         <div v-if="!hasImage">
           <!-- <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>  v-else-->
           <div class="submission__pic--add" ><input type=file accept="image/*,video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" ></div>
-          <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
+          <p class="submission__pic--remark f14">{{ $t('onepicorvideo') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
           <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handleLoadImg" @click="handleScaleImage" v-if="imageURL" />
@@ -390,7 +390,10 @@
               });
 
               return this;
-            }
+            } 
+
+            this.hasImage = true;
+            this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
 
             Promise.all([upload.getToken()]).then(() => {
               // 上传七牛

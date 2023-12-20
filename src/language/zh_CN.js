@@ -83,6 +83,7 @@ let pages = {
   "subjectivetext": "输入文字",
   "isempty": "请输入想说的话（也可以为空）",
   "uploadonepic": "点击+号上传图片（只能添加1张）",
+  'onepicorvideo': "可上传一张图片或一个小视频",
   "viewpost": "查看我的投稿",
 
   "back": "返回",
