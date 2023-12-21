@@ -435,6 +435,24 @@ let lessonMixin = {
           this.liveURL = data.hls;
 
           this.liveType = data.type || 1;
+          // 有清晰度切换 默认使用最高清晰度低一个清晰度
+          if(data.adaptiveFlv.length > 1) {
+            let len = data.adaptiveFlv.length > 2 ? data.adaptiveFlv.length : 2
+            this.liveurl = {
+              hls: data.adaptiveHls[len - 2].url,
+              flv: data.adaptiveFlv[len - 2].url
+            }
+
+            this.hasDefinition = true
+            this.definitionData = {
+              hls: data.adaptiveHls,
+              flv: data.adaptiveFlv,
+              level: data.adaptiveHls.map(item => item.quality)
+            }
+            this.curLevel = len - 2
+            this.liveURL = this.liveurl.hls
+          }
+
           if(this.liveType === 1) {
             let isWeb = this.isWeb;
             if(isWeb) {
@@ -682,6 +700,46 @@ let lessonMixin = {
             this.watermarkInfo = res.data
           }
         })
+    },
+
+    /**
+     * @method 切换清晰度
+     * @param {*} index 
+     */
+    handleChangeDefinition(index) {
+      let liveEl = document.getElementById('player');
+      if(this.curLevel == index) return
+      let lastLevel = this.definitionData.level[this.curLevel]
+      this.curLevel = index
+      this.liveurl = {
+        hls: this.definitionData.hls[index].url,
+        flv: this.definitionData.flv[index].url
+      }
+      this.liveURL = this.liveurl.hls
+
+      this.handleToggleDefinition()
+
+      this.supportFLV()
+
+      // 超清提示
+      if(this.definitionData.level[index] == 'HIGH' && lastLevel == 'STANDARD') {
+        this.definitionTips = this.$t('hightips') || '超清模式对设备性能要求较高，请注意！'
+
+        setTimeout(() => {
+          this.definitionTips = ''
+        }, 5000)
+      }
+
+      setTimeout(() => {
+        liveEl.play()
+      }, 2000)
+    },
+
+    /**
+     * @method 展示清晰度列表
+     */
+    handleToggleDefinition() {
+      this.showDefinition = !this.showDefinition
     }
   }
 }

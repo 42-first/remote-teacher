@@ -903,6 +903,26 @@ let actionsMixin = {
         this.liveType = data.type;
         this.liveURL = data.liveurl.flv;
 
+        // 有清晰度切换 默认使用最高清晰度低一个清晰度
+        if(data.streams && data.streams.flv.length > 1){
+          let len = data.streams.flv.length > 2 ? data.streams.flv.length : 2
+          this.liveurl = {
+            hls: data.streams.hls[len - 2].url,
+            flv: data.streams.flv[len - 2].url
+          }
+
+          this.liveURL = this.liveurl.flv
+
+          this.hasDefinition = true
+          this.definitionData = {
+            hls: data.streams.hls,
+            flv: data.streams.flv,
+            level: data.streams.hls.map(item => item.quality)
+          }
+
+          this.curLevel = len - 2
+        }
+
         // 互动场景 timeline === false
         if(data.timeline !== false) {
           this.addMessage({ type: 1, message: this.$i18n.t('LIVE_ON'), event: data });
@@ -957,6 +977,9 @@ let actionsMixin = {
         this.liveType = 0;
         this.playState = 0;
         this.liveId = '';
+        this.hasDefinition = false;
+        this.definitionData = null;
+        this.curLevel = 0;
       }, 3000)
 
       // 关闭弹幕直播

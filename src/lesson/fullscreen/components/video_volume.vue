@@ -1,5 +1,5 @@
 <template>
-  <section class="volume__wrap">
+  <section class="volume__wrap" :class="{'full': fullscreen}">
     <i class="iconfont icon-quxiaojingyinx" v-if="!mute" @click="handleSetMute"></i>
     <i class="iconfont icon-jingyin" v-else @click="handleSetSound"></i>
     <div class="volume_list">
@@ -19,7 +19,7 @@ export default {
     }
   },
   props: {
-    
+    fullscreen: Boolean
   },
   components: {
   },
@@ -62,7 +62,10 @@ export default {
   .volume__wrap {
     display: flex;
     align-items: center;
-    margin-right: 46px;
+    margin-right: 12px;
+    &.full {
+      margin-right: 24px;
+    }
     .iconfont {
       font-size: 20px;
     }

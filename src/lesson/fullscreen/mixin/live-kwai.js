@@ -228,6 +228,11 @@ let liveMixin = {
 
       this.playLoading = true;
       this.liveStatusTips = '连接中...';
+
+      setTimeout(() => {
+        // 心跳检测卡顿
+        this.checkTimeupdate();
+      }, 1000 * 10)
     },
 
     /*
@@ -350,6 +355,45 @@ let liveMixin = {
         }
       });
     },
+
+    checkTimeupdate() {
+      let self = this;
+      let liveEl = document.getElementById('player');
+      let handleEvent = (evt) => {
+        console.dir && console.dir(evt);
+
+        // 五秒之内定时器没有执行证明 已经确实卡主了
+        this.loadingTimer && clearTimeout(this.loadingTimer)
+        this.loadingTimer = setTimeout(()=>{
+          // 没有播放不用重新拉流
+          if(!this.playState) {
+            return this;
+          }
+
+          // 如果有清晰度切换 且当前不是最低清晰度的 提示降低清晰度
+          if(this.hasDefinition && this.curLevel !== 0) {
+            this.definitionTips = this.$t('lowleveltips') || '播放卡顿，建议您降低清晰度~'
+
+            setTimeout(() => {
+              this.definitionTips = ''
+            }, 5000)
+          }
+        }, 10000)
+      };
+
+      let updateEvent = (evt) => {
+        if(self.loadingTimer) {
+          clearTimeout(self.loadingTimer);
+          self.loadingTimer = null;
+        }
+      }
+
+      liveEl.removeEventListener('waiting', handleEvent);
+      liveEl.removeEventListener('timeupdate', updateEvent);
+      liveEl.addEventListener('waiting', handleEvent);
+      // 卡主不能播放视频问题
+      liveEl.addEventListener('timeupdate', updateEvent)
+    }
 
   }
 }
