@@ -647,6 +647,12 @@ let pages = {
   "requestvcconfirm": "Do you want to initiate a connection request to the teacher?",
   "endvcconfirm": "Disconnected or not?",
 
+  "smooth": "Smooth",
+  "standard": "HD",
+  "high": "Original",
+  "hightips": "SHD requires high device performance.",
+  "lowleveltips": "Lower video quality for smoother playback.",
+
   meeting: {
     "showing": "Showing",
     "dynamics": "Feed",
