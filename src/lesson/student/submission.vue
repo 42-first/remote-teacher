@@ -536,6 +536,7 @@
 
           result['imageURL'] = this.imageURL;
           result['imageThumbURL'] = this.imageThumbURL;
+          result['video'] = this.video ? this.video : undefined;
 
           if(isSupported) {
             localStorage.removeItem(key);
@@ -578,7 +579,15 @@
             }, 300)
           }
 
-          this.sendStatus = 2;
+          if(result.video) {
+            this.hasImage = true;
+            this.video = result.video;
+          }
+
+          if(this.text || this.hasImage) {
+            this.sendStatus = 2;
+          }
+          
         }
       },
 
