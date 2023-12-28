@@ -107,6 +107,7 @@ let pages = {
   "picuploading" : "Uploading",
   "picsizelimit" : "Pictures should be less than 10 MB, please try again.",
   "cfmdelpic" : "Are you sure to delete?",
+  "cfmdelornot": "Confirm deletion or not?",
   "reuploadpiconly" : "We only support picture formats, please try again.",
   "subjectivepro" : "Subjective Question",
   "answerarea" : "Answer here (Please write your answer here.)",

@@ -106,6 +106,7 @@ let pages = {
   "picuploading" : "图片上传中" ,
   "picsizelimit" : "图片不可超过10M，请重试",
   "cfmdelpic" : "确定删除图片",
+  "cfmdelornot": "是否确定删除",
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,

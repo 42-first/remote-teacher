@@ -455,11 +455,12 @@
           cancelButtonText: this.$i18n.t('cancel')
         }
 
-        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?', msgOptions).then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelornot') || '是否确定删除?', msgOptions).then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';
             self.imageThumbURL = '';
+            self.video = null;
 
             !self.text && (self.sendStatus = 0);
             self.cacheResult();
