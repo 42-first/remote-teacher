@@ -381,7 +381,7 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          let isVideo = 'video/mp4' === fileType;
+          let isVideo = ~fileType.indexOf('video');
           if(isVideo) {
             if(size >= 50) {
               this.$toast({
