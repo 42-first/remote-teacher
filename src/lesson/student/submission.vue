@@ -259,24 +259,24 @@
           'pic_type': ''
         };
 
-        let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        // let sBase64 = data.substr(data.indexOf(',') + 1);
-        // params['pic_data'] = sBase64;
-        // params['pic_type'] = picType;
+        // let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
+        // // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // // params['pic_data'] = sBase64;
+        // // params['pic_type'] = picType;
 
-        // jpg,jpeg,bmp,png,gif
-        if(!/png|jpg|jpeg/.test(picType)) {
-          this.$toast({
-            message: '当前仅支持图片格式，请重新上传',
-            duration: 2000
-          });
+        // // jpg,jpeg,bmp,png,gif
+        // if(!/png|jpg|jpeg/.test(picType)) {
+        //   this.$toast({
+        //     message: '当前仅支持图片格式，请重新上传',
+        //     duration: 2000
+        //   });
 
-          this.imageURL = '';
-          this.imageThumbURL = '';
-          this.hasImage = false;
+        //   this.imageURL = '';
+        //   this.imageThumbURL = '';
+        //   this.hasImage = false;
 
-          return this;
-        }
+        //   return this;
+        // }
 
         this.sendStatus = 1;
 
