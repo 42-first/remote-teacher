@@ -371,11 +371,7 @@
 
         let file = targetEl.files[0];
         let fileType = file.type;
-        // 安卓手机从相册选取图片时 可以进行编辑 此时获取到的file 只有base64的地址 没有type
-        // 如果是这种情况 给个默认的图片类型 
-        if(file.base64) {
-          fileType = 'image/png'
-        }
+        
 
         console.log('MIME类型：' + fileType);
         // 课程结束啦
