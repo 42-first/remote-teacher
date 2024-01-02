@@ -105,6 +105,7 @@ let pages = {
   "classended" : "课程已结束",
   "picuploading" : "图片上传中" ,
   "picsizelimit" : "图片不可超过10M，请重试",
+  "videosizelimit": "视频不可超过50M，请重试",
   "cfmdelpic" : "确定删除图片",
   "cfmdelornot": "是否确定删除",
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",

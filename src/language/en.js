@@ -106,6 +106,7 @@ let pages = {
   "classended" : "End Class",
   "picuploading" : "Uploading",
   "picsizelimit" : "Pictures should be less than 10 MB, please try again.",
+  "videosizelimit": "Video should be less than 50 MB, please try again.",
   "cfmdelpic" : "Are you sure to delete?",
   "cfmdelornot": "Confirm deletion or not?",
   "reuploadpiconly" : "We only support picture formats, please try again.",

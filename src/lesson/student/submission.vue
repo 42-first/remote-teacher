@@ -32,7 +32,7 @@
       <section class="submission__pic">
         <div v-if="!hasImage">
           <!-- <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>  v-else-->
-          <div class="submission__pic--add" ><input type=file accept="image/*,video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" ></div>
+          <div class="submission__pic--add" ><input type=file accept="image/*,video/*,mov" class="camera" @change="handleChooseImageChange" ></div>
           <p class="submission__pic--remark f14">{{ $t('onepicorvideo') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
@@ -381,13 +381,15 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          let isVideo = ~fileType.indexOf('video');
+          let isVideo = ~fileType.indexOf('video') || ~fileType.indexOf('mov');
           if(isVideo) {
             if(size >= 50) {
               this.$toast({
-                message: '视频不可超过50M，请重试',
+                message: this.$i18n.t('videosizelimit') || '视频不可超过50M，请重试',
                 duration: 2000
               });
+
+              targetEl.value = ''
 
               return this;
             } 
@@ -407,9 +409,11 @@
 
             if(size >= 10) {
               this.$toast({
-                message: '图片不可超过10M，请重试',
+                message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
                 duration: 2000
               });
+
+              targetEl.value = ''
 
               return this;
             }
