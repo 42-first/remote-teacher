@@ -213,7 +213,7 @@ let logMixin = {
         // 20s记录一次上报点
         if(duration >= 20) {
           // 记录本地打点
-          liveLogs.logs.push(Object.assign({}, heartLog, { ts: dt }));
+          liveLogs.logs.push(Object.assign({}, heartLog, { ts: dt, v: this.liveId }));
           liveLogs.lastLogTime = dt;
           this.liveLogs = liveLogs;
 

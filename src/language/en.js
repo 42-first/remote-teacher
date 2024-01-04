@@ -84,6 +84,7 @@ let pages = {
   "subjectivetext": "Enter text here",
   "isempty": "Please enter here…(Optional)",
   "uploadonepic": 'Click “+” to upload picture (One Only)',
+  'onepicorvideo': "You can upload a picture or a short video",
   "viewpost": "Check My Post",
 
   "back": "Back",
@@ -105,7 +106,9 @@ let pages = {
   "classended" : "End Class",
   "picuploading" : "Uploading",
   "picsizelimit" : "Pictures should be less than 10 MB, please try again.",
+  "videosizelimit": "Video should be less than 50 MB, please try again.",
   "cfmdelpic" : "Are you sure to delete?",
+  "cfmdelornot": "Confirm deletion or not?",
   "reuploadpiconly" : "We only support picture formats, please try again.",
   "subjectivepro" : "Subjective Question",
   "answerarea" : "Answer here (Please write your answer here.)",
