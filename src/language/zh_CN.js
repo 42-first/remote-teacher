@@ -83,6 +83,7 @@ let pages = {
   "subjectivetext": "输入文字",
   "isempty": "请输入想说的话（也可以为空）",
   "uploadonepic": "点击+号上传图片（只能添加1张）",
+  'onepicorvideo': "可上传一张图片或一个小视频",
   "viewpost": "查看我的投稿",
 
   "back": "返回",
@@ -104,7 +105,9 @@ let pages = {
   "classended" : "课程已结束",
   "picuploading" : "图片上传中" ,
   "picsizelimit" : "图片不可超过10M，请重试",
+  "videosizelimit": "视频不可超过50M，请重试",
   "cfmdelpic" : "确定删除图片",
+  "cfmdelornot": "是否确定删除",
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,

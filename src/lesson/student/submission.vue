@@ -31,13 +31,16 @@
       <!-- 图片 -->
       <section class="submission__pic">
         <div v-if="!hasImage">
-          <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
-          <div class="submission__pic--add" v-else><input type=file accept="image/*" class="camera" @change="handleChooseImageChange" ></div>
-          <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
+          <!-- <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>  v-else-->
+          <div class="submission__pic--add" ><input type=file accept="image/*,video/*,mov" class="camera" @change="handleChooseImageChange" ></div>
+          <p class="submission__pic--remark f14">{{ $t('onepicorvideo') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
           <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider' ]" :src="fileData||imageThumbURL" alt="" @load="handleLoadImg" @click="handleScaleImage" v-if="imageURL" />
-          <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
+          <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else-if="imageThumbURL" />
+          <!-- 视频 -->
+          <video class="video--preview" :src="video.url" controls :poster="video.thumb" v-if="video && video.url" >
+            </video>
           <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
           <p class="delete-img" @click="handleDeleteImg"><i class="iconfont icon-wrong f18"></i></p>
         </div>
@@ -211,6 +214,10 @@
           // 'team_id': self.data.team_id,
         }
 
+        if(this.video) {
+          params['video'] = this.video;
+        }
+
         // 发送中
         this.sendStatus = 3;
         request.post(URL, params).
@@ -252,24 +259,24 @@
           'pic_type': ''
         };
 
-        let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
-        // let sBase64 = data.substr(data.indexOf(',') + 1);
-        // params['pic_data'] = sBase64;
-        // params['pic_type'] = picType;
+        // let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[1];
+        // // let sBase64 = data.substr(data.indexOf(',') + 1);
+        // // params['pic_data'] = sBase64;
+        // // params['pic_type'] = picType;
 
-        // jpg,jpeg,bmp,png,gif
-        if(!/png|jpg|jpeg/.test(picType)) {
-          this.$toast({
-            message: '当前仅支持图片格式，请重新上传',
-            duration: 2000
-          });
+        // // jpg,jpeg,bmp,png,gif
+        // if(!/png|jpg|jpeg/.test(picType)) {
+        //   this.$toast({
+        //     message: '当前仅支持图片格式，请重新上传',
+        //     duration: 2000
+        //   });
 
-          this.imageURL = '';
-          this.imageThumbURL = '';
-          this.hasImage = false;
+        //   this.imageURL = '';
+        //   this.imageThumbURL = '';
+        //   this.hasImage = false;
 
-          return this;
-        }
+        //   return this;
+        // }
 
         this.sendStatus = 1;
 
@@ -325,7 +332,7 @@
             }
           };
 
-          upload.upload(file, observer);
+          upload.upload(file, observer, 'file');
         });
       },
 
@@ -364,6 +371,7 @@
 
         let file = targetEl.files[0];
         let fileType = file.type;
+        
 
         console.log('MIME类型：' + fileType);
         // 课程结束啦
@@ -374,13 +382,42 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          if(size >= 10) {
-            this.$toast({
-              message: '图片不可超过10M，请重试',
-              duration: 2000
+          let isVideo = ~fileType.indexOf('video') || ~fileType.indexOf('mov');
+          if(isVideo) {
+            if(size >= 50) {
+              this.$toast({
+                message: this.$i18n.t('videosizelimit') || '视频不可超过50M，请重试',
+                duration: 2000
+              });
+
+              targetEl.value = ''
+
+              return this;
+            } 
+
+            this.hasImage = true;
+            this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
+
+            Promise.all([upload.getToken()]).then(() => {
+              // 上传七牛
+              this.uploadFile(file).then((res)=>{
+                res && this.getVideoInfo(res.url);
+              });
             });
 
             return this;
+          } else {
+
+            if(size >= 10) {
+              this.$toast({
+                message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
+                duration: 2000
+              });
+
+              targetEl.value = ''
+
+              return this;
+            }
           }
         }
 
@@ -423,11 +460,12 @@
           cancelButtonText: this.$i18n.t('cancel')
         }
 
-        this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?', msgOptions).then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelornot') || '是否确定删除?', msgOptions).then(action => {
           if(action === 'confirm') {
             self.hasImage = false;
             self.imageURL = '';
             self.imageThumbURL = '';
+            self.video = null;
 
             !self.text && (self.sendStatus = 0);
             self.cacheResult();
@@ -503,6 +541,7 @@
 
           result['imageURL'] = this.imageURL;
           result['imageThumbURL'] = this.imageThumbURL;
+          result['video'] = this.video ? this.video : undefined;
 
           if(isSupported) {
             localStorage.removeItem(key);
@@ -545,7 +584,15 @@
             }, 300)
           }
 
-          this.sendStatus = 2;
+          if(result.video) {
+            this.hasImage = true;
+            this.video = result.video;
+          }
+
+          if(this.text || this.hasImage) {
+            this.sendStatus = 2;
+          }
+          
         }
       },
 
@@ -630,7 +677,51 @@
         }
         this.isShowPicker = false
         return null
-      }
+      },
+
+      /**
+       * method 视频源信息(?avinfo)
+       * params
+       */
+       getVideoInfo(url) {
+        let URL = url + '?avinfo';
+
+        $.ajax({
+          type: 'GET',
+          url: URL,
+          dataType: 'json',
+          success: (res) => {
+            let data = res;
+
+            if(data) {
+              let streams = data.streams;
+              let info = streams[0];
+              let iofo2 = streams[1];
+              let format = data.format;
+              let width = info.width || iofo2.width;
+              let height = info.height || iofo2.height;
+              let video =  {
+                'url': url,
+                'thumb': `${url}?vframe/jpg/offset/2/w/${width}/h/${height}`,
+                'duration': info.duration,
+                'size': format.size,
+                'height': height,
+                'width': width
+              };
+
+              console.dir(video);
+
+              this.hasImage = true;
+              this.sendStatus = 2;
+              this.video = video;
+
+              this.cacheResult();
+            }
+          },
+          error: (xhr, type) => {
+          }
+        })
+      },
     },
     created() {
       this.lessonID = this.$route.params.lessonID;
@@ -826,6 +917,15 @@
 
         color: #fff;
         background: rgba(0,0,0,0.6);
+      }
+
+      .video--preview {
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
 
     }
