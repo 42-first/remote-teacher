@@ -32,7 +32,7 @@
       <section class="submission__pic">
         <div v-if="!hasImage">
           <!-- <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>  v-else-->
-          <div class="submission__pic--add" ><input type=file accept="image/*,video/*,mov" class="camera" @change="handleChooseImageChange" ></div>
+          <div class="submission__pic--add" ><input type=file accept="image/*,video/*" class="camera" @change="handleChooseImageChange" ></div>
           <p class="submission__pic--remark f14">{{ $t('onepicorvideo') }}</p>
         </div>
         <div class="pic-view" v-show="hasImage">
@@ -382,7 +382,7 @@
         if(file.size) {
           const size = parseInt(file.size/1024/1024, 10);
 
-          let isVideo = ~fileType.indexOf('video') || ~fileType.indexOf('mov');
+          let isVideo = ~fileType.indexOf('video');
           if(isVideo) {
             if(size >= 50) {
               this.$toast({
