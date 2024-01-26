@@ -11,7 +11,11 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center">
-      <iframe class="webview" id="webview" :src="src" allowFullScreen></iframe>
+      <iframe v-if="!inspectorMode" class="webview" id="webview" :src="src" allowFullScreen></iframe>
+      <div class="tips-box" v-else>
+        <img src="~images/fullscreen/nopermission.png" />
+        <p class="f14">{{ $t('inspectornotsupport') }}</p>
+      </div>
     </div>
   </section>
 
@@ -36,6 +40,7 @@ export default {
     ...mapState([
       'lesson',
       'cards',
+      'inspectorMode',
     ]),
   },
   mixins: [ ],
@@ -161,6 +166,22 @@ export default {
     width: 375px;
     height: 100%;
     box-shadow: 1px 1px 5px #999;
+  }
+
+  .tips-box {
+    width: 280px;
+    height: 240px;
+    color: #90949D;
+    padding-top: 168px;
+    position: relative;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 
 </style>

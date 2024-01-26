@@ -63,6 +63,7 @@ let pages = {
   "cantintoteam2": "No authority",
   "watchmodenotintoteam": "View mode. Unable to join grouping.",
   "auditornotgrade": "Auditors are not allowed to participate in peer grading",
+  "inspectornotsupport": "You can't do this",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

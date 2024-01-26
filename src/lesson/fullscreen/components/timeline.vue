@@ -228,6 +228,7 @@
         'observerMode',
         'currSlide',
         'isGuestStudent',
+        'inspectorMode'
       ]),
     },
     filters: {
@@ -246,6 +247,14 @@
        */
       handleView(item, index) {
         if(item && item.type) {
+          if(this.inspectorMode && [4, 8, 9].includes(item.type)) {
+            this.$toast({
+              message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
+              duration: 3000
+            });
+            return this;
+          } 
+          
           if(item.type == 8) {
             if(this.observerMode) {
               this.$toast({
