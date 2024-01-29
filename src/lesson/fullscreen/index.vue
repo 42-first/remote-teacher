@@ -48,7 +48,7 @@
         </div>
         <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
           <!-- 弹幕发送 -->
-          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
+          <danmu-cmp v-if="danmuStatus && videoFullscreen && !inspectorMode" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
           <div class="ponter">
             <template v-if="hasDefinition">
               <div class="definition__wrap box-center" :class="videoFullscreen ? 'mr24' : 'mr6'">
