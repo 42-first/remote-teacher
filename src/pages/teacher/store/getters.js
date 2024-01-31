@@ -6,6 +6,7 @@ const getters = {
   courseid: state => state.courseid,
   classroomid: state => state.classroomid,
   coursename: state => state.coursename,
+  classname: state => state.classname,
   studentCounts: state => state.studentCounts,
   socket: state => state.socket,
   lessonid: state => state.lessonid,

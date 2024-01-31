@@ -465,7 +465,8 @@
 				let data = {
 					classroom: {
 						classroomid: basic.classroomId,
-						count: classroom.count
+						count: classroom.count,
+						classname: classroom.name
 					},
 					course: {
 						coursename: classroom.courseName,

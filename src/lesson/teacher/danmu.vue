@@ -13,6 +13,19 @@
       </v-touch>
     </div>
     <div class="gap"></div>
+    <section class="tab-box box-between">
+      <div class="class-filter box-between f16" @click="handleShowClassList">
+        <div class="name-box box-start" v-if="curCid">
+          <span class="name">{{ classname }}</span>
+          <span class="main-tag box-center f12">主</span>
+        </div>
+        <template v-else>全部班级</template>
+        <span class="icon_wrap box-center"><i class="iconfont icon-jiantoudan-xiangxia f16"></i></span>
+      </div>
+      <div class="marks box-center f16" :class="showMarks ? 'active' : ''" @click="handleToggleMarks">
+        标记 <span class="icon_wrap box-center"><i class="iconfont icon-yibiaoji f16"></i></span>
+      </div>
+    </section>
     <v-touch v-on:tap="refreshDataList" class="new-item-hint f15" :class="isShowNewHint ? 'hintfadein' : 'hintfadeout' ">{{ $t('newbullet') }}</v-touch>
     <div v-show="isShowNoNewItem" class="no-new-item f18">{{ $t('nonewbullet') }}</div>
     <div v-show="isToastSwitch" class="no-new-item f18">{{ $tc('bulletonoff', isDanmuOpen) }}</div>
@@ -43,8 +56,11 @@
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
-            <v-touch class="f15 gray J_ga" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-shiti_touping f24" style="color: #639EF4; margin-right: 0.1rem;"></i>{{ $t('screenmode') }}</v-touch>
-            <v-touch class="cancel-post-btn f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask">{{ $t('screenmodeoff') }}</v-touch>
+            <div class="mark f15 gray box-center">
+              <i class="iconfont f24" :class="item.mark ? 'icon-yibiaoji' : 'icon-biaoji'"></i> {{ item.mark ? '已标记' : '标记' }}
+            </div>
+            <v-touch class="f15 gray J_ga box-center" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-touping f24"></i>{{ $t('screenmode') }}</v-touch>
+            <v-touch class="cancel-post-btn box-center f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask"><i class="iconfont icon-quxiaotouping f24"></i>{{ $t('screenmodeoff') }}</v-touch>
           </div>
         </div>
       </div>
@@ -61,6 +77,13 @@
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     </div>
+
+    <section class="classlist-modal" v-show="showClassList">
+      <section class="class-list">
+        <div class="class-item box-between f17" :class="{'active': !curCid}" @click="handleSetCurCid(0)">全部班级 <i class="iconfont icon-correct f16"></i></div>
+        <div class="class-item box-between f17" :class="{'active': curCid == classroomid}"  @click="handleSetCurCid(classroomid)"><span class="box-center">{{ classname }} <span class="main-tag box-center f12">主</span></span> <i class="iconfont icon-correct f16"></i></div>
+      </section>
+    </section>
   </div>
 </template>
 
@@ -89,7 +112,10 @@
         nodanmuclosedImg: require(`images/teacher/no-danmu-closed${i18n.t('imgafterfix')}.png`),
         nodanmuopenImg: require(`images/teacher/no-danmu-open${i18n.t('imgafterfix')}.png`),
         timer: null,
-        pageNum: 1
+        pageNum: 1,
+        curCid: 0,                  // 当前展示的班级列表 为0 全部班级  具体id 某个班级  本期只有主班
+        showMarks: false,           // 展示标记列表
+        showClassList: false,       // 展示班级列表
       }
     },
     computed: {
@@ -100,11 +126,14 @@
         'postingDanmuid',
         'danmuWordCloudOpen',
         'addinversion',
-        'isCloneClass'
+        'isCloneClass',
+        'classname',
+        'classroomid',
       ])
     },
     created () {
       let self = this
+      this.curCid = this.classroomid;
 
       //首次加载页面
       self.refreshDataList(true);
@@ -244,6 +273,16 @@
         // 如果已经有内容了就不要显示正在加载中了
         if (!self.dataList.length) {
           self.isFetching = true
+        }
+
+        if(this.showMarks) {
+          this.getMarksList()
+
+          return
+        } else if(!this.curCid) {
+          this.getAllList()
+
+          return
         }
 
         /* 分页逻辑：
@@ -426,7 +465,33 @@
           })
         }
         self.socket.send(str)
-      }
+      },
+
+      /**
+       * @method 展示/隐藏已标记列表
+       */
+      handleToggleMarks() {
+        this.showMarks = !this.showMarks;
+      },
+
+      /**
+       * 展示切换班级列表
+       */
+      handleShowClassList() {
+        if(this.showMarks) return
+
+        this.showClassList = true;
+      },
+
+      /**
+       * @method 切换班级列表
+       */
+      handleSetCurCid(cid) {
+        this.curCid = cid;
+        this.showClassList = false;
+
+        this.refreshDataList()
+      },
     }
   }
 </script>
@@ -576,6 +641,70 @@
       background: #eee;
     }
 
+    .main-tag {
+      width: 0.58666667rem;
+      height: 0.58666667rem;
+      background: #4BC7B8;
+      color: #fff;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
+    .tab-box {
+      height: 1.38666667rem;
+      width: 100%;
+      padding: 0 0.42666667rem;
+      border-bottom: 1px solid #F6F7FB;
+
+      .icon_wrap {
+        width: 0.74666667rem;
+        height: 0.74666667rem;
+
+        .iconfont {
+          color: #90949D;
+        }
+      }
+
+      .class-filter {
+        width: 4.56rem;
+        height: 0.96rem;
+        padding: 0 0.10666667rem;
+        background: #F6F7FB;
+        border-radius: 0.16rem;
+        .name-box {
+          flex: 1;
+
+          .name {
+            max-width: 2.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          
+        }
+      }
+
+      .marks {
+        padding: 0 0.21333333rem;
+        height: 0.96rem;
+        color: #2B2E35;
+        border-radius: 0.16rem;
+        
+        .iconfont {
+          color: #90949D;
+        }
+
+        &.active {
+          background: #3D7BFF;
+          color: #fff;
+
+          .iconfont {
+            color: #fff;
+          }
+        }
+      }
+    }
+
     .list {
       height: 100%;
       overflow-x: hidden;
@@ -618,19 +747,22 @@
           margin-right: -0.4rem;
 
           .gray {
-            color: $graybg;
+            color: #90949D;
             height: 1.06666667rem;
             line-height: 1.06666667rem;
             padding: 0 0.4rem;
           }
           .cancel-post-btn {
-            background: $blue;
             // width: 2.733333rem;
             text-align: center;
             height: 1.06666667rem;
             line-height: 1.06666667rem;
             padding: 0 0.4rem;
-            color: $white;
+            color: #3D7BFF;
+          }
+
+          .iconfont {
+            margin-right: 0.10666667rem;
           }
         }
       }
@@ -681,6 +813,49 @@
         width: 0.026667rem;
         height: 0.8rem;
         background: $white;
+      }
+    }
+
+    .classlist-modal {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(43, 46, 53, .4);
+      z-index: 9999;
+
+      .class-list {
+        position: fixed;
+        width: 100%;
+        max-height: 75vh;
+        bottom: 0;
+        left: 0;
+        border-radius: 0.16rem 0.16rem 0 0;
+        overflow-y: auto;
+        background: #fff;
+
+        .class-item {
+          height: 1.38666667rem;
+          padding: 0 0.74666667rem 0 0.64rem;
+
+          &:first-of-type,
+          &:last-of-type {
+            height: 1.49333333rem;
+          }
+
+          .iconfont {
+            display: none;
+          }
+          &.active {
+            background: rgba(61, 123, 255, 0.1);
+            color: #3D7BFF;
+            font-weight: bold;
+            .iconfont {
+              display: block;
+            }
+          }
+        }
       }
     }
   }
