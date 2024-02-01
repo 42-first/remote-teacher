@@ -1,7 +1,6 @@
 <!-- 弹幕控制页面 -->
 <template>
 	<div class="danmu-box">
-    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <div class="desc f20">
       <div class="left">
         <span>{{ $t('bullet') }}</span>
@@ -22,7 +21,7 @@
         <template v-else>全部班级</template>
         <span class="icon_wrap box-center"><i class="iconfont icon-jiantoudan-xiangxia f16"></i></span>
       </div>
-      <div class="marks box-center f16" :class="showMarks ? 'active' : ''" @click="handleToggleMarks">
+      <div class="marks box-center f16" :class="showCollections ? 'active' : ''" @click="handleToggleMarks">
         标记 <span class="icon_wrap box-center"><i class="iconfont icon-yibiaoji f16"></i></span>
       </div>
     </section>
@@ -56,8 +55,8 @@
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
-            <div class="mark f15 gray box-center">
-              <i class="iconfont f24" :class="item.mark ? 'icon-yibiaoji' : 'icon-biaoji'"></i> {{ item.mark ? '已标记' : '标记' }}
+            <div class="mark f15 gray box-center" v-if="(typeof item.collect != 'undefined')" @click="handleCollect(item, index)">
+              <i class="iconfont f24" :class="item.collect ? 'icon-yibiaoji' : 'icon-biaoji'"></i> {{ item.collect ? '已标记' : '标记' }}
             </div>
             <v-touch class="f15 gray J_ga box-center" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-touping f24"></i>{{ $t('screenmode') }}</v-touch>
             <v-touch class="cancel-post-btn box-center f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask"><i class="iconfont icon-quxiaotouping f24"></i>{{ $t('screenmodeoff') }}</v-touch>
@@ -73,15 +72,16 @@
       </div>
 
     </section> 
+    <div class="isFetching f21" v-show="isFetching">正在加载中...</div>
     <!-- <div class="gap"></div> -->
     <div class="button-box f18" v-show="isShowBtnBox">
       <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     </div>
 
-    <section class="classlist-modal" v-show="showClassList">
+    <section class="classlist-modal" v-show="showClassList" @click="showClassList = false">
       <section class="class-list">
-        <div class="class-item box-between f17" :class="{'active': !curCid}" @click="handleSetCurCid(0)">全部班级 <i class="iconfont icon-correct f16"></i></div>
-        <div class="class-item box-between f17" :class="{'active': curCid == classroomid}"  @click="handleSetCurCid(classroomid)"><span class="box-center">{{ classname }} <span class="main-tag box-center f12">主</span></span> <i class="iconfont icon-correct f16"></i></div>
+        <div class="class-item box-between f17" :class="{'active': !curCid}" @click.stop="handleSetCurCid(0)">全部班级 <i class="iconfont icon-correct f16"></i></div>
+        <div class="class-item box-between f17" :class="{'active': curCid == classroomid}"  @click.stop="handleSetCurCid(classroomid)"><span class="box-center">{{ classname }} <span class="main-tag box-center f12">主</span></span> <i class="iconfont icon-correct f16"></i></div>
       </section>
     </section>
   </div>
@@ -114,8 +114,9 @@
         timer: null,
         pageNum: 1,
         curCid: 0,                  // 当前展示的班级列表 为0 全部班级  具体id 某个班级  本期只有主班
-        showMarks: false,           // 展示标记列表
+        showCollections: false,           // 展示标记列表
         showClassList: false,       // 展示班级列表
+        from: 0,                    // 拉取全环境弹幕列表时加载更多 需要传上一次最后一条的时间戳
       }
     },
     computed: {
@@ -208,6 +209,16 @@
       loadBottom () {
         let self = this
         if(this.isAllLoaded) return
+
+        if(this.showCollections) {
+          this.getCollectionList(this.pageNum)
+
+          return this;
+        } else if(!this.curCid) {
+          this.getAllList(this.from)
+          return 
+        }
+
         self.fetchList(this.pageNum).then(res => {
           if(res && res.code === 0 && res.data){
             let list = res.data.dataList
@@ -269,14 +280,16 @@
         let self = this
 
         this.pageNum = 1
+        this.from = 0
+        this.dataList = []
 
         // 如果已经有内容了就不要显示正在加载中了
         if (!self.dataList.length) {
           self.isFetching = true
         }
 
-        if(this.showMarks) {
-          this.getMarksList()
+        if(this.showCollections) {
+          this.getCollectionList()
 
           return
         } else if(!this.curCid) {
@@ -471,14 +484,14 @@
        * @method 展示/隐藏已标记列表
        */
       handleToggleMarks() {
-        this.showMarks = !this.showMarks;
+        this.showCollections = !this.showCollections;
       },
 
       /**
        * 展示切换班级列表
        */
       handleShowClassList() {
-        if(this.showMarks) return
+        if(this.showCollections) return
 
         this.showClassList = true;
       },
@@ -492,6 +505,82 @@
 
         this.refreshDataList()
       },
+
+      /**
+       * @method 获取标记列表
+       */
+      getCollectionList(page = 1) {
+        let URL = API.lesson.get_collecton_danmus
+        let params = {
+          lessonId: this.lessonid,
+          pageNum: page,
+          pageSize: FENYE_COUNT
+        }
+
+        // 单次刷新
+        return request.get(URL, params).then(res => {
+          if(res && res.code == 0 && res.data) {
+            ++this.pageNum
+            let isAllLoaded = false
+            if(res.data.dataList.length < FENYE_COUNT) {
+              isAllLoaded = true
+            }
+
+            this.setData({
+              dataList: this.dataList.concat(res.data.dataList),
+              isAllLoaded
+            })
+          }
+        })
+      },
+
+      /**
+       * @method 获取全环境克隆班的弹幕
+       * @param {*} from 
+       */
+      getAllList(from = 0) {
+        let URL = API.lesson.get_danmu_clone_all
+        let params = {
+          lessonId: this.lessonid,
+          from,
+          // 表示没个环境拉取10条  返回结果不等于size
+          size: 10
+        }
+
+        return request.get(URL, params).then(res => {
+          if(res && res.code == 0 && res.data) {
+            let dataList = res.data.dataList
+            let isAllLoaded = dataList.length ? false : true
+            this.setData({
+              dataList: this.dataList.concat(dataList),
+              isAllLoaded,
+              from: dataList[dataList.length - 1].sentTime
+            })
+          }
+        })
+      },
+
+      /**
+       * @method 标记/取消标记
+       */
+      handleCollect(item, index) {
+        let URL = API.lesson.clone_danmu_collect
+        let action = item.collect ? 1 : 0
+        let {id, env} = item
+        let obj = Object.assign(item, {collect: undefined})
+        let params = {
+          action,
+          danmuId: id,
+          env,
+          data: obj
+        }
+
+        return request.post(URL, params).then(res => {
+          if(res && res.code === 0) {
+            this.dataList[index].collect = action ? false : true
+          }
+        })
+      }
     }
   }
 </script>
@@ -546,10 +635,10 @@
     }
 
     .isFetching {
-      position: relative;
-      z-index: 10;
-      padding-top: 7.0rem;
+      height: 100%;
+      padding-top: 5.92rem;
       text-align: center;
+      color: #656A72;
     }
 
     .no-paper-box {
