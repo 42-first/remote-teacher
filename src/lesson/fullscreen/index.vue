@@ -46,7 +46,7 @@
           <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
           <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
-        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
+        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth box-end' : ''">
           <!-- 弹幕发送 -->
           <danmu-cmp v-if="danmuStatus && videoFullscreen && !inspectorMode" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
           <div class="ponter">
