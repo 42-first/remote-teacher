@@ -55,8 +55,8 @@
             <div class="danmu f18">{{item.message}}</div>
           </div>
           <div class="action-box">
-            <div class="mark f15 gray box-center" v-if="(typeof item.collect != 'undefined')" @click="handleCollect(item, index)">
-              <i class="iconfont f24" :class="item.collect ? 'icon-yibiaoji' : 'icon-biaoji'"></i> {{ item.collect ? '已标记' : '标记' }}
+            <div class="mark f15 gray box-center" v-if="(typeof item.collect !== 'undefined') || showCollections" @click="handleCollect(item, index)">
+              <i class="iconfont f24" :class="item.collect || showCollections ? 'icon-yibiaoji' : 'icon-biaoji'"></i> {{ item.collect || showCollections ? '已标记' : '标记' }}
             </div>
             <v-touch class="f15 gray J_ga box-center" data-category="7" data-label="弹幕页" v-show="postingDanmuid !== item.id" v-on:tap="postDanmu(item.id, item.message)"><i class="iconfont icon-touping f24"></i>{{ $t('screenmode') }}</v-touch>
             <v-touch class="cancel-post-btn box-center f17" v-show="postingDanmuid === item.id" v-on:tap="closeDanmumask"><i class="iconfont icon-quxiaotouping f24"></i>{{ $t('screenmodeoff') }}</v-touch>
@@ -515,9 +515,9 @@
       getCollectionList(page = 1) {
         let URL = API.lesson.get_collecton_danmus
         let params = {
-          lessonId: this.lessonid,
-          pageNum: page,
-          pageSize: FENYE_COUNT
+          lesson_id: this.lessonid,
+          page_num: page,
+          page_size: FENYE_COUNT
         }
 
         // 单次刷新
@@ -531,7 +531,8 @@
 
             this.setData({
               dataList: this.dataList.concat(res.data.dataList),
-              isAllLoaded
+              isAllLoaded,
+              isFetching: false
             })
           }
         })
@@ -544,7 +545,7 @@
       getAllList(from = 0) {
         let URL = API.lesson.get_danmu_clone_all
         let params = {
-          lessonId: this.lessonid,
+          lesson_id: this.lessonid,
           from,
           // 表示没个环境拉取10条  返回结果不等于size
           size: 10
@@ -552,12 +553,13 @@
 
         return request.get(URL, params).then(res => {
           if(res && res.code == 0 && res.data) {
-            let dataList = res.data.dataList
+            let dataList = res.data
             let isAllLoaded = dataList.length ? false : true
             this.setData({
               dataList: this.dataList.concat(dataList),
               isAllLoaded,
-              from: dataList[dataList.length - 1].sentTime
+              isFetching: false,
+              from: dataList[dataList.length - 1] && dataList[dataList.length - 1].sendTime
             })
           }
         })
@@ -568,12 +570,12 @@
        */
       handleCollect(item, index) {
         let URL = API.lesson.clone_danmu_collect
-        let action = item.collect ? 1 : 0
-        let {id, env} = item
+        let action = item.collect || this.showCollections ? 1 : 0
+        let {id, env = 'envning'} = item
         let obj = Object.assign(item, {collect: undefined})
         let params = {
           action,
-          danmuId: id,
+          danmuId: String(id),
           env,
           data: obj
         }
@@ -581,6 +583,10 @@
         return request.post(URL, params).then(res => {
           if(res && res.code === 0) {
             this.dataList[index].collect = action ? false : true
+
+            if(this.showCollections) {
+              this.dataList.splice(index, 1)
+            }
           }
         })
       }
@@ -855,6 +861,10 @@
 
           .iconfont {
             margin-right: 0.10666667rem;
+          }
+
+          .icon-yibiaoji {
+            color: #F56969;
           }
         }
       }
