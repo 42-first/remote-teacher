@@ -12,7 +12,7 @@
       </v-touch>
     </div>
     <div class="gap"></div>
-    <section class="tab-box box-between">
+    <section class="tab-box box-between" v-if="hasCloneLesson">
       <div class="class-filter box-between f16" @click="handleShowClassList">
         <div class="name-box box-start" v-if="curCid">
           <span class="name">{{ classname }}</span>
@@ -130,6 +130,7 @@
         'isCloneClass',
         'classname',
         'classroomid',
+        'hasCloneLesson',
       ])
     },
     created () {
@@ -485,6 +486,8 @@
        */
       handleToggleMarks() {
         this.showCollections = !this.showCollections;
+
+        this.refreshDataList()
       },
 
       /**

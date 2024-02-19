@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     classroomid: '',                        // 班级id 以 八>了 班为例，是 了 的id
     coursename: '',                         // 课程名称 以 八>了 班为例，是 八
     classname: '',                          // 班级名称
+    hasCloneLesson: false,                  // 是否有克隆班
     studentCounts: 0,                       // 班级人数
     socket: null,                           // 全局 Websocket 实例对象
     lessonid: 0,
@@ -100,6 +101,10 @@ const store = new Vuex.Store({
     set_classname (state, name) {
       state.classname = name
     },
+    set_hasCloneLesson(state, data) {
+      state.hasCloneLesson = data
+    },
+
     set_studentCounts (state, count) {
       state.studentCounts = count
     },
@@ -275,6 +280,7 @@ const store = new Vuex.Store({
       commit('set_classroomid', payload.classroom.classroomid)
       commit('set_coursename', payload.course.coursename)
       commit('set_classname', payload.classroom.classname)
+      commit('set_hasCloneLesson', payload.lesson.hasCloneLesson)
       payload.classroom.count && commit('set_studentCounts', payload.classroom.count)
 
       window.USERID = payload.user.user_id
@@ -289,6 +295,7 @@ const store = new Vuex.Store({
       commit('set_coursename', '')
       commit('set_classname', '')
       commit('set_studentCounts', 0)
+      commit('set_hasCloneLesson', false)
 
       // 在 socket-process-message.js 中第 104 行根据 msg.slideindex !== 0 再重新设置
       commit('set_isBrandNewPpt', true)
