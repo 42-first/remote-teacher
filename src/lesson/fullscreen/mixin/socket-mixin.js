@@ -101,7 +101,7 @@ var mixin = {
           self.token && self.socket.send(JSON.stringify({
             'op': 'hello',
             'userid': userId,
-            'role': 'student',
+            'role': this.inspectorMode ? 'inspector' : 'student',
             'auth': self.token,
             'lessonid': self.lessonID
           }))
