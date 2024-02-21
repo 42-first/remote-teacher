@@ -47,7 +47,7 @@
           <div class="box-between">
             <div class="user-box box-start">
               <img :src="item.avatar" alt="">
-              <span class="f14 c666">{{ item.userName }}</span>
+              <span class="f14 c666">{{ item.userName }}<template v-if="item.schoolName">({{ item.schoolName }})</template></span>
             </div>
             <div class="time f14 c666">{{item.sendTime | formatTime}}</div>
           </div>
