@@ -101,9 +101,10 @@ var mixin = {
           self.token && self.socket.send(JSON.stringify({
             'op': 'hello',
             'userid': userId,
-            'role': self.inspectorMode ? 'inspector' : 'student',
+            'role': 'student',
             'auth': self.token,
-            'lessonid': self.lessonID
+            'lessonid': self.lessonID,
+            'inspector': self.inspectorMode ? true : undefined
           }))
         }
       } catch (error) {
