@@ -103,7 +103,8 @@ var mixin = {
             'userid': userId,
             'role': 'student',
             'auth': self.token,
-            'lessonid': self.lessonID
+            'lessonid': self.lessonID,
+            'inspector': self.inspectorMode ? true : undefined
           }))
         }
       } catch (error) {

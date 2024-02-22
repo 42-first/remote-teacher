@@ -70,7 +70,9 @@ const store = new Vuex.Store({
     // 腾讯会议邀请链接
     invitationLink: '',
     // 是否有直播连麦
-    hasKMeeting: false
+    hasKMeeting: false,
+    // 教务端听课
+    inspectorMode: false,
   },
   mutations: {
     // 重置课堂信息
@@ -91,6 +93,7 @@ const store = new Vuex.Store({
       state.invitationLink = '';
       state.hasTXMeeting = false;
       state.hasKMeeting = false;
+      state.inspectorMode = false;
     },
 
     setLines(state, lines) {
@@ -183,6 +186,10 @@ const store = new Vuex.Store({
 
     setHasKMeeting(state, data) {
       state.hasKMeeting = data
+    },
+
+    setInspectorMode(state, data) {
+      state.inspectorMode = data
     },
   },
 
@@ -279,6 +286,10 @@ const store = new Vuex.Store({
 
     setHasKMeeting({commit}, data) {
       commit('setHasKMeeting', data)
+    },
+
+    setInspectorMode({commit}, data) {
+      commit('setInspectorMode', data)
     },
   },
 

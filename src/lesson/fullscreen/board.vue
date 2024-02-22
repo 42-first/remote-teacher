@@ -15,7 +15,7 @@
     </div>
 
     <!-- 不懂收藏 -->
-    <section class="ppt__opt f12 cfff" v-if="slide && slide.type===12" >
+    <section class="ppt__opt f12 cfff" v-if="slide && slide.type===12 && !inspectorMode" >
       <div class="opt__action pb10" @click="handleBoardTag(1, slide.boardid, slide.emphasis)">
         <i class="iconfont f20" :class="[ slide.emphasis ? 'icon-shoucangjihuo-': 'icon-shoucang-' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
@@ -51,6 +51,7 @@ export default {
       'lesson',
       'cards',
       'boardMsg',
+      'inspectorMode',
     ]),
   },
   mixins: [ boardmixin ],

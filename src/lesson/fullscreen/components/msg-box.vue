@@ -139,7 +139,8 @@
       ...mapState([
         'cards',
         // 'slideIndex',
-        'msg'
+        'msg',
+        'inspectorMode',
       ]),
 
       ...mapState('meeting', [
@@ -167,6 +168,14 @@
         // })
 
         let slideIndex = slide.index || this.cards.length - 1;
+
+        if(this.inspectorMode && [4,8,9].includes(slide.type)) {
+          this.$toast({
+            message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
+            duration: 3000
+          });
+          return this;
+        }
 
         if(~slideIndex) {
           this.setSlideIndex(slideIndex);
