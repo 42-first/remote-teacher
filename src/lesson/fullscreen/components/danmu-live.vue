@@ -9,9 +9,9 @@
 
 <template>
   <!-- 弹幕直播 -->
-  <section class="danmu__cmp">
+  <section class="danmu__cmp" :class="{'inspector': inspectorMode}">
     <!-- 关闭 -->
-    <p class="danmu__closed box-center" @click="handleClose" v-show="danmuList && danmuList.length">
+    <p class="danmu__closed box-center" @click="handleClose" v-show="danmuList && danmuList.length && !inspectorMode">
       <i class="iconfont icon-guanbi1 f12 cfff"></i>
     </p>
     <section class="danmu__container" v-show="visible">
@@ -29,7 +29,7 @@
     </section>
 
     <!-- 发送弹幕组件 -->
-    <section class="publish__wrap" >
+    <section class="publish__wrap" v-if="!inspectorMode">
       <section class="danmu__publish f14 J_publish">
         <input class="danmu__ipt J_input f12 cfff" type="text" :placeholder="$t('danmuipttip')" v-model="danmuText" @focus="handleFocus" @keyup="handleKeyup" />
         <p class="ipt--tips box-center f12 c9b">{{ limit }}/50</p>
@@ -61,6 +61,11 @@
       // background: rgba(255, 255,255, 0.6);
       // border-radius: 4px;
       // outline: 1px solid #E5E5E5;
+    }
+
+    &.inspector {
+      right: 20px;
+      bottom: 20px;
     }
   }
 
@@ -242,6 +247,7 @@
         // 是否显示弹幕
         'visibleDanmu',
         'danmus',
+        'inspectorMode',
       ]),
 
       limit() {
@@ -302,7 +308,7 @@
           this.addEventListeners();
         }, true)
 
-        danmuEl.querySelector('.J_input').focus();
+        danmuEl.querySelector('.J_input') && danmuEl.querySelector('.J_input').focus();
       },
 
       translateContent(offset) {

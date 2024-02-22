@@ -26,7 +26,7 @@
       <template v-if="options" v-for="option in item.options">
         <p class="slide__shape" :class="['options-label', option.selected ? 'selected' : '', item.problemType === 1 || pollingCount === 1 ? 'MultipleChoice': '']" :style="option | setStyle" @click="handleClickOption(option.label, $event)" :data-option="option.label">{{ option.label }}</p>
       </template>
-      <template v-if="!observerMode">
+      <template v-if="!observerMode && !inspectorMode">
         <div v-if="[4, 5].includes(item.problemType)" class="slide__shape submit-btn" :style="item.submit | setStyle" :class="timeOver ? '' : 'can'" @click="handleAnswer">
           {{item.isComplete ? $t('viewdetails') : $t('answer') }}
         </div>
@@ -124,7 +124,8 @@ computed: {
   ...mapState([
     'lessonStatus',
     'observerMode',
-    'layoutSize'
+    'layoutSize',
+    'inspectorMode'
   ]),
 
   maxWidth(){

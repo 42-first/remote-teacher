@@ -46,9 +46,9 @@
           <i class="iconfont icon-zanting2" @click="handlestopVideo" v-if="playState"></i>
           <i class="iconfont icon-bofang4" @click="handleplayVideo" v-else></i>
         </div>
-        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth' : ''">
+        <div class="controls__right" :class="danmuStatus && videoFullscreen ? 'halfWidth box-end' : ''">
           <!-- 弹幕发送 -->
-          <danmu-cmp v-if="danmuStatus && videoFullscreen" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
+          <danmu-cmp v-if="danmuStatus && videoFullscreen && !inspectorMode" :videoFullscreen="videoFullscreen" @showtips="handleShowTips" :visible-danmu="visibleDanmu"></danmu-cmp>
           <div class="ponter">
             <template v-if="hasDefinition">
               <div class="definition__wrap box-center" :class="videoFullscreen ? 'mr24' : 'mr6'">
@@ -82,7 +82,7 @@
     </section>
 
     <!-- 更多操作 新 -->
-    <actions-cmp :liveType="liveType"></actions-cmp>
+    <actions-cmp v-if="!inspectorMode" :liveType="liveType"></actions-cmp>
 
     <div class="definition_tip box-center" v-if="definitionTips && !videoFullscreen">
       <i class="iconfont icon-weidingyue f20"></i>{{ definitionTips }}
@@ -124,6 +124,9 @@
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
+
+    <!-- 教务端查看只展示弹幕列表 -->
+    <danmu-live v-if="inspectorMode && danmuStatus"></danmu-live>
   </section>
 </template>
 <script>
@@ -164,6 +167,8 @@
   import userAgreement from '@/components/common/agreement-pc'
   import watermark from '@/util/watermark'
   import {getPlatformKey, loadScript} from '@/util/util'
+
+  import danmuLive from './components/danmu-live';
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -299,7 +304,8 @@
       actionsCmp,
       meeting,
       userAgreement,
-      kmeeting
+      kmeeting,
+      danmuLive,
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -321,6 +327,7 @@
         'hasKMeeting',
         'teacher',
         'isGuestStudent',
+        'inspectorMode',
       ]),
 
       ...mapState('kmeeting',[
@@ -501,6 +508,7 @@
         'setHasTXMeeting',
         'setInvitationLink',
         'setHasKMeeting',
+        'setInspectorMode',
       ]),
 
       ...mapActions('kmeeting', [
@@ -522,6 +530,9 @@
         if(query && query.code) {
           this.inviteCode = query.code;
         }
+
+        let inspectorMode = this.source == 91 ? true : false
+        this.setInspectorMode(inspectorMode)
 
         this.iniTimeline(this.lessonID);
 

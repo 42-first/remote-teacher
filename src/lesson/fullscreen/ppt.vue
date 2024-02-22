@@ -23,7 +23,7 @@
     </div>
 
     <!-- 不懂收藏 -->
-    <section class="ppt__opt f12 cfff" v-if="slide && slide.type===2" >
+    <section class="ppt__opt f12 cfff" v-if="slide && slide.type===2 && !inspectorMode" >
       <div class="opt__action pb10" @click="handleTag(1)">
         <i class="iconfont f20 cfff" :class="[ slide.hasStore ? 'icon-shoucangjihuo-': 'icon-shoucang-' ]"></i>
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
@@ -59,7 +59,8 @@ export default {
     ...mapState([
       'lesson',
       'cards',
-      'rightType'
+      'rightType',
+      'inspectorMode'
     ]),
   },
   mixins: [ ],

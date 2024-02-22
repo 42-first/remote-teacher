@@ -62,6 +62,7 @@ let pages = {
   "cantintoteam2": "你不在本组，无权限进入",
   "watchmodenotintoteam": "观看者模式下无法参与分组",
   "auditornotgrade": "旁听生身份无法参与互评",
+  "inspectornotsupport": "管理员视角不能进行该操作",
 
   "submit": "提交",
   "submitansw": "提交答案",
