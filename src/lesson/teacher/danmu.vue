@@ -1,6 +1,6 @@
 <!-- 弹幕控制页面 -->
 <template>
-	<div class="danmu-box">
+	<div class="danmu-box" @click="showClassList = false">
     <div class="desc f20">
       <div class="left">
         <span>{{ $t('bullet') }}</span>
@@ -13,13 +13,18 @@
     </div>
     <div class="gap"></div>
     <section class="tab-box box-between" v-if="hasCloneLesson">
-      <div class="class-filter box-between f16" @click="handleShowClassList">
+      <div class="class-filter box-between f16" @click.stop="handleShowClassList">
         <div class="name-box box-start" v-if="curCid">
           <span class="name">{{ classname }}</span>
-          <span class="main-tag box-center f12">主</span>
+          <span class="main-tag box-center f12">主班</span>
         </div>
-        <template v-else>全部班级</template>
+        <template v-else>全部班级弹幕</template>
         <span class="icon_wrap box-center"><i class="iconfont icon-jiantoudan-xiangxia f16"></i></span>
+
+        <section class="class-list" v-show="showClassList">
+          <div class="class-item box-between f17" :class="{'active': !curCid}" @click.stop="handleSetCurCid(0)">全部班级弹幕 <i class="iconfont icon-correct f16"></i></div>
+          <div class="class-item box-between f17" :class="{'active': curCid == classroomid}"  @click.stop="handleSetCurCid(classroomid)"><span class="box-center"><span class="main-tag box-center f12">主班</span>{{ classname }}</span> <i class="iconfont icon-correct f16"></i></div>
+        </section>
       </div>
       <div class="marks box-center f16" :class="showCollections ? 'active' : ''" @click="handleToggleMarks">
         标记 <span class="icon_wrap box-center"><i class="iconfont icon-yibiaoji f16"></i></span>
@@ -78,12 +83,6 @@
       <v-touch class="btn" v-on:tap="refreshDataList">{{ $t('refresh') }}</v-touch>
     </div>
 
-    <section class="classlist-modal" v-show="showClassList" @click="showClassList = false">
-      <section class="class-list">
-        <div class="class-item box-between f17" :class="{'active': !curCid}" @click.stop="handleSetCurCid(0)">全部班级 <i class="iconfont icon-correct f16"></i></div>
-        <div class="class-item box-between f17" :class="{'active': curCid == classroomid}"  @click.stop="handleSetCurCid(classroomid)"><span class="box-center">{{ classname }} <span class="main-tag box-center f12">主</span></span> <i class="iconfont icon-correct f16"></i></div>
-      </section>
-    </section>
   </div>
 </template>
 
@@ -740,12 +739,13 @@
     }
 
     .main-tag {
-      width: 0.58666667rem;
-      height: 0.58666667rem;
-      background: #4BC7B8;
-      color: #fff;
+      // width: 0.58666667rem;
+      // height: 0.58666667rem;
+      padding: 2px 6px;
+      border: 1px solid #3D7BFF;
+      color: #3D7BFF;
       border-radius: 4px;
-      margin-left: 4px;
+      margin: 0 4px;
     }
 
     .tab-box {
@@ -769,6 +769,7 @@
         padding: 0 0.10666667rem;
         background: #F6F7FB;
         border-radius: 0.16rem;
+        position: relative;
         .name-box {
           flex: 1;
 
@@ -780,6 +781,41 @@
           }
           
         }
+
+        .class-list {
+          position: absolute;
+          width: 6.85333333rem;
+          max-height: 75vh;
+          top: calc(100% + 10px);
+          left: 0;
+          border-radius: 0.16rem 0.16rem 0 0;
+          overflow-y: auto;
+          background: #fff;
+          box-shadow: 0px 6px 26px 0px rgba(123, 135, 178, 0.14);
+
+
+          .class-item {
+            height: 1.38666667rem;
+            padding: 0 0.74666667rem 0 0.64rem;
+            color: #2B2E35;
+
+            &:first-of-type,
+            &:last-of-type {
+              height: 1.49333333rem;
+            }
+
+            .iconfont {
+              display: none;
+            }
+            &.active {
+              background: rgba(61, 123, 255, 0.1);
+              .iconfont {
+                display: block;
+                color: #3D7BFF;
+              }
+            }
+          }
+        }
       }
 
       .marks {
@@ -787,6 +823,7 @@
         height: 0.96rem;
         color: #2B2E35;
         border-radius: 0.16rem;
+        border: 1px solid rgba(45, 74, 148, 0.14);
         
         .iconfont {
           color: #90949D;
@@ -795,6 +832,7 @@
         &.active {
           background: #3D7BFF;
           color: #fff;
+          border: 1px solid #3D7BFF;
 
           .iconfont {
             color: #fff;
@@ -918,47 +956,5 @@
       }
     }
 
-    .classlist-modal {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: rgba(43, 46, 53, .4);
-      z-index: 9999;
-
-      .class-list {
-        position: fixed;
-        width: 100%;
-        max-height: 75vh;
-        bottom: 0;
-        left: 0;
-        border-radius: 0.16rem 0.16rem 0 0;
-        overflow-y: auto;
-        background: #fff;
-
-        .class-item {
-          height: 1.38666667rem;
-          padding: 0 0.74666667rem 0 0.64rem;
-
-          &:first-of-type,
-          &:last-of-type {
-            height: 1.49333333rem;
-          }
-
-          .iconfont {
-            display: none;
-          }
-          &.active {
-            background: rgba(61, 123, 255, 0.1);
-            color: #3D7BFF;
-            font-weight: bold;
-            .iconfont {
-              display: block;
-            }
-          }
-        }
-      }
-    }
   }
 </style>
