@@ -12,7 +12,7 @@
       </v-touch>
     </div>
     <div class="gap"></div>
-    <section class="tab-box box-between" v-if="hasCloneLesson && addinversion > 5.2">
+    <section class="tab-box box-between" v-if="hasCloneLesson && addinversion > 5.2 && cloneVersion >= 2">
       <div class="class-filter box-between f16" @click.stop="handleShowClassList">
         <div class="name-box box-start" v-if="curCid">
           <span class="name">{{ classname }}</span>
@@ -130,6 +130,7 @@
         'classname',
         'classroomid',
         'hasCloneLesson',
+        'cloneVersion',
       ])
     },
     created () {

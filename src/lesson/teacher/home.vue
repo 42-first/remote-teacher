@@ -476,7 +476,8 @@
 						is_lesson_end: basic.endTime > 0,
 						user_role: joined.data.isTeacher ? 1 : 5,
 						invite_code: invitation.inviteCode,
-						hasCloneLesson: basic.hasCloneLesson
+						hasCloneLesson: basic.hasCloneLesson,
+						cloneVersion: basic.cloneVersion
 					},
 					user: {
 						user_id: userInfo.id,
