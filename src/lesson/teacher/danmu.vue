@@ -532,7 +532,8 @@
             this.setData({
               dataList: this.dataList.concat(res.data.dataList),
               isAllLoaded,
-              isFetching: false
+              isFetching: false,
+              isShowNewHint: false
             })
           }
         })
@@ -554,12 +555,13 @@
         return request.get(URL, params).then(res => {
           if(res && res.code == 0 && res.data) {
             let dataList = res.data
-            let isAllLoaded = dataList.length ? false : true
+            let isAllLoaded = dataList.length >= 10 ? false : true
             this.setData({
               dataList: this.dataList.concat(dataList),
               isAllLoaded,
               isFetching: false,
-              from: dataList[dataList.length - 1] && dataList[dataList.length - 1].sendTime
+              from: dataList[dataList.length - 1] && dataList[dataList.length - 1].sendTime,
+              isShowNewHint: false
             })
           }
         })
