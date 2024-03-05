@@ -7,8 +7,13 @@
       <i class="iconfont icon-dakai f16"></i>
     </div>
     <div class="upper">
-      <div class="desc f24" v-show="step === 0" v-html="$t('attendingno', {attendingno: signInCount})">
-      </div>
+      <template v-if="step == 0">
+        <div class="desc f24" v-if="!rollcallRange || rollcallRange && addinversion < 5.3" v-html="$t('attendingno', {attendingno: signInCount})">
+        </div>
+        <div class="desc f24" v-else v-html="$t('toberolling')">
+        </div>
+      </template>
+      
       <div class="desc f24" v-show="step === 1">{{ $t('radomrolling') }}</div>
       <div class="desc f24" v-show="step === 2">{{ $t('selhim') }}</div>
       <v-touch class="roll_btn_box" v-on:tap="rollBtnHandler">
@@ -72,7 +77,8 @@
           uid: ''
         },
         selectStudentIndex: null,
-        noSendMsg: false
+        noSendMsg: false,
+        rollcallRange: 0
       }
     },
     computed: {
@@ -93,6 +99,7 @@
         'lessonid',
         'classroomid',
         'socket',
+        'addinversion',
       ])
     },
     created () {
@@ -100,6 +107,7 @@
 
       // 设置班级人数
       self.signInCount = +self.$route.query.sc
+      self.rollcallRange = +self.$route.query.range
 
       // 通过 node 获取点名列表
       let str = JSON.stringify({
@@ -188,8 +196,10 @@
         let self = this
 
         if(self.signInCount === 0){
-          self.isNostuhintHidden = false
-          return
+          if(self.rollcallRange && self.addinversion < 5.3) {
+            self.isNostuhintHidden = false
+            return
+          }
         }
 
         // remoteNS.MSGID++

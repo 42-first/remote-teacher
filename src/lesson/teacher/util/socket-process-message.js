@@ -433,7 +433,8 @@ function socketProcessMessage(msg){
     let to = {
       name: 'randomcall_v3',
       query: {
-        sc: +msg.sc
+        sc: +msg.sc,
+        range: msg.range || 0
       }
     }
 
