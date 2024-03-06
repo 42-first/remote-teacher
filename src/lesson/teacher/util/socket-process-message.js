@@ -552,6 +552,11 @@ function socketProcessMessage(msg){
     T_PUBSUB.publish('remark-msg.shown', msg)
   }
 
+  // 变更随机点名范围
+  if(msg.op == 'rollcall') {
+    T_PUBSUB.publish('call-msg.rollcall', msg)
+  }
+
 }
 
 export default socketProcessMessage

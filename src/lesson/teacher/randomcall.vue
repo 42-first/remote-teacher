@@ -169,6 +169,10 @@
           self.$router.back()
         })
 
+        T_PUBSUB.subscribe('call-msg.rollcall', (_name, msg) => {
+          selfrollcallRange = data.range
+          self.isNostuhintHidden = true
+        })
         
       },
       /**
@@ -196,7 +200,7 @@
         let self = this
 
         if(self.signInCount === 0){
-          if(self.rollcallRange && self.addinversion < 5.3) {
+          if(self.rollcallRange && self.addinversion < 5.3 || !self.rollcallRange) {
             self.isNostuhintHidden = false
             return
           }
@@ -220,6 +224,8 @@
         //     myToast('网络不佳')
         //   }
         // }, 2000)
+
+        self.isNostuhintHidden = true
       },
       /**
        * 将选中的人放进list
