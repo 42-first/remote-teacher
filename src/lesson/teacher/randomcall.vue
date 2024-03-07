@@ -170,7 +170,7 @@
         })
 
         T_PUBSUB.subscribe('call-msg.rollcall', (_name, msg) => {
-          selfrollcallRange = data.range
+          self.rollcallRange = msg.range
           self.isNostuhintHidden = true
         })
         
