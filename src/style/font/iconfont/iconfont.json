@@ -6,6 +6,41 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "25452883",
+      "name": "箭头单-向下",
+      "font_class": "jiantoudan-xiangxia",
+      "unicode": "e784",
+      "unicode_decimal": 59268
+    },
+    {
+      "icon_id": "39179338",
+      "name": "已标记",
+      "font_class": "yibiaoji",
+      "unicode": "e8d2",
+      "unicode_decimal": 59602
+    },
+    {
+      "icon_id": "39179429",
+      "name": "标记",
+      "font_class": "biaoji",
+      "unicode": "e8d3",
+      "unicode_decimal": 59603
+    },
+    {
+      "icon_id": "36877259",
+      "name": "取消投屏",
+      "font_class": "quxiaotouping",
+      "unicode": "e8ba",
+      "unicode_decimal": 59578
+    },
+    {
+      "icon_id": "36877267",
+      "name": "投屏",
+      "font_class": "touping",
+      "unicode": "e8b0",
+      "unicode_decimal": 59568
+    },
+    {
       "icon_id": "36835526",
       "name": "新消息",
       "font_class": "xinxiaoxi",
