@@ -82,7 +82,7 @@
     </section>
 
     <!-- 更多操作 新 -->
-    <actions-cmp v-if="!inspectorMode" :liveType="liveType"></actions-cmp>
+    <actions-cmp :liveType="liveType"></actions-cmp>
 
     <div class="definition_tip box-center" v-if="definitionTips && !videoFullscreen">
       <i class="iconfont icon-weidingyue f20"></i>{{ definitionTips }}
@@ -125,8 +125,6 @@
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
 
-    <!-- 教务端查看只展示弹幕列表 -->
-    <danmu-live v-if="inspectorMode && danmuStatus"></danmu-live>
   </section>
 </template>
 <script>
@@ -168,7 +166,6 @@
   import watermark from '@/util/watermark'
   import {getPlatformKey, loadScript} from '@/util/util'
 
-  import danmuLive from './components/danmu-live';
 
   // 子组件不需要引用直接使用
   window.request = request;
@@ -305,7 +302,6 @@
       meeting,
       userAgreement,
       kmeeting,
-      danmuLive,
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
