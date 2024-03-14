@@ -433,7 +433,8 @@ function socketProcessMessage(msg){
     let to = {
       name: 'randomcall_v3',
       query: {
-        sc: +msg.sc
+        sc: +msg.sc,
+        range: msg.range || 0
       }
     }
 
@@ -549,6 +550,11 @@ function socketProcessMessage(msg){
   // 答案解析投屏了
   if(msg.op == 'problemremarkshown') {
     T_PUBSUB.publish('remark-msg.shown', msg)
+  }
+
+  // 变更随机点名范围
+  if(msg.op == 'rollcall') {
+    T_PUBSUB.publish('call-msg.rollcall', msg)
   }
 
 }
