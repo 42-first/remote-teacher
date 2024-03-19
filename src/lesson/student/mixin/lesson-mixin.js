@@ -1,4 +1,4 @@
-/*
+/** 
  * 学生接收器 升级接口新流程
  * @author: chenzhou
  * @update: 2020.8.20
@@ -196,6 +196,12 @@ let lessonMixin = {
      * @param pid
      */
     async updatePresentation(pid) {
+      // 防止1s多次请求
+      const canFetch = this.limitPresFetchTimes(pid);
+      if(canFetch === false) {
+        return this;
+      }
+
       if(this.updatingPPT) {
         return this;
       } else {
@@ -218,6 +224,63 @@ let lessonMixin = {
         'lessonid': this.lessonID,
         'msgid': this.msgid++,
       }));
+    },
+
+    /**
+     * @method 限制更新pres请求次数
+     * @param presId
+     */
+    limitPresFetchTimes(presId) {
+      let canFetch = true;
+
+      try {
+        // 增加机制防止1s多次请求
+        if (!this.presFetchTimerMap) {
+          this.presFetchTimerMap = new Map();
+        }
+
+        const presFetchTimerMap = this.presFetchTimerMap;
+        // 是否存在presId的记录
+        if(presFetchTimerMap.has(presId)) {
+          const currPresTimerInfo = presFetchTimerMap.get(presId);
+
+          if(currPresTimerInfo) {
+            const { timer, dt } = currPresTimerInfo;
+            const now = Date.now();
+
+            // 如果在500ms内有请求，延时请求
+            if(now - dt < 500) {
+              if(timer) {
+                clearTimeout(timer);
+              }
+
+              const fetchTimer = setTimeout(() => {
+                this.updatePresentation(presId);
+              }, 500);
+
+              // update fetch pres timer
+              presFetchTimerMap.set(presId, {
+                timer: fetchTimer,
+                dt: now
+              });
+
+              canFetch = false;
+            }
+          }
+        }
+
+        // 记录请求时间
+        presFetchTimerMap.set(presId, {
+          timer: null,
+          dt: Date.now()
+        });
+
+        return canFetch;
+      } catch(error) {
+        console.log(error);
+
+        return canFetch;
+      }
     },
 
     /**
