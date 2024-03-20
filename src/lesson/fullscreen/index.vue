@@ -29,7 +29,7 @@
     </section>
 
     <!-- 直播入口 视频直播 加入会议不再显示直播 -->
-    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && !hasMeeting && !(hasKMeeting && joined)">
+    <section class="live__video J_live_wrap" :class="{ 'fullscreen': videoFullscreen }" v-if="liveURL && liveType === 2 && (!hasMeeting && !(hasKMeeting && joined) || inspectorMode)">
       <!-- 定制video -->
       <div class="live__video_box J_live">
         <video id="player" class="live__container video__container" webkit-playsinline playsinline autobuffer ></video>
