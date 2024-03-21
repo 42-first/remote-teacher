@@ -248,15 +248,15 @@ let lessonMixin = {
             const { timer, dt } = currPresTimerInfo;
             const now = Date.now();
 
-            // 如果在500ms内有请求，延时请求
-            if(now - dt < 500) {
+            // 如果在1s内有请求，延时请求
+            if(now - dt < 1000) {
               if(timer) {
                 clearTimeout(timer);
               }
 
               const fetchTimer = setTimeout(() => {
                 this.updatePresentation(presId);
-              }, 500);
+              }, 1002);
 
               // update fetch pres timer
               presFetchTimerMap.set(presId, {
