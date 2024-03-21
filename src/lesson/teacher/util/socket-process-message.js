@@ -367,7 +367,7 @@ function socketProcessMessage(msg){
 
   // 弹幕投屏
   if (msg.op == 'danmushown') {
-    self.$store.commit('set_postingDanmuid', +msg.danmuid)
+    self.$store.commit('set_postingDanmuid', msg.danmuid > 1e13 ? msg.danmuid : +msg.danmuid)
     return
   }
 

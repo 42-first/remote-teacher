@@ -260,6 +260,13 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
       // 获取连麦参数
       get_live_params: '/api/v3/lesson/live/new/get-params-after-class',
+
+      // 获取克隆班标记弹幕列表
+      get_collecton_danmus: '/api/v3/lesson/danmu/collection/list',
+      // 查看lesson克隆班所有弹幕列表
+      get_danmu_clone_all: '/api/v3/lesson/danmu/clone/all',
+      // 收藏克隆班弹幕
+      clone_danmu_collect: '/api/v3/lesson/danmu/collect',
     },
 
     /*------------------*\

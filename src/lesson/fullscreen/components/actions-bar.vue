@@ -12,103 +12,139 @@
 <template>
   <!-- 操作栏 -->
   <section class="actions__cmp" :class="{ 'center': hasMeeting && joined, 'right': rightType}" tabindex="1">
-    <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting && !hasKMeeting }">
-      <!-- 会议基本操作 -->
-      <section class="meeting__actions box-center" v-if="hasMeeting && joined">
-        <section class="actions__item" @click="handleSetAudio">
-          <div class="actions__btn box-center action__tips" :data-tips="meeting.audio ? $t('meeting.muteaudio') : $t('meeting.unmuteaudio')">
-            <svg class="icon f28 c666" aria-hidden="true">
-              <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
-              <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
-            </svg>
-          </div>
-        </section>
-        <section class="actions__item" @click="handleSetVideo">
-          <div class="actions__btn box-center action__tips" :data-tips="meeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
-            <svg class="icon f28 c666" aria-hidden="true">
-              <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
-              <use xlink:href="#icon48-guanbishipin" v-else></use>
-            </svg>
-          </div>
-        </section>
-        <!-- 这一期 不上线 -->
-        <!-- <section class="actions__item" @click="handleShareScreen">
-          <div class="actions__btn box-center">
-            <svg class="icon f28 c666" aria-hidden="true">
-              <use xlink:href="#icon20-gongxiangpingmu" ></use>
-            </svg>
-          </div>
-        </section> -->
-        <div class="line"></div>
-      </section>
-
-      <!-- 直播连麦基本操作 -->
-      <section class="meeting__actions box-center" v-if="hasKMeeting && joined">
-        <section class="actions__item" @click="handleSetKAudio">
-          <div class="actions__btn box-center action__tips" :data-tips="kmeeting.audio ? $t('meeting.muteaudio') : $t('meeting.unmuteaudio')">
-            <svg class="icon f28 c666" aria-hidden="true">
-              <use xlink:href="#icon20-yuyin" v-if="kmeeting.audio"></use>
-              <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
-            </svg>
-          </div>
-        </section>
-        <section class="actions__item" @click="handleSetKVideo" v-if="liveType == 2">
-          <div class="actions__btn box-center action__tips" :data-tips="kmeeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
-            <svg class="icon f28 c666" aria-hidden="true">
-              <use xlink:href="#icon20-shipin" v-if="kmeeting.video"></use>
-              <use xlink:href="#icon48-guanbishipin" v-else></use>
-            </svg>
-          </div>
-        </section>
-        <div class="line"></div>
-      </section>
-
-      <!-- 弹幕 -->
-      <section class="action box-center" v-if="danmuStatus" @click="handleEnableDanmu">
-        <p class="action__danmu box-center f12 cfff" :class="{ 'active': visibleDanmu }" title="弹幕">弹</p>
-      </section>
-
-      <!-- 更多 -->
-      <section class="action action-tip box-center" :title="$t('meeting.showing')" >
-        <i class="iconfont icon--gengduocaozuo f24 c666"></i>
-
-        <!-- 更多操作 -->
-        <section class="action__more">
-          <section class="action__menu box-start c333" @click="handleVisibleSubmission">
-            <i class="iconfont icon-ykq_tab_tougao f20"></i>
-            <p class="pl10 f14"><!-- 投稿 -->{{ $t('meeting.post') }}</p>
+    <section class="actions__container box-center" :class="{ 'only': !danmuStatus && !hasMeeting && !hasKMeeting || inspectorMode}">
+      <!-- 督导听课改用web接收器  只保留腾讯会议入口 其他功能入口不保留 -->
+      <template v-if="!inspectorMode">
+        <!-- 会议基本操作 -->
+        <section class="meeting__actions box-center" v-if="hasMeeting && joined">
+          <section class="actions__item" @click="handleSetAudio">
+            <div class="actions__btn box-center action__tips" :data-tips="meeting.audio ? $t('meeting.muteaudio') : $t('meeting.unmuteaudio')">
+              <svg class="icon f28 c666" aria-hidden="true">
+                <use xlink:href="#icon20-yuyin" v-if="meeting.audio"></use>
+                <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
+              </svg>
+            </div>
           </section>
-           <section class="action__menu box-start c333" @click="handleVisibleGroup">
-            <i class="iconfont icon-fenzu1 f20"></i>
-            <p class="pl10 f14"><!--分组 --> {{$t('group')}}</p>
+          <section class="actions__item" @click="handleSetVideo">
+            <div class="actions__btn box-center action__tips" :data-tips="meeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
+              <svg class="icon f28 c666" aria-hidden="true">
+                <use xlink:href="#icon20-shipin" v-if="meeting.video"></use>
+                <use xlink:href="#icon48-guanbishipin" v-else></use>
+              </svg>
+            </div>
           </section>
+          <!-- 这一期 不上线 -->
+          <!-- <section class="actions__item" @click="handleShareScreen">
+            <div class="actions__btn box-center">
+              <svg class="icon f28 c666" aria-hidden="true">
+                <use xlink:href="#icon20-gongxiangpingmu" ></use>
+              </svg>
+            </div>
+          </section> -->
+          <div class="line"></div>
         </section>
-      </section>
 
-      <!-- 会议 -->
-      <template v-if="hasMeeting">
-        <div class="line"></div>
-        <section class="actions__item" @click="handleHangup" v-if="joined">
-          <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 退出互动 -->{{ $t('meeting.hangup') }}</div>
+        <!-- 直播连麦基本操作 -->
+        <section class="meeting__actions box-center" v-if="hasKMeeting && joined">
+          <section class="actions__item" @click="handleSetKAudio">
+            <div class="actions__btn box-center action__tips" :data-tips="kmeeting.audio ? $t('meeting.muteaudio') : $t('meeting.unmuteaudio')">
+              <svg class="icon f28 c666" aria-hidden="true">
+                <use xlink:href="#icon20-yuyin" v-if="kmeeting.audio"></use>
+                <use xlink:href="#icon48-yuyin-jingyin" v-else></use>
+              </svg>
+            </div>
+          </section>
+          <section class="actions__item" @click="handleSetKVideo" v-if="liveType == 2">
+            <div class="actions__btn box-center action__tips" :data-tips="kmeeting.video ? $t('meeting.mutecamera') : $t('meeting.unmutecamera')">
+              <svg class="icon f28 c666" aria-hidden="true">
+                <use xlink:href="#icon20-shipin" v-if="kmeeting.video"></use>
+                <use xlink:href="#icon48-guanbishipin" v-else></use>
+              </svg>
+            </div>
+          </section>
+          <div class="line"></div>
         </section>
-        <section class="action box-center join__wrap" v-else>
-          <div class="meeting__join box-center" @click.stop="handleJoin">
-            <i class="iconfont icon-48-jieru f28 cfff"></i>
-          </div>
 
-          <!-- 互动加入提示 -->
-          <section class="meeting__tips box-start" v-if="visibleMeetingTips">
-            <div class="tips__content f16 cfff"><!-- 老师开启了课堂互动快来加入吧 -->{{ $t('meeting.jointips') }}</div>
-            <p class="tips__closed box-center" @click="handleClosedTips">
-              <i class="iconfont icon-guanbi1 f12 cfff"></i>
-            </p>
+        <!-- 弹幕 -->
+        <section class="action box-center" v-if="danmuStatus" @click="handleEnableDanmu">
+          <p class="action__danmu box-center f12 cfff" :class="{ 'active': visibleDanmu }" title="弹幕">弹</p>
+        </section>
+
+        <!-- 更多 -->
+        <section class="action action-tip box-center" :title="$t('meeting.showing')" >
+          <i class="iconfont icon--gengduocaozuo f24 c666"></i>
+
+          <!-- 更多操作 -->
+          <section class="action__more">
+            <section class="action__menu box-start c333" @click="handleVisibleSubmission">
+              <i class="iconfont icon-ykq_tab_tougao f20"></i>
+              <p class="pl10 f14"><!-- 投稿 -->{{ $t('meeting.post') }}</p>
+            </section>
+            <section class="action__menu box-start c333" @click="handleVisibleGroup">
+              <i class="iconfont icon-fenzu1 f20"></i>
+              <p class="pl10 f14"><!--分组 --> {{$t('group')}}</p>
+            </section>
           </section>
         </section>
+
+        <!-- 会议 -->
+        <template v-if="hasMeeting">
+          <div class="line"></div>
+          <section class="actions__item" @click="handleHangup" v-if="joined">
+            <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 退出互动 -->{{ $t('meeting.hangup') }}</div>
+          </section>
+          <section class="action box-center join__wrap" v-else>
+            <div class="meeting__join box-center" @click.stop="handleJoin">
+              <i class="iconfont icon-48-jieru f28 cfff"></i>
+            </div>
+
+            <!-- 互动加入提示 -->
+            <section class="meeting__tips box-start" v-if="visibleMeetingTips">
+              <div class="tips__content f16 cfff"><!-- 老师开启了课堂互动快来加入吧 -->{{ $t('meeting.jointips') }}</div>
+              <p class="tips__closed box-center" @click="handleClosedTips">
+                <i class="iconfont icon-guanbi1 f12 cfff"></i>
+              </p>
+            </section>
+          </section>
+        </template>
+
+        <!-- 快手直播连麦 -->
+        <template v-if="hasKMeeting">
+          <div class="line" v-if="joined || kmeeting.canrequestvc"></div>
+          <section class="actions__item" @click="handleHangupK" v-if="joined">
+            <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 结束连麦 -->{{ $t('endvc') }} </div>
+          </section>
+          <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else-if="kmeeting.canrequestvc">
+            <div class="meeting__join kmeeting box-center" v-if="!kmeeting.status" @click.stop="handleJoinK">
+              <i class="iconfont icon-48-jieru f28 cfff"></i>
+            </div>
+
+            <div class="box-center" v-if="kmeeting.status == 1">
+              <i class="iconfont icon-dianhuajieru cgreen f24"></i>
+              <span class="join__status f14"><!-- 申请中... --> {{ $t('applying') }}</span>
+              <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK"><!-- 取消申请 -->{{ $t('cancelvc') }}</div>
+            </div>
+
+            <div class="box-center" v-if="kmeeting.status == 2">
+              <i class="iconfont icon-dianhuajieru cgreen f24"></i>
+              <span class="join__status f14"><!-- 连线中... --> {{ $t('wired') }}</span>
+            </div>
+
+
+            <!-- 互动加入提示 -->
+            <section class="meeting__tips kmeeting box-start" v-if="visibleKMeetingTips">
+              <div class="tips__content f16 cfff"><!-- 申请连麦 -->{{ $t('requestvc') }}</div>
+              <p class="tips__closed box-center" @click="handleClosedKMeetingTips">
+                <i class="iconfont icon-guanbi1 f12 cfff"></i>
+              </p>
+            </section>
+          </section>
+        </template>
       </template>
 
       <!-- 腾讯扩展应用 -->
       <template v-if="hasTXMeeting">
-        <div class="line"></div>
+        <div class="line" v-if="!inspectorMode"></div>
         <section class="action box-center join__wrap">
           <div class="txmeet__join box-center" @click="handleOpenTXMeet" @mouseover="handleToggleHoverTXMeetingTips" @mouseout="handleToggleHoverTXMeetingTips">
             <img class="icon-txmeet" src="~images/student/txmeet-logo2.png" >
@@ -124,38 +160,7 @@
         </section>
       </template>
 
-      <!-- 快手直播连麦 -->
-      <template v-if="hasKMeeting">
-        <div class="line" v-if="joined || kmeeting.canrequestvc"></div>
-        <section class="actions__item" @click="handleHangupK" v-if="joined">
-          <div class="actions__btn over meeting__exit box-center f12 cfff"><!-- 结束连麦 -->{{ $t('endvc') }} </div>
-        </section>
-        <section class="action box-center join__wrap" :class="kmeeting.status ? 'widthAuto' : ''" v-else-if="kmeeting.canrequestvc">
-          <div class="meeting__join kmeeting box-center" v-if="!kmeeting.status" @click.stop="handleJoinK">
-            <i class="iconfont icon-48-jieru f28 cfff"></i>
-          </div>
-
-          <div class="box-center" v-if="kmeeting.status == 1">
-            <i class="iconfont icon-dianhuajieru cgreen f24"></i>
-            <span class="join__status f14"><!-- 申请中... --> {{ $t('applying') }}</span>
-            <div class="cancel__join box-center pointer" @click.stop="handleCancelJoinK"><!-- 取消申请 -->{{ $t('cancelvc') }}</div>
-          </div>
-
-          <div class="box-center" v-if="kmeeting.status == 2">
-            <i class="iconfont icon-dianhuajieru cgreen f24"></i>
-            <span class="join__status f14"><!-- 连线中... --> {{ $t('wired') }}</span>
-          </div>
-
-
-          <!-- 互动加入提示 -->
-          <section class="meeting__tips kmeeting box-start" v-if="visibleKMeetingTips">
-            <div class="tips__content f16 cfff"><!-- 申请连麦 -->{{ $t('requestvc') }}</div>
-            <p class="tips__closed box-center" @click="handleClosedKMeetingTips">
-              <i class="iconfont icon-guanbi1 f12 cfff"></i>
-            </p>
-          </section>
-        </section>
-      </template>
+      
     </section>
 
     <!-- 弹幕直播 -->
@@ -230,6 +235,7 @@
         'hasTXMeeting',
         'invitationLink',
         'hasKMeeting',
+        'inspectorMode',
       ]),
 
       ...mapState('meeting', [
