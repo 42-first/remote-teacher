@@ -100,6 +100,7 @@
         'classroomid',
         'socket',
         'addinversion',
+        'studentCounts',
       ])
     },
     created () {
@@ -200,7 +201,8 @@
         let self = this
 
         if(self.signInCount === 0){
-          if(self.rollcallRange && self.addinversion < 5.3 || !self.rollcallRange) {
+          // 班级人数为0 或者范围是全部但是版本小于5.3  活着已签到学生 都做拦截
+          if(self.rollcallRange && (self.addinversion < 5.3 || !self.studentCounts) || !self.rollcallRange) {
             self.isNostuhintHidden = false
             return
           }
