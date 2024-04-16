@@ -70,7 +70,7 @@ var exerciseMixin = {
         answerPostList.forEach((item) => {
           if(item.problemType == 5 && (item.result.content || item.result.pics)) {
             problems.push(item);
-          } else if(item.problemType == 4 && isArray(item.result)) {
+          } else if(item.problemType == 4 && Array.isArray(item.result)) {
             problems.push(item);
           } else if(item.problemType != 5 && item.problemType != 4 && !item.result.content && !item.result.pics) {
             problems.push(item);
@@ -79,26 +79,30 @@ var exerciseMixin = {
 
         let params = { problems };
 
-        request.post(URL, params).
-        then((res)=>{
-          if(res && res.code === 0) {
-            let successList = res.data.success;
-            if(successList) {
-              successList.forEach((pid)=>{
-                let problem = problems.find((item)=>{
-                  return item.problemId == pid;
-                })
+        if(problems.length) {
+          request.post(URL, params).
+            then((res)=>{
+              if(res && res.code === 0) {
+                let successList = res.data.success;
+                if(successList) {
+                  successList.forEach((pid)=>{
+                    let problem = problems.find((item)=>{
+                      return item.problemId == pid;
+                    })
 
-                problem && this.setProblemStatus(pid, problem);
-              })
+                    problem && this.setProblemStatus(pid, problem);
+                  })
 
-              this.removeAnswer(key);
-            }
-          }
-        }).
-        catch(error => {
-          console.log('autoSendAnswers:', error);
-        })
+                  this.removeAnswer(key);
+                }
+              }
+            }).
+            catch(error => {
+              console.log('autoSendAnswers:', error);
+            })
+        } else {
+          this.removeAnswer(key);
+        }
       }
     }
   }
