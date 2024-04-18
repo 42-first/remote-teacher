@@ -463,6 +463,17 @@ var actionsMixin = {
         this.cards.push(data);
         this.setCards(this.cards);
         // problem && this.problemMap.set(problem['problemId'], slideData);
+      } else {
+        // presentation更新后题目类型不同的话 变更下数据
+        // 可能存在将已发布的客观题修改成主观题的情况 此时手机遥控器该题是未发布状态
+        // 重新发送会导致题目类型和答案结构不一致需要更新一致
+        if(hasEvent.problemType !== data.problemType) {
+          let index = this.cards.findIndex((item) => {
+            return item.type === 3 && item.problemID === data.event['prob'];
+          })
+  
+          this.cards.splice(index, 1, data);
+        }
       }
 
       problem && this.problemMap.set(problem['problemId'], slideData);
