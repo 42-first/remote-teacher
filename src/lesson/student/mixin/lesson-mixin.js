@@ -197,10 +197,10 @@ let lessonMixin = {
      */
     async updatePresentation(pid) {
       // 防止1s多次请求
-      const canFetch = this.limitPresFetchTimes(pid);
-      if(canFetch === false) {
-        return this;
-      }
+      // const canFetch = this.limitPresFetchTimes(pid);
+      // if(canFetch === false) {
+      //   return this;
+      // }
 
       if(this.updatingPPT) {
         return this;
