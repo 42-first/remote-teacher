@@ -113,6 +113,7 @@ let lessonMixin = {
       // 是否有分组
       let hasGroup = false
       let hasReview = false
+      let hasInstructionTask = false
 
       if(timeline && timeline.length) {
         timeline.forEach(item => {
@@ -140,6 +141,10 @@ let lessonMixin = {
           if(item.type === 'review'){
             hasReview = true
           }
+
+          if(item.type === 'aitask') {
+            hasInstructionTask = true
+          }
         })
       }
 
@@ -150,6 +155,9 @@ let lessonMixin = {
       hasGroup && await this.getGroupStatus()
       // 有互评
       hasReview && await this.getReviewStatus()
+
+      // 有指令任务
+      hasInstructionTask && this.getInstructionTasks()
 
 
       // 有课件
@@ -803,6 +811,26 @@ let lessonMixin = {
      */
     handleToggleDefinition() {
       this.showDefinition = !this.showDefinition
+    },
+
+    /**
+     * @method 获取已发布指令任务
+     */
+    getInstructionTasks() {
+      let self = this
+      let URL = API.lesson.get_review_status_list
+      return request.get(URL)
+      .then(res => {
+        if(res && res.code === 0 && res.data){
+          res.data.length && res.data.forEach(task => {
+            this.instructionTaskMap.set(task.taskId, task);
+          })
+          return res.data
+        }
+      }).catch(error => {
+        console.log('getInstructionTasks:', error)
+        return {}
+      })
     }
   }
 }

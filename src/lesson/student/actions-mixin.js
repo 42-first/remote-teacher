@@ -105,6 +105,11 @@ var actionsMixin = {
 
               break;
 
+            // 发起指令任务
+            case '':
+              this.addInstructionTask({ type: 14, task: item, time: item['dt'], event: item, isFetch: isFetch })
+              break;
+
             default:
               break;
           }
@@ -1224,6 +1229,53 @@ var actionsMixin = {
         console.info(error);
         return hasBind;
       }
+    },
+
+    /**
+     * @method 新增指令任务
+     */
+    addInstructionTask(data) {
+      let task = this.instructionTaskMap.get(data.taskid);
+      let isEnd = task && task.isEnd || false;
+      let isComplete = task && task.finished || false
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 9 && item.task === data.task && data.isFetch;
+      })
+      let index = this.cards.length;
+
+
+      Object.assign(data, {
+        status: isEnd ? '已结束' : '进行中',
+        isEnd,
+        index,
+        href: `/ai-workspace/chatbot-lesson/${data.taskid}`
+      })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      if (!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
+    },
+
+    /*
+     * @method 结束指令任务
+     * @param 
+     */
+    finishInstructionTask(data) {
+      let task = this.cards.find((item) => {
+        return item.type === 8 && item.taskid === data.taskid;
+      })
+
+      task && Object.assign(task, {
+        isEnd: true,
+        status: '已结束'
+      })
+
+      this.setCards(this.cards);
     },
 
   }

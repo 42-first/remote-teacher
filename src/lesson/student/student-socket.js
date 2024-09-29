@@ -493,6 +493,16 @@ var mixin = {
 
             break;
 
+          // 发起指令任务
+          case '':
+            this.addInstructionTask(msg)
+            break;
+
+          // 结束指令任务
+          case '':
+            this.finishInstructionTask(msg)
+            break;
+
           default:
             hasMsg = false;
             break
