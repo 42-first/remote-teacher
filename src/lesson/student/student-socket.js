@@ -494,13 +494,14 @@ var mixin = {
             break;
 
           // 发起指令任务
-          case '':
-            this.addInstructionTask(msg)
+          case 'sendinstr':
+            item = msg['it']
+            this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], time: item['dt'], event: item });
             break;
 
           // 结束指令任务
-          case '':
-            this.finishInstructionTask(msg)
+          case 'instrfinished':
+            this.finishInstructionTask({ taskid: item['task'], promptid: item['instrid'] })
             break;
 
           default:
