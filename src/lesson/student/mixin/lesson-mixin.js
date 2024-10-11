@@ -818,11 +818,15 @@ let lessonMixin = {
      */
     getInstructionTasks() {
       let self = this
-      let URL = API.lesson.get_review_status_list
-      return request.get(URL)
+      let URL = API.lesson.get_ai_task_status_list
+      let params = {
+        status: 0
+      }
+      return request.get(URL, params)
       .then(res => {
         if(res && res.code === 0 && res.data){
-          res.data.length && res.data.forEach(task => {
+          let { tasks } = res.data
+          tasks.length && tasks.forEach(task => {
             this.instructionTaskMap.set(task.taskId, task);
           })
           return res.data

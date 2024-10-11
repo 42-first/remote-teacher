@@ -106,7 +106,7 @@ var actionsMixin = {
               break;
 
             // 发起指令任务
-            case 'sendinstr':
+            case 'instruction':
               this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], time: item['dt'], event: item, isFetch: isFetch })
               break;
 
@@ -1236,20 +1236,21 @@ var actionsMixin = {
      */
     addInstructionTask(data) {
       let task = this.instructionTaskMap.get(data.taskid);
-      let isEnd = task && task.isEnd || false;
-      let isComplete = task && task.finished || false
+      let isEnd = task && task.status == 2 ;
+      let status = task && task.finishStatus == 2 ? this.$i18n.t('done') : task && task.finishStatus == 1 ? '进行中' : this.$i18n.t('undone')
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 14 && item.taskid === data.taskid && data.isFetch;
       })
       let index = this.cards.length;
 
+      const { taskid, promptid } = data
 
       Object.assign(data, {
-        status: isEnd ? '已结束' : '进行中',
+        status: status,
         isEnd,
         index,
-        href: `/ai-workspace/chatbot-lesson/${this.lessonID}/${data.taskid}/${data.promptid}`
+        href: `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}`
       })
 
       // 消息box弹框
