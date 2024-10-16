@@ -58,7 +58,18 @@
         </div>
       </div>
     </template>
-
+    <!-- ai 指令任务 -->
+    <template v-else-if="item.type == 14">
+      <div class="popup__paper">
+        <div class="paper-info ai-task">
+          <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
+            <p class="icon-wrapper"><i class="iconfont icon-fenzu f32"></i></p>
+            <p class="paper-name"><!-- Hi，老师进行了随机分组 {{ $t('team.randomized') }}-->Hi, 你有新的AI指令任务</p>
+          </a>
+          <i class="iconfont gray icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>

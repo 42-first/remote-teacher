@@ -142,7 +142,7 @@ let lessonMixin = {
             hasReview = true
           }
 
-          if(item.type === 'aitask') {
+          if(item.type === 'instruction') {
             hasInstructionTask = true
           }
         })
@@ -157,7 +157,7 @@ let lessonMixin = {
       hasReview && await this.getReviewStatus()
 
       // 有指令任务
-      hasInstructionTask && this.getInstructionTasks()
+      hasInstructionTask && await this.getInstructionTasks()
 
 
       // 有课件

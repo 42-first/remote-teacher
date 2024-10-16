@@ -269,7 +269,7 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       clone_danmu_collect: '/api/v3/lesson/danmu/collect',
 
       // 获取指令任务状态
-      get_ai_task_status_list: '/api/v3/lesson/ai-task/recieve-list',
+      get_ai_task_status_list: '/api/v3/lesson/ai-task/receive-list',
     },
 
     /*------------------*\

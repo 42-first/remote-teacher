@@ -215,10 +215,10 @@
     <!-- 指令任务 -->
     <template v-else-if="item.type == 14">
       <div class="timeline__paper">
-        <a :class="['paper-info', 'task', item.isEnd ? 'end' : '']" href="javascript:;" @click="handleAskAI(item)" >
+        <a :class="['paper-info', 'ai-task', item.isEnd ? 'complete' : '']" href="javascript:;" @click="handleAskAI(item)" >
           <div class="paper-txt f18">
             <p class="paper-name">Hi, 你有新的AI指令任务</p>
-            <p class="paper-name">知识点答疑</p>
+            <p class="paper-name">{{item.instrname}}</p>
           </div>
           <i class="iconfont icon-fenzu f50"></i>
         </a>
@@ -536,7 +536,7 @@
           return false;
         }
 
-        location.href = href
+        location.href = item.href
 
         return true;
       }
@@ -757,6 +757,9 @@
 
     .paper-info.evaluation {
       background: rgba(239,175,79,0.7);
+    }
+    .paper-info.ai-task {
+      background: linear-gradient(98.52deg, #8F7EFE 0.29%, #5C9BFF 50.14%, #83BDFF 100%);
     }
 
     .paper-info.complete,

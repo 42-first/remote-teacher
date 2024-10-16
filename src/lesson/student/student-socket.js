@@ -496,12 +496,12 @@ var mixin = {
           // 发起指令任务
           case 'sendinstr':
             item = msg['it']
-            this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], time: item['dt'], event: item });
+            this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], isPopup: true, event: item });
             break;
 
           // 结束指令任务
           case 'instrfinished':
-            this.finishInstructionTask({ taskid: item['task'], promptid: item['instrid'] })
+            this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
             break;
 
           default:

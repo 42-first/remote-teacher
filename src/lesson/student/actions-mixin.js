@@ -107,7 +107,7 @@ var actionsMixin = {
 
             // 发起指令任务
             case 'instruction':
-              this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], time: item['dt'], event: item, isFetch: isFetch })
+              this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], event: item, isFetch: isFetch })
               break;
 
             default:
@@ -1245,12 +1245,13 @@ var actionsMixin = {
       let index = this.cards.length;
 
       const { taskid, promptid } = data
-
+      let href = process.env.NODE_ENV === 'production' ? `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}` : `http://localhost:8080/ai-workspace.html#/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}`
       Object.assign(data, {
         status: status,
         isEnd,
         index,
-        href: `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}`
+        href: href,
+        instrname: data.instrname
       })
 
       // 消息box弹框
