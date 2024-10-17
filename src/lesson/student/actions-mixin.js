@@ -36,7 +36,7 @@ var actionsMixin = {
 
               // event
             case 'event':
-              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
+              item.show && this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 

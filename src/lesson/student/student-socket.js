@@ -277,7 +277,7 @@ var mixin = {
           case 'quizfinished':
           case 'callpaused':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'], event: item });
+            item.show && this.addMessage({ type: 1, message: item['title'], event: item });
 
             break
 

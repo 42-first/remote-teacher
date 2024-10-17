@@ -220,7 +220,7 @@
             <p class="paper-name">Hi, 你有新的AI指令任务</p>
             <p class="paper-name">{{item.instrname}}</p>
           </div>
-          <i class="iconfont icon-fenzu f50"></i>
+          <i class="iconfont icon-jiangban f50"></i>
         </a>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
