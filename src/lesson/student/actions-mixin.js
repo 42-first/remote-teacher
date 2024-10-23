@@ -1237,7 +1237,7 @@ var actionsMixin = {
     addInstructionTask(data) {
       let task = this.instructionTaskMap.get(data.taskid);
       let isEnd = task && task.status == 2 ;
-      let status = task && task.finishStatus == 2 ? this.$i18n.t('done') : task && task.finishStatus == 1 ? '进行中' : this.$i18n.t('undone')
+      let status = task && task.finishStatus == 2 ? this.$i18n.t('done') : task && task.finishStatus == 1 ? '已启动' : '未开始'
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
         return item.type === 14 && item.taskid === data.taskid && data.isFetch;
