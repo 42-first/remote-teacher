@@ -63,6 +63,9 @@ let pages = {
   "watchmodenotintoteam": "观看者模式下无法参与分组",
   "auditornotgrade": "旁听生身份无法参与互评",
   "inspectornotsupport": "管理员视角不能进行该操作",
+  "newaitask": "Hi, 你有新的AI指令任务",
+  "started": "已启动",
+  "notstart": "未开始",
 
   "submit": "提交",
   "submitansw": "提交答案",

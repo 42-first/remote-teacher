@@ -217,7 +217,7 @@
       <div class="timeline__paper">
         <a :class="['paper-info', 'ai-task', item.isEnd ? 'complete' : '']" href="javascript:;" @click="handleAskAI(item)" >
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 你有新的AI指令任务</p>
+            <p class="paper-name"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }} </p>
             <p class="paper-name">{{item.instrname}}</p>
           </div>
           <i class="iconfont icon-jiangban f50"></i>
