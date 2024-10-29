@@ -67,6 +67,7 @@ let pages = {
   "newaitask": "Hi, you have a new AI instruction task.",
   "started": "Started",
   "notstart": "Not Started",
+  "performaitask": "You cannot perform instruction task in spectator mode.",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

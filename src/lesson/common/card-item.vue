@@ -520,7 +520,7 @@
       handleAskAI(item) {
         if(this.observerMode) {
           this.$toast({
-            message: '观看者模式下无法进行AI问答',
+            message: this.$i18n.t('performaitask') || '观看者模式下无法执行指令任务',
             duration: 3000
           });
 
