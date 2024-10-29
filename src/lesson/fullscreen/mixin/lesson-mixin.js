@@ -138,6 +138,9 @@ var commandMixin = {
           // 未绑定专业版
           this.bindSchool(data);
         } else {
+          if(code == 50070) {
+            msg = this.$t(`code.${code}`)
+          }
           // 确认框提示
           this.$rainConfirm({
             data: {
