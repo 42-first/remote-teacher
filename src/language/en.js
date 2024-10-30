@@ -736,7 +736,7 @@ let pages = {
     '50031': 'Your post has no content.',
     '50032': 'You can not visit deleted post~',
     '50042': `There are too many people, we can't provide the details yet.`,
-    '50070': '该课堂已开启动态二维码签到，请扫码签到进班',
+    '50070': 'The lesson has enabled dynamic QR code check-in. Please scan the QR code.',
 
     '60000': 'Something is wrong, please try again later.',
     '60001': 'Something is wrong, please try again later.',
