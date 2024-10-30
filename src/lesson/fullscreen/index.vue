@@ -14,7 +14,7 @@
       <msgbox></msgbox>
 
       <!-- 这里布局要改成 pad版 -->
-      <lesson ref="lessoncmp" ></lesson>
+      <lesson ref="lessoncmp" :functionTips="functionTips"></lesson>
     </section>
 
     <!-- 直播入口 音频直播 -->
@@ -290,6 +290,7 @@
         // 当前清晰度等级
         curLevel: 0,
         definitionTips: '',
+        functionTips: '',
       };
     },
     components: {

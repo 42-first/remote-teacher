@@ -493,6 +493,12 @@ var mixin = {
 
             break;
 
+          case 'notification':
+            if(msg.notifications.length > 0 && msg.notifications[0].content) {
+              this.functionTips = msg.notifications[0].content
+            }
+            break;
+
           default:
             hasMsg = false;
             break

@@ -262,7 +262,7 @@
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
 
     <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
-    <div class="function__notice" v-if="functionTips">{{ functionTips }}</div>
+    <div class="function__notice f15" v-if="functionTips">{{ functionTips }}</div>
   </section>
 </template>
 <script>
