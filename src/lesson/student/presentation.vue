@@ -248,7 +248,7 @@
     </div>
 
     <!-- 弹幕直播 -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
+    <danmu-live :class="[functionTips ? 'moveup' : '']" :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
     <!-- 加入会议 -->
     <div class="meeting__join box-center" @click="handleJoin" v-if="hasMeeting">
@@ -260,6 +260,9 @@
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
+
+    <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
+    <div class="function__notice" v-if="functionTips">{{ functionTips }}</div>
   </section>
 </template>
 <script>
@@ -472,7 +475,8 @@
         // 当前清晰度等级
         curLevel: 0,
         showDefinition: false,
-        definitionTips: ''
+        definitionTips: '',
+        functionTips: ''
       };
     },
     components: {
@@ -1496,7 +1500,7 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0.8rem;
+    bottom: 0.9333rem;
     text-align: center;
 
     margin: 0 auto;
@@ -1504,7 +1508,7 @@
     height: 1rem;
 
     &.moveup {
-      bottom: 1.5rem;
+      bottom: 1.9rem;
     }
 
     .open-btn {
@@ -1554,5 +1558,22 @@
 
   .J_pswp .pswp__img {
     background: #fff !important;
+  }
+
+  .function__notice {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 0.8533rem;
+    text-align: center;
+    line-height: 0.8533rem;
+    background: rgba(254, 119, 0, 0.7);
+    backdrop-filter: blur(5px);
+    color: #fff;
+  }
+
+  .danmu__cmp.moveup {
+    bottom: 0.4rem !important;
   }
 </style>
