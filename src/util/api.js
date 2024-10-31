@@ -267,6 +267,9 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       get_danmu_clone_all: '/api/v3/lesson/danmu/clone/all',
       // 收藏克隆班弹幕
       clone_danmu_collect: '/api/v3/lesson/danmu/collect',
+
+      // 获取指令任务状态
+      get_ai_task_status_list: '/api/v3/lesson/ai-task/receive-list',
     },
 
     /*------------------*\

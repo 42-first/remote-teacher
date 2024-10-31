@@ -64,6 +64,10 @@ let pages = {
   "watchmodenotintoteam": "View mode. Unable to join grouping.",
   "auditornotgrade": "Auditors are not allowed to participate in peer grading",
   "inspectornotsupport": "You can't do this",
+  "newaitask": "Hi, you have a new AI instruction task.",
+  "started": "Started",
+  "notstart": "Not Started",
+  "performaitask": "You cannot perform instruction task in spectator mode.",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
