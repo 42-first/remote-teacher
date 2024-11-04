@@ -61,6 +61,8 @@ let lessonMixin = {
         this.teacherName = lesson.teacher.name;
       }
 
+      this.qrCodeState = lesson.qrCodeState
+
       // 导播课设置
       if(lesson && lesson.hasLiveCaster) {
         this.hasLiveCaster = lesson.hasLiveCaster;
@@ -295,6 +297,7 @@ let lessonMixin = {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
           this.userID = data.id;
+          this.user = res.data;
           // 日活上报增加
           window.userId = data.id;
 

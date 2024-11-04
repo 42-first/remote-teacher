@@ -7,7 +7,7 @@
  */
 
 <template>
-  <section class="page" :class="[ liveType ? 'live__view' : '' ]" @click="handleFilter">
+  <section class="page" :class="[ liveType || qrCodeState || functionTips ? 'live__view' : '' ]" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
@@ -137,8 +137,18 @@
       </section>
     </section>
 
+    <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
+    <div class="function__notice f15 box-start" v-if="functionTips">
+      <i class="iconfont icon-weidingyue f20 mr4"></i>
+      {{ functionTips }}
+    </div>
+
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
+      <div class="dynamic_qrcode_tips box-between f15" v-if="qrCodeState && !functionTips">
+        <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> 已签到</span>
+        <span class="f12">{{ user.name }} {{ user.schoolNumber }}</span>
+      </div>
       <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
@@ -260,9 +270,6 @@
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
-
-    <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
-    <div class="function__notice f15" v-if="functionTips">{{ functionTips }}</div>
   </section>
 </template>
 <script>
@@ -476,7 +483,10 @@
         curLevel: 0,
         showDefinition: false,
         definitionTips: '',
-        functionTips: ''
+        functionTips: '',
+        // 动态二维码签到
+        qrCodeState: 0,
+        user: null,
       };
     },
     components: {
@@ -1228,10 +1238,11 @@
   .live__view {
     display: flex;
     flex-flow: column;
-
+    padding: 2.33rem 0 0;
+    
     .live__wrap {
       position: relative;
-      padding: 2.33rem 0 0;
+      padding: 0;
 
       .player__box {
         position: relative;
@@ -1376,6 +1387,11 @@
     .timeline-wrapper {
       width: 100%;
     }
+  }
+
+  .mint-loadmore{
+    overflow: hidden;
+    height: auto;
   }
 
   .student__msg {
@@ -1561,16 +1577,28 @@
   }
 
   .function__notice {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 0.8533rem;
-    text-align: center;
-    line-height: 0.8533rem;
-    background: rgba(254, 119, 0, 0.7);
-    backdrop-filter: blur(5px);
-    color: #fff;
+    margin: 0.2133rem 0.4267rem 0;
+    background: rgba(241, 103, 72, 0.1);
+    padding: 0.2133rem 0.2667rem;
+    border: 1px solid rgba(241, 103, 72, 0.5);
+    border-radius: 6px;
+    color: #F16748;
+  }
+
+  .dynamic_qrcode_tips {
+    margin: 0.2133rem 0.4267rem 0;
+    background: rgba(20, 181, 101, 0.1);
+    padding: 0.2133rem 0.2667rem;
+    color: #656A72;
+    border-radius: 6px;
+
+    .status {
+      color: #14BF82;
+    }
+  }
+
+  .mr4 {
+    margin-right: 0.1067rem;
   }
 
   .danmu__cmp.moveup {
