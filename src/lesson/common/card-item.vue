@@ -212,6 +212,24 @@
       </div>
     </template>
 
+    <!-- 指令任务 -->
+    <template v-else-if="item.type == 14">
+      <div class="timeline__paper">
+        <a :class="['paper-info', 'ai-task', item.isEnd ? 'complete' : '']" href="javascript:;" @click="handleAskAI(item)" >
+          <div class="paper-txt f18">
+            <p class="paper-name"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }} </p>
+            <p class="paper-name">{{item.instrname}}</p>
+          </div>
+          <i class="iconfont icon-jiangban f50"></i>
+        </a>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>
@@ -493,6 +511,34 @@
         this.$router.push({
           path: `/v3/${this.lessonId}/evaluation/${index}`
         })
+      },
+
+
+      /**
+       * @method 指令任务
+       */
+      handleAskAI(item) {
+        if(this.observerMode) {
+          this.$toast({
+            message: this.$i18n.t('performaitask') || '观看者模式下无法执行指令任务',
+            duration: 3000
+          });
+
+          return false;
+        }
+
+        if(item.isEnd) {
+          this.$toast({
+            message: '该任务已结束',
+            duration: 3000
+          });
+
+          return false;
+        }
+
+        location.href = item.href
+
+        return true;
       }
     },
     created() {
@@ -711,6 +757,9 @@
 
     .paper-info.evaluation {
       background: rgba(239,175,79,0.7);
+    }
+    .paper-info.ai-task {
+      background: linear-gradient(98.52deg, #8F7EFE 0.29%, #5C9BFF 50.14%, #83BDFF 100%);
     }
 
     .paper-info.complete,

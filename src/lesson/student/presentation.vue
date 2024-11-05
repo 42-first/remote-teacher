@@ -390,6 +390,8 @@
         groupReviewMap: new Map(),
         // 习题map
         problemMap: new Map(),
+        // 指令任务Map
+        instructionTaskMap: new Map(),
 
         // 消息box数据
         msgBoxs: [],

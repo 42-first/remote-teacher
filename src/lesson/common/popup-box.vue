@@ -58,7 +58,18 @@
         </div>
       </div>
     </template>
-
+    <!-- ai 指令任务 -->
+    <template v-else-if="item.type == 14">
+      <div class="popup__paper">
+        <div class="paper-info ai-task">
+          <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
+            <p class="icon-wrapper"><i class="iconfont icon-jiangban f32"></i></p>
+            <p class="paper-name"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }} </p>
+          </a>
+          <i class="iconfont cfff icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>
@@ -188,6 +199,20 @@
     .paper-info.evaluation .paper-txt .icon-wrapper {
       background: rgba(239,175,79,0.7);
     }
+
+    .paper-info.ai-task {
+      background: linear-gradient(96.67deg, #8F7EFE -1.37%, #5C9BFF 59.98%, #83E7FF 102.99%);
+      color: #fff;
+
+      .paper-name {
+        color: #fff;
+      }
+    }
+
+    .paper-info.ai-task .paper-txt .icon-wrapper {
+      background: transparent;
+    }
+
 
     .paper-icon {
       display: block;

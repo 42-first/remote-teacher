@@ -277,7 +277,7 @@ var mixin = {
           case 'quizfinished':
           case 'callpaused':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'], event: item });
+            item.show && this.addMessage({ type: 1, message: item['title'], event: item });
 
             break
 
@@ -491,6 +491,17 @@ var mixin = {
               this.setInvitationLink(null);
             }
 
+            break;
+          
+          // 发起指令任务
+          case 'sendinstr':
+            item = msg['it']
+            this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], isPopup: true, event: item });
+            break;
+
+          // 结束指令任务
+          case 'instrfinished':
+            this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
             break;
 
           case 'notification':
