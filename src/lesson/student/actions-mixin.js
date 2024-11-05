@@ -1269,7 +1269,7 @@ var actionsMixin = {
      */
     finishInstructionTask(data) {
       let task = this.cards.find((item) => {
-        return item.type === 8 && item.taskid === data.taskid;
+        return item.type === 14 && item.taskid === data.taskid;
       })
 
       task && Object.assign(task, {
