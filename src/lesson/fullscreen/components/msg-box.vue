@@ -110,6 +110,14 @@
       </div>
     </template>
 
+    <div class="function__notice box-center f15" v-if="functionTips">
+      <i class="iconfont icon-weidingyue f20 mr4"></i> {{ functionTips }}
+    </div>
+
+    <div class="dynamic_qrcode_tips box-between f15" v-if="!functionTips && lesson && qrCodeState">
+      <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> 已签到</span>
+      <span class="f12">{{ user.name }} {{ user.schoolNumber }}</span>
+    </div>
   </section>
 
 </template>
@@ -130,9 +138,13 @@
     name: 'mag-box',
     data() {
       return {
+        user: window.user
       };
     },
     watch: {
+    },
+    props: {
+      functionTips: String
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -141,6 +153,7 @@
         // 'slideIndex',
         'msg',
         'inspectorMode',
+        'lesson',
       ]),
 
       ...mapState('meeting', [
@@ -222,6 +235,7 @@
 
     background: #fff;
     border-radius: 4px;
+    margin-bottom: 8px;
 
     .icon__wrap {
       width: 40px;
@@ -274,6 +288,28 @@
     }
   }
 
+  .function__notice {
+    padding: 8px 18px;
+    border-radius: 6px;
+    background: rgba(241, 103, 72, 0.1);
+    border: 1px solid rgba(241, 103, 72, 0.5);
+    color: #F16748;
+
+    .mr4 {
+      margin-right: 4px;
+    }
+  }
+
+  .dynamic_qrcode_tips {
+    background: rgba(20, 181, 101, 0.1);
+    padding: 8px 18px;
+    border-radius: 6px;
+    color: #656A72;
+
+    .status {
+      color: #14BF82;
+    }
+  }
 
 </style>
 

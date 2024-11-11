@@ -26,7 +26,6 @@
             <span><!-- 课堂动态 -->{{ $t('meeting.dynamics') }}</span>
             <i class="iconfont icon-guanbi1 f16 c9b pointer" @click="handleFold(true)"></i>
           </h3>
-          <div class="function__notice f15" v-if="functionTips">{{ functionTips }}</div>
           <section class="nav__list">
             <timeline></timeline>
           </section>
@@ -78,7 +77,6 @@ let resizeObserver = null
 export default {
   name: "lesson-content",
   props: {
-    functionTips: String
   },
   data() {
     return {

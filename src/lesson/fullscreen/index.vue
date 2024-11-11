@@ -11,10 +11,10 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 消息通知 -->
-      <msgbox></msgbox>
+      <msgbox :functionTips="functionTips"></msgbox>
 
       <!-- 这里布局要改成 pad版 -->
-      <lesson ref="lessoncmp" :functionTips="functionTips"></lesson>
+      <lesson ref="lessoncmp" ></lesson>
     </section>
 
     <!-- 直播入口 音频直播 -->
