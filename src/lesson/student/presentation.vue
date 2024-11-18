@@ -147,7 +147,7 @@
     <section class="student__timeline-wrapper">
       <div class="dynamic_qrcode_tips box-between f15" v-if="qrCodeState && !functionTips">
         <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> 已签到</span>
-        <span class="f12">{{ user.name }} {{ user.schoolNumber }}</span>
+        <span class="f12">{{ identityInfo.name }} {{ identityInfo.schoolNumber }}</span>
       </div>
       <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
@@ -488,7 +488,7 @@
         functionTips: '',
         // 动态二维码签到
         qrCodeState: 0,
-        user: null,
+        identityInfo: null,
       };
     },
     components: {

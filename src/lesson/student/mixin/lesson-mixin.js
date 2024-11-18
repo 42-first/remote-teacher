@@ -305,7 +305,6 @@ let lessonMixin = {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
           this.userID = data.id;
-          this.user = res.data;
           // 日活上报增加
           window.userId = data.id;
 
@@ -420,6 +419,10 @@ let lessonMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
+            this.identityInfo = {
+              name: data.identityName,
+              schoolNumber: data.identityNumber
+            }
           }
 
           // 是否导播嘉宾
