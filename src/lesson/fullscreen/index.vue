@@ -11,7 +11,7 @@
     <!-- PPT 展示 -->
     <section class="ppt__wrapper J_ppt">
       <!-- 消息通知 -->
-      <msgbox :functionTips="functionTips"></msgbox>
+      <msgbox :functionTips="functionTips" :qrCodeState="qrCodeState"></msgbox>
 
       <!-- 这里布局要改成 pad版 -->
       <lesson ref="lessoncmp" ></lesson>
@@ -291,6 +291,7 @@
         curLevel: 0,
         definitionTips: '',
         functionTips: '',
+        qrCodeState: 0,
       };
     },
     components: {

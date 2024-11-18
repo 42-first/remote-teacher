@@ -172,6 +172,8 @@ var commandMixin = {
         this.setTeacher(lesson.teacher);
       }
 
+      this.qrCodeState = lesson.qrCodeState
+
       // 导播课设置
       if(lesson && lesson.hasLiveCaster) {
         this.hasLiveCaster = lesson.hasLiveCaster;
@@ -529,6 +531,8 @@ var commandMixin = {
           if(data.identityId) {
             this.identityId = data.identityId;
             window.identityId = data.identityId;
+            window.identityName = data.identityName
+            window.identityNumber = data.identityNumber
           }
 
           // 是否导播嘉宾

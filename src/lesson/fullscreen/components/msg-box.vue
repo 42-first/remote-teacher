@@ -138,13 +138,23 @@
     name: 'mag-box',
     data() {
       return {
-        user: window.user
+        user: {
+          name: window.identityName,
+          schoolNumber: window.identityNumber
+        }
       };
     },
     watch: {
+      qrCodeState(newVal) {
+        this.user = {
+          name: window.identityName,
+          schoolNumber: window.identityNumber
+        }
+      }
     },
     props: {
-      functionTips: String
+      functionTips: String,
+      qrCodeState: Number
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -305,6 +315,7 @@
     padding: 8px 18px;
     border-radius: 6px;
     color: #656A72;
+    min-width: 274px;
 
     .status {
       color: #14BF82;
