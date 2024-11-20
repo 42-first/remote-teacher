@@ -36,6 +36,9 @@
     </section>
 
     <div class="chat-wrapper" v-if="lessonCompanionState && chatUrl">
+      <div class="close" @click="chatUrl = ''">
+        <i class="iconfont icon-guanbi f30"></i>
+      </div>
       <iframe :src="chatUrl" frameborder="0"></iframe>
     </div>
   </section>
@@ -316,10 +319,27 @@ export default {
 
   .chat-wrapper {
     position: fixed;
-    top: 100px;
+    top: 40px;
     right: 50px;
     width: 400px;
     height: calc(100vh - 100px);
+    z-index: 99999;
+    background: #f7f9ff;
+    border: 1px solid #b5ccfc;
+    border-radius: 12px;
+    box-shadow: 0 6px 26px 0 rgba(123, 135, 178, .14);
+
+    .close {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: -15px;
+      right: -15px;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
   }
 
 </style>
