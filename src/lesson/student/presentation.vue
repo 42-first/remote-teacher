@@ -138,14 +138,14 @@
     </section>
 
     <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
-    <div class="function__notice f15 box-start" v-if="functionTips">
+    <div class="function__notice f15 box-start" v-if="functionTips && !observerMode">
       <i class="iconfont icon-weidingyue f20 mr4"></i>
       {{ functionTips }}
     </div>
 
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
-      <div class="dynamic_qrcode_tips box-between f15" v-if="qrCodeState && !functionTips">
+      <div class="dynamic_qrcode_tips box-between f15" v-if="qrCodeState && !functionTips && !observerMode">
         <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> <!-- 已签到 -->{{ $t('yiqiandao') }}</span>
         <span class="f12">{{ identityInfo.name }} {{ identityInfo.schoolNumber }}</span>
       </div>

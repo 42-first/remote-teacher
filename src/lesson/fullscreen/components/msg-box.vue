@@ -110,11 +110,11 @@
       </div>
     </template>
 
-    <div class="function__notice box-center f15" v-if="functionTips">
+    <div class="function__notice box-center f15" v-if="functionTips && !observerMode">
       <i class="iconfont icon-weidingyue f20 mr4"></i> {{ functionTips }}
     </div>
 
-    <div class="dynamic_qrcode_tips box-between f15" v-if="!functionTips && lesson && qrCodeState">
+    <div class="dynamic_qrcode_tips box-between f15" v-if="!functionTips && lesson && qrCodeState && !observerMode">
       <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> <!-- 已签到 -->{{ $t('yiqiandao') }}</span>
       <span class="f12">{{ user.name }} {{ user.schoolNumber }}</span>
     </div>
@@ -164,6 +164,7 @@
         'msg',
         'inspectorMode',
         'lesson',
+        'observerMode',
       ]),
 
       ...mapState('meeting', [
