@@ -742,6 +742,15 @@ var mixin = {
             this.$refs.kmeeting && this.$refs.kmeeting.updateVCUsersInfo(msg.users)
             break;
 
+          // 讲伴开关 
+          case 'companion':
+            // 课程基本信息
+            let lesson = this.lesson
+            this.setLesson(Object.assign(lesson, {
+              lessonCompanionState: msg.show ? 1 : 0
+            }));
+            break;
+
           default:
             hasMsg = false;
             break

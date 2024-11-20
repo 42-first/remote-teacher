@@ -29,10 +29,15 @@
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
       <div class="opt__action" @click="handleTag(0)">
+        <!-- <img class="chat-entry" v-if="lessonCompanionState && slide.hasQuestion" :src="$t('imgs.clarify')" alt=""> -->
         <i class="iconfont f20 cfff" :class="[ slide.hasQuestion ? 'icon-budongjihuo': 'icon-budong-' ]"></i>
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
     </section>
+
+    <div class="chat-wrapper" v-if="lessonCompanionState && chatUrl">
+      <iframe :src="chatUrl" frameborder="0"></iframe>
+    </div>
   </section>
 
 </template>
@@ -49,6 +54,7 @@ export default {
       index: 0,
       slide: null,
       style: {},
+      chatUrl: ''
     };
   },
   components: {
@@ -62,6 +68,9 @@ export default {
       'rightType',
       'inspectorMode'
     ]),
+    lessonCompanionState() {
+      return this.lesson.lessonCompanionState
+    }
   },
   mixins: [ ],
   created() {
@@ -230,6 +239,12 @@ export default {
             if(type === 0) {
               item.hasQuestion = !item.hasQuestion;
               slide && (slide.question = item.hasQuestion ? 1 : 0);
+
+              if(item.hasQuestion) {
+                this.chatUrl = `/ai-workspace/chatbot-mobile/${this.lesson.classroomId}?lid=${this.lesson.lessonId}&presid=${slide.presentationid}&sid=${slideID}&pIdx=${slide.pageIndex}&ent=16&entity_type=16&category=3`
+              } else {
+                this.chatUrl = ''
+              }
             } else if(type === 1) {
               item.hasStore = !item.hasStore;
               slide && (slide.store = item.hasStore ? 1 : 0);
@@ -297,6 +312,14 @@ export default {
       cursor: pointer;
       line-height: 1.3;
     }
+  }
+
+  .chat-wrapper {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    width: 400px;
+    height: calc(100vh - 100px);
   }
 
 </style>
