@@ -504,6 +504,11 @@ var mixin = {
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
             break;
 
+          // 讲伴开关 
+          case 'companion':
+            this.lessonCompanionState = msg.show ? 1 : 0
+            break;
+
           default:
             hasMsg = false;
             break
