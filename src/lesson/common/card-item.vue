@@ -556,7 +556,7 @@
         console.log(item,)
         let { presentationid, slideID, pageIndex } = item;
         location.href = process.env.NODE_ENV === 'production' ?  
-          `/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3` : 
+          `/ai-workspace/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3` : 
           `http://localhost:8080/ai-workspace.html#/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3`
       }
     },
