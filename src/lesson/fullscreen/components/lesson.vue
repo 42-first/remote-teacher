@@ -456,15 +456,6 @@ export default {
       text-align: left;
     }
 
-    .function__notice {
-      height: 32px;
-      text-align: center;
-      line-height: 32px;
-      background: rgba(254, 119, 0, 0.7);
-      backdrop-filter: blur(5px);
-      color: #fff;
-    }
-
     .nav__list {
       flex: 1;
       overflow-y: auto;
