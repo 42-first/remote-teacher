@@ -61,6 +61,8 @@ let lessonMixin = {
         this.teacherName = lesson.teacher.name;
       }
 
+      this.qrCodeState = lesson.qrCodeState
+
       // 导播课设置
       if(lesson && lesson.hasLiveCaster) {
         this.hasLiveCaster = lesson.hasLiveCaster;
@@ -417,6 +419,10 @@ let lessonMixin = {
           // 设置当前userid 专业版是虚ID 基础本是实ID
           if(data.identityId) {
             this.identityId = data.identityId;
+            this.identityInfo = {
+              name: data.identityName,
+              schoolNumber: data.identityNumber
+            }
           }
 
           // 是否导播嘉宾

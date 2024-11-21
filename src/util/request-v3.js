@@ -87,7 +87,8 @@ const catchCode = (code) => {
     }
 
     // 下课啦 不提示
-    if(code === 50004) {
+    // 需扫动态二维码进班 业务提示
+    if(code === 50004 || code === 50070) {
       return this;
     }
 
