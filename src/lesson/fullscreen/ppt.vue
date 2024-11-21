@@ -34,13 +34,12 @@
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
     </section>
-
-    <div class="chat-wrapper" v-if="lessonCompanionState && chatUrl">
-      <div class="close" @click="chatUrl = ''">
-        <i class="iconfont icon-guanbi f30"></i>
-      </div>
-      <iframe :src="chatUrl" frameborder="0"></iframe>
-    </div>
+    <chat 
+      v-if="lessonCompanionState && chatUrl"
+      :chatUrl="chatUrl"
+      @close="chatUrl = ''"
+      
+    ></chat>
   </section>
 
 </template>
@@ -48,6 +47,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import slide from './components/slide'
+import chat from './components/chat'
 
 
 export default {
@@ -61,7 +61,8 @@ export default {
     };
   },
   components: {
-    slide
+    slide,
+    chat
   },
   computed: {
     // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -317,29 +318,6 @@ export default {
     }
   }
 
-  .chat-wrapper {
-    position: fixed;
-    top: 40px;
-    right: 50px;
-    width: 400px;
-    height: calc(100vh - 100px);
-    z-index: 99999;
-    background: #f7f9ff;
-    border: 1px solid #b5ccfc;
-    border-radius: 12px;
-    box-shadow: 0 6px 26px 0 rgba(123, 135, 178, .14);
-
-    .close {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      top: -15px;
-      right: -15px;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-    }
-  }
+  
 
 </style>
