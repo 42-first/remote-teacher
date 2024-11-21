@@ -7,7 +7,7 @@
  */
 
 <template>
-  <section class="page" :class="[ liveType ? 'live__view' : '' ]" @click="handleFilter">
+  <section class="page" :class="[ liveType || qrCodeState || functionTips ? 'live__view' : '' ]" @click="handleFilter">
     <section class="page-fixed">
       <!-- header 返回 弹幕 投稿 标题 -->
       <header class="student__header">
@@ -137,8 +137,18 @@
       </section>
     </section>
 
+    <!-- 功能通知 例：动态二维码签到 可进班但只有扫动态码才算签到 -->
+    <div class="function__notice f15 box-start" v-if="functionTips && !observerMode">
+      <i class="iconfont icon-weidingyue f20 mr4"></i>
+      {{ functionTips }}
+    </div>
+
     <!-- 接收器 时间轴 -->
     <section class="student__timeline-wrapper">
+      <div class="dynamic_qrcode_tips box-between f15" v-if="qrCodeState && !functionTips && !observerMode">
+        <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> <!-- 已签到 -->{{ $t('yiqiandao') }}</span>
+        <span class="f12">{{ identityInfo.name }} {{ identityInfo.schoolNumber }}</span>
+      </div>
       <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
@@ -248,7 +258,7 @@
     </div>
 
     <!-- 弹幕直播 -->
-    <danmu-live :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
+    <danmu-live :class="[functionTips ? 'moveup' : '']" :danmu-status="danmuStatus" :danmus.sync="danmus" :clear-danmus="clearDanmus" v-if="danmuStatus"></danmu-live>
 
     <!-- 加入会议 -->
     <div class="meeting__join box-center" @click="handleJoin" v-if="hasMeeting">
@@ -474,7 +484,11 @@
         // 当前清晰度等级
         curLevel: 0,
         showDefinition: false,
-        definitionTips: ''
+        definitionTips: '',
+        functionTips: '',
+        // 动态二维码签到
+        qrCodeState: 0,
+        identityInfo: null,
       };
     },
     components: {
@@ -1226,10 +1240,11 @@
   .live__view {
     display: flex;
     flex-flow: column;
-
+    padding: 2.33rem 0 0;
+    
     .live__wrap {
       position: relative;
-      padding: 2.33rem 0 0;
+      padding: 0;
 
       .player__box {
         position: relative;
@@ -1376,6 +1391,11 @@
     }
   }
 
+  .mint-loadmore{
+    overflow: hidden;
+    height: auto;
+  }
+
   .student__msg {
     position: absolute;
     top: 2.5rem;
@@ -1498,7 +1518,7 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0.8rem;
+    bottom: 0.9333rem;
     text-align: center;
 
     margin: 0 auto;
@@ -1506,7 +1526,7 @@
     height: 1rem;
 
     &.moveup {
-      bottom: 1.5rem;
+      bottom: 1.9rem;
     }
 
     .open-btn {
@@ -1556,5 +1576,34 @@
 
   .J_pswp .pswp__img {
     background: #fff !important;
+  }
+
+  .function__notice {
+    margin: 0.2133rem 0.4267rem 0;
+    background: rgba(241, 103, 72, 0.1);
+    padding: 0.2133rem 0.2667rem;
+    border: 1px solid rgba(241, 103, 72, 0.5);
+    border-radius: 6px;
+    color: #F16748;
+  }
+
+  .dynamic_qrcode_tips {
+    margin: 0.2133rem 0.4267rem 0;
+    background: rgba(20, 181, 101, 0.1);
+    padding: 0.2133rem 0.2667rem;
+    color: #656A72;
+    border-radius: 6px;
+
+    .status {
+      color: #14BF82;
+    }
+  }
+
+  .mr4 {
+    margin-right: 0.1067rem;
+  }
+
+  .danmu__cmp.moveup {
+    bottom: 0.4rem !important;
   }
 </style>

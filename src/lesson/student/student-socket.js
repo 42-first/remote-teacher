@@ -492,7 +492,7 @@ var mixin = {
             }
 
             break;
-
+          
           // 发起指令任务
           case 'sendinstr':
             item = msg['it']
@@ -502,6 +502,12 @@ var mixin = {
           // 结束指令任务
           case 'instrfinished':
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
+            break;
+
+          case 'notification':
+            if(msg.notifications.length > 0 && msg.notifications[0].content) {
+              this.functionTips = msg.notifications[0].content
+            }
             break;
 
           default:
