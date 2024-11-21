@@ -9,8 +9,8 @@
 <template>
   <div class="chat-wrapper">
     <div class="drag-handle J_drag"></div>
-    <div class="close" @click="$emit('close')">
-      <i class="iconfont icon-guanbi f30"></i>
+    <div class="close box-center" @click="$emit('close')">
+      <i class="iconfont icon-guanbi1 f14"></i>
     </div>
     <div class="container">
       <iframe :src="chatUrl" frameborder="0"></iframe>
@@ -151,14 +151,26 @@
       width: 100%;
       height: 20px;
       cursor: move;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .close {
       position: absolute;
-      width: 30px;
-      height: 30px;
-      top: -15px;
-      right: -15px;
+      width: 26px;
+      height: 26px;
+      top: -12px;
+      right: -12px;
+      z-index: 2;
+      cursor: pointer;
+      background: #f4f9ff;
+      border: 1px solid #b5ccfc;
+      border-radius: 50%;
+
+      &:hover {
+        background: #e7f0ff;
+      }
     }
     iframe {
       width: 100%;
@@ -168,7 +180,7 @@
     .container {
       flex: 1;
       overflow: hidden;
-      border-radius: 0 0 12px 12px;
+      border-radius: 12px;
     }
   }
 
