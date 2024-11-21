@@ -742,6 +742,12 @@ var mixin = {
             this.$refs.kmeeting && this.$refs.kmeeting.updateVCUsersInfo(msg.users)
             break;
 
+          case 'notification':
+            if(msg.notifications.length > 0 && msg.notifications[0].content) {
+              this.functionTips = msg.notifications[0].content
+            }
+            break;
+
           // 讲伴开关 
           case 'companion':
             // 课程基本信息

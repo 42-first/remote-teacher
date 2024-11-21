@@ -1,7 +1,7 @@
 <!--二维码控制面板 被父组件 home.vue 引用 -->
 <template>
 	<div class="mask-content qrcode-box">
-    <div class="anhao">
+    <div class="anhao" v-if="inviteCode">
       <div class="f16">{{ $t('classsignal') }}</div>
       <div class="anhao-code f32">{{inviteCode}}</div>
     </div>

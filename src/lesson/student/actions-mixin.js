@@ -6,6 +6,24 @@
  *
  */
 
+const CodeList = [
+  "LESSON_START",
+  "SHOW_PRESENTATION",
+  "LESSON_FINISH",
+  "DANMU_ON",
+  "DANMU_OFF",
+  "RANDOM_PICK",
+  "SHOW_FINISH",
+  "QUIZ_FINISH",
+  "FREE_GROUP_CANCEL",
+  "RANDOM_GROUP_CANCEL",
+  "LIVE_ON",
+  "LIVE_OFF",
+  "INTERACTIVE_ON",
+  "INTERACTIVE_OFF",
+  "TencentInteractive_ON",
+  "TencentInteractive_OFF",
+]
 
 var actionsMixin = {
   methods: {
@@ -131,7 +149,8 @@ var actionsMixin = {
       data.oriMessage = data.message;
 
       // 消息统一国际化
-      if (!hasEvent && data.event && data.event['code']) {
+      // 后续可能增加新的code 不能及时上线更新时 不做国际化处理
+      if (!hasEvent && data.event && data.event['code'] && CodeList.includes(data.event['code'])) {
         let code = data.event && data.event['code'];
         let aReplace = data.event && data.event['replace'] || [];
         let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
@@ -1269,7 +1288,7 @@ var actionsMixin = {
      */
     finishInstructionTask(data) {
       let task = this.cards.find((item) => {
-        return item.type === 8 && item.taskid === data.taskid;
+        return item.type === 14 && item.taskid === data.taskid;
       })
 
       task && Object.assign(task, {
