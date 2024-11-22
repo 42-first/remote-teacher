@@ -244,7 +244,7 @@ export default {
               item.hasQuestion = !item.hasQuestion;
               slide && (slide.question = item.hasQuestion ? 1 : 0);
 
-              if(item.hasQuestion) {
+              if(item.hasQuestion && this.lessonCompanionState) {
                 this.chatUrl = `/ai-workspace/chatbot-mobile/${this.lesson.classroomId}?lid=${this.lesson.lessonId}&presid=${slide.presentationid}&sid=${slideID}&pIdx=${slide.pageIndex}&ent=16&entity_type=16&category=3`
               } else {
                 this.chatUrl = ''
