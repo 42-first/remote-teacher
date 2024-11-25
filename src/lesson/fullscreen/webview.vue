@@ -50,6 +50,9 @@ export default {
   mounted() {
     this.index = +this.$route.params.index;
     this.initPubSub()
+    let slide = this.cards[this.index];
+    this.slide = slide;
+    this.init(slide)
   },
   updated() {},
   beforeDestroy() {

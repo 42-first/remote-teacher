@@ -1300,7 +1300,7 @@ let actionsMixin = {
       let index = this.cards.length;
 
       const { taskid, promptid } = data
-      let href = `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.lesson.classroomId}`
+      let href = `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.lesson.classroomId}?from=fullscreen`
       Object.assign(data, {
         status: status,
         isEnd,
