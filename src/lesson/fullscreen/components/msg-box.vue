@@ -116,9 +116,9 @@
           <div class="icon__wrap box-center">
             <i class="iconfont icon-jiangban cfff f24"></i>
           </div>
-          <p class="pl10 f16 cfff"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+          <p class="pl10 f16 c333"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
         </section>
-        <i class="iconfont icon-shiti_guanbitouping f24 cfff" @click="handleClosedMsg"></i>
+        <i class="iconfont icon-shiti_guanbitouping f24 c666" @click="handleClosedMsg"></i>
       </div>
     </template>
 
@@ -311,7 +311,10 @@
     }
 
     &.ai-task {
-      background: linear-gradient(96.67deg, #8F7EFE -1.37%, #5C9BFF 59.98%, #83E7FF 102.99%);
+      box-shadow: 0px 6px 32px 0px rgba(123, 135, 178, 0.1);
+      .icon__wrap {
+        background: linear-gradient(96.66deg, #7964FF -1.37%, #458EFF 64.43%, #51DEFF 110.57%);
+      }
     }
   }
 
