@@ -97,7 +97,9 @@ export default {
             break;
 
           // 发起了分组
+          // 指令任务
           case 8:
+          case 14:
             this.src = slide.href;
             break;
 
