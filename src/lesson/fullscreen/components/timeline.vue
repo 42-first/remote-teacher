@@ -556,13 +556,21 @@
       &.complete {
         background: #fff;
         border: 1px solid #B5CCFC;
-        color: #90949D;
+        color: #656A72;
+
+        p {
+          color: #656A72;
+        }
 
         .icon__wrap {
           background: linear-gradient(96.66deg, #8F7EFE -1.37%, #5C9BFF 64.43%, #83E7FF 110.57%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           opacity: 1;
+        }
+
+        .timeline__footer {
+          background: #F0F2FA;
         }
       }
     }
