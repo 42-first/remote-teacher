@@ -47,7 +47,7 @@
       <!-- 视频直播 -->
       <section v-if="liveType === 2">
         <section class="player__box" v-show="liveVisible">
-          <video id="player" class="video__live" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
+          <video id="player" class="video__live" :class="{'minHeight': hasMinHeight}" x5-video-player-fullscreen="true" x5-video-player-type="h5-page" webkit-playsinline playsinline autobuffer controls controlslist="nodownload" ></video>
           <div class="live__status f14" v-show="liveStatusTips">{{liveStatusTips}}</div>
           <!-- 视频水印层 -->
           <div class="watermark_layer" id="watermark_layer"></div>
@@ -489,6 +489,7 @@
         // 动态二维码签到
         qrCodeState: 0,
         identityInfo: null,
+        hasMinHeight: true,
       };
     },
     components: {
@@ -1250,9 +1251,14 @@
         position: relative;
         .video__live {
           width: 100%;
-          min-height: 5rem;
           background: rgba(0,0,0,0.45);
+          min-height: unset;
         }
+
+        .minHeight {
+          min-height: 5rem;
+        }
+
         .watermark_layer {
           position: absolute;
           top: 0;

@@ -219,6 +219,7 @@ let liveMixin = {
       // 卡主不能播放视频问题
       liveEl.addEventListener('timeupdate', (evt) => {
         console.log('currentTime:', liveEl.currentTime)
+        liveEl.currentTime && this.hasMinHeight && (this.hasMinHeight = false)
 
         // 删除提示
         if(self.liveStatusTips) {
@@ -658,6 +659,7 @@ let liveMixin = {
      */
     handleStopVideo() {
       this.liveVisible = false;
+      this.hasMinHeight = true
       this.handlestop();
     },
 
