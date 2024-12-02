@@ -11,7 +11,7 @@ import * as qiniu from 'qiniu-js'
 
 
 let fileupload = {
-  qiniuDomain: 'https://qn-scd0.yuketang.cn/',
+  qiniuDomain: 'https://qn-scd1.yuketang.cn/',
   bucketName: 'cms-attachment',
   tokenExpiredTime: 3600,
 
