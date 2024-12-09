@@ -71,7 +71,9 @@ let lessonMixin = {
       }
 
       // 班级信息
-      lesson && this.getClassroom(lesson.classroomId);
+      let classroom = lesson && await this.getClassroom(lesson.classroomId);
+      // 获取班级所在课程是否在白名单内  在的话新用户不展示信息弹窗
+      let inWhiteList = await this.checkClassInWhiteList(classroom && classroom.courseId)
 
       // 初始化websocket
       setTimeout(() => {
@@ -79,7 +81,7 @@ let lessonMixin = {
       }, 20)
 
       // 是否新用户
-      if(user.edited === false) {
+      if(user.edited === false && !inWhiteList) {
         this.showGuide = true;
       }
     },
@@ -370,7 +372,7 @@ let lessonMixin = {
         'classroom_id': rid
       };
 
-      request.get(URL, params).
+      return request.get(URL, params).
       then( res => {
         if (res && res.code === 0 && res.data) {
           let data = res.data;
@@ -384,9 +386,12 @@ let lessonMixin = {
           if(data.pro) {
             this.getWaterMarkInfo()
           }
+
+          return data
         }
       }).catch(error => {
         console.log('getClassroom:', error);
+        return {}
       })
     },
 
@@ -840,6 +845,26 @@ let lessonMixin = {
       }).catch(error => {
         console.log('getInstructionTasks:', error)
         return {}
+      })
+    },
+
+    /**
+     * @method 检测班级是否在新用户白名单内
+     */
+    checkClassInWhiteList(cid) {
+      let URL = API.lesson.check_course_white_list
+      let params = {
+        courseId: cid
+      }
+
+      return request.get(URL, params)
+      .then(res => {
+        if(res && res.code === 0 && res.data) {
+          return res.data.skipPermission
+        }
+      }).catch(error => {
+        console.log('checkClassInWhiteList:', error)
+        return false
       })
     }
   }

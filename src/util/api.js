@@ -270,6 +270,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
 
       // 获取指令任务状态
       get_ai_task_status_list: '/api/v3/lesson/ai-task/receive-list',
+      // 检测当前课程是否在新用户白名单内
+      check_course_white_list: '/api/v3/classroom/check-course-white-list',
     },
 
     /*------------------*\
