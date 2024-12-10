@@ -156,7 +156,8 @@ export default {
       'setSlideIndex',
       'setMsg',
       'setLayoutSize',
-      'setRightType'
+      'setRightType',
+      'setIsAutoJump',
     ]),
 
     /**
@@ -262,6 +263,8 @@ export default {
           if(slide && [2, 3, 12].includes(slide.type)) {
             this.setSlideIndex(index);
             this.setMsg(null);
+
+            this.setIsAutoJump(true)
           }
         }
       }

@@ -70,7 +70,8 @@ export default {
       'lesson',
       'cards',
       'rightType',
-      'inspectorMode'
+      'inspectorMode',
+      'isAutoJump',
     ]),
     lessonCompanionState() {
       return this.lesson.lessonCompanionState
@@ -132,6 +133,10 @@ export default {
           let slide = this.cards[newVal];
           this.slide = slide;
         }, 1000)
+      }
+
+      if(!this.isAutoJump) {
+        this.chatUrl && (this.chatUrl = '')
       }
     },
     rightType(newVal){

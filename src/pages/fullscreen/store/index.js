@@ -73,6 +73,8 @@ const store = new Vuex.Store({
     hasKMeeting: false,
     // 教务端听课
     inspectorMode: false,
+    // timeline是否自动跳转的
+    isAutoJump: false,
   },
   mutations: {
     // 重置课堂信息
@@ -94,6 +96,7 @@ const store = new Vuex.Store({
       state.hasTXMeeting = false;
       state.hasKMeeting = false;
       state.inspectorMode = false;
+      state.isAutoJump = false;
     },
 
     setLines(state, lines) {
@@ -190,6 +193,10 @@ const store = new Vuex.Store({
 
     setInspectorMode(state, data) {
       state.inspectorMode = data
+    },
+
+    setIsAutoJump(state, data) {
+      state.isAutoJump = data
     },
   },
 
@@ -290,6 +297,10 @@ const store = new Vuex.Store({
 
     setInspectorMode({commit}, data) {
       commit('setInspectorMode', data)
+    },
+
+    setIsAutoJump({commit}, data) {
+      commit('setIsAutoJump', data)
     },
   },
 

@@ -254,6 +254,7 @@
       ...mapActions([
         'setSlideIndex',
         'setMsg',
+        'setIsAutoJump'
       ]),
 
       /**
@@ -302,6 +303,7 @@
           }
 
           this.setSlideIndex(index);
+          this.setIsAutoJump(false)
         }
       },
 
