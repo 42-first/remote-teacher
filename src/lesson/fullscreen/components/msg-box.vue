@@ -109,6 +109,18 @@
         <i class="iconfont icon-shiti_guanbitouping f24 c666" @click="handleClosedMsg"></i>
       </div>
     </template>
+    <!-- 指令任务 -->
+    <template v-else-if="msg && msg.type == 14">
+      <div class="msg__box box-between cfff ai-task">
+        <section class="box-start pr10" @click="handleLink(msg)">
+          <div class="icon__wrap box-center">
+            <i class="iconfont icon-jiangban cfff f24"></i>
+          </div>
+          <p class="pl10 f16 c333"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+        </section>
+        <i class="iconfont icon-shiti_guanbitouping f24 c666" @click="handleClosedMsg"></i>
+      </div>
+    </template>
 
     <div class="function__notice box-center f15" v-if="functionTips && !observerMode">
       <i class="iconfont icon-weidingyue f20 mr4"></i> {{ functionTips }}
@@ -193,7 +205,7 @@
 
         let slideIndex = slide.index || this.cards.length - 1;
 
-        if(this.inspectorMode && [4,8,9].includes(slide.type)) {
+        if(this.inspectorMode && [4,8,9,14].includes(slide.type)) {
           this.$toast({
             message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
             duration: 3000
@@ -295,6 +307,13 @@
       .icon__wrap {
         background: #F84F41;
         box-shadow: 0 2px 4px rgba(248, 79, 65, 0.5);
+      }
+    }
+
+    &.ai-task {
+      box-shadow: 0px 6px 32px 0px rgba(123, 135, 178, 0.1);
+      .icon__wrap {
+        background: linear-gradient(96.66deg, #7964FF -1.37%, #458EFF 64.43%, #51DEFF 110.57%);
       }
     }
   }

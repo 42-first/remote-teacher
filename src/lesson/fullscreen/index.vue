@@ -226,6 +226,9 @@
 
         // 习题map
         problemMap: new Map(),
+        // 指令任务
+        instructionTaskMap: new Map(),
+        
 
         // 插件版本号
         version: 1.5,
