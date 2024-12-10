@@ -1329,7 +1329,7 @@ let actionsMixin = {
 
       task && Object.assign(task, {
         isEnd: true,
-        status: '已结束'
+        status: this.$i18n.t('statusisend') || '已结束'
       })
 
       this.setCards(this.cards);

@@ -69,6 +69,7 @@ let pages = {
   "notstart": "Not Started",
   "performaitask": "You cannot perform instruction task in spectator mode.",
   "aitaskisend": "The task has Closed",
+  "statusisend": "Closed",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

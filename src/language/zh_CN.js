@@ -68,6 +68,7 @@ let pages = {
   "notstart": "未开始",
   "performaitask": "观看者模式下无法执行指令任务",
   "aitaskisend": "该任务已结束",
+  "statusisend": "已结束",
   
   "submit": "提交",
   "submitansw": "提交答案",
