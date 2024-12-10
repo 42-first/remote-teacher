@@ -295,7 +295,7 @@
             }
           } else if(item.type == 14 && item.isEnd) {
             this.$toast({
-              message: '该任务已结束',
+              message: this.$i18n.t('aitaskisend') || '该任务已结束',
               duration: 3000
             });
 
