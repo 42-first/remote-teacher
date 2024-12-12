@@ -173,6 +173,20 @@
 
       </template>
 
+      <!-- 指令任务 -->
+      <template v-else-if="item.type == 14">
+        <div class="timeline__cards ai-task" :class="[item.isEnd ? 'complete' : '']">
+          <div class="icon__wrap box-center">
+            <i class="iconfont icon-jiangban cfff f32"></i>
+          </div>
+          <p class="f14 bold"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+          <p class="f12">{{item.instrname}}</p>
+          <div class="box-between timeline__footer">
+            <p class="f12">{{ item.time|getTimeago }}</p>
+            <span class="f12">{{ item.status }}</span>
+          </div>
+        </div>
+      </template>
     </section>
 
   </section>
@@ -240,6 +254,7 @@
       ...mapActions([
         'setSlideIndex',
         'setMsg',
+        'setIsAutoJump'
       ]),
 
       /**
@@ -278,9 +293,17 @@
               });
               return this;
             }
+          } else if(item.type == 14 && item.isEnd) {
+            this.$toast({
+              message: this.$i18n.t('aitaskisend') || '该任务已结束',
+              duration: 3000
+            });
+
+            return false;
           }
 
           this.setSlideIndex(index);
+          this.setIsAutoJump(false)
         }
       },
 
@@ -523,6 +546,34 @@
 
       .timeline__footer {
         // background: #c8c8c8;
+      }
+    }
+
+    &.ai-task {
+      background: linear-gradient(98.52deg, #8F7EFE 0.29%, #5C9BFF 50.14%, #83BDFF 100%);
+      color: #fff;
+      width: 100%;
+      border: none;
+
+      &.complete {
+        background: #fff;
+        border: 1px solid #B5CCFC;
+        color: #656A72;
+
+        p {
+          color: #656A72;
+        }
+
+        .icon__wrap {
+          background: linear-gradient(96.66deg, #8F7EFE -1.37%, #5C9BFF 64.43%, #83E7FF 110.57%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          opacity: 1;
+        }
+
+        .timeline__footer {
+          background: #F0F2FA;
+        }
       }
     }
 

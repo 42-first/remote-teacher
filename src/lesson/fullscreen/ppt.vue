@@ -29,10 +29,17 @@
         <p><!-- 收藏 -->{{ $t('favorite') }}</p>
       </div>
       <div class="opt__action" @click="handleTag(0)">
+        <!-- <img class="chat-entry" v-if="lessonCompanionState && slide.hasQuestion" :src="$t('imgs.clarify')" alt=""> -->
         <i class="iconfont f20 cfff" :class="[ slide.hasQuestion ? 'icon-budongjihuo': 'icon-budong-' ]"></i>
         <p><!-- 不懂 -->{{ $t('unknown') }}</p>
       </div>
     </section>
+    <chat 
+      v-if="lessonCompanionState && chatUrl"
+      :chatUrl="chatUrl"
+      @close="chatUrl = ''"
+      
+    ></chat>
   </section>
 
 </template>
@@ -40,6 +47,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import slide from './components/slide'
+import chat from './components/chat'
 
 
 export default {
@@ -49,10 +57,12 @@ export default {
       index: 0,
       slide: null,
       style: {},
+      chatUrl: ''
     };
   },
   components: {
-    slide
+    slide,
+    chat
   },
   computed: {
     // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -60,8 +70,12 @@ export default {
       'lesson',
       'cards',
       'rightType',
-      'inspectorMode'
+      'inspectorMode',
+      'isAutoJump',
     ]),
+    lessonCompanionState() {
+      return this.lesson.lessonCompanionState
+    }
   },
   mixins: [ ],
   created() {
@@ -119,6 +133,10 @@ export default {
           let slide = this.cards[newVal];
           this.slide = slide;
         }, 1000)
+      }
+
+      if(!this.isAutoJump) {
+        this.chatUrl && (this.chatUrl = '')
       }
     },
     rightType(newVal){
@@ -230,6 +248,12 @@ export default {
             if(type === 0) {
               item.hasQuestion = !item.hasQuestion;
               slide && (slide.question = item.hasQuestion ? 1 : 0);
+
+              if(item.hasQuestion && this.lessonCompanionState) {
+                this.chatUrl = `/ai-workspace/chatbot-mobile/${this.lesson.classroomId}?lid=${this.lesson.lessonId}&presid=${slide.presentationid}&sid=${slideID}&pIdx=${slide.pageIndex}&ent=16&entity_type=16&category=3`
+              } else {
+                this.chatUrl = ''
+              }
             } else if(type === 1) {
               item.hasStore = !item.hasStore;
               slide && (slide.store = item.hasStore ? 1 : 0);
@@ -298,5 +322,7 @@ export default {
       line-height: 1.3;
     }
   }
+
+  
 
 </style>

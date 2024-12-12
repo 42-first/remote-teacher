@@ -70,6 +70,8 @@ let lessonMixin = {
         this.liveCasterMode = lesson.liveCasterMode;
       }
 
+      this.lessonCompanionState = lesson.lessonCompanionState
+
       // 班级信息
       lesson && this.getClassroom(lesson.classroomId);
 

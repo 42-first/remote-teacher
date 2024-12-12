@@ -68,6 +68,8 @@ let pages = {
   "started": "Started",
   "notstart": "Not Started",
   "performaitask": "You cannot perform instruction task in spectator mode.",
+  "aitaskisend": "The task has Closed",
+  "statusisend": "Closed",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",
@@ -703,7 +705,8 @@ let pages = {
 
   // 图片国际化
   imgs: {
-    "tougaoempty": "https://qn-sfe.yuketang.cn/o_1c2vtgl92fc11pofoot1ggv1clc9.png"
+    "tougaoempty": "https://qn-sfe.yuketang.cn/o_1c2vtgl92fc11pofoot1ggv1clc9.png",
+    "clarify": "https://fe-static-yuketang.yuketang.cn/fe/static/assets/remote/clarify_en.png",
   },
 
   code: {

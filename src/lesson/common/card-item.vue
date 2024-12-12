@@ -24,6 +24,7 @@
         <div class="ppt-footer">
           <p class="ppt__time f16">{{ item.time|getTimeago }}</p>
           <div class="ppt__opt f15" v-show="!observerMode">
+            <img class="chat-entry" v-if="item.hasQuestion && lessonCompanionState" :src="$t('imgs.clarify')" alt="" @click="handleBudongChat(item)">
             <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(0, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
             <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('favorite') }}</p>
           </div>
@@ -260,6 +261,13 @@
       item: {
         type: Object,
         default: null
+      },
+      lessonCompanionState: {
+        type: Number,
+        default: 0
+      },
+      cid: {
+        type: String
       }
     },
     data() {
@@ -529,7 +537,7 @@
 
         if(item.isEnd) {
           this.$toast({
-            message: '该任务已结束',
+            message: this.$i18n.t('aitaskisend') || '该任务已结束',
             duration: 3000
           });
 
@@ -539,6 +547,17 @@
         location.href = item.href
 
         return true;
+      },
+      
+      /**
+       * @method 课件不懂帮你理解
+       */
+      handleBudongChat(item) {
+        console.log(item,)
+        let { presentationid, slideID, pageIndex } = item;
+        location.href = process.env.NODE_ENV === 'production' ?  
+          `/ai-workspace/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3` : 
+          `http://localhost:8080/ai-workspace.html#/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3`
       }
     },
     created() {
@@ -637,11 +656,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
 
       .ppt__opt {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: absolute;
+        right: 0;
 
         .ppt--action {
           margin-left: 0.266667rem;
@@ -659,6 +681,12 @@
         .selected {
           color: #fff;
           background: #639EF4;
+        }
+
+        .chat-entry {
+          width: 2.9867rem;
+          margin-top: -0.3333rem;
+          margin-right: -0.2133rem;
         }
       }
     }
