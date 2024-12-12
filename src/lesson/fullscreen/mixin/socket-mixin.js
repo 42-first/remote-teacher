@@ -390,7 +390,7 @@ var mixin = {
           case 'quizfinished':
           case 'callpaused':
             item = msg['event'];
-            this.addMessage({ type: 1, message: item['title'], event: item });
+            item.show && this.addMessage({ type: 1, message: item['title'], event: item });
 
             break
 
@@ -746,6 +746,27 @@ var mixin = {
             if(msg.notifications.length > 0 && msg.notifications[0].content) {
               this.functionTips = msg.notifications[0].content
             }
+            break;
+
+          // 讲伴开关 
+          case 'companion':
+            // 课程基本信息
+            let lesson = this.lesson
+            this.setLesson(Object.assign(lesson, {
+              lessonCompanionState: msg.show ? 1 : 0
+            }));
+
+            break;
+            
+          // 发起指令任务
+          case 'sendinstr':
+            item = msg['it']
+            this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], isPopup: true, event: item });
+            break;
+
+          // 结束指令任务
+          case 'instrfinished':
+            this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
             break;
 
           default:

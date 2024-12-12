@@ -37,7 +37,7 @@ let actionsMixin = {
 
             // event
             case 'event':
-              this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
+              item.show && this.addMessage({ type: 1, message: item['title'], time: item['dt'], event: item, isFetch: isFetch });
 
               break;
 
@@ -106,6 +106,11 @@ let actionsMixin = {
 
               break;
 
+            // 发起指令任务
+            case 'instruction':
+              this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], event: item, isFetch: isFetch })
+              break;
+
             default: break;
           }
         });
@@ -116,7 +121,7 @@ let actionsMixin = {
 
           setTimeout(()=>{
             this.cards.forEach( (item, index) => {
-              if(item.type !== 1) {
+              if(item.type !== 1 && !item.isEnd) {
                 slideIndex = index;
               }
             });
@@ -1279,7 +1284,56 @@ let actionsMixin = {
       if(confirmObj) {
         this.$removeConfirm(confirmObj);
       }
-    }
+    },
+
+    /**
+     * @method 新增指令任务
+     */
+    addInstructionTask(data) {
+      let task = this.instructionTaskMap.get(data.taskid);
+      let isEnd = task && task.status == 2 ;
+      let status = task && task.finishStatus == 2 ? this.$i18n.t('done') : task && task.finishStatus == 1 ? this.$i18n.t('started') || '已启动' : this.$i18n.t('notstart') || '未开始'
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 14 && item.taskid === data.taskid && data.isFetch;
+      })
+      let index = this.cards.length;
+
+      const { taskid, promptid } = data
+      let href = `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.lesson.classroomId}?from=fullscreen`
+      Object.assign(data, {
+        status: status,
+        isEnd,
+        index,
+        href: href,
+        instrname: data.instrname
+      })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.setMsg(data));
+
+      if (!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
+    },
+
+    /*
+     * @method 结束指令任务
+     * @param 
+     */
+    finishInstructionTask(data) {
+      let task = this.cards.find((item) => {
+        return item.type === 14 && item.taskid === data.taskid;
+      })
+
+      task && Object.assign(task, {
+        isEnd: true,
+        status: this.$i18n.t('statusisend') || '已结束'
+      })
+
+      this.setCards(this.cards);
+    },
 
   }
 }
