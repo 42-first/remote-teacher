@@ -18,16 +18,20 @@
           <i class="iconfont icon-add f25"></i>
           <div :class="['more-actions', 'animated', isMore == 1 ? 'slideInDown' : 'slideInUp']" v-show="isMore">
             <p class="action f17 line" @click="handleOpenDanmu">
-              <i class="iconfont icon-ykq_tab_danmu f25"></i>
+              <i class="iconfont icon-danmu f25"></i>
               <span>{{ $t('sendbullet') }}</span>
             </p>
             <router-link :to="'/v3/'+lessonID+'/submission/?classroomid=' + (classroom && classroom.classroomId)" tag="p" class="action f17 line">
-              <i class="iconfont icon-ykq_tab_tougao f25"></i>
+              <i class="iconfont icon-gongzuojiluorkaoshiorwenjuanortougao f25"></i>
               <span>{{ $t('sendpost') }}</span>
             </router-link>
-            <p class="action f17" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
-              <i class="iconfont icon-fenzu f25"></i>
+            <p class="action f17" :class="showRealTimeLectureNote ? 'line' : ''" @click="handleenterTeam" v-if="classroom && classroom.classroomId">
+              <i class="iconfont icon-a-fenzujiegouzuo f25"></i>
               <span>{{ $t('team.mygroup') }}</span>
+            </p>
+            <p v-if="showRealTimeLectureNote" class="action f17" @click="handleOpenLectureNote()">
+              <i class="iconfont icon-jianggao f25"></i>
+              <span>{{ $t('lectureNote') }}</span>
             </p>
           </div>
         </div>
@@ -167,7 +171,7 @@
           </div>
           <!-- 时间轴内容列表 -->
           <div class="timeline-wrapper" v-for="(item, index) in cards" :key="index">
-            <Card-Item-Component :item="item" :index="index" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1" :lessonCompanionState="lessonCompanionState" :cid="classroom.classroomId"></Card-Item-Component>
+            <Card-Item-Component :item="item" :index="index" :tabindex='currTabIndex' v-if="currTabIndex===item.type||currTabIndex===1" :lessonCompanionState="lessonCompanionState" :cid="classroom.classroomId" :showRealTimeLectureNote="showRealTimeLectureNote" @showLectureNote="handleOpenLectureNote"></Card-Item-Component>
           </div>
           <!-- 各类型中的空状态 -->
           <div class="timeline__msg f15" v-if="currTabIndex===2 && !hasPPT">{{ $t('noslides') }}</div>
@@ -270,6 +274,9 @@
 
     <!-- 清华继教用户协议 -->
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
+
+    <!-- 课堂讲稿 -->
+    <lecture-note v-if="visibleLectureNote" :time="lectureNoteTime" @close="handleClosedLectureNote"></lecture-note>
   </section>
 </template>
 <script>
@@ -492,6 +499,9 @@
         hasMinHeight: true,
         // 是否开启讲伴
         lessonCompanionState: 0,
+        showRealTimeLectureNote: false,
+        visibleLectureNote: false, 
+        lectureNoteTime: 0,
       };
     },
     components: {
@@ -504,7 +514,8 @@
       notice: () => import('@/lesson/common/service-notice.vue'),
       danmuLive: () => import('@/lesson/common/danmu-live.vue'),
       livetip: () => import('@/lesson/common/live-tip.vue'),
-      userAgreement
+      userAgreement,
+      lectureNote: () => import('@/lesson/common/lecturenote.vue')
     },
     computed: {
       ...mapState([
@@ -1171,7 +1182,7 @@
 
         color: #fff;
 
-        background: rgba(51,51,51, 0.9);
+        background: rgba(38, 43, 65, 0.9);
         border-radius: 0.106667rem;
 
         animation-duration: 0.3s;
@@ -1201,8 +1212,8 @@
         right: 0.28rem;
 
         content: '';
-        border: 0.2rem solid rgba(51,51,51, 0.9);
-        border-color: transparent transparent rgba(51,51,51, 0.9) transparent;
+        border: 0.2rem solid rgba(38, 43, 65, 0.9);
+        border-color: transparent transparent rgba(38, 43, 65, 0.9) transparent;
       }
 
     }

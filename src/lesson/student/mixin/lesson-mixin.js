@@ -61,6 +61,7 @@ let lessonMixin = {
         this.teacherName = lesson.teacher.name;
       }
 
+      // 是否开启了动态二维码
       this.qrCodeState = lesson.qrCodeState
 
       // 导播课设置
@@ -70,7 +71,10 @@ let lessonMixin = {
         this.liveCasterMode = lesson.liveCasterMode;
       }
 
+      // 是否开启了讲伴
       this.lessonCompanionState = lesson.lessonCompanionState
+      // 是否展示课堂讲稿
+      this.showRealTimeLectureNote = lesson.showRealTimeLectureNote
 
       // 班级信息
       let classroom = lesson && await this.getClassroom(lesson.classroomId);
@@ -868,6 +872,21 @@ let lessonMixin = {
         console.log('checkClassInWhiteList:', error)
         return false
       })
+    },
+
+    /**
+     * @method 展示课堂讲稿
+     */
+    handleOpenLectureNote(time) {
+      this.visibleLectureNote = true
+      this.lectureNoteTime = time
+    },
+
+    /**
+     * @method 关闭课堂讲稿
+     */
+    handleClosedLectureNote() {
+      this.visibleLectureNote = false
     }
   }
 }
