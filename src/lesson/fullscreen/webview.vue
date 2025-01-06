@@ -162,7 +162,7 @@ export default {
     handlePostMessage(e) {
       let data = e.data
       if(data.op == 'webviewSendLesson') {
-        let type = self.slide && self.slide.type
+        let type = this.slide && this.slide.type
         switch(type){
           case 14:
             let taskObj = {
