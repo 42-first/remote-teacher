@@ -75,6 +75,13 @@ export default {
 
       this.init(slide);
     },
+    cards(newVal, oldVal) {
+      if(!oldVal.length) {
+        let slide = newVal[this.index];
+        this.slide = slide;
+        this.init(slide)  
+      }
+    }
   },
   methods: {
     ...mapActions([
