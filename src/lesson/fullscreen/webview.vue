@@ -53,9 +53,12 @@ export default {
     let slide = this.cards[this.index];
     this.slide = slide;
     this.init(slide)
+
+    window.addEventListener('message', this.handlePostMessage)
   },
   updated() {},
   beforeDestroy() {
+    window.removeEventListener('message', this.handlePostMessage)
   },
   filters: {
   },
@@ -147,6 +150,24 @@ export default {
             break;
         }
       })
+    },
+
+    handlePostMessage(e) {
+      let data = e.data
+      if(data.op == 'webviewSendLesson') {
+        let type = self.slide && self.slide.type
+        switch(type){
+          case 14:
+            let taskObj = {
+              status: this.$i18n.t('started') || '已启动'
+            }
+            this.slide = Object.assign({}, this.slide, taskObj)
+            this.cards.splice(this.index, 1, this.slide)
+
+            this.setCards(this.cards)
+            break;
+        }
+      }
     }
 
   }
