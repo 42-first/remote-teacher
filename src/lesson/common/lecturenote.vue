@@ -8,12 +8,17 @@
         </div>
       </div>
       <div
+        v-if="lectureNotes.length"
         class="note__list"
+        @scroll="handleScroll"
       >
-        <div class="note__item" :id="`note${index}`" v-for="(item, index) in lectureNotes" :key="index">
+        <div class="note__item" :id="`note${item.id}`" v-for="(item, index) in lectureNotes" :key="index">
           <div class="time f13">{{item.createTime | formatTime}}</div>
           <div class="text f16">{{item.content}}</div>
         </div>
+      </div>
+      <div class="empty" v-else>
+        <img src="https://fe-static-yuketang.yuketang.cn/fe/static/assets/remote/empty.png" alt="">
       </div>
     </section>
   </section>
@@ -22,11 +27,18 @@
 </template>
 
 <script>
+ import _ from 'underscore'
   export default {
     data() {
       return {
         lectureNotes: [],
-        scrollId: ''
+        scrollId: '',
+        direction: 0,
+        time: 0,
+        deltaY: 0,
+        hasNext: false,
+        hasPrev: false,
+        lastScrollTop: 0
       }
     },
 
@@ -35,13 +47,13 @@
         let noteEl = this.$el.querySelector(`#${newVal}`);
 
         setTimeout(()=>{
-          noteEl && noteEl.scrollIntoView({ behavior: "smooth", block: 'center' });
+          noteEl && noteEl.scrollIntoView({ behavior: "instant", block: 'center' });
         }, 0)
       }
     },
 
     props: {
-      time: {
+      pptTime: {
         type: Number,
         default: 0
       }
@@ -55,27 +67,82 @@
       }
     },  
     mounted() {
-      this.fetchLectureNotes()
+      if(this.pptTime) {
+        this.time = this.pptTime
+      }
+      this.fetchLectureNotes(true)
+
+      // 下拉加载更多
+      this.scrollThrottled = _.throttle(evt => {
+        let $list = evt.target
+        let clientHeight = $list.clientHeight;
+        let totalHeight = $list.scrollHeight;
+        let scrollTop = $list && $list.scrollTop;
+        let leaveHeight = totalHeight - clientHeight - scrollTop;
+
+        if(scrollTop > this.lastScrollTop) {
+          console.log('向下滚动')
+          // 向下滚动
+          if(leaveHeight < 150 && this.hasNext) {
+            this.time = this.lectureNotes[this.lectureNotes.length - 1].createTime
+            this.direction = 1
+
+            this.fetchLectureNotes()
+          }
+        } else {
+          console.log('向上滚动')
+          if(scrollTop < 100 && this.hasPrev) {
+           
+            this.time = this.lectureNotes[0].createTime
+            this.direction = -1
+
+            this.fetchLectureNotes()
+          }
+        }
+
+        this.lastScrollTop = scrollTop
+
+      }, 100);
     },
 
     methods: {
       /**
        * @method 获取讲稿
        */
-      fetchLectureNotes() {
+      fetchLectureNotes(isInit) {
         let URL = API.lesson.get_records
+        let params = {
+          time: this.time,
+          direction: this.direction
+        }
 
-        return request.get(URL).then(res => {
+        return request.get(URL, params).then(res => {
           if(res && res.code == 0 && res.data) {
-            this.lectureNotes = res.data.records
-            this.$nextTick(() => {
-              let index = this.time && res.data.records.findIndex(item => item.createTime >= this.time) || -1
-              this.scrollId = ~index ? `note${index}` : `note${res.data.records.length - 1}`
-            })
+            let list = []
+            if(this.direction == 0) {
+              list = res.data.records.list
+            } else if(this.direction == -1) {
+              list = res.data.records.list.concat(this.lectureNotes)
+            } else {
+              list = this.lectureNotes.concat(res.data.records.list)
+            }
+            this.lectureNotes = [...list]
+            this.hasNext = res.data.records.hasNext
+            this.hasPrev = res.data.records.hasPrev
+            if(isInit || this.direction == -1) {
+              this.$nextTick(() => {
+                let item = this.time && this.lectureNotes.find(item => item.createTime >= this.time) || this.lectureNotes[this.lectureNotes.length -1]
+                this.scrollId = item && `note${item.id}` || ''
+              })
+            }
             
           }
         })
       },
+
+      handleScroll(e) {
+        this.scrollThrottled(e)
+      }
     }
   }
 </script>
@@ -137,6 +204,18 @@
           padding: 0.1067rem 0;
           line-height: 0.6933rem;
         }
+      }
+    }
+
+    .empty {
+      height: 60vh;
+      padding-top: 2.1333rem;
+      display: flex;
+      justify-content: center;
+
+      img {
+        width: 7.4667rem;
+        height: 4.2667rem;
       }
     }
   } 

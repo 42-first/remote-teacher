@@ -276,7 +276,7 @@
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
 
     <!-- 课堂讲稿 -->
-    <lecture-note v-if="visibleLectureNote" :time="lectureNoteTime" @close="handleClosedLectureNote"></lecture-note>
+    <lecture-note v-if="visibleLectureNote" :pptTime="lectureNoteTime" @close="handleClosedLectureNote"></lecture-note>
   </section>
 </template>
 <script>
