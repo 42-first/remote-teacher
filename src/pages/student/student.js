@@ -15,10 +15,10 @@ import('pubsub-js').then(res => {
 import EnLanguage from '@/language/en'
 import ChLanguage from '@/language/zh_CN'
 
-import { loadScript } from '@/util/util'
+import { loadScript, isFlutterApp, isNativeApp } from '@/util/util'
 
 setTimeout(() => {
-  if (window.__wxjs_environment === 'miniprogram') {
+  if (window.__wxjs_environment === 'miniprogram' || isFlutterApp() || isNativeApp()) {
     return
   } else {
     let youmengSrc = 'https://v1.cnzz.com/z.js?id=1281406241&async=1'

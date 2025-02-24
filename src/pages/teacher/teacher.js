@@ -7,13 +7,13 @@ import App from '@/pages/teacher/teacher.vue'
 import router from '@/router/index-teacher'
 import store from '@/pages/teacher/store';
 // 检测是否https
-import {initProtocal, loadScript} from '@/util/util'
+import {initProtocal, loadScript, isFlutterApp, isNativeApp} from '@/util/util'
 import('pubsub-js').then(res => {
 	window.T_PUBSUB = res
 })
 
 setTimeout(() => {
-  if (window.__wxjs_environment === 'miniprogram') {
+  if (window.__wxjs_environment === 'miniprogram' || isFlutterApp() || isNativeApp()) {
     return
   } else {
     let youmengSrc = 'https://v1.cnzz.com/z.js?id=1281406241&async=1'
