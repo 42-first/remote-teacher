@@ -276,6 +276,6 @@ export function isFlutterApp() {
   return navigator.userAgent.indexOf('flutterApp') > -1
 }
 // 是否nativeApp 最新版APP
-export function isNativeApp() {
-  return navigator.userAgent.indexOf('NativeApp') > -1
+export function isRainclassroomApp() {
+  return navigator.userAgent.indexOf('RainclassroomApp') > -1
 }
