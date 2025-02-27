@@ -270,3 +270,12 @@ export function isTMWebview() {
     return false;
   }
 }
+
+// 是否fluterAPP
+export function isFlutterApp() {
+  return navigator.userAgent.indexOf('flutterApp') > -1
+}
+// 是否nativeApp 最新版APP
+export function isRainclassroomApp() {
+  return navigator.userAgent.indexOf('RainclassroomApp') > -1
+}

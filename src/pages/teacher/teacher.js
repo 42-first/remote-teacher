@@ -7,30 +7,32 @@ import App from '@/pages/teacher/teacher.vue'
 import router from '@/router/index-teacher'
 import store from '@/pages/teacher/store';
 // 检测是否https
-import {initProtocal, loadScript} from '@/util/util'
+import {initProtocal, loadScript, isFlutterApp, isRainclassroomApp} from '@/util/util'
 import('pubsub-js').then(res => {
 	window.T_PUBSUB = res
 })
 
 setTimeout(() => {
-  if (window.__wxjs_environment === 'miniprogram') {
+  if (window.__wxjs_environment === 'miniprogram' || isFlutterApp() || isRainclassroomApp()) {
     return
   } else {
-    let jiguangSrc = 'https://web-stat.jiguang.cn/web-janalytics/scripts/janalytics-web.min.js'
-    loadScript(jiguangSrc)
-    .then(() => {
-      (function () {
-        if (window.JAnalyticsInterface) {
-          window.JAnalyticsInterface.init({
-            appkey: 'fcdf8e635093adde6bef4265',
-            debugMode: false,
-            channel: 'rainH5',
-            loc: false, // 设置是否尝试获取位置信息上报，默认为 true
-            singlePage: true // 设置是否为单页面，默认为 false
-          })
-        }
-      })()
-    })
+    let youmengSrc = 'https://v1.cnzz.com/z.js?id=1281406241&async=1'
+    loadScript(youmengSrc) 
+    // let jiguangSrc = 'https://web-stat.jiguang.cn/web-janalytics/scripts/janalytics-web.min.js'
+    // loadScript(jiguangSrc)
+    // .then(() => {
+    //   (function () {
+    //     if (window.JAnalyticsInterface) {
+    //       window.JAnalyticsInterface.init({
+    //         appkey: 'fcdf8e635093adde6bef4265',
+    //         debugMode: false,
+    //         channel: 'rainH5',
+    //         loc: false, // 设置是否尝试获取位置信息上报，默认为 true
+    //         singlePage: true // 设置是否为单页面，默认为 false
+    //       })
+    //     }
+    //   })()
+    // })
   }
 }, 3000)
 
