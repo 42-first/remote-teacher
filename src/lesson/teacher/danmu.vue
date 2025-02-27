@@ -756,6 +756,8 @@
       width: 100%;
       padding: 0 0.42666667rem;
       border-bottom: 1px solid #F6F7FB;
+      position: relative;
+      z-index: 99999999;
 
       .icon_wrap {
         width: 0.74666667rem;
