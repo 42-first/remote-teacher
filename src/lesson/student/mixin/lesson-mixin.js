@@ -880,6 +880,8 @@ let lessonMixin = {
     handleOpenLectureNote(time) {
       this.visibleLectureNote = true
       this.lectureNoteTime = time
+
+      document.querySelector('.student__timeline-wrapper').style.overflowY = 'hidden'
     },
 
     /**
@@ -887,6 +889,7 @@ let lessonMixin = {
      */
     handleClosedLectureNote() {
       this.visibleLectureNote = false
+      document.querySelector('.student__timeline-wrapper').style.overflowY = 'auto'
     }
   }
 }
