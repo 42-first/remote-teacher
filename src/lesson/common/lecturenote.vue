@@ -38,7 +38,8 @@
         deltaY: 0,
         hasNext: false,
         hasPrev: false,
-        lastScrollTop: 0
+        lastScrollTop: 0,
+        isPending: false
       }
     },
 
@@ -110,6 +111,9 @@
        * @method 获取讲稿
        */
       fetchLectureNotes(isInit) {
+        if(this.isPending) return
+
+        this.isPending = true
         let URL = API.lesson.get_records
         let params = {
           time: this.time,
@@ -136,6 +140,7 @@
               })
             }
             
+            this.isPending = false;
           }
         })
       },
