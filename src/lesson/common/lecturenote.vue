@@ -49,7 +49,7 @@
 
         setTimeout(()=>{
           noteEl && noteEl.scrollIntoView({ behavior: "instant", block: 'center' });
-        }, 50)
+        }, 0)
       }
     },
 
