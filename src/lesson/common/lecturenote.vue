@@ -133,7 +133,7 @@
             this.lectureNotes = [...list]
             this.hasNext = res.data.records.hasNext
             this.hasPrev = res.data.records.hasPrev
-            if(isInit || this.direction == -1) {
+            if(isInit) {
               this.$nextTick(() => {
                 let item = this.time && this.lectureNotes.find(item => item.createTime >= this.time) || this.lectureNotes[this.lectureNotes.length -1]
                 this.scrollId = item && `note${item.id}` || ''
