@@ -162,6 +162,7 @@
   z-index: 9999999;
   background: rgba(17, 19, 24, 0.4);
   text-align: left;
+  -webkit-overflow-scrolling: touch;
 
   .lecture__container {
     position: absolute;
