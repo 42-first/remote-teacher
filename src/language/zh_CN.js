@@ -69,6 +69,9 @@ let pages = {
   "performaitask": "观看者模式下无法执行指令任务",
   "aitaskisend": "该任务已结束",
   "statusisend": "已结束",
+  "lectureNote": "课堂讲稿",
+  "transcript": "讲稿",
+
   
   "submit": "提交",
   "submitansw": "提交答案",
