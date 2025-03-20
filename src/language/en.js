@@ -70,6 +70,8 @@ let pages = {
   "performaitask": "You cannot perform instruction task in spectator mode.",
   "aitaskisend": "The task has Closed",
   "statusisend": "Closed",
+  "lectureNote": "Transcript",
+  "transcript": "Transcript",
 
   "submit": "Submit",
   "submitansw": "Submit Answer",

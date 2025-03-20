@@ -27,6 +27,7 @@
             <img class="chat-entry" v-if="item.hasQuestion && lessonCompanionState" :src="$t('imgs.clarify')" alt="" @click="handleBudongChat(item)">
             <p :class="['ppt--action', item.hasQuestion ? 'selected' : '']" @click="handleTag(0, item.slideID, item.presentationid)">{{ $t('unknown') }}</p>
             <p :class="['ppt--action', item.hasStore ? 'selected' : '']" @click="handleTag(1, item.slideID, item.presentationid)">{{ $t('favorite') }}</p>
+            <p class="ppt--action" v-if="showRealTimeLectureNote" @click="$emit('showLectureNote', item.time)"><!-- 讲稿 --> {{ $t('transcript') }} </p>
           </div>
         </div>
         <!-- 动画蒙版 -->
@@ -268,6 +269,10 @@
       },
       cid: {
         type: String
+      },
+      showRealTimeLectureNote: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
