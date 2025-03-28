@@ -93,6 +93,7 @@ let pages = {
   "subjectivetext": "输入文字",
   "isempty": "请输入想说的话（也可以为空）",
   "uploadonepic": "点击+号上传图片（只能添加1张）",
+  "uploadninepic": "点击+号上传图片（只能添加9张）",
   'onepicorvideo': "可上传一张图片或一个小视频",
   "viewpost": "查看我的投稿",
 
@@ -121,7 +122,7 @@ let pages = {
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,
-  "contentsizelimit" : "内容限制1000字可插入1张图片",
+  "contentsizelimit" : "内容限制1000字可插入9张图片",
   "myanswer" : "我的回答",
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",
