@@ -122,7 +122,7 @@ let pages = {
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,
-  "contentsizelimit" : "内容限制1000字可插入1张图片",
+  "contentsizelimit" : "内容限制1000字可插入9张图片",
   "myanswer" : "我的回答",
   "subjectivepro" : "主观题作答",
   "classbonus" : "课堂红包",

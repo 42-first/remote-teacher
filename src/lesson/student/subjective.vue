@@ -707,6 +707,7 @@
           this.uploadFile(data).
           then((res)=>{
             if(res.url) {
+              console.log(index, 'ssssssssssss====================')
               // this.imageURL = res.url;
               // this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
               this.sendStatus = 2;
@@ -798,7 +799,7 @@
           });
 
           // 帮用户清空上传
-          this.pics = this.pics.filters(item => item.pic)
+          this.pics = this.pics.filter(item => item.pic)
           this.hasImage = !!this.pics.length;
           this.imageURL = '';
           this.imageThumbURL = '';
@@ -816,58 +817,69 @@
         let self = this;
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
         let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
-
-        for(let i = 0; i < 9; i++) {
+        let len = this.pics.length
+        for(let i = 0; i < 9 - len; i++) {
           let file = targetEl.files[i];
-          let fileType = file.type;
+          if(file) {
+            let fileType = file.type;
 
-          console.log('MIME类型：' + fileType);
-          // 课程结束啦
-          if(this.sendStatus === 5) {
-            return this;
-          }
-
-          if(file.size) {
-            const size = parseInt(file.size/1024/1024, 10);
-
-            if(size >= 10) {
-              this.$toast({
-                message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
-                duration: 2000
-              });
-
+            console.log('MIME类型：' + fileType);
+            // 课程结束啦
+            if(this.sendStatus === 5) {
               return this;
             }
-          }
 
-          // 图片处理参数
-          let options = {
-            compress: {
-              width: 1600,
-              height: 1600,
-              quality: .6
-            },
-          };
+            if(file.size) {
+              const size = parseInt(file.size/1024/1024, 10);
 
-          // 压缩 浏览器旋转 微信崩溃等问题
-          this.hasImage = true;
-          this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
-          this.uploadImage(file, fileType, i);
+              if(size >= 10) {
+                this.$toast({
+                  message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
+                  duration: 2000
+                });
 
-          compress(file, options, function(dataUrl) {
-            if(dataUrl) {
-              self.fileData = dataUrl;
-              
-              self.pics.push({
-                pic: '',
-                thumbnail: '',
-                base64: dataUrl
-              })
-
-              // 上传图片
-              // self.uploadImage(dataUrl, fileType);
+                return this;
+              }
             }
-          });
+
+            let pics = this.pics
+            if(pics.length < 9) {
+                // 图片处理参数
+              let options = {
+                compress: {
+                  width: 1600,
+                  height: 1600,
+                  quality: .6
+                },
+              };
+
+              // 压缩 浏览器旋转 微信崩溃等问题
+              this.hasImage = true;
+              this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
+
+              compress(file, options, function(dataUrl) {
+                if(dataUrl) {
+                  self.fileData = dataUrl;
+                  
+                  self.pics.push({
+                    pic: '',
+                    thumbnail: '',
+                    thumb: '',
+                    base64: dataUrl
+                  })
+
+                  let curIndex = self.pics.length - 1
+
+                  // 上传图片
+                  // self.uploadImage(dataUrl, fileType);
+                  self.uploadImage(file, fileType, curIndex);
+                }
+              });
+            }
+
+            
+          }
+          
         }
       },
 
