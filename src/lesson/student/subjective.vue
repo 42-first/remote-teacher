@@ -592,18 +592,20 @@
         // 发送中
         this.sendStatus = 3;
 
+        let pics = this.pics.filter(item => item.pic).map(item => {
+          return {
+            pic: item.pic,
+            thumb: item.thumb
+          }
+        })
+
         let params = {
           'problemId': problemID,
           'problemType': this.problemType,
           'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': this.pics.filter(item => item.pic).map(item => {
-              return {
-                pic: item.pic,
-                thumb: item.thumb
-              }
-            })
+            'pics': pics.length ? pics : [{ pic: '', thumb: '' }]
           }
         };
 
