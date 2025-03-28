@@ -93,6 +93,7 @@ let pages = {
   "subjectivetext": "Enter text here",
   "isempty": "Please enter here…(Optional)",
   "uploadonepic": 'Click “+” to upload picture (One Only)',
+  "uploadninepic": "Click “+” to upload picture (Up to 9 photos)",
   'onepicorvideo': "You can upload a picture or a short video",
   "viewpost": "Check My Post",
 
