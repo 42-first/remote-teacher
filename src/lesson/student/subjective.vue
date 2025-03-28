@@ -598,7 +598,7 @@
           'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': this.pics.filter(item => item.pic).map(item => {
+            'pics': this.pics.map(item => {
               return {
                 pic: item.pic,
                 thumb: item.thumb
