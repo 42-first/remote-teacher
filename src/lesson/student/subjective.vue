@@ -69,7 +69,7 @@
             </div>
           </div>
           
-          <p class="submission__pic--remark f14" v-if="pics.length < 9">{{ $t('uploadonepic') }}</p>
+          <p class="submission__pic--remark f14" v-if="pics.length < 9">{{ $t('uploadninepic') }}</p>
         </section>
       </div>
       <!-- 预览状态 -->
