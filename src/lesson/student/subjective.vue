@@ -56,26 +56,32 @@
 
         <!-- 图片 -->
         <section class="submission__pic">
-          <div v-if="!hasImage&&!loading">
-            <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
-            <div class="submission__pic--add" v-else ><input type=file accept="image/jpeg,image/png,image/jpg" class="camera" @change="handleChooseImageChange" ></div>
-            <p class="submission__pic--remark f14">{{ $t('uploadonepic') }}</p>
+          <div :class="!pics.length ? 'box-center' : 'grid'">
+            <div class="pic-view" v-show="hasImage||loading" v-for="(item, index) in pics" :key="index">
+              <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" :src="item.base64 || item.pic" @load="handleLoadImg(2, $event, index)" @click="handleScaleImage(2, $event, index)" v-if="item.pic" />
+              <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
+              <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
+              <p class="delete-img" @click="handleDeleteImg(index)" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
+            </div>
+            <div v-if="pics.length < 9 &&!loading">
+              <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
+              <div class="submission__pic--add" v-else ><input type=file accept="image/jpeg,image/png,image/jpg" multiple class="camera" @change="handleChooseImageChange" ></div>
+            </div>
           </div>
-          <div class="pic-view" v-show="hasImage||loading">
-            <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" v-show="hasImage" :src="fileData||imageURL" @load="handleLoadImg(2, $event)" @click="handleScaleImage(2, $event)" v-if="imageURL" />
-            <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
-            <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
-            <p class="delete-img" @click="handleDeleteImg" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
-          </div>
+          
+          <p class="submission__pic--remark f14" v-if="pics.length < 9">{{ $t('uploadonepic') }}</p>
         </section>
       </div>
       <!-- 预览状态 -->
       <div class="subjective__answer" v-if="ispreview && result">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics && result.pics.length && result.pics[0].pic">
-            <img class="J_preview_img" :src="result.pics[0].pic" alt="主观题作答图片" @load="handleLoadImg(3, $event)" @click="handleScaleImage(3, $event)" />
+          <div :class="result.pics.length > 1 ? 'grid' : ''" v-if="result.pics && result.pics.length && result.pics[0].pic">
+            <div class="answer--image" v-for="(item, index) in result.pics" :key="index">
+              <img class="J_preview_img" :key="index" :src="item.pic" alt="主观题作答图片" @load="handleLoadImg(3, $event, index)" @click="handleScaleImage(3, $event, index)" />
+            </div>
           </div>
+          
         </div>
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
@@ -196,7 +202,8 @@
         isGuestStudent: false,
         // 是否华为特殊手机
         huawei: !!huawei,
-        timer: null
+        timer: null,
+        pics: [],
       };
     },
     components: {
@@ -330,13 +337,14 @@
             // 是否有图片
             if(result.pics.length) {
               this.hasImage = true;
-              this.imageURL = result.pics[0].pic;
-              this.imageThumbURL = result.pics[0].thumb;
+              // this.imageURL = result.pics[0].pic;
+              // this.imageThumbURL = result.pics[0].thumb;
+              this.pics = result.pics;
 
-              setTimeout(()=>{
-                let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
-                imgEl.src = this.imageURL;
-              }, 300)
+              // setTimeout(()=>{
+              //   let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
+              //   imgEl.src = this.imageURL;
+              // }, 300)
             }
 
             this.sendStatus = 2;
@@ -404,8 +412,9 @@
                 // 是否有图片
                 if(problemResult.pics && problemResult.pics.length && problemResult.pics[0].pic) {
                   this.hasImage = true;
-                  this.imageURL = problemResult.pics[0].pic;
-                  this.imageThumbURL = problemResult.pics[0].thumb;
+                  // this.imageURL = problemResult.pics[0].pic;
+                  // this.imageThumbURL = problemResult.pics[0].thumb;
+                  this.pics = problemResult.pics;
                 }
 
                 this.result = problemResult;
@@ -550,11 +559,8 @@
             'pics': []
           };
 
-          if(this.imageURL) {
-            result.pics.push({
-              'pic': this.imageURL,
-              'thumb': this.imageThumbURL
-            });
+          if(this.pics.length) {
+            result.pics = this.pics
           }
 
           localStorage.removeItem(key);
@@ -592,7 +598,12 @@
           'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': [ { 'pic': this.imageURL, 'thumb': this.imageThumbURL} ]
+            'pics': this.pics.filter(item => item.pic).map(item => {
+              return {
+                pic: item.pic,
+                thumb: item.thumb
+              }
+            })
           }
         };
 
@@ -659,7 +670,7 @@
        * @method 上传图片
        * @param
        */
-      uploadImage(data, fileType) {
+      uploadImage(data, fileType, index) {
         let self = this;
         let URL = API.student.UPLOAD_PIC;
         let params = {
@@ -696,17 +707,21 @@
           this.uploadFile(data).
           then((res)=>{
             if(res.url) {
-              this.imageURL = res.url;
-              this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
+              // this.imageURL = res.url;
+              // this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
               this.sendStatus = 2;
-
+              let pic = this.pics[index]
+              this.pics.splice(index, 1, Object.assign(pic, {
+                'pic': res.url,
+                'thumb': res.url? `${res.url}?imageView2/2/w/568` : ''
+              }))
               this.cacheResult();
             } else {
-              this.retryUpload(data, fileType);
+              this.retryUpload(data, fileType, index);
             }
           }).
           catch(error => {
-            this.retryUpload(data, fileType);
+            this.retryUpload(data, fileType, index);
           });
         });
 
@@ -766,13 +781,13 @@
        * @method 上传图片失败重试策略
        * @param
        */
-      retryUpload(data, fileType) {
+      retryUpload(data, fileType, index) {
         // 重试次数
         let retryTimes = this.retryTimes + 1;
 
         if(retryTimes < 4) {
           setTimeout(()=>{
-            this.uploadImage(data, fileType);
+            this.uploadImage(data, fileType, index);
           }, 2000 * retryTimes)
 
           this.retryTimes = retryTimes;
@@ -783,10 +798,12 @@
           });
 
           // 帮用户清空上传
-          this.hasImage = false;
+          this.pics = this.pics.filters(item => item.pic)
+          this.hasImage = !!this.pics.length;
           this.imageURL = '';
           this.imageThumbURL = '';
-          this.text && (this.sendStatus = 2);
+          
+          this.text || this.pics.length && (this.sendStatus = 2);
           this.retryTimes = 0;
         }
       },
@@ -800,50 +817,58 @@
         let targetEl = typeof event !== 'undefined' && event.target || evt.target;
         let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
 
-        let file = targetEl.files[0];
-        let fileType = file.type;
+        for(let i = 0; i < 9; i++) {
+          let file = targetEl.files[i];
+          let fileType = file.type;
 
-        console.log('MIME类型：' + fileType);
-        // 课程结束啦
-        if(this.sendStatus === 5) {
-          return this;
-        }
-
-        if(file.size) {
-          const size = parseInt(file.size/1024/1024, 10);
-
-          if(size >= 10) {
-            this.$toast({
-              message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
-              duration: 2000
-            });
-
+          console.log('MIME类型：' + fileType);
+          // 课程结束啦
+          if(this.sendStatus === 5) {
             return this;
           }
+
+          if(file.size) {
+            const size = parseInt(file.size/1024/1024, 10);
+
+            if(size >= 10) {
+              this.$toast({
+                message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
+                duration: 2000
+              });
+
+              return this;
+            }
+          }
+
+          // 图片处理参数
+          let options = {
+            compress: {
+              width: 1600,
+              height: 1600,
+              quality: .6
+            },
+          };
+
+          // 压缩 浏览器旋转 微信崩溃等问题
+          this.hasImage = true;
+          this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
+          this.uploadImage(file, fileType, i);
+
+          compress(file, options, function(dataUrl) {
+            if(dataUrl) {
+              self.fileData = dataUrl;
+              
+              self.pics.push({
+                pic: '',
+                thumbnail: '',
+                base64: dataUrl
+              })
+
+              // 上传图片
+              // self.uploadImage(dataUrl, fileType);
+            }
+          });
         }
-
-        // 图片处理参数
-        let options = {
-          compress: {
-            width: 1600,
-            height: 1600,
-            quality: .6
-          }
-        };
-
-        // 压缩 浏览器旋转 微信崩溃等问题
-        this.hasImage = true;
-        this.imageThumbURL = 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif';
-        this.uploadImage(file, fileType);
-
-        compress(file, options, function(dataUrl) {
-          if(dataUrl) {
-            self.fileData = dataUrl;
-
-            // 上传图片
-            // self.uploadImage(dataUrl, fileType);
-          }
-        });
       },
 
       /*
@@ -872,16 +897,15 @@
           this.height = height;
         }
       },
-      handleDeleteImg() {
+      handleDeleteImg(index) {
         let self = this;
 
         this.$messagebox.confirm(this.$i18n.t('cfmdelpic') || '确定删除图片?').then(action => {
           if(action === 'confirm') {
-            self.hasImage = false;
-            self.imageURL = '';
-            self.imageThumbURL = '';
+            self.pics.splice(index, 1);
+            self.hasImage = !!self.pics.length
 
-            !self.text && (self.sendStatus = 0);
+            !self.text && !self.hasImage && (self.sendStatus = 0);
           }
         });
       },
@@ -890,13 +914,12 @@
        * @method 图片放大
        * @param
        */
-      handleScaleImage(type, evt) {
+      handleScaleImage(type, evt, index = 0) {
         let targetEl = evt.target;
         // let pswpElement = this.$el.querySelector('.J_submission_pswp');
         let pswpElement = document.querySelector('.J_pswp');
-        let index = 0;
         let items = [];
-        let src = this.fileData || this.imageURL;
+        let src = this.pics[index].pic;
         let width = this.width;
         let height = this.height;
 
@@ -1301,11 +1324,24 @@
     margin: 1.066667rem auto 0.266667rem;
     padding-bottom: 2rem;
 
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(2.88rem, 1fr));
+      gap: 0.2667rem;
+      padding: 0.2667rem;
+    }
+    .box-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .submission__pic--add {
       position: relative;
       margin: 0 auto;
-      width: 1.92rem;
-      height: 1.92rem;
+      width: 2.88rem;
+      height: 2.88rem;
+      
 
       border: 2px solid #C8C8C8;
       border-radius: 0.106667rem;
@@ -1346,9 +1382,8 @@
 
     .pic-view {
       position: relative;
-      margin: 0 auto;
-      width: 6.666667rem;
-      height: 6.666667rem;
+      width: 2.88rem;
+      height: 2.88rem;
 
       background: #C8C8C8;
       overflow: hidden;
@@ -1420,6 +1455,26 @@
         display: block;
         width: 6.933333rem;
         max-width: 100%;
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(2.88rem, 1fr));
+      gap: 0.2667rem;
+
+      .answer--image {
+        width: 2.88rem;
+        height: 2.88rem;
+        position: relative;
+        overflow: hidden;
+
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
       }
     }
 

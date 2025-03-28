@@ -117,7 +117,13 @@
                           </span>
                       </span>
                     </div>
-                    <v-touch v-if="hasThumb(item)" :id="'pic' + item.index" tag="img" v-lazy="item.result.pics[0].thumb || item.result.pics[0].pic" class="pic" alt="" v-on:tap="scaleImage(item.result.pics[0].pic, $event)"></v-touch>
+                    <div class="anser__imgs" :class="item.result.pics.length > 1 ? 'grid' : ''">
+                      <template v-for="(pic, i) in item.result.pics">
+                        <v-touch v-if="hasThumb(pic)" :id="'pic' + item.index + i" tag="img" v-lazy="pic.thumb || pic.pic" class="pic" alt="" v-on:tap="scaleImage(pic.pic, $event)"></v-touch>
+                      </template>
+                      
+                    </div>
+                    
                   </div>
                 </div>
                 <div class="action-box f14">
@@ -1332,8 +1338,8 @@
       },
       // 是否有缩略图
       hasThumb(item) {
-        let sub = item.result
-        return !!(sub && sub.pics && sub.pics[0] && sub.pics[0].thumb || sub.pics[0].pic)
+        // let sub = item.result
+        return !!(item.thumb || item.pic)
       },
       // 下线功能提示
       showToast(){
@@ -1634,6 +1640,17 @@
                 font-size: px2rem(24px);
                 color: #639ef4;
               }
+
+              .anser__imgs.grid {
+                display: grid;
+                grid-template-columns: repeat(3, 2.88rem);
+                gap: 0.2667rem;
+
+                .pic {
+                  width: 2.88rem;
+                }
+              }
+
 	            .pic {
 	              max-width: 100%;
 	              max-height: 5.68rem;
