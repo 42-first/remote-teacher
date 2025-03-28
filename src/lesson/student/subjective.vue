@@ -707,7 +707,6 @@
           this.uploadFile(data).
           then((res)=>{
             if(res.url) {
-              console.log(index, 'ssssssssssss====================')
               // this.imageURL = res.url;
               // this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
               this.sendStatus = 2;
