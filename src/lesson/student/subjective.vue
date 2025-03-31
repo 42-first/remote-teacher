@@ -101,7 +101,7 @@
             </div>
           </div>
           
-          <div class="videos__wrap" v-if="result.videos.length">
+          <div class="videos__wrap" v-if="result.videos && result.videos.length">
             <div class="video" v-for="(video, index) in result.videos" :key="index">
               <video class="video--preview" :src="video.url" controls :poster="video.thumb">
               </video>
