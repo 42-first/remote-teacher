@@ -6,6 +6,20 @@
   "description": "这里包含原遥控器icon和现小程序所有icon",
   "glyphs": [
     {
+      "icon_id": "29454907",
+      "name": "教学内容-4视频",
+      "font_class": "jiaoxueneirong-4shipin",
+      "unicode": "e7d1",
+      "unicode_decimal": 59345
+    },
+    {
+      "icon_id": "29454920",
+      "name": "时间-面状",
+      "font_class": "shijian-mianzhuang",
+      "unicode": "e7df",
+      "unicode_decimal": 59359
+    },
+    {
       "icon_id": "43028868",
       "name": "弹幕",
       "font_class": "danmu",

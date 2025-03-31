@@ -26,7 +26,13 @@
         <div class="item-content">
           <p class="user-name f15" v-if="name">{{ name }}</p>
           <p class="f15" v-if="result.content">{{ result.content }}</p>
-          <img v-if="result.pics && result.pics.length" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="result.pics[0].thumb||result.pics[0].pic" :data-src="result.pics[0].pic" alt="" />
+          <div class="images__wrap" v-if="result.pics && result.pics.length" :class="result.pics.length > 1 ? 'grid' : ''">
+            <img v-for="(img, index) in result.pics" :key="index" class="item-image" @load="handleLoadImg" @click="handleScaleImage" :src="img.thumb||img.pic" :data-src="img.pic" alt="" />
+          </div>
+          <div class="anser__videos" v-if="result.videos && result.videos.length">
+            <video v-for="(video, index) in result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
+            </video>
+          </div>
           <p class="date-time f15">{{ result.submitTime|formatTime('HH:mm') }}</p>
         </div>
       </div>
@@ -133,9 +139,11 @@
         let pswpElement = document.querySelector('.J_pswp');
         let index = 0;
         let items = [];
+        let width = targetEl.naturalWidth
+        let height = targetEl.naturalHeight
 
         // build items array
-        items.unshift({ src: src, w: this.width || 750, h: this.height || 520 });
+        items.unshift({ src: src, w: width || 750, h: height || 520 });
 
         let options = {
           index: 0,
@@ -286,6 +294,28 @@
         // max-width: 100%;
         // max-height: 7.04rem;
       }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 2.4rem);
+        gap: 0.2667rem;
+
+        .item-image {
+          width: 2.4rem;
+          height: 2.4rem;
+          object-fit: cover;
+        }
+      }
+
+      .anser__videos {
+        margin-top: 0.2667rem;
+        video {
+          max-width: 100%;
+          max-height: 5.68rem;
+          object-fit: cover;
+        }
+      }
+
 
       .date-time {
         padding-top: 0.4rem;
