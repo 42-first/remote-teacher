@@ -373,6 +373,10 @@
               // }, 300)
             }
 
+            if(result.videos.length) {
+              this.videos = result.videos;
+            }
+
             this.sendStatus = 2;
           }
         }
@@ -582,11 +586,16 @@
           let key = 'lessonsubjective'+this.summary.problemID;
           let result = {
             'content': this.text,
-            'pics': []
+            'pics': [],
+            'videos': []
           };
 
           if(this.pics.length) {
             result.pics = this.pics
+          }
+
+          if(this.videos.length) {
+            result.videos = this.videos
           }
 
           localStorage.removeItem(key);
@@ -631,7 +640,8 @@
           'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': pics.length ? pics : [{ pic: '', thumb: '' }]
+            'pics': pics.length ? pics : [{ pic: '', thumb: '' }],
+            'videos': this.videos
           }
         };
 
