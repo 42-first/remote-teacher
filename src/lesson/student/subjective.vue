@@ -79,7 +79,7 @@
               <div class="submission__pic--add box-center">
                 <i class="iconfont icon-jiaoxueneirong-4shipin f28"></i>
                  <!-- 上传视频 -->{{ $t('uoloadvideo')  }}
-                <input type=file accept="video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" >
+                <input type=file accept="video/mp4,video/mpeg" class="camera" @change="handleChooseVideoChange" >
               </div>
             </div>
           </div>
@@ -871,42 +871,13 @@
 
             if(file.size) {
               const size = parseInt(file.size/1024/1024, 10);
-
-              let isVideo = ~fileType.indexOf('video'); 
-              if(isVideo) {
-                if(size >= 50) {
-                  this.$toast({
-                    message: this.$i18n.t('videosizelimit') || '视频不可超过50M，请重试',
-                    duration: 2000
-                  });
-
-                  targetEl.value = ''
-
-                  return this;
-                } 
-
-                this.videos.push({
-                  pic: 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif'
-                })
-                this.hasImage = true
-
-                Promise.all([upload.getToken()]).then(() => {
-                  // 上传七牛
-                  this.uploadFile(file, true).then((res)=>{
-                    res && this.getVideoInfo(res.url);
-                  });
+              if(size >= 10) {
+                this.$toast({
+                  message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
+                  duration: 2000
                 });
 
                 return this;
-              } else {
-                if(size >= 10) {
-                  this.$toast({
-                    message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
-                    duration: 2000
-                  });
-
-                  return this;
-                }
               }
             }
 
@@ -951,6 +922,49 @@
         }
       },
 
+      /**
+       * @method 选择视频后触发事件
+       * @param type 
+       * @param evt 
+       */
+      handleChooseVideoChange(evt) {
+        let self = this;
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
+        if(this.sendStatus === 5) {
+          return this;
+        }
+
+        let file = targetEl.files[0];
+        if(file) {
+          if(file.size) {
+            const size = parseInt(file.size/1024/1024, 10);
+            if(size >= 50) {
+              this.$toast({
+                message: this.$i18n.t('videosizelimit') || '视频不可超过50M，请重试',
+                duration: 2000
+              });
+
+              targetEl.value = ''
+
+              return this;
+            } 
+
+            this.videos.push({
+              pic: 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif'
+            })
+            this.hasImage = true
+
+            Promise.all([upload.getToken()]).then(() => {
+              // 上传七牛
+              this.uploadFile(file, true).then((res)=>{
+                res && this.getVideoInfo(res.url);
+              });
+            });
+
+            return this;
+          }
+        }
+      },
       /*
        * @method 选择拍照后触发事件
        * @param type 1 ppt图片 2 上传图片 3 完成后预览
