@@ -56,7 +56,7 @@
 
         <!-- 图片 -->
         <section class="submission__pic">
-          <p class="submission__pic--remark f14">上传图片/视频（最多9张图片和1个视频）</p>
+          <p class="submission__pic--remark f14"><!-- 上传图片/视频（最多9张图片和1个视频）--> {{ $t('uploadpicvideo') }}</p>
           <div class="grid">
             <div class="pic-view" v-show="hasImage||loading" v-for="(item, index) in pics" :key="index">
               <img :class="['J_preview_img']" alt="" :src="item.base64 || item.pic" @load="handleLoadImg(2, $event, index)" @click="handleScaleImage(2, $event, index)" v-if="item.pic" />
@@ -67,15 +67,18 @@
             <div v-if="pics.length < 9 &&!loading">
               <div class="submission__pic--add box-center" v-if="huawei" @click="handleChooseImage">
                 <i class="iconfont icon-tupian-mianzhuang f28"></i>
+                <!-- 上传图片 -->{{ $t('uoloadpic')  }}
               </div>
               <div class="submission__pic--add box-center" v-else >
                 <i class="iconfont icon-tupian-mianzhuang f28"></i>
+                 <!-- 上传图片 -->{{ $t('uoloadpic')  }}
                 <input type=file accept="image/jpeg,image/png,image/jpg" multiple class="camera" @change="handleChooseImageChange" >
               </div>
             </div>
             <div v-if="!videos.length">
               <div class="submission__pic--add box-center">
                 <i class="iconfont icon-jiaoxueneirong-4shipin f28"></i>
+                 <!-- 上传视频 -->{{ $t('uoloadvideo')  }}
                 <input type=file accept="video/mp4,video/mpeg" class="camera" @change="handleChooseImageChange" >
               </div>
             </div>
@@ -1172,7 +1175,7 @@
       handleDeleteVideo(index) {
         let self = this;
 
-        this.$messagebox.confirm('确定删除视频?').then(action => {
+        this.$messagebox.confirm(this.$i18n.t('cfmdelvideo') ||'确定删除视频?').then(action => {
           if(action === 'confirm') {
             self.videos.splice(index, 1)
             self.hasImage = !!self.pics.length || !!self.videos.length
