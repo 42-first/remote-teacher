@@ -1484,6 +1484,7 @@
       border-radius: 0.106667rem;
 
       color: #90949D;
+      flex-direction: column;
 
       .camera {
         position: absolute;
