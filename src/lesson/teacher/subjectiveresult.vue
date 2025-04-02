@@ -123,7 +123,10 @@
                       </template>
                       
                     </div>
-                    
+                    <div class="anser__videos" v-if="item.result.videos.length">
+                      <video v-for="(video, index) in item.result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
+                      </video>
+                    </div>
                   </div>
                 </div>
                 <div class="action-box f14">
@@ -1648,6 +1651,17 @@
 
                 .pic {
                   width: 2.88rem;
+                  height: 2.88rem;
+                  object-fit: cover;
+                }
+              }
+
+              .anser__videos {
+                margin-top: 0.2667rem;
+                video {
+                  max-width: 100%;
+                  max-height: 5.68rem;
+                  object-fit: cover;
                 }
               }
 

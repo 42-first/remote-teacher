@@ -56,20 +56,42 @@
 
         <!-- 图片 -->
         <section class="submission__pic">
-          <div :class="!pics.length ? 'box-center' : 'grid'">
+          <p class="submission__pic--remark f14"><!-- 上传图片/视频（最多9张图片和1个视频）--> {{ $t('uploadpicvideo') }}</p>
+          <div class="grid">
             <div class="pic-view" v-show="hasImage||loading" v-for="(item, index) in pics" :key="index">
-              <img :class="['J_preview_img', rate < 1 ? 'higher' : 'wider']" alt="" :src="item.base64 || item.pic" @load="handleLoadImg(2, $event, index)" @click="handleScaleImage(2, $event, index)" v-if="item.pic" />
+              <img :class="['J_preview_img']" alt="" :src="item.base64 || item.pic" @load="handleLoadImg(2, $event, index)" @click="handleScaleImage(2, $event, index)" v-if="item.pic" />
               <img class="img--loading" :src="imageThumbURL" alt="雨课堂" v-else />
               <!-- 解决image 在微信崩溃的问题采用canvas处理 -->
               <p class="delete-img" @click="handleDeleteImg(index)" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
             </div>
             <div v-if="pics.length < 9 &&!loading">
-              <div class="submission__pic--add" v-if="huawei" @click="handleChooseImage"></div>
-              <div class="submission__pic--add" v-else ><input type=file accept="image/jpeg,image/png,image/jpg" multiple class="camera" @change="handleChooseImageChange" ></div>
+              <div class="submission__pic--add box-center" v-if="huawei" @click="handleChooseImage">
+                <i class="iconfont icon-tupian-mianzhuang f28"></i>
+                <!-- 上传图片 -->{{ $t('uoloadpic')  }}
+              </div>
+              <div class="submission__pic--add box-center" v-else >
+                <i class="iconfont icon-tupian-mianzhuang f28"></i>
+                 <!-- 上传图片 -->{{ $t('uoloadpic')  }}
+                <input type=file accept="image/jpeg,image/png,image/jpg" multiple class="camera" @change="handleChooseImageChange" >
+              </div>
+            </div>
+            <div v-if="!videos.length">
+              <div class="submission__pic--add box-center">
+                <i class="iconfont icon-jiaoxueneirong-4shipin f28"></i>
+                 <!-- 上传视频 -->{{ $t('uoloadvideo')  }}
+                <input type=file accept="video/mp4,video/mpeg" class="camera" @change="handleChooseVideoChange" >
+              </div>
+            </div>
+          </div>
+          <div class="videos__wrap" v-if="videos.length">
+            <div class="video box-center"  v-for="(video, index) in videos" :key="index" >
+              <img v-if="!video.url" src="https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif" alt="">
+              <video v-else class="video--preview" :src="video.url" controls :poster="video.thumb">
+              </video>
+              <p class="delete-img" @click="handleDeleteVideo(index)" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
             </div>
           </div>
           
-          <p class="submission__pic--remark f14" v-if="pics.length < 9">{{ $t('uploadninepic') }}</p>
         </section>
       </div>
       <!-- 预览状态 -->
@@ -82,6 +104,12 @@
             </div>
           </div>
           
+          <div class="videos__wrap" v-if="result.videos && result.videos.length">
+            <div class="video" v-for="(video, index) in result.videos" :key="index">
+              <video class="video--preview" :src="video.url" controls :poster="video.thumb">
+              </video>
+            </div>
+          </div>
         </div>
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
@@ -204,6 +232,7 @@
         huawei: !!huawei,
         timer: null,
         pics: [],
+        videos: [],
       };
     },
     components: {
@@ -345,6 +374,10 @@
               //   let imgEl = this.$el.querySelector('.pic-view .J_preview_img');
               //   imgEl.src = this.imageURL;
               // }, 300)
+            }
+
+            if(result.videos.length) {
+              this.videos = result.videos;
             }
 
             this.sendStatus = 2;
@@ -556,11 +589,16 @@
           let key = 'lessonsubjective'+this.summary.problemID;
           let result = {
             'content': this.text,
-            'pics': []
+            'pics': [],
+            'videos': []
           };
 
           if(this.pics.length) {
             result.pics = this.pics
+          }
+
+          if(this.videos.length) {
+            result.videos = this.videos
           }
 
           localStorage.removeItem(key);
@@ -605,7 +643,8 @@
           'dt': +new Date(),
           'result': {
             'content': content,
-            'pics': pics.length ? pics : [{ pic: '', thumb: '' }]
+            'pics': pics.length ? pics : [{ pic: '', thumb: '' }],
+            'videos': this.videos
           }
         };
 
@@ -751,7 +790,7 @@
        * method 上传七牛
        * params
        */
-      uploadFile(file) {
+      uploadFile(file, isVideo = false) {
         let domain = upload.qiniuDomain;
 
         return new Promise((resolve, reject)=>{
@@ -775,7 +814,7 @@
             }
           };
 
-          upload.upload(file, observer);
+          upload.upload(file, observer, isVideo ? 'file' : '');
         });
       },
 
@@ -832,7 +871,6 @@
 
             if(file.size) {
               const size = parseInt(file.size/1024/1024, 10);
-
               if(size >= 10) {
                 this.$toast({
                   message: this.$i18n.t('picsizelimit') || '图片不可超过10M，请重试',
@@ -884,6 +922,49 @@
         }
       },
 
+      /**
+       * @method 选择视频后触发事件
+       * @param type 
+       * @param evt 
+       */
+      handleChooseVideoChange(evt) {
+        let self = this;
+        let targetEl = typeof event !== 'undefined' && event.target || evt.target;
+        if(this.sendStatus === 5) {
+          return this;
+        }
+
+        let file = targetEl.files[0];
+        if(file) {
+          if(file.size) {
+            const size = parseInt(file.size/1024/1024, 10);
+            if(size >= 50) {
+              this.$toast({
+                message: this.$i18n.t('videosizelimit') || '视频不可超过50M，请重试',
+                duration: 2000
+              });
+
+              targetEl.value = ''
+
+              return this;
+            } 
+
+            this.videos.push({
+              pic: 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif'
+            })
+            this.hasImage = true
+
+            Promise.all([upload.getToken()]).then(() => {
+              // 上传七牛
+              this.uploadFile(file, true).then((res)=>{
+                res && this.getVideoInfo(res.url);
+              });
+            });
+
+            return this;
+          }
+        }
+      },
       /*
        * @method 选择拍照后触发事件
        * @param type 1 ppt图片 2 上传图片 3 完成后预览
@@ -932,9 +1013,9 @@
         // let pswpElement = this.$el.querySelector('.J_submission_pswp');
         let pswpElement = document.querySelector('.J_pswp');
         let items = [];
-        let src = this.pics[index].pic;
-        let width = this.width;
-        let height = this.height;
+        let src = this.pics[index] && this.pics[index].pic;
+        let width = targetEl.naturalWidth;
+        let height = targetEl.naturalHeight;
 
         if(type === 1 || type === 3) {
           src = targetEl.src;
@@ -1059,6 +1140,63 @@
 
           console.log('息屏锁屏 ->唤醒启用');
         }
+      },
+
+      /**
+       * method 视频源信息(?avinfo)
+       * params
+       */
+       getVideoInfo(url) {
+        let URL = url + '?avinfo';
+
+        $.ajax({
+          type: 'GET',
+          url: URL,
+          dataType: 'json',
+          success: (res) => {
+            let data = res;
+
+            if(data) {
+              let streams = data.streams;
+              let info = streams[0];
+              let iofo2 = streams[1];
+              let format = data.format;
+              let width = info.width || iofo2.width;
+              let height = info.height || iofo2.height;
+              let video =  {
+                'url': url,
+                'thumb': `${url}?vframe/jpg/offset/2/w/${width}/h/${height}`,
+                'duration': info.duration,
+                'size': format.size,
+                'height': height,
+                'width': width
+              };
+
+             
+
+              this.hasImage = true;
+              this.sendStatus = 2;
+              this.videos.splice(0, 1, video)
+
+              this.cacheResult();
+            }
+          },
+          error: (xhr, type) => {
+          }
+        })
+      },
+
+      handleDeleteVideo(index) {
+        let self = this;
+
+        this.$messagebox.confirm(this.$i18n.t('cfmdelvideo') ||'确定删除视频?').then(action => {
+          if(action === 'confirm') {
+            self.videos.splice(index, 1)
+            self.hasImage = !!self.pics.length || !!self.videos.length
+
+            !self.text && !self.hasImage && (self.sendStatus = 0);
+          }
+        });
       }
     },
     created() {
@@ -1334,7 +1472,7 @@
   \*------------------*/
 
   .submission__pic {
-    margin: 1.066667rem auto 0.266667rem;
+    margin: 0.5333rem auto 0.266667rem;
     padding-bottom: 2rem;
 
     .grid {
@@ -1359,6 +1497,9 @@
       border: 2px solid #C8C8C8;
       border-radius: 0.106667rem;
 
+      color: #90949D;
+      flex-direction: column;
+
       .camera {
         position: absolute;
         top: 0;
@@ -1369,7 +1510,7 @@
       }
     }
 
-    .submission__pic--add:before,
+    /* .submission__pic--add:before,
     .submission__pic--add:after {
       content: '';
       position: absolute;
@@ -1386,11 +1527,12 @@
     .submission__pic--add:after {
       width: 2px;
       height: 0.986667rem;
-    }
+    } */
 
     .submission__pic--remark {
-      padding-top: 0.4rem;
       color: #C8C8C8;
+      text-align: left;
+      padding-left: 0.2667rem;
     }
 
     .pic-view {
@@ -1406,6 +1548,13 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+
+        &.J_preview_img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
       }
 
       .pic--loading {
@@ -1439,6 +1588,38 @@
 
     }
 
+    
+
+  }
+
+  .videos__wrap {
+      
+    padding: 0.2667rem;
+
+    .video {
+      width: 6.666667rem;
+      height: 6.666667rem;
+      background: #C8C8C8;
+      position: relative;
+
+      video {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .delete-img {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        width: 0.773333rem;
+        height: 0.773333rem;
+        line-height: 0.75rem;
+
+        color: #fff;
+        background: rgba(0,0,0,0.6);
+      }
+    }
   }
 
 
@@ -1487,6 +1668,9 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
     }

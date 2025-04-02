@@ -33,7 +33,13 @@
           <p class="answer--points f14 blue" @click="handlenode" v-if="declaration"><!-- 评分要点 -->{{ $t('grading.pointsgrading') }}</p>
         </h3>
         <div class="">
-          <img class="answer--pic" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="雨课堂主观题" v-if="result.pics.length && result.pics[0].pic" @click="handleZoom" />
+          <div class="images__wrap" v-if="result.pics && result.pics.length" :class="result.pics.length > 1 ? 'grid' : ''">
+            <img v-for="(img, index) in result.pics" :key="index" class="answer--pic" @click="handleZoom" :src="img.pic" :data-src="img.pic" alt="雨课堂主观题" />
+          </div>
+          <div class="anser__videos" v-if="result.videos && result.videos.length">
+            <video v-for="(video, index) in result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
+            </video>
+          </div>
           <div class="answer--text f17 c333" v-if="result.content">{{ result.content }}</div>
         </div>
       </section>
@@ -500,6 +506,28 @@
       width: 100%;
       padding-bottom: 0.4rem;
     }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 2.88rem);
+      gap: 0.2667rem;
+
+      .answer--pic {
+        width: 2.88rem;
+        height: 2.88rem;
+        object-fit: cover;
+      }
+    }
+
+    .anser__videos {
+      margin-top: 0.2667rem;
+      video {
+        max-width: 100%;
+        max-height: 5.68rem;
+        object-fit: cover;
+      }
+    }
+
 
     .answer--text {
       text-align: left;
