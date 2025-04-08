@@ -112,6 +112,7 @@ var commandMixin = {
 
           // 指令任务
           case 14:
+          case 15:
             path = `/v3/${this.lesson.lessonID}/webview/${index}`;
             break;
 

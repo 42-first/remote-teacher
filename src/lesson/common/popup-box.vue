@@ -59,7 +59,7 @@
       </div>
     </template>
     <!-- ai 指令任务 -->
-    <template v-else-if="item.type == 14">
+    <template v-else-if="item.type == 14 || item.type == 15">
       <div class="popup__paper">
         <div class="paper-info ai-task">
           <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
