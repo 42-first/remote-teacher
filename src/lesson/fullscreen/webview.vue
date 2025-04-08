@@ -113,6 +113,7 @@ export default {
           // 指令任务
           case 8:
           case 14:
+          case 15:
             this.src = slide.href;
             break;
 
