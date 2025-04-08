@@ -128,6 +128,11 @@ var actionsMixin = {
               this.addInstructionTask({ type: 14, taskid: item['task'], promptid: item['instrid'], instrname: item['instrname'], time: item['dt'], event: item, isFetch: isFetch })
               break;
 
+            // 智能体的指令任务
+            case 'agent':
+              this.addInstructionTask({ type: 15, taskid: item['task'], promptid: item['agentid'], instrname: item['agentname'], time: item['dt'], event: item, isFetch: isFetch })
+              break;
+
             default:
               break;
           }
@@ -1259,12 +1264,14 @@ var actionsMixin = {
       let status = task && task.finishStatus == 2 ? this.$i18n.t('done') : task && task.finishStatus == 1 ? this.$i18n.t('started') || '已启动' : this.$i18n.t('notstart') || '未开始'
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 14 && item.taskid === data.taskid && data.isFetch;
+        return (item.type === 14 || item.type == 15) && item.taskid === data.taskid && data.isFetch;
       })
       let index = this.cards.length;
 
+      let isAgent = data.type == 15 ? '?agent=1' : ''
+
       const { taskid, promptid } = data
-      let href = process.env.NODE_ENV === 'production' ? `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}` : `http://localhost:8080/ai-workspace.html#/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}`
+      let href = process.env.NODE_ENV === 'production' ? `/ai-workspace/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}${isAgent}` : `http://localhost:8080/ai-workspace.html#/chatbot-lesson/${this.lessonID}/${taskid}/${promptid}/${this.classroom.classroomId}${isAgent}`
       Object.assign(data, {
         status: status,
         isEnd,
@@ -1288,7 +1295,7 @@ var actionsMixin = {
      */
     finishInstructionTask(data) {
       let task = this.cards.find((item) => {
-        return item.type === 14 && item.taskid === data.taskid;
+        return (item.type === 14 || item.type == 15) && item.taskid === data.taskid;
       })
 
       task && Object.assign(task, {

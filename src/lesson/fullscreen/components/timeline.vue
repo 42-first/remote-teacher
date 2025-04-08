@@ -174,7 +174,7 @@
       </template>
 
       <!-- 指令任务 -->
-      <template v-else-if="item.type == 14">
+      <template v-else-if="item.type == 14 || item.type == 15">
         <div class="timeline__cards ai-task" :class="[item.isEnd ? 'complete' : '']">
           <div class="icon__wrap box-center">
             <i class="iconfont icon-jiangban cfff f32"></i>
