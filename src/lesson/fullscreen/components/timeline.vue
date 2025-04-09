@@ -179,7 +179,7 @@
           <div class="icon__wrap box-center">
             <i class="iconfont icon-jiangban cfff f32"></i>
           </div>
-          <p class="f14 bold"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+          <p class="f14 bold"><!-- Hi, 你有新的AI指令任务 --> {{ item.type == 14 ? $t('newaitask') : $t('newagenttask') }}</p>
           <p class="f12">{{item.instrname}}</p>
           <div class="box-between timeline__footer">
             <p class="f12">{{ item.time|getTimeago }}</p>

@@ -110,13 +110,13 @@
       </div>
     </template>
     <!-- 指令任务 -->
-    <template v-else-if="msg && msg.type == 14">
+    <template v-else-if="msg && (msg.type == 14 || msg.type == 15)">
       <div class="msg__box box-between cfff ai-task">
         <section class="box-start pr10" @click="handleLink(msg)">
           <div class="icon__wrap box-center">
             <i class="iconfont icon-jiangban cfff f24"></i>
           </div>
-          <p class="pl10 f16 c333"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+          <p class="pl10 f16 c333"><!-- Hi, 你有新的AI指令任务 --> {{ msg.type == 14 ? $t('newaitask') : $t('newagenttask') }}</p>
         </section>
         <i class="iconfont icon-shiti_guanbitouping f24 c666" @click="handleClosedMsg"></i>
       </div>
