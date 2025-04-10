@@ -171,6 +171,8 @@ var commandMixin = {
       if(lesson && lesson.endTime > 0) {
         return this;
       }
+      const key = 'Report.Daily.Cid';
+      window.sessionStorage.setItem(key, lesson.classroomId)
 
       if(lesson && lesson.teacher) {
         this.teacherName = lesson.teacher.name;

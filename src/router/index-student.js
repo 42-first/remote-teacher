@@ -219,8 +219,18 @@ studentRouter.beforeEach((to, from, next) => {
 studentRouter.afterEach(route=>{
   // 统计
   setTimeout(() => {
-    // pv单页面统计
-    typeof dailyReport !== 'undefined' && dailyReport.reportLog();
+    if (typeof dailyReport !== 'undefined') {
+      const key = 'Report.Daily.Cid';
+      let cid = window.sessionStorage.getItem(key)
+      if (cid) {
+        dailyReport.updateLog({classroom_id: +cid}, true)
+      } else {
+        dailyReport.updateLog({classroom_id: undefined}, true)
+      }
+
+      // pv单页面统计
+      dailyReport.reportLog();
+    }
   }, 2000);
 });
 

@@ -57,6 +57,9 @@ let lessonMixin = {
         return this;
       }
 
+      const key = 'Report.Daily.Cid';
+      window.sessionStorage.setItem(key, lesson.classroomId)
+
       if(lesson && lesson.teacher) {
         this.teacherName = lesson.teacher.name;
       }

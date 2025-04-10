@@ -423,8 +423,19 @@ router.afterEach(function (to, from){
     // 解决 android手机字体缩放
     setSize();
 
-    // pv单页面统计
-    typeof dailyReport !== 'undefined' && dailyReport.reportLog();
+    if (typeof dailyReport !== 'undefined') {
+      const key = 'Report.Daily.Cid';
+      let cid = window.sessionStorage.getItem(key)
+      console.log(key, cid)
+      if (cid) {
+        dailyReport.updateLog({classroom_id: +cid}, true)
+      } else {
+        dailyReport.updateLog({classroom_id: undefined}, true)
+      }
+
+      // pv单页面统计
+      dailyReport.reportLog();
+    }
 }, 1050);
 
 })

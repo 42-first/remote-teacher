@@ -461,6 +461,8 @@
 				let lessonInfo = await this.getLessonInfo();
 				if(lessonInfo){
 					let {basic, classroom, invitation} = lessonInfo
+					let key = 'Report.Daily.Cid';
+					window.sessionStorage.setItem(key, basic.classroomId)
 
 				let data = {
 					classroom: {

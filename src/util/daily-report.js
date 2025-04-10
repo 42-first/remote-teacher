@@ -62,11 +62,9 @@ let dailyReport = {
       // 各项目需要根据项目store取
       let uid = data && data.userId || window.userId || window.USERID || log.original_id;
 
-      this.options.log = Object.assign({}, log, {
-        time: (new Date()).getTime(),
-        distinct_id: uid,
-        terminal_type: data && data.terminal || 'h5',
-        properties: {
+      let properties = Object.assign(
+        log.properties,
+        {
           channel: '',
           user_agent: navigator.userAgent,
           page_name: document.title,
@@ -74,7 +72,15 @@ let dailyReport = {
           url: location.href,
           referer: document.referrer,
           original_referrer: document.referrer
-        }
+        },
+        data.properties,
+      );
+
+      this.options.log = Object.assign({}, log, {
+        time: new Date().getTime(),
+        distinct_id: uid,
+        terminal_type: (data && data.terminal) || "h5",
+        properties,
       });
 
       return this.options.log;
@@ -104,6 +110,25 @@ let dailyReport = {
     };
 
     axios.post(URL, params);
+  },
+
+  /**
+   * @method 更新日志数据
+   * @params
+   */
+  updateLog(data, updateProperties) {
+    let log = this.options.log;
+
+    if (updateProperties && typeof data === "object") {
+      log.properties = Object.assign(log.properties, data);
+
+      console.log(log.properties)
+      return;
+    }
+
+    if (log && typeof data === "object") {
+      Object.assign(log, data);
+    }
   },
 
 }
