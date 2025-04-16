@@ -265,7 +265,7 @@ var commandMixin = {
             hasReview = true
           }
 
-          if(item.type === 'instruction') {
+          if(item.type === 'instruction' || item.type === 'agent') {
             hasInstructionTask = true
           }
         })
