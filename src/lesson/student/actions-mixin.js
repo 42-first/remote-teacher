@@ -403,7 +403,7 @@ var actionsMixin = {
       data = Object.assign(data, {
         papername: data.title,
         examid: data.exam,
-        href: `v/index/course/normalcourse/examcover/${this.classroom.classroomId}/${data.exam}`,
+        href: `/v/index/course/normalcourse/examcover/${this.classroom.classroomId}/${data.exam}`,
         count: data.total,
         time: data.time,
         status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
