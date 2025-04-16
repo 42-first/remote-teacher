@@ -115,6 +115,10 @@ var commandMixin = {
             path = `/v3/${this.lesson.lessonID}/webview/${index}`;
             break;
 
+          case 16:
+            path = `/v3/${this.lesson.lessonID}/exam/${index}`;
+            break;
+
           default:
             break;
         }

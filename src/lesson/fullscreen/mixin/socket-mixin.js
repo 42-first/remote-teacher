@@ -333,6 +333,13 @@ var mixin = {
 
             break
 
+          case 'newpaper':
+            item = msg['paper']
+
+            item && this.addExam({ type: 16, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true  })
+            
+            break;
+
           // 换一个PPT
           case 'showpresentation':
             this.presentationID = msg['presentation'];

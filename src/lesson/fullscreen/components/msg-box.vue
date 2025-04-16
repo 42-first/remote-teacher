@@ -19,7 +19,7 @@
     <!-- 消息模板一 试卷 习题 分组 互评 -->
 
     <!-- 试卷模板 -->
-    <template v-if="msg && msg.type==4">
+    <template v-if="msg && (msg.type==4 || msg.type == 16)">
       <div class="msg__box box-between cfff quiz">
         <section class="box-start" @click="handleLink(msg)">
           <i class="iconfont icon-shiti_shijuan f32"></i>

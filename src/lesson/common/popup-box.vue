@@ -9,7 +9,7 @@
   <section class="popup-item" v-if="item">
     <!-- type : 3习题 4试卷 8分组 9:互评 -->
     <!-- 试卷模板 -->
-    <template v-if="item.type==4">
+    <template v-if="item.type==4 || item.type == 16">
       <div class="popup__paper">
         <div class="paper-info">
           <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">

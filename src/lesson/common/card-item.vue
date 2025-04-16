@@ -52,7 +52,7 @@
       </div>
     </template>
     <!-- 试卷模板 -->
-    <template v-else-if="item.type==4">
+    <template v-else-if="item.type==4 || item.type == 16">
       <div class="timeline__paper">
         <div class="">
           <div :class="['paper-info', item.isComplete ? 'complete' : '']" :data-quizid="item.quizid" @click="gotoQuiz(item.href)">

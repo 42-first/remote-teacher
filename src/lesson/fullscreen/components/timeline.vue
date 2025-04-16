@@ -55,7 +55,7 @@
         </div>
       </template>
       <!-- 试卷模板 -->
-      <template v-else-if="item.type==4" >
+      <template v-else-if="item.type==4 || item.type == 16" >
         <div class="timeline__cards quiz" :class="{ 'complete': item.isComplete }" >
           <div class="icon__wrap box-center">
             <i class="iconfont icon-queding cfff f24" v-if="item.isComplete"></i>
@@ -262,7 +262,7 @@
        */
       handleView(item, index) {
         if(item && item.type) {
-          if(this.inspectorMode && [4, 8, 9].includes(item.type)) {
+          if(this.inspectorMode && [4, 16, 8, 9].includes(item.type)) {
             this.$toast({
               message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
               duration: 3000
