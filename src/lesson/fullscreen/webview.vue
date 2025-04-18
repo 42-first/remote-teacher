@@ -166,6 +166,7 @@ export default {
         let type = this.slide && this.slide.type
         switch(type){
           case 14:
+          case 15:
             let taskObj = {
               status: this.$i18n.t('started') || '已启动'
             }
