@@ -18,9 +18,13 @@
       <section class="list upper" v-show="quizList.length && activeTab === 1">
         <!-- <div class="title f17">{{ $t('publishedquiz') }}</div> -->
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quizId" v-on:tap="showQuizResult(quiz.quizId)">
-          <div class="desc f18 ellipsis">
-            {{quiz.title}} <br>
-            <span class="f14"> {{quiz.publishTime | formatTime}}</span>
+          <div class="box-start">
+            <img v-if="quiz.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
+            <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
+            <div class="desc f18 ellipsis">
+              {{quiz.title}} <br>
+              <span class="f14"> {{quiz.publishTime | formatTime}}</span>
+            </div>
           </div>
           <i class="iconfont icon-dakai f14"></i>
         </v-touch>
@@ -38,7 +42,9 @@
           <div class="right">{{folder.count}} <i class="iconfont icon-dakai f14"></i></div>
         </router-link>
         
-        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
+        <v-touch :class="['item', 'box-start', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
+          <img v-if="paper.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
+          <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
           <div class="desc f18 ellipsis">
             {{paper.title}} <br>
             <span class="f14">{{paper.createTime | formatTime}}</span>
@@ -330,6 +336,12 @@
       }
     }
 
+    .box-start {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start !important;
+    }
+
     .list {
       .title {
         padding-left: 0.613333rem;
@@ -368,6 +380,11 @@
         height: 2.133333rem;
         padding: 0 0.613333rem;
         background: $white;
+
+        .papericon {
+          width: 0.8533rem;
+          margin-right: 0.266667rem;
+        }
 
         .desc {
           span {

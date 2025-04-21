@@ -59,7 +59,7 @@
         <div class="timeline__cards quiz" :class="{ 'complete': item.isComplete }" >
           <div class="icon__wrap box-center">
             <i class="iconfont icon-queding cfff f24" v-if="item.isComplete"></i>
-            <i class="iconfont cfff f24" :class="item.type == 4 ? 'icon-shiti_shijuan' : 'shijuanku-mianzhuang'" v-else ></i>
+            <i class="iconfont cfff f24" :class="item.type == 4 ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'" v-else ></i>
           </div>
           <p class="f14 c333 bold">{{ item.papername }}</p>
           <p class="f12 c9b">{{ $t('totalprob', { number: item.count }) }}</p>
