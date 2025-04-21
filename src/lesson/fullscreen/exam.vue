@@ -3,7 +3,7 @@
     <div class="container box-center">
       <div>
         <div class="icon__wrap box-center">
-          <i class="iconfont shijuanku-mianzhuang f64"></i>
+          <i class="iconfont icon-shijuanku-mianzhuang f64"></i>
         </div>
         
         <p class="f20 bold">{{ slide && slide.papername }}</p>
