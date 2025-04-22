@@ -9,12 +9,15 @@
         <div class="title f20 ellipsis">{{folderTitle}}</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
-          <div class="desc f18 ellipsis">
+          <div class="box-start">
             <img v-if="paper.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
             <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
-            {{paper.title}} <br>
-            <span class="f14">{{paper.createTime | formatTime}}</span>
+            <div class="desc f18 ellipsis">
+              {{paper.title}} <br>
+              <span class="f14">{{paper.createTime | formatTime}}</span>
+            </div>
           </div>
+          
           <!-- <i class="iconfont icon-dakai f14"></i> -->
         </v-touch>
       </section>
@@ -252,6 +255,11 @@
           span {
             color: $graybg;
           }
+        }
+
+        .papericon {
+          width: 0.8533rem;
+          margin-right: 0.266667rem;
         }
       }
 
