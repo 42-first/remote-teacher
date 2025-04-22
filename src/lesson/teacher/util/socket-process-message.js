@@ -510,7 +510,7 @@ function socketProcessMessage(msg){
   }
 
   // 收卷了
-  if (msg.op == 'quizfinished') {
+  if (msg.op == 'quizfinished' || msg.op == 'paperfinished') {
     T_PUBSUB.publish('quiz-msg.quizfinished', msg)
     return
   }

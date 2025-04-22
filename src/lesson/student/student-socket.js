@@ -282,6 +282,7 @@ var mixin = {
 
           // 试卷结束
           case 'quizfinished':
+          case 'paperfinished':
           case 'callpaused':
             item = msg['event'];
             item.show && this.addMessage({ type: 1, message: item['title'], event: item });
