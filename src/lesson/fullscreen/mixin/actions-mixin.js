@@ -37,7 +37,7 @@ let actionsMixin = {
             
             // 新考试
             case 'paper':
-              this.addPaper({ type: 16, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
+              this.addExam({ type: 16, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
 
               break;
 

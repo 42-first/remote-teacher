@@ -210,7 +210,7 @@
         let self = this
 
         let index = self.paperList.findIndex(item => {
-          return item.paper_id === msg.quiz.paperid
+          return item.paper_id === msg.quiz.paperid || item.paper_id === msg.paper.paperid
         })
 
         self.paperList.splice(index, 1)

@@ -504,7 +504,7 @@ function socketProcessMessage(msg){
   }
 
   // 发了新的试卷，单通了
-  if (msg.op == 'newquiz') {
+  if (msg.op == 'newquiz' || msg.op == 'newpaper') {
     T_PUBSUB.publish('quiz-msg.newquiz', msg)
     return
   }
