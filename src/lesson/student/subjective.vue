@@ -33,14 +33,43 @@
 
       <!-- 小组作答 显示 未进组不显示小组详情 -->
       <section class="team__intro" v-if="team && !noTeam">
-        <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
-        <p class="f14 blue" @click="handleshowTeam"><!-- 详情 -->{{ $t('team.info') }}</p>
+        <template v-if="result">
+          <div class="team-info">
+            <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
+            <div class="avatar-box mt10">
+              <template v-for="(member, index) in team.memberList">
+                <img v-if="index < 3" :src="member.avatar" :key="index" class="avatar" alt="">
+              </template>
+
+              <p class="f15 box-start" @click="handleshowTeam">
+                <!-- 详情 -->{{ $t('team.info') }}
+                <i class="iconfont icon-jiantoudan-xiangyou f16"></i>
+              </p>
+            </div>
+          </div>
+          <div class="history box-start f15" @click="handleCheckHistory">
+            历史作答记录
+            <i class="iconfont icon-jiantoudan-xiangyou f16"></i>
+          </div>
+        </template>
+        <template v-else>
+          <p class="team__intro--name ellipsis f18 c333"><!-- 小组作答： -->{{ $t('team.groupanswered') }}{{ team.teamName }}</p>
+          <div class="avatar-box">
+            <template v-for="(member, index) in team.memberList">
+              <img v-if="index < 3" :src="member.avatar" :key="index" class="avatar" alt="">
+            </template>
+            <p class="f15 box-start" @click="handleshowTeam">
+              <!-- 详情 -->{{ $t('team.info') }}
+              <i class="iconfont icon-jiantoudan-xiangyou f16"></i>
+            </p>
+          </div>
+        </template>
+        
       </section>
 
-      <h3 class="subjective__answer--lable f17" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimitnine') }}）</span></h3>
-      <h3 class="subjective__answer--lable answer__header f17" v-else >
+      <h3 class="subjective__answer--lable f17" :class="answerType ? 'bg-white' : ''" v-if="!ispreview"><!-- 作答区域 -->{{ $t('answerarea') }}<span class="tip f12">（<!-- 内容限制140字可插入1张图片 -->{{ $t('contentsizelimitnine') }}）</span></h3>
+      <h3 class="subjective__answer--lable answer__header f17" v-else-if="ispreview && !answerType" >
         <p><!-- 我的回答 -->{{ $t('myanswer') }}</p>
-        <p @click="handleedit" v-if="answerType && !hasAnswered"><i class="iconfont icon-bianji f25 blue"></i></p>
       </h3>
       <!-- 编辑状态-->
       <div class="subjective-inner" v-if="!ispreview">
@@ -111,6 +140,11 @@
             </div>
           </div>
         </div>
+        <!-- 分组作答最后提交人信息 -->
+        <div class="team-answer-info box-between" v-if="answerType && lastResult">
+          <p class="f15">提交人：{{ lastResult.lastAnswerUserName }}</p>
+          <p class="f15">{{ lastResult.submitTime | formatTime('HH:mm') }}</p>
+        </div>
         <!-- 打分显示 -->
         <div class="answer-score" v-if="getScore !== -1">
           <i class="iconfont blue icon-ykq_dafen f18"></i>
@@ -119,13 +153,13 @@
       </div>
 
       <!-- 小组提示 -->
-      <div class="team__tip" v-show="answerType">
+      <div class="team__tip" v-show="answerType && (isGuestStudent || noTeam || forceTempTeam)">
         <span class="f18 yellow">*</span>
         <!-- 由于获取小组信息状态接口不再处理旁听生的异常 优先展示旁听生提示 -->
         <p class="f14 c9b" v-if="isGuestStudent">{{ $t('team.guestStudent') }}</p>
         <p class="f14 c9b" v-else-if="noTeam"><!-- 当前题目为小组作答，您还没有进组 -->{{ $t('team.withoutteamhint') }}</p>
         <p class="f14 c9b" v-else-if="forceTempTeam">{{ $t('team.forcetempteam') }}</p>
-        <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p>
+        <!-- <p class="f14 c9b" v-else>{{ $t('team.groupansweredtip') }}</p> -->
       </div>
 
       <!-- 观看者提示文字 返回 -->
@@ -133,10 +167,17 @@
         <p class="f18">{{ $t('watchmode') }}</p>
         <p class="submit-btn f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
-      <!-- 提交按钮 -->
-      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" v-else><!-- 提交答案 -->{{ $t('submitansw') }}</p>
-
     </div>
+
+    <!-- 提交按钮 -->
+    <div class="footer" v-if="!observerMode && (!ispreview || answerType && isComplete)">
+      <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
+      <div class="group-actions box-between" v-if="answerType && isComplete && ispreview">
+        <div class="refresh box-center f16" @click="handleRefreshResult"> <i class="iconfont icon--xiangyouxuanzhuan f20"></i> 刷新</div>
+        <div class="edit box-center f16 bold" @click="handleedit">修改答案</div>
+      </div>
+    </div>
+    
 
     <!-- 小组成员列表 -->
     <section class="members__wrap" v-if="teamVisible">
@@ -233,6 +274,8 @@
         timer: null,
         pics: [],
         videos: [],
+        // 最后提交记录
+        lastResult: null,
       };
     },
     components: {
@@ -295,6 +338,9 @@
       },
     },
     filters: {
+      formatTime(time, format) {
+        return window.moment && moment(time).format(format || 'YYYY-MM-DD HH:mm');
+      }
     },
     mixins: [ imagemixin, problemControl ],
     methods: {
@@ -353,6 +399,8 @@
 
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
+
+          this.text = this.result.content;
         } else {
           // 开始启动定时
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
@@ -450,8 +498,14 @@
                   this.pics = problemResult.pics;
                 }
 
+                if(problemResult.videos.length) {
+                  this.videos = problemResult.videos;
+                }
+
                 this.result = problemResult;
                 this.ispreview = true;
+
+                this.lastResult = data.lastResult
               }
 
               // 未进组提示
@@ -671,6 +725,7 @@
           this.sendStatus = 4;
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
+          this.ispreview = true
         } else if(code === 50028) {
           this.$toast({
             message: '此题已经作答过',
@@ -703,7 +758,9 @@
         }
 
         setTimeout(() => {
-          this.$router.back();
+          if(!this.answerType) {
+            this.$router.back();
+          }
         }, 2000)
       },
 
@@ -1197,6 +1254,22 @@
             !self.text && !self.hasImage && (self.sendStatus = 0);
           }
         });
+      },
+
+      // 更新小组答案
+      handleRefreshResult() {
+        this.getTeamInfo(this.summary.problemID, this.summary.groupid)
+      },
+
+      // 查看历史作答记录
+      handleCheckHistory() {
+        this.$router.push({
+          name: 'subject-team-history',
+          params: {
+            pid: this.summary.problemID,
+            tid: this.summary.groupid
+          }
+        })
       }
     },
     created() {
@@ -1413,6 +1486,11 @@
     color: #333;
     font-weight: normal;
     text-align: left;
+
+    &.bg-white {
+      background: #fff;
+      padding: 0.2133rem 0.453333rem 0.186667rem;
+    }
 
     .tip {
       color: #9B9B9B;
@@ -1675,6 +1753,11 @@
       }
     }
 
+    .team-answer-info {
+      color: #90949D;
+      margin-top: 0.32rem;
+    }
+
     .answer-score {
       padding: 0.266667rem 0.2rem 0;
       color: #9B9B9B;
@@ -1707,13 +1790,36 @@
 
     margin: 0.133333rem 0;
     padding: 0 0.533333rem;
-    height: 1.733333rem;
-    line-height: 1.733333rem;
-    background: #fff;
+    // background: #fff;
 
     .team__intro--name {
       flex: 1;
       text-align: left;
+    }
+
+    .avatar-box {
+      display: flex;
+      align-items: center;
+      color: #90949D;
+
+      &.mt10 {
+        margin-top: 0.2667rem;
+      }
+
+      .avatar {
+        margin-right: -.133333rem;
+        width: .666667rem;
+        height: .666667rem;
+        border-radius: 50%;
+      }
+      .avatar:last-of-type {
+        margin-right: .4rem;
+      }
+    }
+
+    .history {
+      align-self: flex-start;
+      color: #90949D;
     }
   }
 
@@ -1797,5 +1903,45 @@
     background: rgba(0,0,0,0.45);
   }
 
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 1.7067rem;
+    box-shadow: 0px -4px 8px 0px #7B87B21A;
+    background: #fff;
+    padding: 0.2667rem 0.64rem;
 
+    .submit-btn {
+      width: 7.7333rem;
+      height: 1.1733rem;
+      background: #5096f5;
+      color: #fff;
+      margin: 0 auto;
+      border-radius: 44px;
+    }
+  }
+
+  .group-actions {
+    .refresh {
+      width: 2.3467rem;
+      height: 1.1733rem;
+      border-radius: 36px;
+      margin-right: 0.4267rem;
+      border: 1px solid var(--border-border-gray-02, #2D4A9424);
+      color: #656A72;
+      .iconfont {
+        color: #90949D;
+        margin-right: 4px;
+      }
+    }
+    .edit {
+      flex: 1;
+      height: 1.1733rem;
+      border-radius: 444px;
+      border: 1px solid var(--text-text-pri-02, #3D7BFF);
+      color: #3D7BFF;
+    }
+  }
 </style>

@@ -135,6 +135,12 @@ const studentRouter = new Router({
           name: 'join',
           component: () => import('@/lesson/student/join')
         },
+        // 主观题分组作答历史记录
+        {
+          path: 'subject-team-history/:pid/:tid',
+          name: 'subject-team-history',
+          component: () => import('@/lesson/student/subjective-team-history')
+        }
       ]
     },
     {
