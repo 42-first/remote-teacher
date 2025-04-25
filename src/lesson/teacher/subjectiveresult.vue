@@ -62,15 +62,14 @@
           </div>
         </section>
         <hide-some-info :isUserInfo="true" @change="showUserInfoChange"></hide-some-info>
-        <!-- 有解析显示解析入口 -->
-        <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
         <template v-if="group_name">
-          <div class="gap"></div>
           <div class="group_name f14">
             <i class="iconfont icon-fenzu1 f21"></i>{{group_name}}
           </div>
         </template>
-        <div class="gap"></div>
+        <!-- 有解析显示解析入口 -->
+        <p class="analysis--btn f17" v-if="problem && problem.hasRemark" @click="handleVisibleAnalysis"><!-- 答案解析 -->{{ $t('answerkey') }}</p>
+
         <!-- 中间主观题页面 -->
         <section class="subjective-box f18">
           <p v-show="!(total_num !== 0 || total_num === '--')" class="hmy" v-html="$t('noanssubmit')">
@@ -81,59 +80,65 @@
           <div class="subjective-list" v-show="dataList.length">
             <div class="item-with-gap" v-for="(item, index) in dataList" :key="item.problem_result_id">
               <div class="item">
-                <div class="detail">
-                  <div class="student-info" v-if="problem_answer_type == 1">
-                    <v-touch class="avatar-box" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
+                <div class="item-header box-between">
+                  <v-touch class="user-box" v-if="problem_answer_type == 1" v-on:tap="handleOpenTeamMember(item.teamInfo.teamId)">
+                    <div class="f17 text-gray-01 bold">{{ item.teamInfo.teamName }}</div>
+                    <div class="avatar-box">
                       <template v-for="(item2, index2) in item.teamInfo.memberList">
                         <img v-if="index2 < 3" :src="item2.avatar" :key="index2" class="avatar" alt="">
                       </template>
-                      <span class="author f15">{{item.teamInfo.teamName}}</span>
-                    </v-touch>
-                    <div class="time f15">{{item.resultInfo.submitTime | formatTime}}</div>
-                  </div>
-                  <div class="student-info" v-else>
+                    </div>
+                  </v-touch>
+                  <div class="user-box box-start" v-else>
                     <div class="avatar-box">
                       <img :src="item.user.avatar" class="avatar" alt="">
-                      <span class="author f15">{{item.user.name}}</span>
+                      <span class="text-gray-01 f15">{{item.user.name}}</span>
                     </div>
-                    <div class="time f15">{{item.time | formatTime}}</div>
                   </div>
 
-                  <div class="cont f18">
-                    <div class="cont-title">
-                      {{item.fold ? item.result.foldContent : item.result.content}}
-                      <!-- {{item.result.content}} -->
-                      <span v-show="!item.hideFold">
-                          <span v-show="item.fold" @click="item.fold = false">
-                              <span>...</span>
-                              <span class="color16">
-                                <span>{{$t('showall')}}</span>
-                                <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
-                              </span>
-                          </span>
-                          <span v-show="!item.fold" @click="item.fold = true" class="color16">
-                              <i class="iconfont icon-zhankai"></i>
-                              {{$t('foldall')}}
-                          </span>
-                      </span>
-                    </div>
-                    <div class="anser__imgs" :class="item.result.pics.length > 1 ? 'grid' : ''">
-                      <template v-for="(pic, i) in item.result.pics">
-                        <v-touch v-if="hasThumb(pic)" :id="'pic' + item.index + i" tag="img" v-lazy="pic.thumb || pic.pic" class="pic" alt="" v-on:tap="scaleImage(pic.pic, $event)"></v-touch>
-                      </template>
-                      
-                    </div>
-                    <div class="anser__videos" v-if="item.result.videos.length">
-                      <video v-for="(video, index) in item.result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
-                      </video>
-                    </div>
+                  <div class="f15 text-gray-03 time">{{ (problem_answer_type == 1 ? item.resultHistory && item.resultHistory[0].submitTime : item.time) | formatTime }}</div>
+                </div>
+                <div class="box-between team-history" v-if="problem_answer_type == 1 && item.resultHistory && item.resultHistory.length > 1">
+                  <div class="f15 text-gray-01">
+                    <span class="bold">最后提交：</span>
+                    <span>{{ item.resultHistory[0].user.name}}</span>
+                  </div>
+                  <v-touch class="f15 box-start text-gray-03" v-on:tap="handleCheckTeamHistory(item.resultInfo.index, item.teamInfo.teamId)">历史作答记录 <i class="iconfont icon-jiantoudan-xiangyou f16"></i></v-touch>
+                </div>
+                <div class="cont f18">
+                  <div class="cont-title text-gray-02 f15">
+                    {{item.fold ? item.result.foldContent : item.result.content}}
+                    <!-- {{item.result.content}} -->
+                    <span v-show="!item.hideFold">
+                        <span v-show="item.fold" @click="item.fold = false">
+                            <span>...</span>
+                            <span class="color16">
+                              <span>{{$t('showall')}}</span>
+                              <span class="color12">({{item.result.content ? item.result.content.length : 0}})</span>
+                            </span>
+                        </span>
+                        <span v-show="!item.fold" @click="item.fold = true" class="color16">
+                            <i class="iconfont icon-zhankai"></i>
+                            {{$t('foldall')}}
+                        </span>
+                    </span>
+                  </div>
+                  <div class="anser__imgs" :class="[item.result.pics.length > 1 ? 'grid' : '', item.result.content ? 'mt8' : '']">
+                    <template v-for="(pic, i) in item.result.pics">
+                      <v-touch v-if="hasThumb(pic)" :id="'pic' + item.index + i" tag="img" v-lazy="pic.thumb || pic.pic" class="pic" alt="" v-on:tap="scaleImage(pic.pic, $event)"></v-touch>
+                    </template>
+                    
+                  </div>
+                  <div class="anser__videos" :class="item.result.content || item.result.pics[0].pic ? 'mt8' : ''" v-if="item.result.videos.length">
+                    <video v-for="(video, index) in item.result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
+                    </video>
                   </div>
                 </div>
                 <div class="action-box f14">
                   <!-- 投屏时不能打分 -->
                   <v-touch class="dafen-box" v-show="postingSubjectiveid !== item.index" v-on:tap="initScore(item.index, item.resultId, item.score, item.totalScore, index, item.comment && item.comment.content)">
-                    <div class="gray">
-                      <i class="iconfont icon-ykq_dafen f20 ver-middle" style="color: #639EF4;"></i>
+                    <div class="gray blue">
+                      <i class="iconfont icon-wenbenwancheng- f16 ver-middle" style="color: #639EF4;"></i>
                       <span>{{ $tc('givestuscore', item.score === -1) }}</span>
                       <span v-show="item.score !== -1">{{item.score > -1 ? (item.score/100).toFixed(1) : '--'}}</span>
                     </div>
@@ -142,7 +147,7 @@
 
                   <div class="action f14">
                     <v-touch class="gray" v-show="postingSubjectiveid !== item.index" v-on:tap="postSubjective(item.index)">
-                      <i class="iconfont icon-shiti_touping f24 ver-middle" style="color: #639EF4; margin-right: 0.1rem;"></i>
+                      <i class="iconfont icon-shiti_touping f16 ver-middle"></i>
                       <!-- 投屏 --><span>{{ $t('screenmode') }}</span>
                     </v-touch>
                     <v-touch class="cancel-post-btn f14 ver-middle" v-show="postingSubjectiveid === item.index && !postingSubjectiveSent" v-on:tap="fsqbHander(item.index)">
@@ -152,7 +157,6 @@
                       <!-- 已发全班 -->{{ $t('postpubliced') }}
                     </div>
                     <v-touch class="cancel-post-btn f14 qxtp" v-show="postingSubjectiveid === item.index" v-on:tap="closeSubjectivemask">
-                      <span class="fsqb-innerline"></span>
                       <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
                     </v-touch>
                   </div>
@@ -331,7 +335,8 @@
         'pptData',
         'postingSubjectiveid',
         'postingSubjectiveSent',
-        'isCloneClass'
+        'isCloneClass',
+        'addinversion',
       ])
 	  },
 	  components: {
@@ -563,7 +568,7 @@
        * 所有状态下都能延时（除非不限时）
        * 限时后，能再改为不限时
        *
-       * 延时规则：https://www.tapd.cn/20392061/prong/stories/view/1120392061001000893
+       * 延时规则：https://www.tapd.cn/20392061/prong/stories/div/1120392061001000893
        * 原来是倒计时，设置为不限时，时间从最初发题算
        * 从已经收题，变成不限时，时间从最初发题算
        * 从时间到，设置为不限时，时间从最初发题算
@@ -746,6 +751,9 @@
        */
       fetchList(last_index = -1){
         let URL = API.lesson.get_subj_list
+        // if(this.addinversion >= 5.4) {
+          URL = API.lesson.get_subj_group_list
+        // }
 
         let params = {
           problem_id: this.problemid,
@@ -1369,6 +1377,17 @@
             this.gProportion = res.data.reviewPercent
           }
         })
+      },
+
+      handleCheckTeamHistory(resultIndex, teamid) {
+        this.$router.push({
+          name: 'subjective_team_history_t_v3',
+          params: {
+            pid: this.problemid,
+            tid: teamid,
+            index: resultIndex
+          }
+        })
       }
 	  }
 	}
@@ -1388,7 +1407,7 @@
 	.problem-root {
     position: relative;
     height: 100%;
-    background: #fff;
+    background: #f5f6f7;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -1433,7 +1452,7 @@
 	  position: relative;
     z-index: 20; /* 遮盖toolbar */
 	  color: $white;
-	  background: $white;
+	  background: #f5f6f7;
 
 		/* 上部 */
 	  .upper {
@@ -1441,7 +1460,8 @@
 	  	max-height: 4.453333rem;
 	  	padding: .133333rem .2rem 0;
 	  	text-align: center;
-			box-shadow: 0 .026667rem .16rem 0 #e2e2e2;
+      background: #fff;
+			// box-shadow: 0 .026667rem .16rem 0 #e2e2e2;
 
       .xitixushi {
         display: flex;
@@ -1555,9 +1575,11 @@
 	  }
 
 		.group_name {
+      margin-top: -.533333rem;
+      position: relative;
 			padding-left: .533333rem;
 			color: #666;
-			width: 100%;
+			width: 60%;
 			height: 1.226667rem;
 			line-height: 1.226667rem;
 			.iconfont {
@@ -1580,113 +1602,138 @@
       }
 
       .subjective-list {
-      	color: #4A4A4A;
-
-      	padding-bottom: 1.5rem;
+      	padding: 0 0.4267rem;
 	      -webkit-overflow-scrolling: touch;
 
 	      .item {
-	        padding: 0 .533333rem;
-	        background: $white;
+	        margin-bottom: 0.4267rem;
+          background: #fff;
+          box-sizing: border-box;
+          padding: 0.32rem;
+          border-radius: 0.16rem;
 
-	        .detail {
-	          padding-top: 0.266667rem;
+          .item-header  {
+            padding-bottom: 0.32rem;
+            border-bottom: 1px solid var(--border-border-gray-03, #2D4A9412);
 
-						.student-info {
-							display: flex;
-							align-items: center;
-							justify-content: space-between;
-							width: 100%;
+            .time {
+              align-self: flex-start;
+            }
+          }
 
-							.avatar-box {
-								display: flex;
-								align-items: center;
+          .team-history {
+            margin: 0.2133rem 0;
+            .iconfont {
+              line-height: 1;
+              color: #90949D;
+            }
+          }
 
-								.avatar {
-			            margin-right: -.133333rem;
-			            width: .666667rem;
-			            height: .666667rem;
-			            border-radius: 50%;
-			          }
-								.avatar:last-of-type {
-									margin-right: .4rem;
-								}
-							}
+          .avatar-box {
+            display: flex;
+            align-items: center;
 
-							.time {
-		            color: $graybg;
-		          }
+            .avatar {
+              margin-right: -.133333rem;
+              width: .666667rem;
+              height: .666667rem;
+              border-radius: 50%;
+            }
+            .avatar:last-of-type {
+              margin-right: .4rem;
+            }
+          }
 
-	            .author {
-	            	display: inline-block;
-	              color: #666;
-	            }
+          .mt8 {
+            margin-top: 0.2133rem;
+          }
 
-						}
+          .cont {
+            border-bottom: 1px solid var(--border-border-gray-03, #2D4A9412);
+            padding: 0.2133rem 0;
 
-	          .cont {
-							.cont-title {
-								margin: .266667rem 0 0 .093333rem;
-								color: #333;
-                text-align: justify;
-							}
-              .color16{
-                font-size: px2rem(32px);
-                color: #639ef4;
-                display: inline-block;
-                .iconfont{
-                  font-size: px2rem(60px);
-                  vertical-align: middle;
-                }
+            .cont-title {
+              text-align: justify;
+              line-height: 0.6933rem;
+            }
+            .color16{
+              font-size: px2rem(32px);
+              color: #639ef4;
+              display: inline-block;
+              .iconfont{
+                font-size: px2rem(60px);
+                vertical-align: middle;
               }
-              .color12{
-                font-size: px2rem(24px);
-                color: #639ef4;
+            }
+            .color12{
+              font-size: px2rem(24px);
+              color: #639ef4;
+            }
+
+            .anser__imgs.grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 0.2133rem;
+              min-height: 2.64rem;
+
+              .pic {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                background: #ccc;
               }
+            }
 
-              .anser__imgs.grid {
-                display: grid;
-                grid-template-columns: repeat(3, 2.88rem);
-                gap: 0.2667rem;
-
-                .pic {
-                  width: 2.88rem;
-                  height: 2.88rem;
-                  object-fit: cover;
-                }
+            .anser__videos {
+              video {
+                max-width: 100%;
+                max-height: 5.68rem;
+                object-fit: cover;
               }
+            }
 
-              .anser__videos {
-                margin-top: 0.2667rem;
-                video {
-                  max-width: 100%;
-                  max-height: 5.68rem;
-                  object-fit: cover;
-                }
-              }
-
-	            .pic {
-	              max-width: 100%;
-	              max-height: 5.68rem;
-								display: block;
-	            }
-	            img[lazy=loading] {
-	              width: 4.666667rem;
-	              height: 4.666667rem;
-	              background: url(~~images/teacher/img-holder.png) center center no-repeat;
-								background-size: cover;
-	            }
-	          }
-	        }
+            .pic {
+              max-width: 100%;
+              max-height: 5.68rem;
+              display: block;
+            }
+            img[lazy=loading] {
+              width: 4.666667rem;
+              height: 4.666667rem;
+              background: url(~~images/teacher/img-holder.png) center center no-repeat;
+              background-size: cover;
+            }
+          }
 
 	        .action-box {
 	          display: flex;
 	          justify-content: space-between;
 	          align-items: center;
-	          padding: px2rem(40px) 0;
-            height: px2rem(50px);
+            margin-top: 0.32rem;
 	          .gray {
-	            color: $graybg;
+              color: #90949D;
+              display: flex;
+              align-items: center;
+              padding: 0 0.4267rem;
+              border: 1px solid var(--border-border-gray-02, #2D4A9424);
+              border-radius: 0.96rem;
+              height: 0.7467rem;
+
+              &.blue {
+                background: var(--fill-colorful-fill-pri-0810, #5096F51A);
+                color: #5096f5;
+                border-color: transparent;
+
+                .iconfont {
+                  color: #5096F5;
+                }
+              }
+
+              .iconfont {
+                color: #90949D;
+                margin-right: 0.1067rem;
+                line-height: 1;
+              }
 	          }
 
 	          .dafen-box, .action {
@@ -1701,17 +1748,16 @@
             }
 
             .cancel-post-btn {
-              background: $blue;
-              width: 2.346667rem;
+              background: #639ef4;
+              width: 2.24rem;
               text-align: center;
-              height: 0.826667rem;
-              line-height: 0.826667rem;
-              color: $white;
+              height: 0.7467rem;
+              line-height: 0.7467rem;
+              color: #fff;
+              border-radius: 0.96rem;
+              margin-left: 0.32rem;
             }
 
-            .qxtp {
-              margin-right: -0.4rem;
-            }
 
             .yfqb {
               background: $graybg;
@@ -1879,5 +1925,15 @@
     cursor: pointer;
     border: 0.026667rem solid #639EF4;
     border-radius: 0.106667rem;
+  }
+
+  .text-gray-01 {
+    color: #2B2E35;
+  }
+  .text-gray-02 {
+    color: #656A72;
+  }
+  .text-gray-03 {
+    color: #90949D;
   }
 </style>
