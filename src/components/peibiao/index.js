@@ -5,16 +5,16 @@ import ChLanguage_zhktpt from './platform/zhktpt/language/zh_cn';
 import {getRouteVm, startPolling} from './utils';
 import './index.scss';
 import './extra/index.scss';
-import peiBiaoInjectionRouteView from './extra/peiBiaoInjectionRouteView'
+import injectionRouteView from './extra/injectionRouteView'
 import initExtra from './extra/initExtra';
 function isPeiBiaoCustomization({data, router, store, to}) {
   const customization = {
     count: 0,
     matchedInjectionModule: null,
   };
-  for (const routeName in peiBiaoInjectionRouteView) {
-    if (Object.prototype.hasOwnProperty.call(peiBiaoInjectionRouteView, routeName)) {
-      const module = peiBiaoInjectionRouteView[routeName];
+  for (const routeName in injectionRouteView) {
+    if (Object.prototype.hasOwnProperty.call(injectionRouteView, routeName)) {
+      const module = injectionRouteView[routeName];
       if (module.regex.test(to.path)) {
         if (!customization.matchedInjectionModule) {
           customization.matchedInjectionModule = {};
