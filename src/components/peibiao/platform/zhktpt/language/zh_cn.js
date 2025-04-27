@@ -1,2 +1,2 @@
-import DataCenter from "./DataCenter/zh_cn";
-export default {DataCenter};
+import meeting from "./meeting/zh_cn";
+export default {meeting};
