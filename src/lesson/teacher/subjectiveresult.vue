@@ -751,9 +751,9 @@
        */
       fetchList(last_index = -1){
         let URL = API.lesson.get_subj_list
-        // if(this.addinversion >= 5.4) {
+        if(this.addinversion >= 5.4) {
           URL = API.lesson.get_subj_group_list
-        // }
+        }
 
         let params = {
           problem_id: this.problemid,

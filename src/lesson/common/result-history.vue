@@ -51,17 +51,27 @@
             ></video>
           </div>
         </div>
-        <div
-          class="screen box-center"
-          v-if="isTeacher"
-          @click.stop="handleScreen(index)"
-        >
-          <i
-            class="iconfont icon-shiti_touping f24 ver-middle"
-            style="margin-right: 0.1rem"
-          ></i>
-          投屏
-        </div>
+        <template v-if="isTeacher">
+          <div
+            class="screen box-center"
+            v-if="screenIndex == index"
+            @click.stop="handleCancelScreen(index)"
+          >
+            取消投屏
+          </div>
+          <div
+            class="screen box-center"
+            v-else
+            @click.stop="handleScreen(index)"
+          >
+            <i
+              class="iconfont icon-shiti_touping f16 ver-middle"
+              style="margin-right: 0.1rem"
+            ></i>
+            投屏
+          </div>
+        </template>
+        
       </div>
     </div>
 
@@ -144,6 +154,7 @@ export default {
       teamId: "",
       spid: "",
       resultIndex: -1,
+      screenIndex: -1,
     };
   },
   components: {
@@ -161,6 +172,7 @@ export default {
   methods: {
     init() {
       this.fetchHistory();
+      this.handlePubSub();
     },
 
     fetchHistory() {
@@ -194,6 +206,19 @@ export default {
         resultindex: index,
       });
       this.socket.send(str);
+    },
+
+    handleCancelScreen() {
+      let self = this
+
+      let str = JSON.stringify({
+        'op': 'closemask',
+        'lessonid': self.lessonid,
+        'type': 'subjective',
+        'msgid': 1234
+      })
+
+      self.socket.send(str)
     },
 
     handleCloseDetail() {
@@ -266,6 +291,19 @@ export default {
         }, 1500);
       }
     },
+
+    handlePubSub() {
+      let self = this
+      // 订阅前清掉之前可能的订阅，避免多次触发回调
+      T_PUBSUB.unsubscribe('pro-msg')
+      T_PUBSUB.subscribe('pro-msg.sproblemshown', (_name, msg) => {
+        self.screenIndex = msg.resultindex
+      })
+      T_PUBSUB.subscribe('call-msg.closedmask', (_name, msg) => {
+        self.screenIndex = -1
+      })
+      
+    }
   },
   created() {
     this.isTeacher = this.$route.name == "subjective_team_history_t_v3";

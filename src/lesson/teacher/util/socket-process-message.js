@@ -375,6 +375,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', msg.spid)
     self.$store.commit('set_postingSubjectiveSent', msg.sent)
+    T_PUBSUB.publish('pro-msg.sproblemshown', msg)
     return
   }
 
@@ -481,6 +482,7 @@ function socketProcessMessage(msg){
     // 退出主观题投屏蒙版
     if (msg.type == 'subjective') {
       self.$store.commit('set_postingSubjectiveid', -1)
+      T_PUBSUB.publish('call-msg.closedmask', msg)
       return
     }
 
