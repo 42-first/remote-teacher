@@ -1,0 +1,25 @@
+.pei-biao-global-class-name-body {
+  #global-left-nav {
+    &.current-role-0,
+    &.current-role-1 {
+      > div {
+        display: none !important;
+      }
+
+      > #data_center {
+        display: block !important;
+      }
+
+      > .user-wrapper {
+        display: flex !important;
+        > div {
+          display: none !important;
+        }
+        > .user-change-role,
+        > .blank {
+          display: block !important;
+        }
+      }
+    }
+  }
+}
