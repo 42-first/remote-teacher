@@ -1,12 +1,12 @@
 <template>
   <section class="page__wrap">
     <div class="container box-center">
-      <div>
+      <div class="box-center column">
         <div class="icon__wrap box-center">
           <i class="iconfont icon-shijuanku-mianzhuang f64"></i>
         </div>
         
-        <p class="f20 bold">{{ slide && slide.papername }}</p>
+        <p class="f20 bold title">{{ slide && slide.papername }}</p>
         <div class="btn box-center pointer" @click="handleJumpExam">进入考试</div>
       </div>
     </div>
@@ -81,6 +81,15 @@ export default {
     background: linear-gradient(330.1deg, #08BC72 8.98%, #A9FFCD 92.74%);
     margin: 0 auto 16px;
     color: #fff;
+  }
+
+  .column {
+    flex-direction: column;
+  }
+
+  .title {
+    max-width: 50%;
+    // white-space: 
   }
 
   .btn {
