@@ -9,7 +9,7 @@
         <div class="title f20 ellipsis">{{folderTitle}}</div>
         
         <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
-          <div class="box-start">
+          <div class="box-start overhidden">
             <img v-if="paper.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
             <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
             <div class="desc f18 ellipsis">
@@ -241,6 +241,10 @@
         font-weight: 500;
         color: #333333;
         border-bottom: 0.026667rem solid #EEEEEE;
+      }
+
+      .overhidden {
+        overflow: hidden;
       }
 
       .item {

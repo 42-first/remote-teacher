@@ -18,7 +18,7 @@
       <section class="list upper" v-show="quizList.length && activeTab === 1">
         <!-- <div class="title f17">{{ $t('publishedquiz') }}</div> -->
         <v-touch class="item" v-for="quiz in quizList" :key="quiz.quizId" v-on:tap="showQuizResult(quiz.quizId)">
-          <div class="box-start">
+          <div class="box-start overhidden">
             <img v-if="quiz.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
             <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
             <div class="desc f18 ellipsis">
@@ -371,6 +371,10 @@
         .right .iconfont {
           margin-left: 0.4rem;
         }
+      }
+
+      .overhidden {
+        overflow: hidden;
       }
 
       .item {
