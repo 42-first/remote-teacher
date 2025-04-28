@@ -22,8 +22,8 @@ export default {
 
 <template>
   <div
-      :class="`pei-biao-global-class-name-loading pei-biao-global-class-name-loading-${platform}`"
-      v-show="isLoading"
+    :class="`pei-biao-global-class-name-loading pei-biao-global-class-name-loading-${platform}`"
+    v-show="isLoading"
   >
     <div class="loading-spin"></div>
   </div>
