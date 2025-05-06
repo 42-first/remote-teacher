@@ -1577,11 +1577,14 @@
 		.group_name {
       margin-top: -.533333rem;
       position: relative;
-			padding-left: .533333rem;
+			padding: 0.0667rem 0 0 .533333rem;
 			color: #666;
-			width: 60%;
-			height: 1.226667rem;
-			line-height: 1.226667rem;
+			width: 48%;
+			// height: 1.226667rem;
+			// line-height: 1.226667rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 			.iconfont {
 				color: #B684C8;
 				margin-right: .266667rem;
