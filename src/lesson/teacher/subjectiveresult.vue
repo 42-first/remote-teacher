@@ -96,7 +96,7 @@
                     </div>
                   </div>
 
-                  <div class="f15 text-gray-03 time">{{ (problem_answer_type == 1 ? item.resultHistory && item.resultHistory[0].submitTime : item.time) | formatTime }}</div>
+                  <div class="f15 text-gray-03 time">{{ (problem_answer_type == 1 ? (item.resultHistory && item.resultHistory[0].submitTime || item.resultInfo.submitTime) : item.time) | formatTime }}</div>
                 </div>
                 <div class="box-between team-history" v-if="problem_answer_type == 1 && item.resultHistory && item.resultHistory.length > 1">
                   <div class="f15 text-gray-01">
