@@ -4,7 +4,7 @@
       <div class="back" @click="handleBack">
         <i class="iconfont icon-jiantoudan-xiangzuo f24"></i>
       </div>
-      作答历史记录
+      <!-- 历史作答记录--> {{ $t('historyanswers') }}
     </header>
     <div class="container">
       <div
@@ -14,7 +14,7 @@
         @click="handleCheckDetail(index)"
       >
         <div class="box-between text-gray-01 f15 bold">
-          <p class="person">提交人: {{ item.user.name }}</p>
+          <p class="person"><!-- 提交人：--> {{ $t('submiter') }}: {{ item.user.name }}</p>
           <p class="time">{{ item.submitTime | formatTime }}</p>
         </div>
         <div class="content text-gray-02 f15">
@@ -57,7 +57,7 @@
             v-if="screenIndex == index"
             @click.stop="handleCancelScreen(index)"
           >
-            取消投屏
+            <!-- 取消投屏 -->{{ $t('screenmodeoff') }}
           </div>
           <div
             class="screen box-center"
@@ -68,7 +68,7 @@
               class="iconfont icon-shiti_touping f16 ver-middle"
               style="margin-right: 0.1rem"
             ></i>
-            投屏
+            <!-- 投屏 -->{{ $t('screenmode') }}
           </div>
         </template>
         
@@ -78,10 +78,10 @@
     <section class="modal" v-if="visibleDetail">
       <div class="detail">
         <div class="box-between text-gray-01 f15 bold">
-          <p class="person">提交人: {{ curResult.user.name }}</p>
+          <p class="person"><!-- 提交人：--> {{ $t('submiter') }}: {{ curResult.user.name }}</p>
           <p class="time">{{ curResult.submitTime | formatTime }}</p>
         </div>
-        <p class="text-gray-02">{{ curResult.result.content }}</p>
+        <p class="text-gray-02 mt8 f15">{{ curResult.result.content }}</p>
         <div
           class="anser__imgs"
           :class="[
@@ -124,10 +124,10 @@
             v-if="isTeacher"
             @click="handleScreen(resultIndex)"
           >
-            投屏
+            <!-- 投屏 -->{{ $t('screenmode') }}
           </div>
           <div class="btn box-center text-gray-02" @click="handleCloseDetail">
-            关闭
+            <!-- 关闭 -->{{ $t('close') }}
           </div>
         </div>
       </div>
