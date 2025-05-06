@@ -479,7 +479,7 @@
               // 小组信息
               let team = data.teamInfo;
               // 当前学生是否进入分组
-              let noTeam = team && !+team.teamId;
+              let noTeam = team && !+team.teamId || false;
               // 学生是否作答过
               this.hasAnswered = data.userAnswered;
               // 是否强制临时组作答
@@ -513,9 +513,7 @@
               }
 
               // 未进组提示
-              if(noTeam) {
-                this.noTeam = true;
-              }
+              this.noTeam = noTeam;
             }
           })
           .catch((error) => {
@@ -733,6 +731,11 @@
 
           if(this.answerType) {
             this.result = params.result
+
+            // 之前是未进组 提交后会有一个临时组  获取下临时组的信息
+            if(this.noTeam) {
+              this.handleRefreshResult()
+            }
           }
         } else if(code === 50028) {
           this.$toast({
@@ -1330,6 +1333,7 @@
     min-height: 100vh;
     // overflow-y: scroll;
     // -webkit-overflow-scrolling: touch;
+    padding-bottom: 1.7067rem;
   }
 
   .problem-tag {
@@ -1715,7 +1719,7 @@
 
   .subjective__answer {
     margin-bottom: 1.066667rem;
-    padding: 0.333333rem 0.4rem 1.7067rem;; 
+    padding: 0.333333rem 0.4rem; 
     color: #333;
     background: #fff;
 
