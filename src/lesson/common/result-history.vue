@@ -1,8 +1,8 @@
 <template>
   <section class="page__wrap">
-    <header class="page__header box-center">
-      <div class="back">
-        <i class="iconfont icon-jiantoudan-xiangzuo f20"></i>
+    <header class="page__header box-center f17">
+      <div class="back" @click="handleBack">
+        <i class="iconfont icon-jiantoudan-xiangzuo f24"></i>
       </div>
       作答历史记录
     </header>
@@ -172,7 +172,7 @@ export default {
   methods: {
     init() {
       this.fetchHistory();
-      this.handlePubSub();
+      this.isTeacher && this.handlePubSub();
     },
 
     fetchHistory() {
@@ -303,6 +303,10 @@ export default {
         self.screenIndex = -1
       })
       
+    },
+
+    handleBack() {
+      this.$router.back()
     }
   },
   created() {
@@ -337,11 +341,14 @@ export default {
 
   .page__header {
     position: relative;
+    height: 1.28rem;
+    color: #2B2E35;
+    box-shadow: 0px 6px 32px 0px #7B87B21A;
 
     .back {
       position: absolute;
       top: 50%;
-      left: 20px;
+      left: 0.3733rem;
       transform: translateY(-50%);
     }
   }

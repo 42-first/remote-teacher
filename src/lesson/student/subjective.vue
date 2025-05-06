@@ -146,9 +146,13 @@
           <p class="f15">{{ lastResult.submitTime | formatTime('HH:mm') }}</p>
         </div>
         <!-- 打分显示 -->
-        <div class="answer-score" v-if="getScore !== -1">
-          <i class="iconfont blue icon-ykq_dafen f18"></i>
-          <span class="lable f15" >{{ $t('stuscore') }}: <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
+        <div class="answer-score box-between" v-if="getScore !== -1">
+          <span class="box-center">
+            <i class="iconfont blue icon-wenbenwancheng- f18"></i>
+            <span class="lable f15 bold" >  {{ $t('stuscore') }}:</span>
+          </span>
+          
+          <span class="score f15 bold" > <!-- {{getScore}}分 -->{{ $t('getpoint', { score: getScore }) }}</span>
         </div>
       </div>
 
@@ -726,6 +730,10 @@
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
           this.ispreview = true
+
+          if(this.answerType) {
+            this.result = params.result
+          }
         } else if(code === 50028) {
           this.$toast({
             message: '此题已经作答过',
@@ -1264,7 +1272,7 @@
       // 查看历史作答记录
       handleCheckHistory() {
         this.$router.push({
-          name: 'subject-team-history',
+          name: 'subject-team-history-s',
           params: {
             pid: this.summary.problemID,
             tid: this.summary.groupid
@@ -1707,7 +1715,7 @@
 
   .subjective__answer {
     margin-bottom: 1.066667rem;
-    padding: 0.333333rem 0.4rem;
+    padding: 0.333333rem 0.4rem 1.7067rem;; 
     color: #333;
     background: #fff;
 
@@ -1759,20 +1767,28 @@
     }
 
     .answer-score {
-      padding: 0.266667rem 0.2rem 0;
+      padding: 0.2133rem 0.2667rem;
       color: #9B9B9B;
       text-align: left;
+      background: #F0F2FA;
+      border-radius: 0.1067rem;
+      margin-top: 0.32rem;
 
       .lable {
-        vertical-align: 0.066667rem;
+        margin-left: 0.16rem;
+        color: #2B2E35;
       }
 
-      .iconfont {
+      .score {
         color: #F5A623;
       }
 
       .iconfont.blue {
         color: #639EF4;
+      }
+
+      .bold {
+        font-weight: bold;
       }
     }
 

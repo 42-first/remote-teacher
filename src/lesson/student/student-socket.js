@@ -514,6 +514,14 @@ var mixin = {
           case 'companion':
             this.lessonCompanionState = msg.show ? 1 : 0
             break;
+
+          // 主观题分组作答同组有新答案
+          case 'groupanswerupdate':
+            this.$toast({
+              message: '作答内容有更新，请及时刷新',
+              duration: 3000
+            });
+            break;
             
           default:
             hasMsg = false;
