@@ -729,10 +729,10 @@
           this.sendStatus = 4;
           this.sLeaveTime = this.$i18n.t('done') || '已完成';
           this.isComplete = true;
-          this.ispreview = true
 
           if(this.answerType) {
             this.result = params.result
+            this.ispreview = true
 
             // 提交后更新下提交人信息
             this.handleRefreshResult()
