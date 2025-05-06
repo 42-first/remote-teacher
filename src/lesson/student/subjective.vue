@@ -734,10 +734,8 @@
           if(this.answerType) {
             this.result = params.result
 
-            // 之前是未进组 提交后会有一个临时组  获取下临时组的信息
-            if(this.noTeam) {
-              this.handleRefreshResult()
-            }
+            // 提交后更新下提交人信息
+            this.handleRefreshResult()
           }
         } else if(code === 50028) {
           this.$toast({
