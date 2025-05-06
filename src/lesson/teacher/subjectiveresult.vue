@@ -100,10 +100,10 @@
                 </div>
                 <div class="box-between team-history" v-if="problem_answer_type == 1 && item.resultHistory && item.resultHistory.length > 1">
                   <div class="f15 text-gray-01">
-                    <span class="bold">最后提交：</span>
+                    <span class="bold"><!-- 最后提交：--> {{ $t('lastsubmit') }}: </span>
                     <span>{{ item.resultHistory[0].user.name}}</span>
                   </div>
-                  <v-touch class="f15 box-start text-gray-03" v-on:tap="handleCheckTeamHistory(item.resultInfo.index, item.teamInfo.teamId)">历史作答记录 <i class="iconfont icon-jiantoudan-xiangyou f16"></i></v-touch>
+                  <v-touch class="f15 box-start text-gray-03" v-on:tap="handleCheckTeamHistory(item.resultInfo.index, item.teamInfo.teamId)"><!-- 历史作答记录--> {{ $t('historyanswers') }} <i class="iconfont icon-jiantoudan-xiangyou f16"></i></v-touch>
                 </div>
                 <div class="cont f18">
                   <div class="cont-title text-gray-02 f15">

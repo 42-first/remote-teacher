@@ -518,7 +518,7 @@ var mixin = {
           // 主观题分组作答同组有新答案
           case 'groupanswerupdate':
             this.$toast({
-              message: '作答内容有更新，请及时刷新',
+              message: this.$i18n.t('answerupdate') || '作答内容有更新，请及时刷新',
               duration: 3000
             });
             break;

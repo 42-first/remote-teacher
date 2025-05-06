@@ -459,6 +459,11 @@ let pages = {
   "showall": "Full text",
   "foldall": "fold",
   "tougaowarn": "The current version does not support short video, please upgrade to the latest version",
+  "lastsubmit": "Last",
+  "historyanswers": "History",
+  "submiter": "Submitter",
+  "modifyanswer": "Edit",
+  "answerupdate": "Updates detected, refresh now",
 
   // 给学生增加备注需求增加
   behavior: {

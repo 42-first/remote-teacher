@@ -461,6 +461,12 @@ let pages = {
   "showall": "全文",
   "foldall": "收起",
   "tougaowarn": "当前插件版本不支持播放小视频，请将电脑端雨课堂升级至最新版本",
+  "lastsubmit": "最后提交",
+  "historyanswers": "历史作答记录",
+  "submiter": "提交人",
+  "modifyanswer": "修改答案",
+  "answerupdate": "作答内容有更新，请及时刷新",
+
 
   // 给学生增加备注需求增加
   behavior: {

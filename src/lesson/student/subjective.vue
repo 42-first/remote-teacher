@@ -48,7 +48,7 @@
             </div>
           </div>
           <div class="history box-start f15" @click="handleCheckHistory">
-            历史作答记录
+            <!-- 历史作答记录--> {{ $t('historyanswers') }}
             <i class="iconfont icon-jiantoudan-xiangyou f16"></i>
           </div>
         </template>
@@ -142,7 +142,7 @@
         </div>
         <!-- 分组作答最后提交人信息 -->
         <div class="team-answer-info box-between" v-if="answerType && lastResult">
-          <p class="f15">提交人：{{ lastResult.lastAnswerUserName }}</p>
+          <p class="f15"><!-- 提交人：--> {{ $t('submiter') }}: {{ lastResult.lastAnswerUserName }}</p>
           <p class="f15">{{ lastResult.submitTime | formatTime('HH:mm') }}</p>
         </div>
         <!-- 打分显示 -->
@@ -177,8 +177,8 @@
     <div class="footer" v-if="!observerMode && (!ispreview || answerType && isComplete)">
       <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
       <div class="group-actions box-between" v-if="answerType && isComplete && ispreview">
-        <div class="refresh box-center f16" @click="handleRefreshResult"> <i class="iconfont icon--xiangyouxuanzhuan f20"></i> 刷新</div>
-        <div class="edit box-center f16 bold" @click="handleedit">修改答案</div>
+        <div class="refresh box-center f16" @click="handleRefreshResult"> <i class="iconfont icon--xiangyouxuanzhuan f20"></i> <!-- 刷新 --> {{ $t('refresh') }}</div>
+        <div class="edit box-center f16 bold" @click="handleedit"><!-- 修改答案 --> {{ $t('modifyanswer') }}</div>
       </div>
     </div>
     
@@ -535,6 +535,8 @@
           .then((res) => {
             if(res && res.code == 0 && res.data) {
               let data = res.data;
+
+              data.teamId = teamID
 
               // 小组成员
               this.team = data;
@@ -1278,7 +1280,7 @@
           name: 'subject-team-history-s',
           params: {
             pid: this.summary.problemID,
-            tid: this.summary.groupid
+            tid: this.team.teamId
           }
         })
       }
