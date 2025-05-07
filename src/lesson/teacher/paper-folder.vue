@@ -8,7 +8,7 @@
       <section class="list downer">
         <div class="title f20 ellipsis">{{folderTitle}}</div>
         
-        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
+        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount, paper.hasError, paper.errorMsg)">
           <div class="box-start overhidden">
             <img v-if="paper.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
             <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
@@ -135,7 +135,14 @@
        * @event bindtap
        * @param {number, number, string, number} index paperid papertitle papertotal
        */
-      choosePaper (index, paperid, papertitle, papertotal) {
+      choosePaper (index, paperid, papertitle, papertotal, hasError, errorMsg) {
+        if(hasError) {
+          this.$toast({
+            message: errorMsg,
+            duration: 3e3
+          });
+          return
+        }
         // 克隆班不能执行当前操作
         if (!!this.isCloneClass) {
           this.$toast({
