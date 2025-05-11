@@ -1,5 +1,6 @@
+import checkRedirectExtra from './extra/checkRedirectExtra';
 import './extra/index.scss';
-import initExtra from './extra/initExtra';
+import initRouterGuardsExtra from './extra/initRouterGuardsExtra';
 import injectionRouteView from './extra/injectionRouteView';
 import EnLanguage_cyktdx from './extra/platform/cyktdx/language/en';
 import ChLanguage_cyktdx from './extra/platform/cyktdx/language/zh_cn';
@@ -8,7 +9,15 @@ import ChLanguage_zhktpt from './extra/platform/zhktpt/language/zh_cn';
 import './index.scss';
 import {findFirstRouterViewComponentInChildren, startPolling} from './utils';
 
-export function getRouteViewVm({data, router, i18n, store, to, matchedInjectionModule, callback}) {
+export function getRouteViewVm({
+  data,
+  router,
+  i18n,
+  store,
+  to,
+  matchedInjectionModuleConfig,
+  callback,
+}) {
   if (to.matched && to.matched.length) {
     let length = to.matched.length;
     let count = 0;
@@ -33,14 +42,18 @@ export function getRouteViewVm({data, router, i18n, store, to, matchedInjectionM
     // 遍历匹配到的router-view
     to.matched.forEach(async (matchedRoute, index) => {
       const injectionModuleConfig =
-        matchedInjectionModule[matchedRoute.name] ||
-        matchedInjectionModule[matchedRoute.meta.peiBiaoName];
+        matchedInjectionModuleConfig[matchedRoute.name] ||
+        matchedInjectionModuleConfig[matchedRoute.meta.peiBiaoName];
       if (injectionModuleConfig && injectionModuleConfig.module) {
         const injectionModule = (await injectionModuleConfig.module()).default;
         if (injectionModule && injectionModule.initModule) {
           injectionModule.name = injectionModuleConfig.name;
           let pollingCount = 0;
-          startPolling(20, async () => {
+          if (injectionModuleConfig.stopPolling) {
+            injectionModuleConfig.stopPolling();
+            injectionModuleConfig.stopPolling = null;
+          }
+          injectionModuleConfig.stopPolling = startPolling(20, async () => {
             pollingCount++;
             // 正常情况这里就能获得router view挂载的vue组件实例
             if (matchedRoute.instances.default) {
@@ -52,7 +65,7 @@ export function getRouteViewVm({data, router, i18n, store, to, matchedInjectionM
               return true;
             }
             // 如果router view用了 is 动态组件，则只能这样才能拿到实例
-            if (pollingCount >= 3) {
+            if (pollingCount >= 20) {
               const $children =
                 matchedRoute.parent &&
                 matchedRoute.parent.instances &&
@@ -65,7 +78,7 @@ export function getRouteViewVm({data, router, i18n, store, to, matchedInjectionM
               }
             }
             // 保底拿不到vm也执行注入代码
-            if (pollingCount >= 10) {
+            if (pollingCount >= 50) {
               await updateCount({injectionModule, matchedRoute});
               return true;
             }
@@ -81,34 +94,55 @@ export function getRouteViewVm({data, router, i18n, store, to, matchedInjectionM
   }
 }
 
+async function checkRedirect({data, router, i18n, store, to, from, next}) {
+  let result = false;
+  result = await checkRedirectExtra({data, router, i18n, store, to, from, next});
+  return result;
+}
+
+let customizationData = null;
 /**
  * 判断是否有注入页面的需求
  * @param data
  * @param router
  * @param store
  * @param to
- * @returns {{count: number, matchedInjectionModule: null}}
+ * @returns {{count: number, matchedInjectionModuleConfig: null}}
  */
-function isCustomization({data, router, store, to}) {
-  const customization = {
+function checkCustomization({data, router, store, to}) {
+  if (customizationData) {
+    if (customizationData.stopPolling) {
+      customizationData.stopPolling();
+      customizationData.stopPolling = null;
+    }
+    customizationData = null;
+  }
+  const _customizationData = {
     count: 0,
-    matchedInjectionModule: null,
+    matchedInjectionModuleConfig: null,
   };
   for (const routeName in injectionRouteView) {
     if (Object.prototype.hasOwnProperty.call(injectionRouteView, routeName)) {
-      const module = injectionRouteView[routeName];
-      if (module.regex.test(to.path)) {
-        if (!customization.matchedInjectionModule) {
-          customization.matchedInjectionModule = {};
+      const moduleConfig = injectionRouteView[routeName];
+      if (moduleConfig.stopPolling) {
+        moduleConfig.stopPolling();
+        moduleConfig.stopPolling = null;
+      }
+      if (moduleConfig.regex.test(to.path)) {
+        if (!_customizationData.matchedInjectionModuleConfig) {
+          _customizationData.matchedInjectionModuleConfig = {};
         }
-        customization.matchedInjectionModule[routeName] = module;
+        moduleConfig.css && moduleConfig.css();
+        _customizationData.matchedInjectionModuleConfig[routeName] = moduleConfig;
       }
     }
   }
-  if (customization.matchedInjectionModule) {
-    customization.count++;
+  if (_customizationData.matchedInjectionModuleConfig) {
+    _customizationData.count++;
   }
-  return customization;
+  if (_customizationData.count > 0) {
+    customizationData = _customizationData;
+  }
 }
 
 /**
@@ -121,9 +155,12 @@ function isCustomization({data, router, store, to}) {
  * @param from
  * @param next
  */
-function beforeEach({data, router, i18n, store, to, from, next}) {
-  const {count} = isCustomization({data, router, store, to});
-  if (count > 0) {
+async function beforeEach({data, router, i18n, store, to, from, next}) {
+  if (await checkRedirect({data, router, i18n, store, to, from, next})) {
+    return;
+  }
+  checkCustomization({data, router, store, to});
+  if (customizationData && customizationData.count > 0) {
     data.globalLoading.setLoading(true);
     next();
   } else {
@@ -141,25 +178,25 @@ function beforeEach({data, router, i18n, store, to, from, next}) {
  */
 function initAfterEach({data, router, i18n, store}) {
   router.afterEach(async (to, from) => {
-    const customization = isCustomization({data, router, store, to});
-    if (customization.count > 0) {
-      if (customization.matchedInjectionModule) {
+    if (customizationData && customizationData.count > 0) {
+      if (customizationData.matchedInjectionModuleConfig) {
         getRouteViewVm({
           data,
           router,
           i18n,
           store,
           to,
-          matchedInjectionModule: customization.matchedInjectionModule,
+          matchedInjectionModuleConfig: customizationData.matchedInjectionModuleConfig,
           callback: async vm => {
-            customization.count--;
+            customizationData.count--;
           },
         });
       }
       let pollingCount = 0;
-      startPolling(22, async () => {
+      customizationData.stopPolling = startPolling(22, async () => {
         pollingCount++;
-        if (customization.count <= 0 || pollingCount > 20) {
+        if (customizationData.count <= 0 || pollingCount > 50) {
+          customizationData = null;
           data.globalLoading.setLoading(false);
           return true;
         }
@@ -169,19 +206,34 @@ function initAfterEach({data, router, i18n, store}) {
   });
 }
 
-async function initMain({data, router, i18n, store, to, from, next}) {
-  await initExtra({data, router, i18n, store, to, from, next});
-  initAfterEach({data, router, i18n, store});
-  if (data.platform + '' === data.platformKeyValue.zhktpt) {
-    i18n.mergeLocaleMessage('en', EnLanguage_zhktpt);
-    i18n.mergeLocaleMessage('zh-cn', ChLanguage_zhktpt);
-  } else {
-    i18n.mergeLocaleMessage('en', EnLanguage_cyktdx);
-    i18n.mergeLocaleMessage('zh-cn', ChLanguage_cyktdx);
+async function initRouterGuards({data, router, i18n, store, to, from, next}) {
+  const langConfig = {
+    [data.platformKeyValue.zhktpt]: {
+      zh: ChLanguage_zhktpt,
+      en: EnLanguage_zhktpt,
+    },
+    [data.platformKeyValue.cyktdx]: {
+      zh: ChLanguage_cyktdx,
+      en: EnLanguage_cyktdx,
+    },
+  };
+  const currentLangConfig = langConfig[data.platform + ''];
+  if (currentLangConfig) {
+    for (let langKey in data.langKeys) {
+      if (Object.prototype.hasOwnProperty.call(currentLangConfig, langKey)) {
+        i18n.mergeLocaleMessage(data.langKeys[langKey], currentLangConfig[langKey]);
+      }
+    }
   }
-  beforeEach({data, router, i18n, store, to, from, next});
+
+  await initRouterGuardsExtra({data, router, i18n, store, to, from, next});
+
+  initAfterEach({data, router, i18n, store});
+
+  await beforeEach({data, router, i18n, store, to, from, next});
   data.beforeEach = beforeEach;
+
   data.ready = true;
 }
 
-export {initMain};
+export {initRouterGuards};

@@ -62,13 +62,20 @@ export default {
     z-index: 1;
   }
 }
-
-.pei-biao-global-class-name-loading-cyktdx {
-  background: #10122e;
+.pei-biao-global-class-name-loading-zhktpt {
+  background: #f7fff7 !important;
 
   .loading-spin {
-    border: 3px solid rgba(152, 147, 172, 0.3);
-    border-left-color: #8e85af;
+    border: 3px solid #32b32b;
+    border-left-color: #fff;
+  }
+}
+.pei-biao-global-class-name-loading-cyktdx {
+  background: #fdfbf5 !important;
+
+  .loading-spin {
+    border: 3px solid #fa4949;
+    border-left-color: #fff;
   }
 }
 </style>

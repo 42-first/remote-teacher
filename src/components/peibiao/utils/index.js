@@ -2,9 +2,11 @@ export function startPolling(interval, callback) {
   let pollingId;
 
   const poll = async () => {
+    if (pollingId) {
+      clearTimeout(pollingId); // 清除定时器，停止轮询
+      pollingId = undefined;
+    }
     const stop = await callback(); // 执行回调函数
-    clearTimeout(pollingId); // 清除定时器，停止轮询
-    pollingId = undefined;
     if (stop) {
       return;
     }
@@ -15,8 +17,10 @@ export function startPolling(interval, callback) {
   poll();
   // 返回一个停止轮询的函数
   return () => {
-    clearTimeout(pollingId); // 清除定时器，停止轮询
-    pollingId = undefined;
+    if (pollingId) {
+      clearTimeout(pollingId); // 清除定时器，停止轮询
+      pollingId = undefined;
+    }
   };
 }
 
@@ -55,4 +59,3 @@ export function findFirstRouterViewComponentInChildren(children) {
   // 如果所有子组件都没找到，返回 null
   return null;
 }
-
