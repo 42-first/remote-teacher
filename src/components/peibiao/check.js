@@ -42,8 +42,8 @@ window.xuetangxpeibiao = {
 };
 window.xuetangxpeibiao.platform = getPeiBiaoPlatform(window.xuetangxpeibiao);
 if (process.env.NODE_ENV === 'development') {
-  // localStorage.setItem('runtime_xtbz', 'yth');
-  // window.xuetangxpeibiao.platform = 'zhktpt';
+  localStorage.setItem('runtime_xtbz', 'yth');
+  window.xuetangxpeibiao.platform = 'cyktdx';
 }
 // 陪标平台要上线，这些代码必须加载
 // 如果是陪标平台里面添加body特定classname,并且添加全局loading，在陪标修改完成前面遮挡，不然就穿帮了

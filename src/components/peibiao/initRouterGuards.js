@@ -188,14 +188,14 @@ function initAfterEach({data, router, i18n, store}) {
           to,
           matchedInjectionModuleConfig: customizationData.matchedInjectionModuleConfig,
           callback: async vm => {
-            customizationData.count--;
+            customizationData && customizationData.count--;
           },
         });
       }
       let pollingCount = 0;
       customizationData.stopPolling = startPolling(22, async () => {
         pollingCount++;
-        if (customizationData.count <= 0 || pollingCount > 50) {
+        if ((customizationData && customizationData.count <= 0) || pollingCount > 50) {
           customizationData = null;
           data.globalLoading.setLoading(false);
           return true;
