@@ -769,6 +769,16 @@ var mixin = {
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['instrid'] })
             break;
 
+          // 智能体的指令任务
+          case 'sendagent':
+            item = msg['it']
+            this.addInstructionTask({ type: 15, taskid: item['task'], promptid: item['agentid'], instrname: item['agentname'], time: item['dt'], isPopup: true, event: item });
+            break;
+
+          case 'agentfinished':
+            this.finishInstructionTask({ taskid: msg['task'], promptid: msg['agentid'] })
+            break;
+
           default:
             hasMsg = false;
             break

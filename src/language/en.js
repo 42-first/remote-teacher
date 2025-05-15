@@ -65,6 +65,7 @@ let pages = {
   "auditornotgrade": "Auditors are not allowed to participate in peer grading",
   "inspectornotsupport": "You can't do this",
   "newaitask": "Hi, you have a new AI instruction task.",
+  "newagenttask": "Hi, you have a new Intelligent agent",
   "started": "Started",
   "notstart": "Not Started",
   "performaitask": "You cannot perform instruction task in spectator mode.",
