@@ -174,12 +174,12 @@
       </template>
 
       <!-- 指令任务 -->
-      <template v-else-if="item.type == 14">
+      <template v-else-if="item.type == 14 || item.type == 15">
         <div class="timeline__cards ai-task" :class="[item.isEnd ? 'complete' : '']">
           <div class="icon__wrap box-center">
             <i class="iconfont icon-jiangban cfff f32"></i>
           </div>
-          <p class="f14 bold"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }}</p>
+          <p class="f14 bold"><!-- Hi, 你有新的AI指令任务 --> {{ item.type == 14 ? $t('newaitask') : $t('newagenttask') }}</p>
           <p class="f12">{{item.instrname}}</p>
           <div class="box-between timeline__footer">
             <p class="f12">{{ item.time|getTimeago }}</p>
@@ -293,7 +293,7 @@
               });
               return this;
             }
-          } else if(item.type == 14 && item.isEnd) {
+          } else if((item.type == 14 || item.type == 15) && item.isEnd) {
             this.$toast({
               message: this.$i18n.t('aitaskisend') || '该任务已结束',
               duration: 3000

@@ -64,6 +64,7 @@ let pages = {
   "auditornotgrade": "旁听生身份无法参与互评",
   "inspectornotsupport": "管理员视角不能进行该操作",
   "newaitask": "Hi, 你有新的AI指令任务",
+  "newagenttask": "Hi, 你有新的智能体",
   "started": "已启动",
   "notstart": "未开始",
   "performaitask": "观看者模式下无法执行指令任务",

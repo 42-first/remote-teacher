@@ -214,12 +214,12 @@
       </div>
     </template>
 
-    <!-- 指令任务 -->
-    <template v-else-if="item.type == 14">
+    <!-- 指令任务14 智能体的指令任务15 -->
+    <template v-else-if="item.type == 14 || item.type == 15">
       <div class="timeline__paper">
         <a :class="['paper-info', 'ai-task', item.isEnd ? 'complete' : '']" href="javascript:;" @click="handleAskAI(item)" >
           <div class="paper-txt f18">
-            <p class="paper-name"><!-- Hi, 你有新的AI指令任务 --> {{ $t('newaitask') }} </p>
+            <p class="paper-name"><!-- Hi, 你有新的AI指令任务 --> {{ item.type == 14 ? $t('newaitask') : $t('newagenttask') }} </p>
             <p class="paper-name">{{item.instrname}}</p>
           </div>
           <i class="iconfont icon-jiangban f50"></i>
