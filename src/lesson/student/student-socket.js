@@ -519,7 +519,7 @@ var mixin = {
           case 'groupanswerupdate':
             this.$toast({
               message: this.$i18n.t('answerupdate') || '作答内容有更新，请及时刷新',
-              duration: 3000
+              duration: 5000
             });
             break;
             
