@@ -10,7 +10,7 @@
   <section class="page-subjective">
     <!-- 定时 续时等 -->
     <section class="exercise__tips">
-      <div class="timing" v-if="limit>0 && sLeaveTime && !hasNewExtendTime || timeOver">
+      <div class="timing" v-if="(limit>0 && sLeaveTime && !hasNewExtendTime || timeOver )&& !isComplete">
         <img class="timing--icon" v-if="!warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1nd601n5v1dku1k0b1680fi9.png">
         <img class="timing--icon" v-if="warning&&!timeOver" src="https://qn-sfe.yuketang.cn/o_1bvu1oi7k1v411l4a8e41qtt1uq8e.png">
         <p :class="['timing--number', warning || timeOver ? 'over':'', timeOver ? 'f24':'f32']">{{ sLeaveTime }}</p>
@@ -42,7 +42,7 @@
               </template>
 
               <p class="f15 box-start" @click="handleshowTeam">
-                <!-- 详情 -->{{ $t('team.info') }}
+                <!-- 成员 -->{{ $t('member') }}
                 <i class="iconfont icon-jiantoudan-xiangyou f16"></i>
               </p>
             </div>
@@ -174,7 +174,7 @@
     </div>
 
     <!-- 提交按钮 -->
-    <div class="footer" v-if="!observerMode && (!ispreview || answerType && isComplete)">
+    <div class="footer" v-if="!observerMode && (!ispreview || answerType && isComplete) && !timeOver">
       <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
       <div class="group-actions box-between" v-if="answerType && isComplete && ispreview">
         <div class="refresh box-center f16" @click="handleRefreshResult"> <i class="iconfont icon--xiangyouxuanzhuan f20"></i> <!-- 刷新 --> {{ $t('refresh') }}</div>
@@ -405,6 +405,12 @@
           this.isComplete = true;
 
           this.text = this.result.content;
+          
+          // 分组作答的查询下当前是否收题  未收题可以继续作答
+          if(isTeam) {
+            this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
+          }
+          
         } else {
           // 开始启动定时
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
