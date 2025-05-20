@@ -397,13 +397,14 @@ export default {
 
   .anser__imgs.grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 2.6933rem);
     gap: 0.2133rem;
-    min-height: 2.64rem;
+    min-height: 2.6933rem;
 
     .pic {
       width: 100%;
       height: 100%;
+      height: 2.6933rem;
       object-fit: cover;
       background: #ccc;
     }
@@ -455,10 +456,13 @@ export default {
       height: 80vh;
       background: #fff;
       border-radius: 36px 36px 0 0;
-      padding: 0.7467rem 0.4267rem 0.64rem;
+      padding: 0.7467rem 0.7467rem 2.6667rem;
+      overflow: auto;
+
+
 
       .footer {
-        position: absolute;
+        position: fixed;
         bottom: 0.64rem;
         left: 0;
         width: 100%;
