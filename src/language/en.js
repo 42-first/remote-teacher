@@ -77,6 +77,7 @@ let pages = {
   "submitansw": "Submit Answer",
   "cannotsubmit": "Unable to submit",
   "submitok": "Submited",
+  "member": "Members",
 
   "voteremain": "{number} more votes",
   "novote": "You haven't voted yet.",

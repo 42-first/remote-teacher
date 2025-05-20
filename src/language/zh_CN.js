@@ -77,6 +77,7 @@ let pages = {
   "submitansw": "提交答案",
   "cannotsubmit": "提交有困难",
   "submitok": "提交成功",
+  "member": "成员",
 
   "voteremain": "您还可以再投{number}票",
   "novote": "您还未投票",

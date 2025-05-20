@@ -81,7 +81,7 @@
           <p class="person"><!-- 提交人：--> {{ $t('submiter') }}: {{ curResult.user.name }}</p>
           <p class="time">{{ curResult.submitTime | formatTime }}</p>
         </div>
-        <p class="text-gray-02 mt8 f15">{{ curResult.result.content }}</p>
+        <p class="text-gray-02 mt8 f15 align-left">{{ curResult.result.content }}</p>
         <div
           class="anser__imgs"
           :class="[
@@ -442,6 +442,10 @@ export default {
     top: 0;
     left: 0;
     background: var(--mask-Mask-02, #11131866);
+
+    .align-left {
+      text-align: left;
+    }
 
     .detail {
       position: absolute;
