@@ -60,7 +60,7 @@ export default {
 
     handleJumpExam() {
       if(!this.observerMode && !this.inspectorMode) {
-        window.open(`/v2/web/exam/${this.lesson.classroomId}/${this.slide.exam}`)
+        window.open(`/v2/web/exam/${this.lesson.classroomId}/${this.slide.exam}?lesson=1`)
       }
     }
   },
