@@ -11,10 +11,10 @@
   <section class="lesson__ppt">
     <!-- 内容区 -->
     <div class="cover__container box-center">
-      <iframe v-if="!inspectorMode" class="webview" id="webview" :src="src" allowFullScreen></iframe>
+      <iframe v-if="!inspectorMode && !observerMode" class="webview" id="webview" :src="src" allowFullScreen></iframe>
       <div class="tips-box" v-else>
         <img src="~images/fullscreen/nopermission.png" />
-        <p class="f14">{{ $t('inspectornotsupport') }}</p>
+        <p class="f14">{{ inspectorMode ? $t('inspectornotsupport') : $t('watchmode2') }}</p>
       </div>
     </div>
   </section>
@@ -41,6 +41,7 @@ export default {
       'lesson',
       'cards',
       'inspectorMode',
+      'observerMode'
     ]),
   },
   mixins: [ ],

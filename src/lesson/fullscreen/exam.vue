@@ -1,14 +1,22 @@
 <template>
   <section class="page__wrap">
     <div class="container box-center">
-      <div class="box-center column">
-        <div class="icon__wrap box-center">
-          <i class="iconfont icon-shijuanku-mianzhuang f64"></i>
+      <template v-if="inspectorMode || observerMode">
+        <div class="tips-box">
+          <img src="~images/fullscreen/nopermission.png" />
+          <p class="f14">{{ inspectorMode ? $t('inspectornotsupport') : $t('watchmode2') }}</p>
         </div>
-        
-        <p class="f20 bold title">{{ slide && slide.papername }}</p>
-        <div class="btn box-center pointer" @click="handleJumpExam">进入考试</div>
-      </div>
+      </template>
+      <template v-else>
+        <div class="box-center column">
+          <div class="icon__wrap box-center">
+            <i class="iconfont icon-shijuanku-mianzhuang f64"></i>
+          </div>
+          
+          <p class="f20 bold title">{{ slide && slide.papername }}</p>
+          <div class="btn box-center pointer" @click="handleJumpExam">进入考试</div>
+        </div>
+      </template>
     </div>
   </section>
 </template>
@@ -27,6 +35,8 @@ export default {
     ...mapState([
       'lesson',
       'cards',
+      'inspectorMode',
+      'observerMode'
     ]),
   },
   watch: {
@@ -49,7 +59,9 @@ export default {
     },
 
     handleJumpExam() {
-      window.open(`/v2/web/exam/${this.lesson.classroomId}/${this.slide.exam}`)
+      if(!this.observerMode && !this.inspectorMode) {
+        window.open(`/v2/web/exam/${this.lesson.classroomId}/${this.slide.exam}`)
+      }
     }
   },
 
