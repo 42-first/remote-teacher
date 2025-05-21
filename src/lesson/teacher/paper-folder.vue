@@ -14,7 +14,7 @@
             <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
             <div class="desc f18 ellipsis">
               {{paper.title}} <br>
-              <span class="f14">{{paper.createTime | formatTime}}</span>
+              <span class="f14">{{paper.updateTime | formatTime}}</span>
             </div>
           </div>
           
