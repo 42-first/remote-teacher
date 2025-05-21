@@ -55,11 +55,11 @@
         </div>
       </template>
       <!-- 试卷模板 -->
-      <template v-else-if="item.type==4 || item.type == 16" >
+      <template v-else-if="item.type==4" >
         <div class="timeline__cards quiz" :class="{ 'complete': item.isComplete }" >
           <div class="icon__wrap box-center">
             <i class="iconfont icon-queding cfff f24" v-if="item.isComplete"></i>
-            <i class="iconfont cfff f24" :class="item.type == 4 ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'" v-else ></i>
+            <i class="iconfont cfff f24" :class="!item.version ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'" v-else ></i>
           </div>
           <p class="f14 c333 bold ellipsis">{{ item.papername }}</p>
           <p class="f12 c9b">{{ $t('totalprob', { number: item.count }) }}</p>
@@ -262,7 +262,7 @@
        */
       handleView(item, index) {
         if(item && item.type) {
-          if([4, 16, 8, 9].includes(item.type)) {
+          if([4, 8, 9].includes(item.type)) {
             if(this.inspectorMode) {
               this.$toast({
                 message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',

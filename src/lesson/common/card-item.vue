@@ -52,7 +52,7 @@
       </div>
     </template>
     <!-- 试卷模板 -->
-    <template v-else-if="item.type==4 || item.type == 16">
+    <template v-else-if="item.type==4">
       <div class="timeline__paper">
         <div class="">
           <div :class="['paper-info', item.isComplete ? 'complete' : '']" :data-quizid="item.quizid" @click="gotoQuiz(item.href)">
@@ -60,7 +60,7 @@
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count">{{ $t('totalprob', { number: item.count }) }}</p>
             </div>
-            <i class="iconfont f55" :class="item.type == 4 ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'"></i>
+            <i class="iconfont f55" :class="!item.version ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'"></i>
           </div>
         </div>
         <div class="item-footer">

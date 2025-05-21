@@ -336,7 +336,7 @@ var mixin = {
           case 'newpaper':
             item = msg['paper']
 
-            item && this.addExam({ type: 16, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true  })
+            item && this.addExam({ type: 4, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true, version: 1  })
             
             break;
 

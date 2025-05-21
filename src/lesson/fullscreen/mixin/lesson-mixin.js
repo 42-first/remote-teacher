@@ -64,8 +64,12 @@ var commandMixin = {
 
           // 试卷
           case 4:
-            path = `/v3/${this.lesson.lessonID}/webview/${index}`;
-
+            if(item.version) {
+              path = `/v3/${this.lesson.lessonID}/exam/${index}`;
+            } else {
+              path = `/v3/${this.lesson.lessonID}/webview/${index}`;
+            }
+            
             break;
 
           // 红包
@@ -115,9 +119,6 @@ var commandMixin = {
             path = `/v3/${this.lesson.lessonID}/webview/${index}`;
             break;
 
-          case 16:
-            path = `/v3/${this.lesson.lessonID}/exam/${index}`;
-            break;
 
           default:
             break;

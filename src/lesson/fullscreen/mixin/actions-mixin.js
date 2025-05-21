@@ -37,7 +37,7 @@ let actionsMixin = {
             
             // 新考试
             case 'paper':
-              this.addExam({ type: 16, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
+              this.addExam({ type: 4, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], version: 1});
 
               break;
 
@@ -415,7 +415,7 @@ let actionsMixin = {
       let oQuiz = this.quizMap.get(data.exam);
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
-        return item.type === 16 && item.exam === data.exam;
+        return item.type === 4 && item.exam === data.exam;
       })
 
       let index = this.cards.length;
@@ -428,7 +428,8 @@ let actionsMixin = {
         count: data.total,
         time: data.time,
         status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
-        isComplete: oQuiz && oQuiz.answered || false
+        isComplete: oQuiz && oQuiz.answered || false,
+        version: 1
       })
 
       // 消息box弹框
