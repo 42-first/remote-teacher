@@ -256,7 +256,7 @@ var commandMixin = {
             this.formatBoard(item, lessonTags);
           }
 
-          if(item.type === 'quiz') {
+          if(item.type === 'quiz' || item.type === 'paper') {
             hasQuiz = true
           }
 
