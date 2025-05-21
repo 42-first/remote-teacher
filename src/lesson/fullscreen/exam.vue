@@ -112,5 +112,21 @@ export default {
     color: #fff;
     border-radius: 36px;
   }
+
+  .tips-box {
+    width: 280px;
+    height: 240px;
+    color: #90949D;
+    padding-top: 168px;
+    position: relative;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      // height: 100%;
+    }
+  }
 }
 </style>
