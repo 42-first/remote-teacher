@@ -439,6 +439,13 @@
             }
 
             this.sendStatus = 2;
+          } else {
+            // 本地没有答案的话  清空当前作答状态
+            this.text = ''
+            this.pics = []
+            this.videos = []
+            this.hasImage = false
+            this.sendStatus = 1
           }
         }
 
