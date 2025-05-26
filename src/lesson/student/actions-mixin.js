@@ -1306,6 +1306,45 @@ var actionsMixin = {
       this.setCards(this.cards);
     },
 
+
+    /**
+     * @method 发布分组活动
+     */
+    addGroupEvent(data) {
+      let event = this.groupEventMap.get(data.eventid);
+      
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 16 && item.eventid === data.eventid && data.isFetch;
+      })
+      let index = this.cards.length;
+      let href = data.eventtype == 'discuss' ? `/v3/${this.lessonID}/groupdiscuss/${data.teamid}/${data.eventid}` : ``
+
+      Object.assign(data, {
+        index,
+        href,
+      })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      if (!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
+    },
+
+    addGroupMsg(msg) {
+      // 订阅发布定时
+      PubSub && PubSub.publish('groupchat.newmsg', {
+        msg: 'groupchat.newmsg',
+        teamid: msg.teamid,
+        eventid: msg.eventid,
+        uid: msg.uid,
+        content: msg.content
+      });
+    }
+
   }
 }
 

@@ -437,6 +437,8 @@ let lessonMixin = {
               name: data.identityName,
               schoolNumber: data.identityNumber
             }
+
+            window.identityId = data.identityId
           }
 
           // 是否导播嘉宾

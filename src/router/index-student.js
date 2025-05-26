@@ -135,6 +135,12 @@ const studentRouter = new Router({
           name: 'join',
           component: () => import('@/lesson/student/join')
         },
+        // 分组活动-分组讨论
+        {
+          path: 'groupdiscuss/:teamid/:eventid',
+          name: 'group-discuss',
+          component: () => import('@/lesson/student/group-discuss')
+        }
       ]
     },
     {

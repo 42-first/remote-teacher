@@ -232,6 +232,25 @@
         </div>
       </div>
     </template>
+
+    <!-- 分组活动 分组讨论 -->
+    <template v-else-if="item.type == 16">
+      <div class="timeline__paper">
+        <a :class="['paper-info', item.eventtype]" href="javascript:;"  @click="handleGoGroupEvent(item)" >
+          <div class="paper-txt f18">
+            <p class="paper-name">Hi, 你有新的分组讨论</p>
+            <p class="paper-name">{{ item.eventname }}</p>
+          </div>
+          <i class="iconfont icon-huping f55"></i>
+        </a>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>
@@ -563,7 +582,18 @@
         location.href = process.env.NODE_ENV === 'production' ?  
           `/ai-workspace/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3` : 
           `http://localhost:8080/ai-workspace.html#/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3`
-      }
+      },
+
+      handleGoGroupEvent(item) {
+        if(this.observerMode){
+          this.$toast({
+            message: this.$i18n.t('watchmode2'),
+            duration: 3000
+          })
+        }else {
+          location.href = item.href
+        }
+      },
     },
     created() {
     },

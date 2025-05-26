@@ -524,6 +524,18 @@ var mixin = {
           case 'agentfinished':
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['agentid'] })
             break;
+
+          // 分组活动
+          case 'groupevent':
+            item = msg['group']
+            this.addGroupEvent({ type: 16, eventtype: item['type'], teamid: item['teamid'], eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
+            break;
+
+          // 分组群聊
+          case 'groupchat':
+            item = msg['message']
+            this.addGroupMsg(item)
+            break;
             
           default:
             hasMsg = false;
