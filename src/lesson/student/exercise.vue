@@ -774,6 +774,14 @@
       margin: 0 auto;
       border-radius: 44px;
       cursor: pointer;
+
+      &.can {
+        background: #639EF4;
+      }
+
+      .can:active {
+        background: rgba(99,158,244,0.7);
+      }
     }
   }
 
