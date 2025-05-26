@@ -366,8 +366,15 @@
         this.problemID = problemID;
 
         // 检测这个问题是否分组
+        // 分组作答的 提交后不返回 此时直接点击顶部提示进入下一题  需要重置状态
         let isTeam = data.groupid || false;
-        isTeam && this.getTeamInfo(problemID, data.groupid);
+        if(isTeam) {
+          this.getTeamInfo(problemID, data.groupid);
+        } else {
+          this.answerType = 0
+          this.team = null
+        }
+        
 
         // event消息订阅
         this.initPubSub();
@@ -416,6 +423,16 @@
           this.$parent.startTiming({ problemID: problemID, msgid: this.msgid++ });
           this.limit = data.limit;
 
+          this.isComplete = false
+          this.ispreview = false
+          this.result = null;
+          this.sendStatus = 0
+          // 先重置作答状态 
+          this.text = ''
+          this.pics = []
+          this.videos = []
+          this.hasImage = false
+
           // 恢复作答结果
           let sResult = localStorage.getItem('lessonsubjective'+problemID);
           if(sResult && !this.observerMode) {
@@ -439,13 +456,6 @@
             }
 
             this.sendStatus = 2;
-          } else {
-            // 本地没有答案的话  清空当前作答状态
-            this.text = ''
-            this.pics = []
-            this.videos = []
-            this.hasImage = false
-            this.sendStatus = 1
           }
         }
 
@@ -1953,6 +1963,14 @@
       color: #fff;
       margin: 0 auto;
       border-radius: 44px;
+
+      &.disable {
+        background: #9B9B9B;
+      }
+
+      &:active:not(.disable) {
+        background: rgba(99,158,244,0.7);
+      }
     }
   }
 
