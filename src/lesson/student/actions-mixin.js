@@ -1318,7 +1318,7 @@ var actionsMixin = {
         return item.type === 16 && item.eventid === data.eventid && data.isFetch;
       })
       let index = this.cards.length;
-      let href = data.eventtype == 'discuss' ? `/v3/${this.lessonID}/groupdiscuss/${data.teamid}/${data.eventid}` : ``
+      let href = `/v3/${this.lessonID}/groupdiscuss/${data.teamid}/${data.eventid}`
 
       Object.assign(data, {
         index,
@@ -1336,8 +1336,8 @@ var actionsMixin = {
 
     addGroupMsg(msg) {
       // 订阅发布定时
-      PubSub && PubSub.publish('groupchat.newmsg', {
-        msg: 'groupchat.newmsg',
+      PubSub && PubSub.publish('groupevent.groupchat', {
+        msg: 'groupevent.groupchat',
         teamid: msg.teamid,
         eventid: msg.eventid,
         uid: msg.uid,

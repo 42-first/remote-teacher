@@ -5,11 +5,22 @@
         <i class="iconfont icon-a-fenzujiegouzuo f24"></i>
         <span class="f17 bold">{{teamName}}</span>
       </div>
-      <div class="close box-center">
-        <i class="iconfont icon-cuowu f20"></i>
+      <div class="box-center">
+        <div class="box-center detail" v-if="!visibleEventDetail" @click="handleToggleEventDetail">
+          <i class="iconfont icon-jiaoxueneirong-7taolun f16 mr4"></i>
+          <span class="f13">查看主题</span> 
+        </div>
+        <div class="close box-center"  @click="handleBack">
+          <i class="iconfont icon-cuowu f20"></i>
+        </div>
       </div>
     </header>
-    <div class="discuss-info">{{ eventInfo.name }}</div>
+    <div class="discuss-info box-between" v-if="visibleEventDetail">
+      <div class="name f16">{{ eventInfo.name }}</div>
+      <div class="close box-center" @click="handleToggleEventDetail">
+        <i class="iconfont icon-cuowu f16"></i>
+      </div>
+    </div>
     <section class="chat__wrap">
       <div
         class="msg--item"
@@ -36,14 +47,9 @@
       <div class="btns box-start" v-if="eventInfo.requireSummary">
         <div class="btn f15" @click="visibleSubmitSummary = true">提交结果</div>
       </div>
-      <div class="input-box">
+      <div class="input-box" :class="focus ? 'active' : ''">
         <div class="pic-preview box-start" v-if="hasImage">
-          <img :src="pic.pic" alt="">
-          <div class="info">
-            <p class="name f13">{{ pic.name }}</p>
-            <p class="f12" v-if="pic.pic">{{ pic.size }} 上传成功</p>
-          </div>
-
+          <img :src="pic" alt="">
           <div class="clear" @click="handleClearPic">
             <i class="iconfont icon-guanbi f16"></i>
           </div>
@@ -51,6 +57,8 @@
         <input
           type="text"
           v-model="sendMsg"
+          @focus="focus = true"
+          @blur="focus = false"
           placeholder="请输入"
           class="input f16"
         />
@@ -64,7 +72,7 @@
             />
             <i class="iconfont icon-tianjiatupian- f24"></i>
           </div>
-          <div class="btn box-center" :class="{ disabled: !sendMsg && !pic }">
+          <div class="btn box-center" :class="{ disabled: !sendMsg && !pic }" @click="handleSendMsg">
             <i class="iconfont icon-48fabu f20"></i>
           </div>
         </div>
@@ -107,13 +115,15 @@ export default {
       mineId: "",
       userInfos: null,
       sendMsg: "",
-      pic: null,
+      pic: '',
       hasImage: false,
       retryTimes: 0,
       visibleSubmitSummary: false,
       summary: '',
       teamName: '',
-      eventInfo: null
+      eventInfo: {},
+      visibleEventDetail: false,
+      focus: false
     };
   },
   computed: {
@@ -136,11 +146,11 @@ export default {
      */
     initPubSub() {
       // 取消练习的订阅
-      PubSub && PubSub.unsubscribe("groupchat");
+      PubSub && PubSub.unsubscribe("groupevent");
 
       // 订阅定时消息
       PubSub &&
-        PubSub.subscribe("groupchat.newMsg", (topic, data) => {
+        PubSub.subscribe("groupevent.groupchat", (topic, data) => {
           if (data.eventid == this.eventid) {
             this.addNewMsg(data);
           }
@@ -218,11 +228,7 @@ export default {
         compress(file, options, function (dataUrl) {
           if (dataUrl) {
             self.hasImage = true
-            self.pic = {
-              pic: '',
-              thumb: '',
-              name: file.name
-            }
+            self.pic = ''
             // 上传图片
             // self.uploadImage(dataUrl, fileType);
             self.uploadImage(file, fileType);
@@ -264,10 +270,7 @@ export default {
         this.uploadFile(data)
           .then((res) => {
             if (res.url) {
-              Object.assign(this.pic, {
-                pic: res.url,
-                thumb: res.url ? `${res.url}?imageView2/2/w/568` : "",
-              })
+              this.pic = res.url
             } else {
               this.retryUpload(data, fileType);
             }
@@ -298,7 +301,7 @@ export default {
         });
 
         // 帮用户清空上传
-        this.pic = null
+        this.pic = ''
         this.hasImage = false;
         this.retryTimes = 0;
       }
@@ -337,7 +340,7 @@ export default {
     },
 
     handleClearPic() {
-      this.pic = null;
+      this.pic = '';
       this.hasImage = false
     },
 
@@ -350,6 +353,35 @@ export default {
       return request.post(URL, params)
       .then(res => {
         this.visibleSubmitSummary = false
+      })
+    },
+
+    handleBack() {
+      this.$router.back()
+    },
+
+    handleToggleEventDetail() {
+      this.visibleEventDetail = !this.visibleEventDetail
+    },
+
+    handleSendMsg() {
+      let URL = API.lesson.send_group_message
+      let params = {
+        teamId: this.teamid,
+        content: {
+          text: this.sendMsg,
+          pic: this.pic
+        },
+        eventId: this.eventid
+      }
+
+      return request.post(URL, params).then(res => {
+        if(res && res.code == 0 && res.data) {
+          this.chatRecords.push({
+            senderId: this.mineId,
+            content: params.content,
+          })
+        }
       })
     }
   },
@@ -404,6 +436,35 @@ export default {
       .iconfont {
         color: #6984bd;
       }
+    }
+
+    .detail {
+      padding: 0 0.3733rem;
+      height: 0.7467rem;
+      box-sizing: border-box;
+      border: 1px solid var(--border-border-gray-02, #2D4A9424);
+      border-radius: 0.96rem;
+      color: #90949D;
+    }
+  }
+
+  .discuss-info  {
+    padding: 0.16rem 0.4267rem 0.16rem 0.64rem;
+    box-sizing: border-box;
+    border: 1px solid #B6D3FF;
+    background: #B6D3FF25;
+    border-radius: 0.16rem;
+    margin: 0.2133rem 0.4267rem 0.64rem;
+    line-height: 0.6933rem;
+    color: #2B2E35;
+    text-align: left;
+
+    .close {
+      color: #B6BAC5;
+      width: 0.7467rem;
+      height: 0.7467rem;
+      margin-left: 0.32rem;
+      align-self: flex-start;
     }
   }
 
@@ -487,33 +548,43 @@ export default {
     .input-box {
       margin-top: 0.32rem;
       padding: 0.32rem 0.32rem 0.2667rem;
-      border: 0.0533rem solid var(--border-border-gray-02, #2d4a9424);
       border-radius: 0.32rem;
+      position: relative;
+      background: #fff;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: calc(100% + 0.08rem);
+        height: calc(100% + 0.08rem);
+        background: var(--border-border-gray-02, #2D4A9424);
+        border-radius: 0.32rem;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+      }
+
+      &.active {
+        &::before {
+          background: linear-gradient(90deg, #EEA3EE 0%, #A79DF9 29.15%, #AAC8FB 56.75%, #ACF1FD 75.36%, #5698F4 100%);
+        }
+      }
 
       .iconfont {
         line-height: 1;
       }
 
       .pic-preview {
-        background: rgba(123, 135, 178, .1);
-        border-radius: 0.16rem;
-        height: 1.3333rem;
+        width: 2.1333rem;
+        height: 2.1333rem;
         position: relative;
-        padding: 0 0.32rem;
 
         img {
-          width: 56px;
-          height: 56px;
+          width: 100%;
+          height: 100%;
           border-radius: 0.16rem;
           background: rgba(0,0,0,.1);
-          margin-right: 0.2133rem;
-        }
-
-        .info {
-          color: #90949d;
-          .name {
-            color: #2b2e35;
-          }
         }
 
         .clear {

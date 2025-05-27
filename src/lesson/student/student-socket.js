@@ -528,7 +528,10 @@ var mixin = {
           // 分组活动
           case 'groupevent':
             item = msg['group']
-            this.addGroupEvent({ type: 16, eventtype: item['type'], teamid: item['teamid'], eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
+            // 分组汇报暂不在移动端接收器显示
+            if(item['type'] == 'discuss') {
+              this.addGroupEvent({ type: 16, eventtype: item['type'], teamid: item['teamid'], eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
+            }
             break;
 
           // 分组群聊
