@@ -174,9 +174,9 @@
     </div>
 
     <!-- 提交按钮 -->
-    <div class="footer" v-if="!observerMode && (!ispreview || answerType && isComplete) && !timeOver">
+    <div class="footer" v-if="!observerMode && (!ispreview || answerType && (isComplete || !hasAnswered)) && !timeOver">
       <p :class="['submit-btn', 'f18', sendStatus === 0 || sendStatus === 1 || sendStatus >= 4 || isGuestStudent ? 'disable': '']" v-show="!ispreview" @click="handleSend" ><!-- 提交答案 -->{{ $t('submitansw') }}</p>
-      <div class="group-actions box-between" v-if="answerType && isComplete && ispreview">
+      <div class="group-actions box-between" v-if="answerType && (isComplete || !hasAnswered) && ispreview">
         <div class="refresh box-center f16" @click="handleRefreshResult"> <i class="iconfont icon--xiangyouxuanzhuan f20"></i> <!-- 刷新 --> {{ $t('refresh') }}</div>
         <div class="edit box-center f16 bold" @click="handleedit"><!-- 修改答案 --> {{ $t('modifyanswer') }}</div>
       </div>
