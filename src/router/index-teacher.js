@@ -334,6 +334,12 @@ const router = new Router({
           name: 'search_v3',
           component: () => import('@/lesson/teacher/search_student'),
           meta
+        },
+        {
+          path: 'subjective-team-history/:pid/:tid/:index',
+          name: 'subjective_team_history_t_v3',
+          component: () => import('@/lesson/common/result-history'),
+          meta
         }
       ]
     },

@@ -113,7 +113,8 @@ let problemControl = {
         }
 
         // 同一个问题续时 切没有结束
-        if(id === this.problemID && !this.isComplete) {
+        // 
+        if(id === this.problemID && (!this.isComplete || (this.problemType == 5 && this.answerType))) {
           this.hasNewExtendTime = true;
           this.sExtendTimeMsg = sMsg;
 
@@ -145,7 +146,7 @@ let problemControl = {
      * @params problemid
      */
     closedProblem(problemid) {
-      if(problemid === this.problemID && !this.isComplete) {
+      if(problemid === this.problemID && (!this.isComplete || (this.problemType == 5 && this.answerType))) {
         this.setTiming(0);
       }
     },
