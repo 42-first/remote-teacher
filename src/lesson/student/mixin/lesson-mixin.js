@@ -216,7 +216,7 @@ let lessonMixin = {
      * @method 获取实时更新的数据
      * @param pid
      */
-    async updatePresentation(pid) {
+    async updatePresentation(pid, fetchTimeline = false) {
       // 防止1s多次请求
       // const canFetch = this.limitPresFetchTimes(pid);
       // if(canFetch === false) {
@@ -239,7 +239,7 @@ let lessonMixin = {
       this.updatingPPT = false;
 
       // 更新ppt刷新timeline
-      WebSocket.OPEN === this.socket.readyState &&
+      !fetchTimeline && WebSocket.OPEN === this.socket.readyState &&
       this.socket.send(JSON.stringify({
         'op': 'fetchtimeline',
         'lessonid': this.lessonID,
