@@ -525,6 +525,14 @@ var mixin = {
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['agentid'] })
             break;
             
+          // 主观题分组作答同组有新答案
+          case 'groupanswerupdate':
+            this.$toast({
+              message: this.$i18n.t('answerupdate') || '作答内容有更新，请及时刷新',
+              duration: 5000
+            });
+            break;
+            
           default:
             hasMsg = false;
             break
