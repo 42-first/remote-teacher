@@ -399,6 +399,7 @@
         problemMap: new Map(),
         // 指令任务Map
         instructionTaskMap: new Map(),
+        groupDiscussMap: new Map(),
 
         // 消息box数据
         msgBoxs: [],

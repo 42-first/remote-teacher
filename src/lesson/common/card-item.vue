@@ -236,12 +236,12 @@
     <!-- 分组活动 分组讨论 -->
     <template v-else-if="item.type == 16">
       <div class="timeline__paper">
-        <a :class="['paper-info', item.eventtype]" href="javascript:;"  @click="handleGoGroupEvent(item)" >
+        <a :class="['paper-info', 'group-discuss']" href="javascript:;"  @click="handleGoGroupEvent(item)" >
           <div class="paper-txt f18">
             <p class="paper-name">Hi, 你有新的分组讨论</p>
             <p class="paper-name">{{ item.eventname }}</p>
           </div>
-          <i class="iconfont icon-huping f55"></i>
+          <i class="iconfont icon-a-fenzujiegouzuo f55"></i>
         </a>
         <div class="item-footer">
           <p class="f16">{{ item.time|getTimeago }}</p>
@@ -591,7 +591,12 @@
             duration: 3000
           })
         }else {
-          location.href = item.href
+          this.$router.push({
+            name: `group-discuss`,
+            params: {
+              eventid: item.eventid,
+            }
+          })
         }
       },
     },
@@ -823,6 +828,10 @@
     }
     .paper-info.ai-task {
       background: linear-gradient(98.52deg, #8F7EFE 0.29%, #5C9BFF 50.14%, #83BDFF 100%);
+    }
+
+    .paper-info.group-discuss {
+      background: linear-gradient(98.52deg, #19C2D8 0.29%, #5CB0FF 50.14%, #83E7FF 100%);
     }
 
     .paper-info.complete,

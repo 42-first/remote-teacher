@@ -530,7 +530,7 @@ var mixin = {
             item = msg['group']
             // 分组汇报暂不在移动端接收器显示
             if(item['type'] == 'discuss') {
-              this.addGroupEvent({ type: 16, eventtype: item['type'], teamid: item['teamid'], eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
+              this.addGroupDiscuss({ type: 16, eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
             }
             break;
 
@@ -538,6 +538,17 @@ var mixin = {
           case 'groupchat':
             item = msg['message']
             this.addGroupMsg(item)
+            break;
+
+          // 结束讨论
+          case 'gefinished':
+            this.endGroupDiscuss(msg);
+            break;
+
+          // 讨论续时
+          case 'geext':
+            item = msg['group']
+            this.extendGroupDiscuss(item);
             break;
             
           default:

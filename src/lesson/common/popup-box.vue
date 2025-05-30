@@ -74,11 +74,11 @@
     <!-- 分组活动 -->
     <template v-else-if="item.type == 16">
       <div class="popup__paper">
-        <div class="paper-info ai-task">
-          <a class="paper-txt f17" :href="item.href" @click="handlelink(index, $event)">
-            <p class="icon-wrapper"><i class="iconfont icon-jiangban f32"></i></p>
+        <div class="paper-info group-discuss" @click="handlelink(index, $event)">
+          <router-link class="paper-txt f17" :to="'/v3/'+lessonid+'/groupdiscuss/'+item.eventid" >
+            <p class="icon-wrapper"><i class="iconfont icon-a-fenzujiegouzuo f32"></i></p>
             <p class="paper-name">Hi, 你有新的分组讨论 </p>
-          </a>
+          </router-link>
           <i class="iconfont cfff icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>
       </div>
@@ -217,6 +217,14 @@
       background: linear-gradient(96.67deg, #8F7EFE -1.37%, #5C9BFF 59.98%, #83E7FF 102.99%);
       color: #fff;
 
+      .paper-name {
+        color: #fff;
+      }
+    }
+
+    .paper-info.group-discuss {
+      background: linear-gradient(98.52deg, #19C2D8 0.29%, #5CB0FF 50.14%, #83E7FF 100%);
+      color: #fff;
       .paper-name {
         color: #fff;
       }

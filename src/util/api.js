@@ -282,6 +282,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       submit_group_summary: '/api/v3/lesson/group-event/summary',
       // 发送聊天信息
       send_group_message: '/api/v3/lesson/group-event/send-group-message',
+      // 获取分组讨论状态
+      get_group_discuss_status: '/api/v3/lesson/group-event/student/status',
     },
 
     /*------------------*\

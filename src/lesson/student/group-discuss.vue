@@ -37,8 +37,10 @@
               {{ userInfos[item.senderId].name }}
               <template v-if="item.senderId == mineId">(我)</template>
             </p>
-            <p class="content" v-if="item.type == 1">{{ item.content }}</p>
-            <img class="img" v-else :src="item.content" alt="" />
+            <div class="content" :class="item.content.text ? 'bg' : ''">
+              <img :class="item.content.text ? 'h120' : 'h160'" v-if="item.content.pic" :src="item.content.pic" />
+              <div v-if="item.content.text" class="text">{{ item.content.text }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -65,6 +67,7 @@
         <div class="box-between">
           <div class="pics box-center">
             <input
+              :disabled="isEnd"
               type="file"
               class="file-input"
               accept="images/*"
@@ -123,7 +126,8 @@ export default {
       teamName: '',
       eventInfo: {},
       visibleEventDetail: false,
-      focus: false
+      focus: false,
+      isEnd: false,
     };
   },
   computed: {
@@ -155,6 +159,20 @@ export default {
             this.addNewMsg(data);
           }
         });
+
+        PubSub &&
+        PubSub.subscribe("groupevent.gefinished", (topic, data) => {
+          if (data.eventid == this.eventid) {
+            this.isEnd = true
+          }
+        });
+
+        PubSub &&
+        PubSub.subscribe("groupevent.geext", (topic, data) => {
+          if (data.eventid == this.eventid) {
+            this.isEnd = false
+          }
+        });
     },
 
     addNewMsg(data) {
@@ -180,9 +198,10 @@ export default {
           this.teamName = data.teamName
           this.chatRecords = data.chatRecords
           this.userInfos = data.userInfos.reduce((acc, item) => {
-            acc[item.userId] = item
+            acc[item.identityId] = item
             return acc
           }, {})
+          this.teamid = data.teamId
         }
       })
     },
@@ -345,14 +364,32 @@ export default {
     },
 
     handleSubmitSummary() {
-      let URL = ''
-      let params = {
+      if(this.isEnd) {
+        this.$toast({
+          message: '当前讨论已结束',
+          duration: 3000
+        });
 
+        return
       }
 
-      return request.post(URL, params)
-      .then(res => {
-        this.visibleSubmitSummary = false
+      let URL = API.lesson.submit_group_summary
+      let params = {
+        teamId: this.teamid,
+        summary: this.summary,
+        eventId: this.eventid
+      }
+
+      return request.post(URL, params).then(res => {
+        if(res && res.code == 0 && res.data) {
+          this.visibleSubmitSummary = false
+          this.summary = ''
+        }else if(res.code == 50100) {
+          this.$toast({
+            message: '当前讨论已结束',
+            duration: 3000
+          })
+        }
       })
     },
 
@@ -365,6 +402,14 @@ export default {
     },
 
     handleSendMsg() {
+      if(this.isEnd) {
+        this.$toast({
+          message: '当前讨论已结束',
+          duration: 3000
+        });
+
+        return
+      }
       let URL = API.lesson.send_group_message
       let params = {
         teamId: this.teamid,
@@ -381,13 +426,21 @@ export default {
             senderId: this.mineId,
             content: params.content,
           })
+
+          this.sendMsg = ''
+          this.pic = ''
+          this.hasImage = false
+        }else if(res.code == 50100) {
+          this.$toast({
+            message: '当前讨论已结束',
+            duration: 3000
+          })
         }
       })
     }
   },
   created() {
-    let { teamid, eventid } = this.$route.params;
-    this.teamid = teamid;
+    let { eventid } = this.$route.params;
     this.eventid = eventid;
 
     this.init();
@@ -485,10 +538,23 @@ export default {
           flex-direction: row-reverse;
 
           .content {
-            background: #d0e2ff;
-            border-radius: 0.32rem 0 0.32rem 0.32rem;
+            &.bg {
+              background: #d0e2ff;
+              border-radius: 0.32rem 0 0.32rem 0.32rem;
+            }
+            
           }
         }
+      }
+
+      .h120 {
+        max-height: 3.2rem;
+        max-width: 3.2rem;
+      }
+
+      .h160 {
+        max-height: 4.2667rem;
+        max-width: 4.2667rem;
       }
 
       .avatar {
@@ -513,9 +579,13 @@ export default {
         }
 
         .content {
-          border-radius: 0 0.32rem 0.32rem 0.32rem;
-          background: #fff;
-          padding: 0.32rem 0.5333rem;
+          &.bg {
+            border-radius: 0 24rpx 24rpx 24rpx;
+            background: #fff;
+            padding: 0.32rem 0.5333rem;
+            box-sizing: border-box;
+            text-align: left;
+          }
         }
 
         .img {
