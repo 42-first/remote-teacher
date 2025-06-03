@@ -230,9 +230,12 @@
       }
     }
 
-    .paper-info.ai-task .paper-txt .icon-wrapper {
-      background: transparent;
-    }
+    .paper-info.ai-task,
+    .paper-info.group-discuss {
+      .paper-txt .icon-wrapper {
+        background: transparent;
+      }
+    } 
 
 
     .paper-icon {

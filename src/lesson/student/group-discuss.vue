@@ -437,6 +437,22 @@ export default {
           })
         }
       })
+    },
+  },
+  watch: {
+    '$route' (to, from) {
+      if(to && to.params && to.name === 'group-discuss') {
+        let eventid = to.params.eventid
+        this.eventid = eventid;
+        if(eventid) {
+          this.fetchData()
+          this.summary = ''
+          this.sendMsg = ''
+          this.pic = ''
+          this.hasImage = false
+          this.visibleSubmitSummary = false
+        }
+      }
     }
   },
   created() {
