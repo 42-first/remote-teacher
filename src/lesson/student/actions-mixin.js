@@ -1316,7 +1316,7 @@ var actionsMixin = {
      */
     addGroupDiscuss(data) {
       let event = this.groupDiscussMap.get(data.eventid);
-      let status = event && event.finishStatus ? this.$i18n.t('done') :  this.$i18n.t('notstart')
+      let status = event && event.finishedStatus == 2 ? this.$i18n.t('done') :  event.finishedStatus == 1 ? '进行中' : this.$i18n.t('notstart')
       
       // 是否含有重复数据
       let hasEvent = this.cards.find((item) => {
@@ -1327,7 +1327,8 @@ var actionsMixin = {
       Object.assign(data, {
         index,
         status,
-        isEnd: event && event.eventStatus
+        isEnd: event && event.eventStatus,
+        finishedStatus: event && event.finishStatus,
       })
 
       // 消息box弹框

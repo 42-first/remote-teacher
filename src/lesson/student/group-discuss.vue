@@ -131,11 +131,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(["lessonId", "observerMode"]),
+    ...mapState(["lessonId", "observerMode", "cards"]),
   },
   filters: {},
   methods: {
-    ...mapActions([]),
+    ...mapActions(['setCards']),
 
     init() {
       this.fetchData();
@@ -384,6 +384,13 @@ export default {
         if(res && res.code == 0 && res.data) {
           this.visibleSubmitSummary = false
           this.summary = ''
+          
+          let data = this.cards[this.index]
+          data.status = '已完成'
+          data.finishedStatus = 2
+          // 替换原来的数据
+          this.cards.splice(this.index, 1, data);
+          this.setCards(this.cards);
         }else if(res.code == 50100) {
           this.$toast({
             message: '当前讨论已结束',
@@ -430,6 +437,13 @@ export default {
           this.sendMsg = ''
           this.pic = ''
           this.hasImage = false
+
+          let data = this.cards[this.index]
+          data.status = !data.finishedStatus ? '进行中' : data.status
+          data.finishedStatus = !data.finishedStatus ? 1 : data.finishedStatus
+          // 替换原来的数据
+          this.cards.splice(this.index, 1, data);
+          this.setCards(this.cards);
         }else if(res.code == 50100) {
           this.$toast({
             message: '当前讨论已结束',
@@ -442,7 +456,8 @@ export default {
   watch: {
     '$route' (to, from) {
       if(to && to.params && to.name === 'group-discuss') {
-        let eventid = to.params.eventid
+        let {eventid, index} = to.params
+        this.index = index
         this.eventid = eventid;
         if(eventid) {
           this.fetchData()
@@ -456,8 +471,9 @@ export default {
     }
   },
   created() {
-    let { eventid } = this.$route.params;
+    let { eventid, index } = this.$route.params;
     this.eventid = eventid;
+    this.index = index;
 
     this.init();
   },

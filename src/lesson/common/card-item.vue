@@ -236,7 +236,7 @@
     <!-- 分组活动 分组讨论 -->
     <template v-else-if="item.type == 16">
       <div class="timeline__paper">
-        <a :class="['paper-info', 'group-discuss']" href="javascript:;"  @click="handleGoGroupEvent(item)" >
+        <a :class="['paper-info', 'group-discuss', item.isEnd ? 'complete' : '']" href="javascript:;"  @click="handleGoGroupEvent(item)" >
           <div class="paper-txt f18">
             <p class="paper-name">Hi, 你有新的分组讨论</p>
             <p class="paper-name">{{ item.eventname }}</p>
@@ -585,6 +585,13 @@
       },
 
       handleGoGroupEvent(item) {
+        if(item.isEnd) {
+          this.$toast({
+            message: '该活动已结束',
+            duration: 3000
+          });
+          return false;
+        }
         if(this.observerMode){
           this.$toast({
             message: this.$i18n.t('watchmode2'),
@@ -595,6 +602,7 @@
             name: `group-discuss`,
             params: {
               eventid: item.eventid,
+              index: item.index
             }
           })
         }
@@ -837,7 +845,8 @@
     .paper-info.complete,
     .paper-info.xt.complete,
     .paper-info.submission.complete,
-    .paper-info.evaluation.complete {
+    .paper-info.evaluation.complete,
+    .paper-info.group-discuss.complete {
       background: #C8C8C8;
     }
 
