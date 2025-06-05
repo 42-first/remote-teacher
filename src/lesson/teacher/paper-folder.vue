@@ -8,11 +8,16 @@
       <section class="list downer">
         <div class="title f20 ellipsis">{{folderTitle}}</div>
         
-        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount)">
-          <div class="desc f18 ellipsis">
-            {{paper.title}} <br>
-            <span class="f14">{{paper.createTime | formatTime}}</span>
+        <v-touch :class="['item', {'active': paperChosen.index === index}]" v-for="(paper, index) in paperList" :key="paper.paper_id" v-on:tap="choosePaper(index, paper.paperId, paper.title, paper.slideCount, paper.hasError, paper.errorMsg)">
+          <div class="box-start overhidden">
+            <img v-if="paper.version" class="papericon" src="~images/teacher/exam-icon.png" alt="">
+            <img v-else class="papericon" src="~images/teacher/quiz-icon.png" alt="">
+            <div class="desc f18 ellipsis">
+              {{paper.title}} <br>
+              <span class="f14">{{paper.updateTime | formatTime}}</span>
+            </div>
           </div>
+          
           <!-- <i class="iconfont icon-dakai f14"></i> -->
         </v-touch>
       </section>
@@ -130,7 +135,14 @@
        * @event bindtap
        * @param {number, number, string, number} index paperid papertitle papertotal
        */
-      choosePaper (index, paperid, papertitle, papertotal) {
+      choosePaper (index, paperid, papertitle, papertotal, hasError, errorMsg) {
+        if(hasError) {
+          this.$toast({
+            message: errorMsg,
+            duration: 3e3
+          });
+          return
+        }
         // 克隆班不能执行当前操作
         if (!!this.isCloneClass) {
           this.$toast({
@@ -208,7 +220,7 @@
         let self = this
 
         let index = self.paperList.findIndex(item => {
-          return item.paper_id === msg.quiz.paperid
+          return item.paper_id === msg.quiz.paperid || item.paper_id === msg.paper.paperid
         })
 
         self.paperList.splice(index, 1)
@@ -238,6 +250,10 @@
         border-bottom: 0.026667rem solid #EEEEEE;
       }
 
+      .overhidden {
+        overflow: hidden;
+      }
+
       .item {
         display: flex;
         justify-content: space-between;
@@ -250,6 +266,11 @@
           span {
             color: $graybg;
           }
+        }
+
+        .papericon {
+          width: 0.8533rem;
+          margin-right: 0.266667rem;
         }
       }
 
