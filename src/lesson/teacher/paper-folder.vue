@@ -270,6 +270,7 @@
 
         .papericon {
           width: 0.8533rem;
+          min-width: 0.8533rem;
           margin-right: 0.266667rem;
         }
       }
