@@ -34,6 +34,12 @@ let actionsMixin = {
               this.addPaper({ type: 4, quiz: item['quiz'], title: item['title'], total: item['total'], time: item['dt']});
 
               break;
+            
+            // 新考试
+            case 'paper':
+              this.addExam({ type: 4, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], version: 1});
+
+              break;
 
             // event
             case 'event':
@@ -401,6 +407,39 @@ let actionsMixin = {
       data.isPopup && this.setMsg(data);
 
       if(!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
+    },
+
+    /**
+     * @method 新增新考试
+     * @param {*} data { type: 16, exam: 'quizID', title: '最新考试', total: '10', time: '' }
+     */
+    addExam(data) {
+      let oQuiz = this.quizMap.get(data.exam);
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 4 && item.exam === data.exam;
+      })
+
+      let index = this.cards.length;
+
+      data = Object.assign(data, {
+        index,
+        papername: data.title,
+        quizid: data.exam,
+        href: `v/index/course/normalcourse/examcover/${this.lesson.classroomId}/${data.exam}`,
+        count: data.total,
+        time: data.time,
+        status: oQuiz && oQuiz.answered ? this.$i18n.t('done') || '已完成' : this.$i18n.t('undone') || '未完成',
+        isComplete: oQuiz && oQuiz.answered || false,
+        version: 1
+      })
+
+      // 消息box弹框
+      data.isPopup && this.setMsg(data);
+      if (!hasEvent) {
         this.cards.push(data);
         this.setCards(this.cards)
       }

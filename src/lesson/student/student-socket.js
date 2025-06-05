@@ -222,6 +222,13 @@ var mixin = {
 
             break
 
+          // 新考试
+          case 'newpaper':
+            item = msg['paper']
+
+            item && this.addExam({ type: 4, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true  })
+            break;
+
           // 换一个PPT
           case 'showpresentation':
             this.presentationID = msg['presentation'];
@@ -275,6 +282,7 @@ var mixin = {
 
           // 试卷结束
           case 'quizfinished':
+          case 'paperfinished':
           case 'callpaused':
             item = msg['event'];
             item.show && this.addMessage({ type: 1, message: item['title'], event: item });

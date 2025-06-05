@@ -59,9 +59,9 @@
         <div class="timeline__cards quiz" :class="{ 'complete': item.isComplete }" >
           <div class="icon__wrap box-center">
             <i class="iconfont icon-queding cfff f24" v-if="item.isComplete"></i>
-            <i class="iconfont icon-shiti_shijuan cfff f24" v-else ></i>
+            <i class="iconfont cfff f24" :class="!item.version ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'" v-else ></i>
           </div>
-          <p class="f14 c333 bold">{{ item.papername }}</p>
+          <p class="f14 c333 bold ellipsis">{{ item.papername }}</p>
           <p class="f12 c9b">{{ $t('totalprob', { number: item.count }) }}</p>
 
           <div class="box-between timeline__footer">
@@ -262,12 +262,21 @@
        */
       handleView(item, index) {
         if(item && item.type) {
-          if(this.inspectorMode && [4, 8, 9].includes(item.type)) {
-            this.$toast({
-              message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
-              duration: 3000
-            });
-            return this;
+          if([4, 8, 9].includes(item.type)) {
+            if(this.inspectorMode) {
+              this.$toast({
+                message: this.$i18n.t('inspectornotsupport') || '管理员视角不能进行该操作',
+                duration: 3000
+              });
+              return this;
+            }
+            if(this.observerMode){
+              this.$toast({
+                message: this.$i18n.t('watchmode2'),
+                duration: 3000
+              })
+              return this;
+            }
           } 
           
           if(item.type == 8) {

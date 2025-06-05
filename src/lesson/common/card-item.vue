@@ -60,7 +60,7 @@
               <p class="paper-name">{{ item.papername }}</p>
               <p class="paper-count">{{ $t('totalprob', { number: item.count }) }}</p>
             </div>
-            <i class="iconfont icon-shiti_shijuan f55"></i>
+            <i class="iconfont f55" :class="!item.version ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'"></i>
           </div>
         </div>
         <div class="item-footer">
