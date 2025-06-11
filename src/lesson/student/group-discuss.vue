@@ -222,6 +222,19 @@ export default {
         let fileType = file.type;
 
         console.log("MIME类型：" + fileType);
+        let picType = fileType && fileType.split("/").length === 2 && fileType.split("/")[1];
+
+        if (!/png|jpg|jpeg/.test(picType)) {
+        this.$toast({
+          message:
+            this.$i18n.t("reuploadpiconly") || "当前仅支持图片格式，请重新上传",
+          duration: 2000,
+        });
+
+        this.hasImage = false;
+
+        return this;
+      }
 
         if (file.size) {
           const size = parseInt(file.size / 1024 / 1024, 10);
@@ -268,18 +281,6 @@ export default {
       };
 
       let picType = fileType && fileType.split("/").length === 2 && fileType.split("/")[1];
-
-      if (!/png|jpg|jpeg/.test(picType)) {
-        this.$toast({
-          message:
-            this.$i18n.t("reuploadpiconly") || "当前仅支持图片格式，请重新上传",
-          duration: 2000,
-        });
-
-        this.hasImage = false;
-
-        return this;
-      }
 
       // 上传七牛
       Promise.all([upload.getToken()]).then(() => {
