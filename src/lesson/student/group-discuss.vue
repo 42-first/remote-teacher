@@ -21,7 +21,7 @@
         <i class="iconfont icon-cuowu f16"></i>
       </div>
     </div>
-    <section class="chat__wrap">
+    <section class="chat__wrap" @scroll="handleScroll">
       <div
         class="msg--item"
         :class="[item.senderId == mineId ? 'me' : '', `J_msg-${index}`]"
@@ -105,6 +105,7 @@ import { mapState, mapActions } from "vuex";
 import { compress } from "@/util/image";
 import imagemixin from "@/components/common/image-mixin";
 import upload from "@/util/upload";
+import _ from 'underscore'
 
 export default {
   name: "group-discuss",
@@ -142,6 +143,26 @@ export default {
 
       this.initPubSub();
       this.mineId = window.identityId || window.userId;
+
+      // 下拉加载更多
+      this.scrollThrottled = _.throttle(evt => {
+        let $list = evt.target
+        let clientHeight = $list.clientHeight;
+        let totalHeight = $list.scrollHeight;
+        let scrollTop = $list && $list.scrollTop;
+        let leaveHeight = totalHeight - clientHeight - scrollTop;
+
+        if(scrollTop > this.lastScrollTop) {
+          console.log('向下滚动')
+          this.scrollLock = false
+        } else {
+          console.log('向上滚动')
+          this.scrollLock = true
+        }
+
+        this.lastScrollTop = scrollTop
+
+      }, 100);
     },
 
     /**
@@ -453,6 +474,10 @@ export default {
         }
       })
     },
+
+    handleScroll(e) {
+      this.scrollThrottled(e)
+    }
   },
   watch: {
     '$route' (to, from) {
@@ -477,7 +502,7 @@ export default {
         this.$nextTick(() => {
           let el = this.$el.querySelector(`.J_msg-${index}`)
           setTimeout(()=>{
-            el && el.scrollIntoView({ behavior: "instant", block: 'center' });
+           !this.scrollLock && el && el.scrollIntoView({ behavior: "instant", block: 'center' });
           }, 0)
         })
         
