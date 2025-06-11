@@ -1,0 +1,132 @@
+<template>
+  <section class="page__wrap">
+    <div class="container box-center">
+      <template v-if="inspectorMode || observerMode">
+        <div class="tips-box">
+          <img src="~images/fullscreen/nopermission.png" />
+          <p class="f14">{{ inspectorMode ? $t('inspectornotsupport') : $t('watchmode2') }}</p>
+        </div>
+      </template>
+      <template v-else>
+        <div class="box-center column">
+          <div class="icon__wrap box-center">
+            <i class="iconfont icon-shijuanku-mianzhuang f64"></i>
+          </div>
+          
+          <p class="f20 bold title">{{ slide && slide.papername }}</p>
+          <div class="btn box-center pointer" @click="handleJumpExam">进入考试</div>
+        </div>
+      </template>
+    </div>
+  </section>
+</template>
+
+<script>
+import { mapState, mapActions } from 'vuex'
+export default {
+  name: 'exam',
+  data() {
+    return {
+      index: 0,
+      slide: null
+    }
+  },
+  computed: {
+    ...mapState([
+      'lesson',
+      'cards',
+      'inspectorMode',
+      'observerMode'
+    ]),
+  },
+  watch: {
+    '$route'(to, from) {
+      if(to && to.params && to.name === 'exam') {
+        let params = to.params;
+        this.init(params.index)
+      }
+    },
+  },
+
+  methods: {
+    init(index) {
+      this.index = index;
+      this.slide = this.cards[index]
+      if(this.slide && this.slide.exam) {
+        this.handleJumpExam()
+      }
+      
+    },
+
+    handleJumpExam() {
+      if(!this.observerMode && !this.inspectorMode) {
+        window.open(`/v2/web/exam/${this.lesson.classroomId}/${this.slide.exam}?lesson=1`)
+      }
+    }
+  },
+
+  mounted() {
+    let index = +this.$route.params.index;
+    this.init(index);
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.page__wrap {
+  width: 100%;
+  height: 100%;
+  background: #F6F7FB;
+  padding: 24px;
+
+  .container {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .icon__wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(330.1deg, #08BC72 8.98%, #A9FFCD 92.74%);
+    margin: 0 auto 16px;
+    color: #fff;
+  }
+
+  .column {
+    flex-direction: column;
+  }
+
+  .title {
+    max-width: 50%;
+    // white-space: 
+  }
+
+  .btn {
+    width: 280px;
+    height: 44px;
+    margin-top: 80px;
+    background: #3D7BFF;
+    color: #fff;
+    border-radius: 36px;
+  }
+
+  .tips-box {
+    width: 280px;
+    height: 240px;
+    color: #90949D;
+    padding-top: 168px;
+    position: relative;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      // height: 100%;
+    }
+  }
+}
+</style>

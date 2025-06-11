@@ -222,6 +222,13 @@ var mixin = {
 
             break
 
+          // 新考试
+          case 'newpaper':
+            item = msg['paper']
+
+            item && this.addExam({ type: 4, exam: item['quiz'], title: item['title'], total: item['total'], time: item['dt'], event: item, isPopup: true  })
+            break;
+
           // 换一个PPT
           case 'showpresentation':
             this.presentationID = msg['presentation'];
@@ -275,6 +282,7 @@ var mixin = {
 
           // 试卷结束
           case 'quizfinished':
+          case 'paperfinished':
           case 'callpaused':
             item = msg['event'];
             item.show && this.addMessage({ type: 1, message: item['title'], event: item });
@@ -549,6 +557,17 @@ var mixin = {
           case 'geext':
             item = msg['group']
             this.extendGroupDiscuss(item);
+            break;
+            
+          // 主观题分组作答同组有新答案
+          case 'groupanswerupdate':
+            if(this.$route.name == 'student-subjective') {
+              this.$toast({
+                message: this.$i18n.t('answerupdate') || '作答内容有更新，请及时刷新',
+                duration: 5000
+              });
+            }
+            
             break;
             
           default:

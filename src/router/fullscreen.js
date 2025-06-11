@@ -148,6 +148,12 @@ const fullscreenRouter = new Router({
           name: 'bind-txmeet',
           component: () => import('@/lesson/fullscreen/txmeet-bind')
         },
+        // 课上发布新考试
+        {
+          path: 'exam/:index',
+          name: 'exam',
+          component: () => import('@/lesson/fullscreen/exam')
+        }
       ]
     },
     {

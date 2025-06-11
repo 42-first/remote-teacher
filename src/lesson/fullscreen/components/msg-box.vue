@@ -22,7 +22,7 @@
     <template v-if="msg && msg.type==4">
       <div class="msg__box box-between cfff quiz">
         <section class="box-start" @click="handleLink(msg)">
-          <i class="iconfont icon-shiti_shijuan f32"></i>
+          <i class="iconfont f32" :class="!msg.version ? 'icon-shiti_shijuan' : 'icon-shijuanku-mianzhuang'"></i>
           <p class="pl10 f16 cfff">{{ msg.papername }}</p>
         </section>
         <i class="iconfont icon-shiti_guanbitouping f24" @click="handleClosedMsg"></i>

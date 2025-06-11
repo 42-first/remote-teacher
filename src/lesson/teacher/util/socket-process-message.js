@@ -375,6 +375,7 @@ function socketProcessMessage(msg){
   if (msg.op == 'sproblemshown') {
     self.$store.commit('set_postingSubjectiveid', msg.spid)
     self.$store.commit('set_postingSubjectiveSent', msg.sent)
+    T_PUBSUB.publish('pro-msg.sproblemshown', msg)
     return
   }
 
@@ -481,6 +482,7 @@ function socketProcessMessage(msg){
     // 退出主观题投屏蒙版
     if (msg.type == 'subjective') {
       self.$store.commit('set_postingSubjectiveid', -1)
+      T_PUBSUB.publish('call-msg.closedmask', msg)
       return
     }
 
@@ -504,13 +506,13 @@ function socketProcessMessage(msg){
   }
 
   // 发了新的试卷，单通了
-  if (msg.op == 'newquiz') {
+  if (msg.op == 'newquiz' || msg.op == 'newpaper') {
     T_PUBSUB.publish('quiz-msg.newquiz', msg)
     return
   }
 
   // 收卷了
-  if (msg.op == 'quizfinished') {
+  if (msg.op == 'quizfinished' || msg.op == 'paperfinished') {
     T_PUBSUB.publish('quiz-msg.quizfinished', msg)
     return
   }

@@ -64,8 +64,12 @@ var commandMixin = {
 
           // 试卷
           case 4:
-            path = `/v3/${this.lesson.lessonID}/webview/${index}`;
-
+            if(item.version) {
+              path = `/v3/${this.lesson.lessonID}/exam/${index}`;
+            } else {
+              path = `/v3/${this.lesson.lessonID}/webview/${index}`;
+            }
+            
             break;
 
           // 红包
@@ -115,6 +119,7 @@ var commandMixin = {
           case 15:
             path = `/v3/${this.lesson.lessonID}/webview/${index}`;
             break;
+
 
           default:
             break;
@@ -255,7 +260,7 @@ var commandMixin = {
             this.formatBoard(item, lessonTags);
           }
 
-          if(item.type === 'quiz') {
+          if(item.type === 'quiz' || item.type === 'paper') {
             hasQuiz = true
           }
 

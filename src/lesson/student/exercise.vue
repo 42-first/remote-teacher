@@ -44,7 +44,7 @@
         <!-- 投票选择提示 -->
         <p class="polling-count f20" v-if="(problemType === 3) && selectedPollingCount < pollingCount">{{ $t('voteremain', { number: selectedPollingCount }) }}</p>
         <p class="polling-count f20" v-if="summary && !summary.isComplete && (problemType === 3) && selectedPollingCount === pollingCount">{{ $t('novote') }}</p>
-        <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" v-if="isShowSubmit" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(anonymous && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
+        
       </section>
 
       <!-- 观看者提示文字 返回 -->
@@ -53,6 +53,10 @@
         <p class="submit-btn can f18" @click="handleBack">{{ $t('back') }}</p>
       </section>
 
+    </div>
+
+    <div class="footer" v-if="isShowSubmit">
+      <p :class="['submit-btn', 'f18', canSubmit === 1 || canSubmit === 2 ? 'can' : '']" @click="handleSubmit">{{ canSubmit|setSubmitText }}{{(anonymous && (canSubmit === 0 || canSubmit === 1)) ? $t('anonymous') : ''}}</p>
     </div>
 
     <!-- 图片放大结构 -->
@@ -597,6 +601,8 @@
 
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+
+    padding-bottom: 2rem;;
   }
 
 
@@ -749,6 +755,37 @@
     }
   }
 
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 1.7067rem;
+    box-shadow: 0px -4px 8px 0px #7B87B21A;
+    background: #fff;
+    padding: 0.2667rem 0.64rem;
+
+    .submit-btn {
+      margin: 0 auto;
+
+      width: 7.7333rem;
+      height: 1.1733rem;
+      background: #999999;
+      color: #fff;
+      margin: 0 auto;
+      border-radius: 44px;
+      cursor: pointer;
+
+      &.can {
+        background: #639EF4;
+      }
+
+      .can:active {
+        background: rgba(99,158,244,0.7);
+      }
+    }
+  }
 
 </style>
 

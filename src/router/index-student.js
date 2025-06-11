@@ -135,12 +135,18 @@ const studentRouter = new Router({
           name: 'join',
           component: () => import('@/lesson/student/join')
         },
+        // 主观题分组作答历史记录
+        {
+          path: 'subject-team-history/:pid/:tid',
+          name: 'subject-team-history-s',
+          component: () => import('@/lesson/common/result-history')
+        },
         // 分组活动-分组讨论
         {
           path: 'groupdiscuss/:eventid/:index',
           name: 'group-discuss',
           component: () => import('@/lesson/student/group-discuss')
-        }
+        },
       ]
     },
     {

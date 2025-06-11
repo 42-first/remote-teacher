@@ -199,6 +199,10 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       share_tougao: '/api/v3/lesson/tougao/share-screen',
       // 获取主观题回答列表
       get_subj_list: '/api/v3/lesson/problem/subj-list',
+      // 获取带有分组历史记录的主观题作答列表
+      get_subj_group_list: '/api/v3/lesson/problem/group/subj-list',
+      // 获取小组回答记录
+      get_team_history: '/api/v3/lesson/problem/group/subjective/list',
       // 学生课堂表现加分备注页
       student_about: '/api/v3/lesson/assess/student/about',
       // 修改学生的表现加分值

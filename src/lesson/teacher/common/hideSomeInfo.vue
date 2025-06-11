@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="w100" :class="position == 'left' ? 'text-left' : 'text-right'" v-if="pptversion >= 1.3">
-      <span class="hide-show-name color6 back-f inline-block" v-if="isUserInfo" :class="{'no-border': !problemtype}">
+      <span class="hide-show-name color6 inline-block" v-if="isUserInfo" :class="{'no-border': !problemtype}">
         <label @click="hideNameHandle" class="ver-middle inline-block">
           <i class="iconfont icon-kuang ver-middle" v-show="!isHideName"></i>
           <i class="iconfont icon-kuangxuanzhong color63 ver-middle" v-show="isHideName"></i>
@@ -188,7 +188,7 @@
     width: 100%;
     height: px2rem(40px);
     line-height: px2rem(40px);
-    background-color: #fff;
+    // background-color: #fff;
     box-sizing: border-box;
     padding: 0 px2rem(30px);
     font-size: 0;
