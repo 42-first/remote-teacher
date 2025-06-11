@@ -471,7 +471,7 @@ let pages = {
   "newgroupdiscuss": "Hi, 你有新的分组讨论",
   "viewdiscusstopic": "查看主题",
   "submitsummary": "提交结果",
-  "enterteamsummary": "请输入小组组最终要提交的结果",
+  "enterteamsummary": "请输入小组最终要提交的结果",
   "discussisend": "当前讨论已结束",
   "underway": "进行中",
 
