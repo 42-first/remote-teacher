@@ -724,6 +724,7 @@ export default {
         color: #fff;
         &.disabled {
           background: #d2d7e5;
+          pointer-events: none;
         }
       }
     }
