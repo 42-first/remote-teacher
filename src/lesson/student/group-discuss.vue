@@ -24,7 +24,7 @@
     <section class="chat__wrap">
       <div
         class="msg--item"
-        :class="item.senderId == mineId ? 'me' : ''"
+        :class="[item.senderId == mineId ? 'me' : '', `J_msg-${index}`]"
         v-for="(item, index) in chatRecords"
         :key="index"
       >
@@ -467,6 +467,19 @@ export default {
           this.hasImage = false
           this.visibleSubmitSummary = false
         }
+      }
+    },
+
+    chatRecords(newVal) {
+      if(newVal.length) {
+        let index = newVal.length - 1
+        this.$nextTick(() => {
+          let el = this.$el.querySelector(`.J_msg-${index}`)
+          setTimeout(()=>{
+            el && el.scrollIntoView({ behavior: "instant", block: 'center' });
+          }, 0)
+        })
+        
       }
     }
   },
