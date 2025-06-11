@@ -77,7 +77,7 @@
         <div class="paper-info group-discuss" @click="handlelink(index, $event)">
           <router-link class="paper-txt f17" :to="'/v3/'+lessonid+'/groupdiscuss/'+item.eventid+'/'+index" >
             <p class="icon-wrapper"><i class="iconfont icon-a-fenzujiegouzuo f32"></i></p>
-            <p class="paper-name">Hi, 你有新的分组讨论 </p>
+            <p class="paper-name"><!-- Hi, 你有新的分组讨论 --> {{ $t('newgroupdiscuss') }} </p>
           </router-link>
           <i class="iconfont cfff icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>

@@ -8,7 +8,7 @@
       <div class="box-center">
         <div class="box-center detail" v-if="!visibleEventDetail" @click="handleToggleEventDetail">
           <i class="iconfont icon-jiaoxueneirong-7taolun f16 mr4"></i>
-          <span class="f13">查看主题</span> 
+          <span class="f13"><!--查看主题 --> {{ $t('viewdiscusstopic') }} </span> 
         </div>
         <div class="close box-center"  @click="handleBack">
           <i class="iconfont icon-cuowu f20"></i>
@@ -35,7 +35,7 @@
           <div class="content_box">
             <p class="user-name f12">
               {{ userInfos[item.senderId].name }}
-              <template v-if="item.senderId == mineId">(我)</template>
+              <template v-if="item.senderId == mineId"><!-- (我)-->{{ $t('danmume') }}</template>
             </p>
             <div class="content" :class="item.content.text ? 'bg' : ''">
               <img :class="item.content.text ? 'h120' : 'h160'" v-if="item.content.pic" :src="item.content.pic" />
@@ -47,7 +47,7 @@
     </section>
     <footer class="page__footer" :class="hasImage ? 'heightauto': ''">
       <div class="btns box-start" v-if="eventInfo.requireSummary">
-        <div class="btn f15" @click="visibleSubmitSummary = true">提交结果</div>
+        <div class="btn f15" @click="visibleSubmitSummary = true"><!-- 提交结果 -->{{ $t('submitsummary') }}</div>
       </div>
       <div class="input-box" :class="focus ? 'active' : ''">
         <div class="pic-preview box-start" v-if="hasImage">
@@ -88,12 +88,12 @@
           <div class="close box-start" @click="visibleSubmitSummary = false">
             <i class="iconfont icon-cuowu f20"></i>
           </div>
-          <div class="f17 bold title">提交结果</div>
-          <div class="submit box-center" @click="handleSubmitSummary">提交</div>
+          <div class="f17 bold title"><!-- 提交结果 -->{{ $t('submitsummary') }}</div>
+          <div class="submit box-center" @click="handleSubmitSummary"><!-- 提交 -->{{ $t('submit') }}</div>
         </div>
 
         <div class="content-box">
-          <textarea class="f15" v-model="summary" name="" id="" placeholder="请输入小组组最终要提交的结果"></textarea>
+          <textarea class="f15" v-model="summary" name="" id="" :placeholder="$t('enterteamsummary')"></textarea>
         </div>
       </div>
     </section>
@@ -366,7 +366,7 @@ export default {
     handleSubmitSummary() {
       if(this.isEnd) {
         this.$toast({
-          message: '当前讨论已结束',
+          message: this.$t('discussisend') || '当前讨论已结束',
           duration: 3000
         });
 
@@ -386,14 +386,14 @@ export default {
           this.summary = ''
           
           let data = this.cards[this.index]
-          data.status = '已完成'
+          data.status = this.$t('done') || '已完成'
           data.finishedStatus = 2
           // 替换原来的数据
           this.cards.splice(this.index, 1, data);
           this.setCards(this.cards);
         }else if(res.code == 50100) {
           this.$toast({
-            message: '当前讨论已结束',
+            message: this.$t('discussisend') || '当前讨论已结束',
             duration: 3000
           })
         }
@@ -411,7 +411,7 @@ export default {
     handleSendMsg() {
       if(this.isEnd) {
         this.$toast({
-          message: '当前讨论已结束',
+          message: this.$t('discussisend') || '当前讨论已结束',
           duration: 3000
         });
 
@@ -439,14 +439,14 @@ export default {
           this.hasImage = false
 
           let data = this.cards[this.index]
-          data.status = !data.finishedStatus ? '进行中' : data.status
+          data.status = !data.finishedStatus ? this.$t('underway') || '进行中' : data.status
           data.finishedStatus = !data.finishedStatus ? 1 : data.finishedStatus
           // 替换原来的数据
           this.cards.splice(this.index, 1, data);
           this.setCards(this.cards);
         }else if(res.code == 50100) {
           this.$toast({
-            message: '当前讨论已结束',
+            message: this.$t('discussisend') || '当前讨论已结束',
             duration: 3000
           })
         }

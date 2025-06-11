@@ -238,7 +238,7 @@
       <div class="timeline__paper">
         <a :class="['paper-info', 'group-discuss', item.isEnd ? 'complete' : '']" href="javascript:;"  @click="handleGoGroupEvent(item)" >
           <div class="paper-txt f18">
-            <p class="paper-name">Hi, 你有新的分组讨论</p>
+            <p class="paper-name"><!-- Hi, 你有新的分组讨论 --> {{ $t('newgroupdiscuss') }} </p>
             <p class="paper-name">{{ item.eventname }}</p>
           </div>
           <i class="iconfont icon-a-fenzujiegouzuo f55"></i>
