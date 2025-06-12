@@ -85,7 +85,7 @@
     <section class="submit-summary" v-if="visibleSubmitSummary">
       <div class="container">
         <div class="header box-between">
-          <div class="close box-start" @click="visibleSubmitSummary = false">
+          <div class="close box-start" @click="handleCloseSummary">
             <i class="iconfont icon-cuowu f20"></i>
           </div>
           <div class="f17 bold title"><!-- 提交结果 -->{{ $t('submitsummary') }}</div>
@@ -93,7 +93,7 @@
         </div>
 
         <div class="content-box">
-          <textarea class="f15" v-model="summary" name="" id="" :placeholder="$t('enterteamsummary')"></textarea>
+          <textarea class="f15" v-model="tempSummary" name="" id="" :placeholder="$t('enterteamsummary')"></textarea>
         </div>
       </div>
     </section>
@@ -129,6 +129,7 @@ export default {
       visibleEventDetail: false,
       focus: false,
       isEnd: false,
+      tempSummary: ''
     };
   },
   computed: {
@@ -223,6 +224,8 @@ export default {
             return acc
           }, {})
           this.teamid = data.teamId
+          this.summary = data.summary
+          this.tempSummary = data.summary
         }
       })
     },
@@ -398,14 +401,14 @@ export default {
       let URL = API.lesson.submit_group_summary
       let params = {
         teamId: this.teamid,
-        summary: this.summary,
+        summary: this.tempSummary,
         eventId: this.eventid
       }
 
       return request.post(URL, params).then(res => {
         if(res && res.code == 0 && res.data) {
           this.visibleSubmitSummary = false
-          this.summary = ''
+          this.summary = this.tempSummary
           
           let data = this.cards[this.index]
           data.status = this.$t('done') || '已完成'
@@ -477,6 +480,11 @@ export default {
 
     handleScroll(e) {
       this.scrollThrottled(e)
+    },
+
+    handleCloseSummary() {
+      this.tempSummary = this.summary
+      this.visibleSubmitSummary = false
     }
   },
   watch: {
@@ -790,6 +798,7 @@ export default {
       .header {
         padding: 0 0.4267rem;
         height: 1.4933rem;
+        position: relative;
         
         .title {
           color: #2B2E35;
@@ -799,9 +808,17 @@ export default {
 
         .close {
           color: #90949D;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 0.4267rem;
         }
 
         .submit {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          right: 0.4267rem;
           height: 0.7467rem;
           padding: 0 0.3733rem;
           color: #fff;
