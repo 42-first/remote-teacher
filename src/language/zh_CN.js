@@ -470,7 +470,7 @@ let pages = {
   "answerupdate": "作答内容有更新，请及时刷新",
   "newgroupdiscuss": "Hi, 你有新的分组讨论",
   "viewdiscusstopic": "查看主题",
-  "submitsummary": "提交结果",
+  "submitsummary": "提交结论",
   "enterteamsummary": "请输入小组最终要提交的结果",
   "discussisend": "当前讨论已结束",
   "underway": "进行中",

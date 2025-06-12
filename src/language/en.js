@@ -467,14 +467,14 @@ let pages = {
   "modifyanswer": "Edit",
   "answerupdate": "Updates detected, refresh now",
   // 分组讨论
-  "newgroupdiscuss": "Hi, 你有新的分组讨论",
-  "viewdiscusstopic": "查看主题",
-  "submitsummary": "提交结果",
-  "enterteamsummary": "请输入小组组最终要提交的结果",
-  "discussisend": "当前讨论已结束",
-  "underway": "进行中",
-  "guestnotdiscuss": "旁听生无法参与分组活动",
-  "watchmodenotdiscuss": "当前视角无法参与分组活动",
+  "newgroupdiscuss": "New group discussion",
+  "viewdiscusstopic": "Topic",
+  "submitsummary": "Submit",
+  "enterteamsummary": "Enter final submission",
+  "discussisend": "Discussion ended",
+  "underway": "In Progress",
+  "guestnotdiscuss": "Auditors cannot join group activities",
+  "watchmodenotdiscuss": "Current view cannot join activities",
 
   // 给学生增加备注需求增加
   behavior: {
