@@ -84,7 +84,7 @@
 
     <section class="submit-summary" v-if="visibleSubmitSummary">
       <div class="container">
-        <div class="header box-between">
+        <div class="header box-center">
           <div class="close box-start" @click="handleCloseSummary">
             <i class="iconfont icon-cuowu f20"></i>
           </div>
@@ -621,7 +621,7 @@ export default {
               background: #d0e2ff;
               border-radius: 0.32rem 0 0.32rem 0.32rem;
             }
-            
+            text-align: left;
           }
         }
       }
