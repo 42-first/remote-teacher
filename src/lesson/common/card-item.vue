@@ -585,13 +585,6 @@
       },
 
       handleGoGroupEvent(item) {
-        if(item.isEnd) {
-          this.$toast({
-            message: '该活动已结束',
-            duration: 3000
-          });
-          return false;
-        }
         if(this.observerMode){
           this.$toast({
             message: this.$i18n.t('watchmodenotdiscuss'),
@@ -607,6 +600,15 @@
           })
           return
         }
+        
+        if(item.isEnd) {
+          this.$toast({
+            message: '该活动已结束',
+            duration: 3000
+          });
+          return false;
+        }
+        
 
         this.$router.push({
           name: `group-discuss`,
