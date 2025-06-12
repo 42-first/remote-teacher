@@ -594,18 +594,28 @@
         }
         if(this.observerMode){
           this.$toast({
-            message: this.$i18n.t('watchmode2'),
+            message: this.$i18n.t('watchmodenotdiscuss'),
             duration: 3000
           })
-        }else {
-          this.$router.push({
-            name: `group-discuss`,
-            params: {
-              eventid: item.eventid,
-              index: item.index
-            }
-          })
+          return
         }
+
+        if(this.$parent.$parent.role === 6) {
+          this.$toast({
+            message: this.$i18n.t('guestnotdiscuss'),
+            duration: 3000
+          })
+          return
+        }
+
+        this.$router.push({
+          name: `group-discuss`,
+          params: {
+            eventid: item.eventid,
+            index: item.index
+          }
+        })
+        
       },
     },
     created() {

@@ -75,10 +75,10 @@
     <template v-else-if="item.type == 16">
       <div class="popup__paper">
         <div class="paper-info group-discuss" @click="handlelink(index, $event)">
-          <router-link class="paper-txt f17" :to="'/v3/'+lessonid+'/groupdiscuss/'+item.eventid+'/'+index" >
+          <div class="paper-txt f17" @click="handleGroupDiscuss(item, index)">
             <p class="icon-wrapper"><i class="iconfont icon-a-fenzujiegouzuo f32"></i></p>
             <p class="paper-name"><!-- Hi, 你有新的分组讨论 --> {{ $t('newgroupdiscuss') }} </p>
-          </router-link>
+          </div>
           <i class="iconfont cfff icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
         </div>
       </div>
@@ -123,6 +123,22 @@
       },
       handlelink(index, evt) {
         this.$parent.msgBoxs.splice(index, 1);
+      },
+
+      handleGroupDiscuss(item, index) {
+        this.$parent.msgBoxs.splice(index, 1);
+
+        if(this.$parent.role === 6) {
+          this.$toast({
+            message: this.$i18n.t('guestnotdiscuss'),
+            duration: 3000
+          })
+          return
+        }
+        this.$router.push({
+          path: '/v3/'+this.lessonid+'/groupdiscuss/'+item.eventid+'/'+index
+        })
+
       }
     },
     created() {

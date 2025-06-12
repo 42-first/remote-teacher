@@ -473,6 +473,8 @@ let pages = {
   "enterteamsummary": "请输入小组组最终要提交的结果",
   "discussisend": "当前讨论已结束",
   "underway": "进行中",
+  "guestnotdiscuss": "旁听生无法参与分组活动",
+  "watchmodenotdiscuss": "当前视角无法参与分组活动",
 
   // 给学生增加备注需求增加
   behavior: {
