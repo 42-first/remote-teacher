@@ -794,6 +794,8 @@ export default {
       left: 0;
       background: #fff;
       border-radius: 0.4267rem 0.4267rem 0 0;
+      display: flex;
+      flex-direction: column;
 
       .header {
         padding: 0 0.4267rem;
@@ -829,10 +831,11 @@ export default {
 
       .content-box {
         padding: 0.4267rem;
+        flex: 1;
 
         textarea {
           width: 100%;
-          height: auto;
+          height: 100%;
           border: none;
         }
       }
