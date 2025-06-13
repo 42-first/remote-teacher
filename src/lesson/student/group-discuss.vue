@@ -145,6 +145,13 @@ export default {
       this.initPubSub();
       this.mineId = window.identityId || window.userId;
 
+      // 处理弹出的消息
+      this.$parent.msgBoxs.forEach((item, index) => {
+        if(item.type === 16 && item.eventid == this.eventid) {
+          this.$parent.msgBoxs.splice(index, 1);
+        }
+      })
+
       // 下拉加载更多
       this.scrollThrottled = _.throttle(evt => {
         let $list = evt.target
@@ -502,7 +509,14 @@ export default {
           this.pic = ''
           this.hasImage = false
           this.visibleSubmitSummary = false
+          this.isEnd = false
         }
+        // 处理弹出的消息
+        this.$parent.msgBoxs.forEach((item, index) => {
+          if(item.type === 16 && item.eventid == eventid) {
+            this.$parent.msgBoxs.splice(index, 1);
+          }
+        })
       }
     },
 
