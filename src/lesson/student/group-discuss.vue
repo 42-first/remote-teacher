@@ -154,11 +154,13 @@ export default {
         let leaveHeight = totalHeight - clientHeight - scrollTop;
 
         if(scrollTop > this.lastScrollTop) {
-          console.log('向下滚动')
-          this.scrollLock = false
+          if(scrollTop - this.lastScrollTop > 100) {
+            this.scrollLock = false
+          }
         } else {
-          console.log('向上滚动')
-          this.scrollLock = true
+          if(this.lastScrollTop - scrollTop > 100) {
+            this.scrollLock = true
+          }
         }
 
         this.lastScrollTop = scrollTop
