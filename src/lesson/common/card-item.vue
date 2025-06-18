@@ -603,7 +603,7 @@
         
         if(item.isEnd) {
           this.$toast({
-            message: '该活动已结束',
+            message: this.$i18n.t('discussisend') || '该活动已结束',
             duration: 3000
           });
           return false;
