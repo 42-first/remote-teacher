@@ -70,7 +70,7 @@
               :disabled="isEnd"
               type="file"
               class="file-input"
-              accept="images/*"
+              accept="image/*"
               @change="handleChooseImageChange"
             />
             <i class="iconfont icon-tianjiatupian- f24"></i>
