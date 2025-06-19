@@ -127,6 +127,7 @@ let lessonMixin = {
       let hasGroup = false
       let hasReview = false
       let hasInstructionTask = false
+      let hasGroupDiscuss = false
 
       if(timeline && timeline.length) {
         timeline.forEach(item => {
@@ -158,6 +159,10 @@ let lessonMixin = {
           if(item.type === 'instruction' || item.type === 'agent') {
             hasInstructionTask = true
           }
+
+          if(item.type === 'discuss') {
+            hasGroupDiscuss = true
+          }
         })
       }
 
@@ -171,6 +176,9 @@ let lessonMixin = {
 
       // 有指令任务
       hasInstructionTask && await this.getInstructionTasks()
+
+      // 有分组讨论
+      hasGroupDiscuss && await this.getGroupDiscussStatus()
 
 
       // 有课件
@@ -437,6 +445,8 @@ let lessonMixin = {
               name: data.identityName,
               schoolNumber: data.identityNumber
             }
+
+            window.identityId = data.identityId
           }
 
           // 是否导播嘉宾
@@ -893,6 +903,22 @@ let lessonMixin = {
     handleClosedLectureNote() {
       this.visibleLectureNote = false
       document.querySelector('.student__timeline-wrapper').style.overflowY = 'auto'
+    },
+
+    getGroupDiscussStatus() {
+      let URL = API.lesson.get_group_discuss_status
+      return request.get(URL)
+      .then(res => {
+        if(res && res.code === 0 && res.data){
+          Object.keys(res.data).forEach(item => {
+            this.groupDiscussMap.set(item, res.data[item])
+          })
+          return res.data
+        }
+      }).catch(error => {
+        console.log('getGroupDiscussStatus:', error)
+        return {}
+      })
     }
   }
 }

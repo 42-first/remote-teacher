@@ -278,6 +278,16 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       check_course_white_list: '/api/v3/classroom/check-course-white-list',
       // 获取课堂讲稿
       get_records: '/api/v3/ai-lesson-companion/get-records',
+
+      // 分组讨论
+      // 获取小组聊天消息
+      get_group_chat_message: '/api/v3/lesson/group-event/chat-message',
+      // 提交讨论结论
+      submit_group_summary: '/api/v3/lesson/group-event/summary',
+      // 发送聊天信息
+      send_group_message: '/api/v3/lesson/group-event/send-group-message',
+      // 获取分组讨论状态
+      get_group_discuss_status: '/api/v3/lesson/group-event/student/status',
     },
 
     /*------------------*\

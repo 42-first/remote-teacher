@@ -137,6 +137,10 @@ var actionsMixin = {
               this.addInstructionTask({ type: 15, taskid: item['task'], promptid: item['agentid'], instrname: item['agentname'], time: item['dt'], event: item, isFetch: isFetch })
               break;
 
+            case 'discuss':
+              this.addGroupDiscuss({ type: 16, eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], event: item, isFetch: isFetch})
+              break;
+
             default:
               break;
           }
@@ -1338,6 +1342,98 @@ var actionsMixin = {
       })
 
       this.setCards(this.cards);
+    },
+
+
+    /**
+     * @method 发布分组活动
+     */
+    addGroupDiscuss(data) {
+      let event = this.groupDiscussMap.get(data.eventid);
+      let status = event && event.finishedStatus == 2 ? this.$i18n.t('done') :  event && event.finishedStatus == 1 ? this.$t('underway') || '进行中' : this.$i18n.t('notstart')
+      
+      // 是否含有重复数据
+      let hasEvent = this.cards.find((item) => {
+        return item.type === 16 && item.eventid === data.eventid && data.isFetch;
+      })
+      let index = this.cards.length;
+
+      Object.assign(data, {
+        index,
+        status,
+        isEnd: event && event.eventStatus,
+        finishedStatus: event && event.finishedStatus,
+      })
+
+      // 消息box弹框
+      data.isPopup && !this.observerMode && (this.msgBoxs = [data]);
+
+      if (!hasEvent) {
+        this.cards.push(data);
+        this.setCards(this.cards)
+      }
+    },
+
+    // 讨论对话通知
+    addGroupMsg(msg) {
+      // 订阅发布定时
+      PubSub && PubSub.publish('groupevent.groupchat', {
+        msg: 'groupevent.groupchat',
+        teamid: msg.teamid,
+        eventid: msg.eventid,
+        uid: msg.uid,
+        content: msg.content
+      });
+    },
+
+    // 讨论结束
+    endGroupDiscuss(msg) {
+      let discuss = this.cards.find((item) => {
+        return item.type === 16 && item.eventid === msg.eventid;
+      })
+
+      discuss && Object.assign(discuss, {
+        isEnd: true,
+        status: this.$i18n.t('statusisend') || '已结束'
+      })
+
+      this.setCards(this.cards);
+
+      PubSub && PubSub.publish('groupevent.gefinished', {
+        msg: 'groupevent.gefinished',
+        eventid: msg.eventid,
+      });
+    },
+
+    // 讨论续时
+    extendGroupDiscuss(data) {
+      let discuss = this.cards.find((item) => {
+        return item.type === 16 && item.eventid === data.eventid;
+      })
+
+      discuss && Object.assign(discuss, {
+        isEnd: false,
+      })
+
+      this.setCards(this.cards);
+
+      PubSub && PubSub.publish('groupevent.geext', {
+        msg: 'groupevent.geext',
+        eventid: data.eventid,
+      });
+    },
+
+    /**
+     * @method 分组讨论同组学生提交总结
+     * @param {*} data 
+     */
+    handleGroupResult(data) {
+      PubSub && PubSub.publish('groupevent.groupresult', {
+        msg: 'groupevent.groupresult',
+        eventid: data.eventid,
+        teamid: data.teamid,
+        result: data.result
+      });
     },
 
   }

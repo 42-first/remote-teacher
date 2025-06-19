@@ -532,6 +532,37 @@ var mixin = {
           case 'agentfinished':
             this.finishInstructionTask({ taskid: msg['task'], promptid: msg['agentid'] })
             break;
+
+          // 分组活动
+          case 'groupevent':
+            item = msg['group']
+            // 分组汇报暂不在移动端接收器显示
+            if(item['type'] == 'discuss') {
+              this.addGroupDiscuss({ type: 16, eventid: item['eventid'], eventname: item['eventname'], time: item['dt'], isPopup: true, event: item })
+            }
+            break;
+
+          // 分组群聊
+          case 'groupchat':
+            item = msg['message']
+            this.addGroupMsg(item)
+            break;
+
+          // 结束讨论
+          case 'gefinished':
+            this.endGroupDiscuss(msg);
+            break;
+
+          // 讨论续时
+          case 'geext':
+            item = msg['group']
+            this.extendGroupDiscuss(item);
+            break;
+
+          // 分组讨论学生提交总结
+          case 'groupresult':
+            this.handleGroupResult(msg);
+            break;
             
           // 主观题分组作答同组有新答案
           case 'groupanswerupdate':

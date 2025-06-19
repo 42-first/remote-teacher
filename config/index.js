@@ -4,8 +4,8 @@ var path = require('path')
 var proxyUrl = 'https://b.yuketang.cn'
 
 // proxyUrl = 'https://protest.xuetangonline.com'
-// proxyUrl = 'https://ykt-envning.rainclassroom.com'
-proxyUrl = 'https://zhktpt.yuketang.cn'
+proxyUrl = 'https://ykt-envning.rainclassroom.com'
+// proxyUrl = 'https://zhktpt.yuketang.cn'
 
 
 function proxyConfig () {

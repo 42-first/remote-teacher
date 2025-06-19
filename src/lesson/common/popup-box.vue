@@ -70,6 +70,19 @@
         </div>
       </div>
     </template>
+
+    <!-- 分组活动 -->
+    <template v-else-if="item.type == 16">
+      <div class="popup__paper">
+        <div class="paper-info group-discuss" @click="handlelink(index, $event)">
+          <div class="paper-txt f17" @click="handleGroupDiscuss(item, index)">
+            <p class="icon-wrapper"><i class="iconfont icon-a-fenzujiegouzuo f32"></i></p>
+            <p class="paper-name"><!-- Hi, 你有新的分组讨论 --> {{ $t('newgroupdiscuss') }} </p>
+          </div>
+          <i class="iconfont cfff icon-shiti_guanbitouping f25" @click="handledelMag(index, $event)"></i>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>
@@ -110,6 +123,22 @@
       },
       handlelink(index, evt) {
         this.$parent.msgBoxs.splice(index, 1);
+      },
+
+      handleGroupDiscuss(item, index) {
+        this.$parent.msgBoxs.splice(index, 1);
+
+        if(this.$parent.role === 6) {
+          this.$toast({
+            message: this.$i18n.t('guestnotdiscuss'),
+            duration: 3000
+          })
+          return
+        }
+        this.$router.push({
+          path: '/v3/'+this.lessonid+'/groupdiscuss/'+item.eventid+'/'+index
+        })
+
       }
     },
     created() {
@@ -209,9 +238,20 @@
       }
     }
 
-    .paper-info.ai-task .paper-txt .icon-wrapper {
-      background: transparent;
+    .paper-info.group-discuss {
+      background: linear-gradient(98.52deg, #19C2D8 0.29%, #5CB0FF 50.14%, #83E7FF 100%);
+      color: #fff;
+      .paper-name {
+        color: #fff;
+      }
     }
+
+    .paper-info.ai-task,
+    .paper-info.group-discuss {
+      .paper-txt .icon-wrapper {
+        background: transparent;
+      }
+    } 
 
 
     .paper-icon {

@@ -232,6 +232,25 @@
         </div>
       </div>
     </template>
+
+    <!-- 分组活动 分组讨论 -->
+    <template v-else-if="item.type == 16">
+      <div class="timeline__paper">
+        <a :class="['paper-info', 'group-discuss', item.isEnd ? 'complete' : '']" href="javascript:;"  @click="handleGoGroupEvent(item)" >
+          <div class="paper-txt f18">
+            <p class="paper-name"><!-- Hi, 你有新的分组讨论 --> {{ $t('newgroupdiscuss') }} </p>
+            <p class="paper-name">{{ item.eventname }}</p>
+          </div>
+          <i class="iconfont icon-a-fenzujiegouzuo f55"></i>
+        </a>
+        <div class="item-footer">
+          <p class="f16">{{ item.time|getTimeago }}</p>
+          <div class="f14" v-show="!observerMode">
+            <span class="status">{{ item.status }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
   </section>
 
 </template>
@@ -563,7 +582,43 @@
         location.href = process.env.NODE_ENV === 'production' ?  
           `/ai-workspace/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3` : 
           `http://localhost:8080/ai-workspace.html#/chatbot-mobile/${this.cid}?lid=${this.lessonId}&presid=${presentationid}&sid=${slideID}&pIdx=${pageIndex}&ent=16&entity_type=16&category=3`
-      }
+      },
+
+      handleGoGroupEvent(item) {
+        if(this.observerMode){
+          this.$toast({
+            message: this.$i18n.t('watchmodenotdiscuss'),
+            duration: 3000
+          })
+          return
+        }
+
+        if(this.$parent.$parent.role === 6) {
+          this.$toast({
+            message: this.$i18n.t('guestnotdiscuss'),
+            duration: 3000
+          })
+          return
+        }
+        
+        if(item.isEnd) {
+          this.$toast({
+            message: this.$i18n.t('discussisend') || '该活动已结束',
+            duration: 3000
+          });
+          return false;
+        }
+        
+
+        this.$router.push({
+          name: `group-discuss`,
+          params: {
+            eventid: item.eventid,
+            index: item.index
+          }
+        })
+        
+      },
     },
     created() {
     },
@@ -795,10 +850,15 @@
       background: linear-gradient(98.52deg, #8F7EFE 0.29%, #5C9BFF 50.14%, #83BDFF 100%);
     }
 
+    .paper-info.group-discuss {
+      background: linear-gradient(98.52deg, #19C2D8 0.29%, #5CB0FF 50.14%, #83E7FF 100%);
+    }
+
     .paper-info.complete,
     .paper-info.xt.complete,
     .paper-info.submission.complete,
-    .paper-info.evaluation.complete {
+    .paper-info.evaluation.complete,
+    .paper-info.group-discuss.complete {
       background: #C8C8C8;
     }
 

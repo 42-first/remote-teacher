@@ -468,6 +468,15 @@ let pages = {
   "submiter": "提交人",
   "modifyanswer": "修改答案",
   "answerupdate": "作答内容有更新，请及时刷新",
+  "newgroupdiscuss": "Hi, 你有新的分组讨论",
+  "viewdiscusstopic": "查看主题",
+  "submitsummary": "提交结论",
+  "enterteamsummary": "请输入小组最终要提交的结果",
+  "discussisend": "当前讨论已结束",
+  "underway": "进行中",
+  "guestnotdiscuss": "旁听生无法参与分组活动",
+  "watchmodenotdiscuss": "当前视角无法参与分组活动",
+  "pleaseenter": "请输入",
 
 
   // 给学生增加备注需求增加
@@ -765,6 +774,7 @@ let pages = {
     '50032': '投稿已被撤回，无法查看~',
     '50042': '当前人数太多，暂不支持查看明细',
     '50070': '该课堂已开启动态二维码签到，请扫码签到进班',
+    '50100': '当前讨论已结束',
 
     '60000': '服务错误，请稍后再试。',
     '60001': '服务错误，请稍后再试。',
