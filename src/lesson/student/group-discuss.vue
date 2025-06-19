@@ -61,7 +61,7 @@
           v-model="sendMsg"
           @focus="focus = true"
           @blur="focus = false"
-          placeholder="请输入"
+          :placeholder="$t('pleaseenter')"
           class="input f16"
         />
         <div class="box-between">
@@ -184,26 +184,33 @@ export default {
       PubSub && PubSub.unsubscribe("groupevent");
 
       // 订阅定时消息
-      PubSub &&
-        PubSub.subscribe("groupevent.groupchat", (topic, data) => {
-          if (data.eventid == this.eventid) {
-            this.addNewMsg(data);
-          }
-        });
+      PubSub && PubSub.subscribe("groupevent.groupchat", (topic, data) => {
+        if (data.eventid == this.eventid) {
+          this.addNewMsg(data);
+        }
+      });
 
-        PubSub &&
-        PubSub.subscribe("groupevent.gefinished", (topic, data) => {
-          if (data.eventid == this.eventid) {
-            this.isEnd = true
-          }
-        });
+      PubSub && PubSub.subscribe("groupevent.gefinished", (topic, data) => {
+        if (data.eventid == this.eventid) {
+          this.isEnd = true
+        }
+      });
 
-        PubSub &&
-        PubSub.subscribe("groupevent.geext", (topic, data) => {
-          if (data.eventid == this.eventid) {
-            this.isEnd = false
+      PubSub && PubSub.subscribe("groupevent.geext", (topic, data) => {
+        if (data.eventid == this.eventid) {
+          this.isEnd = false
+        }
+      });
+
+      PubSub && PubSub.subscribe("groupevent.groupresult", (topic, data) => {
+        if(data.eventid == this.eventid && data.teamid == this.teamid) {
+          if(!this.summary) {
+            this.summary = data.result
+            this.tempSummary = data.result
           }
-        });
+          
+        }
+      })
     },
 
     addNewMsg(data) {
@@ -776,6 +783,8 @@ export default {
         .file-input {
           position: absolute;
           opacity: 0;
+
+          width: 100%;
         }
       }
 

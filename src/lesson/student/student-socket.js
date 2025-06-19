@@ -558,6 +558,11 @@ var mixin = {
             item = msg['group']
             this.extendGroupDiscuss(item);
             break;
+
+          // 分组讨论学生提交总结
+          case 'groupresult':
+            this.handleGroupResult(msg);
+            break;
             
           // 主观题分组作答同组有新答案
           case 'groupanswerupdate':

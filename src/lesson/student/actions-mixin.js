@@ -1421,7 +1421,20 @@ var actionsMixin = {
         msg: 'groupevent.geext',
         eventid: data.eventid,
       });
-    }
+    },
+
+    /**
+     * @method 分组讨论同组学生提交总结
+     * @param {*} data 
+     */
+    handleGroupResult(data) {
+      PubSub && PubSub.publish('groupevent.groupresult', {
+        msg: 'groupevent.groupresult',
+        eventid: data.eventid,
+        teamid: data.teamid,
+        result: data.result
+      });
+    },
 
   }
 }

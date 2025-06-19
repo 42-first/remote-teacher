@@ -476,6 +476,7 @@ let pages = {
   "underway": "进行中",
   "guestnotdiscuss": "旁听生无法参与分组活动",
   "watchmodenotdiscuss": "当前视角无法参与分组活动",
+  "pleaseenter": "请输入",
 
 
   // 给学生增加备注需求增加

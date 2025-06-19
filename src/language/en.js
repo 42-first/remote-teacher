@@ -475,6 +475,7 @@ let pages = {
   "underway": "In Progress",
   "guestnotdiscuss": "Auditors cannot join group activities",
   "watchmodenotdiscuss": "Current view cannot join activities",
+  "pleaseenter": "Please enter",
 
   // 给学生增加备注需求增加
   behavior: {
