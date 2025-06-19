@@ -47,7 +47,7 @@
     </section>
     <footer class="page__footer" :class="hasImage ? 'heightauto': ''">
       <div class="btns box-start" v-if="eventInfo.requireSummary">
-        <div class="btn f15" @click="visibleSubmitSummary = true"><!-- 提交结果 -->{{ $t('submitsummary') }}</div>
+        <div class="btn f15" @click="handleShowSubmitSummary"><!-- 提交结果 -->{{ $t('submitsummary') }}</div>
       </div>
       <div class="input-box" :class="focus ? 'active' : ''">
         <div class="pic-preview box-start" v-if="hasImage">
@@ -204,11 +204,7 @@ export default {
 
       PubSub && PubSub.subscribe("groupevent.groupresult", (topic, data) => {
         if(data.eventid == this.eventid && data.teamid == this.teamid) {
-          if(!this.summary) {
-            this.summary = data.result
-            this.tempSummary = data.result
-          }
-          
+          this.summary = data.result
         }
       })
     },
@@ -501,6 +497,11 @@ export default {
     handleCloseSummary() {
       this.tempSummary = this.summary
       this.visibleSubmitSummary = false
+    },
+
+    handleShowSubmitSummary() {
+      this.tempSummary = this.summary
+      this.visibleSubmitSummary = true
     }
   },
   watch: {
