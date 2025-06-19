@@ -143,7 +143,6 @@ export default {
       this.fetchData();
 
       this.initPubSub();
-      this.mineId = window.identityId || window.userId;
 
       // 处理弹出的消息
       this.$parent.msgBoxs.forEach((item, index) => {
@@ -238,6 +237,8 @@ export default {
           this.teamid = data.teamId
           this.summary = data.summary
           this.tempSummary = data.summary
+
+          this.mineId = this.$parent.identityId || this.$parent.userID || window.identityId || window.userId;
         }
       })
     },
