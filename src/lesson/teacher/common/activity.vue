@@ -70,6 +70,18 @@
       </div>
     </div>
 
+    <div @click="toQuickAnswer" class="activity-item f18 J_ga" data-category="17" data-label="抢答">
+      <div>
+        <div class="iconbox" style="background: #5F8CFF;">
+          <i class="iconfont icon-fenzu1 f21"></i>
+        </div>
+        抢答
+      </div>
+			<div class="dakai-box">
+        <i class="iconfont icon-dakai f21"></i>
+      </div>
+    </div>
+
     <Toolbar
       ref="Toolbar"
       class="activity-tollbar"
@@ -227,6 +239,19 @@
           message: this.$t('backsoon') || '该功能暂时下线维护，稍后回归，敬请期待~',
           duration: 3e3
         });
+      },
+
+      /**
+       * @method 抢答入口
+       */
+      toQuickAnswer() {
+        let msg = {
+          op: 'jumpinwakeup',
+          lessonid: this.lessonid,
+          msgid: Date.now(),
+        }
+
+        this.socket.send(JSON.stringify(msg))
       }
     },
     beforeRouteEnter (to, from, next) {

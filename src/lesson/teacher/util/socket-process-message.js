@@ -497,6 +497,10 @@ function socketProcessMessage(msg){
       T_PUBSUB.publish('remark-msg.closedshown', msg)
     }
 
+    if(msg.type == 'jumpin') {
+      T_PUBSUB.publish('jumpin-msg.closedmask', msg)
+    }
+
   }
 
   // 获取随机点名名单列表
@@ -557,6 +561,27 @@ function socketProcessMessage(msg){
   // 变更随机点名范围
   if(msg.op == 'rollcall') {
     T_PUBSUB.publish('call-msg.rollcall', msg)
+  }
+
+  // 桌面端打开了抢答页面
+  if(msg.op == 'jumpinwokeup') {
+    let to = {
+      name: 'quickanswer_v3',
+      query: {
+        sc: msg.sc
+      }
+    }
+
+    self.$router.push(to)
+    return
+  }
+
+  if(msg.op == 'jumpinstart') {
+    T_PUBSUB.publish('jumpin-msg.jumpinstart', msg.jumpin)
+  }
+
+  if(msg.op == 'jumpinend') {
+    T_PUBSUB.publish('jumpin-msg.jumpinend', msg)
   }
 
 }

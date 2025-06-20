@@ -1,0 +1,364 @@
+<template>
+  <div class="quickanswer__wrapper">
+    <div class="records-btn box-center f13" @click="handleToggleRecords">
+      已抢答
+      <i class="iconfont icon-jiantoudan-xiangyou f12"></i>
+    </div>
+    <component
+      :is="curComponent"
+      :status="status"
+      :waiting="waiting"
+      :countdown="countdown"
+      :user="jumpInUser"
+      :signin="signin"
+      @start="handleJumpIn"
+      @updateScore="addScore"
+      @toggleEdit="handleToggleEdit"
+    ></component>
+
+    <footer class="footer box-center">
+      <div class="btn box-center">继续上课</div>
+      <div class="btn box-center continue" v-if="jumpInUser" @click="handleJumpIn">继续抢答</div>
+    </footer>
+
+    <QuickAnswerScore
+      v-if="visibleEdit"
+      :editUser="editUser"
+      @toggleEdit="handleToggleEdit"
+    />
+
+    <QuickAnswerRecords
+      v-if="visibleRecords"
+      :records="records"
+      @toggleRecords="handleToggleRecords"
+      @toggleEdit="handleToggleEdit"
+    />
+  </div>
+</template>
+
+<script>
+import {mapGetters} from 'vuex'
+import request from '@/util/request-v3'
+import API from '@/util/api'
+import QuickAnswerRecords from './common/quickanswer-records.vue'
+import QuickAnswerProcess from './common/quickanswer-process.vue'
+import QuickAnswerResult from './common/quickanswer-result.vue'
+import QuickAnswerScore from './common/quickanswer-score.vue'
+
+const QuickAnswerState = {
+  // 
+  INIT: 0,
+  COUNTDOWN: 1,
+  ANSWERING: 2,
+  ENDED: 3
+}
+
+let prepareTimer = null
+let countdownTimer = null
+
+export default {
+  name: 'quickanswer',
+  data() {
+    return {
+      status: QuickAnswerState.INIT,
+      waiting: 5,
+      countdown: 10,
+      records: [],
+      quickAnswerId: '',
+      jumpInUser: null,
+      isAnswering: false,
+      signin: 0,
+      editUser: null,
+      visibleEdit: false,
+      visibleRecords: false,
+    }
+  },
+  components: {
+    QuickAnswerProcess,
+    QuickAnswerResult,
+    QuickAnswerScore,
+    QuickAnswerRecords
+  },
+  computed: {
+    ...mapGetters([
+      'lessonid',
+      'classroomid',
+      'socket',
+    ]),
+
+    btnText() {
+      if(this.status === QuickAnswerState.INIT) {
+        return '开始抢答'
+      } else if(this.status === QuickAnswerState.COUNTDOWN) {
+        return `${this.waiting}s 后开始抢答`
+      } else if(this.status === QuickAnswerState.ANSWERING) {
+        return `${this.countdown}s`
+      } else {
+        return '继续抢答'
+      }
+    },
+
+    curComponent() {
+      if(this.status == QuickAnswerState.ENDED && this.jumpInUser) {
+        return QuickAnswerResult
+      } else {
+        return QuickAnswerProcess
+      }
+    }
+  },
+
+  methods: {
+    init() {
+      this.signin = +this.$route.query.sc
+      this.handlePubSub()
+
+      this.getRecords()
+    },
+    
+    /**
+     * 处理发布订阅
+     *
+     */
+    handlePubSub () {
+      let self = this
+
+      // 订阅前清掉之前可能的订阅，避免多次触发回调
+      T_PUBSUB.unsubscribe('jumpin-msg')
+
+      T_PUBSUB.subscribe('jumpin-msg.closedmask', (_name, msg) => {
+        self.handleClose()
+        self.$router.back()
+      })
+
+      T_PUBSUB.subscribe('jumpin-msg.jumpinstart', (_name, msg) => {
+        self.handleStarted(msg)
+      })
+
+      T_PUBSUB.subscribe('jumpin-msg.jumpinend', (_name, msg) => {
+        self.handleEnded(msg)
+      })
+      
+    },
+
+    /**
+     * @method 关闭通知
+     */
+    handleClose() {
+      let self = this
+
+      let str = JSON.stringify({
+        'op': 'closemask',
+        'lessonid': self.lessonid,
+        'type': 'jumpin'
+      })
+
+      self.socket.send(str)
+    },
+
+    /**
+     * @method 获取抢答记录
+     */
+    getRecords() {
+      let URL = API.lesson.get_quick_answer_records
+      return request.get(URL)
+      .then(res => {
+        if(res && res.code == 0 && res.data) {
+          this.records = res.data.list
+        }
+      })
+    },
+
+    /**
+     * @method 开始抢答
+     */
+    handleJumpIn() {
+      if([QuickAnswerState.INIT, QuickAnswerState.ENDED].includes(this.status)) {
+        this.startQuickAnswer()
+        this.jumpInUser = null
+      }
+    },
+
+    /**
+    * @method 发起抢答
+    */
+    startQuickAnswer() {
+      this.status = QuickAnswerState.COUNTDOWN
+      let URL = API.lesson.start_quick_answer
+      return request.post(URL)
+      .then(res => {
+        if(res && res.code == 0) {
+          return res.data.id
+        }
+      })
+    },
+
+
+    /**
+    * @method 结束抢答
+    */
+    endQuickAnswer(id) {
+      let URL = API.lesson.end_quick_answer
+      let params = {
+        id
+      }
+      return request.post(URL, params)
+      .then(res => {
+        if(res && res.code == 0) {
+          return res.data.id
+        }
+      })
+    },
+
+    /**
+     * @method 抢答加分
+     */
+    addScore(id, score) {
+      let URL = API.lesson.set_quick_answer_score
+      let params = {
+        id,
+        score
+      }
+      return request.post(URL, params)
+      .then(res => {
+        if(res && res.code == 0) {
+          return res.code
+        }
+      })
+    },
+
+
+    /**
+     * @method 抢答开始 准备倒计时
+     */
+    handleStarted(val) {
+      let { id, prepare, limit, now, start } = val
+      this.quickAnswerId = id
+      this.status = QuickAnswerState.COUNTDOWN
+      this.waiting = Math.ceil((prepare - (now - start)) / 1000)
+      this.countdown = limit / 1000
+      this.handleStartPrepare()
+      this.isAnswering = true
+    },
+
+
+    /**
+     * @method 开始准备倒计时
+     */
+    handleStartPrepare() {
+      prepareTimer = setInterval(() => {
+        if(this.waiting > 1) {
+          this.waiting--
+        }else {
+          clearInterval(prepareTimer)
+
+          this.handleStartCountdown()
+        }
+      }, 1000)
+    },
+
+    /**
+     * @method 开始倒计时
+     */
+    handleStartCountdown() {
+      countdownTimer = setInterval(() => {
+        if(this.countdown > 1) {
+          this.countdown--
+        } else {
+          clearInterval(countdownTimer)
+          this.status = QuickAnswerState.ENDED
+        }
+      }, 1000)
+    },
+
+    handleEnded(msg) {
+      if(msg.uid) {
+        this.jumpInUser = msg.uid
+      }
+    },
+
+    handleToggleEdit(user) {
+      this.visibleEdit = !this.visibleEdit
+      this.editUser = user
+    },
+
+    handleToggleRecords() {
+      this.visibleRecords = !this.visibleRecords
+    }
+
+  },
+
+  created() {
+    this.init()
+
+    this.handlePubSub()
+  },
+
+  beforeDestroy() {
+    T_PUBSUB.unsubscribe('jumpin-msg')
+  },
+
+}
+</script>
+
+<style lang="scss" scoped>
+@import "~@/style/common_rem";
+.quickanswer__wrapper {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(119.74% 255.75% at 133.33% -2.71%, #04006B 0%, #0E0E17 100%);
+  padding-top: px2rem(180px);
+  color: #fff;
+
+  .yellow {
+    color: #F78600;
+  }
+
+  .records-btn {
+    position: absolute;
+    top: px2rem(16px);
+    left: 0;
+    padding: px2rem(16px);
+    border-radius: 0 px2rem(32px) px2rem(32px) 0;
+    border-width: 1px, 1px, 1px, 0px;
+    border-style: solid;
+    border-color: #FFFFFF66;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: px2rem(60px);
+    left: 0;
+    width: 100%;
+    padding: 0 px2rem(60px);
+
+    .btn {
+      flex: 1;
+      height: px2rem(88px);
+      max-width: px2rem(600px);
+      border-radius: px2rem(64px);
+      border: 1px solid var(--text-text-pri-02, #3D7BFF);
+      color: #3D7BFF;
+      background: transparent;
+      position: relative;
+
+      &.continue {
+        background: linear-gradient(224.03deg, rgba(45, 114, 232, 0.8) 8.38%, rgba(67, 25, 130, 0.8) 89.03%);
+        color: #fff;
+        margin-left: px2rem(32px);
+
+        &::before {
+          content: "";
+          width: calc(100% + 2px);
+          height: calc(100% + 2px);
+          position: absolute;
+          top: -1px;
+          left: -1px;
+          background: linear-gradient(224.03deg, rgba(248, 251, 255, 0.1) 8.38%, rgba(191, 148, 255, 0.1) 89.03%);
+          border-radius: px2rem(64px);
+          z-index: -1;
+        }
+      }
+    }
+  }
+}
+</style>

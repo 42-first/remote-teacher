@@ -340,6 +340,12 @@ const router = new Router({
           name: 'subjective_team_history_t_v3',
           component: () => import('@/lesson/common/result-history'),
           meta
+        },
+        {
+          path: 'quickanswer',
+          name: 'quickanswer_v3',
+          component: () => import('@/lesson/teacher/quickanswer'),
+          meta
         }
       ]
     },
