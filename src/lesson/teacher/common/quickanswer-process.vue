@@ -20,8 +20,8 @@
 const QuickAnswerState = {
   // 
   INIT: 0,
-  COUNTDOWN: 1,
-  ANSWERING: 2,
+  PREPARE: 1,
+  COUNTDOWN: 2,
   ENDED: 3
 }
 export default {
@@ -42,9 +42,9 @@ export default {
     btnText: function() {
       if(this.status == QuickAnswerState.INIT) {
         return '开始抢答'
-      } else if(this.status == QuickAnswerState.COUNTDOWN) {
+      } else if(this.status == QuickAnswerState.PREPARE) {
         return `${this.waiting}s 后开始抢答`
-      } else if(this.status == QuickAnswerState.ANSWERING) {
+      } else if(this.status == QuickAnswerState.COUNTDOWN) {
         return `抢答中`
       } else {
         return '继续抢答'
@@ -52,7 +52,7 @@ export default {
     },
 
     isAnswering: function() {
-      return this.status == QuickAnswerState.COUNTDOWN || this.status == QuickAnswerState.ANSWERING
+      return this.status == QuickAnswerState.COUNTDOWN || this.status == QuickAnswerState.PREPARE
     }
   },
 

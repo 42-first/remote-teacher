@@ -32,6 +32,7 @@
       :records="records"
       @toggleRecords="handleToggleRecords"
       @toggleEdit="handleToggleEdit"
+      @updateScore="addScore"
     />
   </div>
 </template>
@@ -48,8 +49,8 @@ import QuickAnswerScore from './common/quickanswer-score.vue'
 const QuickAnswerState = {
   // 
   INIT: 0,
-  COUNTDOWN: 1,
-  ANSWERING: 2,
+  PREPARE: 1,
+  COUNTDOWN: 2,
   ENDED: 3
 }
 
@@ -60,12 +61,12 @@ export default {
   name: 'quickanswer',
   data() {
     return {
-      status: QuickAnswerState.INIT,
+      status: QuickAnswerState.ENDED,
       waiting: 5,
       countdown: 10,
       records: [],
       quickAnswerId: '',
-      jumpInUser: null,
+      jumpInUser: {},
       isAnswering: false,
       signin: 0,
       editUser: null,
@@ -89,9 +90,9 @@ export default {
     btnText() {
       if(this.status === QuickAnswerState.INIT) {
         return '开始抢答'
-      } else if(this.status === QuickAnswerState.COUNTDOWN) {
+      } else if(this.status === QuickAnswerState.PREPARE) {
         return `${this.waiting}s 后开始抢答`
-      } else if(this.status === QuickAnswerState.ANSWERING) {
+      } else if(this.status === QuickAnswerState.COUNTDOWN) {
         return `${this.countdown}s`
       } else {
         return '继续抢答'
@@ -182,7 +183,6 @@ export default {
     * @method 发起抢答
     */
     startQuickAnswer() {
-      this.status = QuickAnswerState.COUNTDOWN
       let URL = API.lesson.start_quick_answer
       return request.post(URL)
       .then(res => {
@@ -233,7 +233,7 @@ export default {
     handleStarted(val) {
       let { id, prepare, limit, now, start } = val
       this.quickAnswerId = id
-      this.status = QuickAnswerState.COUNTDOWN
+      this.status = QuickAnswerState.PREPARE
       this.waiting = Math.ceil((prepare - (now - start)) / 1000)
       this.countdown = limit / 1000
       this.handleStartPrepare()
@@ -250,7 +250,7 @@ export default {
           this.waiting--
         }else {
           clearInterval(prepareTimer)
-
+          this.status = QuickAnswerState.COUNTDOWN
           this.handleStartCountdown()
         }
       }, 1000)
