@@ -173,6 +173,12 @@ var mixin = {
               this.getAllPres(msg);
             }
 
+            // 当前有抢答
+            if(msg.jumpinid) {
+              this.hasJumpIn = true
+              this.getJumpInInfo(msg.jumpinid)
+            }
+
             break
 
           // 开启互动 { op: 'startinteractive', lessonid }
@@ -573,6 +579,14 @@ var mixin = {
               });
             }
             
+            break;
+
+          case 'jumpinstart':
+            this.handleJumpInStart(msg.jumpin);
+            break;
+
+          case 'jumpinend':
+            this.handleJumpInEnd(msg)
             break;
             
           default:

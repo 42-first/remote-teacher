@@ -300,6 +300,8 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       set_quick_answer_score: '/api/v3/lesson/rapid-answer/score',
       // 学生抢答
       student_quick_answer: '/api/v3/lesson/rapid-answer/participate',
+      // 获取抢答信息
+      get_quick_answer_info: '/api/v3/lesson/rapid-answer/get-info',
     },
 
     /*------------------*\

@@ -1436,6 +1436,24 @@ var actionsMixin = {
       });
     },
 
+    /**
+     * @method 开始抢答
+     * @param {*} msg 
+     */
+    handleJumpInStart(msg) {
+      this.hasJumpIn = true;
+      this.jumpInInfo = msg;
+    },
+
+    /**
+     * @method 结束抢答
+     * @param {*} msg 
+     */
+    handleJumpInEnd(msg) {
+      this.hasJumpIn = false;
+      this.jumpInInfo = null;
+    },
+
   }
 }
 
