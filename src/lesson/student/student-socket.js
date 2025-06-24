@@ -587,6 +587,10 @@ var mixin = {
 
           case 'jumpinend':
             this.handleJumpInEnd(msg)
+            if(msg.event) {
+              item = msg['event'];
+              item.show && this.addMessage({ type: 1, message: item['title'], event: item }, true);
+            }
             break;
             
           default:
