@@ -153,7 +153,7 @@
         <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> <!-- 已签到 -->{{ $t('yiqiandao') }}</span>
         <span class="f12">{{ identityInfo.name }} {{ identityInfo.schoolNumber }}</span>
       </div>
-      <jumpin v-if="hasJumpIn" :info="jumpinInfo"></jumpin>
+      <jumpin v-if="hasJumpIn" :info="jumpInInfo"></jumpin>
       <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
@@ -506,7 +506,7 @@
         lectureNoteTime: 0,
         // 当前是否有抢答
         hasJumpIn: false,
-        jumpinInfo: null,
+        jumpInInfo: null,
       };
     },
     components: {
