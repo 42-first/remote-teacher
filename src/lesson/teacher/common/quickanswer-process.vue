@@ -91,7 +91,7 @@ export default {
   }
 
   .label {
-    padding: 0 px2rem(60px);
+    padding: px2rem(40px) px2rem(60px);
   }
 
   .empty {

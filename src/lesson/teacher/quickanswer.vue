@@ -1,6 +1,6 @@
 <template>
   <div class="quickanswer__wrapper">
-    <div class="records-btn box-center f13" @click="handleToggleRecords">
+    <div class="records-btn box-center f13" @click="handleToggleRecords" v-if="records.length">
       已抢答
       <i class="iconfont icon-jiantoudan-xiangyou f12"></i>
     </div>
@@ -17,7 +17,7 @@
     ></component>
 
     <footer class="footer box-center">
-      <div class="btn box-center">继续上课</div>
+      <div class="btn box-center" @click="handleClose">继续上课</div>
       <div class="btn box-center continue" v-if="jumpInUser" @click="handleJumpIn">继续抢答</div>
     </footer>
 
@@ -25,6 +25,7 @@
       v-if="visibleEdit"
       :editUser="editUser"
       @toggleEdit="handleToggleEdit"
+      @updateScore="addScore"
     />
 
     <QuickAnswerRecords
@@ -61,17 +62,18 @@ export default {
   name: 'quickanswer',
   data() {
     return {
-      status: QuickAnswerState.ENDED,
+      status: QuickAnswerState.INIT,
       waiting: 5,
       countdown: 10,
       records: [],
       quickAnswerId: '',
-      jumpInUser: {},
+      jumpInUser: null,
       isAnswering: false,
       signin: 0,
       editUser: null,
       visibleEdit: false,
       visibleRecords: false,
+      noSend: false
     }
   },
   components: {
@@ -127,6 +129,8 @@ export default {
       T_PUBSUB.unsubscribe('jumpin-msg')
 
       T_PUBSUB.subscribe('jumpin-msg.closedmask', (_name, msg) => {
+        if(self.noSend) return
+        self.noSend = true
         self.handleClose()
         self.$router.back()
       })
@@ -187,7 +191,7 @@ export default {
       return request.post(URL)
       .then(res => {
         if(res && res.code == 0) {
-          return res.data.id
+          this.quickAnswerId = res.data.id
         }
       })
     },
@@ -196,10 +200,10 @@ export default {
     /**
     * @method 结束抢答
     */
-    endQuickAnswer(id) {
+    endQuickAnswer() {
       let URL = API.lesson.end_quick_answer
       let params = {
-        id
+        id: this.quickAnswerId
       }
       return request.post(URL, params)
       .then(res => {
@@ -221,6 +225,15 @@ export default {
       return request.post(URL, params)
       .then(res => {
         if(res && res.code == 0) {
+          this.$toast({
+            message: '加分成功',
+            duration: 3000
+          })
+          this.getRecords()
+
+          if(this.jumpInUser.id == id) {
+            this.jumpInUser.score = score
+          }
           return res.code
         }
       })
@@ -234,8 +247,8 @@ export default {
       let { id, prepare, limit, now, start } = val
       this.quickAnswerId = id
       this.status = QuickAnswerState.PREPARE
-      this.waiting = Math.ceil((prepare - (now - start)) / 1000)
-      this.countdown = limit / 1000
+      this.waiting = prepare
+      this.countdown = limit
       this.handleStartPrepare()
       this.isAnswering = true
     },
@@ -271,9 +284,13 @@ export default {
     },
 
     handleEnded(msg) {
+     countdownTimer && clearInterval(countdownTimer)
+      this.status = QuickAnswerState.ENDED
       if(msg.uid) {
-        this.jumpInUser = msg.uid
+        this.jumpInUser = Object.assign(msg, {id: this.quickAnswerId, score: 0})
       }
+
+      this.getRecords()
     },
 
     handleToggleEdit(user) {
@@ -295,6 +312,9 @@ export default {
 
   beforeDestroy() {
     T_PUBSUB.unsubscribe('jumpin-msg')
+    if(this.isAnswering) {
+      this.endQuickAnswer()
+    }
   },
 
 }

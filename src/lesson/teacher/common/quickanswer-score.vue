@@ -6,10 +6,10 @@
       </div>
       <div class="header f19 bold">加分</div>
       <div class="user-info box-start">
-        <img class="avatar" src="" alt="">
+        <img class="avatar" :src="editUser.avatar" alt="">
         <div class="info">
-          <p class="f15 bold">与小雨</p>
-          <p class="f13">123123</p>
+          <p class="f15 bold">{{editUser.name}}</p>
+          <p class="f13">{{editUser.number}}</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export default {
     },
 
     handleScore() {
-      this.$emit('updateScore', this.user.id, this.score * 100)
+      this.$emit('updateScore', this.editUser.id, this.score * 100)
     }
   },
 

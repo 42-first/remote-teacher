@@ -7,16 +7,16 @@
       </span>
     </div>
     <div class="list">
-      <div class="item box-between" v-for="item in 10" :key="item">
+      <div class="item box-between" v-for="item in records" :key="item.id">
         <div class="user box-start">
-          <img class="avatar" src="" alt="">
+          <img class="avatar" :src="item.avatar" alt="">
           <div>
-            <p class="f17 bold">与小雨</p>
-            <p class="f13 number">12123</p>
+            <p class="f17 bold">{{item.name}}</p>
+            <p class="f13 number">{{item.number}}</p>
           </div>
         </div>
-        <div class="score" v-if="item % 2">
-          <span class="f18 yellow">+1</span>
+        <div class="score" v-if="item.score">
+          <span class="f18 yellow">+{{item.score / 100}}</span>
           <i class="iconfont icon-bianji f18 ml8" @click="handleScore(item)"></i>
         </div>
         <div class="add-score box-center" v-else @click="handleScore(item)">
@@ -37,7 +37,7 @@ export default {
     }
   },
   props: {
-    
+    records: Array
   },
   computed: {
    

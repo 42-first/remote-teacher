@@ -6,13 +6,13 @@
     </div>
     <div class="card-container box-center">
       <div class="user-box box-center">
-        <img class="avatar" src="" alt="">
-        <p class="name f19 bold">刘晓宇</p>
-        <p class="number f13">234234234</p>
+        <img class="avatar" :src="user.avatar" alt="">
+        <p class="name f19 bold">{{ user.name }}</p>
+        <p class="number f13">{{user.number}}</p>
 
-        <div class="score box-center">
+        <div class="score box-center" v-if="score">
           <span class="f15 bold">加分: </span>
-          <span class="num f21 bold yellow">+1</span>
+          <span class="num f21 bold yellow">+{{score}}</span>
           <span class="edit" @click="handleVisibleEdit">
             <i class="iconfont icon-bianji f20"></i>
           </span>
@@ -41,6 +41,16 @@ export default {
    
   },
 
+  watch: {
+    user:  {
+      handler(newVal) {
+        this.score = newVal.score / 100 
+      }, 
+      deep: true
+      
+    }
+  },
+
   methods: {
     handleToggleScore(num) {
       if(this.score == num) {
@@ -53,7 +63,7 @@ export default {
     },
 
     handleVisibleEdit() {
-      this.$emit('toggleEdit', this.user)
+      this.$emit('toggleEdit', Object.assign(this.user, {score: this.score * 100}))
     }
   },
 
