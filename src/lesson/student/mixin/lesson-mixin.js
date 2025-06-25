@@ -936,7 +936,7 @@ let lessonMixin = {
 
       return request.get(URL, params)
       .then(res => {
-        this.jumpinInfo = res.data
+        this.jumpInInfo = res.data
       })
     }
   }

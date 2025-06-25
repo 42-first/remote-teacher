@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import { param } from 'jquery'
 export default {
   name: 'jumpin',
   data() {
@@ -20,21 +19,31 @@ export default {
     info: Object
   },
 
+  watch: {
+    info(newVal) {
+      if(newVal) {
+        this.init()
+      }
+    }
+  },
+
   computed: {
   },
 
   methods: {
     init() {
-      let { prepare, now, limit, start } = this.info
-      if(now - start >= prepare) {
+      if(!this.info) return
+      let { now, start } = this.info
+      if(now >= start) {
+        console.log(2222)
         this.isStart = true
       } else {
-        this.waiting = Math.ceil((prepare - (now - start)) / 1000)
+        this.timer && clearInterval(this.timer)
         this.timer = setInterval(() => {
-          if(this.waiting > 1) {
-            this.waiting--
-          } else {
-            clearInterval(this.timer)
+          now += 1000
+          console.log(now, start)
+          if(now >= start) {
+            clearInterval(this.timer) 
             this.isStart = true
           }
         }, 1000)
@@ -42,6 +51,7 @@ export default {
     },
 
     handleJumpIn() {
+      if(!this.isStart) return
       let URL = API.lesson.student_quick_answer
       let params = {
         id: this.info.id
