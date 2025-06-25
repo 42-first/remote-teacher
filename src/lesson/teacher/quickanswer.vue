@@ -1,7 +1,7 @@
 <template>
   <div class="quickanswer__wrapper">
     <div class="records-btn box-center f13" @click="handleToggleRecords" v-if="records.length">
-      已抢答
+      <!-- 已抢答 -->{{ $t('quickanswerrecords') }}
       <i class="iconfont icon-jiantoudan-xiangyou f12"></i>
     </div>
     <component
@@ -17,8 +17,8 @@
     ></component>
 
     <footer class="footer box-center">
-      <div class="btn box-center" @click="handleClose">继续上课</div>
-      <div class="btn box-center continue" v-if="jumpInUser" @click="handleJumpIn">继续抢答</div>
+      <div class="btn box-center" @click="handleClose"><!-- 继续上课 --> {{ $t('backtoclass') }}</div>
+      <div class="btn box-center continue" v-if="jumpInUser" @click="handleJumpIn"><!-- 继续抢答 --> {{ $t('continuequickanswer') }}</div>
     </footer>
 
     <QuickAnswerScore
@@ -91,13 +91,13 @@ export default {
 
     btnText() {
       if(this.status === QuickAnswerState.INIT) {
-        return '开始抢答'
+        return this.$t('startquickanswer') || '开始抢答'
       } else if(this.status === QuickAnswerState.PREPARE) {
-        return `${this.waiting}s 后开始抢答`
+        return this.$t('quickanswerprepare') || `${this.waiting}s 后开始抢答`
       } else if(this.status === QuickAnswerState.COUNTDOWN) {
         return `${this.countdown}s`
       } else {
-        return '继续抢答'
+        return this.$t('continuequickanswer') || '继续抢答'
       }
     },
 

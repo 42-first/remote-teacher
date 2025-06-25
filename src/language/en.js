@@ -476,6 +476,16 @@ let pages = {
   "guestnotdiscuss": "Auditors cannot join group activities",
   "watchmodenotdiscuss": "Current view cannot join activities",
   "pleaseenter": "Please enter",
+  "quickanswerrecords": "已抢答",
+  "backtoclass": "继续上课",
+  "continuequickanswer": "继续抢答",
+  "startquickanswer": "开始抢答",
+  "quickanswerprepare": "{count}s 后开始抢答",
+  "quickanswersignedin": `当前共有<span class="f24 num">{signin}</span>位学生进入课堂`,
+  "quickanswertips": "举手发言太常规?开启抢答点燃学生热情，轻松把控课堂节奏～",
+  "nostudentjumpin": "抢答席位暂空，谁来破局？",
+  "quickansweraddscore": "加分",
+  "quickanswersuccess": "抢答成功",
 
   // 给学生增加备注需求增加
   behavior: {

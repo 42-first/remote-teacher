@@ -2,7 +2,7 @@
   <section class="jumpin__result__wrapper">
     <div class="box-center">
       <img src="~images/teacher/jumpin-success.png" class="mr12" alt="">
-      <span class="f19 bold">抢答成功</span>
+      <span class="f19 bold"><!-- 抢答成功 -->{{ $t('quickanswersuccess') }}</span>
     </div>
     <div class="card-container box-center">
       <div class="user-box box-center">
@@ -11,7 +11,7 @@
         <p class="number f13">{{user.number}}</p>
 
         <div class="score box-center" v-if="score">
-          <span class="f15 bold">加分: </span>
+          <span class="f15 bold"><!-- 加分 -->{{ $t('quickansweraddscore') }}: </span>
           <span class="num f21 bold yellow">+{{score}}</span>
           <span class="edit" @click="handleVisibleEdit">
             <i class="iconfont icon-bianji f20"></i>

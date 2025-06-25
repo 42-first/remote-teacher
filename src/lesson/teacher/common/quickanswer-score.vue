@@ -4,7 +4,7 @@
       <div class="close box-center" @click="handleClose">
         <i class="iconfont icon-cuowu f24"></i>
       </div>
-      <div class="header f19 bold">加分</div>
+      <div class="header f19 bold"><!-- 加分 -->{{ $t('quickansweraddscore') }}</div>
       <div class="user-info box-start">
         <img class="avatar" :src="editUser.avatar" alt="">
         <div class="info">
@@ -20,8 +20,8 @@
       </div>
 
       <div class="actions-btns box-center">
-        <div class="actions-btn box-center f16 bold" @click="handleClose">取消</div>
-        <div class="actions-btn box-center f16 bold confirm" @click="handleScore">确定</div>
+        <div class="actions-btn box-center f16 bold" @click="handleClose"><!-- 取消 --> {{ $t('cancel') }} </div>
+        <div class="actions-btn box-center f16 bold confirm" @click="handleScore"><!-- 确定 --> {{ $t('confirm') }} </div>
       </div>
     </div>
   </section>

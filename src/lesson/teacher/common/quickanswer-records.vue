@@ -1,7 +1,7 @@
 <template>
   <section class="jumpin__records__wrapper">
     <div class="header box-between">
-      <span class="f15 bold">已抢答</span>
+      <span class="f15 bold"><!-- 已抢答 -->{{ $t('quickanswerrecords') }}</span>
       <span class="close" @click="handleClose">
         <i class="iconfont icon-cuowu f18"></i>
       </span>
@@ -21,7 +21,7 @@
         </div>
         <div class="add-score box-center" v-else @click="handleScore(item)">
           <i class="iconfont icon-tianjia1 f16"></i>
-          加分
+          <!-- 加分 -->{{ $t('quickansweraddscore') }}
         </div>
       </div>
     </div>

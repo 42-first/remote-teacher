@@ -1,10 +1,10 @@
 <template>
   <section class="jumpin__process__wrapper">
-    <p class="signin f13">当前共有<span class="f24 num">{{ signin }}</span>位学生进入课堂</p>
-    <p class="label f17" v-if="status == QuickAnswerState.INIT">举手发言太常规?开启抢答点燃学生热情，轻松把控课堂节奏～</p>
+    <p class="signin f13" v-html="$t('quickanswersignedin', {signin: signin})">当前共有<span class="f24 num">{{ signin }}</span>位学生进入课堂</p>
+    <p class="label f17" v-if="status == QuickAnswerState.INIT"><!-- 举手发言太常规?开启抢答点燃学生热情，轻松把控课堂节奏～ -->{{ $t('quickanswertips') }} </p>
     <div class="empty" v-else>
       <img src="~images/teacher/jumpin-empty.png" alt="">
-      <p class="f17"> 抢答席位暂空，谁来破局？</p>
+      <p class="f17"> <!-- 抢答席位暂空，谁来破局？ -->{{ $t('nostudentjumpin') }}</p>
     </div>
 
     <div class="control-btn box-center">
@@ -40,14 +40,14 @@ export default {
   },
   computed: {
     btnText: function() {
-      if(this.status == QuickAnswerState.INIT) {
-        return '开始抢答'
-      } else if(this.status == QuickAnswerState.PREPARE) {
-        return `${this.waiting}s 后开始抢答`
-      } else if(this.status == QuickAnswerState.COUNTDOWN) {
-        return `抢答中`
+      if(this.status === QuickAnswerState.INIT) {
+        return this.$t('startquickanswer') || '开始抢答'
+      } else if(this.status === QuickAnswerState.PREPARE) {
+        return this.$t('quickanswerprepare') || `${this.waiting}s 后开始抢答`
+      } else if(this.status === QuickAnswerState.COUNTDOWN) {
+        return `${this.countdown}s`
       } else {
-        return '继续抢答'
+        return this.$t('continuequickanswer') || '继续抢答'
       }
     },
 
