@@ -477,16 +477,18 @@ let pages = {
   "guestnotdiscuss": "旁听生无法参与分组活动",
   "watchmodenotdiscuss": "当前视角无法参与分组活动",
   "pleaseenter": "请输入",
+  "quickanswer": "抢答",
   "quickanswerrecords": "已抢答",
   "backtoclass": "继续上课",
   "continuequickanswer": "继续抢答",
   "startquickanswer": "开始抢答",
-  "quickanswerprepare": "{count}s 后开始抢答",
+  "quickanswerprepare": "{count}s <br/> <span class='f15'> 后开始抢答</span>",
   "quickanswersignedin": `当前共有<span class="f24 num">{signin}</span>位学生进入课堂`,
   "quickanswertips": "举手发言太常规?开启抢答点燃学生热情，轻松把控课堂节奏～",
   "nostudentjumpin": "抢答席位暂空，谁来破局？",
   "quickansweraddscore": "加分",
   "quickanswersuccess": "抢答成功",
+  "quickanswering": "{count}s <br/> <span class='f15'>抢答中...</span>",
 
 
   // 给学生增加备注需求增加

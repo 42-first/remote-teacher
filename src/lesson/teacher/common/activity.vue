@@ -75,7 +75,7 @@
         <div class="iconbox" style="background: #5F8CFF;">
           <i class="iconfont icon-fenzu1 f21"></i>
         </div>
-        抢答
+        <!-- 抢答 --> {{$t('quickanswer')}}
       </div>
 			<div class="dakai-box">
         <i class="iconfont icon-dakai f21"></i>

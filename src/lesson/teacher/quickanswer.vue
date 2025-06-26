@@ -93,7 +93,7 @@ export default {
       if(this.status === QuickAnswerState.INIT) {
         return this.$t('startquickanswer') || '开始抢答'
       } else if(this.status === QuickAnswerState.PREPARE) {
-        return this.$t('quickanswerprepare') || `${this.waiting}s 后开始抢答`
+        return this.$t('quickanswerprepare', {count: this.waiting}) || `${this.waiting}s 后开始抢答`
       } else if(this.status === QuickAnswerState.COUNTDOWN) {
         return `${this.countdown}s`
       } else {

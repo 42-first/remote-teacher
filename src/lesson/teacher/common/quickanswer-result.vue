@@ -6,6 +6,7 @@
     </div>
     <div class="card-container box-center">
       <div class="user-box box-center">
+        <img src="~images/teacher/quickanswer-light.png" class="light" alt="">
         <img class="avatar" :src="user.avatar" alt="">
         <p class="name f19 bold">{{ user.name }}</p>
         <p class="number f13">{{user.number}}</p>
@@ -93,6 +94,24 @@ export default {
     height: px2rem(600px);
     background: #11215CB2;
     border-radius: px2rem(36px);
+    opacity: 0;
+    animation: fadeIn  1s linear both;
+
+    &::before {
+      position: absolute;
+      content: "";
+       width: px2rem(482px);
+      height: px2rem(572px);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(115.02% 101.06% at 97.1% 2.81%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%) ,
+        radial-gradient(80.09% 70.37% at 8.43% 98.55%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
+      border-radius: px2rem(36px);  
+      z-index: -1;
+      animation: gradientRotation 1s linear infinite;
+      overflow: hidden;
+    }
 
     .user-box {
       width: px2rem(480px);
@@ -101,28 +120,16 @@ export default {
       position: relative;
       border-radius: px2rem(36px);  
       flex-direction: column;
+      overflow: hidden;
 
-
-      &::before {
-        position: absolute;
-        content: "";
-        width: calc(100% + 4px);
-        height: calc(100% + 4px);
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(115.02% 101.06% at 97.1% 2.81%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%) ,
-          radial-gradient(80.09% 70.37% at 8.43% 98.55%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-        border-radius: px2rem(36px);  
-        z-index: -1;
-        animation: rotate .5s linear infinite;
-      }
 
       .avatar {
         width: px2rem(166px);
         height: px2rem(166px);
         border-radius: 50%;
         margin-bottom: px2rem(36px);
+        position: relative;
+        z-index: 2;
       }
 
       .name {
@@ -136,21 +143,33 @@ export default {
     }
   }
 
-  @keyframes rotate {
+  @keyframes gradientRotation {
     0% {
-      background: linear-gradient(0deg, rgba(0, 92, 250, 0.19), rgba(255, 255, 255, 0.7));
+        background: radial-gradient(115.02% 101.06% at 97% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
+    }
+    12.5% {
+        background: radial-gradient(115.02% 101.06% at 116.5% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
     }
     25% {
-      background: linear-gradient(90deg, rgba(0, 92, 250, 0.19), rgba(255, 255, 255, 0.7));
+        background: radial-gradient(115.02% 101.06% at 97% 97%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
+    }
+    37.5% {
+        background: radial-gradient(115.02% 101.06% at 50% 116.5%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
     }
     50% {
-      background: linear-gradient(180deg, rgba(0, 92, 250, 0.19), rgba(255, 255, 255, 0.7));
+        background: radial-gradient(115.02% 101.06% at 3% 97%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
+    }
+    62.5% {
+        background: radial-gradient(115.02% 101.06% at -16.5% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
     }
     75% {
-      background: linear-gradient(270deg, rgba(0, 92, 250, 0.19), rgba(255, 255, 255, 0.7));
+        background: radial-gradient(115.02% 101.06% at 3% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
+    }
+    87.5% {
+        background: radial-gradient(115.02% 101.06% at 50% -16.5%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
     }
     100% {
-      background: linear-gradient(360deg, rgba(0, 92, 250, 0.19), rgba(255, 255, 255, 0.7));
+        background: radial-gradient(115.02% 101.06% at 97% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
     }
   }
 
@@ -168,6 +187,18 @@ export default {
       border: 1px solid #FFFFFF66;
       border-radius: px2rem(36px);  
       color: #fff;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

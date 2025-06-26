@@ -8,10 +8,10 @@
     </div>
 
     <div class="control-btn box-center">
-      <div class="bg"></div>
+      <div class="bg" :class="{'ani': isAnswering}"></div>
       <div class="line" :class="{'ani': isAnswering}"></div>
      
-      <div class="btn-inner box-center f21 bold" @click="handleStart">{{ btnText}}</div>
+      <div class="btn-inner box-center f21 bold" :class="{'being': isAnswering}" @click="handleStart" v-html="btnText">{{ btnText}}</div>
     </div>
   </section>
 </template>
@@ -43,9 +43,9 @@ export default {
       if(this.status === QuickAnswerState.INIT) {
         return this.$t('startquickanswer') || '开始抢答'
       } else if(this.status === QuickAnswerState.PREPARE) {
-        return this.$t('quickanswerprepare') || `${this.waiting}s 后开始抢答`
+        return this.$t('quickanswerprepare', {count: this.waiting}) || `${this.waiting}s <br/> 后开始抢答`
       } else if(this.status === QuickAnswerState.COUNTDOWN) {
-        return `${this.countdown}s`
+        return this.$t('quickanswering', {count: this.countdown}) || `${this.countdown}s <br/> 抢答中...`
       } else {
         return this.$t('continuequickanswer') || '继续抢答'
       }
@@ -112,12 +112,13 @@ export default {
 
     .bg {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: 100%;
       height: 100%;
       background: url(~images/teacher/jumpin-btn-bg.png)no-repeat center center/contain;
+
+      &.ani {
+        animation: anim 2s linear infinite .3s;
+      }
     }
 
     .line {
@@ -126,14 +127,14 @@ export default {
       background: url(~images/teacher/jumpin-btn-line.png)no-repeat center center/contain;
 
       &.ani {
-        animation: anim 1s linear infinite;
+        animation: anim 2s linear infinite;
       }
     }
 
     @keyframes anim {
       0%  { transform: scale(1) ;   opacity: 0;  }
       50% { opacity: 1; }
-      100% { transform: scale(1.2) ;  opacity: 0;  }
+      100% { transform: scale(1.5) ;  opacity: 0;  }
     }
 
     .btn-inner {
@@ -146,19 +147,24 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      flex-direction: column;
 
-      &::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: px2rem(320px);
-        height: px2rem(320px);
-        border-radius: 50%;
-        background: linear-gradient(224.03deg, rgba(45, 114, 232, 0.6) 8.38%, rgba(67, 25, 130, 0.6) 89.03%);
-        z-index: -1;
+      &.being {
+        background: linear-gradient(224.03deg, rgba(45, 114, 232, 0.3) 8.38%, rgba(67, 25, 130, 0.3) 89.03%);
       }
+
+      // &::before {
+      //   content: "";
+      //   position: absolute;
+      //   top: 50%;
+      //   left: 50%;
+      //   transform: translate(-50%, -50%);
+      //   width: px2rem(320px);
+      //   height: px2rem(320px);
+      //   border-radius: 50%;
+      //   background: linear-gradient(224.03deg, rgba(45, 114, 232, 0.6) 8.38%, rgba(67, 25, 130, 0.6) 89.03%);
+      //   z-index: -1;
+      // }
     }
   }
 }

@@ -476,6 +476,7 @@ let pages = {
   "guestnotdiscuss": "Auditors cannot join group activities",
   "watchmodenotdiscuss": "Current view cannot join activities",
   "pleaseenter": "Please enter",
+  "quickanswer": "抢答",
   "quickanswerrecords": "已抢答",
   "backtoclass": "继续上课",
   "continuequickanswer": "继续抢答",

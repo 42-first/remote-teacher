@@ -1,7 +1,10 @@
 <template>
   <div class="jumpin__wrapper box-between">
-    <p>老师发起了抢答，快来参与吧</p>
-    <div class="jumpin" :class="{'disabled': !isStart}" @click="handleJumpIn">抢</div>
+    <div class="text">
+      <p class="f18">Hi,老师发起了抢答</p>
+      <p class="f15">快点击参与~</p>
+    </div>
+    <div class="jumpin box-center f28" :class="{'disabled': !isStart}" @click="handleJumpIn">抢</div>
   </div>
 </template>
 
@@ -94,6 +97,44 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "~@/style/common_rem";
+.jumpin__wrapper {
+  margin: px2rem(30px) px2rem(34px);
+  padding: px2rem(30px);
+  background: url('https://fe-static-yuketang.yuketang.cn/fe/static/assets/remote/stu-jumpin-btn.png') no-repeat center center/contain;
+  color: #fff;
 
+  .text {
+    text-align: left;
+  }
+
+  .jumpin {
+    width: px2rem(128px);
+    height: px2rem(128px);
+    color: #2A498A;
+    background: url('https://fe-static-yuketang.yuketang.cn/fe/static/assets/remote/stu-jumpin-yellow.png') no-repeat center center/contain;
+    animation: shake 0.5s linear infinite;
+
+    &.disabled {
+      color: #919196;
+      background-image: url('https://fe-static-yuketang.yuketang.cn/fe/static/assets/remote/stu-jumpin-gray.png');
+      animation: none;
+    }
+  }
+
+  @keyframes shake {
+    0% { transform: translateZ(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+}
 </style>
