@@ -127,6 +127,7 @@ let pages = {
   "uoloadvideo": "上传视频",
   "uploadpicvideo": "上传图片/视频（最多9张图片和1个视频）",
   "reuploadpiconly" : "当前仅支持图片格式，请重新上传",
+  "reuploadvideoonly": "当前仅支持视频格式，请重新上传",
   "subjectivepro" : "主观题",
   "answerarea" : "作答区域" ,
   "contentsizelimit" : "内容限制1000字可插入1张图片",

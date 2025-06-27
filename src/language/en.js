@@ -127,6 +127,7 @@ let pages = {
   "uoloadvideo": "Video",
   "uploadpicvideo": "Upload picture/video (up to 9 pictures and 1 video)",
   "reuploadpiconly" : "We only support picture formats, please try again.",
+  "reuploadvideoonly": "We only support video formats, please try again.",
   "subjectivepro" : "Subjective Question",
   "answerarea" : "Answer here (Please write your answer here.)",
   "contentsizelimit" : "Maximum 1000 characters and one picture",
