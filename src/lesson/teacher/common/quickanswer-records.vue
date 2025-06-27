@@ -106,8 +106,8 @@ export default {
       }
 
       .add-score {
-        padding: px2rem(18px) 0;
-        width: px2rem(152px);
+        padding: px2rem(18px) px2rem(10px);
+        min-width: px2rem(152px);
         color: #3D7BFF;
         background: var(--fill-colorful-fill-pri-0810, #3D7BFF1A);
         border-radius: px2rem(72px);
