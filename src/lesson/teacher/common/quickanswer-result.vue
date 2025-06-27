@@ -140,6 +140,15 @@ export default {
         margin-top: px2rem(88px);
         gap: px2rem(16px);
       }
+
+      .light {
+        position: absolute;
+        top: px2rem(-110px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: px2rem(286px);
+        height: px2rem(420px);
+      }
     }
   }
 
