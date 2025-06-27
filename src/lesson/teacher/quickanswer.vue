@@ -1,6 +1,6 @@
 <template>
-  <div class="quickanswer__wrapper">
-    <div class="records-btn box-center f13" @click="handleToggleRecords" v-if="records.length">
+  <div class="quickanswer__wrapper" @click="handleCloseModal">
+    <div class="records-btn box-center f13" @click.stop="handleToggleRecords" v-if="records.length">
       <!-- 已抢答 -->{{ $t('quickanswerrecords') }}
       <i class="iconfont icon-jiantoudan-xiangyou f12"></i>
     </div>
@@ -300,6 +300,11 @@ export default {
 
     handleToggleRecords() {
       this.visibleRecords = !this.visibleRecords
+    },
+
+    handleCloseModal() {
+      this.visibleEdit = false
+      this.visibleRecords = false
     }
 
   },

@@ -1,8 +1,8 @@
 <template>
-  <section class="jumpin__records__wrapper">
+  <section class="jumpin__records__wrapper" @click.stop="">
     <div class="header box-between">
       <span class="f15 bold"><!-- 已抢答 -->{{ $t('quickanswerrecords') }}</span>
-      <span class="close" @click="handleClose">
+      <span class="close" @click.stop="handleClose">
         <i class="iconfont icon-cuowu f18"></i>
       </span>
     </div>
@@ -17,9 +17,9 @@
         </div>
         <div class="score" v-if="item.score">
           <span class="f18 yellow">+{{item.score / 100}}</span>
-          <i class="iconfont icon-bianji f18 ml8" @click="handleScore(item)"></i>
+          <i class="iconfont icon-bianji f18 ml8" @click.stop="handleScore(item)"></i>
         </div>
-        <div class="add-score box-center" v-else @click="handleScore(item)">
+        <div class="add-score box-center" v-else @click.stop="handleScore(item)">
           <i class="iconfont icon-tianjia1 f16"></i>
           <!-- 加分 -->{{ $t('quickansweraddscore') }}
         </div>

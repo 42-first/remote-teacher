@@ -1,6 +1,6 @@
 <template>
-  <section class="jumpin__score__wrapper">
-    <div class="container">
+  <section class="jumpin__score__wrapper" @click.stop="handleClose">
+    <div class="container" @click.stop="">
       <div class="close box-center" @click="handleClose">
         <i class="iconfont icon-cuowu f24"></i>
       </div>
@@ -47,7 +47,7 @@ export default {
   methods: {
     // 分数减
     handlereduce() {
-      if(this.score >1) {
+      if(this.score > 0) {
         this.score--
       }
     },
@@ -69,7 +69,7 @@ export default {
   },
 
   created() {
-    this.score = this.editUser.score ? this.editUser.score / 100 : ''
+    this.score = this.editUser.score ? this.editUser.score / 100 : 0
   },
 
   beforeDestroy() {
