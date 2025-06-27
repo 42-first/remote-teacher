@@ -344,6 +344,10 @@ function socketProcessMessage(msg){
   // pc端发题，通知我
   if (msg.op == 'unlockproblem') {
     self.$store.commit('set_isProblemPublished', true)
+    // 课件更新后要检测题目状态 之前发题后没有记录 只在翻页的时候存储了 导致题目状态不正确
+    self.setData({
+      unlockedproblem: msg.unlockedproblem
+    })
     return
   }
 
