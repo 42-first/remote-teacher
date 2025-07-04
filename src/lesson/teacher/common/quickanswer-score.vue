@@ -15,7 +15,7 @@
 
       <div class="setting-box box-center">
         <p class="settings__content--reduce box-center" @click="handlereduce"><i class="iconfont icon-jiafenjianhao f24 blue"></i></p>
-        <input class="settings__content--input" type="tel" v-model="score" :max="MaxScore" @focus="isFocus = true" @blur="isFocus = false"/>
+        <input class="settings__content--input" type="number" v-model="score" :max="MaxScore" @focus="isFocus = true" @blur="isFocus = false"/>
         <p class="settings__content--reduce box-center" @click="handleadd"><i class="iconfont icon-jiafenjiahao f24 blue"></i></p>
       </div>
 
@@ -42,6 +42,17 @@ export default {
   },
   computed: {
    
+  },
+
+  watch: {
+    score(newVal) {
+      let num = Number(newVal)
+      if(num > MaxScore) {
+        this.score = MaxScore
+      } else if(num < 1) {
+        this.score = 0
+      }
+    }
   },
 
   methods: {
