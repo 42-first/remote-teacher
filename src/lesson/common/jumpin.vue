@@ -57,7 +57,7 @@ export default {
       if(!this.isStart) return
       if(this.$parent.role == 6) {
         this.$toast({
-          message: '旁听生无法抢答',
+          message: this.$i18n.t('gueststudentnotquickanswer') || '旁听生无法抢答',
           duration: 3000
         })
 

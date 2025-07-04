@@ -490,6 +490,7 @@ let pages = {
   "quickansweraddscore": "加分",
   "quickanswersuccess": "抢答成功",
   "quickanswering": "{count}s <br/> <span class='f15'>抢答中...</span>",
+  "gueststudentnotquickanswer": "旁听生无法抢答",
 
 
   // 给学生增加备注需求增加

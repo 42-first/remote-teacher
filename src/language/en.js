@@ -488,6 +488,7 @@ let pages = {
   "quickansweraddscore": "Add Points",
   "quickanswersuccess": "Answered!",
   "quickanswering": "Quick answering...",
+  "gueststudentnotquickanswer": "Guest students cannot join quick answer",
 
   // 给学生增加备注需求增加
   behavior: {
