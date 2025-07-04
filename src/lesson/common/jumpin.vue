@@ -55,6 +55,15 @@ export default {
 
     handleJumpIn() {
       if(!this.isStart) return
+      if(this.$parent.role == 6) {
+        this.$toast({
+          message: '旁听生无法抢答',
+          duration: 3000
+        })
+
+        return
+      }
+
       let URL = API.lesson.student_quick_answer
       let params = {
         id: this.info.id
