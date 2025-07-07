@@ -812,7 +812,7 @@
       color: #fff;
       background: rgba(40,207,110,0.7);
 
-      border-radius: 4px;
+      border-radius: 0.4267rem;
 
       .paper-txt {
         text-align: left;
