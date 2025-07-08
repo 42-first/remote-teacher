@@ -489,7 +489,7 @@ let pages = {
   "quickanswersuccess": "Answered!",
   "quickanswering": "Quick answering...",
   "gueststudentnotquickanswer": "Guest students cannot join quick answer",
-  "newquickanswer": "Hi, teacher launched a Quick Answer",
+  "newquickanswer": "Hi, Quick Answer started",
   "clicktojump": "Click to join now!",
   "jumpin": "Answer",
   "quickanswerend": "Quick Answer ended",

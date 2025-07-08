@@ -4,7 +4,7 @@
       <p class="f18"><!-- Hi,老师发起了抢答 --> {{ $t('newquickanswer') }} </p>
       <p class="f15"><!-- 快点击参与~ --> {{ $t('clicktojump') }} </p>
     </div>
-    <div class="jumpin box-center bold f30"  @click="handleJumpIn"><!-- 抢~ --> {{ $t('jumpin') }} </div>
+    <div class="jumpin box-center bold" :class="lang == 'en' ? 'f15' : 'f30'"  @click="handleJumpIn"><!-- 抢~ --> {{ $t('jumpin') }} </div>
   </div>
 </template>
 
@@ -15,7 +15,8 @@ export default {
     return {
       isStart: false,
       waiting: 0,
-      timer: null
+      timer: null,
+      lang: i18n.locale
     }
   },
   props: {
