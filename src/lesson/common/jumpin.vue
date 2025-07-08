@@ -1,10 +1,10 @@
 <template>
   <div class="jumpin__wrapper box-between" :class="{'disabled': !isStart}">
     <div class="text">
-      <p class="f18">Hi,老师发起了抢答</p>
-      <p class="f15">快点击参与~</p>
+      <p class="f18"><!-- Hi,老师发起了抢答 --> {{ $t('newquickanswer') }} </p>
+      <p class="f15"><!-- 快点击参与~ --> {{ $t('clicktojump') }} </p>
     </div>
-    <div class="jumpin box-center bold f30"  @click="handleJumpIn">抢</div>
+    <div class="jumpin box-center bold f30"  @click="handleJumpIn"><!-- 抢~ --> {{ $t('jumpin') }} </div>
   </div>
 </template>
 
@@ -75,17 +75,17 @@ export default {
           let { status } = res.data
           if(status == 1) {
             this.$toast({
-              message: '抢答成功',
+              message: this.$i18n.t('quickanswersuccess') || '抢答成功',
               duration: 3000
             });
           } else if(status == 2) {
             this.$toast({
-              message: '抢答已结束',
+              message: this.$i18n.t('quickanswerend') || '抢答已结束',
               duration: 3000
             });
           } else {
             this.$toast({
-              message: '抢答失败',
+              message: this.$i18n.t('quickanswerfail') || '抢答失败',
               duration: 3000
             })
           }

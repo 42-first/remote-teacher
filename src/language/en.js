@@ -489,6 +489,13 @@ let pages = {
   "quickanswersuccess": "Answered!",
   "quickanswering": "Quick answering...",
   "gueststudentnotquickanswer": "Guest students cannot join quick answer",
+  "newquickanswer": "Hi, teacher launched a Quick Answer",
+  "clicktojump": "Click to join now!",
+  "jumpin": "Answer",
+  "quickanswerend": "Quick Answer ended",
+  "quickanswerfail": "Failed",
+  "JUMP_IN_NOBODY": "Quick Answer: No one jumped in",
+  "JUMP_IN": "Quick Answer: {0} jumped in",
 
   // 给学生增加备注需求增加
   behavior: {

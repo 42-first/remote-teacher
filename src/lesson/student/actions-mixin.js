@@ -23,6 +23,8 @@ const CodeList = [
   "INTERACTIVE_OFF",
   "TencentInteractive_ON",
   "TencentInteractive_OFF",
+  "JUMP_IN_NOBODY",
+  "JUMP_IN"
 ]
 
 var actionsMixin = {

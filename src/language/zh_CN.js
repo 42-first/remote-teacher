@@ -491,6 +491,14 @@ let pages = {
   "quickanswersuccess": "抢答成功",
   "quickanswering": "{count}s <br/> <span class='f15'>抢答中...</span>",
   "gueststudentnotquickanswer": "旁听生无法抢答",
+  "newquickanswer": "Hi,老师发起了抢答",
+  "clicktojump": "快点击参与~",
+  "jumpin": "抢",
+  "quickanswerend": "抢答已结束",
+  "quickanswerfail": "抢答失败",
+  "JUMP_IN_NOBODY": "抢答：本轮无人抢答",
+  "JUMP_IN": "抢答：本轮{0}抢答成功",
+  
 
 
   // 给学生增加备注需求增加
