@@ -905,6 +905,10 @@ let lessonMixin = {
       document.querySelector('.student__timeline-wrapper').style.overflowY = 'auto'
     },
 
+    handleTranslateLectureNote() {
+      this.translated = !this.translated
+    },
+
     getGroupDiscussStatus() {
       let URL = API.lesson.get_group_discuss_status
       return request.get(URL)

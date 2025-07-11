@@ -3,8 +3,11 @@
     <section class="lecture__container">
       <div class="header box-between">
         <div class="f17 bold"><!--课堂讲稿-->{{ $t('lectureNote') }}</div>
-        <div class="close" @click="$emit('close')">
-          <i class="iconfont icon-guanbi1 f20"></i>
+        <div class="actions-wrap box-center">
+          <div class="translate" v-if="hasTranslateNote" @click="handleTranslate">翻译</div>
+          <div class="close" @click="$emit('close')">
+            <i class="iconfont icon-guanbi1 f20"></i>
+          </div>
         </div>
       </div>
       <div
@@ -13,7 +16,12 @@
         @scroll="handleScroll"
       >
         <div class="note__item" :id="`note${item.id}`" v-for="(item, index) in lectureNotes" :key="index">
-          <div class="time f13">{{item.createTime | formatTime}}</div>
+          <div class="time f13">
+            <div class="bgwhite">{{item.createTime | formatTime}}</div>
+            <div class="last-view" v-if="lastViewIndex == index">
+              <div class="text">上次学到</div>
+            </div>
+          </div>
           <div class="text f16">{{item.content}}</div>
         </div>
       </div>
@@ -39,7 +47,8 @@
         hasNext: false,
         hasPrev: false,
         lastScrollTop: 0,
-        isPending: false
+        isPending: false,
+        lastViewIndex: -1
       }
     },
 
@@ -50,6 +59,10 @@
         setTimeout(()=>{
           noteEl && noteEl.scrollIntoView({ behavior: "instant", block: 'center' });
         }, 0)
+      },
+
+      translated(newVal) {
+        this.fetchLectureNotes()
       }
     },
 
@@ -57,6 +70,14 @@
       pptTime: {
         type: Number,
         default: 0
+      },
+      translated: {
+        type: Boolean,
+        default: false
+      },
+      hasTranslateNote: {
+        type: Boolean,
+        default: false
       }
     },
     filters: {
@@ -100,6 +121,8 @@
             this.fetchLectureNotes()
           }
         }
+
+        this.lastViewIndex = -1
 
         this.lastScrollTop = scrollTop
 
@@ -147,6 +170,22 @@
 
       handleScroll(e) {
         this.scrollThrottled(e)
+      },
+
+      handleTranslate() {
+        let wrapBounds = document.querySelector('.note__list').getBoundingClientRect()
+
+        for(let i = 0; i < this.lectureNotes.length; i++) {
+          let item = this.lectureNotes[i]
+          let el = document.querySelector(`#note${item.id}`).getBoundingClientRect()
+          if(el.top >= wrapBounds.top && el.bottom <= wrapBounds.bottom) {
+            this.lastViewIndex = i
+            break
+          }
+
+        }
+
+        this.$emit('translate')
       }
     }
   }
@@ -203,11 +242,60 @@
         margin-bottom: 0.4267rem;
         .time {
           line-height: 0.48rem;
+          position: relative;
+
+          .bgwhite {
+            padding: 0.08rem 0.2133rem;
+            background: #fff;
+            z-index: 1;
+            position: relative;
+            display: inline-block;
+          }
+
+          .last-view {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 0;
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: #fff;
+            }
+
+            &::after {
+              position: absolute;
+              content: "";
+              top: 50%;
+              transform: translateY(-50%);
+              right: -0.5333rem;
+              width: 100vw;
+              height: 0.0267rem;
+              background: #3D7BFF4D;
+            }
+
+            .text {
+              background: #ECF2FF;
+              color: #3D7BFF;
+              font-size: 0.2933rem;
+              padding: 0.08rem 0.16rem;
+              position: relative;
+              z-index: 2;
+              border-radius: 0.1067rem;
+              margin: 0;
+              line-height: 0.3733rem;
+            }
+          }
         }
 
         .text {
           margin-top: 2px;
-          padding: 0.1067rem 0;
+          padding: 0.1067rem 0.2133rem;
           line-height: 0.6933rem;
         }
       }
