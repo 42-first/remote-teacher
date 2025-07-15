@@ -482,7 +482,7 @@ let pages = {
   "continuequickanswer": "Continue",
   "startquickanswer": "Start",
   "quickanswerprepare": "Preparation",
-  "quickanswersignedin": `{signin} students joined`,
+  "quickanswersignedin": `<span class="f24 num bold">{signin}</span> students joined`,
   "quickanswertips": "Hand-raising too ordinary? Use Quick Answer to spark excitement and manage class flow easily!",
   "nostudentjumpin": "Spot open! Who'll take the first spot?",
   "quickansweraddscore": "Add Points",
