@@ -15,9 +15,11 @@
             <p class="f13 number">{{item.number}}</p>
           </div>
         </div>
-        <div class="score" v-if="item.score">
+        <div class="score box-end" v-if="item.score">
           <span class="f18 yellow">+{{item.score / 100}}</span>
-          <i class="iconfont icon-bianji f18 ml8" @click.stop="handleScore(item)"></i>
+          <div class="icon-wrap box-center"  @click.stop="handleScore(item)">
+            <i class="iconfont icon-bianji-bi f18"></i>
+          </div>
         </div>
         <div class="add-score box-center" v-else @click.stop="handleScore(item)">
           <i class="iconfont icon-tianjia1 f16"></i>
@@ -103,6 +105,12 @@ export default {
 
       .number {
         color: #96A0AD;
+      }
+
+      .icon-wrap {
+        width: px2rem(64px);
+        height: px2rem(64px);
+        margin-left: px2rem(16px);
       }
 
       .add-score {

@@ -484,7 +484,7 @@ let pages = {
   "continuequickanswer": "继续抢答",
   "startquickanswer": "开始抢答",
   "quickanswerprepare": "{count}s <br/> <span class='f15'> 后开始抢答</span>",
-  "quickanswersignedin": `当前共有<span class="f24 num">{signin}</span>位学生进入课堂`,
+  "quickanswersignedin": `当前共有<span class="f24 num bold">{signin}</span>位学生进入课堂`,
   "quickanswertips": "举手发言太常规?开启抢答点燃学生热情，轻松把控课堂节奏～",
   "nostudentjumpin": "抢答席位暂空，谁来破局？",
   "quickansweraddscore": "加分",

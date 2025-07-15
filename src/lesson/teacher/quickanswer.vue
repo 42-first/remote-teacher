@@ -225,10 +225,6 @@ export default {
       return request.post(URL, params)
       .then(res => {
         if(res && res.code == 0) {
-          this.$toast({
-            message: '加分成功',
-            duration: 3000
-          })
           this.getRecords()
 
           if(this.jumpInUser.id == id) {
@@ -347,6 +343,7 @@ export default {
     border-width: 1px, 1px, 1px, 0px;
     border-style: solid;
     border-color: #FFFFFF66;
+    gap: px2rem(8px);
   }
 
   .footer {
@@ -367,21 +364,14 @@ export default {
       position: relative;
 
       &.continue {
-        background: linear-gradient(224.03deg, rgba(45, 114, 232, 0.8) 8.38%, rgba(67, 25, 130, 0.8) 89.03%);
         color: #fff;
         margin-left: px2rem(32px);
+        border: px2rem(2px) solid transparent;
+        background-clip: padding-box, border-box;
+        background-origin: padding-box, border-box;
+        background-image: linear-gradient(224.03deg, rgba(45, 114, 232, 0.8) 8.38%, rgba(67, 25, 130, 0.8) 89.03%),
+          linear-gradient(224.03deg, #518DF4 8.38%, #5907D3 89.03%);
 
-        &::before {
-          content: "";
-          width: calc(100% + 2px);
-          height: calc(100% + 2px);
-          position: absolute;
-          top: -1px;
-          left: -1px;
-          background: linear-gradient(224.03deg, rgba(248, 251, 255, 0.1) 8.38%, rgba(191, 148, 255, 0.1) 89.03%);
-          border-radius: px2rem(64px);
-          z-index: -1;
-        }
       }
     }
   }

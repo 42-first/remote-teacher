@@ -70,10 +70,10 @@
       </div>
     </div>
 
-    <div @click="toQuickAnswer" class="activity-item f18 J_ga" data-category="17" data-label="抢答">
+    <div v-if="addinversion >= 5.5" @click="toQuickAnswer" class="activity-item f18 J_ga" data-category="17" data-label="抢答">
       <div>
         <div class="iconbox" style="background: #5F8CFF;">
-          <i class="iconfont icon-fenzu1 f21"></i>
+          <i class="iconfont icon-a-32-qiangda2x f21"></i>
         </div>
         <!-- 抢答 --> {{$t('quickanswer')}}
       </div>
@@ -125,7 +125,8 @@
         'toolbarIndex',
 				'notParticipantList',
         'isCloneClass',
-        'studentCounts'
+        'studentCounts',
+        'addinversion',
       ])
     },
     components: {

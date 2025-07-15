@@ -98,7 +98,7 @@ export default {
     margin: px2rem(72px) auto;
 
     img {
-      width: px2rem(400px);
+      height: px2rem(136px);
     }
   }
 
@@ -169,4 +169,15 @@ export default {
   }
 }
 
+</style>
+
+<style lang="scss">
+@import "~@/style/common_rem";
+.jumpin__process__wrapper {
+  .signin {
+    .num {
+      margin: 0 px2rem(16px);
+    }
+  }
+}
 </style>

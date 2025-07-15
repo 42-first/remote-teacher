@@ -90,8 +90,8 @@ export default {
   }
   .card-container {
     margin: px2rem(32px) auto;
-    width: px2rem(510px);
-    height: px2rem(600px);
+    width: 34vh;
+    height: 40vh;
     background: #11215CB2;
     border-radius: px2rem(36px);
     opacity: 0;
@@ -100,8 +100,8 @@ export default {
     &::before {
       position: absolute;
       content: "";
-       width: px2rem(482px);
-      height: px2rem(572px);
+      width: calc(32vh + 4px);
+      height: calc(38vh + 4px);
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -109,13 +109,13 @@ export default {
         radial-gradient(80.09% 70.37% at 8.43% 98.55%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
       border-radius: px2rem(36px);  
       z-index: -1;
-      animation: gradientRotation 1s linear infinite;
-      overflow: hidden;
+      animation: runlight 4s linear infinite;
+      clip-path: inset(0 0 87% 0);
     }
 
     .user-box {
-      width: px2rem(480px);
-      height: px2rem(570px);
+      width: 32vh;
+      height: 38vh;
       background: #11215C;
       position: relative;
       border-radius: px2rem(36px);  
@@ -152,35 +152,25 @@ export default {
     }
   }
 
-  @keyframes gradientRotation {
-    0% {
-        background: radial-gradient(115.02% 101.06% at 97% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    12.5% {
-        background: radial-gradient(115.02% 101.06% at 116.5% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    25% {
-        background: radial-gradient(115.02% 101.06% at 97% 97%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    37.5% {
-        background: radial-gradient(115.02% 101.06% at 50% 116.5%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    50% {
-        background: radial-gradient(115.02% 101.06% at 3% 97%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    62.5% {
-        background: radial-gradient(115.02% 101.06% at -16.5% 50%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    75% {
-        background: radial-gradient(115.02% 101.06% at 3% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    87.5% {
-        background: radial-gradient(115.02% 101.06% at 50% -16.5%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
-    100% {
-        background: radial-gradient(115.02% 101.06% at 97% 3%, rgba(255, 255, 255, 0.7) 0%, rgba(0, 92, 250, 0.19) 100%);
-    }
+  @keyframes runlight {
+  0%,
+  100% {
+    clip-path: inset(0 87% 0 0);
   }
+  25% {
+    clip-path: inset(0 0 87% 0);
+  }
+
+  50% {
+    clip-path: inset(0 0 0 87%);
+  }
+
+  75% {
+    clip-path: inset(87% 0 0 0);
+  }
+
+
+}
 
   .yellow {
     color: #F78600;
@@ -194,7 +184,7 @@ export default {
       height: px2rem(72px);
       background: #FFFFFF1A;
       border: 1px solid #FFFFFF66;
-      border-radius: px2rem(36px);  
+      border-radius: px2rem(72px);  
       color: #fff;
     }
   }
