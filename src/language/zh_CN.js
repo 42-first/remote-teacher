@@ -498,6 +498,7 @@ let pages = {
   "quickanswerfail": "抢答失败",
   "JUMP_IN_NOBODY": "抢答：本轮无人抢答",
   "JUMP_IN": "抢答：本轮{0}抢答成功",
+  "quickanswerscoretip": "课堂加分最多支持 10 分",
   
 
 

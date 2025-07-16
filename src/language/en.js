@@ -496,6 +496,7 @@ let pages = {
   "quickanswerfail": "Failed",
   "JUMP_IN_NOBODY": "Quick Answer: No one jumped in",
   "JUMP_IN": "Quick Answer: {0} jumped in",
+  "quickanswerscoretip": "Classroom bonus points can be up to 10 points at most",
 
   // 给学生增加备注需求增加
   behavior: {

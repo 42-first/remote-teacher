@@ -17,6 +17,7 @@
         <p class="settings__content--reduce box-center" @click="handlereduce"><i class="iconfont icon-jiafenjianhao f24 blue"></i></p>
         <input class="settings__content--input" type="number" v-model="score" :max="MaxScore" @focus="isFocus = true" @blur="isFocus = false"/>
         <p class="settings__content--reduce box-center" @click="handleadd"><i class="iconfont icon-jiafenjiahao f24 blue"></i></p>
+        <p class="score-tips yellow f13" v-if="tips">{{ $t('quickanswerscoretip') }}</p>
       </div>
 
       <div class="actions-btns box-center">
@@ -35,6 +36,7 @@ export default {
     return {
       score: 0,
       MaxScore,
+      tips: false
     }
   },
   props: {
@@ -67,6 +69,12 @@ export default {
     handleadd() {
       if(this.score < MaxScore) {
         this.score++;
+      } else {
+        this.tips = true
+
+        setTimeout(() => {
+          this.tips = false
+        }, 3000)
       }
     },
 
@@ -145,6 +153,7 @@ export default {
 
     .setting-box {
       gap: px2rem(48px);
+      position: relative;
       .settings__content--reduce {
         width: px2rem(88px);
         height: px2rem(88px);
@@ -168,6 +177,14 @@ export default {
         &:hover {
           border-color: #B5CCFC;
         }
+      }
+
+      .score-tips {
+        position: absolute;
+        top: calc(100% + 24px);
+        left: 0;
+        width: 100%;
+        text-align: center;
       }
     }
 
