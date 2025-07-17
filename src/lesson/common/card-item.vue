@@ -661,16 +661,16 @@
   .timeline__msg {
     margin: 0.4rem auto;
     display: inline-block;
-    padding: 0 0.4rem;
+    padding: 0 0.5333rem;
     max-width: 9.2rem;
-    height: 0.8rem;
-    line-height: 0.8rem;
+    height: 0.96rem;
+    line-height: 0.96rem;
 
     text-align: center;
     color: #fff;
-    background: #C1C1C1;
+    background: #9199AB;
 
-    border-radius: 4px;
+    border-radius: 1.3333rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -812,7 +812,7 @@
       color: #fff;
       background: rgba(40,207,110,0.7);
 
-      border-radius: 4px;
+      border-radius: 0.4267rem;
 
       .paper-txt {
         text-align: left;

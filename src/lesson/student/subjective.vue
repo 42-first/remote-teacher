@@ -955,6 +955,15 @@
             let fileType = file.type;
 
             console.log('MIME类型：' + fileType);
+            let picType = fileType && fileType.split('/').length === 2 && fileType.split('/')[0];
+            // jpg,jpeg,bmp,png,gif
+            if(!/image/.test(picType)) {
+              this.$toast({
+                message: this.$i18n.t('reuploadpiconly') || '当前仅支持图片格式，请重新上传',
+                duration: 2000
+              });
+              return this;
+            }
             // 课程结束啦
             if(this.sendStatus === 5) {
               return this;
@@ -1027,6 +1036,18 @@
 
         let file = targetEl.files[0];
         if(file) {
+           let fileType = file.type;
+
+          console.log('MIME类型：' + fileType);
+          let videoType = fileType && fileType.split('/').length === 2 && fileType.split('/')[0];
+          if(!/video/.test(videoType)) {
+            this.$toast({
+              message: this.$i18n.t('reuploadvideoonly') || '当前仅支持视频格式，请重新上传',
+              duration: 2000
+            });
+            return this;
+          }
+
           if(file.size) {
             const size = parseInt(file.size/1024/1024, 10);
             if(size >= 50) {

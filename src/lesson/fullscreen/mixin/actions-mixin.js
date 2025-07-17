@@ -6,6 +6,25 @@
  *
  */
 
+const CodeList = [
+  "LESSON_START",
+  "SHOW_PRESENTATION",
+  "LESSON_FINISH",
+  "DANMU_ON",
+  "DANMU_OFF",
+  "RANDOM_PICK",
+  "SHOW_FINISH",
+  "QUIZ_FINISH",
+  "FREE_GROUP_CANCEL",
+  "RANDOM_GROUP_CANCEL",
+  "LIVE_ON",
+  "LIVE_OFF",
+  "INTERACTIVE_ON",
+  "INTERACTIVE_OFF",
+  "TencentInteractive_ON",
+  "TencentInteractive_OFF",
+]
+
 let confirmObj = null
 let actionsMixin = {
   methods: {
@@ -169,7 +188,7 @@ let actionsMixin = {
       data.oriMessage = data.message;
 
       // 消息统一国际化
-      if(!hasEvent && data.event && data.event['code']) {
+      if(!hasEvent && data.event && data.event['code'] && CodeList.includes(data.event['code'])) {
         let code = data.event && data.event['code'];
         let aReplace = data.event && data.event['replace'] || [];
         let sMsg = aReplace.length ? this.$i18n.t(code, aReplace) : this.$i18n.t(code);
