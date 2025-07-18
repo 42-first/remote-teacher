@@ -4,7 +4,8 @@
       <div class="header box-between">
         <div class="f17 bold"><!--课堂讲稿-->{{ $t('lectureNote') }}</div>
         <div class="actions-wrap box-center">
-          <div class="translate" v-if="hasTranslateNote" @click="handleTranslate">翻译</div>
+          <!-- v-if="hasTranslateNote" -->
+          <div class="translate"  @click="handleTranslate">翻译</div>
           <div class="close" @click="$emit('close')">
             <i class="iconfont icon-guanbi1 f20"></i>
           </div>
@@ -18,7 +19,7 @@
         <div class="note__item" :id="`note${item.id}`" v-for="(item, index) in lectureNotes" :key="index">
           <div class="time f13">
             <div class="bgwhite">{{item.createTime | formatTime}}</div>
-            <div class="last-view" v-if="lastViewIndex == index">
+            <div class="last-view" v-if="lastView == item.createTime">
               <div class="text">上次学到</div>
             </div>
           </div>
@@ -48,7 +49,7 @@
         hasPrev: false,
         lastScrollTop: 0,
         isPending: false,
-        lastViewIndex: -1
+        lastView: 0
       }
     },
 
@@ -62,6 +63,7 @@
       },
 
       translated(newVal) {
+        this.lectureNotes = []
         this.fetchLectureNotes()
       }
     },
@@ -122,7 +124,7 @@
           }
         }
 
-        this.lastViewIndex = -1
+        this.lastView = 0
 
         this.lastScrollTop = scrollTop
 
@@ -139,8 +141,9 @@
         this.isPending = true
         let URL = API.lesson.get_records
         let params = {
-          time: this.time,
-          direction: this.direction
+          time: this.lastView || this.time,
+          direction: this.direction,
+          translate: this.translated ? 1 : 0
         }
 
         return request.get(URL, params).then(res => {
@@ -179,7 +182,7 @@
           let item = this.lectureNotes[i]
           let el = document.querySelector(`#note${item.id}`).getBoundingClientRect()
           if(el.top >= wrapBounds.top && el.bottom <= wrapBounds.bottom) {
-            this.lastViewIndex = i
+            this.lastView = item.createTime
             break
           }
 

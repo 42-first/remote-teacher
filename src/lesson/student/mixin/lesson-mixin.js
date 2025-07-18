@@ -73,11 +73,15 @@ let lessonMixin = {
         // mode 0录制 1导播模式
         this.liveCasterMode = lesson.liveCasterMode;
       }
+      if(lesson) {
+        // 是否开启了讲伴
+        this.lessonCompanionState = lesson.lessonCompanionState
+        // 是否展示课堂讲稿
+        this.showRealTimeLectureNote = lesson.showRealTimeLectureNote
+        // 讲稿是否有翻译
+        this.hasTranslateNote = lesson.lessonCompanionTranslate
+      }
 
-      // 是否开启了讲伴
-      this.lessonCompanionState = lesson.lessonCompanionState
-      // 是否展示课堂讲稿
-      this.showRealTimeLectureNote = lesson.showRealTimeLectureNote
 
       // 班级信息
       let classroom = lesson && await this.getClassroom(lesson.classroomId);

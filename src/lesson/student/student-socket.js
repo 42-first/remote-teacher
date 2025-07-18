@@ -527,6 +527,7 @@ var mixin = {
           // 讲伴开关 
           case 'companion':
             this.lessonCompanionState = msg.show ? 1 : 0
+            this.hasTranslateNote = msg.translate ? 1 : 0
             break;
 
           // 智能体的指令任务
