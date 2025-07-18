@@ -23,6 +23,8 @@ const CodeList = [
   "INTERACTIVE_OFF",
   "TencentInteractive_ON",
   "TencentInteractive_OFF",
+  "JUMP_IN_NOBODY",
+  "JUMP_IN"
 ]
 
 var actionsMixin = {
@@ -1434,6 +1436,24 @@ var actionsMixin = {
         teamid: data.teamid,
         result: data.result
       });
+    },
+
+    /**
+     * @method 开始抢答
+     * @param {*} msg 
+     */
+    handleJumpInStart(msg) {
+      this.hasJumpIn = true;
+      this.jumpInInfo = msg;
+    },
+
+    /**
+     * @method 结束抢答
+     * @param {*} msg 
+     */
+    handleJumpInEnd(msg) {
+      this.hasJumpIn = false;
+      this.jumpInInfo = null;
     },
 
   }

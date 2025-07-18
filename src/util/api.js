@@ -288,6 +288,20 @@ if (process.env.NODE_ENV === 'production' || process.env) {
       send_group_message: '/api/v3/lesson/group-event/send-group-message',
       // 获取分组讨论状态
       get_group_discuss_status: '/api/v3/lesson/group-event/student/status',
+
+      // 抢答
+      // 教师发起抢答
+      start_quick_answer: '/api/v3/lesson/rapid-answer/start',
+      // 教师结束抢答
+      end_quick_answer: '/api/v3/lesson/rapid-answer/end',
+      // 查看抢答记录
+      get_quick_answer_records: '/api/v3/lesson/rapid-answer/records',
+      // 给学生设置抢答分数
+      set_quick_answer_score: '/api/v3/lesson/rapid-answer/score',
+      // 学生抢答
+      student_quick_answer: '/api/v3/lesson/rapid-answer/participate',
+      // 获取抢答信息
+      get_quick_answer_info: '/api/v3/lesson/rapid-answer/get-info',
     },
 
     /*------------------*\

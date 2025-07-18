@@ -112,6 +112,10 @@ textarea { outline: none; resize: none; }
   align-items: center;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 
 /*-----------------------------*\
     $ 基本字体大小
@@ -125,6 +129,16 @@ textarea { outline: none; resize: none; }
 }
 [data-dpr="3"] .f12 {
   font-size: 36px;
+}
+
+[data-dpr="1"] .f13 {
+  font-size: 13px;
+}
+[data-dpr="2"] .f13 {
+    font-size: 26px;
+}
+[data-dpr="3"] .f13 {
+  font-size: 39px;
 }
 
 [data-dpr="1"] .f14 {

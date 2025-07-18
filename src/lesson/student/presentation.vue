@@ -153,6 +153,7 @@
         <span class="status f15 box-center"><i class="iconfont icon--lianjiezhengchang f20 mr4"></i> <!-- 已签到 -->{{ $t('yiqiandao') }}</span>
         <span class="f12">{{ identityInfo.name }} {{ identityInfo.schoolNumber }}</span>
       </div>
+      <jumpin v-if="hasJumpIn" :info="jumpInInfo"></jumpin>
       <loadmore class="J_timeline" :top-method="refeshLoad" @translate-change="translateChange" :top-status.sync="topStatus" :top-distance.sync="topDistance" :top-loading-text="$t('toploading')" :top-pull-text="$t('pullrefresh')" :top-drop-text="$t('toprelease')" ref="loadmore">
 
         <section class="student__timeline J_cards">
@@ -503,6 +504,9 @@
         showRealTimeLectureNote: false,
         visibleLectureNote: false, 
         lectureNoteTime: 0,
+        // 当前是否有抢答
+        hasJumpIn: false,
+        jumpInInfo: null,
         // 是有讲稿翻译
         hasTranslateNote: false,
         // 当前是翻译状态
@@ -520,7 +524,8 @@
       danmuLive: () => import('@/lesson/common/danmu-live.vue'),
       livetip: () => import('@/lesson/common/live-tip.vue'),
       userAgreement,
-      lectureNote: () => import('@/lesson/common/lecturenote.vue')
+      lectureNote: () => import('@/lesson/common/lecturenote.vue'),
+      jumpin: () => import('@/lesson/common/jumpin.vue'),
     },
     computed: {
       ...mapState([

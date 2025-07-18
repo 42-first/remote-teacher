@@ -909,6 +909,10 @@ let lessonMixin = {
       this.translated = !this.translated
     },
 
+    /**
+     * @method 获取分组讨论的状态
+     * @returns 
+     */
     getGroupDiscussStatus() {
       let URL = API.lesson.get_group_discuss_status
       return request.get(URL)
@@ -923,7 +927,23 @@ let lessonMixin = {
         console.log('getGroupDiscussStatus:', error)
         return {}
       })
-    }
+    },
+
+    /**
+     * @method 获取抢答信息
+     */
+    getJumpInInfo(id) {
+      let URL = API.lesson.get_quick_answer_info
+      let params = {
+        id
+      }
+
+      return request.get(URL, params)
+      .then(res => {
+        this.jumpInInfo = res.data
+      })
+    },
+
   }
 }
 

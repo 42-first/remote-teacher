@@ -129,7 +129,8 @@ export default {
       visibleEventDetail: false,
       focus: false,
       isEnd: false,
-      tempSummary: ''
+      tempSummary: '',
+      isPending: false,
     };
   },
   computed: {
@@ -402,6 +403,7 @@ export default {
     },
 
     handleSubmitSummary() {
+      if(this.isPending) return
       if(this.isEnd) {
         this.$toast({
           message: this.$t('discussisend') || '当前讨论已结束',
@@ -410,6 +412,8 @@ export default {
 
         return
       }
+
+      this.isPending = true
 
       let URL = API.lesson.submit_group_summary
       let params = {
@@ -435,6 +439,9 @@ export default {
             duration: 3000
           })
         }
+        this.isPending = false
+      }).catch(err => {
+        this.isPending = false
       })
     },
 
@@ -447,6 +454,7 @@ export default {
     },
 
     handleSendMsg() {
+      if(this.isPending) return
       if(this.isEnd) {
         this.$toast({
           message: this.$t('discussisend') || '当前讨论已结束',
@@ -455,6 +463,9 @@ export default {
 
         return
       }
+
+      this.isPending = true
+
       let URL = API.lesson.send_group_message
       let params = {
         teamId: this.teamid,
@@ -488,6 +499,10 @@ export default {
             duration: 3000
           })
         }
+
+        this.isPending = false
+      }).catch(err => {
+        this.isPending = false
       })
     },
 
