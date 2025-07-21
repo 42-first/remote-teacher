@@ -117,7 +117,7 @@
               <img v-if="!video.url" src="https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif" alt="">
               <video v-else class="video--preview" :src="video.url" controls :poster="video.thumb">
               </video>
-              <p class="delete-img" @click="handleDeleteVideo(index)" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
+              <p class="delete-img" @click="handleDeleteVideo(index)" v-show="video.url"><i class="iconfont icon-wrong f18"></i></p>
             </div>
           </div>
           
