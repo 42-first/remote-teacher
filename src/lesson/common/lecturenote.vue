@@ -4,8 +4,9 @@
       <div class="header box-between">
         <div class="f17 bold"><!--课堂讲稿-->{{ $t('lectureNote') }}</div>
         <div class="actions-wrap box-center">
-          <!-- v-if="hasTranslateNote" -->
-          <div class="translate"  @click="handleTranslate">翻译</div>
+          <div class="translate" :class="translated ? 'blue' : ''" v-if="hasTranslateNote" @click="handleTranslate">
+            <i class="iconfont icon-zhongying f20"></i>
+          </div>
           <div class="close" @click="$emit('close')">
             <i class="iconfont icon-guanbi1 f20"></i>
           </div>
@@ -176,7 +177,7 @@
       },
 
       handleTranslate() {
-        let wrapBounds = document.querySelector('.note__list').getBoundingClientRect()
+        let wrapBounds = document.querySelector('.note__list') && document.querySelector('.note__list').getBoundingClientRect()
 
         for(let i = 0; i < this.lectureNotes.length; i++) {
           let item = this.lectureNotes[i]
@@ -229,6 +230,15 @@
 
       .close {
         color: #90949D;
+      }
+      
+      .translate {
+        margin-right: 0.4267rem;
+        color: #90949D;
+
+        &.blue {
+          color: #3D7BFF;
+        }
       }
     }
 
