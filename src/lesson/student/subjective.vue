@@ -1065,6 +1065,7 @@
               pic: 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif'
             })
             this.hasImage = true
+            this.sendStatus = 1;
 
             Promise.all([upload.getToken()]).then(() => {
               // 上传七牛
