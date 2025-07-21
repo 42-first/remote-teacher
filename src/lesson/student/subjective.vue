@@ -841,7 +841,11 @@
             if(res.url) {
               // this.imageURL = res.url;
               // this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
-              this.sendStatus = 2;
+              if(!this.videos.length) {
+                this.sendStatus = 2;
+              } else if(this.videos[0].url) {
+                this.sendStatus = 2;
+              }
               let pic = this.pics[index]
               this.pics.splice(index, 1, Object.assign(pic, {
                 'pic': res.url,
