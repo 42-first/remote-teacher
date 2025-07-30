@@ -193,7 +193,7 @@
           let el = document.querySelector(`#note${item.id}`).getBoundingClientRect()
           if(el.top >= wrapBounds.top && el.bottom <= wrapBounds.bottom) {
             this.lastView = item.createTime
-            if(this.direction == Direction.Up  && i == 0 && !this.hasPrev) {
+            if(i == 0 && !this.hasPrev) {
               this.direction = Direction.Down
             }
             break
