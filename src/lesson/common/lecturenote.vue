@@ -38,6 +38,10 @@
 
 <script>
  import _ from 'underscore'
+ const Direction = {
+  Up: -1,
+  Down: 1,
+ }
   export default {
     data() {
       return {
@@ -50,7 +54,8 @@
         hasPrev: false,
         lastScrollTop: 0,
         isPending: false,
-        lastView: 0
+        lastView: 0,
+        bound: 0
       }
     },
 
@@ -65,6 +70,7 @@
 
       translated(newVal) {
         this.lectureNotes = []
+        this.bound = 1
         this.fetchLectureNotes()
       }
     },
@@ -105,6 +111,8 @@
         let scrollTop = $list && $list.scrollTop;
         let leaveHeight = totalHeight - clientHeight - scrollTop;
 
+        this.bound = 0
+
         if(scrollTop > this.lastScrollTop) {
           console.log('向下滚动')
           // 向下滚动
@@ -144,7 +152,8 @@
         let params = {
           time: this.lastView || this.time,
           direction: this.direction,
-          translate: this.translated ? 1 : 0
+          translate: this.translated ? 1 : 0,
+          bound: this.bound
         }
 
         return request.get(URL, params).then(res => {
@@ -184,6 +193,9 @@
           let el = document.querySelector(`#note${item.id}`).getBoundingClientRect()
           if(el.top >= wrapBounds.top && el.bottom <= wrapBounds.bottom) {
             this.lastView = item.createTime
+            if(this.direction == Direction.Up  && i == 0 && !this.hasPrev) {
+              this.direction = Direction.Down
+            }
             break
           }
 
