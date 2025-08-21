@@ -53,6 +53,8 @@ export default {
         this.score = MaxScore
       } else if(num < 1) {
         this.score = 0
+      } else {
+        this.score = Math.ceil(num)
       }
     }
   },
