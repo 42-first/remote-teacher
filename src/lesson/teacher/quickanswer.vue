@@ -227,9 +227,11 @@ export default {
         if(res && res.code == 0) {
           this.getRecords()
 
-          if(this.jumpInUser.id == id) {
+          if(this.jumpInUser && this.jumpInUser.id == id) {
             this.jumpInUser.score = score
           }
+
+          this.visibleEdit = false
           return res.code
         }
       })
