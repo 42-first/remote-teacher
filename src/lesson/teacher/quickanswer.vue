@@ -249,6 +249,7 @@ export default {
       this.countdown = limit
       this.handleStartPrepare()
       this.isAnswering = true
+      this.jumpInUser = null
     },
 
 
