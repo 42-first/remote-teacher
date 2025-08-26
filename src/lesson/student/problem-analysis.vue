@@ -43,7 +43,7 @@
       <div class="subjective__answer" v-if="result&&(result.content || result.pics&&result.pics.length)">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="images__wrap" v-if="result.pics && result.pics.length" :class="result.pics.length > 1 ? 'grid' : ''">
+          <div class="images__wrap" v-if="result.pics && result.pics[0].pic" :class="result.pics.length > 1 ? 'grid' : ''">
             <div class="item-image" v-for="(img, index) in result.pics" :key="index" >
               <img class="" @click="handlePreviewImage" :src="img.thumb||img.pic" :data-src="img.pic" alt="" />
             </div>
