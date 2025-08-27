@@ -178,6 +178,7 @@ let logMixin = {
       this.interactiveLogTimer && clearInterval(this.interactiveLogTimer)
 
       this.vcLogTimer && clearInterval(this.vcLogTimer)
+      this.sq = 1
 
       // 上报一次打点数据
       let liveLogs = this.liveLogs;
