@@ -14,7 +14,7 @@
         <div class="score box-center" v-if="score">
           <span class="f15 bold"><!-- 加分 -->{{ $t('quickansweraddscore') }}: </span>
           <span class="num f21 bold yellow">+{{score}}</span>
-          <span class="edit" @click="handleVisibleEdit">
+          <span class="edit" @click.stop="handleVisibleEdit">
             <i class="iconfont icon-bianji f20"></i>
           </span>
         </div>

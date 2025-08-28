@@ -45,12 +45,13 @@ let logMixin = {
         fp: 0,
         tp: 0,
         d: 1,
-        pg: 1,
+        pg: '',
         sp: 1,
         sq: 1,
       },
       // 互动直播上报video-log timer
-      interactiveLogTimer: null
+      interactiveLogTimer: null,
+      sq: 1,
     }
   },
   methods: {
@@ -83,6 +84,7 @@ let logMixin = {
           lesson_id: this.lessonID,
           ts: (new Date()).getTime(),
           v: this.liveId || 1,
+          pg: `${this.liveId}_${(new Date()).getTime()}`,
           n
         });
       } catch(error) {
@@ -176,6 +178,7 @@ let logMixin = {
       this.interactiveLogTimer && clearInterval(this.interactiveLogTimer)
 
       this.vcLogTimer && clearInterval(this.vcLogTimer)
+      this.sq = 1
 
       // 上报一次打点数据
       let liveLogs = this.liveLogs;
@@ -213,7 +216,8 @@ let logMixin = {
         // 20s记录一次上报点
         if(duration >= 20) {
           // 记录本地打点
-          liveLogs.logs.push(Object.assign({}, heartLog, { ts: dt, v: this.liveId }));
+          liveLogs.logs.push(Object.assign({}, heartLog, { ts: dt, v: this.liveId, sq: this.sq }));
+          this.sq += 1
           liveLogs.lastLogTime = dt;
           this.liveLogs = liveLogs;
 

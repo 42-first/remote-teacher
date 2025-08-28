@@ -43,8 +43,14 @@
       <div class="subjective__answer" v-if="result&&(result.content || result.pics&&result.pics.length)">
         <div class="answer__inner">
           <p class="answer--text f17">{{ result.content }}</p>
-          <div class="answer--image" v-if="result.pics.length && result.pics[0].pic">
-            <img class="" :src="result.pics[0].pic" :data-src="result.pics[0].pic" alt="主观题作答图片" @click="handlePreviewImage" />
+          <div class="images__wrap" v-if="result.pics && result.pics[0].pic" :class="result.pics.length > 1 ? 'grid' : ''">
+            <div class="item-image" v-for="(img, index) in result.pics" :key="index" >
+              <img class="" @click="handlePreviewImage" :src="img.thumb||img.pic" :data-src="img.pic" alt="" />
+            </div>
+          </div>
+          <div class="anser__videos" v-if="result.videos && result.videos.length">
+            <video v-for="(video, index) in result.videos" :key="index" class="video--preview" :src="video.url" controls :poster="video.thumb">
+            </video>
           </div>
         </div>
         <!-- 打分显示 -->
@@ -457,12 +463,44 @@
       word-wrap: break-word;
     }
 
-    .answer--image {
-      padding-top: 0.266667rem;
+    .item-image {
+      margin-top: 0.2rem;
+      display: block;
+      width: 6.933333rem;
       img {
-        display: block;
-        width: 6.933333rem;
+        width: 100%;
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 33%);
+      gap: 0.2667rem;
+
+      .item-image {
+        width: 100%;
+        padding-top: 100%;
+        position: relative;
+        overflow: hidden;
+        
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          object-fit: cover;
+          width: 100%;
+          transform: translate(-50%, -50%);
+        }
+        
+      }
+    }
+
+    .anser__videos {
+      margin-top: 0.2667rem;
+      video {
         max-width: 100%;
+        max-height: 5.68rem;
+        object-fit: cover;
       }
     }
 
