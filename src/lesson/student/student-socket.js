@@ -528,6 +528,7 @@ var mixin = {
           case 'companion':
             this.lessonCompanionState = msg.show ? 1 : 0
             this.hasTranslateNote = msg.translate ? 1 : 0
+            this.showRealTimeLectureNote = msg.showlecturenote ? 1 : 0
             break;
 
           // 智能体的指令任务
