@@ -117,7 +117,7 @@
               <img v-if="!video.url" src="https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif" alt="">
               <video v-else class="video--preview" :src="video.url" controls :poster="video.thumb">
               </video>
-              <p class="delete-img" @click="handleDeleteVideo(index)" v-show="hasImage"><i class="iconfont icon-wrong f18"></i></p>
+              <p class="delete-img" @click="handleDeleteVideo(index)" v-show="video.url"><i class="iconfont icon-wrong f18"></i></p>
             </div>
           </div>
           
@@ -841,7 +841,11 @@
             if(res.url) {
               // this.imageURL = res.url;
               // this.imageThumbURL = `${res.url}?imageView2/2/w/568`;
-              this.sendStatus = 2;
+              if(!this.videos.length) {
+                this.sendStatus = 2;
+              } else if(this.videos[0].url) {
+                this.sendStatus = 2;
+              }
               let pic = this.pics[index]
               this.pics.splice(index, 1, Object.assign(pic, {
                 'pic': res.url,
@@ -1065,6 +1069,7 @@
               pic: 'https://fe-static-yuketang.yuketang.cn/fe/static/vue_images/2.2.561/images/loading-3.gif'
             })
             this.hasImage = true
+            this.sendStatus = 1;
 
             Promise.all([upload.getToken()]).then(() => {
               // 上传七牛

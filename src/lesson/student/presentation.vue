@@ -277,7 +277,7 @@
     <user-agreement v-if="!is_agreement" @close="handleGoIndex" @confirm="handleConfirm"></user-agreement>
 
     <!-- 课堂讲稿 -->
-    <lecture-note v-if="visibleLectureNote" :pptTime="lectureNoteTime" @close="handleClosedLectureNote"></lecture-note>
+    <lecture-note v-if="visibleLectureNote" :pptTime="lectureNoteTime" :hasTranslateNote="hasTranslateNote" :translated="translated" @close="handleClosedLectureNote" @translate="handleTranslateLectureNote"></lecture-note>
   </section>
 </template>
 <script>
@@ -507,6 +507,10 @@
         // 当前是否有抢答
         hasJumpIn: false,
         jumpInInfo: null,
+        // 是有讲稿翻译
+        hasTranslateNote: false,
+        // 当前是翻译状态
+        translated: false,
       };
     },
     components: {
