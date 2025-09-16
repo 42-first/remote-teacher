@@ -8,6 +8,7 @@
 
 import { isSupported } from '@/util/util'
 import KwaiPlayerKernelExternal from '@/util/kwai-player-v1.0.0'
+import dailyReport from '@/util/daily-report';
 
 
 let liveMixin = {
@@ -44,6 +45,18 @@ let liveMixin = {
 
       // 停止播放时上报下当前数据
       this.forceReport()
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: '点击关闭',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
     },
 
     /*
@@ -70,6 +83,19 @@ let liveMixin = {
           this.saveLiveStatus(this.playState);
         });
       }
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: '点击收听',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
+
     },
 
     /*
@@ -97,6 +123,18 @@ let liveMixin = {
 
       // 停止播放时上报下当前数据
       this.forceReport()
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: '暂停',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
     },
 
     /*
@@ -115,6 +153,18 @@ let liveMixin = {
           this.saveLiveStatus(this.playState);
         });
       }
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: '点击观看',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
     },
 
     /*

@@ -131,6 +131,33 @@ let dailyReport = {
     }
   },
 
+  /**
+   * @method 点击事件上报
+   * @params
+   */
+  reportClickLog(data) {
+    let URL = '/video-log/log/track/';
+    let commonLog = this.options.log;
+
+    if(data) {
+      if(data.properties && commonLog.properties) {
+        data.properties = Object.assign({}, commonLog.properties, data.properties);
+      }
+
+      let log = Object.assign({}, commonLog, data, {
+        event: data.event,
+        time: (new Date()).getTime()
+      });
+
+      const params = {
+        'uip': '',
+        'data': log,
+        'ts_ms': (new Date()).getTime()
+      };
+      axios.post(URL, params);
+    }
+  },
+
 }
 
 

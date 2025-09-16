@@ -10,6 +10,8 @@
  // import flvjs from 'flv.js/dist/flv.min'
  import '@/util/flv.min'
 
+import dailyReport from '@/util/daily-report';
+
 
 let liveMixin = {
   methods: {
@@ -320,6 +322,34 @@ let liveMixin = {
       liveEl.addEventListener('canplay', (evt) => {
         liveEl.play()
       })
+
+      liveEl.addEventListener('fullscreenchange', (evt) => {
+        if (document.fullscreenElement) {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+            }
+          });
+        } else {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '取消全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+            }
+          });
+        }
+      })
     },
 
     /*
@@ -484,6 +514,18 @@ let liveMixin = {
     handlestop() {
       let liveEl = document.getElementById('player');
 
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击关闭' : '暂停',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
+
       if(this.playLoading && this.liveType === 1) {
         return this;
       }
@@ -518,6 +560,17 @@ let liveMixin = {
     */
     handleplay() {
       let liveEl = document.getElementById('player');
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击收听' : '点击观看',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
 
       if(this.flvPlayer) {
         try {
@@ -651,6 +704,18 @@ let liveMixin = {
       // } else {
       //   this.handlestop();
       // }
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: visible ? '点击观看' : '只听声音',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+        }
+      });
     },
 
     /*

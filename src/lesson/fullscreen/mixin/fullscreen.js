@@ -11,6 +11,8 @@ import { isSupported } from '@/util/util'
 let screenfull = require('screenfull');
 import Danmaku from 'danmaku';
 
+import dailyReport from '@/util/daily-report';
+
 let fullscreenMixin = {
   methods: {
     /**
@@ -28,6 +30,18 @@ let fullscreenMixin = {
 
           if(!screenfull.isFullscreen) {
             this.videoFullscreen = false;
+          }
+        });
+
+        dailyReport.reportClickLog({
+          event: 'live_view_click',
+          properties: {
+            button_name: '全屏播放',
+            lesson_id: this.lessonID,
+            live_id: this.liveId,
+            classroom_id: +this.classroom.classroomId,
+            url: window.location.href,
+            user_agent: navigator.userAgent,
           }
         });
 
@@ -65,6 +79,19 @@ let fullscreenMixin = {
         if(this.videoDanmaku) {
           this.videoDanmaku.destroy();
         }
+
+        dailyReport.reportClickLog({
+          event: 'live_view_click',
+          properties: {
+            button_name: '取消全屏播放',
+            lesson_id: this.lessonID,
+            live_id: this.liveId,
+            classroom_id: +this.classroom.classroomId,
+            url: window.location.href,
+            user_agent: navigator.userAgent,
+          }
+        });
+
       }
     },
 
