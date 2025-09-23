@@ -7,6 +7,7 @@
 
 
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 
 function getUUID() {
@@ -76,11 +77,15 @@ let dailyReport = {
         data.properties,
       );
 
+      let lng = Cookies.get('django_language') || 'zh-cn';
+      lng = lng === 'zh-cn' ? 'zh_CN' : 'en';
+
       this.options.log = Object.assign({}, log, {
         time: new Date().getTime(),
         distinct_id: uid,
         terminal_type: (data && data.terminal) || "h5",
         properties,
+        language: lng,
       });
 
       return this.options.log;
