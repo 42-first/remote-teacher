@@ -256,7 +256,7 @@ fullscreenRouter.afterEach(route=>{
       }
 
       // pv单页面统计
-      dailyReport.reportLog({ terminal: 'Web' });
+      dailyReport.reportLog({ terminal: 'web' });
     }
   }, 1000);
 });
