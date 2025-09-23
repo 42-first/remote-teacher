@@ -323,6 +323,35 @@ let liveMixin = {
         liveEl.play()
       })
 
+      liveEl.addEventListener('play', (evt) => {
+        dailyReport.reportClickLog({
+          event: 'live_view_click',
+          properties: {
+            button_name: this.liveType === 1 ? '点击收听' : '点击观看',
+            lesson_id: this.lessonID,
+            live_id: this.liveId,
+            classroom_id: +this.classroom.classroomId,
+            url: window.location.href,
+            user_agent: navigator.userAgent,
+          }
+        });
+      })
+
+      liveEl.addEventListener('pause', (evt) => {
+        dailyReport.reportClickLog({
+          event: 'live_view_click',
+          properties: {
+            button_name: this.liveType === 1 ? '点击关闭' : '暂停',
+            lesson_id: this.lessonID,
+            live_id: this.liveId,
+            classroom_id: +this.classroom.classroomId,
+            url: window.location.href,
+            user_agent: navigator.userAgent,
+          }
+        });
+
+      })
+
       document.addEventListener('fullscreenchange', (evt) => {
         if (document.fullscreenElement) {
           dailyReport.reportClickLog({
@@ -514,18 +543,6 @@ let liveMixin = {
     handlestop() {
       let liveEl = document.getElementById('player');
 
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: this.liveType === 1 ? '点击关闭' : '暂停',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
-
       if(this.playLoading && this.liveType === 1) {
         return this;
       }
@@ -560,17 +577,6 @@ let liveMixin = {
     */
     handleplay() {
       let liveEl = document.getElementById('player');
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: this.liveType === 1 ? '点击收听' : '点击观看',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
 
       if(this.flvPlayer) {
         try {
