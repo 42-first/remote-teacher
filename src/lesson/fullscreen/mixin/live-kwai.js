@@ -46,17 +46,7 @@ let liveMixin = {
       // 停止播放时上报下当前数据
       this.forceReport()
 
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: '点击关闭',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
+      this.pauseHandler()
     },
 
     /*
@@ -83,18 +73,6 @@ let liveMixin = {
           this.saveLiveStatus(this.playState);
         });
       }
-
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: '点击收听',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
 
     },
 
@@ -124,17 +102,7 @@ let liveMixin = {
       // 停止播放时上报下当前数据
       this.forceReport()
 
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: '暂停',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
+      this.pauseHandler()
     },
 
     /*
@@ -153,18 +121,6 @@ let liveMixin = {
           this.saveLiveStatus(this.playState);
         });
       }
-
-      dailyReport.reportClickLog({
-        event: 'live_view_click',
-        properties: {
-          button_name: '点击观看',
-          lesson_id: this.lessonID,
-          live_id: this.liveId,
-          classroom_id: +this.classroom.classroomId,
-          url: window.location.href,
-          user_agent: navigator.userAgent,
-        }
-      });
     },
 
     /*
@@ -438,11 +394,95 @@ let liveMixin = {
         }
       }
 
-      liveEl.removeEventListener('waiting', handleEvent);
-      liveEl.removeEventListener('timeupdate', updateEvent);
-      liveEl.addEventListener('waiting', handleEvent);
-      // 卡主不能播放视频问题
-      liveEl.addEventListener('timeupdate', updateEvent)
+      if(liveEl) {
+        liveEl.removeEventListener('waiting', handleEvent);
+        liveEl.removeEventListener('timeupdate', updateEvent);
+        liveEl.addEventListener('waiting', handleEvent);
+        // 卡主不能播放视频问题
+        liveEl.addEventListener('timeupdate', updateEvent)
+      }
+      
+    },
+
+    initLiveEvents() {
+      this.removeLiveEvents()
+      let liveEl = document.getElementById('player');
+      if(!liveEl) return
+
+      liveEl.addEventListener('play', this.playHandler)
+
+      liveEl.addEventListener('pause', this.pauseHandler)
+
+      document.addEventListener('fullscreenchange', this.fullscreenchangeHandler)
+    },
+
+    playHandler() {
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击收听' : '点击观看',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+          page_name: document.title,
+        }
+      });
+    },
+
+    pauseHandler() {
+      dailyReport.reportClickLog({
+          event: 'live_view_click',
+          properties: {
+            button_name: this.liveType === 1 ? '点击关闭' : '暂停',
+            lesson_id: this.lessonID,
+            live_id: this.liveId,
+            classroom_id: +this.classroom.classroomId,
+            url: window.location.href,
+            user_agent: navigator.userAgent,
+            page_name: document.title,
+          }
+        });
+    },
+
+    fullscreenchangeHandler() {
+      if (document.fullscreenElement) {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+              page_name: document.title,
+            }
+          });
+        } else {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '取消全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+              page_name: document.title,
+            }
+          });
+        }
+    },
+
+    removeLiveEvents() {
+      let liveEl = document.getElementById('player');
+      if(!liveEl) return
+
+      liveEl.removeEventListener('play', this.playHandler);
+      liveEl.removeEventListener('pause', this.pauseHandler);
+      document.removeEventListener('fullscreenchange', this.fullscreenchangeHandler);
     }
 
   }

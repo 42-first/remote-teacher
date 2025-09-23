@@ -33,18 +33,6 @@ let fullscreenMixin = {
           }
         });
 
-        dailyReport.reportClickLog({
-          event: 'live_view_click',
-          properties: {
-            button_name: '全屏播放',
-            lesson_id: this.lessonID,
-            live_id: this.liveId,
-            classroom_id: +this.classroom.classroomId,
-            url: window.location.href,
-            user_agent: navigator.userAgent,
-          }
-        });
-
         // 创建弹幕引擎
         this.visibleDanmu && this.initVideoDanmu();
       });
@@ -79,19 +67,6 @@ let fullscreenMixin = {
         if(this.videoDanmaku) {
           this.videoDanmaku.destroy();
         }
-
-        dailyReport.reportClickLog({
-          event: 'live_view_click',
-          properties: {
-            button_name: '取消全屏播放',
-            lesson_id: this.lessonID,
-            live_id: this.liveId,
-            classroom_id: +this.classroom.classroomId,
-            url: window.location.href,
-            user_agent: navigator.userAgent,
-          }
-        });
-
       }
     },
 
