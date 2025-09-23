@@ -323,7 +323,7 @@ let liveMixin = {
         liveEl.play()
       })
 
-      liveEl.addEventListener('fullscreenchange', (evt) => {
+      document.addEventListener('fullscreenchange', (evt) => {
         if (document.fullscreenElement) {
           dailyReport.reportClickLog({
             event: 'live_view_click',
