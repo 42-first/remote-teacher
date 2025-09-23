@@ -333,6 +333,7 @@ let liveMixin = {
             classroom_id: +this.classroom.classroomId,
             url: window.location.href,
             user_agent: navigator.userAgent,
+            page_name: document.title,
           }
         });
       })
@@ -347,6 +348,7 @@ let liveMixin = {
             classroom_id: +this.classroom.classroomId,
             url: window.location.href,
             user_agent: navigator.userAgent,
+            page_name: document.title,
           }
         });
 
@@ -363,6 +365,7 @@ let liveMixin = {
               classroom_id: +this.classroom.classroomId,
               url: window.location.href,
               user_agent: navigator.userAgent,
+              page_name: document.title,
             }
           });
         } else {
@@ -375,6 +378,7 @@ let liveMixin = {
               classroom_id: +this.classroom.classroomId,
               url: window.location.href,
               user_agent: navigator.userAgent,
+              page_name: document.title,
             }
           });
         }
@@ -720,6 +724,7 @@ let liveMixin = {
           classroom_id: +this.classroom.classroomId,
           url: window.location.href,
           user_agent: navigator.userAgent,
+          page_name: document.title,
         }
       });
     },

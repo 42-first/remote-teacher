@@ -540,8 +540,9 @@
           return this;
         }
 
-        if(from.name == 'student-danmu' || from.name == 'student-submission') {
-          document.title = this.courseName && this.courseName;
+        if(from.name == 'danmu' || from.name == 'submission') {
+          let { courseName } = this.classroom || {}
+          document.title = courseName;
           setTimeout(() => {
             typeof this.handleScrollToTop === 'function' && this.handleScrollToTop();
           }, 300)
