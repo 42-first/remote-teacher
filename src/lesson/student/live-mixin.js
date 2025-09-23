@@ -483,7 +483,7 @@ let liveMixin = {
     * @method 直播音频停止直播
     * @params
     */
-    handlestop() {
+    handlestop(e) {
       let liveEl = document.getElementById('player');
 
       if(this.playLoading && this.liveType === 1) {
@@ -513,7 +513,7 @@ let liveMixin = {
       // 停止播放时上报下当前数据
       this.forceReport()
 
-      this.pauseHandler()
+      e && this.pauseHandler()
     },
 
     /*
@@ -674,10 +674,10 @@ let liveMixin = {
      * @method 关闭视频直播
      * @params
      */
-    handleStopVideo() {
+    handleStopVideo(e) {
       this.liveVisible = false;
       this.hasMinHeight = true
-      this.handlestop();
+      this.handlestop(e);
     },
 
     /*
