@@ -78,7 +78,7 @@ let dailyReport = {
       );
 
       let lng = Cookies.get('django_language') || 'zh-cn';
-      lng = lng === 'zh-cn' ? 'zh_CN' : 'en';
+      lng = lng === 'zh-cn' ? 'zh' : 'en';
 
       this.options.log = Object.assign({}, log, {
         time: new Date().getTime(),
