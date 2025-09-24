@@ -159,7 +159,7 @@ let dailyReport = {
         'data': log,
         'ts_ms': (new Date()).getTime()
       };
-      axios.post(URL, params);
+      return axios.post(URL, params);
     }
   },
 

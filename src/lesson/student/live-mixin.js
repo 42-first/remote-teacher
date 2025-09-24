@@ -12,6 +12,8 @@
 
 import dailyReport from '@/util/daily-report';
 
+let isPending = false;
+
 
 let liveMixin = {
   methods: {
@@ -765,19 +767,23 @@ let liveMixin = {
       });
     },
 
-    pauseHandler() {
-      dailyReport.reportClickLog({
-          event: 'live_view_click',
-          properties: {
-            button_name: this.liveType === 1 ? '点击关闭' : '暂停',
-            lesson_id: this.lessonID,
-            live_id: this.liveId,
-            classroom_id: +this.classroom.classroomId,
-            url: window.location.href,
-            user_agent: navigator.userAgent,
-            page_name: document.title,
-          }
-        });
+    async pauseHandler() {
+      if(isPending) return
+      isPending = true
+      await dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击关闭' : '暂停',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+          page_name: document.title,
+        }
+      });
+
+      isPending = false
     },
 
     fullscreenchangeHandler() {
