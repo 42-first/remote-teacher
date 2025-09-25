@@ -5,7 +5,7 @@
     <div class="nav-menus" v-bind:class="{ios: isIos}">
       <a class="join-us" href="/presenter">翻页笔</a>
       <a class="join-us curr" href="/lesson/market/mobile_market">雨课件</a>
-      <a class="download" href="/bindmobile/download/app">下载</a>
+      <a v-if="!isOhApp" class="download" href="/bindmobile/download/app">下载</a>
       <a class="help" href="/help" >帮助</a>
     </div>
   </div>
@@ -16,7 +16,8 @@
     name: 'page-header',
     data () {
       return {
-        isIos: !1
+        isIos: !1,
+        isOhApp: !1
       }
     },
     created: function () {
@@ -38,12 +39,15 @@
               android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,
               iPhone: u.indexOf('iPhone') > -1,
               iPad: u.indexOf('iPad') > -1,
-              webApp: u.indexOf('Safari') === -1
+              webApp: u.indexOf('Safari') === -1,
+              isFlutterApp: u.indexOf('flutterApp') > -1,
+              isHarmony: u.indexOf('Harmony') > -1,
             }
           })()
         }
         this.isIos = browser.versions.ios
-      }
+        this.isOhApp = browser.versions.isFlutterApp && browser.versions.isHarmony
+      }  
     }
   }
 </script>
