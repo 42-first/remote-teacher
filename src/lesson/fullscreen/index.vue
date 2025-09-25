@@ -381,6 +381,9 @@
               watermark.set('#watermark_layer', textArr);
             }
           }
+
+          // 直播按钮打点事件
+          this.initLiveEvents()
         }, 1000)
       },
       visibleDanmu(newVal, oldVal) {

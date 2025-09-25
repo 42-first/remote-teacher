@@ -10,6 +10,10 @@
  // import flvjs from 'flv.js/dist/flv.min'
  import '@/util/flv.min'
 
+import dailyReport from '@/util/daily-report';
+
+let isPending = false;
+
 
 let liveMixin = {
   methods: {
@@ -481,7 +485,7 @@ let liveMixin = {
     * @method 直播音频停止直播
     * @params
     */
-    handlestop() {
+    handlestop(e) {
       let liveEl = document.getElementById('player');
 
       if(this.playLoading && this.liveType === 1) {
@@ -510,6 +514,8 @@ let liveMixin = {
 
       // 停止播放时上报下当前数据
       this.forceReport()
+
+      e && this.pauseHandler()
     },
 
     /*
@@ -651,16 +657,29 @@ let liveMixin = {
       // } else {
       //   this.handlestop();
       // }
+
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: visible ? '点击观看' : '只听声音',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+          page_name: document.title,
+        }
+      });
     },
 
     /*
      * @method 关闭视频直播
      * @params
      */
-    handleStopVideo() {
+    handleStopVideo(e) {
       this.liveVisible = false;
       this.hasMinHeight = true
-      this.handlestop();
+      this.handlestop(e);
     },
 
     /*
@@ -718,6 +737,92 @@ let liveMixin = {
           liveurl: this.logLiveurl
         });
       }
+    },
+
+
+    initLiveEvents() {
+      this.removeLiveEvents()
+      let liveEl = document.getElementById('player');
+      if(!liveEl) return
+
+      liveEl.addEventListener('play', this.playHandler)
+
+      liveEl.addEventListener('pause', this.pauseHandler)
+
+      document.addEventListener('fullscreenchange', this.fullscreenchangeHandler)
+    },
+
+    playHandler() {
+      dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击收听' : '点击观看',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+          page_name: document.title,
+        }
+      });
+    },
+
+    async pauseHandler() {
+      if(isPending) return
+      isPending = true
+      await dailyReport.reportClickLog({
+        event: 'live_view_click',
+        properties: {
+          button_name: this.liveType === 1 ? '点击关闭' : '暂停',
+          lesson_id: this.lessonID,
+          live_id: this.liveId,
+          classroom_id: +this.classroom.classroomId,
+          url: window.location.href,
+          user_agent: navigator.userAgent,
+          page_name: document.title,
+        }
+      });
+
+      isPending = false
+    },
+
+    fullscreenchangeHandler() {
+      if (document.fullscreenElement) {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+              page_name: document.title,
+            }
+          });
+        } else {
+          dailyReport.reportClickLog({
+            event: 'live_view_click',
+            properties: {
+              button_name: '取消全屏播放',
+              lesson_id: this.lessonID,
+              live_id: this.liveId,
+              classroom_id: +this.classroom.classroomId,
+              url: window.location.href,
+              user_agent: navigator.userAgent,
+              page_name: document.title,
+            }
+          });
+        }
+    },
+
+    removeLiveEvents() {
+      let liveEl = document.getElementById('player');
+      if(!liveEl) return
+
+      liveEl.removeEventListener('play', this.playHandler);
+      liveEl.removeEventListener('pause', this.pauseHandler);
+      document.removeEventListener('fullscreenchange', this.fullscreenchangeHandler);
     }
   }
 }

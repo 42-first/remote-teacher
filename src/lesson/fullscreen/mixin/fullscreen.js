@@ -11,6 +11,8 @@ import { isSupported } from '@/util/util'
 let screenfull = require('screenfull');
 import Danmaku from 'danmaku';
 
+import dailyReport from '@/util/daily-report';
+
 let fullscreenMixin = {
   methods: {
     /**

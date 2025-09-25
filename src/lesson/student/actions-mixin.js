@@ -979,6 +979,11 @@ var actionsMixin = {
         // 标记这是一堂远程课
         !this.isLive && this.liveURL && (this.isLive = true);
 
+        setTimeout(()=>{
+          this.initLiveEvents()
+        }, 1000)
+
+
         // 日志上报
         this.liveId = data.liveid;
         setTimeout(() => {

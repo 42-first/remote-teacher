@@ -573,6 +573,10 @@ let lessonMixin = {
             }, 3000)
           }
 
+          setTimeout(()=>{
+            this.initLiveEvents()
+          }, 1000)
+
           // 日志上报
           setTimeout(() => {
             this.handleLogEvent(this.hasMeeting ? 'kwai_rtmp' : '');

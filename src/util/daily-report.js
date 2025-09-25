@@ -7,6 +7,7 @@
 
 
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 
 function getUUID() {
@@ -76,11 +77,15 @@ let dailyReport = {
         data.properties,
       );
 
+      let lng = Cookies.get('django_language') || 'zh-cn';
+      lng = lng === 'zh-cn' ? 'zh' : 'en';
+
       this.options.log = Object.assign({}, log, {
         time: new Date().getTime(),
         distinct_id: uid,
         terminal_type: (data && data.terminal) || "h5",
         properties,
+        language: lng,
       });
 
       return this.options.log;
@@ -128,6 +133,33 @@ let dailyReport = {
 
     if (log && typeof data === "object") {
       Object.assign(log, data);
+    }
+  },
+
+  /**
+   * @method 点击事件上报
+   * @params
+   */
+  reportClickLog(data) {
+    let URL = '/video-log/log/track/';
+    let commonLog = this.options.log;
+
+    if(data) {
+      if(data.properties && commonLog.properties) {
+        data.properties = Object.assign({}, commonLog.properties, data.properties);
+      }
+
+      let log = Object.assign({}, commonLog, data, {
+        event: data.event,
+        time: (new Date()).getTime()
+      });
+
+      const params = {
+        'uip': '',
+        'data': log,
+        'ts_ms': (new Date()).getTime()
+      };
+      return axios.post(URL, params);
     }
   },
 
