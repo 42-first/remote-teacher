@@ -6,9 +6,6 @@ pipeline {
         REGISTRY = "xuetangx-registry.cn-beijing.cr.aliyuncs.com"
         NAMESPACE = "xtng"
         APP_NAME = "xc/xc-server"
-
-        // GitHub Token
-        GITHUB_TOKEN = credentials('github_token')
     }
 
     tools {
@@ -17,15 +14,15 @@ pipeline {
 
     stages {
 
-        stage('Checkout GitHub') {
-            steps {
-                git(
-                    url: 'https://github.com/42-first/remote-teacher.git',
-                    credentialsId: '203d6a3f-a952-49bf-a80b-bcf1a7bdbac4',
-                    branch: 'master'
-                )
-            }
-        }
+        // stage('Checkout GitHub') {
+        //     steps {
+        //         git(
+        //             url: 'https://github.com/42-first/remote-teacher.git',
+        //             credentialsId: '203d6a3f-a952-49bf-a80b-bcf1a7bdbac4',
+        //             branch: 'master'
+        //         )
+        //     }
+        // }
 
         stage('Install NPM Dependencies') {
             steps {
