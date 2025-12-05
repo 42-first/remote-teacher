@@ -21,7 +21,7 @@ pipeline {
             steps {
                 git(
                     url: 'https://github.com/42-first/remote-teacher.git',
-                    credentialsId: 'github_token',
+                    credentialsId: '203d6a3f-a952-49bf-a80b-bcf1a7bdbac4',
                     branch: 'master'
                 )
             }
